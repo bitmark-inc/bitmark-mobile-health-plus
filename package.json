@@ -7,12 +7,24 @@
     "test": "jest"
   },
   "dependencies": {
+    "lodash": "^4.17.4",
+    "moment": "^2.20.1",
     "react": "16.2.0",
-    "react-native": "0.52.1"
+    "react-native": "0.52.1",
+    "react-native-fs": "^2.9.7",
+    "react-native-mail": "^3.0.5",
+    "react-native-push-notification": "^3.0.2",
+    "react-native-swiper": "^1.5.13",
+    "react-native-video": "^2.0.0",
+    "react-navigation": "^1.0.0-beta.27"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.1",
     "babel-jest": "22.1.0",
     "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.16.0",
+    "eslint-plugin-react": "^7.5.1",
+    "eslint-plugin-react-native": "^3.2.1",
     "jest": "22.1.4",
     "react-test-renderer": "16.2.0"
   },
