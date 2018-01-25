@@ -1,0 +1,3 @@
+rootProject.name = 'Bitmark'
+
+include ':app'
