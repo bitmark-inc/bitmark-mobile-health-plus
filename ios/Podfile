@@ -1,0 +1,23 @@
+platform :ios, '10.0'
+
+target 'Bitmark' do
+  use_frameworks!
+
+  # Pods for Bitmark
+
+  pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
+
+  target 'BitmarkTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+          config.build_settings['SWIFT_VERSION'] = '4.0'
+      end
+  end
+end
