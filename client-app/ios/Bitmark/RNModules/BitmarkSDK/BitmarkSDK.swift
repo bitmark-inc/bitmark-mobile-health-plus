@@ -13,24 +13,14 @@ import KeychainAccess
 @objc(BitmarkSDK)
 class BitmarkSDK: NSObject {
   
-  func networkWithName(name: String) -> Network {
-    switch(name) {
-    case "livenet":
-      return Network.livenet
-    case "testnet":
-      return Network.testnet
-    default:
-      var network = Network.testnet
-      network.setEndpoint(api: URL(string: "https://api.devel.bitmark.com")!, asset: URL(string: "https://assets.devel.bitmark.com")!)
-      return network
-    }
+  enum BitmarkSDKError: Error {
+    case accountNotFound
   }
   
   @objc(newAccount::)
   func newAccount(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let network = networkWithName(name: network)
-      let account = try Account(network: network)
+      let account = try BitmarkSDK.getAccount(network: network)
       try KeychainUtil.saveCore(account.core)
       callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }
@@ -56,13 +46,7 @@ class BitmarkSDK: NSObject {
   @objc(accountInfo::)
   func accountInfo(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let network = networkWithName(name: network)
-      guard let core = try KeychainUtil.getCore() else {
-        callback([false])
-        return
-      }
-      
-      let account = try Account(core: core, network: network)
+      let account = try BitmarkSDK.getAccount(network: network)
       callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }
     catch let e {
@@ -74,8 +58,7 @@ class BitmarkSDK: NSObject {
   @objc(registerAccessPublicKey::)
   func registerAccessPublicKey(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let network = networkWithName(name: input["network"] as! String)
-      let account = try Account(core: (input["coreString"] as! String).hexDecodedData, network: network)
+      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
       callback([try account.registerPublicEncryptionKey()])
     }
     catch let e {
@@ -87,8 +70,7 @@ class BitmarkSDK: NSObject {
   @objc(issueFile::)
   func issueFile(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let network = networkWithName(name: input["network"] as! String)
-      let account = try Account(core: (input["coreString"] as! String).hexDecodedData, network: network)
+      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
       let fileURL = input["url"] as! String
       let propertyName = input["property_name"] as! String
       let metadata = input["metadata"] as! [String: String]
@@ -111,8 +93,7 @@ class BitmarkSDK: NSObject {
   @objc(issueThenTransferFile::)
   func issueThenTransferFile(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let network = networkWithName(name: input["network"] as! String)
-      let account = try Account(core: (input["coreString"] as! String).hexDecodedData, network: network)
+      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
       let fileURL = input["url"] as! String
       let propertyName = input["property_name"] as! String
       let metadata = input["metadata"] as! [String: String]
@@ -134,8 +115,7 @@ class BitmarkSDK: NSObject {
   @objc(sign::)
   func sign(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let network = networkWithName(name: input["network"] as! String)
-      let account = try Account(core: (input["coreString"] as! String).hexDecodedData, network: network)
+      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
       let message = input["message"] as! String
       let signature = try account.sign(withMessage: message, forAction: .Indentity)
       callback([true, signature.hexEncodedString])
@@ -149,13 +129,7 @@ class BitmarkSDK: NSObject {
   @objc(sign1stForTransfer::::)
   func sign1stForTransfer(_ network: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let network = networkWithName(name: network)
-      guard let core = try KeychainUtil.getCore() else {
-        callback([false])
-        return
-      }
-      
-      let account = try Account(core: core, network: network)
+      let account = try BitmarkSDK.getAccount(network: network)
       guard let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address) else {
         callback([false])
         return
@@ -172,13 +146,7 @@ class BitmarkSDK: NSObject {
   @objc(sign2ndForTransfer:::::)
   func sign2ndForTranfer(_ network: String, _ txId: String, _ address: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let network = networkWithName(name: network)
-      guard let core = try KeychainUtil.getCore() else {
-        callback([false])
-        return
-      }
-      
-      let account = try Account(core: core, network: network)
+      let account = try BitmarkSDK.getAccount(network: network)
       let offer = TransferOffer(txId: txId, receiver: try AccountNumber(address: address), signature: signature.hexDecodedData)
       let counterSignature = try account.createSignForTransferOffer(offer: offer)
       callback([true, counterSignature.counterSignature!.hexEncodedString])
@@ -187,5 +155,30 @@ class BitmarkSDK: NSObject {
       print(e)
       callback([false])
     }
+  }
+}
+
+extension BitmarkSDK {
+  
+  static func networkWithName(name: String) -> Network {
+    switch(name) {
+    case "livenet":
+      return Network.livenet
+    case "testnet":
+      return Network.testnet
+    default:
+      var network = Network.testnet
+      network.setEndpoint(api: URL(string: "https://api.devel.bitmark.com")!, asset: URL(string: "https://assets.devel.bitmark.com")!)
+      return network
+    }
+  }
+  
+  static func getAccount(network: String) throws -> Account {
+    let network = networkWithName(name: network)
+    guard let core = try KeychainUtil.getCore() else {
+      throw BitmarkSDKError.accountNotFound
+    }
+    
+    return try Account(core: core, network: network)
   }
 }
