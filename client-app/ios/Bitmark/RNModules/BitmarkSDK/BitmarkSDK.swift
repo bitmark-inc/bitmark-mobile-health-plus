@@ -8,6 +8,7 @@
 
 import Foundation
 import BitmarkSDK
+import KeychainAccess
 
 @objc(BitmarkSDK)
 class BitmarkSDK: NSObject {
@@ -30,7 +31,8 @@ class BitmarkSDK: NSObject {
     do {
       let network = networkWithName(name: network)
       let account = try Account(network: network)
-      callback([true, account.core.hexEncodedString, try account.toSeed(), account.accountNumber.string, try account.getRecoverPhrase()])
+      try KeychainUtil.saveCore(account.core)
+      callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }
     catch let e {
       print(e)
@@ -42,7 +44,8 @@ class BitmarkSDK: NSObject {
   func newAccountFrom24Words(_ pharse: [String], _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let account = try Account(recoverPhrase: pharse)
-      callback([true, account.core.hexEncodedString, try account.toSeed(), account.accountNumber.string, try account.getRecoverPhrase()])
+      try KeychainUtil.saveCore(account.core)
+      callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }
     catch let e {
       print(e)
@@ -50,12 +53,17 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(accountInfo:::)
-  func accountInfo(_ coreString: String!, _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(accountInfo::)
+  func accountInfo(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let network = networkWithName(name: network)
-      let account = try Account(core: coreString.hexDecodedData, network: network)
-      callback([true, try account.toSeed(), account.accountNumber.string, try account.getRecoverPhrase()])
+      guard let core = try KeychainUtil.getCore() else {
+        callback([false])
+        return
+      }
+      
+      let account = try Account(core: core, network: network)
+      callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }
     catch let e {
       print(e)

@@ -12,7 +12,7 @@
 
 RCT_EXTERN_METHOD(newAccount:(NSString)network:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(newAccountFrom24Words:(NSArray<NSString *> *)pharse:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(accountInfo:(NSString *)coreString:(NSString)network:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(accountInfo:(NSString)network:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(issueFile:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(issueThenTransferFile:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(sign:(NSDictionary *)input:(RCTResponseSenderBlock)callback)

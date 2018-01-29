@@ -6,11 +6,13 @@ PODS:
     - CryptoSwift
     - TweetNacl
   - CryptoSwift (0.8.1)
+  - KeychainAccess (3.1.0)
   - SipHash (1.2.0)
   - TweetNacl (1.0.1)
 
 DEPENDENCIES:
   - BitmarkSDK (from `https://github.com/bitmark-inc/bitmark-sdk-swift.git`)
+  - KeychainAccess
 
 EXTERNAL SOURCES:
   BitmarkSDK:
@@ -25,9 +27,10 @@ SPEC CHECKSUMS:
   BigInt: 8e8a52161c745cd3ab78e3dc346a9fbee51e6cf6
   BitmarkSDK: f92c0ab13ef06f415f8b525471e402d8ae2d380f
   CryptoSwift: 4b07d5b508c1eb67bfa314a727b705f8048a85de
+  KeychainAccess: 94c5540b32eabf7bc32bfb976a268e8ea05fd6da
   SipHash: c6e9e43e9c531b5bc6602545130c26194a6d31ce
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
-PODFILE CHECKSUM: bdb8020915ac51ff6d8f520a9f8ede3a3e065e2d
+PODFILE CHECKSUM: 8f7b3e222ce5b0318224e27431288591efb12b79
 
 COCOAPODS: 1.4.0

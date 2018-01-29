@@ -6,6 +6,7 @@ target 'Bitmark' do
   # Pods for Bitmark
 
   pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
+  pod 'KeychainAccess'
 
   target 'BitmarkTests' do
     inherit! :search_paths
