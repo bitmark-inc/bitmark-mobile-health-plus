@@ -1,0 +1,1 @@
+export * from './bitmark-app-scale.component.js';

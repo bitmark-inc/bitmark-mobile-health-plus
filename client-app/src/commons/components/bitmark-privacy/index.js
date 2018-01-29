@@ -1,0 +1,1 @@
+export * from './bitmark-privacy.component.js';

@@ -8,6 +8,8 @@ target 'Bitmark' do
   pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
   pod 'KeychainAccess'
 
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
   target 'BitmarkTests' do
     inherit! :search_paths
     # Pods for testing
