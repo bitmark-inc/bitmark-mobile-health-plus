@@ -146,4 +146,46 @@ class BitmarkSDK: NSObject {
     }
   }
   
+  @objc(sign1stForTransfer::::)
+  func sign1stForTransfer(_ network: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let network = networkWithName(name: network)
+      guard let core = try KeychainUtil.getCore() else {
+        callback([false])
+        return
+      }
+      
+      let account = try Account(core: core, network: network)
+      guard let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address) else {
+        callback([false])
+        return
+      }
+      
+      callback([true, offer.txId, offer.receiver, offer.signature!.hexEncodedString])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
+  
+  @objc(sign2ndForTransfer:::::)
+  func sign2ndForTranfer(_ network: String, _ txId: String, _ address: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let network = networkWithName(name: network)
+      guard let core = try KeychainUtil.getCore() else {
+        callback([false])
+        return
+      }
+      
+      let account = try Account(core: core, network: network)
+      let offer = TransferOffer(txId: txId, receiver: try AccountNumber(address: address), signature: signature.hexDecodedData)
+      let counterSignature = try account.createSignForTransferOffer(offer: offer)
+      callback([true, counterSignature.counterSignature!.hexEncodedString])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
 }

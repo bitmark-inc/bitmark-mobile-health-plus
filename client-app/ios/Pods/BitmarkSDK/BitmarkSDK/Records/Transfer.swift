@@ -139,10 +139,10 @@ public struct Payment {
 }
 
 public struct TransferOffer {
-    internal(set) var txId: String
-    internal(set) var payment: Payment? = nil
-    internal(set) var receiver: AccountNumber
-    private(set) var signature: Data? = nil
+    internal(set) public var txId: String
+    internal(set) public var payment: Payment? = nil
+    internal(set) public var receiver: AccountNumber
+    private(set) public var signature: Data? = nil
     
     public init(txId: String, payment: Payment? = nil, receiver: AccountNumber, signature: Data? = nil) {
         self.txId = txId
@@ -178,8 +178,8 @@ public struct TransferOffer {
 }
 
 public struct CountersignedTransferRecord {
-    internal(set) var offer: TransferOffer
-    private(set) var counterSignature: Data? = nil
+    internal(set) public var offer: TransferOffer
+    private(set) public var counterSignature: Data? = nil
     
     public init(offer: TransferOffer) {
         self.offer = offer
