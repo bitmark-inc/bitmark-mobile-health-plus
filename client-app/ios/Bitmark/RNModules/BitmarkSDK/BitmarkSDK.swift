@@ -50,6 +50,12 @@ class BitmarkSDK: NSObject {
       callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }
     catch let e {
+      if let error = e as? BitmarkSDKError,
+        error == BitmarkSDKError.accountNotFound {
+        callback([true])
+        return
+      }
+      
       print(e)
       callback([false])
     }
