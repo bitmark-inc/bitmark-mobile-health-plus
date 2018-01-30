@@ -20,7 +20,8 @@ class BitmarkSDK: NSObject {
   @objc(newAccount::)
   func newAccount(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let account = try BitmarkSDK.getAccount(network: network)
+      let network = BitmarkSDK.networkWithName(name: network)
+      let account = try Account(network: network)
       try KeychainUtil.saveCore(account.core)
       callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }

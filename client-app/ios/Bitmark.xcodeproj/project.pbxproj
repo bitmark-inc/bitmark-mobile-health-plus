@@ -24,6 +24,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		32B57ECB1D8A5A50E3D15BD3 /* Pods_BitmarkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */; };
 		589626E9201B28380026C4A5 /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
+		58C9513920202AF80050A9D4 /* TouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9510D20202AF70050A9D4 /* TouchID.m */; };
 		58CB4892201EC63A0058B364 /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
 		58FC1E56201B21CC00F60AF9 /* BitmarkSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FC1E55201B21CC00F60AF9 /* BitmarkSDK.swift */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -369,6 +370,8 @@
 		295B8983183E4140AD6083BB /* libRNMail.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNMail.a; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkSDKBridge.m; sourceTree = "<group>"; };
+		58C9510C20202AF70050A9D4 /* TouchID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchID.h; sourceTree = "<group>"; };
+		58C9510D20202AF70050A9D4 /* TouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchID.m; sourceTree = "<group>"; };
 		58CB488F201EC5670058B364 /* Bitmark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Bitmark.entitlements; path = Bitmark/Bitmark.entitlements; sourceTree = "<group>"; };
 		58CB4891201EC63A0058B364 /* KeychainUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainUtil.swift; sourceTree = "<group>"; };
 		58FC1E54201B21CC00F60AF9 /* Bitmark-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bitmark-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -567,6 +570,15 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		58C9510B20202AF70050A9D4 /* TouchID */ = {
+			isa = PBXGroup;
+			children = (
+				58C9510C20202AF70050A9D4 /* TouchID.h */,
+				58C9510D20202AF70050A9D4 /* TouchID.m */,
+			);
+			path = TouchID;
+			sourceTree = "<group>";
+		};
 		58CB4890201EC62E0058B364 /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
@@ -606,6 +618,7 @@
 		58FC1E27201B21AC00F60AF9 /* RNModules */ = {
 			isa = PBXGroup;
 			children = (
+				58C9510B20202AF70050A9D4 /* TouchID */,
 				58FC1E53201B21B900F60AF9 /* BitmarkSDK */,
 			);
 			name = RNModules;
@@ -1328,6 +1341,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58C9513920202AF80050A9D4 /* TouchID.m in Sources */,
 				58FC1E56201B21CC00F60AF9 /* BitmarkSDK.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				589626E9201B28380026C4A5 /* BitmarkSDKBridge.m in Sources */,
