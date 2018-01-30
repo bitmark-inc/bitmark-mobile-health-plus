@@ -41,45 +41,4 @@ export default StyleSheet.create({
     marginRight: 10,
     textAlign: 'right',
   },
-
-  bottomButtonArea: {
-    position: 'absolute',
-    bottom: 0,
-    minHeight: ios.constant.buttonHeight + ios.constant.blankFooter,
-    width: '100%',
-    flexDirection: 'column',
-  },
-  bottomButton: {
-    height: ios.constant.buttonHeight + ios.constant.blankFooter,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#0060F2',
-    paddingBottom: ios.constant.blankFooter,
-  },
-  bottomButtonText: {
-    fontFamily: 'Avenir black',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '900',
-    color: 'white'
-  },
-  defaultButton: {
-    height: ios.constant.buttonHeight,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#0060F2',
-  },
-  defaultButtonText: {
-    fontFamily: 'Avenir black',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '900',
-    color: 'white'
-  },
 });

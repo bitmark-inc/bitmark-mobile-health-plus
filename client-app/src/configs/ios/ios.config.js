@@ -2,7 +2,7 @@ import { Dimensions } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 const currentSize = Dimensions.get('window');
-const isIPhoneX = (currentSize.height === 812 && DeviceInfo.getModel() === 'iPhone');
+const isIPhoneX = (currentSize.height === 812);
 const windowWidth = 375;
 const windowHeight = isIPhoneX ? 812 : 667;
 const blankFooter = isIPhoneX ? 20 : 0;

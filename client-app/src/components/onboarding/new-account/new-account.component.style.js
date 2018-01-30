@@ -1,8 +1,4 @@
-import { StyleSheet, Platform } from 'react-native'
-import {
-  ios,
-  // android // TODO
-} from './../../../configs';
+import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   body: {
@@ -37,14 +33,10 @@ export default StyleSheet.create({
   },
   swipePagination: {
     position: 'absolute',
-    bottom: Platform.select({
-      ios: 58 + ios.constant.blankFooter,
-      android: 58 // TODO;
-    })
+    bottom: 35,
   },
   introductionTitle: {
-    position: 'absolute',
-    top: 119,
+    marginTop: 48,
     left: 50,
     fontFamily: 'Avenir black',
     color: '#0060F2',
@@ -52,8 +44,7 @@ export default StyleSheet.create({
     fontWeight: '900',
   },
   introductionDescription: {
-    position: 'absolute',
-    top: 199,
+    marginTop: 50,
     left: 50,
     width: 265,
     fontFamily: 'Avenir light',
@@ -84,8 +75,7 @@ export default StyleSheet.create({
     height: 180,
   },
   introductionTermPrivacy: {
-    position: 'absolute',
-    top: 515,
+    marginTop: 66,
     left: 50,
     width: 272,
   },
@@ -109,4 +99,51 @@ export default StyleSheet.create({
     lineHeight: 22,
   },
 
+  skipButtonArea: {
+    position: 'absolute',
+    bottom: 77,
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  skipButton: {
+    marginTop: 10,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#0060F2',
+  },
+  skipButtonText: {
+    fontFamily: 'Avenir black',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '900',
+    color: 'white'
+  },
+
+  letDoItButtonArea: {
+    marginTop: 85,
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  letDoItButton: {
+    marginTop: 10,
+    width: 309,
+    height: 42,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#0060F2',
+  },
+  letDoItButtonText: {
+    fontFamily: 'Avenir black',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '900',
+    color: 'white'
+  },
 });

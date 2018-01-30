@@ -20,8 +20,8 @@ export default StyleSheet.create({
     height: '100%'
   },
   loadingLogo: {
-    width: 261,
-    height: 95,
+    width: 310,
+    height: 113,
     resizeMode: 'contain',
     position: 'absolute',
   },

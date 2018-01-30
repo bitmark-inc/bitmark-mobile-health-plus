@@ -14,9 +14,10 @@ const {
   View,
 } = ReactNative;
 
-import { LoadingComponent, AppScaleComponent } from './commons/components';
+import { LoadingComponent } from './commons/components';
 import { HomeComponent } from './components/home';
 import { OnboardingComponent } from './components/onboarding';
+import { AppService } from './services';
 
 Text.defaultProps.allowFontScaling = false;
 
@@ -26,26 +27,31 @@ class MainComponent extends Component {
     this.state = {
       user: null,
     };
+
+    AppService.getCurrentAccount().then((user) => {
+      this.setState({ user });
+    }).catch(error => {
+      console.log(error);
+      this.setState({ user: {} })
+    });
   }
 
   render() {
     let DisplayedComponent = LoadingComponent;
-    // if (this.state.user) {
-    DisplayedComponent = this.state.user ? HomeComponent : OnboardingComponent;
-    // }
+    if (this.state.user) {
+      DisplayedComponent = this.state.user.bitmarkAccountNumber ? HomeComponent : OnboardingComponent;
+    }
     return (
-      <AppScaleComponent ref={(r) => { this.appScaler = r; }}>
-        <View style={{ width: '100%', height: '100%' }}>
-          <DisplayedComponent screenProps={{
-            refreshScaling: () => {
-              if (this.appScaler) {
-                this.appScaler.refreshScaling();
-              }
+      <View style={{ flex: 1 }}>
+        <DisplayedComponent style={{ borderWidth: 1 }} screenProps={{
+          refreshScaling: () => {
+            if (this.appScaler) {
+              this.appScaler.refreshScaling();
             }
-          }}>
-          </DisplayedComponent>
-        </View>
-      </AppScaleComponent >
+          }
+        }}>
+        </DisplayedComponent>
+      </View>
     )
   }
 }

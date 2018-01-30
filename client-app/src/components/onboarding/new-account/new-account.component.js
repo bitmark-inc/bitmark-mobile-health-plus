@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import Video from 'react-native-video';
 
-import { DefaultIndicatorComponent } from './../../../commons/components';
+import { DefaultIndicatorComponent, AppScaleComponent } from './../../../commons/components';
 import {
   BitmarkWebsiteComponent,
   BitmarkPrivacyComponent,
@@ -25,6 +25,8 @@ import {
   // android // TODO
 } from './../../../configs';
 
+import { AppService } from './../../../services';
+
 let defaultWindowSize = Platform.select({
   ios: ios.constant.defaultWindowSize,
   android: Dimensions.get('window'), //TODO
@@ -35,7 +37,6 @@ let defaultStyle = Platform.select({
   android: androidDefaultStyle
 })
 
-
 class DonateYourDataComponent extends React.Component {
   constructor(props) {
     super(props)
@@ -43,6 +44,7 @@ class DonateYourDataComponent extends React.Component {
   render() {
     return (
       <View style={newAccountStyle.swipePage}>
+        <View style={defaultStyle.header}></View>
         <Text style={[newAccountStyle.introductionTitle,]}>
           {'DONATE YOUR DATA'.toUpperCase()}
         </Text>
@@ -68,9 +70,12 @@ class DonateYourDataComponent extends React.Component {
             <Text style={newAccountStyle.bitmarkTermsPrivacyText}>.</Text>
           </View>
         </View>
-        <View style={defaultStyle.bottomButtonArea}>
-          <TouchableOpacity style={[defaultStyle.bottomButton]} onPress={() => { this.props.screenProps.createBitmarkAccount() }}>
-            <Text style={[defaultStyle.bottomButtonText]}>LET’S DO IT!</Text>
+        <View style={newAccountStyle.letDoItButtonArea}>
+          <TouchableOpacity style={[newAccountStyle.letDoItButton]} onPress={() => {
+            console.log('call creatre bitamrk account');
+            this.props.screenProps.createBitmarkAccount();
+          }}>
+            <Text style={[newAccountStyle.letDoItButtonText]}>LET’S DO IT!</Text>
           </TouchableOpacity>
         </View>
       </View >
@@ -122,7 +127,8 @@ class BuildDigitalAssetComponent extends React.Component {
   render() {
     return (
       <View style={newAccountStyle.swipePage}>
-        <Text style={[newAccountStyle.introductionTitle, { width: 250, top: 118, }]}>
+        <View style={defaultStyle.header}></View>
+        <Text style={[newAccountStyle.introductionTitle]}>
           {'BUILD A DIGITAL ESTATE'.toUpperCase()}
         </Text>
         <Text style={[newAccountStyle.introductionDescription,]}>You can bitmark any type of data to build your digital estate: photos, music, videos, location data, documents, etc. If it’s digital, it can be bitmarked.</Text>
@@ -190,8 +196,8 @@ export class NewAccountComponent extends React.Component {
     };
   }
   componentDidMount() {
-    if (this.props.screenProps.refreshScaling) {
-      this.props.screenProps.refreshScaling();
+    if (this.appScaler) {
+      this.appScaler.refreshScaling();
     }
     AppState.addEventListener('change', this.handleAppStateChange);
   }
@@ -215,131 +221,132 @@ export class NewAccountComponent extends React.Component {
       this.setState({
         processing: true
       });
-      // appService.doCreatingBitmarkAccount().then(() => {
-      //   if (this.props.screenProps && this.props.screenProps.enableJustCreatedBitmarkAccount) {
-      //     this.props.screenProps.enableJustCreatedBitmarkAccount();
-      //   }
-      //   this.props.navigation.navigate('Notification');
-      // }).catch(error => {
-      //   console.log('createBitmarkAccount error :', error);
-      //   this.setState({
-      //     processing: false
-      //   });
-      // });
+      AppService.createNewAccount().then(() => {
+        this.props.navigation.navigate('FaceTouchId');
+      }).catch((error) => {
+        console.log('createBitmarkAccount error :', error);
+        this.setState({
+          processing: false
+        });
+      });
     };
     return (
-      <View style={newAccountStyle.body}>
-        <StatusBar hidden={false} />
-        {this.state.processing && <DefaultIndicatorComponent />}
-        <View style={newAccountStyle.main}>
-          <Swiper activeDotColor='#0060F2'
-            scrollEnabled={this.state.scrollEnabled}
-            showsPagination={this.state.showPagination} style={newAccountStyle.swipeArea} showsButtons={false}
-            buttonWrapperStyle={{ color: 'black' }} loop={false}
-            paginationStyle={newAccountStyle.swipePagination}
-            ref={swiper => this.swiper = swiper}
-            onIndexChanged={(index) => {
-              this.setState({
-                index: index,
-              });
-              if (this['player' + index] && this['player' + index].seek) {
-                this['player' + index].seek(0);
-              }
-            }}
-            width={defaultWindowSize.width}
-            height={defaultWindowSize.height}
-            dot={
-              <View style={newAccountStyle.swipeDotButton} />
-            }>
+      <AppScaleComponent ref={(r) => { this.appScaler = r; }}>
+        <View style={newAccountStyle.body}>
+          <StatusBar hidden={false} />
+          {this.state.processing && <DefaultIndicatorComponent />}
+          <View style={newAccountStyle.main}>
+            <Swiper activeDotColor='#0060F2'
+              scrollEnabled={this.state.scrollEnabled}
+              showsPagination={this.state.showPagination} style={newAccountStyle.swipeArea} showsButtons={false}
+              buttonWrapperStyle={{ color: 'black' }} loop={false}
+              paginationStyle={newAccountStyle.swipePagination}
+              ref={swiper => this.swiper = swiper}
+              onIndexChanged={(index) => {
+                this.setState({
+                  index: index,
+                });
+                if (this['player' + index] && this['player' + index].seek) {
+                  this['player' + index].seek(0);
+                }
+              }}
+              width={defaultWindowSize.width}
+              height={defaultWindowSize.height}
+              dot={
+                <View style={newAccountStyle.swipeDotButton} />
+              }>
 
-            <View style={newAccountStyle.swipePage}>
-              <View style={defaultStyle.header}>
-                <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
-                  <Image style={defaultStyle.headerLeftIcon} source={require('../../../../assets/imgs/header_back_icon_study_setting.png')} />
-                </TouchableOpacity>
-                <Text style={defaultStyle.headerTitle}></Text>
-                <TouchableOpacity style={defaultStyle.headerRight}>
-                </TouchableOpacity>
-              </View>
+              <View style={newAccountStyle.swipePage}>
+                <View style={defaultStyle.header}>
+                  <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
+                    <Image style={defaultStyle.headerLeftIcon} source={require('../../../../assets/imgs/header_back_icon_study_setting.png')} />
+                  </TouchableOpacity>
+                  <Text style={defaultStyle.headerTitle}></Text>
+                  <TouchableOpacity style={defaultStyle.headerRight}>
+                  </TouchableOpacity>
+                </View>
 
-              <Text style={[newAccountStyle.introductionTitle]}>OWN YOUR DATA</Text>
-              <Text style={[newAccountStyle.introductionDescription,]}>
-                Your personal data is a valuable digital asset. Bitmark makes it simple to take advantage of this value by giving you tools to claim ownership of your data.
+                <Text style={[newAccountStyle.introductionTitle]}>OWN YOUR DATA</Text>
+                <Text style={[newAccountStyle.introductionDescription,]}>
+                  Your personal data is a valuable digital asset. Bitmark makes it simple to take advantage of this value by giving you tools to claim ownership of your data.
               </Text>
-              <View style={newAccountStyle.introductionImageArea}>
-                <Video
-                  ref={(ref) => { this.player0 = ref }}
-                  rate={this.state.index === 0 ? 1 : 0}
-                  source={require('./../../../../assets/videos/Own-Your-Data.mp4')}
-                  resizeMode="contain"
-                  style={newAccountStyle.introductionImage}
-                />
+                <View style={newAccountStyle.introductionImageArea}>
+                  <Video
+                    ref={(ref) => { this.player0 = ref }}
+                    rate={this.state.index === 0 ? 1 : 0}
+                    source={require('./../../../../assets/videos/Own-Your-Data.mp4')}
+                    resizeMode="contain"
+                    style={newAccountStyle.introductionImage}
+                  />
+                </View>
+                <View style={[newAccountStyle.skipButtonArea]}>
+                  <TouchableOpacity style={[newAccountStyle.skipButton, { backgroundColor: 'white' }]} onPress={() => { this.swiper.scrollBy(4) }}>
+                    <Text style={[newAccountStyle.skipButtonText, { color: '#0060F2', fontSize: 14, fontWeight: '400' }]}>SKIP</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={[defaultStyle.bottomButtonArea]}>
-                <TouchableOpacity style={[defaultStyle.bottomButton, { backgroundColor: 'white' }]} onPress={() => { this.swiper.scrollBy(4) }}>
-                  <Text style={[defaultStyle.bottomButtonText, { color: '#0060F2', fontSize: 14, fontWeight: '400' }]}>SKIP</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
 
-            <View style={newAccountStyle.swipePage}>
-              <Text style={[newAccountStyle.introductionTitle]}>{'authenticate property'.toUpperCase()}</Text>
-              <Text style={[newAccountStyle.introductionDescription,]}>
-                Your data is authenticated by ‘bitmarking’ and recording to the Bitmark blockchain. The blockchain holds secure and verifiable records of ownership of digital assets.
+              <View style={newAccountStyle.swipePage}>
+                <View style={defaultStyle.header}></View>
+                <Text style={[newAccountStyle.introductionTitle]}>{'authenticate property'.toUpperCase()}</Text>
+                <Text style={[newAccountStyle.introductionDescription,]}>
+                  Your data is authenticated by ‘bitmarking’ and recording to the Bitmark blockchain. The blockchain holds secure and verifiable records of ownership of digital assets.
               </Text>
-              <View style={newAccountStyle.introductionImageArea}>
-                <Video
-                  ref={(ref) => { this.player1 = ref }}
-                  rate={this.state.index === 1 ? 1 : 0}
-                  source={require('./../../../../assets/videos/Verify-Ownership-2.mp4')}
-                  resizeMode="contain"
-                  style={newAccountStyle.introductionImage}
-                />
+                <View style={newAccountStyle.introductionImageArea}>
+                  <Video
+                    ref={(ref) => { this.player1 = ref }}
+                    rate={this.state.index === 1 ? 1 : 0}
+                    source={require('./../../../../assets/videos/Verify-Ownership-2.mp4')}
+                    resizeMode="contain"
+                    style={newAccountStyle.introductionImage}
+                  />
+                </View>
               </View>
-            </View>
 
-            <FullBuildDigitalAssetComponent ref={(ref) => { this.player2 = ref }}
-              screenProps={{
-                index: this.state.index,
+              <FullBuildDigitalAssetComponent ref={(ref) => { this.player2 = ref }}
+                screenProps={{
+                  index: this.state.index,
+                  setShowPagination: (show) => {
+                    this.setState({
+                      showPagination: show,
+                      scrollEnabled: show,
+                    })
+                  }
+                }}
+              />
+
+              <View style={newAccountStyle.swipePage}>
+                <View style={defaultStyle.header}></View>
+                <Text style={[newAccountStyle.introductionTitle,]}>
+                  {'Property IS Privacy'.toUpperCase()}
+                </Text>
+                <Text style={[newAccountStyle.introductionDescription, { width: 270 }]}>
+                  Bitmark gives you the power of privacy over your digital property. No third parties will have access to your data, including us. You choose who has access to your property.
+              </Text>
+                <View style={newAccountStyle.introductionImageArea}>
+                  <Video
+                    ref={(ref) => { this.player3 = ref }}
+                    rate={this.state.index === 3 ? 1 : 0}
+                    source={require('./../../../../assets/videos/Property-Privacy.mp4')}
+                    resizeMode="contain"
+                    style={newAccountStyle.introductionImage}
+                  />
+                </View>
+              </View>
+
+              <FullDonateYourDataComponent screenProps={{
+                createBitmarkAccount: createBitmarkAccount,
                 setShowPagination: (show) => {
                   this.setState({
                     showPagination: show,
                     scrollEnabled: show,
                   })
-                }
-              }}
-            />
-
-            <View style={newAccountStyle.swipePage}>
-              <Text style={[newAccountStyle.introductionTitle,]}>
-                {'Property IS Privacy'.toUpperCase()}
-              </Text>
-              <Text style={[newAccountStyle.introductionDescription, { width: 270 }]}>
-                Bitmark gives you the power of privacy over your digital property. No third parties will have access to your data, including us. You choose who has access to your property.
-              </Text>
-              <View style={newAccountStyle.introductionImageArea}>
-                <Video
-                  ref={(ref) => { this.player3 = ref }}
-                  rate={this.state.index === 3 ? 1 : 0}
-                  source={require('./../../../../assets/videos/Property-Privacy.mp4')}
-                  resizeMode="contain"
-                  style={newAccountStyle.introductionImage}
-                />
-              </View>
-            </View>
-
-            <FullDonateYourDataComponent screenProps={{
-              createBitmarkAccount: createBitmarkAccount,
-              setShowPagination: (show) => {
-                this.setState({
-                  showPagination: show,
-                  scrollEnabled: show,
-                })
-              },
-            }} />
-          </Swiper>
+                },
+              }} />
+            </Swiper>
+          </View>
         </View>
-      </View>
+      </AppScaleComponent>
     );
   }
 }
