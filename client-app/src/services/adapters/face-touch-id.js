@@ -1,12 +1,12 @@
 import { NativeModules } from 'react-native'
-let SwiftFaceTouchId = NativeModules.FaceTouchId;
+let SwiftFaceTouchId = NativeModules.TouchID;
 
 const FaceTouchId = {
   isSupported: () => {
     return new Promise((resolve, reject) => {
-      SwiftFaceTouchId.isSupported((ok, result) => {
-        if (ok && result) {
-          resolve({ result });
+      SwiftFaceTouchId.isSupported((ok) => {
+        if (ok) {
+          resolve();
         } else {
           reject(new Error('Can not check [Face or Touch Id] feature in this device!'));
         }

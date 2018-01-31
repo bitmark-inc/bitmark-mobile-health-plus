@@ -1,6 +1,9 @@
 import { BitmarkAppComponent } from './src';
 export default BitmarkAppComponent;
 
+// import AutoCompleteComponent from './test/auto-complete';
+// export default AutoCompleteComponent;
+
 // import React, { Component } from 'react';
 // import {
 //   Platform,

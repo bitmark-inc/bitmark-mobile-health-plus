@@ -1,5 +1,5 @@
 import { Dimensions } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+// import DeviceInfo from 'react-native-device-info';
 
 const currentSize = Dimensions.get('window');
 const isIPhoneX = (currentSize.height === 812);
@@ -16,10 +16,10 @@ const buttonHeight = 42;
 const autoCompleteHeight = 42;
 
 let iosConstant = {
-  bottomTabsHeight: bottomTabsHeight,
-  blankFooter: blankFooter,
-  buttonHeight: buttonHeight,
-  autoCompleteHeight: autoCompleteHeight,
+  bottomTabsHeight,
+  blankFooter,
+  buttonHeight,
+  autoCompleteHeight,
   defaultWindowSize: {
     width: windowWidth,
     height: windowHeight,

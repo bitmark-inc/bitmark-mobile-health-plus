@@ -5,3 +5,4 @@ export * from './bitmark-terms';
 export * from './bitmark-website';
 export * from './bitmark-dialog';
 export * from './bitmark-indicator';
+export * from './bitmark-auto-complete';

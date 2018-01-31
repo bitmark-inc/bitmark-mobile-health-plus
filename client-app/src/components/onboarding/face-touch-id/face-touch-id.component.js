@@ -6,7 +6,7 @@ import {
   Linking,
   // NativeModules,
 } from 'react-native'
-// const TouchID = NativeModules.TouchID;
+import { AppService } from './../../../services/index';
 
 import { AppScaleComponent } from './../../../commons/components';
 import faceTouchIdStyle from './face-touch-id.component.style';
@@ -20,11 +20,11 @@ export class FaceTouchIdComponent extends React.Component {
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'Main', params: { justCreatedBitmarkAccount: true } })]
     });
-    // TouchID.isSupported(ok => {
-    //   if (ok) {
-    //     this.props.screenProps.rootNavigation.dispatch(resetMainPage);
-    //   }
-    // });
+    AppService.checkFaceTouchId().then(() => {
+      this.props.screenProps.rootNavigation.dispatch(resetMainPage);
+    }).catch(error => {
+      console.log('checkFaceTouchId erorr :', error);
+    });
     return (
       <AppScaleComponent ref={(r) => { this.appScaler = r; }}>
         <View style={[faceTouchIdStyle.body]}>

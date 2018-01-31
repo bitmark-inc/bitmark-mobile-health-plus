@@ -1,13 +1,4 @@
-import { StyleSheet, Platform } from 'react-native'
-import {
-  ios,
-  android // TODO
-} from './../../../configs';
-
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
+import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   body: {
@@ -17,26 +8,22 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
 
-  //sign-in
-  recoveryPhraseContent: {
+  mainContent: {
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#EDF0F4',
-    height: constant.defaultWindowSize.height - constant.headerSize.height - constant.blankFooter - constant.buttonHeight,
   },
+  //sign-in
   writeRecoveryPhraseContentMessage: {
     fontFamily: 'Avenir Light',
-    fontSize: 14,
+    fontSize: 17,
     fontWeight: '300',
-    width: 346,
-    marginLeft: 12,
-    marginTop: 14,
+    width: 340,
+    marginTop: 18,
   },
   writeRecoveryPhraseArea: {
     marginTop: 14,
     backgroundColor: 'white',
     width: '100%',
-    height: 364,
   },
   writeRecoveryPhraseContentList: {
     paddingLeft: 73,
@@ -87,7 +74,7 @@ export default StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontSize: 15,
     fontWeight: '900',
-    marginTop: 27,
+    marginTop: 18,
   },
   recoveryPhraseTestMessage: {
     fontFamily: 'Avenir Light',
@@ -112,5 +99,22 @@ export default StyleSheet.create({
     transform: [
       { scale: 1.5 },
     ],
+  },
+  submitButton: {
+    marginTop: 40,
+    minHeight: 42,
+    width: 309,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#0060F2',
+  },
+  submitButtonText: {
+    fontFamily: 'Avenir black',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '900',
+    color: 'white'
   },
 });

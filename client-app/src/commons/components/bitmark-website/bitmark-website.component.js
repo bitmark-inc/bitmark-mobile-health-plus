@@ -33,7 +33,7 @@ export class BitmarkWebsiteComponent extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={termsStyles.main}>
-          <WebView source={{ uri: 'https://bitmark.com' }} />
+          <WebView source={{ uri: 'https://bitmark.com' }}/>
         </View>
       </View >
     );

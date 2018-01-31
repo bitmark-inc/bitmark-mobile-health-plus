@@ -10,7 +10,6 @@ export default StyleSheet.create({
   welcomeBackground: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
     flexDirection: 'column',
     alignItems: 'center',
     alignContent: 'center',
