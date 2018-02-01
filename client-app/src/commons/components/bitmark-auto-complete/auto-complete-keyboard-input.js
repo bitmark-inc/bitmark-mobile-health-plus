@@ -37,7 +37,7 @@ export class AutoCompleteKeyboardInput extends React.Component {
     this.state = {
       dataSource: this.props.dataSource || [],
       opacity: new Animated.Value(0),
-      extBottom: new Animated.Value(0),
+      extBottom: new Animated.Value(-50),
       keyboardHeight: 0,
       inputtedText: '',
       realInputtedText: '',
@@ -79,7 +79,7 @@ export class AutoCompleteKeyboardInput extends React.Component {
   }
   doHideExtensionArea() {
     let listAnimations = [Animated.spring(this.state.extBottom, {
-      toValue: 0,
+      toValue: -50,
       duration: 1000,
     })];
     if (this.props.onlyDisplayWhenCalled) {

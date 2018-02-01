@@ -24,9 +24,8 @@ let PreCheckResults = {
   error: 'RETRY'
 };
 
-let testWords = ["abuse", "acid", "lobster", "able", "able", "absorb", "about", "access", "ability", "abstract", "ability", "account",
-  "able", "abandon", "able", "addon", "accident", "about", "habit", "about", "acid", "achieve", "tag", "absurd"];
-
+// let testWords = ['abstract', 'fault', 'margin', 'improve', 'quantum', 'observe', 'invite', 'session', 'cluster', 'west', 'oven', 'acquire',
+//   'burger', 'delay', 'spirit', 'body', 'fine', 'gift', 'acid', 'soldier', 'goddess', 'differ', 'pledge', 'traffic',];
 
 export class SignInComponent extends React.Component {
 
@@ -39,6 +38,7 @@ export class SignInComponent extends React.Component {
     this.onKeyboardDidShow = this.onKeyboardDidShow.bind(this);
     this.selectIndex = this.selectIndex.bind(this);
     this.checkStatusInputing = this.checkStatusInputing.bind(this);
+    this.submit24Words = this.submit24Words.bind(this);
 
     let smallerList = [];
     let biggerList = [];
@@ -46,14 +46,14 @@ export class SignInComponent extends React.Component {
       if (index < 12) {
         smallerList.push({
           key: index,
-          word: testWords[index],
-          // word: '',
+          // word: testWords[index],
+          word: '',
         });
       } else {
         biggerList.push({
           key: index,
-          word: testWords[index],
-          // word: '',
+          // word: testWords[index],
+          word: '',
         });
       }
     }
@@ -67,6 +67,7 @@ export class SignInComponent extends React.Component {
       dataSource: dictionary24Words,
       keyBoardHeight: 0,
     };
+    // setTimeout(this.checkStatusInputing, 200);
   }
 
   onChangeText(index, text) {
@@ -170,6 +171,31 @@ export class SignInComponent extends React.Component {
   }
 
   submit24Words() {
+    if (this.state.preCheckResult === PreCheckResults.error) {
+      let smallerList = [];
+      let biggerList = [];
+      for (let index = 0; index < 24; index++) {
+        if (index < 12) {
+          smallerList.push({
+            key: index,
+            word: '',
+          });
+        } else {
+          biggerList.push({
+            key: index,
+            word: '',
+          });
+        }
+      }
+      this.setState({
+        smallerList: smallerList,
+        biggerList: biggerList,
+        preCheckResult: null,
+        selectedIndex: -1,
+        remainWordNumber: 24,
+      });
+      return;
+    }
     let inputtedWords = [];
     this.state.smallerList.forEach(item => inputtedWords.push(item.word));
     this.state.biggerList.forEach(item => inputtedWords.push(item.word));
@@ -199,7 +225,7 @@ export class SignInComponent extends React.Component {
             <View style={signStyle.mainContent}>
               <Text style={[signStyle.writeRecoveryPhraseContentMessage,]}>
                 Please type all 24 words of your recovery phrase in the exact sequence below:
-          </Text>
+             </Text>
               <View style={[signStyle.writeRecoveryPhraseArea, {
                 height: (this.state.keyBoardHeight
                   ? deviceSize.height - constant.headerSize.height - this.state.keyBoardHeight - constant.autoCompleteHeight - 66
@@ -268,7 +294,6 @@ export class SignInComponent extends React.Component {
                   {this.state.preCheckResult === PreCheckResults.success ? 'Keep your written copy private in a secure and safe location.' : 'Please try again!'}
                 </Text>
               </View>}
-
               {!this.state.keyBoardHeight && <TouchableOpacity style={[signStyle.submitButton, {
                 backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'
               }]} onPress={this.submit24Words} disabled={this.state.remainWordNumber > 0}>
