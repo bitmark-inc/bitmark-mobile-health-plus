@@ -35,6 +35,30 @@ const bitmarkSDK = {
         }
       });
     });
+  },
+
+  try24Words: (pharse24Words) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.try24Words(pharse24Words, (ok, bitmarkAccountNumber, pharse24Words) => {
+        if (ok) {
+          resolve({ bitmarkAccountNumber, pharse24Words });
+        } else {
+          reject(new Error('Can not recovery account from 24 words!'));
+        }
+      });
+    });
+  },
+
+  removeAccount: () => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.removeAccount((ok) => {
+        if (ok) {
+          resolve();
+        } else {
+          reject(new Error('Can not recovery account from 24 words!'));
+        }
+      });
+    });
   }
 
 };

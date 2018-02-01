@@ -151,10 +151,10 @@ export class SignInComponent extends React.Component {
       let inputtedWords = [];
       this.state.smallerList.forEach(item => inputtedWords.push(item.word));
       this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-      AppService.getAccountFrom24Words(inputtedWords).then(() => {
+      AppService.check24Words(inputtedWords).then(() => {
         this.setState({ preCheckResult: PreCheckResults.success });
       }).catch((error) => {
-        console.log('getAccountFrom24Words error: ', error);
+        console.log('check24Words error: ', error);
         this.setState({ preCheckResult: PreCheckResults.error });
       });
     } else {

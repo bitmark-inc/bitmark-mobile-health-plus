@@ -14,10 +14,10 @@ const {
   View,
 } = ReactNative;
 
-import { LoadingComponent } from './commons/components';
-import { HomeComponent } from './components/home';
-import { OnboardingComponent } from './components/onboarding';
-import { AppService } from './services';
+import { LoadingComponent } from './../commons/components';
+import { HomeComponent } from './../components/home';
+import { OnboardingComponent } from './onboarding';
+import { AppService } from './../services';
 
 Text.defaultProps.allowFontScaling = false;
 
@@ -44,6 +44,7 @@ class MainComponent extends Component {
     return (
       <View style={{ flex: 1 }}>
         <DisplayedComponent style={{ borderWidth: 1 }} screenProps={{
+          rootNavigation: this.props.navigation,
           refreshScaling: () => {
             if (this.appScaler) {
               this.appScaler.refreshScaling();

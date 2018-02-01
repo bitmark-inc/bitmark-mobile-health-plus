@@ -13,13 +13,23 @@ const getCurrentAccount = async () => {
   return await bitmarkSDK.accountInfo(config.network);
 };
 
+const check24Words = async (pharse24Words) => {
+  return await bitmarkSDK.try24Words(pharse24Words);
+};
+
 const getAccountFrom24Words = async (pharse24Words) => {
   return await bitmarkSDK.newAccountFrom24Words(pharse24Words);
 };
 
+const logOut = async () => {
+  return await bitmarkSDK.removeAccount();
+}
+
+
 const checkFaceTouchId = async () => {
   return await FaceTouchId.isSupported();
 }
+
 
 // ================================================================================================
 // ================================================================================================
@@ -28,8 +38,10 @@ const checkFaceTouchId = async () => {
 let AppService = {
   createNewAccount,
   getCurrentAccount,
+  check24Words,
   getAccountFrom24Words,
   checkFaceTouchId,
+  logOut,
 }
 
 export {

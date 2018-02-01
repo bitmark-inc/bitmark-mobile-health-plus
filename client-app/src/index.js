@@ -1,1 +1,1 @@
-export * from './bitmark-app.component'
+export * from './components';
