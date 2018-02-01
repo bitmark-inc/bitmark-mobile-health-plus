@@ -10,6 +10,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: ios.constant.headerSize.paddingTop,
+    backgroundColor: '#F5F5F5',
   },
   headerLeft: {
     width: 70,

@@ -35,7 +35,7 @@ let defaultWindowSize = Platform.select({
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle
-})
+});
 
 class DonateYourDataComponent extends React.Component {
   constructor(props) {

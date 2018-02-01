@@ -11,7 +11,7 @@ const headerPaddingTop = isIPhoneX ? 35 : 20;
 
 const studyCardWidth = windowWidth;
 const studyCardHeight = 220;
-const bottomTabsHeight = 55;
+const bottomTabsHeight = 56;
 const buttonHeight = 42;
 const autoCompleteHeight = 42;
 

@@ -1,14 +1,4 @@
-import { StyleSheet, Platform } from 'react-native'
-import {
-  ios,
-  android // TODO
-} from './../../../configs';
-
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
-
+import { StyleSheet } from 'react-native'
 export default StyleSheet.create({
   body: {
     flex: 1,
