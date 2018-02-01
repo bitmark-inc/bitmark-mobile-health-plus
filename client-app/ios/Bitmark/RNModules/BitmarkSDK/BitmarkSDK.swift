@@ -44,6 +44,18 @@ class BitmarkSDK: NSObject {
     }
   }
   
+  @objc(try24Words::)
+  func try24Words(_ pharse: [String], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+    do {
+      let account = try Account(recoverPhrase: pharse)
+      callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
+  
   @objc(accountInfo::)
   func accountInfo(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
@@ -57,6 +69,18 @@ class BitmarkSDK: NSObject {
         return
       }
       
+      print(e)
+      callback([false])
+    }
+  }
+  
+  @objc(removeAccount:)
+  func removeAccount(callback: @escaping RCTResponseSenderBlock) {
+    do {
+      try KeychainUtil.clearCore()
+      callback([true])
+    }
+    catch let e {
       print(e)
       callback([false])
     }
