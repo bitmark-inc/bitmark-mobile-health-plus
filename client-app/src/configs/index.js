@@ -11,7 +11,7 @@ let NETWORKS = {
 let config = {
   NETWORKS,
   platform: Platform.OS,
-  network: NETWORKS.devnet,
+  network: NETWORKS.testnet,
 };
 
 config.storage_server_url = 'https://storage.devel.bitmark.com';
