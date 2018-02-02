@@ -113,13 +113,31 @@ export default StyleSheet.create({
     color: 'white',
   },
 
+  pairedInfoArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  pairedAccountInfoArea: {
+    flexDirection: 'column',
+  },
+  pairedIconArea: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  pairedIcon: {
+    width: 23,
+    height: 23,
+    resizeMode: 'contain',
+  },
+
   pairedLabel: {
     fontFamily: 'Avenir Black',
     fontSize: 14,
     fontWeight: '900',
     lineHeight: 16,
     color: 'white',
-    width: convertWidth(324),
     marginLeft: 21,
     marginTop: 16,
   },
@@ -130,7 +148,6 @@ export default StyleSheet.create({
     fontWeight: '400',
     lineHeight: 16,
     color: 'white',
-    width: convertWidth(324),
     marginLeft: 21,
     marginTop: 5,
   },

@@ -4,13 +4,14 @@ import {
   ios,
   android // TODO
 } from './../../../../configs';
-
-const deviceSize = Dimensions.get('window');
-
 let constant = Platform.select({
   ios: ios.constant,
   android: android.constant
 });
+
+const deviceSize = Dimensions.get('window');
+
+
 
 export default StyleSheet.create({
   body: {
@@ -28,6 +29,4 @@ export default StyleSheet.create({
     borderWidth: 1,
     width: '100%',
   }
-
-
 });

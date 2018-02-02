@@ -13,6 +13,7 @@ export class MarketsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.reload = this.reload.bind(this);
+    this.openMarket = this.openMarket.bind(this);
     this.state = { user: null };
     this.reload();
   }
@@ -24,6 +25,12 @@ export class MarketsComponent extends React.Component {
     }).catch(error => {
       console.log('getCurrentUser error :', error);
     });
+  }
+
+  openMarket() {
+    AppService.generatePairedMarketURL().then(url => {
+      this.props.screenProps.homeNavigation.navigate('MarketViewer', { name: 'Totemic', url });
+    }).catch(error => console.log('generatePairedMarketURL error:', error));
   }
 
   render() {
@@ -56,14 +63,23 @@ export class MarketsComponent extends React.Component {
                   <Text style={marketsStyle.marketCardButtonItemText}>PAIR WITH EXISTING TOTEMIC ACCOUNT</Text>
                 </TouchableOpacity>
               </View>}
-              {this.state.user && this.state.user.markets.totemic.account_number && <View style={marketsStyle.marketCardButtonArea}>
-                <Text style={marketsStyle.pairedLabel}>{'WEB ACCOUNT PAIRED'}</Text>
-                <Text style={marketsStyle.pairedEmail}>{this.state.user.markets.totemic.email}</Text>
-              </View>}
+              {this.state.user && this.state.user.markets.totemic.account_number && <TouchableOpacity style={marketsStyle.marketCardButtonArea}
+                onPress={this.openMarket}>
+                <View style={marketsStyle.pairedInfoArea}>
+                  <View style={marketsStyle.pairedAccountInfoArea}>
+                    <Text style={marketsStyle.pairedLabel}>{'WEB ACCOUNT PAIRED'}</Text>
+                    <Text style={marketsStyle.pairedEmail}>{this.state.user.markets.totemic.email}</Text>
+                  </View>
+                  <View style={marketsStyle.pairedIconArea}>
+                    <Image style={marketsStyle.pairedIcon} source={require('./../../../../assets/imgs/open-market-icon.png')} />
+                  </View>
+                </View>
+
+              </TouchableOpacity>}
             </View>
           </View>
         </ScrollView>
-      </View>
+      </View >
     );
   }
 }

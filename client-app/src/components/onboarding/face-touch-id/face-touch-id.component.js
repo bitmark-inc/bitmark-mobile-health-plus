@@ -37,7 +37,7 @@ export class FaceTouchIdComponent extends React.Component {
             <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />
           </View>
           <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>
-            Touch/Face ID or a passcode is required to authorize your data donation.
+            Touch/Face ID or a passcode is required to authorize your transactions.
         </Text>
           <View style={faceTouchIdStyle.enableButtonArea}>
             <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
