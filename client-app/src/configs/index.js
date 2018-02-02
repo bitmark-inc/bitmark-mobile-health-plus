@@ -9,6 +9,7 @@ let NETWORKS = {
   livenet: 'livenet',
 }
 let config = {
+  NETWORKS,
   platform: Platform.OS,
   network: NETWORKS.devnet,
 };

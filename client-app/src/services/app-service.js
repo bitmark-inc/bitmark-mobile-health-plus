@@ -6,11 +6,13 @@ import { config } from './../configs';
 // ================================================================================================
 
 const createNewAccount = async () => {
-  return await bitmarkSDK.newAccount(config.network);
+  let network = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
+  return await bitmarkSDK.newAccount(network);
 };
 
 const getCurrentAccount = async () => {
-  return await bitmarkSDK.accountInfo(config.network);
+  let network = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
+  return await bitmarkSDK.accountInfo(network);
 };
 
 const check24Words = async (pharse24Words) => {
