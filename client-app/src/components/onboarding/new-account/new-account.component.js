@@ -37,7 +37,7 @@ let defaultStyle = Platform.select({
   android: androidDefaultStyle
 });
 
-class DonateYourDataComponent extends React.Component {
+class PropertyPrivateYourDataComponent extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -46,10 +46,10 @@ class DonateYourDataComponent extends React.Component {
       <View style={newAccountStyle.swipePage}>
         <View style={defaultStyle.header}></View>
         <Text style={[newAccountStyle.introductionTitle,]}>
-          {'DONATE YOUR DATA'.toUpperCase()}
+          {'Property IS Privacy'.toUpperCase()}
         </Text>
         <Text style={[newAccountStyle.introductionDescription,]}>
-          Your activity and personal health data is of value to public health researchers. Use Bitmark to donate your bitmarked data to help advance their studies.
+          <Text style={[newAccountStyle.introductionDescription,]}>You can bitmark any type of data to build your digital estate: photos, music, videos, location data, documents, etc. If it’s digital, it can be bitmarked.</Text>
         </Text>
         <View style={newAccountStyle.introductionTermPrivacy}>
           <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark</Text>
@@ -82,7 +82,7 @@ class DonateYourDataComponent extends React.Component {
     );
   }
 }
-DonateYourDataComponent.propTypes = {
+PropertyPrivateYourDataComponent.propTypes = {
   screenProps: PropTypes.shape({
     createBitmarkAccount: PropTypes.func,
     setShowPagination: PropTypes.func,
@@ -97,8 +97,8 @@ DonateYourDataComponent.propTypes = {
   })
 };
 
-let FullDonateYourDataComponent = StackNavigator({
-  DonateYourData: { screen: DonateYourDataComponent, },
+let FullPropertyPrivateYourDataComponent = StackNavigator({
+  DonateYourData: { screen: PropertyPrivateYourDataComponent, },
   BitmarkTerms: { screen: BitmarkTermsComponent, },
   BitmarkPrivacy: { screen: BitmarkPrivacyComponent, },
 }, {
@@ -221,10 +221,10 @@ export class NewAccountComponent extends React.Component {
       this.setState({
         processing: true
       });
-      AppService.createNewAccount().then(() => {
+      AppService.createNewUser().then(() => {
         this.props.navigation.navigate('FaceTouchId');
       }).catch((error) => {
-        console.log('createBitmarkAccount error :', error);
+        console.log('createNewUser error :', error);
         this.setState({
           processing: false
         });
@@ -280,7 +280,7 @@ export class NewAccountComponent extends React.Component {
                   />
                 </View>
                 <View style={[newAccountStyle.skipButtonArea]}>
-                  <TouchableOpacity style={[newAccountStyle.skipButton, { backgroundColor: 'white' }]} onPress={() => { this.swiper.scrollBy(4) }}>
+                  <TouchableOpacity style={[newAccountStyle.skipButton, { backgroundColor: 'white' }]} onPress={() => { this.swiper.scrollBy(3) }}>
                     <Text style={[newAccountStyle.skipButtonText, { color: '#0060F2', fontSize: 14, fontWeight: '400' }]}>SKIP</Text>
                   </TouchableOpacity>
                 </View>
@@ -314,27 +314,7 @@ export class NewAccountComponent extends React.Component {
                   }
                 }}
               />
-
-              <View style={newAccountStyle.swipePage}>
-                <View style={defaultStyle.header}></View>
-                <Text style={[newAccountStyle.introductionTitle,]}>
-                  {'Property IS Privacy'.toUpperCase()}
-                </Text>
-                <Text style={[newAccountStyle.introductionDescription, { width: 270 }]}>
-                  Bitmark gives you the power of privacy over your digital property. No third parties will have access to your data, including us. You choose who has access to your property.
-              </Text>
-                <View style={newAccountStyle.introductionImageArea}>
-                  <Video
-                    ref={(ref) => { this.player3 = ref }}
-                    rate={this.state.index === 3 ? 1 : 0}
-                    source={require('./../../../../assets/videos/Property-Privacy.mp4')}
-                    resizeMode="contain"
-                    style={newAccountStyle.introductionImage}
-                  />
-                </View>
-              </View>
-
-              <FullDonateYourDataComponent screenProps={{
+              <FullPropertyPrivateYourDataComponent screenProps={{
                 createBitmarkAccount: createBitmarkAccount,
                 setShowPagination: (show) => {
                   this.setState({

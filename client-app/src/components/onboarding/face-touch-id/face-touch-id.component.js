@@ -6,7 +6,7 @@ import {
   Linking,
   // NativeModules,
 } from 'react-native'
-import { AppService } from './../../../services/index';
+import { CommonService } from './../../../services/index';
 
 import { AppScaleComponent } from './../../../commons/components';
 import faceTouchIdStyle from './face-touch-id.component.style';
@@ -21,7 +21,7 @@ export class FaceTouchIdComponent extends React.Component {
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'Main', params: { justCreatedBitmarkAccount: true } })]
     });
-    AppService.checkFaceTouchId().then(() => {
+    CommonService.checkFaceTouchId().then(() => {
       this.props.screenProps.rootNavigation.dispatch(resetMainPage);
     }).catch(error => {
       console.log('checkFaceTouchId erorr :', error);

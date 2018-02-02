@@ -7,8 +7,9 @@ import {
 import { NavigationActions } from 'react-navigation';
 
 import { AccountComponent } from './account';
+import { MarketsComponent } from './markets';
 
-import homeStyle from './home.component.style';
+import userStyle from './user.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../commons/styles';
 
 import { AppService } from "./../../services";
@@ -25,17 +26,18 @@ const MainTabs = {
 };
 
 
-export class HomeComponent extends React.Component {
+export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.logOut = this.logOut.bind(this);
+    this.logout = this.logout.bind(this);
     this.state = {
       mainTab: MainTabs.properties,
     };
+    console.log('UserComponent props:', props);
   }
 
-  logOut() {
-    AppService.logOut().then(() => {
+  logout() {
+    AppService.doLogout().then(() => {
       const resetMainPage = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Main', params: { justCreatedBitmarkAccount: true } })]
@@ -48,37 +50,40 @@ export class HomeComponent extends React.Component {
 
   render() {
     return (
-      <View style={homeStyle.body}>
+      <View style={userStyle.body}>
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>{this.state.mainTab}</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
 
-        {/* {this.state.mainTab === MainTabs.properties}
-        {this.state.mainTab === MainTabs.markets} */}
+        {/* {this.state.mainTab === MainTabs.properties} */}
+        {this.state.mainTab === MainTabs.markets && <MarketsComponent screenProps={{
+          homeNavigation: this.props.navigation,
+        }} />}
         {this.state.mainTab === MainTabs.account && <AccountComponent screenProps={{
-          logOut: this.logOut
+          homeNavigation: this.props.navigation,
+          logout: this.logout
         }} />}
 
-        <View style={homeStyle.bottomTabArea}>
-          <TouchableOpacity style={homeStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.properties })}>
-            <Image style={homeStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.properties
+        <View style={userStyle.bottomTabArea}>
+          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.properties })}>
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.properties
               ? require('./../../../assets/imgs/properties-icon-enable.png')
               : require('./../../../assets/imgs/properties-icon-disable.png')} />
-            <Text style={[homeStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.properties ? '#0060F2' : '#999999' }]}>{MainTabs.properties}</Text>
+            <Text style={[userStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.properties ? '#0060F2' : '#999999' }]}>{MainTabs.properties}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={homeStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.markets })}>
-            <Image style={homeStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.markets
+          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.markets })}>
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.markets
               ? require('./../../../assets/imgs/markets-icon-enable.png')
               : require('./../../../assets/imgs/markets-icon-disable.png')} />
-            <Text style={[homeStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.markets ? '#0060F2' : '#999999' }]}>{MainTabs.markets}</Text>
+            <Text style={[userStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.markets ? '#0060F2' : '#999999' }]}>{MainTabs.markets}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={homeStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.account })}>
-            <Image style={homeStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.account
+          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.account })}>
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.account
               ? require('./../../../assets/imgs/account-icon-enable.png')
               : require('./../../../assets/imgs/account-icon-disable.png')} />
-            <Text style={[homeStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.account ? '#0060F2' : '#999999' }]}>{MainTabs.account}</Text>
+            <Text style={[userStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.account ? '#0060F2' : '#999999' }]}>{MainTabs.account}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -86,7 +91,7 @@ export class HomeComponent extends React.Component {
   }
 }
 
-HomeComponent.propTypes = {
+UserComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,

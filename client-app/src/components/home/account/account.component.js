@@ -22,7 +22,7 @@ export class AccountComponent extends React.Component {
       accountNumber: '',
       copyText: 'COPY'
     };
-    AppService.getCurrentAccount().then((info) => {
+    AppService.getCurrentUser().then((info) => {
       this.setState({ accountNumber: info.bitmarkAccountNumber });
     }).catch((error) => {
       console.log('get current account error :', error);
@@ -75,7 +75,7 @@ export class AccountComponent extends React.Component {
             <TouchableOpacity style={accountStyle.accountWriteDownButton}>
               <Text style={accountStyle.accountWriteDownButtonText}>{'WRITE DOWN RECOVERY PHRASE »'.toUpperCase()} </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.props.screenProps.logOut}>
+            <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.props.screenProps.logout}>
               <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device  »'.toUpperCase()} </Text>
             </TouchableOpacity>
           </View>}
@@ -91,7 +91,7 @@ AccountComponent.propTypes = {
     goBack: PropTypes.func,
   }),
   screenProps: PropTypes.shape({
-    logOut: PropTypes.func,
+    logout: PropTypes.func,
   }),
 
 }

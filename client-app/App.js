@@ -1,3 +1,8 @@
+
+import { Text } from 'react-native';
+// YellowBox.ignoreWarnings(['Warning: ...']);
+Text.defaultProps.allowFontScaling = false;
+
 import { BitmarkAppComponent } from './src';
 export default BitmarkAppComponent;
 

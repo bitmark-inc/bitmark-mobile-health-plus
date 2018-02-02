@@ -14,7 +14,7 @@ import signStyle from './sign-in.component.style';
 import { AutoCompleteKeyboardInput } from './../../../commons/components';
 import { android, ios } from './../../../configs';
 import { dictionary24Words } from './../../../utils';
-import { AppService } from './../../../services';
+import { AppService, AccountService } from './../../../services';
 
 let deviceSize = Dimensions.get('window');
 let constant = Platform.select({ ios: ios.constant, android: android.constant });
@@ -24,8 +24,8 @@ let PreCheckResults = {
   error: 'RETRY'
 };
 
-// let testWords = ['abstract', 'fault', 'margin', 'improve', 'quantum', 'observe', 'invite', 'session', 'cluster', 'west', 'oven', 'acquire',
-//   'burger', 'delay', 'spirit', 'body', 'fine', 'gift', 'acid', 'soldier', 'goddess', 'differ', 'pledge', 'traffic',];
+let testWords = ['abstract', 'fault', 'margin', 'improve', 'quantum', 'observe', 'invite', 'session', 'cluster', 'west', 'oven', 'acquire',
+  'burger', 'delay', 'spirit', 'body', 'fine', 'gift', 'acid', 'soldier', 'goddess', 'differ', 'pledge', 'traffic',];
 
 export class SignInComponent extends React.Component {
 
@@ -46,14 +46,14 @@ export class SignInComponent extends React.Component {
       if (index < 12) {
         smallerList.push({
           key: index,
-          // word: testWords[index],
-          word: '',
+          word: testWords[index],
+          // word: '',
         });
       } else {
         biggerList.push({
           key: index,
-          // word: testWords[index],
-          word: '',
+          word: testWords[index],
+          // word: '',
         });
       }
     }
@@ -67,7 +67,7 @@ export class SignInComponent extends React.Component {
       dataSource: dictionary24Words,
       keyBoardHeight: 0,
     };
-    // setTimeout(this.checkStatusInputing, 200);
+    setTimeout(this.checkStatusInputing, 200);
   }
 
   onChangeText(index, text) {
@@ -152,7 +152,7 @@ export class SignInComponent extends React.Component {
       let inputtedWords = [];
       this.state.smallerList.forEach(item => inputtedWords.push(item.word));
       this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-      AppService.check24Words(inputtedWords).then(() => {
+      AccountService.check24Words(inputtedWords).then(() => {
         this.setState({ preCheckResult: PreCheckResults.success });
       }).catch((error) => {
         console.log('check24Words error: ', error);
@@ -199,10 +199,10 @@ export class SignInComponent extends React.Component {
     let inputtedWords = [];
     this.state.smallerList.forEach(item => inputtedWords.push(item.word));
     this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-    AppService.getAccountFrom24Words(inputtedWords).then(() => {
+    AppService.doLogin(inputtedWords).then(() => {
       this.props.navigation.navigate('FaceTouchId');
     }).catch((error) => {
-      console.log('getAccountFrom24Words error: ', error);
+      console.log('login error: ', error);
       this.setState({ preCheckResult: PreCheckResults.error });
     });
   }
@@ -221,7 +221,7 @@ export class SignInComponent extends React.Component {
             </TouchableOpacity>
           </View>
 
-          <ScrollView>
+          <ScrollView scrollEnabled={this.state.keyBoardHeight === 0}>
             <View style={signStyle.mainContent}>
               <Text style={[signStyle.writeRecoveryPhraseContentMessage,]}>
                 Please type all 24 words of your recovery phrase in the exact sequence below:

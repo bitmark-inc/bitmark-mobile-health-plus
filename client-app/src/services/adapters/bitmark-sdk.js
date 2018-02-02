@@ -43,7 +43,7 @@ const bitmarkSDK = {
         if (ok) {
           resolve({ bitmarkAccountNumber, pharse24Words });
         } else {
-          reject(new Error('Can not recovery account from 24 words!'));
+          reject(new Error('Can not try 24 words!'));
         }
       });
     });
@@ -55,11 +55,23 @@ const bitmarkSDK = {
         if (ok) {
           resolve();
         } else {
-          reject(new Error('Can not recovery account from 24 words!'));
+          reject(new Error('Can not remove account!'));
         }
       });
     });
-  }
+  },
+
+  signMessage: (message, network) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.sign({ message, network }, (ok, signature) => {
+        if (ok) {
+          resolve(signature);
+        } else {
+          reject(new Error('Can not sign message!'));
+        }
+      });
+    });
+  },
 
 };
 export { bitmarkSDK };

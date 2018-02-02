@@ -1,0 +1,1 @@
+export * from './market-login.component';

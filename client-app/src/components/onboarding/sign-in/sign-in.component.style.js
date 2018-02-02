@@ -74,7 +74,7 @@ export default StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontSize: 15,
     fontWeight: '900',
-    marginTop: 18,
+    marginTop: 10,
   },
   recoveryPhraseTestMessage: {
     fontFamily: 'Avenir Light',
@@ -82,7 +82,7 @@ export default StyleSheet.create({
     fontWeight: '300',
     textAlign: 'center',
     width: 335,
-    marginTop: 11,
+    marginTop: 5,
   },
   recoveringMessage: {
     fontFamily: 'Avenir Black',
@@ -101,7 +101,7 @@ export default StyleSheet.create({
     ],
   },
   submitButton: {
-    marginTop: 40,
+    marginTop: 20,
     minHeight: 42,
     width: 309,
     flexDirection: 'row',

@@ -9,7 +9,6 @@ const {
   // Alert,
   // AppState,
   // NetInfo,
-  Text,
   // PushNotificationIOS,
   View,
 } = ReactNative;
@@ -19,8 +18,6 @@ import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
 import { AppService } from './../services';
 
-Text.defaultProps.allowFontScaling = false;
-
 class MainComponent extends Component {
   constructor(props) {
     super(props);
@@ -28,8 +25,9 @@ class MainComponent extends Component {
       user: null,
     };
 
-    AppService.getCurrentAccount().then((user) => {
+    AppService.getCurrentUser().then((user) => {
       this.setState({ user });
+      console.log('current user :', user);
     }).catch(error => {
       console.log(error);
       this.setState({ user: {} })

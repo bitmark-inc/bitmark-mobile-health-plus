@@ -1,49 +1,58 @@
-import { bitmarkSDK, FaceTouchId } from './adapters'
-import { config } from './../configs';
+
+import { CommonService } from './common-service';
+import { AccountService } from './account-service';
 
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
 
-const createNewAccount = async () => {
-  let network = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
-  return await bitmarkSDK.newAccount(network);
+const getCurrentUser = async () => {
+  return await CommonService.getLocalData(CommonService.app_local_data_key);
 };
 
-const getCurrentAccount = async () => {
-  let network = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
-  return await bitmarkSDK.accountInfo(network);
+const createNewUser = async () => {
+  let userInfo = await AccountService.createNewAccount();
+  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  return userInfo;
 };
 
-const check24Words = async (pharse24Words) => {
-  return await bitmarkSDK.try24Words(pharse24Words);
+const doLogin = async (phase24Words) => {
+  let userInfo = AccountService.accessBy24Words(phase24Words);
+  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  return userInfo;
 };
 
-const getAccountFrom24Words = async (pharse24Words) => {
-  return await bitmarkSDK.newAccountFrom24Words(pharse24Words);
+const doLogout = async () => {
+  await AccountService.logout();
+  await CommonService.setLocalData(CommonService.app_local_data_key, {});
 };
 
-const logOut = async () => {
-  return await bitmarkSDK.removeAccount();
-}
+const doPairMarketAccount = async (token) => {
+  //TODO 
+  let pairUrl = 'http://192.168.0.100:8088/s/api/qrcode';
+  let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
 
-
-const checkFaceTouchId = async () => {
-  return await FaceTouchId.isSupported();
-}
-
+  let marketAccountInfo = await AccountService.pairtMarketAccounut(userInfo.bitmarkAccountNumber, token, pairUrl);
+  userInfo.markets = {
+    'totemic': {
+      name: marketAccountInfo.name,
+      email: marketAccountInfo.email,
+      account_number: marketAccountInfo.account_number,
+    }
+  }
+  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  return userInfo;
+};
 
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
-
 let AppService = {
-  createNewAccount,
-  getCurrentAccount,
-  check24Words,
-  getAccountFrom24Words,
-  checkFaceTouchId,
-  logOut,
+  getCurrentUser,
+  createNewUser,
+  doLogin,
+  doLogout,
+  doPairMarketAccount,
 }
 
 export {

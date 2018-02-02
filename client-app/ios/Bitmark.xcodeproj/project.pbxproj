@@ -1532,7 +1532,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios;
 				PRODUCT_NAME = Bitmark;
-				PROVISIONING_PROFILE = "6dacb75f-df2e-42ca-be02-2b208af692c0";
+				PROVISIONING_PROFILE = "6e49f150-f986-44b8-b957-bcb727ac2c65";
 				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Distribution";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
