@@ -16,21 +16,19 @@ struct KeychainUtil {
   static func getKeychain() -> Keychain {
     return Keychain(service: "com.bitmark.bitmarkios.account",
                     accessGroup: "Z5CE7A3A7N.com.bitmark.bitmarkios") // Z5CE7A3A7N is the app prefix
+            .accessibility(.whenPasscodeSetThisDeviceOnly, authenticationPolicy: .userPresence)
+            .authenticationPrompt("Allow bitmark app access to your account")
   }
   
   static func saveCore(_ core: Data) throws {
-    let keychain = getKeychain()
-    try keychain.accessibility(.whenPasscodeSetThisDeviceOnly, authenticationPolicy: .userPresence)
-    .set(core, key: bitmarkSeedCoreKey)
+    return try getKeychain().set(core, key: bitmarkSeedCoreKey)
   }
   
   static func getCore() throws -> Data? {
-    let keychain = getKeychain()
-    return try keychain.authenticationPrompt("Allow bitmark app access to your account")
-    .getData(bitmarkSeedCoreKey)
+    return try getKeychain().getData(bitmarkSeedCoreKey)
   }
   
   static func clearCore() throws {
-    try getKeychain().remove(bitmarkSeedCoreKey)
+    return try getKeychain().remove(bitmarkSeedCoreKey)
   }
 }
