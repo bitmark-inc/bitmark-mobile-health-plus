@@ -6,7 +6,7 @@ import { AccountService } from './account-service';
 // ================================================================================================
 // ================================================================================================
 // TODO
-let totemicMarketPairUrl = 'http://192.168.0.100:8088';
+let totemicMarketPairUrl = 'http://192.168.0.101:8088';
 
 const getCurrentUser = async () => {
   return await CommonService.getLocalData(CommonService.app_local_data_key);
@@ -19,8 +19,7 @@ const createNewUser = async () => {
 };
 
 const doLogin = async (phase24Words) => {
-  let userInfo = AccountService.accessBy24Words(phase24Words);
-
+  let userInfo = await AccountService.accessBy24Words(phase24Words);
   //TODO
   let marketAccountInfo = await AccountService.checkPairingStatus(userInfo.bitmarkAccountNumber, totemicMarketPairUrl + '/s/api/mobile/pairing-account');
   userInfo.markets = {

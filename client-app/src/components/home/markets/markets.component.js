@@ -45,12 +45,12 @@ export class MarketsComponent extends React.Component {
                   <Text style={marketsStyle.marketCardTitleMaketLink}>https://totemic.co</Text>
                 </View>
               </View>
-              {!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
-                !this.state.user.markets.totemic.account_number && <Text style={marketsStyle.marketCardMessage}>
+              {(!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
+                !this.state.user.markets.totemic.account_number) && <Text style={marketsStyle.marketCardMessage}>
                   Blockchain-based, limited edition, collector cards. Totemic empowers content creators, fans and collectors with a completely new kind of digital asset.
               </Text>}
-              {!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
-                !this.state.user.markets.totemic.account_number && <View style={marketsStyle.marketCardButtonArea}>
+              {(!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
+                !this.state.user.markets.totemic.account_number) && <View style={marketsStyle.marketCardButtonArea}>
                   <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => { this.props.screenProps.homeNavigation.navigate('MarketLogin') }}>
                     <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-create-account.png')} />
                     <Text style={marketsStyle.marketCardButtonItemText}>CREATE TOTEMIC ACCOUNT</Text>

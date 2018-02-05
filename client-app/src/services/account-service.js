@@ -51,7 +51,7 @@ const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, pairUrl) => {
 };
 
 const checkPairingStatus = (loaclBitmarkAccountNumber, checkPairingStatusUrl) => {
-  let timestamp = moment().toDate().getTime();
+  let timestamp = moment().toDate().getTime().toString();
   return new Promise((resolve, reject) => {
     bitmarkSDK.signMessage(timestamp, bitmarkNetwork).then(signature => {
       let urlCheck = checkPairingStatusUrl += `?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signature}`;
@@ -90,6 +90,48 @@ const generatePairedMarketURL = (loaclBitmarkAccountNumber, generateURL) => {
   });
 };
 
+//TODO for totemic
+const generateCodeForSignInMarket = (marketServerUrl) => {
+  return new Promise((resolve, reject) => {
+    fetch(marketServerUrl + '/s/api/mobile/login', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => response.json()).then((data) => {
+      resolve(data.code || null);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+};
+
+const loginMarket = async (marketServerUrl, loaclBitmarkAccountNumber) => {
+  return new Promise((resolve, reject) => {
+    let codeResult = '';
+    generateCodeForSignInMarket(marketServerUrl).then((code) => {
+      codeResult = code;
+      return bitmarkSDK.signMessage(code, bitmarkNetwork);
+    }).then(signature => {
+      return fetch(marketServerUrl + '/s/api/mobile/login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          account_number: loaclBitmarkAccountNumber,
+          code: codeResult,
+          signature: signature,
+        })
+      })
+    }).then((response) => response.json()).then((data) => {
+      resolve(data.code || null);
+    }).catch(reject);
+  });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -103,6 +145,7 @@ let AccountService = {
   pairtMarketAccounut,
   checkPairingStatus,
   generatePairedMarketURL,
+  loginMarket,
 }
 
 export {
