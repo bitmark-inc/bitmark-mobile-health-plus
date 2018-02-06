@@ -153,7 +153,7 @@ const getBalanceOnMarket = (marketServerUrl) => {
         'Content-Type': 'application/json',
       }
     }).then((response) => response.json()).then((data) => {
-      let ethData = data.fund.eth;
+      let ethData = (data && data.fund) ? data.fund.eth : {};
       let balance = ethData.balance || 0;
       let pending = ethData.pending || 0;
       resolve({ balance, pending });

@@ -29,12 +29,13 @@ export class AccountDetailComponent extends React.Component {
     this.state = {
       subtab: SubTabs.balance,
       accountNumber: '',
+      markets: {},
       copyText: 'COPY',
       balance: 0,
       balanceHistories: [],
     };
     AppService.getCurrentUser().then((info) => {
-      this.setState({ accountNumber: info.bitmarkAccountNumber });
+      this.setState({ accountNumber: info.bitmarkAccountNumber, markets: info.markets });
     }).catch((error) => {
       console.log('get current account error :', error);
     });
@@ -85,43 +86,44 @@ export class AccountDetailComponent extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView style={[accountStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
-          {this.state.subtab === SubTabs.balance && <View style={accountStyle.contentSubTab}>
-            <Image style={accountStyle.marketCardTitleIcon} source={require('./../../../../assets/imgs/totemic-market.png')} />
-            <View style={accountStyle.marketBalance}>
-              <View style={accountStyle.marketBalanceLabel}>
-                <Image style={accountStyle.marketBalanceIcon} source={require('./../../../../assets/imgs/ETH-alt.png')} />
-                <Text style={accountStyle.marketBalanceName}>ETH</Text>
-                <Text style={accountStyle.marketBalanceNameFull}>(Ethereum)</Text>
+          {this.state.subtab === SubTabs.balance && this.state.us && this.state.markets && this.state.markets.totemic && this.state.markets.totemic.account_number &&
+            <View style={accountStyle.contentSubTab}>
+              <Image style={accountStyle.marketCardTitleIcon} source={require('./../../../../assets/imgs/totemic-market.png')} />
+              <View style={accountStyle.marketBalance}>
+                <View style={accountStyle.marketBalanceLabel}>
+                  <Image style={accountStyle.marketBalanceIcon} source={require('./../../../../assets/imgs/ETH-alt.png')} />
+                  <Text style={accountStyle.marketBalanceName}>ETH</Text>
+                  <Text style={accountStyle.marketBalanceNameFull}>(Ethereum)</Text>
+                </View>
+                <Text style={accountStyle.marketBalanceValue}>{Math.floor(this.state.balance / 1E4) / 1E5}</Text>
               </View>
-              <Text style={accountStyle.marketBalanceValue}>{Math.floor(this.state.balance / 1E4) / 1E5}</Text>
-            </View>
-            <View style={accountStyle.marketBalanceButtonArea}>
-              <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => { }}>
-                <Text style={accountStyle.marketBalanceButtonText}>DEPOSIT</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => { }}>
-                <Text style={accountStyle.marketBalanceButtonText}>WITHDRAWAL</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={accountStyle.marketBalanceHistory}>
-              <Text style={accountStyle.marketBalanceHistoryLabel}>Balance History </Text>
-              <FlatList data={this.state.balanceHistories}
-                scrollEnabled={false}
-                extraData={this.state}
-                renderItem={({ item }) => {
-                  console.log('item :', item);
-                  return (
-                    <View style={accountStyle.marketBalanceHistoryItem}>
-                      <Text style={accountStyle.marketBalanceHistoryItemAction}>{item.history.action}</Text>
-                      <Text style={accountStyle.marketBalanceHistoryItemAmount}>{item.history.data.currency.toUpperCase() + ' ' + (Math.floor(item.history.data.amount / 1E4) / 1E5)}</Text>
-                      <Text style={accountStyle.marketBalanceHistoryItemCreatedAt}>{moment(item.history.createdAt).format('YYYY-MM-DD HH:mm:ss')}</Text>
-                      <Text style={accountStyle.marketBalanceHistoryItemStatus}>{item.history.status.toUpperCase()}</Text>
-                    </View>
-                  )
-                }}
-              />
-            </View>
-          </View>}
+              <View style={accountStyle.marketBalanceButtonArea}>
+                <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => { }}>
+                  <Text style={accountStyle.marketBalanceButtonText}>DEPOSIT</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => { }}>
+                  <Text style={accountStyle.marketBalanceButtonText}>WITHDRAWAL</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={accountStyle.marketBalanceHistory}>
+                <Text style={accountStyle.marketBalanceHistoryLabel}>Balance History </Text>
+                <FlatList data={this.state.balanceHistories}
+                  scrollEnabled={false}
+                  extraData={this.state}
+                  renderItem={({ item }) => {
+                    console.log('item :', item);
+                    return (
+                      <View style={accountStyle.marketBalanceHistoryItem}>
+                        <Text style={accountStyle.marketBalanceHistoryItemAction}>{item.history.action}</Text>
+                        <Text style={accountStyle.marketBalanceHistoryItemAmount}>{item.history.data.currency.toUpperCase() + ' ' + (Math.floor(item.history.data.amount / 1E4) / 1E5)}</Text>
+                        <Text style={accountStyle.marketBalanceHistoryItemCreatedAt}>{moment(item.history.createdAt).format('YYYY-MM-DD HH:mm:ss')}</Text>
+                        <Text style={accountStyle.marketBalanceHistoryItemStatus}>{item.history.status.toUpperCase()}</Text>
+                      </View>
+                    )
+                  }}
+                />
+              </View>
+            </View>}
 
           {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
             <Text style={accountStyle.accountNumberLabel}>My Bitmark Account Number</Text>
@@ -146,7 +148,7 @@ export class AccountDetailComponent extends React.Component {
             </TouchableOpacity>
           </View >}
         </ScrollView>
-      </View>
+      </View >
     );
   }
 }
