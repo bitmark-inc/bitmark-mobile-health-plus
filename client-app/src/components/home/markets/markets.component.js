@@ -1,13 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView,
-  Image,
+  View, Text, TouchableOpacity, ScrollView, Image,
+  Platform,
 } from 'react-native';
 
 import { AppService } from './../../../services';
 
 import marketsStyle from './markets.component.style';
+import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
+
+let defaultStyle = Platform.select({
+  ios: iosDefaultStyle,
+  android: androidDefaultStyle
+});
+
+
 
 export class MarketsComponent extends React.Component {
   constructor(props) {
@@ -27,14 +35,19 @@ export class MarketsComponent extends React.Component {
   }
 
   openMarket() {
-    AppService.generatePairedMarketURL().then(url => {
+    AppService.getMarketUrl().then(url => {
       this.props.screenProps.homeNavigation.navigate('MarketViewer', { name: 'Totemic', url });
-    }).catch(error => console.log('generatePairedMarketURL error:', error));
+    }).catch(error => console.log('getMarketUrl error:', error));
   }
 
   render() {
     return (
       <View style={marketsStyle.body}>
+        <View style={defaultStyle.header}>
+          <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
+          <Text style={defaultStyle.headerTitle}>Markets</Text>
+          <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
+        </View>
         <ScrollView style={[marketsStyle.scrollSubTabArea]}>
           <View style={marketsStyle.contentSubTab}>
             <View style={marketsStyle.marketCardArea}>

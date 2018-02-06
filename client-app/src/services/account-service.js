@@ -25,7 +25,8 @@ const accessBy24Words = async (pharse24Words) => {
 const logout = async () => {
   return await bitmarkSDK.removeAccount();
 }
-
+// ================================================================================================
+// ================================================================================================
 const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, pairUrl) => {
   return new Promise((resolve, reject) => {
     bitmarkSDK.signMessage(token, bitmarkNetwork).then(signature => {
@@ -70,22 +71,30 @@ const checkPairingStatus = (loaclBitmarkAccountNumber, checkPairingStatusUrl) =>
   });
 };
 
-const generatePairedMarketURL = (loaclBitmarkAccountNumber, generateURL) => {
-  let timestamp = moment().toDate().getTime();
+const getLocalBitamrks = (loaclBitmarkAccountNumber) => {
   return new Promise((resolve, reject) => {
-    bitmarkSDK.signMessage(timestamp, bitmarkNetwork).then(signature => {
-      let urlCheck = generateURL += `?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signature}`;
-      fetch(urlCheck, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      }).then((response) => response.json()).then((data) => {
-        resolve(data.user || {});
-      }).catch((error) => {
-        reject(error);
-      });
+    fetch(config.get_way_server_url + `/v1/bitmarks?owner=${loaclBitmarkAccountNumber}&asset=true`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => response.json()).then((data) => {
+      resolve(data || {});
+    }).catch(reject);
+  });
+};
+
+const getMarketBitmarks = (url) => {
+  return new Promise((resolve, reject) => {
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => response.json()).then((data) => {
+      resolve(data || {});
     }).catch(reject);
   });
 };
@@ -107,7 +116,7 @@ const generateCodeForSignInMarket = (marketServerUrl) => {
   });
 };
 
-const loginMarket = async (marketServerUrl, loaclBitmarkAccountNumber) => {
+const loginMarket = (marketServerUrl, loaclBitmarkAccountNumber) => {
   return new Promise((resolve, reject) => {
     let codeResult = '';
     generateCodeForSignInMarket(marketServerUrl).then((code) => {
@@ -132,6 +141,41 @@ const loginMarket = async (marketServerUrl, loaclBitmarkAccountNumber) => {
   });
 };
 
+const getBalanceOnMarket = (marketServerUrl) => {
+  return new Promise((resolve, reject) => {
+    fetch(marketServerUrl + '/s/api/balance', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => response.json()).then((data) => {
+      let ethData = data.fund.eth;
+      let balance = ethData.balance || 0;
+      let pending = ethData.pending || 0;
+      resolve({ balance, pending });
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+};
+
+const getBalanceHistoryOnMarket = (marketServerUrl) => {
+  return new Promise((resolve, reject) => {
+    fetch(marketServerUrl + '/s/api/balance-history', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => response.json()).then((data) => {
+      resolve(data.history || []);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -144,8 +188,11 @@ let AccountService = {
   logout,
   pairtMarketAccounut,
   checkPairingStatus,
-  generatePairedMarketURL,
   loginMarket,
+  getLocalBitamrks,
+  getMarketBitmarks,
+  getBalanceOnMarket,
+  getBalanceHistoryOnMarket,
 }
 
 export {

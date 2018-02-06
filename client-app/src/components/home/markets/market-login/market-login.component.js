@@ -4,7 +4,6 @@ import {
   View, Text, TouchableOpacity, Image,
   Platform,
 } from 'react-native';
-import Camera from 'react-native-camera';
 
 import marketLoginStyle from './market-login.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
@@ -33,12 +32,6 @@ export class MarketLoginComponent extends React.Component {
           <Text style={defaultStyle.headerTitle}></Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
-        <Camera
-          ref={(cam) => this.camera = cam}
-          onBarCodeRead={this.onBarCodeRead.bind(this)}
-          style={marketLoginStyle.preview}
-          aspect={Camera.constants.Aspect.fill}>
-        </Camera>
       </View>
     );
   }

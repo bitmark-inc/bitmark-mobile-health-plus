@@ -1,19 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import {
   View, Text, TouchableOpacity, ScrollView,
   Clipboard,
+  Platform,
 } from 'react-native';
 
+import { AppService } from "./../../../services";
 import accountStyle from './account.component.style';
 
-import { AppService } from "./../../../services";
+import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
+
+let defaultStyle = Platform.select({
+  ios: iosDefaultStyle,
+  android: androidDefaultStyle
+});
 
 const SubTabs = {
   balance: 'Balance',
   settings: 'Settings',
 }
-export class AccountComponent extends React.Component {
+export class AccountDetailComponent extends React.Component {
   constructor(props) {
     super(props);
     this.switchSubtab = this.switchSubtab.bind(this);
@@ -26,7 +34,7 @@ export class AccountComponent extends React.Component {
       this.setState({ accountNumber: info.bitmarkAccountNumber });
     }).catch((error) => {
       console.log('get current account error :', error);
-    })
+    });
   }
 
   switchSubtab(subtab) {
@@ -36,6 +44,11 @@ export class AccountComponent extends React.Component {
   render() {
     return (
       <View style={accountStyle.body}>
+        <View style={defaultStyle.header}>
+          <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
+          <Text style={defaultStyle.headerTitle}>Account</Text>
+          <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
+        </View>
         <View style={accountStyle.subTabArea}>
           <TouchableOpacity style={accountStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.balance)}>
             <View style={accountStyle.subTabButtonArea}>
@@ -72,20 +85,21 @@ export class AccountComponent extends React.Component {
             </View>
             <Text style={accountStyle.accountMessage}>To protect your privacy, you are identified in the Bitmark system by an anonymous public account number. You can safely share this public account number with others without compromising your account security.</Text>
 
-            <TouchableOpacity style={accountStyle.accountWriteDownButton}>
+            <TouchableOpacity style={accountStyle.accountWriteDownButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: false }) }}>
               <Text style={accountStyle.accountWriteDownButtonText}>{'WRITE DOWN RECOVERY PHRASE »'.toUpperCase()} </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.props.screenProps.logout}>
+            {/* <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.props.screenProps.logout}> */}
+            <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}>
               <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device  »'.toUpperCase()} </Text>
             </TouchableOpacity>
-          </View>}
+          </View >}
         </ScrollView>
       </View>
     );
   }
 }
 
-AccountComponent.propTypes = {
+AccountDetailComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
@@ -93,5 +107,4 @@ AccountComponent.propTypes = {
   screenProps: PropTypes.shape({
     logout: PropTypes.func,
   }),
-
 }

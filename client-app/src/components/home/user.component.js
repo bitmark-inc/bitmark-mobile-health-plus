@@ -2,22 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, Image,
-  Platform,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
 import { AccountComponent } from './account';
 import { MarketsComponent } from './markets';
-
-import userStyle from './user.component.style';
-import { androidDefaultStyle, iosDefaultStyle } from './../../commons/styles';
+import { PropertiesComponent } from './properties';
 
 import { AppService } from "./../../services";
 
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
+import userStyle from './user.component.style';
 
 const MainTabs = {
   properties: 'Properties',
@@ -51,20 +45,19 @@ export class UserComponent extends React.Component {
   render() {
     return (
       <View style={userStyle.body}>
-        <View style={defaultStyle.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>{this.state.mainTab}</Text>
-          <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
-        </View>
-
-        {/* {this.state.mainTab === MainTabs.properties} */}
+        {this.state.mainTab === MainTabs.properties && <PropertiesComponent screenProps={{
+          homeNavigation: this.props.navigation,
+        }} />}
         {this.state.mainTab === MainTabs.markets && <MarketsComponent screenProps={{
           homeNavigation: this.props.navigation,
         }} />}
-        {this.state.mainTab === MainTabs.account && <AccountComponent screenProps={{
-          homeNavigation: this.props.navigation,
-          logout: this.logout
-        }} />}
+        {this.state.mainTab === MainTabs.account && <View style={{ width: '100%', flex: 1, }}>
+          <AccountComponent screenProps={{
+            homeNavigation: this.props.navigation,
+            logout: this.logout
+          }} />
+        </View>
+        }
 
         <View style={userStyle.bottomTabArea}>
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.properties })}>
