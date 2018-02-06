@@ -84,6 +84,11 @@ public struct Account {
         let actualMessage = action.rawValue + "|" + message
         return try authKey.sign(message: actualMessage)
     }
+    
+    // TODO: Discuss and remove this function
+    public func riskySign(withMessage message: String) throws -> Data {
+        return try authKey.sign(message:message)
+    }
 }
 
 internal extension Account {
