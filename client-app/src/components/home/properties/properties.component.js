@@ -29,17 +29,28 @@ export class PropertiesComponent extends React.Component {
     this.state = {
       subtab: SubTabs.local,
       accountNumber: '',
-      copyText: 'COPY'
+      copyText: 'COPY',
+      data: {
+        localAssets: [],
+        marketAssets: [],
+      }
     };
     AppService.getUserBitamrk().then((data) => {
-      console.log('getUserBitamrk :', data);
+      this.setState({ data });
     }).catch((error) => {
       console.log('getUserBitamrk error :', error);
     });
   }
 
   switchSubtab(subtab) {
-    this.setState({ subtab });
+    if (subtab === SubTabs.local) {
+      this.setState({ subtab, bitmarks: this.state.data.localAssets });
+    } else if (subtab === SubTabs.market) {
+      this.setState({ subtab, bitmarks: this.state.data.marketAssets });
+    } else if (subtab === SubTabs.global) {
+      let bitmarks = this.state.data.localAssets.concat(this.state.data.marketAssets);
+      this.setState({ subtab, bitmarks });
+    }
   }
 
   render() {
@@ -76,26 +87,25 @@ export class PropertiesComponent extends React.Component {
             </View>
           </TouchableOpacity>
         </View>
-        <ScrollView style={[propertiesStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
+        <ScrollView style={[propertiesStyle.scrollSubTabArea]}>
           <View style={propertiesStyle.contentSubTab}>
             <FlatList
               ref={(ref) => this.listViewElement = ref}
-              keyboardShouldPersistTaps="handled"
-              horizontal={true}
               extraData={this.state}
               data={this.state.bitmarks || []}
               renderItem={({ item }) => {
-                return (<TouchableOpacity style={[propertiesStyle.assetRowArea,]} onPress={() => this.selectAsset(item)}>
+                return (<TouchableOpacity style={[propertiesStyle.assetRowArea,]} >
                   <Image style={propertiesStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + item.key }} />
                   <View style={propertiesStyle.assetInfoArea}>
-                    <Text style={propertiesStyle.assetCreatedDate}>{item.created_at}</Text>
-                    <Text style={propertiesStyle.assetName}>{item.name}</Text>
-                    <Text style={propertiesStyle.assetCreator}>{item.issuer}</Text>
+                    <Text style={propertiesStyle.assetCreatedDate} >{item.created_at}</Text>
+                    <Text style={propertiesStyle.assetName} numberOfLines={1}>{item.name}</Text>
+                    <Text style={propertiesStyle.assetCreator} numberOfLines={1}>{item.issuer}</Text>
                   </View>
                   <View style={propertiesStyle.assetBitmark}>
                     {(item.totalPending > 0) && <Text style={propertiesStyle.assetBitmarkPending}>Pending...({item.totalPending + '/' + item.bitmarks.length})</Text>}
-                    {(item.totalPending === 0) && <View style={propertiesStyle.assetBitmarkNormal}>
-                      <Text style={propertiesStyle.assetBitamrksNumber}>{item.bitamrks.length}</Text>
+                    {item.totalPending === 0 && <View style={propertiesStyle.assetBitmarkNormal}>
+                      <Text style={propertiesStyle.assetBitamrksNumber}>{item.bitmarks.length}</Text>
+                      <Image style={propertiesStyle.assetBitamrksDetail} source={require('./../../../../assets/imgs/next-icon.png')} />
                       <Image style={propertiesStyle.assetBitamrksDetail} source={require('./../../../../assets/imgs/next-icon.png')} />
                     </View>}
                   </View>

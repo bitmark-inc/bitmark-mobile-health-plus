@@ -16,9 +16,9 @@ export default StyleSheet.create({
   body: {
     flexDirection: 'column',
     alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter + constant.headerSize.height),
+    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter),
     width: '100%',
-    backgroundColor: '#E5E5E5'
+    backgroundColor: 'white',
   },
   subTabArea: {
     width: '100%',

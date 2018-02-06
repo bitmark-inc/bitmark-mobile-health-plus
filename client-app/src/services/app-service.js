@@ -79,7 +79,6 @@ const getUserBitamrk = async () => {
     let url = totemicMarketUrl + `/s/api/editions?owner=${userInfo.markets.totemic.id}&include_card=true&include_user=true`;
     marketBitmarks = await AccountService.getMarketBitmarks(url);
   }
-
   let result = {
     localAssets: [],
     marketAssets: []
@@ -89,13 +88,13 @@ const getUserBitamrk = async () => {
       localBitmarks.bitmarks.forEach((bitmark) => {
         if (bitmark.asset_id === asset.id) {
           asset.key = asset.id;
-          if (!asset.bitamrks) {
+          if (!asset.bitmarks) {
             asset.bitmarks = [];
             asset.totalPending = 0;
           }
           asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
-          asset.totalPending += bitmark.status === 'pending' ? 1 : 0;
-          asset.bitamrks.push(bitmark);
+          asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
+          asset.bitmarks.push(bitmark);
         }
       });
       result.localAssets.push(asset);
@@ -105,15 +104,16 @@ const getUserBitamrk = async () => {
     marketBitmarks.cards.forEach((asset) => {
       marketBitmarks.editions.forEach((bitmark) => {
         if (bitmark.card_id === asset.id) {
-          if (!asset.bitamrks) {
+          if (!asset.bitmarks) {
             asset.bitmarks = [];
+            asset.totalPending = 0;
           }
           asset.key = asset.id = asset.asset_id;
-          asset.totalPending += bitmark.status === 'pending' ? 1 : 0;
+          asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
           asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss');
           let issuer = (marketBitmarks.users || []).find((user) => user.id === asset.creator_id);
-          asset.issuer = issuer ? issuer.bitmark_account : null;
-          asset.bitamrks.push(bitmark);
+          asset.issuer = issuer ? issuer.account_number : null;
+          asset.bitmarks.push(bitmark);
         }
       });
       result.marketAssets.push(asset);

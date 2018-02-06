@@ -86,7 +86,7 @@ export class AccountDetailComponent extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView style={[accountStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
-          {this.state.subtab === SubTabs.balance && this.state.us && this.state.markets && this.state.markets.totemic && this.state.markets.totemic.account_number &&
+          {this.state.subtab === SubTabs.balance && this.state.markets && this.state.markets.totemic && this.state.markets.totemic.account_number &&
             <View style={accountStyle.contentSubTab}>
               <Image style={accountStyle.marketCardTitleIcon} source={require('./../../../../assets/imgs/totemic-market.png')} />
               <View style={accountStyle.marketBalance}>

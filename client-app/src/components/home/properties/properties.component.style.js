@@ -15,9 +15,9 @@ export default StyleSheet.create({
   body: {
     flexDirection: 'column',
     alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter + constant.headerSize.height),
+    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter),
     width: '100%',
-    backgroundColor: '#E5E5E5'
+    backgroundColor: 'white',
   },
   subTabArea: {
     width: '100%',
@@ -55,48 +55,79 @@ export default StyleSheet.create({
     height: 4,
     backgroundColor: '#0060F2'
   },
-  scrollSubTabArea: {
-    width: '100%',
-    flexDirection: 'column',
-    alignContent: 'center'
-  },
   contentSubTab: {
     width: '100%',
     flexDirection: 'column',
   },
 
   assetRowArea: {
-
+    width: '100%',
+    height: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   assetImage: {
-
+    width: 62,
+    height: 62,
+    resizeMode: 'contain',
+    marginLeft: 20,
   },
   assetInfoArea: {
-
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    marginLeft: 20,
+    height: 62,
+    width: 140,
   },
   assetCreatedDate: {
-
+    fontFamily: 'Andale Mono',
+    fontSize: 10,
+    lineHeight: 12,
   },
   assetName: {
-
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 12,
+    lineHeight: 14,
   },
   assetCreator: {
-
+    fontFamily: 'Avenir Light',
+    fontWeight: '500',
+    fontSize: 12,
+    lineHeight: 14,
+    width: 140,
   },
 
   assetBitmark: {
-
+    height: 62,
+    width: 130,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   assetBitmarkPending: {
-
+    fontFamily: 'Avenir Heavy',
+    fontWeight: '500',
+    fontSize: 12,
+    lineHeight: 14,
+    color: '#999999',
+    marginRight: 10,
   },
   assetBitmarkNormal: {
-
+    width: 40,
+    height: 62,
+    flexDirection: 'row',
   },
   assetBitamrksNumber: {
-
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 12,
+    lineHeight: 14,
+    color: '#0060F2',
+    marginRight: 5,
   },
   assetBitamrksDetail: {
-
+    width: 7,
+    height: 14,
+    resizeMode: 'contain',
   }
 });

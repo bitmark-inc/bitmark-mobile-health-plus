@@ -24,8 +24,30 @@ let PreCheckResults = {
   error: 'RETRY'
 };
 
-// let testWords = ['abstract', 'fault', 'margin', 'improve', 'quantum', 'observe', 'invite', 'session', 'cluster', 'west', 'oven', 'acquire',
-//   'burger', 'delay', 'spirit', 'body', 'fine', 'gift', 'acid', 'soldier', 'goddess', 'differ', 'pledge', 'traffic',];
+let testWords = ['absurd',
+  'defy',
+  'group',
+  'forward',
+  'curious',
+  'erase',
+  'dwarf',
+  'seminar',
+  'stairs',
+  'abandon',
+  'earn',
+  'civil',
+  'amount',
+  'junk',
+  'stove',
+  'army',
+  'install',
+  'goat',
+  'tunnel',
+  'tunnel',
+  'eagle',
+  'sell',
+  'ridge',
+  'guess'];
 
 export class SignInComponent extends React.Component {
 
@@ -46,14 +68,14 @@ export class SignInComponent extends React.Component {
       if (index < 12) {
         smallerList.push({
           key: index,
-          // word: testWords[index],
-          word: '',
+          word: testWords[index],
+          // word: '',
         });
       } else {
         biggerList.push({
           key: index,
-          // word: testWords[index],
-          word: '',
+          word: testWords[index],
+          // word: '',
         });
       }
     }
@@ -67,7 +89,7 @@ export class SignInComponent extends React.Component {
       dataSource: dictionary24Words,
       keyBoardHeight: 0,
     };
-    // setTimeout(this.checkStatusInputing, 200);
+    setTimeout(this.checkStatusInputing, 200);
   }
 
   onChangeText(index, text) {
