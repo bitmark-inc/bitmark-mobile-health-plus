@@ -16,6 +16,8 @@ let defaultStyle = Platform.select({
   android: androidDefaultStyle
 });
 
+let curretnUser;
+
 class RecoveryPhraseComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +27,8 @@ class RecoveryPhraseComponent extends React.Component {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
     const recoveryPhrase = () => {
       AccountService.getCurrentAccount().then((user) => {
-        this.props.navigation.navigate('WriteDownRecoveryPhrase', { user });
+        curretnUser = user;
+        this.props.navigation.navigate('WriteDownRecoveryPhrase');
       }).catch(error => {
         console.log('recoveryPhrase error :', error);
       });
@@ -82,7 +85,7 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
     this.state = {
       smallerList: [], biggerList: []
     };
-    let userInfo = this.props.navigation.state.params.user;
+    let userInfo = curretnUser;
     let smallerList = [];
     let biggerList = [];
     for (let index in userInfo.pharse24Words) {
@@ -203,8 +206,8 @@ class TryRecoveryPhraseComponent extends React.Component {
     }
     AppService.getCurrentUser().then(user => {
       let result = [];
-      for (let index in user.pharse24Words) {
-        result.push({ key: index, word: user.pharse24Words[index] });
+      for (let index in curretnUser.pharse24Words) {
+        result.push({ key: index, word: curretnUser.pharse24Words[index] });
       }
       let randomWords = [];
       for (let index = 0; index < 24; index++) {
