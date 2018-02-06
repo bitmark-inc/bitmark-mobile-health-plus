@@ -58,8 +58,12 @@ public struct Account {
         let coreBytes = bytes.subdata(in: 1..<33)
         try self.init(core: coreBytes, network: network)
     }
+    
+    public func getRecoverPhrase() throws -> [String] {
+        return try getRecoverPhrase(withNetwork: authKey.network)
+    }
 
-    public func getRecoverPhrase(withNetwork network: Network = Network.livenet) throws -> [String] {
+    public func getRecoverPhrase(withNetwork network: Network) throws -> [String] {
         var data = Data(bytes: [UInt8(truncatingIfNeeded: network.addressValue)])
         data.append(core)
         return try RecoverPhrase.createPhrase(fromData: data)
