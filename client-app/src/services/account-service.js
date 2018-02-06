@@ -29,7 +29,8 @@ const logout = async () => {
 // ================================================================================================
 const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, pairUrl) => {
   return new Promise((resolve, reject) => {
-    bitmarkSDK.signMessage(token, bitmarkNetwork).then(signature => {
+    bitmarkSDK.rickySignMessage([token], bitmarkNetwork).then(signatures => {
+      console.log('pairtMarketAccounut signatures:', signatures, pairUrl);
       fetch(pairUrl, {
         method: 'POST',
         headers: {
@@ -40,11 +41,13 @@ const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, pairUrl) => {
           account_number: loaclBitmarkAccountNumber,
           action: 'pair',
           code: token,
-          signature: signature,
+          signature: signatures[0],
         })
       }).then((response) => response.json()).then((data) => {
+        console.log('pairtMarketAccounut :', data);
         resolve(data.user || {});
       }).catch((error) => {
+        console.log('pairtMarketAccounut error:', error);
         reject(error);
       });
     }).catch(reject);
@@ -54,8 +57,8 @@ const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, pairUrl) => {
 const checkPairingStatus = (loaclBitmarkAccountNumber, checkPairingStatusUrl) => {
   let timestamp = moment().toDate().getTime().toString();
   return new Promise((resolve, reject) => {
-    bitmarkSDK.signMessage(timestamp, bitmarkNetwork).then(signature => {
-      let urlCheck = checkPairingStatusUrl += `?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signature}`;
+    bitmarkSDK.rickySignMessage([timestamp], bitmarkNetwork).then(signatures => {
+      let urlCheck = checkPairingStatusUrl += `?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signatures[0]}`;
       fetch(urlCheck, {
         method: 'GET',
         headers: {
@@ -121,8 +124,8 @@ const loginMarket = (marketServerUrl, loaclBitmarkAccountNumber) => {
     let codeResult = '';
     generateCodeForSignInMarket(marketServerUrl).then((code) => {
       codeResult = code;
-      return bitmarkSDK.signMessage(code, bitmarkNetwork);
-    }).then(signature => {
+      return bitmarkSDK.rickySignMessage([code], bitmarkNetwork);
+    }).then(signatures => {
       return fetch(marketServerUrl + '/s/api/mobile/login', {
         method: 'POST',
         headers: {
@@ -132,7 +135,7 @@ const loginMarket = (marketServerUrl, loaclBitmarkAccountNumber) => {
         body: JSON.stringify({
           account_number: loaclBitmarkAccountNumber,
           code: codeResult,
-          signature: signature,
+          signature: signatures[0],
         })
       })
     }).then((response) => response.json()).then((data) => {

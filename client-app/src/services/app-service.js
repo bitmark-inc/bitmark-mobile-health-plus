@@ -114,6 +114,12 @@ const getUserBitamrk = async () => {
   return result;
 };
 
+const getUserBalance = async () => {
+  let balanceResult = await AccountService.getBalanceOnMarket(totemicMarketUrl);
+  let balanceHistories = await AccountService.getBalanceHistoryOnMarket(totemicMarketUrl);
+  return { balance: balanceResult.balance, pending: balanceResult.pending, balanceHistories };
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -125,6 +131,7 @@ let AppService = {
   doPairMarketAccount,
   getMarketUrl,
   getUserBitamrk,
+  getUserBalance,
 }
 
 export {

@@ -3,6 +3,7 @@ import {
   ios,
   android // TODO
 } from './../../../configs';
+import { convertWidth } from './../../../utils'
 
 const deviceSize = Dimensions.get('window');
 
@@ -131,6 +132,123 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 12,
     color: '#0060F2',
+  },
+
+  marketCardTitleIcon: {
+    width: 133,
+    height: 30,
+    resizeMode: 'contain',
+    marginLeft: 19,
+    marginTop: 23,
+  },
+  marketBalance: {
+    marginTop: 16,
+    marginLeft: 19,
+    backgroundColor: 'white',
+    height: 43,
+    width: convertWidth(337),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  marketBalanceLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  marketBalanceIcon: {
+    width: 12.5,
+    height: 22,
+    resizeMode: 'contain',
+    marginLeft: 16,
+  },
+  marketBalanceName: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 16,
+    marginLeft: 12.5,
+  },
+  marketBalanceNameFull: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '500',
+    fontSize: 12,
+    marginLeft: 5,
+  },
+  marketBalanceValue: {
+    marginRight: 21
+  },
+  marketBalanceButtonArea: {
+    marginTop: 16,
+    marginLeft: 19,
+    width: convertWidth(337),
+    height: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  marketBalanceButton: {
+    backgroundColor: '#0060F2',
+    width: convertWidth(165),
+    height: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  marketBalanceButtonText: {
+    color: 'white',
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 14,
+    lineHeight: 16,
+  },
+  marketBalanceHistory: {
+    marginTop: 16,
+    flexDirection: 'column',
+  },
+  marketBalanceHistoryLabel: {
+    marginLeft: 19,
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 14,
+    lineHeight: 16,
+  },
+  marketBalanceHistoryItem: {
+    marginLeft: 19,
+    width: convertWidth(338),
+    height: 49,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#919191',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  marketBalanceHistoryItemAction: {
+    fontFamily: 'Avenir Heavy',
+    fontWeight: '900',
+    fontSize: 8,
+    lineHeight: 9,
+    marginLeft: 19,
+  },
+  marketBalanceHistoryItemAmount: {
+    fontFamily: 'Avenir Heavy',
+    fontWeight: '900',
+    fontSize: 8,
+    lineHeight: 9,
+    marginLeft: 19,
+    minWidth: 70,
+  },
+  marketBalanceHistoryItemCreatedAt: {
+    fontFamily: 'Andale Mono',
+    fontWeight: '900',
+    fontSize: 8,
+    lineHeight: 9,
+    marginLeft: 19,
+  },
+  marketBalanceHistoryItemStatus: {
+    fontFamily: 'Avenir Medium',
+    fontWeight: '700',
+    fontSize: 8,
+    lineHeight: 9,
+    marginLeft: 19,
   },
 
 });

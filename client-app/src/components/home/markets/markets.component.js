@@ -28,6 +28,7 @@ export class MarketsComponent extends React.Component {
 
   reload() {
     AppService.getCurrentUser().then((user) => {
+      this.setState({ user });
       console.log('MarketsComponent reload : ======', user);
     }).catch(error => {
       console.log('getCurrentUser error :', error);

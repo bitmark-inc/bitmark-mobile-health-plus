@@ -73,5 +73,17 @@ const bitmarkSDK = {
     });
   },
 
+  rickySignMessage: (messages, network) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.rickySign(network, messages, (ok, signatures) => {
+        if (ok && signatures && signatures.length === messages.length) {
+          resolve(signatures);
+        } else {
+          reject(new Error('Can not sign message!'));
+        }
+      });
+    });
+  },
+
 };
 export { bitmarkSDK };
