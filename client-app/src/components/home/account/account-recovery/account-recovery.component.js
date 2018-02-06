@@ -24,8 +24,8 @@ class RecoveryPhraseComponent extends React.Component {
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
     const recoveryPhrase = () => {
-      AccountService.getCurrentAccount().then(() => {
-        this.props.navigation.navigate('WriteDownRecoveryPhrase');
+      AccountService.getCurrentAccount().then((user) => {
+        this.props.navigation.navigate('WriteDownRecoveryPhrase', { user });
       }).catch(error => {
         console.log('recoveryPhrase error :', error);
       });
@@ -82,21 +82,18 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
     this.state = {
       smallerList: [], biggerList: []
     };
-    AppService.getCurrentUser().then(userInfo => {
-      let smallerList = [];
-      let biggerList = [];
-      for (let index in userInfo.pharse24Words) {
-        if (index < 12) {
-          smallerList.push({ key: index, word: userInfo.pharse24Words[index] });
-        } else {
-          biggerList.push({ key: index, word: userInfo.pharse24Words[index] });
-        }
+    let userInfo = this.props.navigation.state.params.user;
+    let smallerList = [];
+    let biggerList = [];
+    for (let index in userInfo.pharse24Words) {
+      if (index < 12) {
+        smallerList.push({ key: index, word: userInfo.pharse24Words[index] });
+      } else {
+        biggerList.push({ key: index, word: userInfo.pharse24Words[index] });
       }
-      this.setState({ smallerList: smallerList, biggerList: biggerList });
-    }).catch(error => {
-      console.log('getCurrentUser error:', error);
-      this.setState({ smallerList: [], biggerList: [] });
-    });
+    }
+    this.state = { smallerList: smallerList, biggerList: biggerList };
+
   }
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
@@ -170,6 +167,7 @@ WriteDownRecoveryPhraseComponent.propTypes = {
       key: PropTypes.string,
       params: PropTypes.shape({
         result: PropTypes.array,
+        user: PropTypes.object,
       })
     }),
   }),

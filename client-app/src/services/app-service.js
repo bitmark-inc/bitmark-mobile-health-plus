@@ -16,15 +16,20 @@ const getCurrentUser = async () => {
 
 const createNewUser = async () => {
   let userInfo = await AccountService.createNewAccount();
-  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  let userStore = {
+    bitmarkAccountNumber: userInfo.bitmarkAccountNumber,
+  }
+  await CommonService.setLocalData(CommonService.app_local_data_key, userStore);
   return userInfo;
 };
 
 const doLogin = async (phase24Words) => {
   let userInfo = await AccountService.accessBy24Words(phase24Words);
-  //TODO
-  let marketAccountInfo = await AccountService.checkPairingStatus(userInfo.bitmarkAccountNumber, totemicMarketUrl + '/s/api/mobile/pairing-account');
-  userInfo.markets = {
+  let userStore = {
+    bitmarkAccountNumber: userInfo.bitmarkAccountNumber,
+  }
+  let marketAccountInfo = await AccountService.checkPairingStatus(userStore.bitmarkAccountNumber, totemicMarketUrl + '/s/api/mobile/pairing-account');
+  userStore.markets = {
     'totemic': {
       id: marketAccountInfo.id,
       name: marketAccountInfo.name,
@@ -32,8 +37,8 @@ const doLogin = async (phase24Words) => {
       account_number: marketAccountInfo.account_number,
     }
   };
-  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
-  return userInfo;
+  await CommonService.setLocalData(CommonService.app_local_data_key, userStore);
+  return userStore;
 };
 
 const doLogout = async () => {
@@ -44,8 +49,11 @@ const doLogout = async () => {
 const doPairMarketAccount = async (token) => {
   //TODO 
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  let marketAccountInfo = await AccountService.pairtMarketAccounut(userInfo.bitmarkAccountNumber, token, totemicMarketUrl + '/s/api/mobile/qrcode');
-  userInfo.markets = {
+  let userStore = {
+    bitmarkAccountNumber: userInfo.bitmarkAccountNumber,
+  }
+  let marketAccountInfo = await AccountService.pairtMarketAccounut(userStore.bitmarkAccountNumber, token, totemicMarketUrl + '/s/api/mobile/qrcode');
+  userStore.markets = {
     'totemic': {
       id: marketAccountInfo.id,
       name: marketAccountInfo.name,
@@ -53,8 +61,8 @@ const doPairMarketAccount = async (token) => {
       account_number: marketAccountInfo.account_number,
     }
   }
-  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
-  return userInfo;
+  await CommonService.setLocalData(CommonService.app_local_data_key, userStore);
+  return userStore;
 };
 
 const getMarketUrl = async () => {
