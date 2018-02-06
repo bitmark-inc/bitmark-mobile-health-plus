@@ -157,13 +157,14 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(rickySign::)
-  func rickySign(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(rickySign:::)
+  func rickySign(_ network: String, _ messages: [String], _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
-      let message = input["message"] as! String
-      let signature = try account.riskySign(withMessage: message)
-      callback([true, signature.hexEncodedString])
+      let account = try BitmarkSDK.getAccount(network: network)
+      let signatures = try messages.map({ (message) -> String in
+        return (try account.riskySign(withMessage: message)).hexEncodedString
+      })
+      callback([true, signatures])
     }
     catch let e {
       print(e)
