@@ -16,8 +16,7 @@ const {
 import { LoadingComponent } from './../commons/components';
 import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
-import { AppService, AccountService } from './../services';
-import { config } from '../configs';
+import { AppService, } from './../services';
 
 class MainComponent extends Component {
   constructor(props) {
@@ -28,9 +27,6 @@ class MainComponent extends Component {
 
     AppService.getCurrentUser().then((user) => {
       this.setState({ user });
-      AccountService.loginMarket(config.totemic_server_url, user.bitmarkAccountNumber).then(() => {
-        console.log('loginMarket success :', user);
-      })
       console.log('current user :', user);
     }).catch(error => {
       console.log(error);

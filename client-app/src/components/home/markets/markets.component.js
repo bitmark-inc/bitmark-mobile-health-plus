@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import { AppService } from './../../../services';
+import { config } from './../../../configs';
 
 import marketsStyle from './markets.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
@@ -36,9 +37,10 @@ export class MarketsComponent extends React.Component {
   }
 
   openMarket() {
-    AppService.getMarketUrl().then(url => {
-      this.props.screenProps.homeNavigation.navigate('MarketViewer', { name: 'Totemic', url });
-    }).catch(error => console.log('getMarketUrl error:', error));
+    this.props.screenProps.homeNavigation.navigate('MarketViewer', {
+      name: config.markets.totemic.charAt(0).toUpperCase() + config.markets.totemic.slice(1),
+      url: config.market_urls.totemic
+    });
   }
 
   render() {

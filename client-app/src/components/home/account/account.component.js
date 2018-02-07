@@ -8,10 +8,11 @@ import {
   FlatList,
 } from 'react-native';
 
-import { AppService } from "./../../../services";
+import { AppService, MarketService } from "./../../../services";
 import accountStyle from './account.component.style';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
+import { config } from '../../../configs/index';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -98,10 +99,20 @@ export class AccountDetailComponent extends React.Component {
                 <Text style={accountStyle.marketBalanceValue}>{Math.floor(this.state.balance / 1E4) / 1E5}</Text>
               </View>
               <View style={accountStyle.marketBalanceButtonArea}>
-                <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => { }}>
+                <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
+                  this.props.screenProps.homeNavigation.navigate('MarketViewer', {
+                    url: MarketService.getBalancUrl(config.markets.totemic),
+                    name: config.markets.totemic.charAt(0).toUpperCase() + config.markets.totemic.slice(1)
+                  });
+                }}>
                   <Text style={accountStyle.marketBalanceButtonText}>DEPOSIT</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => { }}>
+                <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
+                  this.props.screenProps.homeNavigation.navigate('MarketViewer', {
+                    url: MarketService.getBalancUrl(config.markets.totemic),
+                    name: config.markets.totemic.charAt(0).toUpperCase() + config.markets.totemic.slice(1)
+                  });
+                }}>
                   <Text style={accountStyle.marketBalanceButtonText}>WITHDRAWAL</Text>
                 </TouchableOpacity>
               </View>
@@ -160,5 +171,9 @@ AccountDetailComponent.propTypes = {
   }),
   screenProps: PropTypes.shape({
     logout: PropTypes.func,
+    homeNavigation: PropTypes.shape({
+      navigate: PropTypes.func,
+      goBack: PropTypes.func,
+    }),
   }),
 }

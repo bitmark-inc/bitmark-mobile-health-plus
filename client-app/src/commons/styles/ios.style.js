@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { ios } from './../../configs';
+import { convertWidth } from './../../utils';
 
 export default StyleSheet.create({
   header: {
@@ -13,7 +14,7 @@ export default StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   headerLeft: {
-    width: 70,
+    width: convertWidth(70),
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
@@ -23,14 +24,20 @@ export default StyleSheet.create({
     height: 19,
     resizeMode: 'contain'
   },
+  headerCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    maxWidth: convertWidth(375) - convertWidth(140),
+  },
   headerTitle: {
     textAlign: 'center',
     fontSize: 18,
     fontWeight: '900',
-    fontFamily: 'Avenir Black'
+    fontFamily: 'Avenir Black',
+    maxWidth: convertWidth(235),
   },
   headerRight: {
-    width: 70,
+    width: convertWidth(70),
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },

@@ -1,14 +1,14 @@
-
 import { config } from './../configs';
 import { CommonService } from './common-service';
 import { AccountService } from './account-service';
-import moment from 'moment';
+import { BitmarkService } from './bitmark-service';
+
 
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
 // TODO
-let totemicMarketUrl = config.totemic_server_url;
+let totemicMarketUrl = config.market_urls.totemic;
 
 const getCurrentUser = async () => {
   return await CommonService.getLocalData(CommonService.app_local_data_key);
@@ -28,7 +28,7 @@ const doLogin = async (phase24Words) => {
   let userStore = {
     bitmarkAccountNumber: userInfo.bitmarkAccountNumber,
   }
-  let marketAccountInfo = await AccountService.checkPairingStatus(userStore.bitmarkAccountNumber, totemicMarketUrl + '/s/api/mobile/pairing-account');
+  let marketAccountInfo = await AccountService.checkPairingStatus(userStore.bitmarkAccountNumber, totemicMarketUrl);
   userStore.markets = {
     'totemic': {
       id: marketAccountInfo.id,
@@ -52,7 +52,7 @@ const doPairMarketAccount = async (token) => {
   let userStore = {
     bitmarkAccountNumber: userInfo.bitmarkAccountNumber,
   }
-  let marketAccountInfo = await AccountService.pairtMarketAccounut(userStore.bitmarkAccountNumber, token, totemicMarketUrl + '/s/api/mobile/qrcode');
+  let marketAccountInfo = await AccountService.pairtMarketAccounut(userStore.bitmarkAccountNumber, token, totemicMarketUrl);
   userStore.markets = {
     'totemic': {
       id: marketAccountInfo.id,
@@ -65,61 +65,20 @@ const doPairMarketAccount = async (token) => {
   return userStore;
 };
 
-const getMarketUrl = async () => {
-  return totemicMarketUrl;
-};
-
-
 const getUserBitamrk = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  let localBitmarks = await AccountService.getLocalBitamrks(userInfo.bitmarkAccountNumber);
-  let marketBitmarks;
-  let marketUserId = (userInfo.markets && userInfo.markets.totemic) ? userInfo.markets.totemic.id : null;
-  if (marketUserId) {
-    let url = totemicMarketUrl + `/s/api/editions?owner=${userInfo.markets.totemic.id}&include_card=true&include_user=true`;
-    marketBitmarks = await AccountService.getMarketBitmarks(url);
+  let marketAssets = [];
+  for (let market in userInfo.markets) {
+    let tempBitmarks = await BitmarkService.getMarketBitmarks(market, userInfo.markets[market].id);
+    console.log('tempBitmarks :', tempBitmarks);
+    marketAssets = marketAssets.concat(tempBitmarks || []);
+    console.log('marketAssets :', marketAssets);
   }
-  let result = {
-    localAssets: [],
-    marketAssets: []
+  let localAssets = await BitmarkService.getLocalBitamrks(userInfo.bitmarkAccountNumber);
+  return {
+    localAssets,
+    marketAssets
   };
-  if (localBitmarks && localBitmarks.bitmarks && localBitmarks.assets) {
-    localBitmarks.assets.forEach((asset) => {
-      localBitmarks.bitmarks.forEach((bitmark) => {
-        if (bitmark.asset_id === asset.id) {
-          asset.key = asset.id;
-          if (!asset.bitmarks) {
-            asset.bitmarks = [];
-            asset.totalPending = 0;
-          }
-          asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
-          asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-          asset.bitmarks.push(bitmark);
-        }
-      });
-      result.localAssets.push(asset);
-    });
-  }
-  if (marketBitmarks && marketBitmarks.editions && marketBitmarks.cards) {
-    marketBitmarks.cards.forEach((asset) => {
-      marketBitmarks.editions.forEach((bitmark) => {
-        if (bitmark.card_id === asset.id) {
-          if (!asset.bitmarks) {
-            asset.bitmarks = [];
-            asset.totalPending = 0;
-          }
-          asset.key = asset.id = asset.asset_id;
-          asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-          asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss');
-          let issuer = (marketBitmarks.users || []).find((user) => user.id === asset.creator_id);
-          asset.issuer = issuer ? issuer.account_number : null;
-          asset.bitmarks.push(bitmark);
-        }
-      });
-      result.marketAssets.push(asset);
-    });
-  }
-  return result;
 };
 
 const getUserBalance = async () => {
@@ -137,7 +96,6 @@ let AppService = {
   doLogin,
   doLogout,
   doPairMarketAccount,
-  getMarketUrl,
   getUserBitamrk,
   getUserBalance,
 }

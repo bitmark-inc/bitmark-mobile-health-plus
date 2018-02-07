@@ -27,11 +27,10 @@ const logout = async () => {
 }
 // ================================================================================================
 // ================================================================================================
-const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, pairUrl) => {
+const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, marketUrl) => {
   return new Promise((resolve, reject) => {
     bitmarkSDK.rickySignMessage([token], bitmarkNetwork).then(signatures => {
-      console.log('pairtMarketAccounut signatures:', signatures, pairUrl);
-      fetch(pairUrl, {
+      fetch(marketUrl + '/s/api/mobile/qrcode', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -54,11 +53,11 @@ const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, pairUrl) => {
   });
 };
 
-const checkPairingStatus = (loaclBitmarkAccountNumber, checkPairingStatusUrl) => {
-  let timestamp = moment().toDate().getTime().toString();
+const checkPairingStatus = (loaclBitmarkAccountNumber, marketUrl) => {
+  let timestamp = moment().getTime().toString();
   return new Promise((resolve, reject) => {
     bitmarkSDK.rickySignMessage([timestamp], bitmarkNetwork).then(signatures => {
-      let urlCheck = checkPairingStatusUrl += `?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signatures[0]}`;
+      let urlCheck = marketUrl + `/s/api/mobile/pairing-account?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signatures[0]}`;
       fetch(urlCheck, {
         method: 'GET',
         headers: {
@@ -74,33 +73,6 @@ const checkPairingStatus = (loaclBitmarkAccountNumber, checkPairingStatusUrl) =>
   });
 };
 
-const getLocalBitamrks = (loaclBitmarkAccountNumber) => {
-  return new Promise((resolve, reject) => {
-    fetch(config.get_way_server_url + `/v1/bitmarks?owner=${loaclBitmarkAccountNumber}&asset=true`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((response) => response.json()).then((data) => {
-      resolve(data || {});
-    }).catch(reject);
-  });
-};
-
-const getMarketBitmarks = (url) => {
-  return new Promise((resolve, reject) => {
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((response) => response.json()).then((data) => {
-      resolve(data || {});
-    }).catch(reject);
-  });
-};
 
 //TODO for totemic
 const generateCodeForSignInMarket = (marketServerUrl) => {
@@ -192,8 +164,6 @@ let AccountService = {
   pairtMarketAccounut,
   checkPairingStatus,
   loginMarket,
-  getLocalBitamrks,
-  getMarketBitmarks,
   getBalanceOnMarket,
   getBalanceHistoryOnMarket,
 }

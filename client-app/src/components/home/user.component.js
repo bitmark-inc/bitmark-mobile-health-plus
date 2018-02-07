@@ -7,7 +7,7 @@ import { NavigationActions } from 'react-navigation';
 
 import { AccountComponent } from './account';
 import { MarketsComponent } from './markets';
-import { PropertiesComponent } from './properties';
+import { AssetsComponent } from './properties';
 
 import { AppService } from "./../../services";
 
@@ -45,7 +45,7 @@ export class UserComponent extends React.Component {
   render() {
     return (
       <View style={userStyle.body}>
-        {this.state.mainTab === MainTabs.properties && <PropertiesComponent screenProps={{
+        {this.state.mainTab === MainTabs.properties && <AssetsComponent screenProps={{
           homeNavigation: this.props.navigation,
         }} />}
         {this.state.mainTab === MainTabs.markets && <MarketsComponent screenProps={{

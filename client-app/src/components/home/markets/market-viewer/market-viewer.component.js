@@ -27,6 +27,7 @@ export class MarketViewerComponent extends React.Component {
       url: this.props.navigation.state.params.url,
       currentUrl: this.props.navigation.state.params.url,
     };
+    console.log(this.state)
   }
   onNavigationStateChange(webViewState) {
     this.setState({
@@ -51,7 +52,7 @@ export class MarketViewerComponent extends React.Component {
           <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyles.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyles.headerTitle}>{this.state.name}</Text>
+          <Text style={defaultStyles.headerTitle}>{this.state.marketName}</Text>
           <View style={defaultStyles.headerRight}>
             <TouchableOpacity onPress={this.reloadWebView}>
               <Image style={termsStyles.marketIcon} source={require('../../../../../assets/imgs/refresh-icon.png')} />

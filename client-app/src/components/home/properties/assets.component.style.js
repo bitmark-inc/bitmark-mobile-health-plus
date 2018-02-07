@@ -111,6 +111,7 @@ export default StyleSheet.create({
     lineHeight: 14,
     color: '#999999',
     marginRight: 10,
+    fontStyle: 'italic'
   },
   assetBitmarkNormal: {
     width: 40,
