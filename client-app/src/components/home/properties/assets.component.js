@@ -71,14 +71,14 @@ export class AssetsComponent extends React.Component {
       <View style={assetsStyle.body}>
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>Assets</Text>
+          <Text style={defaultStyle.headerTitle}>Simplebar</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
         <View style={assetsStyle.subTabArea}>
           <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.local)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local}</Text>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local}({this.state.data.localAssets.length})</Text>
               </View>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.local ? '#0060F2' : 'white' }]}></View>
             </View>
@@ -86,7 +86,7 @@ export class AssetsComponent extends React.Component {
           <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.market)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.market}</Text>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.market}({this.state.data.marketAssets.length})</Text>
               </View>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.market ? '#0060F2' : 'white' }]}></View>
             </View>
