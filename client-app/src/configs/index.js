@@ -11,8 +11,8 @@ let NETWORKS = {
 let config = {
   NETWORKS,
   platform: Platform.OS,
-  network: NETWORKS.testnet,
-  // network: NETWORKS.devnet,
+  // network: NETWORKS.testnet,
+  network: NETWORKS.devnet,
   storage_server_url: '',
   get_way_server_url: '',
   preive_asset_url: '',
@@ -20,7 +20,10 @@ let config = {
     totemic: '',
   },
   markets: {
-    totemic: 'totemic'
+    totemic: {
+      name: 'totemic',
+      sourceIcon: require('./../../assets/imgs/totemic-market.png'),
+    }
   }
 };
 

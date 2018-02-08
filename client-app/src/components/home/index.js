@@ -1,15 +1,26 @@
 import { StackNavigator, } from 'react-navigation';
 import { UserComponent } from './user.component';
 import { MarketPairComponent, MarketLoginComponent, MarketViewerComponent } from './markets';
-import { PropertyDetailComponent, AssetDetailComponent } from './properties';
+import {
+  LocalPropertyDetailComponent,
+  LocalAssetDetailComponent,
+  MarketPropertyDetailComponent,
+  MarketAssetDetailComponent,
+  BitmarkDepositComponent,
+  BitmarkWithdrawComponent,
+} from './properties';
 
 let HomeComponent = StackNavigator({
   User: { screen: UserComponent, },
   MarketPair: { screen: MarketPairComponent, },
   MarketLogin: { screen: MarketLoginComponent, },
   MarketViewer: { screen: MarketViewerComponent, },
-  AssetDetail: { screen: AssetDetailComponent, },
-  PropertyDetail: { screen: PropertyDetailComponent, },
+  LocalAssetDetail: { screen: LocalAssetDetailComponent, },
+  LocalPropertyDetail: { screen: LocalPropertyDetailComponent, },
+  MarketAssetDetail: { screen: MarketAssetDetailComponent, },
+  MarketPropertyDetail: { screen: MarketPropertyDetailComponent, },
+  BitmarkDeposit: { screen: BitmarkDepositComponent, },
+  BitmarkWithdraw: { screen: BitmarkWithdrawComponent, },
 }, {
     headerMode: 'none',
     navigationOptions: {

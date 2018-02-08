@@ -107,7 +107,13 @@ export class AssetsComponent extends React.Component {
               extraData={this.state}
               data={this.state.asset || []}
               renderItem={({ item }) => {
-                return (<TouchableOpacity style={[assetsStyle.assetRowArea,]} onPress={() => this.props.screenProps.homeNavigation.navigate('AssetDetail', { asset: item.asset })} >
+                return (<TouchableOpacity style={[assetsStyle.assetRowArea,]} onPress={() => {
+                  if (item.asset.market) {
+                    this.props.screenProps.homeNavigation.navigate('MarketAssetDetail', { asset: item.asset });
+                  } else {
+                    this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
+                  }
+                }} >
                   <Image style={assetsStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + item.asset.asset_id }} />
                   <View style={assetsStyle.assetInfoArea}>
                     <Text style={assetsStyle.assetCreatedDate} >{item.asset.created_at}</Text>

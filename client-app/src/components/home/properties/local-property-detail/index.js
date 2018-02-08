@@ -1,0 +1,1 @@
+export * from './local-property-detail.component';

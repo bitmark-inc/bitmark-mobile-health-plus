@@ -2,6 +2,7 @@ import { config } from './../configs';
 import { CommonService } from './common-service';
 import { AccountService } from './account-service';
 import { BitmarkService } from './bitmark-service';
+import { MarketService } from './market-service';
 
 
 // ================================================================================================
@@ -69,12 +70,10 @@ const getUserBitamrk = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let marketAssets = [];
   for (let market in userInfo.markets) {
-    let tempBitmarks = await BitmarkService.getMarketBitmarks(market, userInfo.markets[market].id);
-    console.log('tempBitmarks :', tempBitmarks);
+    let tempBitmarks = await MarketService.getBitmarks(market, userInfo.markets[market].id);
     marketAssets = marketAssets.concat(tempBitmarks || []);
-    console.log('marketAssets :', marketAssets);
   }
-  let localAssets = await BitmarkService.getLocalBitamrks(userInfo.bitmarkAccountNumber);
+  let localAssets = await BitmarkService.getBitamrks(userInfo.bitmarkAccountNumber);
   return {
     localAssets,
     marketAssets

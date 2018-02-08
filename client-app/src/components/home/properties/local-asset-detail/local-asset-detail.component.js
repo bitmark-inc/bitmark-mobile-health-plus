@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { config } from './../../../../configs';
 import { MarketService } from './../../../../services';
-import assetDetailStyle from './asset-detail.component.style';
+import assetDetailStyle from './local-asset-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 
 let defaultStyle = Platform.select({
@@ -17,7 +17,7 @@ let defaultStyle = Platform.select({
 });
 
 
-export class AssetDetailComponent extends React.Component {
+export class LocalAssetDetailComponent extends React.Component {
   constructor(props) {
     super(props);
     let asset;
@@ -102,13 +102,13 @@ export class AssetDetailComponent extends React.Component {
                   data={this.state.bitmarks || []}
                   renderItem={({ item }) => {
                     return (<TouchableOpacity style={assetDetailStyle.bitmarksRow} onPress={() => {
-                      this.props.navigation.navigate('PropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
+                      this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                     }}>
                       <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
                       <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
-                        let url = MarketService.getListingUrl(item.bitmark);
-                        this.props.navigation.navigate('MarketViewer', {
-                          url, name: item.bitmark.market.charAt(0).toUpperCase() + item.bitmark.market.slice(1)
+                        this.props.navigation.navigate('BitmarkDeposit', {
+                          asset: this.state.asset,
+                          bitmark: item.bitmark
                         });
                       }}>
                         {item.bitmark.status !== 'pending' && <Text style={assetDetailStyle.bitmarksRowListingButtonText}>{'List to Market'.toUpperCase()}</Text>}
@@ -126,7 +126,7 @@ export class AssetDetailComponent extends React.Component {
   }
 }
 
-AssetDetailComponent.propTypes = {
+LocalAssetDetailComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,

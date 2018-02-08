@@ -38,7 +38,7 @@ export class MarketsComponent extends React.Component {
 
   openMarket() {
     this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-      name: config.markets.totemic.charAt(0).toUpperCase() + config.markets.totemic.slice(1),
+      name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1),
       url: config.market_urls.totemic
     });
   }
@@ -55,7 +55,7 @@ export class MarketsComponent extends React.Component {
           <View style={marketsStyle.contentSubTab}>
             <View style={marketsStyle.marketCardArea}>
               <View style={marketsStyle.marketCardTitleArea}>
-                <Image style={marketsStyle.marketCardTitleIcon} source={require('./../../../../assets/imgs/totemic-market.png')} />
+                <Image style={marketsStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
                 <View style={marketsStyle.marketCardTitleMaketInfo}>
                   <Text style={marketsStyle.marketCardTitleMaketFeature}>Digital Card Trading</Text>
                   <Text style={marketsStyle.marketCardTitleMaketLink}>https://totemic.co</Text>

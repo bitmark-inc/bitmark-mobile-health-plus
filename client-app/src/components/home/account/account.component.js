@@ -89,7 +89,7 @@ export class AccountDetailComponent extends React.Component {
         <ScrollView style={[accountStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
           {this.state.subtab === SubTabs.balance && this.state.markets && this.state.markets.totemic && this.state.markets.totemic.account_number &&
             <View style={accountStyle.contentSubTab}>
-              <Image style={accountStyle.marketCardTitleIcon} source={require('./../../../../assets/imgs/totemic-market.png')} />
+              <Image style={accountStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
               <View style={accountStyle.marketBalance}>
                 <View style={accountStyle.marketBalanceLabel}>
                   <Image style={accountStyle.marketBalanceIcon} source={require('./../../../../assets/imgs/ETH-alt.png')} />
@@ -101,16 +101,16 @@ export class AccountDetailComponent extends React.Component {
               <View style={accountStyle.marketBalanceButtonArea}>
                 <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-                    url: MarketService.getBalancUrl(config.markets.totemic),
-                    name: config.markets.totemic.charAt(0).toUpperCase() + config.markets.totemic.slice(1)
+                    url: MarketService.getBalancUrl(config.markets.totemic.name),
+                    name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1)
                   });
                 }}>
                   <Text style={accountStyle.marketBalanceButtonText}>DEPOSIT</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-                    url: MarketService.getBalancUrl(config.markets.totemic),
-                    name: config.markets.totemic.charAt(0).toUpperCase() + config.markets.totemic.slice(1)
+                    url: MarketService.getBalancUrl(config.markets.totemic.name),
+                    name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1)
                   });
                 }}>
                   <Text style={accountStyle.marketBalanceButtonText}>WITHDRAWAL</Text>

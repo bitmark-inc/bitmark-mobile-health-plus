@@ -11,7 +11,7 @@ import { BitmarkService, MarketService } from './../../../../services';
 import { convertWidth } from './../../../../utils';
 
 import { config } from './../../../../configs';
-import propertyDetailStyle from './property-detail.component.style';
+import propertyDetailStyle from './local-property-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 
 let defaultStyle = Platform.select({
@@ -19,7 +19,7 @@ let defaultStyle = Platform.select({
   android: androidDefaultStyle
 });
 
-export class PropertyDetailComponent extends React.Component {
+export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
     super(props);
     let asset = this.props.navigation.state.params.asset;
@@ -32,7 +32,6 @@ export class PropertyDetailComponent extends React.Component {
       copied: false,
       displayTopButton: false,
     };
-    console.log('this.state :', this.state);
     BitmarkService.getProvenance(bitmark).then(provenance => {
       let histories = [];
       provenance.forEach((history, key) => {
@@ -98,12 +97,15 @@ export class PropertyDetailComponent extends React.Component {
                 />
               </View>
             </View>
-            <View style={propertyDetailStyle.listingButtonArea} onPress={() => {
-              let url = MarketService.getListingUrl(this.state.bitmark);
-              this.props.navigation.navigate('MarketViewer', { url, name: this.state.bitmark.market.charAt(0).toUpperCase() + this.state.bitmark.market.slice(1) });
-            }}>
+            <View style={propertyDetailStyle.listingButtonArea} >
               <TouchableOpacity style={[propertyDetailStyle.listingButton, { backgroundColor: this.state.bitmark.status === 'pending' ? '#CCCCCC' : '#0060F2' }]}
-                disabled={this.state.bitmark.status === 'pending'}>
+                disabled={this.state.bitmark.status === 'pending'}
+                onPress={() => {
+                  this.props.navigation.navigate('BitmarkDeposit', {
+                    asset: this.state.asset,
+                    bitmark: this.state.bitmark
+                  });
+                }}>
                 <Text style={propertyDetailStyle.listingButtonText}>{'LIST THIS BITMARK TO MARKET'.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
@@ -114,7 +116,7 @@ export class PropertyDetailComponent extends React.Component {
   }
 }
 
-PropertyDetailComponent.propTypes = {
+LocalPropertyDetailComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
@@ -125,8 +127,4 @@ PropertyDetailComponent.propTypes = {
       }),
     }),
   }),
-  screenProps: PropTypes.shape({
-    logout: PropTypes.func,
-  }),
-
 }
