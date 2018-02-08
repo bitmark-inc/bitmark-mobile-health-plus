@@ -57,9 +57,9 @@ class BitmarkSDK: NSObject {
   }
   
   @objc(accountInfo::)
-  func accountInfo(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  func accountInfo(_ sessionId: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let account = try BitmarkSDK.getAccount(network: network)
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }
     catch let e {
@@ -87,9 +87,9 @@ class BitmarkSDK: NSObject {
   }
   
   @objc(registerAccessPublicKey::)
-  func registerAccessPublicKey(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  func registerAccessPublicKey(_ sessionId: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       callback([try account.registerPublicEncryptionKey()])
     }
     catch let e {
@@ -98,10 +98,10 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(issueFile::)
-  func issueFile(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(issueFile:::)
+  func issueFile(_ sessionId: String, _ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let fileURL = input["url"] as! String
       let propertyName = input["property_name"] as! String
       let metadata = input["metadata"] as! [String: String]
@@ -121,10 +121,10 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(issueThenTransferFile::)
-  func issueThenTransferFile(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(issueThenTransferFile:::)
+  func issueThenTransferFile(_ sessionId: String, _ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
-      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let fileURL = input["url"] as! String
       let propertyName = input["property_name"] as! String
       let metadata = input["metadata"] as! [String: String]
@@ -143,11 +143,10 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(sign::)
-  func sign(_ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(sign:::)
+  func sign(_ sessionId: String, _ message: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(network: input["network"] as! String)
-      let message = input["message"] as! String
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let signature = try account.sign(withMessage: message, forAction: .Indentity)
       callback([true, signature.hexEncodedString])
     }
@@ -158,9 +157,9 @@ class BitmarkSDK: NSObject {
   }
   
   @objc(rickySign:::)
-  func rickySign(_ network: String, _ messages: [String], _ callback: @escaping RCTResponseSenderBlock) {
+  func rickySign(_ sessionId: String, _ messages: [String], _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(network: network)
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let signatures = try messages.map({ (message) -> String in
         return (try account.riskySign(withMessage: message)).hexEncodedString
       })
@@ -173,9 +172,9 @@ class BitmarkSDK: NSObject {
   }
   
   @objc(sign1stForTransfer::::)
-  func sign1stForTransfer(_ network: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
+  func sign1stForTransfer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(network: network)
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       guard let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address) else {
         callback([false])
         return
@@ -190,9 +189,9 @@ class BitmarkSDK: NSObject {
   }
   
   @objc(sign2ndForTransfer:::::)
-  func sign2ndForTranfer(_ network: String, _ txId: String, _ address: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
+  func sign2ndForTranfer(_ sessionId: String, _ txId: String, _ address: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(network: network)
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let offer = TransferOffer(txId: txId, receiver: try AccountNumber(address: address), signature: signature.hexDecodedData)
       let counterSignature = try account.createSignForTransferOffer(offer: offer)
       callback([true, counterSignature.counterSignature!.hexEncodedString])
@@ -201,6 +200,28 @@ class BitmarkSDK: NSObject {
       print(e)
       callback([false])
     }
+  }
+  
+  @objc(requestSession::)
+  func requestSession(_ network: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      guard let sessionId = try AccountSession.shared.requestSession(network: network) else {
+        callback([false])
+        return
+      }
+      
+      callback([true, sessionId])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
+  
+  @objc(disposeSession::)
+  func disposeSession(_ sessionId: String, _ callback: @escaping RCTResponseSenderBlock) {
+    AccountSession.shared.disposeSession(sessionId: sessionId)
+    callback([true])
   }
 }
 
@@ -219,12 +240,11 @@ extension BitmarkSDK {
     }
   }
   
-  static func getAccount(network: String) throws -> Account {
-    let network = networkWithName(name: network)
-    guard let core = try KeychainUtil.getCore() else {
+  static func getAccount(sessionId: String) throws -> Account {
+    guard let account = AccountSession.shared.getAccount(sessionId: sessionId) else {
       throw BitmarkSDKError.accountNotFound
     }
     
-    return try Account(core: core, network: network)
+    return account
   }
 }
