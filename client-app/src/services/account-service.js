@@ -1,62 +1,13 @@
 import moment from 'moment';
-import { bitmarkSDK } from './adapters'
+import { BitmarkSDK } from './adapters'
 import { config } from './../configs';
 
 // ================================================================================================
 // ================================================================================================
-// ================================================================================================
-let bitmarkNetwork = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
-const createNewAccount = async () => {
-  return await bitmarkSDK.newAccount(bitmarkNetwork);
-};
-
-const getCurrentAccount = async () => {
-  return await bitmarkSDK.accountInfo(bitmarkNetwork);
-};
-
-const check24Words = async (pharse24Words) => {
-  return await bitmarkSDK.try24Words(pharse24Words);
-};
-
-const accessBy24Words = async (pharse24Words) => {
-  return await bitmarkSDK.newAccountFrom24Words(pharse24Words);
-};
-
-const logout = async () => {
-  return await bitmarkSDK.removeAccount();
-}
-// ================================================================================================
-// ================================================================================================
-const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, marketUrl) => {
-  return new Promise((resolve, reject) => {
-    bitmarkSDK.rickySignMessage([token], bitmarkNetwork).then(signatures => {
-      fetch(marketUrl + '/s/api/mobile/qrcode', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          account_number: loaclBitmarkAccountNumber,
-          action: 'pair',
-          code: token,
-          signature: signatures[0],
-        })
-      }).then((response) => response.json()).then((data) => {
-        console.log('pairtMarketAccounut :', data);
-        resolve(data.user || {});
-      }).catch((error) => {
-        console.log('pairtMarketAccounut error:', error);
-        reject(error);
-      });
-    }).catch(reject);
-  });
-};
-
 const checkPairingStatus = (loaclBitmarkAccountNumber, marketUrl) => {
   let timestamp = moment().toDate().getTime().toString();
   return new Promise((resolve, reject) => {
-    bitmarkSDK.rickySignMessage([timestamp], bitmarkNetwork).then(signatures => {
+    BitmarkSDK.rickySignMessage([timestamp], bitmarkNetwork).then(signatures => {
       let urlCheck = marketUrl + `/s/api/mobile/pairing-account?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signatures[0]}`;
       fetch(urlCheck, {
         method: 'GET',
@@ -72,33 +23,54 @@ const checkPairingStatus = (loaclBitmarkAccountNumber, marketUrl) => {
     }).catch(reject);
   });
 };
-
-
-//TODO for totemic
-const generateCodeForSignInMarket = (marketServerUrl) => {
-  return new Promise((resolve, reject) => {
-    fetch(marketServerUrl + '/s/api/mobile/login', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((response) => response.json()).then((data) => {
-      resolve(data.code || null);
-    }).catch((error) => {
-      reject(error);
-    });
-  });
+// ================================================================================================
+// ================================================================================================
+let bitmarkNetwork = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
+const createNewAccount = async () => {
+  let sessionId = await BitmarkSDK.newAccount(bitmarkNetwork);
+  let userInfo = await BitmarkSDK.accountInfo(sessionId);
+  await BitmarkSDK.disposeSession(sessionId);
+  return userInfo;
 };
 
-const loginMarket = (marketServerUrl, loaclBitmarkAccountNumber) => {
-  return new Promise((resolve, reject) => {
-    let codeResult = '';
-    generateCodeForSignInMarket(marketServerUrl).then((code) => {
-      codeResult = code;
-      return bitmarkSDK.rickySignMessage([code], bitmarkNetwork);
-    }).then(signatures => {
-      return fetch(marketServerUrl + '/s/api/mobile/login', {
+const getCurrentAccount = async () => {
+  let sessionId = await BitmarkSDK.requestSession(bitmarkNetwork);
+  let userInfo = await BitmarkSDK.accountInfo(sessionId);
+  await BitmarkSDK.disposeSession(sessionId);
+  return userInfo;
+};
+
+const check24Words = async (pharse24Words) => {
+  return await BitmarkSDK.try24Words(pharse24Words);
+};
+
+const accessBy24Words = async (pharse24Words) => {
+  let sessionId = await BitmarkSDK.newAccountFrom24Words(pharse24Words);
+  let userInfo = await BitmarkSDK.accountInfo(sessionId);
+  let marketInfos = {};
+  for (let market in config.markets) {
+    let marketInfo = await checkPairingStatus(userInfo.bitmarkAccountNumber, config.market_urls[market]);
+    marketInfos[market] = {
+      id: marketInfo.id,
+      name: marketInfo.name,
+      email: marketInfo.email,
+      account_number: marketInfo.account_number,
+    }
+  }
+  await BitmarkSDK.disposeSession(sessionId);
+  userInfo.marktes = marketInfos;
+  return userInfo;
+};
+
+const logout = async () => {
+  return await BitmarkSDK.removeAccount();
+}
+
+const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, marketUrl) => {
+
+  let requestPair = (signatures) => {
+    return new Promise((resolve, reject) => {
+      fetch(marketUrl + '/s/api/mobile/qrcode', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -106,14 +78,24 @@ const loginMarket = (marketServerUrl, loaclBitmarkAccountNumber) => {
         },
         body: JSON.stringify({
           account_number: loaclBitmarkAccountNumber,
-          code: codeResult,
-          signature: signatures[0],
+          action: 'pair',
+          code: token,
+          signature: signatures,
         })
-      })
-    }).then((response) => response.json()).then((data) => {
-      resolve(data.code || null);
-    }).catch(reject);
-  });
+      }).then((response) => response.json()).then((data) => {
+        resolve(data.user || {});
+      }).catch((error) => {
+        console.log('pairtMarketAccounut error:', error);
+        reject(error);
+      });
+    });
+  }
+
+  let sessionId = await BitmarkSDK.requestSession(bitmarkNetwork);
+  let signature = await BitmarkSDK.rickySignMessage([token], sessionId);
+  let user = await requestPair(signature);
+  await BitmarkSDK.disposeSession(sessionId);
+  return user;
 };
 
 const getBalanceOnMarket = (marketServerUrl) => {
@@ -163,11 +145,10 @@ let AccountService = {
   logout,
   pairtMarketAccounut,
   checkPairingStatus,
-  loginMarket,
   getBalanceOnMarket,
   getBalanceHistoryOnMarket,
 }
 
 export {
-  AccountService
+  AccountService,
 }

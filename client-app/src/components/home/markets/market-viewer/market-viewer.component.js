@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 
 // TODO
-let marketName = 'Totemic';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import termsStyles from './market-viewer.component.style';
 let defaultStyles = Platform.select({
@@ -43,7 +42,7 @@ export class MarketViewerComponent extends React.Component {
     }
   }
   share() {
-    Share.share({ title: marketName, message: marketName, url: this.state.currentUrl });
+    Share.share({ title: this.state.marketName, message: this.state.marketName, url: this.state.currentUrl });
   }
   render() {
     return (

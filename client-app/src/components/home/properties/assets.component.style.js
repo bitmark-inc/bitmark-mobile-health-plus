@@ -3,6 +3,7 @@ import {
   ios,
   android // TODO
 } from './../../../configs';
+import { convertWidth } from '../../../utils/index';
 
 const deviceSize = Dimensions.get('window');
 
@@ -55,9 +56,36 @@ export default StyleSheet.create({
     height: 4,
     backgroundColor: '#0060F2'
   },
+  scrollSubTabArea: {
+    width: '100%',
+    flexDirection: 'column',
+    alignContent: 'center'
+  },
   contentSubTab: {
     width: '100%',
     flexDirection: 'column',
+  },
+  messageNoAssetArea: {
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  messageNoAssetLabel: {
+    marginTop: 46,
+    width: convertWidth(337),
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 17,
+    lineHeight: 19,
+    color: '#0060F2'
+  },
+  messageNoAssetContent: {
+    marginTop: 46,
+    width: convertWidth(337),
+    fontFamily: 'Avenir Light',
+    fontWeight: '300',
+    fontSize: 17,
+    lineHeight: 19,
   },
 
   assetRowArea: {

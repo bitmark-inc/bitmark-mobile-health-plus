@@ -17,29 +17,16 @@ const getCurrentUser = async () => {
 
 const createNewUser = async () => {
   let userInfo = await AccountService.createNewAccount();
-  let userStore = {
-    bitmarkAccountNumber: userInfo.bitmarkAccountNumber,
-  }
-  await CommonService.setLocalData(CommonService.app_local_data_key, userStore);
+  delete userInfo.phase24Words;
+  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
   return userInfo;
 };
 
 const doLogin = async (phase24Words) => {
   let userInfo = await AccountService.accessBy24Words(phase24Words);
-  let userStore = {
-    bitmarkAccountNumber: userInfo.bitmarkAccountNumber,
-  }
-  let marketAccountInfo = await AccountService.checkPairingStatus(userStore.bitmarkAccountNumber, totemicMarketUrl);
-  userStore.markets = {
-    'totemic': {
-      id: marketAccountInfo.id,
-      name: marketAccountInfo.name,
-      email: marketAccountInfo.email,
-      account_number: marketAccountInfo.account_number,
-    }
-  };
-  await CommonService.setLocalData(CommonService.app_local_data_key, userStore);
-  return userStore;
+  delete userInfo.phase24Words;
+  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  return userInfo;
 };
 
 const doLogout = async () => {

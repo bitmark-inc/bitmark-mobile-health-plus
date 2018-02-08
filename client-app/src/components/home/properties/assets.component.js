@@ -32,7 +32,7 @@ export class AssetsComponent extends React.Component {
       subtab: SubTabs.local,
       accountNumber: '',
       copyText: 'COPY',
-      asset: [],
+      assets: [],
       data: {
         localAssets: [],
         marketAssets: [],
@@ -55,15 +55,15 @@ export class AssetsComponent extends React.Component {
   }
 
   switchSubtab(subtab) {
-    let asset = [];
+    let assets = [];
     if (subtab === SubTabs.local) {
-      asset = this.convertToFlatListData(this.state.data.localAssets);
+      assets = this.convertToFlatListData(this.state.data.localAssets);
     } else if (subtab === SubTabs.market) {
-      asset = this.convertToFlatListData(this.state.data.marketAssets);
+      assets = this.convertToFlatListData(this.state.data.marketAssets);
     } else if (subtab === SubTabs.global) {
-      asset = this.convertToFlatListData(this.state.data.localAssets.concat(this.state.data.marketAssets));
+      assets = this.convertToFlatListData(this.state.data.localAssets.concat(this.state.data.marketAssets));
     }
-    this.setState({ subtab, asset });
+    this.setState({ subtab, assets });
   }
 
   render() {
@@ -102,10 +102,24 @@ export class AssetsComponent extends React.Component {
         </View>
         <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <View style={assetsStyle.contentSubTab}>
-            <FlatList
+            {(!this.state.assets || this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
+              {(this.state.subtab === SubTabs.local || this.state.subtab === SubTabs.global) && <Text style={assetsStyle.messageNoAssetLabel}>
+                {'YOu DO not owned any property currently YET.'.toUpperCase()}
+              </Text>}
+              {(this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
+                {'YOu have not paired any markets.'.toUpperCase()}
+              </Text>}
+              {(this.state.subtab === SubTabs.local || this.state.subtab === SubTabs.global) && <Text style={assetsStyle.messageNoAssetContent}>
+                Once you pair your market account with mobile app, you can remove the property from the market and the property will transfer to yours.
+                </Text>}
+              {(this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetContent}>
+                You can pair your market account in the “Market” section with Bitmark app to easily access every markets in the Bitmark system.
+                </Text>}
+            </View>}
+            {(this.state.assets && this.state.assets.length > 0) && <FlatList
               ref={(ref) => this.listViewElement = ref}
               extraData={this.state}
-              data={this.state.asset || []}
+              data={this.state.assets || []}
               renderItem={({ item }) => {
                 return (<TouchableOpacity style={[assetsStyle.assetRowArea,]} onPress={() => {
                   if (item.asset.market) {
@@ -130,7 +144,7 @@ export class AssetsComponent extends React.Component {
                   </View>
                 </TouchableOpacity>)
               }}
-            />
+            />}
           </View>
         </ScrollView>
       </View>
