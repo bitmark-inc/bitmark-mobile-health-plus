@@ -182,7 +182,7 @@ class BitmarkSDK: NSObject {
         return
       }
       
-      callback([true, offer.txId, offer.receiver, offer.signature!.hexEncodedString])
+      callback([true, offer.txId, offer.signature!.hexEncodedString])
     }
     catch let e {
       print(e)
@@ -190,11 +190,11 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(sign2ndForTransfer:::::)
-  func sign2ndForTransfer(_ sessionId: String, _ txId: String, _ address: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(sign2ndForTransfer::::)
+  func sign2ndForTransfer(_ sessionId: String, _ txId: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let offer = TransferOffer(txId: txId, receiver: try AccountNumber(address: address), signature: signature.hexDecodedData)
+      let offer = TransferOffer(txId: txId, receiver: account.accountNumber, signature: signature.hexDecodedData)
       let counterSignature = try account.createSignForTransferOffer(offer: offer)
       callback([true, counterSignature.counterSignature!.hexEncodedString])
     }
