@@ -22,11 +22,11 @@ RCT_EXTERN_METHOD(registerAccessPublicKey:(NSString *)sessionId:(RCTResponseSend
 
 // TODO
 RCT_EXTERN_METHOD(newAccountFrom24Words:(NSArray<NSString *> *)pharse:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(issueFile:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(issueThenTransferFile:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(sign:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(rickySign:(NSString *)network:(NSArray<NSString *>)messages:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(sign1stForTransfer:(NSString *)network:(NSString *)bitmarkId:(NSString *)address:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(sign2ndForTranfer:(NSString *)network:(NSString *)txId:(NSString *)address:(NSString *)signature:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(issueFile:(NSString *)sessionId:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(issueThenTransferFile:(NSString *)sessionId:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(sign:(NSString *)sessionId:(NSString *)message:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(rickySign:(NSString *)sessionId:(NSArray<NSString *>)messages:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(sign1stForTransfer:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)address:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(sign2ndForTransfer:(NSString *)sessionId:(NSString *)txId:(NSString *)address:(NSString *)signature:(RCTResponseSenderBlock)callback)
 
 @end

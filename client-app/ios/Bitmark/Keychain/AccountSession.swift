@@ -20,8 +20,14 @@ class AccountSession {
       return nil
     }
     
-    sessionMap["uuid"] = account
+    sessionMap[uuid] = account
     
+    return uuid
+  }
+  
+  func addSessionForAccount(_ account: Account) -> String {
+    let uuid = UUID().uuidString.lowercased()
+    sessionMap[uuid] = account
     return uuid
   }
   

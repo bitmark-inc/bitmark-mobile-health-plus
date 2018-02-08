@@ -23,7 +23,8 @@ class BitmarkSDK: NSObject {
       let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(network: network)
       try KeychainUtil.saveCore(account.core)
-      callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
+      let sessionId = AccountSession.shared.addSessionForAccount(account)
+      callback([true, sessionId])
     }
     catch let e {
       print(e)
@@ -36,7 +37,8 @@ class BitmarkSDK: NSObject {
     do {
       let account = try Account(recoverPhrase: pharse)
       try KeychainUtil.saveCore(account.core)
-      callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
+      let sessionId = AccountSession.shared.addSessionForAccount(account)
+      callback([true, sessionId])
     }
     catch let e {
       print(e)
@@ -48,7 +50,7 @@ class BitmarkSDK: NSObject {
   func try24Words(_ pharse: [String], _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let account = try Account(recoverPhrase: pharse)
-      callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
+      callback([true, account.accountNumber.string])
     }
     catch let e {
       print(e)
@@ -189,7 +191,7 @@ class BitmarkSDK: NSObject {
   }
   
   @objc(sign2ndForTransfer:::::)
-  func sign2ndForTranfer(_ sessionId: String, _ txId: String, _ address: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
+  func sign2ndForTransfer(_ sessionId: String, _ txId: String, _ address: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let offer = TransferOffer(txId: txId, receiver: try AccountNumber(address: address), signature: signature.hexDecodedData)
