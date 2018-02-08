@@ -1,7 +1,7 @@
 import { StyleSheet, Platform, Dimensions } from 'react-native';
 import {
   ios,
-  android // TODO
+  android
 } from './../../../configs';
 import { convertWidth } from '../../../utils/index';
 
@@ -158,5 +158,13 @@ export default StyleSheet.create({
     width: 7,
     height: 14,
     resizeMode: 'contain',
-  }
+  },
+
+  globalArea: {
+    flexDirection: 'row',
+    borderTopColor: '#C0CCDF',
+    borderTopWidth: 1,
+    height: deviceSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter - constant.subTabSizeHeight,
+    backgroundColor: 'white',
+  },
 });

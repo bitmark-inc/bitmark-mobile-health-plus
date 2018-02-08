@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image,
   Platform,
+  WebView,
 } from 'react-native';
 
 import { config } from './../../../configs';
@@ -103,20 +104,20 @@ export class AssetsComponent extends React.Component {
         <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <View style={assetsStyle.contentSubTab}>
             {(!this.state.assets || this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
-              {(this.state.subtab === SubTabs.local || this.state.subtab === SubTabs.global) && <Text style={assetsStyle.messageNoAssetLabel}>
+              {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'YOu DO not owned any property currently YET.'.toUpperCase()}
               </Text>}
               {(this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'YOu have not paired any markets.'.toUpperCase()}
               </Text>}
-              {(this.state.subtab === SubTabs.local || this.state.subtab === SubTabs.global) && <Text style={assetsStyle.messageNoAssetContent}>
+              {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
                 Once you pair your market account with mobile app, you can remove the property from the market and the property will transfer to yours.
                 </Text>}
               {(this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetContent}>
                 You can pair your market account in the “Market” section with Bitmark app to easily access every markets in the Bitmark system.
                 </Text>}
             </View>}
-            {(this.state.assets && this.state.assets.length > 0) && <FlatList
+            {(this.state.assets && this.state.assets.length > 0 && (this.state.subtab === SubTabs.local || this.state.subtab === SubTabs.market)) && <FlatList
               ref={(ref) => this.listViewElement = ref}
               extraData={this.state}
               data={this.state.assets || []}
@@ -145,6 +146,9 @@ export class AssetsComponent extends React.Component {
                 </TouchableOpacity>)
               }}
             />}
+            {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
+              <WebView source={{ uri: config.registry_server_url }} />
+            </View>}
           </View>
         </ScrollView>
       </View>

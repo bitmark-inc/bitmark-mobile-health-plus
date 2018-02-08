@@ -146,7 +146,7 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 10,
     lineHeight: 12,
-    minWidth: 70,
+    minWidth: convertWidth(70),
   },
   bitmarkListArea: {
     flexDirection: 'row',
@@ -161,13 +161,13 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 10,
     lineHeight: 12,
-    minWidth: 70,
+    minWidth: convertWidth(70),
   },
   bitmarksRowNoPending: {
     fontFamily: 'Andale Mono',
     fontSize: 10,
     lineHeight: 12,
-    minWidth: 70,
+    minWidth: convertWidth(70),
     color: '#CCCCCC',
   },
   bitmarksRowListingButton: {

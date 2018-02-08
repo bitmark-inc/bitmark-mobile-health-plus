@@ -6,7 +6,6 @@ import {
   Share,
 } from 'react-native';
 
-// TODO
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import termsStyles from './market-viewer.component.style';
 let defaultStyles = Platform.select({
