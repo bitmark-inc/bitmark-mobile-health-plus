@@ -54,7 +54,7 @@ const pairtMarketAccounut = (loaclBitmarkAccountNumber, token, marketUrl) => {
 };
 
 const checkPairingStatus = (loaclBitmarkAccountNumber, marketUrl) => {
-  let timestamp = moment().getTime().toString();
+  let timestamp = moment().toDate().getTime().toString();
   return new Promise((resolve, reject) => {
     bitmarkSDK.rickySignMessage([timestamp], bitmarkNetwork).then(signatures => {
       let urlCheck = marketUrl + `/s/api/mobile/pairing-account?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signatures[0]}`;
