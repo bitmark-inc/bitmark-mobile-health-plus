@@ -166,7 +166,7 @@ public struct TransferOffer {
             txData += Data(bytes: [0x00])
         }
         
-        txData = BinaryPacking.append(toData: txData, withData: self.receiver.pubKey)
+        txData = BinaryPacking.append(toData: txData, withAccount: self.receiver)
         
         return txData
     }
@@ -200,7 +200,7 @@ public struct CountersignedTransferRecord {
             txData += Data(bytes: [0x00])
         }
         
-        txData = BinaryPacking.append(toData: txData, withData: offer.receiver.pubKey)
+        txData = BinaryPacking.append(toData: txData, withAccount: offer.receiver)
         txData = BinaryPacking.append(toData: txData, withData: offer.signature)
         
         return txData

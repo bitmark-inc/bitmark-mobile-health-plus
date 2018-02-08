@@ -25,4 +25,8 @@ class BinaryPacking {
             return data
         }
     }
+    
+    static func append(toData data: Data, withAccount account: AccountNumber) -> Data {
+        return append(toData: data, withData: account.pack())
+    }
 }
