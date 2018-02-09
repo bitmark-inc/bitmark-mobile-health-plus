@@ -66,7 +66,11 @@ export class MarketsComponent extends React.Component {
               </Text>}
               {(!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
                 !this.state.user.markets.totemic.account_number) && <View style={marketsStyle.marketCardButtonArea}>
-                  <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => { this.props.screenProps.homeNavigation.navigate('MarketLogin') }}>
+                  <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
+                    this.props.screenProps.homeNavigation.navigate('MarketLogin', {
+                      market: config.markets.totemic.name
+                    });
+                  }}>
                     <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-create-account.png')} />
                     <Text style={marketsStyle.marketCardButtonItemText}>CREATE TOTEMIC ACCOUNT</Text>
                   </TouchableOpacity>

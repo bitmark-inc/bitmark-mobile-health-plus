@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image,
+  View, Text, TouchableOpacity, Image, WebView,
   Platform,
 } from 'react-native';
 
+import { AppService } from './../../../../services';
+
 import marketLoginStyle from './market-login.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import { config } from '../../../../configs';
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle
@@ -15,7 +18,18 @@ let defaultStyle = Platform.select({
 export class MarketLoginComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      market: this.props.navigation.state.params.market,
+      user: null,
+    };
+    AppService.getCurrentUser().then(user => {
+      this.setState({ user });
+    }).catch((error) => {
+      console.log('getCurrentUser error :', error);
+      this.setState({ user: null })
+    })
   }
+
   render() {
     return (
       <View style={marketLoginStyle.body}>
@@ -23,9 +37,22 @@ export class MarketLoginComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}></Text>
+          <Text style={defaultStyle.headerTitle}>{this.state.market.charAt(0).toUpperCase() + this.state.market.slice(1)}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
+        {this.state.user && this.state.user.bitmarkAccountNumber && <View style={marketLoginStyle.main}>
+          <WebView
+            onMessage={(event) => {
+              console.log('onMessage :', event);
+              let message = event.nativeEvent.data;
+              console.log(message, this.state.user.bitmarkAccountNumber);
+              if (message === 'ready') {
+                this.webViewRef.postMessage(this.state.user.bitmarkAccountNumber);
+              }
+            }}
+            ref={(ref) => this.webViewRef = ref}
+            source={{ uri: config.market_urls[this.state.market] + '/login' }} />
+        </View>}
       </View>
     );
   }
@@ -35,5 +62,11 @@ MarketLoginComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        reloadMarketsScreen: PropTypes.func,
+        market: PropTypes.string,
+      }),
+    }),
   }),
 }

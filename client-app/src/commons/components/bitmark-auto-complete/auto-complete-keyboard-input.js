@@ -189,7 +189,7 @@ export class AutoCompleteKeyboardInput extends React.Component {
           bottom: this.state.extBottom,
           opacity: this.props.onlyDisplayWhenCalled ? this.state.opacity : new Animated.Value(1),
         }]}>
-          <View style={[styles.selectionArea, this.selectionAreaStyle]}>
+          {this.onSelectWord && <View style={[styles.selectionArea, this.selectionAreaStyle]}>
             <TouchableOpacity style={styles.nextButton} onPress={this.props.goToNextInputField}>
               <Image style={styles.nextButtonImage} source={require('./../../../../assets/imgs/arrow_down_enable.png')} />
             </TouchableOpacity>
@@ -213,7 +213,7 @@ export class AutoCompleteKeyboardInput extends React.Component {
             <TouchableOpacity style={styles.doneButton} onPress={this.hideKeyboardInput} disabled={this.state.status !== AutoCompleteKeyboardInput.statuses.done}>
               <Text style={[styles.doneButtonText, { color: this.state.status === AutoCompleteKeyboardInput.statuses.done ? '#0060F2' : 'gray' }]}>Done</Text>
             </TouchableOpacity>
-          </View>
+          </View>}
         </Animated.View>
       </TouchableWithoutFeedback>
     );

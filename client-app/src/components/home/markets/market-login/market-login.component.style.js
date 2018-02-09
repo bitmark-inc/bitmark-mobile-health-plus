@@ -1,5 +1,4 @@
 import { StyleSheet, Platform, Dimensions } from 'react-native';
-import { convertWidth } from './../../../../utils';
 import {
   ios,
   android // TODO
@@ -14,12 +13,15 @@ let constant = Platform.select({
 
 export default StyleSheet.create({
   body: {
+    flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter + constant.headerSize.height),
-    width: '100%',
-    backgroundColor: '#E5E5E5'
+    backgroundColor: '#E5E5E5',
   },
 
-
+  main: {
+    borderTopColor: '#C0CCDF',
+    borderTopWidth: 0.5,
+    height: deviceSize.height - constant.headerSize.height,
+    backgroundColor: 'white',
+  },
 });
