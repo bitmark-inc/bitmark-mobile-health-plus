@@ -72,7 +72,7 @@ export class AssetsComponent extends React.Component {
       <View style={assetsStyle.body}>
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>Simplebar</Text>
+          <Text style={defaultStyle.headerTitle}>Properties</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
         <View style={assetsStyle.subTabArea}>
