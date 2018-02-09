@@ -146,7 +146,7 @@ export default StyleSheet.create({
     height: 62,
     flexDirection: 'row',
   },
-  assetBitamrksNumber: {
+  assetBitmarksNumber: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 12,
@@ -154,7 +154,7 @@ export default StyleSheet.create({
     color: '#0060F2',
     marginRight: 5,
   },
-  assetBitamrksDetail: {
+  assetBitmarksDetail: {
     width: 7,
     height: 14,
     resizeMode: 'contain',

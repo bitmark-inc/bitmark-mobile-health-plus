@@ -33,7 +33,6 @@ export class MarketPropertyDetailComponent extends React.Component {
       displayTopButton: false,
     };
     MarketService.getProvenance(bitmark).then(provenance => {
-      console.log('getProvenance :', provenance);
       let histories = [];
       provenance.forEach((history, key) => {
         histories.push({ key, history });
@@ -117,7 +116,7 @@ export class MarketPropertyDetailComponent extends React.Component {
                 onPress={() => {
                   this.props.navigation.navigate('BitmarkWithdraw', {
                     asset: this.state.asset,
-                    bitamrk: this.state.bitmark,
+                    bitmark: this.state.bitmark,
                   });
                 }}>
                 <Text style={propertyDetailStyle.listingButtonText}>REMOVE FROM MARKET</Text>

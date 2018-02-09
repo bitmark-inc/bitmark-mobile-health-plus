@@ -24,8 +24,6 @@ export class BitmarkAutoCompleteComponent extends React.Component {
       dataSource: this.props.dataSource,
       isDone: this.props.isDone
     };
-    console.log('BitmarkAutoCompleteComponent :', this.state);
-
   }
   // ==========================================================================================
   componentDidMount() {
@@ -43,12 +41,10 @@ export class BitmarkAutoCompleteComponent extends React.Component {
   // ==========================================================================================
 
   onKeyboardDidShow(keyboardEvent) {
-    console.log('onKeyboardDidShow :', keyboardEvent);
     this.setState({ topKeyboardPosition: keyboardEvent.endCoordinates.height });
   }
 
   onKeyboardWillHide() {
-    console.log('onKeyboardWillHide :');
     this.setState({ topKeyboardPosition: currentSize.height, });
   }
   // ==========================================================================================

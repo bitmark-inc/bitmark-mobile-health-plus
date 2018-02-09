@@ -20,6 +20,9 @@ let defaultStyle = Platform.select({
 export class MarketAssetDetailComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.viewOnMarket = this.viewOnMarket.bind(this);
+    this.goToWithdraw = this.goToWithdraw.bind(this);
+
     let asset;
     asset = this.props.navigation.state.params.asset;
     let bitmarks = [];
@@ -37,6 +40,20 @@ export class MarketAssetDetailComponent extends React.Component {
       displayTopButton: false,
       copied: false,
     };
+  }
+
+  viewOnMarket(bitmark) {
+    let url = MarketService.getListingUrl(bitmark);
+    this.props.navigation.navigate('MarketViewer', {
+      url, name: bitmark.market.charAt(0).toUpperCase() + bitmark.market.slice(1)
+    });
+  }
+
+  goToWithdraw(bitmark) {
+    this.props.navigation.navigate('BitmarkWithdraw', {
+      asset: this.state.asset,
+      bitmark: bitmark,
+    });
   }
 
 
@@ -103,12 +120,7 @@ export class MarketAssetDetailComponent extends React.Component {
                         {Math.floor(item.bitmark.order_price / 1E4) / 1E5} ETH
                       </Text>}
                       {!(item.bitmark.status !== 'pending' && item.bitmark.order_price) &&
-                        <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
-                          let url = MarketService.getListingUrl(item.bitmark);
-                          this.props.navigation.navigate('MarketViewer', {
-                            url, name: item.bitmark.market.charAt(0).toUpperCase() + item.bitmark.market.slice(1)
-                          });
-                        }}>
+                        <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => this.viewOnMarket(item.bitmark)}>
                           {item.bitmark.status !== 'pending' && !item.bitmark.order_price && <Text style={assetDetailStyle.bitmarksButtonText}>
                             LIST FOR SALE
                         </Text>}
@@ -116,10 +128,11 @@ export class MarketAssetDetailComponent extends React.Component {
                         </TouchableOpacity>
                       }
                       <TouchableOpacity style={assetDetailStyle.bitmarksRowWithdrawButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
-                        let url = MarketService.getListingUrl(item.bitmark);
-                        this.props.navigation.navigate('MarketViewer', {
-                          url, name: item.bitmark.market.charAt(0).toUpperCase() + item.bitmark.market.slice(1)
-                        });
+                        if (item.bitmark.status !== 'pending' && item.bitmark.order_price) {
+                          this.viewOnMarket(item.bitmark);
+                        } else {
+                          this.goToWithdraw(item.bitmark);
+                        }
                       }}>
                         {item.bitmark.status !== 'pending' && !item.bitmark.order_price && <Text style={assetDetailStyle.bitmarksButtonText}>
                           REMOVE FROM MARKET

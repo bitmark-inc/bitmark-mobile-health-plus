@@ -25,7 +25,6 @@ export class MarketViewerComponent extends React.Component {
       url: this.props.navigation.state.params.url,
       currentUrl: this.props.navigation.state.params.url,
     };
-    console.log(this.state)
   }
   onNavigationStateChange(webViewState) {
     this.setState({

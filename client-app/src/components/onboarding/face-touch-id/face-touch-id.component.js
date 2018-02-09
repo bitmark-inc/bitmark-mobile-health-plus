@@ -14,7 +14,6 @@ import faceTouchIdStyle from './face-touch-id.component.style';
 export class FaceTouchIdComponent extends React.Component {
   constructor(props) {
     super(props);
-    console.log('FaceTouchIdComponent  props :', props);
   }
   render() {
     const resetMainPage = NavigationActions.reset({

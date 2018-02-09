@@ -42,7 +42,6 @@ export class AccountDetailComponent extends React.Component {
     });
 
     AppService.getUserBalance().then(data => {
-      console.log('data :', data);
       let balanceHistories = [];
       data.balanceHistories.forEach((history, index) => {
         balanceHistories.push({ key: index, history });
@@ -122,7 +121,6 @@ export class AccountDetailComponent extends React.Component {
                   scrollEnabled={false}
                   extraData={this.state}
                   renderItem={({ item }) => {
-                    console.log('item :', item);
                     return (
                       <View style={accountStyle.marketBalanceHistoryItem}>
                         <Text style={accountStyle.marketBalanceHistoryItemAction}>{item.history.action}</Text>

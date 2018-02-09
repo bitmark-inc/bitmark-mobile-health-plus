@@ -27,7 +27,6 @@ export class UserComponent extends React.Component {
     this.state = {
       mainTab: MainTabs.properties,
     };
-    console.log('UserComponent props:', props);
   }
 
   logout() {

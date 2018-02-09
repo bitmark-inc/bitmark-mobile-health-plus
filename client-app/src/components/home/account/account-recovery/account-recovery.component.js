@@ -21,7 +21,6 @@ let curretnUser;
 class RecoveryPhraseComponent extends React.Component {
   constructor(props) {
     super(props);
-    console.log('props:', props);
   }
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
@@ -131,7 +130,6 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
                 scrollEnabled={false}
                 extraData={this.state.biggerList}
                 renderItem={({ item }) => {
-                  console.log(item.key);
                   return (
                     <View style={accountRecoveryStyle.recoveryPhraseSet}>
                       <Text style={accountRecoveryStyle.recoveryPhraseIndex}>{parseInt(item.key) + 1}.</Text>
@@ -531,7 +529,6 @@ let AccountRecoveryDetailComponent = StackNavigator({
 
 export class AccountRecoveryComponent extends React.Component {
   render() {
-    console.log('AccountRecoveryComponent props:', this.props);
     return (<View style={accountRecoveryStyle.body}>
       <AccountRecoveryDetailComponent screenProps={{
         accountNavigation: this.props.navigation,

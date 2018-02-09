@@ -35,7 +35,6 @@ export class MarketPairComponent extends React.Component {
     let market = qrCodeString.substring(0, qrCodeString.indexOf(':'));
     let token = qrCodeString.substring(qrCodeString.indexOf(':') + 1);
     AppService.doPairMarketAccount(token, market).then((user) => {
-      console.log('doPairMarketAccount success :', user);
       if (this.props.navigation.state.params.reloadMarketsScreen) {
         this.props.navigation.state.params.reloadMarketsScreen();
       }

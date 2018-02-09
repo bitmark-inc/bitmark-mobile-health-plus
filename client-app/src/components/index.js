@@ -27,7 +27,6 @@ class MainComponent extends Component {
 
     AppService.getCurrentUser().then((user) => {
       this.setState({ user });
-      console.log('current user :', user);
     }).catch(error => {
       console.log(error);
       this.setState({ user: {} })

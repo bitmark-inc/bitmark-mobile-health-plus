@@ -39,11 +39,11 @@ export class AssetsComponent extends React.Component {
         marketAssets: [],
       }
     };
-    AppService.getUserBitamrk().then((data) => {
+    AppService.getUserBitmark().then((data) => {
       this.setState({ data });
       this.switchSubtab(this.state.subtab);
     }).catch((error) => {
-      console.log('getUserBitamrk error :', error);
+      console.log('getUserBitmark error :', error);
     });
   }
 
@@ -138,9 +138,9 @@ export class AssetsComponent extends React.Component {
                   <View style={assetsStyle.assetBitmark}>
                     {(item.asset.totalPending > 0) && <Text style={assetsStyle.assetBitmarkPending}>Pending...({item.asset.totalPending + '/' + item.asset.bitmarks.length})</Text>}
                     {item.asset.totalPending === 0 && <View style={assetsStyle.assetBitmarkNormal}>
-                      <Text style={assetsStyle.assetBitamrksNumber}>{item.asset.bitmarks.length}</Text>
-                      <Image style={assetsStyle.assetBitamrksDetail} source={require('./../../../../assets/imgs/next-icon.png')} />
-                      <Image style={assetsStyle.assetBitamrksDetail} source={require('./../../../../assets/imgs/next-icon.png')} />
+                      <Text style={assetsStyle.assetBitmarksNumber}>{item.asset.bitmarks.length}</Text>
+                      <Image style={assetsStyle.assetBitmarksDetail} source={require('./../../../../assets/imgs/next-icon.png')} />
+                      <Image style={assetsStyle.assetBitmarksDetail} source={require('./../../../../assets/imgs/next-icon.png')} />
                     </View>}
                   </View>
                 </TouchableOpacity>)

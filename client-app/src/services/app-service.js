@@ -57,14 +57,14 @@ const doPairMarketAccount = async (token, market) => {
   return userInfo;
 };
 
-const getUserBitamrk = async () => {
+const getUserBitmark = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let marketAssets = [];
   for (let market in userInfo.markets) {
     let tempBitmarks = await MarketService.getBitmarks(market, userInfo.markets[market].id);
     marketAssets = marketAssets.concat(tempBitmarks || []);
   }
-  let localAssets = await BitmarkService.getBitamrks(userInfo.bitmarkAccountNumber);
+  let localAssets = await BitmarkService.getBitmarks(userInfo.bitmarkAccountNumber);
   return {
     localAssets,
     marketAssets
@@ -81,9 +81,9 @@ const doWithdraw = async (bitmark) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let sessionId = await BitmarkSDK.requestSession(bitmarkNetwork);
   let timestamp = moment().toDate().getTime() + '';
-  let signatures = await BitmarkSDK.rickySignMessage(timestamp, sessionId);
+  let signatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
 
-  let data = await MarketService.withdraw(userInfo.bitmarkAccountNumber, timestamp, signatures, [bitmark.bitmark_id]);
+  let data = await BitmarkService.withdraw(userInfo.bitmarkAccountNumber, timestamp, signatures[0], [bitmark.bitmark_id]);
   console.log('first signature :', data);
 };
 
@@ -96,7 +96,7 @@ let AppService = {
   doLogin,
   doLogout,
   doPairMarketAccount,
-  getUserBitamrk,
+  getUserBitmark,
   getUserBalance,
   doWithdraw,
 }

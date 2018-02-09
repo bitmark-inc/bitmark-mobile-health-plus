@@ -65,7 +65,6 @@ const BitmarkSDK = {
   accountInfo: (sessionId) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.accountInfo(sessionId, (ok, bitmarkAccountNumber, pharse24Words) => {
-        console.log('accountInfo :', ok, bitmarkAccountNumber, pharse24Words);
         if (ok) {
           resolve({ bitmarkAccountNumber, pharse24Words });
         } else {

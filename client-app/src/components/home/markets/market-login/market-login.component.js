@@ -15,13 +15,7 @@ let defaultStyle = Platform.select({
 export class MarketLoginComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.onBarCodeRead = this.onBarCodeRead.bind(this);
   }
-
-  onBarCodeRead(e) {
-    console.log('onBarCodeRead :', e)
-  }
-
   render() {
     return (
       <View style={marketLoginStyle.body}>

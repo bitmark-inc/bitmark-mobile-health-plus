@@ -72,7 +72,6 @@ class PropertyPrivateYourDataComponent extends React.Component {
         </View>
         <View style={newAccountStyle.letDoItButtonArea}>
           <TouchableOpacity style={[newAccountStyle.letDoItButton]} onPress={() => {
-            console.log('call creatre bitamrk account');
             this.props.screenProps.createBitmarkAccount();
           }}>
             <Text style={[newAccountStyle.letDoItButtonText]}>LET’S DO IT!</Text>

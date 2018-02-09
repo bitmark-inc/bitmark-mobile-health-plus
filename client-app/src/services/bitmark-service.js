@@ -7,7 +7,7 @@ import { config } from './../configs';
 
 // ===================================================================================================================
 // ===================================================================================================================
-const getBitamrks = (loaclBitmarkAccountNumber) => {
+const getBitmarks = (loaclBitmarkAccountNumber) => {
   return new Promise((resolve, reject) => {
     fetch(config.get_way_server_url + `/v1/bitmarks?owner=${loaclBitmarkAccountNumber}&asset=true`, {
       method: 'GET',
@@ -52,7 +52,6 @@ const getProvenance = (bitmark) => {
         'Content-Type': 'application/json',
       }
     }).then((response) => response.json()).then((data) => {
-      console.log('getProvenance :', data);
       let provenance = (data.bitmark && data.bitmark.provenance) ? data.bitmark.provenance : [];
       provenance.forEach(item => item.created_at = moment(item.created_at).format('YYYY MMM DD HH:mm:ss'));
       resolve(provenance);
@@ -60,9 +59,32 @@ const getProvenance = (bitmark) => {
   });
 }
 
+const withdraw = (localBitmarkAccount, timestamp, signature, bitmarkIds) => {
+  return new Promise((resolve, reject) => {
+    let withdrawURL = config.trade_server_url + `/bitmarks/withdraw`;
+    console.log('withdrawURL :', withdrawURL);
+    fetch(withdrawURL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: 'user/' + localBitmarkAccount,
+        signature: signature,
+        timestamp: timestamp
+      },
+      body: JSON.stringify({
+        bitmarks: bitmarkIds
+      })
+    }).then((response) => response.json()).then((data) => {
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 let BitmarkService = {
-  getBitamrks,
+  getBitmarks,
   getProvenance,
+  withdraw,
 };
 
 export { BitmarkService };

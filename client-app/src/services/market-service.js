@@ -89,33 +89,11 @@ const getProvenance = (bitmark) => {
   });
 };
 
-const withdraw = (localBitmarkAccount, timestamp, signature, bitmarkIds) => {
-  return new Promise((resolve, reject) => {
-    let withdrawURL = config.trade_server_url + `/bitmarks/withdraw`;
-    fetch(withdrawURL, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        requester: 'user/' + localBitmarkAccount,
-        signature: signature,
-        timestamp: timestamp
-      },
-      body: JSON.stringify({
-        bitmarks: bitmarkIds
-      })
-    }).then((response) => response.json()).then((data) => {
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
 let MarketService = {
   getListingUrl,
   getBalancUrl,
   getBitmarks,
   getProvenance,
-  withdraw,
 }
 
 export {
