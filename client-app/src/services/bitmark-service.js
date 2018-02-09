@@ -19,14 +19,17 @@ const getBitamrks = (loaclBitmarkAccountNumber) => {
       let localAssets = [];
       if (localBitmarks && localBitmarks.bitmarks && localBitmarks.assets) {
         localBitmarks.assets.forEach((asset) => {
+          asset.asset_id = asset.id;
           localBitmarks.bitmarks.forEach((bitmark) => {
+            if (!bitmark.bitmark_id) {
+              bitmark.bitmark_id = bitmark.id;
+            }
             if (bitmark.asset_id === asset.id) {
               if (!asset.bitmarks) {
                 asset.bitmarks = [];
                 asset.totalPending = 0;
               }
               asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
-              asset.metadata['test'] = 'test';
               asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
               asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
               asset.bitmarks.push(bitmark);

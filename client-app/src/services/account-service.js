@@ -2,6 +2,7 @@ import moment from 'moment';
 import { BitmarkSDK } from './adapters'
 import { config } from './../configs';
 
+let bitmarkNetwork = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
 // ================================================================================================
 // ================================================================================================
 const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, signature) => {
@@ -23,7 +24,6 @@ const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, sig
 
 // ================================================================================================
 // ================================================================================================
-let bitmarkNetwork = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
 const createNewAccount = async () => {
   let sessionId = await BitmarkSDK.newAccount(bitmarkNetwork);
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
@@ -58,7 +58,7 @@ const accessBy24Words = async (pharse24Words) => {
     }
   }
   await BitmarkSDK.disposeSession(sessionId);
-  userInfo.marktes = marketInfos;
+  userInfo.markets = marketInfos;
   return userInfo;
 };
 
@@ -95,8 +95,8 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
   }
 
   let sessionId = await BitmarkSDK.requestSession(bitmarkNetwork);
-  let signature = await BitmarkSDK.rickySignMessage([token], sessionId);
-  let user = await requestPair(signature);
+  let signatures = await BitmarkSDK.rickySignMessage([token], sessionId);
+  let user = await requestPair(signatures[0]);
   await BitmarkSDK.disposeSession(sessionId);
   return user;
 };

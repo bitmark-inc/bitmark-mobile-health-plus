@@ -16,6 +16,7 @@ let config = {
   get_way_server_url: 'https://api.test.bitmark.com',
   preive_asset_url: 'https://preview.assets.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
+  trade_server_url: 'http://trade-ex.cluster.devel.bitmark.com:30095',
   market_urls: {
     totemic: '',
   },
@@ -28,15 +29,17 @@ let config = {
 };
 
 // local
-config.market_urls.totemic = 'http://192.168.0.101:8088';
+config.market_urls.totemic = 'http://192.168.0.100:8088';
 
 if (config.network === NETWORKS.testnet) {
   config.market_urls.totemic = 'https://totemic.test.bitmark.com';
+  config.trade_server_url = 'http://trade-ex.cluster.test.bitmark.com:30095';
 } else if (config.network === NETWORKS.livenet) {
   config.get_way_server_url = 'https://api.bitmark.com';
   config.preive_asset_url = 'https://preview.assets.bitmark.com';
   config.registry_server_url = 'https://registry.bitmark.com';
   //TODO
+  config.trade_server_url = '';
   config.market_urls.totemic = '';
 }
 

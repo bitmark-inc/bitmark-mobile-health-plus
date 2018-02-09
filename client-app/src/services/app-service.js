@@ -1,10 +1,16 @@
+import moment from 'moment';
+
 import { config } from './../configs';
+
+import { BitmarkSDK } from './adapters';
+
 import { CommonService } from './common-service';
 import { AccountService } from './account-service';
 import { BitmarkService } from './bitmark-service';
 import { MarketService } from './market-service';
 
 
+let bitmarkNetwork = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -17,14 +23,14 @@ const getCurrentUser = async () => {
 
 const createNewUser = async () => {
   let userInfo = await AccountService.createNewAccount();
-  delete userInfo.phase24Words;
+  delete userInfo.pharse24Words;
   await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
   return userInfo;
 };
 
-const doLogin = async (phase24Words) => {
-  let userInfo = await AccountService.accessBy24Words(phase24Words);
-  delete userInfo.phase24Words;
+const doLogin = async (pharse24Words) => {
+  let userInfo = await AccountService.accessBy24Words(pharse24Words);
+  delete userInfo.pharse24Words;
   await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
   return userInfo;
 };
@@ -71,6 +77,16 @@ const getUserBalance = async () => {
   return { balance: balanceResult.balance, pending: balanceResult.pending, balanceHistories };
 };
 
+const doWithdraw = async (bitmark) => {
+  let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
+  let sessionId = await BitmarkSDK.requestSession(bitmarkNetwork);
+  let timestamp = moment().toDate().getTime() + '';
+  let signatures = await BitmarkSDK.rickySignMessage(timestamp, sessionId);
+
+  let data = await MarketService.withdraw(userInfo.bitmarkAccountNumber, timestamp, signatures, [bitmark.bitmark_id]);
+  console.log('first signature :', data);
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -82,6 +98,7 @@ let AppService = {
   doPairMarketAccount,
   getUserBitamrk,
   getUserBalance,
+  doWithdraw,
 }
 
 export {

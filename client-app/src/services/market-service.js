@@ -17,7 +17,6 @@ const convertDataFromMarket = (market, marketBitmarks) => {
               asset.totalPending = 0;
             }
             asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
-            asset.metadata['test'] = 'test';
             asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
             asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss');
             let issuer = (marketBitmarks.users || []).find((user) => user.id === asset.creator_id);
@@ -90,11 +89,33 @@ const getProvenance = (bitmark) => {
   });
 };
 
+const withdraw = (localBitmarkAccount, timestamp, signature, bitmarkIds) => {
+  return new Promise((resolve, reject) => {
+    let withdrawURL = config.trade_server_url + `/bitmarks/withdraw`;
+    fetch(withdrawURL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: 'user/' + localBitmarkAccount,
+        signature: signature,
+        timestamp: timestamp
+      },
+      body: JSON.stringify({
+        bitmarks: bitmarkIds
+      })
+    }).then((response) => response.json()).then((data) => {
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 let MarketService = {
   getListingUrl,
   getBalancUrl,
   getBitmarks,
   getProvenance,
+  withdraw,
 }
 
 export {
