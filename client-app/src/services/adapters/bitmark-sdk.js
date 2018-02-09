@@ -5,9 +5,9 @@ const BitmarkSDK = {
   // return session id
   newAccount: (network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccount(network, (ok, bitmarkAccountNumber, pharse24Words) => {
+      SwiftBitmarkSDK.newAccount(network, (ok, sessionId) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber, pharse24Words });
+          resolve(sessionId);
         } else {
           reject(new Error('Can not create new Account!'));
         }
@@ -16,9 +16,9 @@ const BitmarkSDK = {
   },
   newAccountFrom24Words: (pharse24Words) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFrom24Words(pharse24Words, (ok, bitmarkAccountNumber, pharse24Words) => {
+      SwiftBitmarkSDK.newAccountFrom24Words(pharse24Words, (ok, sessionId) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber, pharse24Words });
+          resolve(sessionId);
         } else {
           reject(new Error('Can not recovery account from 24 words!'));
         }
