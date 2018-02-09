@@ -74,6 +74,7 @@ export class MarketsComponent extends React.Component {
                   <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
                     this.props.screenProps.homeNavigation.navigate('MarketPair', {
                       reloadMarketsScreen: this.reload,
+                      market: config.markets.totemic.name,
                     });
                   }}>
                     <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-pair-account.png')} />

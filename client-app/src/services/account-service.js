@@ -4,25 +4,46 @@ import { config } from './../configs';
 
 // ================================================================================================
 // ================================================================================================
-const checkPairingStatus = (loaclBitmarkAccountNumber, marketUrl) => {
-  let timestamp = moment().toDate().getTime().toString();
+const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, signature) => {
   return new Promise((resolve, reject) => {
-    BitmarkSDK.rickySignMessage([timestamp], bitmarkNetwork).then(signatures => {
-      let urlCheck = marketUrl + `/s/api/mobile/pairing-account?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signatures[0]}`;
-      fetch(urlCheck, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      }).then((response) => response.json()).then((data) => {
-        resolve(data.user || {});
-      }).catch((error) => {
-        reject(error);
-      });
-    }).catch(reject);
+    let urlCheck = marketUrl + `/s/api/mobile/pairing-account?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signature}`;
+    fetch(urlCheck, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => response.json()).then((data) => {
+      resolve(data.user || {});
+    }).catch((error) => {
+      reject(error);
+    });
   });
 };
+
+// const checkSession = (marketUrl, loaclBitmarkAccountNumber) => {
+//   return new Promise((resolve, reject) => {
+//     //TODO urlCheck
+//     let urlCheck = marketUrl + `/s/api/check-session?account_number=${loaclBitmarkAccountNumber}`;
+//     fetch(urlCheck, {
+//       method: 'GET',
+//       headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json',
+//       }
+//     }).then((response) => {
+//       if (response.status === 401) {
+//         return Promise.resolve(false);
+//       } else {
+//         return response.json();
+//       }
+//     }).then((result) => {
+//       resolve(!!result);
+//     }).catch((error) => {
+//       reject(error);
+//     });
+//   });
+// };
 // ================================================================================================
 // ================================================================================================
 let bitmarkNetwork = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
@@ -49,7 +70,9 @@ const accessBy24Words = async (pharse24Words) => {
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
   let marketInfos = {};
   for (let market in config.markets) {
-    let marketInfo = await checkPairingStatus(userInfo.bitmarkAccountNumber, config.market_urls[market]);
+    let timestamp = moment().toDate().getTime().toString();
+    let signatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
+    let marketInfo = await checkPairingStatus(config.market_urls[market], userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
     marketInfos[market] = {
       id: marketInfo.id,
       name: marketInfo.name,
@@ -144,7 +167,6 @@ let AccountService = {
   accessBy24Words,
   logout,
   pairtMarketAccounut,
-  checkPairingStatus,
   getBalanceOnMarket,
   getBalanceHistoryOnMarket,
 }

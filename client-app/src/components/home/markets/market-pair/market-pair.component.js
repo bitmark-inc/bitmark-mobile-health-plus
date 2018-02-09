@@ -19,7 +19,9 @@ let defaultStyle = Platform.select({
 export class MarketPairComponent extends React.Component {
   constructor(props) {
     super(props);
-    console.log('this.props :', props);
+    this.state = {
+      market: this.props.navigation.state.params.market
+    }
     this.onBarCodeRead = this.onBarCodeRead.bind(this);
   }
 
@@ -29,7 +31,7 @@ export class MarketPairComponent extends React.Component {
     }
     this.processing = true;
     this.camera.stopPreview();
-    AppService.doPairMarketAccount(e.data).then((user) => {
+    AppService.doPairMarketAccount(e.data, this.state.market).then((user) => {
       console.log('doPairMarketAccount success :', user);
       if (this.props.navigation.state.params.reloadMarketsScreen) {
         this.props.navigation.state.params.reloadMarketsScreen();
@@ -69,6 +71,7 @@ MarketPairComponent.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         reloadMarketsScreen: PropTypes.func,
+        market: PropTypes.string,
       }),
     }),
   }),

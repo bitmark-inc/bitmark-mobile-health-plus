@@ -34,23 +34,21 @@ const doLogout = async () => {
   await CommonService.setLocalData(CommonService.app_local_data_key, {});
 };
 
-const doPairMarketAccount = async (token) => {
-  //TODO 
+const doPairMarketAccount = async (token, market) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  let userStore = {
-    bitmarkAccountNumber: userInfo.bitmarkAccountNumber,
+  let marketAccountInfo = await AccountService.pairtMarketAccounut(userInfo.bitmarkAccountNumber, token, market);
+
+  if (!userInfo.markets) {
+    userInfo.markets = {};
   }
-  let marketAccountInfo = await AccountService.pairtMarketAccounut(userStore.bitmarkAccountNumber, token, totemicMarketUrl);
-  userStore.markets = {
-    'totemic': {
-      id: marketAccountInfo.id,
-      name: marketAccountInfo.name,
-      email: marketAccountInfo.email,
-      account_number: marketAccountInfo.account_number,
-    }
+  userInfo.markets[market] = {
+    id: marketAccountInfo.id,
+    name: marketAccountInfo.name,
+    email: marketAccountInfo.email,
+    account_number: marketAccountInfo.account_number,
   }
-  await CommonService.setLocalData(CommonService.app_local_data_key, userStore);
-  return userStore;
+  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  return userInfo;
 };
 
 const getUserBitamrk = async () => {
