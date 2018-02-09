@@ -21,29 +21,6 @@ const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, sig
   });
 };
 
-// const checkSession = (marketUrl, loaclBitmarkAccountNumber) => {
-//   return new Promise((resolve, reject) => {
-//     //TODO urlCheck
-//     let urlCheck = marketUrl + `/s/api/check-session?account_number=${loaclBitmarkAccountNumber}`;
-//     fetch(urlCheck, {
-//       method: 'GET',
-//       headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json',
-//       }
-//     }).then((response) => {
-//       if (response.status === 401) {
-//         return Promise.resolve(false);
-//       } else {
-//         return response.json();
-//       }
-//     }).then((result) => {
-//       resolve(!!result);
-//     }).catch((error) => {
-//       reject(error);
-//     });
-//   });
-// };
 // ================================================================================================
 // ================================================================================================
 let bitmarkNetwork = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
@@ -89,8 +66,11 @@ const logout = async () => {
   return await BitmarkSDK.removeAccount();
 }
 
-const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, marketUrl) => {
-
+const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => {
+  let marketUrl = config.market_urls[market];
+  if (!marketUrl) {
+    return null;
+  }
   let requestPair = (signatures) => {
     return new Promise((resolve, reject) => {
       fetch(marketUrl + '/s/api/mobile/qrcode', {
