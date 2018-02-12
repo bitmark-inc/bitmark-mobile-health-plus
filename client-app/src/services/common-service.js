@@ -1,5 +1,6 @@
-import { FaceTouchId } from './adapters'
+import { FaceTouchId, BitmarkSDK } from './adapters'
 import { AsyncStorage } from 'react-native';
+import { config } from './../configs';
 
 const app_local_data_key = 'bitmark-app';
 
@@ -39,12 +40,34 @@ const checkFaceTouchId = async () => {
   return await FaceTouchId.isSupported();
 }
 // ================================================================================================
+let currentFaceTouceSessionId = null;
+
+const endNewFaceTouceSessionId = async () => {
+  if (currentFaceTouceSessionId) {
+    await BitmarkSDK.disposeSession(currentFaceTouceSessionId);
+    currentFaceTouceSessionId = null;
+  }
+};
+
+const startFaceTouceSessionId = async () => {
+  await endNewFaceTouceSessionId();
+  if (!currentFaceTouceSessionId) {
+    currentFaceTouceSessionId = await BitmarkSDK.requestSession(config.bitmark_network);
+  }
+  return currentFaceTouceSessionId;
+};
+
+// ================================================================================================
+// ================================================================================================
+// ================================================================================================
 
 let CommonService = {
   app_local_data_key,
   checkFaceTouchId,
   setLocalData,
   getLocalData,
+  startFaceTouceSessionId,
+  endNewFaceTouceSessionId,
 }
 
 export {

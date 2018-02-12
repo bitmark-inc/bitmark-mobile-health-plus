@@ -10,6 +10,9 @@ const convertDataFromMarket = (market, marketBitmarks) => {
       marketBitmarks.cards.forEach((asset) => {
         asset.market = market;
         marketBitmarks.editions.forEach((bitmark) => {
+          if (bitmark.status === 'pending') {
+            return;
+          }
           bitmark.market = market;
           if (bitmark.card_id === asset.id) {
             if (!asset.bitmarks) {
@@ -55,13 +58,20 @@ const getBitmarks = (market, userId) => {
     let marketServerUrl = config.market_urls[market];
     let marketBitmarkUrl = marketServerUrl +
       `/s/api/editions?owner=${userId}&include_card=true&include_user=true&include_order=true`;
+    let statusCode;
     fetch(marketBitmarkUrl, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       }
-    }).then((response) => response.json()).then((data) => {
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode !== 200) {
+        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+      }
       resolve(convertDataFromMarket(market, data || {}));
     }).catch(reject);
   });
@@ -75,13 +85,20 @@ const getProvenance = (bitmark) => {
     let marketServerUrl = config.market_urls[bitmark.market];
     let marketBitmarkUrl = marketServerUrl +
       `/s/api/editions/${bitmark.id}?include_provenance=true`;
+    let statusCode;
     fetch(marketBitmarkUrl, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       }
-    }).then((response) => response.json()).then((data) => {
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode !== 200) {
+        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+      }
       let provenance = data.provenance || [];
       provenance.forEach(item => item.created_at = moment(item.created_at).format('YYYY MMM DD HH:mm:ss'));
       resolve(provenance);

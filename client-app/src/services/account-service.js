@@ -1,20 +1,28 @@
 import moment from 'moment';
-import { BitmarkSDK } from './adapters'
+
+import { CommonService } from './common-service';
+import { BitmarkSDK } from './adapters';
 import { config } from './../configs';
 
-let bitmarkNetwork = config.network === config.NETWORKS.devnet ? config.NETWORKS.testnet : config.network;
 // ================================================================================================
 // ================================================================================================
 const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, signature) => {
   return new Promise((resolve, reject) => {
     let urlCheck = marketUrl + `/s/api/mobile/pairing-account?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signature}`;
+    let statusCode = null;
     fetch(urlCheck, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       }
-    }).then((response) => response.json()).then((data) => {
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode !== 200) {
+        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+      }
       resolve(data.user || {});
     }).catch((error) => {
       reject(error);
@@ -25,14 +33,14 @@ const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, sig
 // ================================================================================================
 // ================================================================================================
 const createNewAccount = async () => {
-  let sessionId = await BitmarkSDK.newAccount(bitmarkNetwork);
+  let sessionId = await BitmarkSDK.newAccount(config.bitmark_network);
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
   await BitmarkSDK.disposeSession(sessionId);
   return userInfo;
 };
 
 const getCurrentAccount = async () => {
-  let sessionId = await BitmarkSDK.requestSession(bitmarkNetwork);
+  let sessionId = await CommonService.startFaceTouceSessionId();
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
   await BitmarkSDK.disposeSession(sessionId);
   return userInfo;
@@ -73,6 +81,7 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
   }
   let requestPair = (signatures) => {
     return new Promise((resolve, reject) => {
+      let statusCode = null;
       fetch(marketUrl + '/s/api/mobile/qrcode', {
         method: 'POST',
         headers: {
@@ -85,7 +94,13 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
           code: token,
           signature: signatures,
         })
-      }).then((response) => response.json()).then((data) => {
+      }).then((response) => {
+        statusCode = response.status;
+        return response.json();
+      }).then((data) => {
+        if (statusCode !== 200) {
+          return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+        }
         resolve(data.user || {});
       }).catch((error) => {
         console.log('pairtMarketAccounut error:', error);
@@ -94,7 +109,7 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
     });
   }
 
-  let sessionId = await BitmarkSDK.requestSession(bitmarkNetwork);
+  let sessionId = await CommonService.startFaceTouceSessionId();
   let signatures = await BitmarkSDK.rickySignMessage([token], sessionId);
   let user = await requestPair(signatures[0]);
   await BitmarkSDK.disposeSession(sessionId);
@@ -103,13 +118,20 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
 
 const getBalanceOnMarket = (marketServerUrl) => {
   return new Promise((resolve, reject) => {
+    let statusCode = null;
     fetch(marketServerUrl + '/s/api/balance', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       }
-    }).then((response) => response.json()).then((data) => {
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode !== 200) {
+        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+      }
       let ethData = (data && data.fund) ? data.fund.eth : {};
       let balance = ethData.balance || 0;
       let pending = ethData.pending || 0;
@@ -122,13 +144,20 @@ const getBalanceOnMarket = (marketServerUrl) => {
 
 const getBalanceHistoryOnMarket = (marketServerUrl) => {
   return new Promise((resolve, reject) => {
+    let statusCode = null;
     fetch(marketServerUrl + '/s/api/balance-history', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       }
-    }).then((response) => response.json()).then((data) => {
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode !== 200) {
+        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+      }
       resolve(data.history || []);
     }).catch((error) => {
       reject(error);

@@ -74,15 +74,6 @@ export class MarketsComponent extends React.Component {
                     <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-create-account.png')} />
                     <Text style={marketsStyle.marketCardButtonItemText}>CREATE TOTEMIC ACCOUNT</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
-                    this.props.screenProps.homeNavigation.navigate('MarketPair', {
-                      reloadMarketsScreen: this.reload,
-                      market: config.markets.totemic.name,
-                    });
-                  }}>
-                    <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-pair-account.png')} />
-                    <Text style={marketsStyle.marketCardButtonItemText}>PAIR WITH EXISTING TOTEMIC ACCOUNT</Text>
-                  </TouchableOpacity>
                 </View>}
               {this.state.user && this.state.user.markets && this.state.user.markets.totemic.account_number && <TouchableOpacity style={marketsStyle.marketCardButtonArea}
                 onPress={this.openMarket}>
@@ -95,11 +86,18 @@ export class MarketsComponent extends React.Component {
                     <Image style={marketsStyle.pairedIcon} source={require('./../../../../assets/imgs/open-market-icon.png')} />
                   </View>
                 </View>
-
               </TouchableOpacity>}
             </View>
           </View>
         </ScrollView>
+        <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
+          this.props.screenProps.homeNavigation.navigate('MarketPair', {
+            reloadMarketsScreen: this.reload,
+          });
+        }}>
+          <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-pair-account.png')} />
+          <Text style={marketsStyle.marketCardButtonItemText}>PAIR WITH EXISTING ACCOUNT</Text>
+        </TouchableOpacity>
       </View >
     );
   }

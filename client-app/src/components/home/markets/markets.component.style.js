@@ -31,7 +31,6 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
-
   marketCardArea: {
     marginTop: 15,
     flexDirection: 'column',
@@ -87,7 +86,7 @@ export default StyleSheet.create({
     width: '100%',
     borderBottomLeftRadius: 9,
     borderBottomRightRadius: 9,
-    minHeight: 69,
+    minHeight: 42,
   },
   marketCardButtonItem: {
     flexDirection: 'row',
@@ -110,7 +109,6 @@ export default StyleSheet.create({
     lineHeight: 16,
     width: convertWidth(324),
     marginLeft: 14,
-    color: 'white',
   },
 
   pairedInfoArea: {

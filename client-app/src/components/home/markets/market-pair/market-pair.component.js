@@ -19,9 +19,6 @@ let defaultStyle = Platform.select({
 export class MarketPairComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      market: this.props.navigation.state.params.market
-    }
     this.onBarCodeRead = this.onBarCodeRead.bind(this);
   }
 
@@ -34,7 +31,7 @@ export class MarketPairComponent extends React.Component {
     let qrCodeString = e.data;
     let market = qrCodeString.substring(0, qrCodeString.indexOf(':'));
     let token = qrCodeString.substring(qrCodeString.indexOf(':') + 1);
-    AppService.doPairMarketAccount(token, market).then((user) => {
+    AppService.doPairMarketAccount(token, market).then(() => {
       if (this.props.navigation.state.params.reloadMarketsScreen) {
         this.props.navigation.state.params.reloadMarketsScreen();
       }
