@@ -5,7 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import ReactNative from 'react-native';
 
 const {
-  // Linking,
+  Linking,
   // Alert,
   // AppState,
   // NetInfo,
@@ -21,6 +21,9 @@ import { AppService, } from './../services';
 class MainComponent extends Component {
   constructor(props) {
     super(props);
+
+    this.handleDeppLink = this.handleDeppLink.bind(this);
+
     this.state = {
       user: null,
     };
@@ -31,6 +34,30 @@ class MainComponent extends Component {
       console.log(error);
       this.setState({ user: {} })
     });
+  }
+
+  componentDidMount() {
+    Linking.addEventListener('url', this.handleDeppLink);
+  }
+  componentWillUnmount() {
+    Linking.addEventListener('url', this.handleDeppLink);
+  }
+
+  handleDeppLink(event) {
+    const route = event.url.replace(/.*?:\/\//g, '');
+    const params = route.split('/');
+    switch (params[0]) {
+      // case 'login': {
+      //   AppService.doPairMarketAccount(params[2], params[1]).then(() => {
+      //     console.log('handleDeppLink doPairMarketAccount success!');
+      //   }).catch(error => console.log('handleDeppLink doPairMarketAccount error :', error));
+      //   break;
+      // }
+      default: {
+        // TODO
+        break;
+      }
+    }
   }
 
   render() {

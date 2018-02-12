@@ -143,7 +143,7 @@ const BitmarkSDK = {
 
   sign1stForTransfer: (sessionId, bitmarkId, receiver) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.issueThenTransferFile(sessionId, bitmarkId, receiver, (ok, txid, signature) => {
+      SwiftBitmarkSDK.sign1stForTransfer(sessionId, bitmarkId, receiver, (ok, txid, signature) => {
         if (ok && txid && signature) {
           resolve({ txid, signature });
         } else {

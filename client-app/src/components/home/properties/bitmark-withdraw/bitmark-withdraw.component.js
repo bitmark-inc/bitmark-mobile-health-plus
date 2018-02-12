@@ -25,7 +25,7 @@ export class BitmarkWithdrawComponent extends React.Component {
     super(props);
 
     this.doWithdraw = this.doWithdraw.bind(this);
-    this.withDrawSuccess = this.withDrawSuccess.bind(this);
+    this.withdrawSuccess = this.withdrawSuccess.bind(this);
 
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
@@ -42,7 +42,7 @@ export class BitmarkWithdrawComponent extends React.Component {
     };
   }
 
-  withDrawSuccess() {
+  withdrawSuccess() {
     const resetMainPage = NavigationActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'User' })]
@@ -55,7 +55,7 @@ export class BitmarkWithdrawComponent extends React.Component {
     AppService.doWithdrawBitmark(this.state.bitmark).then((data) => {
       console.log('doWithdrawBitmark success :', data);
       this.setState({ processing: false });
-      this.withDrawSuccess();
+      this.withdrawSuccess();
     }).catch(error => {
       console.error('doWithdrawBitmark error:', error);
       this.setState({ processing: false });

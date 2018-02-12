@@ -70,7 +70,7 @@ const getBitmarks = (market, userId) => {
       return response.json();
     }).then((data) => {
       if (statusCode !== 200) {
-        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+        return reject(new Error('getBitmarks error :' + JSON.stringify(data)));
       }
       resolve(convertDataFromMarket(market, data || {}));
     }).catch(reject);
@@ -97,7 +97,7 @@ const getProvenance = (bitmark) => {
       return response.json();
     }).then((data) => {
       if (statusCode !== 200) {
-        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+        return reject(new Error('getProvenance error :' + JSON.stringify(data)));
       }
       let provenance = data.provenance || [];
       provenance.forEach(item => item.created_at = moment(item.created_at).format('YYYY MMM DD HH:mm:ss'));

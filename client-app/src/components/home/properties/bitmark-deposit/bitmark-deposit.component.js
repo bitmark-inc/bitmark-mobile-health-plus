@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
 import {
   View, Text, TouchableOpacity, Image, ScrollView,
   Platform,
@@ -9,6 +10,7 @@ import { config } from './../../../../configs';
 import bitmarkDepositStyle from './bitmark-deposit.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import bitmarkDepositComponentStyle from './bitmark-deposit.component.style';
+import { AppService } from '../../../../services';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -24,26 +26,53 @@ export class BitmarkDepositComponent extends React.Component {
   constructor(props) {
     super(props);
     this.selectMarket = this.selectMarket.bind(this);
+    this.doDeposit = this.doDeposit.bind(this);
+    this.depositSuccess = this.depositSuccess.bind(this);
+
 
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
-    let marketList = [];
-    let index = 0;
-    for (let market in config.markets) {
-      marketList.push({ key: index, market });
-      index++;
-    }
     this.state = {
       asset,
       bitmark,
-      marketList,
+      marketList: [],
       step: Steps.chooseMarket,
       selectedmMarket: '',
     };
+
+    AppService.getCurrentUser().then(user => {
+      let index = 0;
+      let marketList = [];
+      for (let market in user.markets) {
+        marketList.push({ key: index, market });
+        index++;
+      }
+      this.setState({ marketList });
+    }).catch(error => console.log('BitmarkDepositComponent error :', error));
   }
 
   selectMarket(selectedmMarket) {
     this.setState({ selectedmMarket, step: Steps.depost });
+  }
+
+  depositSuccess() {
+    const resetMainPage = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'User' })]
+    });
+    this.props.navigation.dispatch(resetMainPage);
+  }
+
+  doDeposit() {
+    this.setState({ processing: true });
+    AppService.doDepositBitmark(this.state.selectedmMarket, this.state.bitmark).then((data) => {
+      console.log('doDepositBitmark success :', data);
+      this.setState({ processing: false });
+      this.depositSuccess();
+    }).catch(error => {
+      console.error('doDepositBitmark error:', error);
+      this.setState({ processing: false });
+    });
   }
 
   render() {
@@ -79,9 +108,7 @@ export class BitmarkDepositComponent extends React.Component {
             <Image style={bitmarkDepositStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + this.state.asset.asset_id }} />
             <Text style={bitmarkDepositStyle.assetName}>{this.state.asset.name}</Text>
             <Text style={bitmarkDepositStyle.depositMessage}>Your bitmark will be listed on the market.{'\n'}You can remove it from the market anytime.</Text>
-            <TouchableOpacity style={bitmarkDepositStyle.continueButton} onPress={() => {
-              // TODO call deposit
-            }}>
+            <TouchableOpacity style={bitmarkDepositStyle.continueButton} onPress={this.doDeposit}>
               <Text style={bitmarkDepositStyle.continueButtonText}>CONTINUE</Text>
             </TouchableOpacity>
           </View>}
@@ -95,6 +122,7 @@ BitmarkDepositComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+    dispatch: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
         asset: PropTypes.object,

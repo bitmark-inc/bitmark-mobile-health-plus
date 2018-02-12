@@ -6,15 +6,13 @@ import { CommonService } from './common-service';
 
 // ===================================================================================================================
 // ===================================================================================================================
-const withdrawFirstSignature = (localBitmarkAccount, timestamp, signature, bitmarkIds) => {
+const withdrawFirstSignature = (localBitmarkAccount, bitmarkIds) => {
   return new Promise((resolve, reject) => {
-    let withdrawURL = config.trade_server_url + `/bitmarks/withdraw`;
+    let withdrawURL = config.trade_server_url + `/bitmarks/withdraw_request`;
     let header = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       requester: 'user/' + localBitmarkAccount,
-      signature: signature,
-      timestamp: timestamp,
     };
     let data = {
       bitmarks: bitmarkIds
@@ -29,22 +27,54 @@ const withdrawFirstSignature = (localBitmarkAccount, timestamp, signature, bitma
       return response.json();
     }).then((data) => {
       if (statusCode !== 200) {
-        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+        return reject(new Error('withdrawFirstSignature error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
   });
 };
 
-const transferUse2Signature = (link, owner, signature, countersignature) => {
+const withdrawSecondSignature = (localBitmarkAccount, timestamp, signature, signedTransfers) => {
   return new Promise((resolve, reject) => {
-    let withdrawURL = config.get_way_server_url + `/v1/transfer`;
+    let withdrawURL = config.trade_server_url + `/bitmarks/withdraw`;
     let header = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
+      requester: 'user/' + localBitmarkAccount,
+      timestamp,
+      signature,
     };
-    let data = { link, owner, signature, countersignature, };
-    console.log('transferUse2Signature data :', JSON.stringify(data));
+    let data = { items: signedTransfers };
+    console.log('withdrawSecondSignature data :', JSON.stringify(data));
+    let statusCode = null;
+    fetch(withdrawURL, {
+      method: 'POST',
+      headers: header,
+      body: JSON.stringify(data)
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode !== 200) {
+        return reject(new Error('withdrawSecondSignature error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const deposit = (localBitmarkAccount, timestamp, signature, firstSignatures) => {
+  return new Promise((resolve, reject) => {
+    let withdrawURL = config.trade_server_url + `/bitmarks/deposit`;
+    let header = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      requester: 'user/' + localBitmarkAccount,
+      signature,
+      timestamp,
+    };
+    let data = { items: firstSignatures };
+    console.log('deposit data :', JSON.stringify(data));
     let statusCode = null;
     fetch(withdrawURL, {
       method: 'POST',
@@ -78,7 +108,7 @@ const getBitmarks = (loaclBitmarkAccountNumber) => {
       return response.json();
     }).then((localBitmarks) => {
       if (statusCode !== 200) {
-        return reject(new Error('transferUse2Signature error :' + JSON.stringify(localBitmarks)));
+        return reject(new Error('getBitmarks error :' + JSON.stringify(localBitmarks)));
       }
       let localAssets = [];
       if (localBitmarks && localBitmarks.bitmarks && localBitmarks.assets) {
@@ -121,7 +151,7 @@ const getProvenance = (bitmark) => {
       return response.json();
     }).then((data) => {
       if (statusCode !== 200) {
-        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+        return reject(new Error('getProvenance error :' + JSON.stringify(data)));
       }
       let provenance = (data.bitmark && data.bitmark.provenance) ? data.bitmark.provenance : [];
       provenance.forEach(item => item.created_at = moment(item.created_at).format('YYYY MMM DD HH:mm:ss'));
@@ -131,21 +161,49 @@ const getProvenance = (bitmark) => {
 }
 
 const doWithdrawBitmarks = async (bitmarkIds, localBitmarkAccount) => {
+  let sessionId = await CommonService.startFaceTouceSessionId();
+  let firstSignatureData = await withdrawFirstSignature(localBitmarkAccount, bitmarkIds);
+  console.log('firstSignatureData :', firstSignatureData);
+  let signedTransfers = [];
+  for (let item of firstSignatureData.items) {
+    signedTransfers.push({
+      bitmark_id: item.bitmark_id,
+      signed_transfer: {
+        link: item.half_signed_transfer.link,
+        owner: item.half_signed_transfer.owner,
+        signature: item.half_signed_transfer.signature,
+        countersignature: await BitmarkSDK.sign2ndForTransfer(sessionId, item.half_signed_transfer.link, item.half_signed_transfer.signature)
+      }
+    });
+  }
 
+  console.log('signedTransfers :', signedTransfers);
+  let timestamp = moment().toDate().getTime() + '';
+  let timestampSignatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
+  return withdrawSecondSignature(localBitmarkAccount, timestamp, timestampSignatures, signedTransfers);
+};
+
+const doDepositBitmarks = async (bitmarkIds, localBitmarkAccount, marketBitmarkAccount) => {
   let sessionId = await CommonService.startFaceTouceSessionId();
   let timestamp = moment().toDate().getTime() + '';
   let signatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
-  let firstSignatureData = await withdrawFirstSignature(localBitmarkAccount, timestamp, signatures[0], bitmarkIds);
-  let secondSignature = await BitmarkSDK.sign2ndForTransfer(sessionId, firstSignatureData.signed_transfers[0].link, firstSignatureData.signed_transfers[0].signature);
-  console.log('firstSignatureData: ', firstSignatureData);
-  console.log('secondSignature: ', secondSignature);
-  return transferUse2Signature(firstSignatureData.signed_transfers[0].link, firstSignatureData.signed_transfers[0].owner, firstSignatureData.signed_transfers[0].signature, secondSignature);
+  let firstSignatures = {};
+  for (let bitmarkId of bitmarkIds) {
+    let firstSignatureData = await BitmarkSDK.sign1stForTransfer(sessionId, bitmarkId, marketBitmarkAccount);
+    firstSignatures[bitmarkId] = {
+      link: firstSignatureData.txid,
+      owner: localBitmarkAccount,
+      signature: firstSignatureData.signature,
+    };
+  }
+  return await deposit(localBitmarkAccount, timestamp, signatures, firstSignatures);
 };
 
 let BitmarkService = {
   getBitmarks,
   getProvenance,
   doWithdrawBitmarks,
+  doDepositBitmarks,
 };
 
 export { BitmarkService };

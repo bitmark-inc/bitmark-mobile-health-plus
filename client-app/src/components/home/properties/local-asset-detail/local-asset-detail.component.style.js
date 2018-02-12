@@ -121,7 +121,6 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     fontWeight: '400',
-    height: 25,
   },
 
   bitmarkLabel: {

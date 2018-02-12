@@ -1,8 +1,4 @@
-import moment from 'moment';
-
 import { config } from './../configs';
-
-import { BitmarkSDK } from './adapters';
 
 import { CommonService } from './common-service';
 import { AccountService } from './account-service';
@@ -82,6 +78,12 @@ const doWithdrawBitmark = async (bitmark) => {
   return BitmarkService.doWithdrawBitmarks(bitamrkIds, userInfo.bitmarkAccountNumber);
 };
 
+const doDepositBitmark = async (market, bitmark) => {
+  let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
+  let bitamrkIds = [bitmark.bitmark_id];
+  return BitmarkService.doDepositBitmarks(bitamrkIds, userInfo.bitmarkAccountNumber, userInfo.markets[market].account_number);
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -94,6 +96,7 @@ let AppService = {
   getUserBitmark,
   getUserBalance,
   doWithdrawBitmark,
+  doDepositBitmark,
 }
 
 export {

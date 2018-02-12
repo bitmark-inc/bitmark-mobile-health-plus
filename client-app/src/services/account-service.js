@@ -21,7 +21,7 @@ const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, sig
       return response.json();
     }).then((data) => {
       if (statusCode !== 200) {
-        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+        return reject(new Error('checkPairingStatus error :' + JSON.stringify(data)));
       }
       resolve(data.user || {});
     }).catch((error) => {
@@ -79,6 +79,7 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
   if (!marketUrl) {
     return null;
   }
+  console.log('marketUrl :', marketUrl);
   let requestPair = (signatures) => {
     return new Promise((resolve, reject) => {
       let statusCode = null;
@@ -99,7 +100,7 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
         return response.json();
       }).then((data) => {
         if (statusCode !== 200) {
-          return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+          return reject(new Error('pairtMarketAccounut error :' + JSON.stringify(data)));
         }
         resolve(data.user || {});
       }).catch((error) => {
@@ -130,7 +131,7 @@ const getBalanceOnMarket = (marketServerUrl) => {
       return response.json();
     }).then((data) => {
       if (statusCode !== 200) {
-        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+        return reject(new Error('getBalanceOnMarket error :' + JSON.stringify(data)));
       }
       let ethData = (data && data.fund) ? data.fund.eth : {};
       let balance = ethData.balance || 0;
@@ -156,7 +157,7 @@ const getBalanceHistoryOnMarket = (marketServerUrl) => {
       return response.json();
     }).then((data) => {
       if (statusCode !== 200) {
-        return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
+        return reject(new Error('getBalanceHistoryOnMarket error :' + JSON.stringify(data)));
       }
       resolve(data.history || []);
     }).catch((error) => {
