@@ -10,15 +10,12 @@ const convertDataFromMarket = (market, marketBitmarks) => {
       marketBitmarks.cards.forEach((asset) => {
         asset.market = market;
         marketBitmarks.editions.forEach((bitmark) => {
-          if (bitmark.status === 'pending') {
-            return;
+          if (!asset.bitmarks) {
+            asset.bitmarks = [];
+            asset.totalPending = 0;
           }
           bitmark.market = market;
           if (bitmark.card_id === asset.id) {
-            if (!asset.bitmarks) {
-              asset.bitmarks = [];
-              asset.totalPending = 0;
-            }
             asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
             asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
             asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss');

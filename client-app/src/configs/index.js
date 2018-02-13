@@ -30,7 +30,7 @@ let config = {
 };
 
 // local
-config.market_urls.totemic = 'http://192.168.0.102:8088';
+config.market_urls.totemic = 'http://192.168.0.202:8088';
 
 if (config.network === NETWORKS.testnet) {
   config.market_urls.totemic = 'https://totemic.test.bitmark.com';
