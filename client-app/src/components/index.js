@@ -7,7 +7,7 @@ import ReactNative from 'react-native';
 const {
   Linking,
   // Alert,
-  // AppState,
+  AppState,
   // NetInfo,
   // PushNotificationIOS,
   View,
@@ -23,24 +23,29 @@ class MainComponent extends Component {
     super(props);
 
     this.handleDeppLink = this.handleDeppLink.bind(this);
+    this.handleAppStateChange = this.handleAppStateChange.bind(this);
 
     this.state = {
       user: null,
     };
+    this.appState = AppState.currentState;
 
-    AppService.getCurrentUser().then((user) => {
+    AppService.doOpenApp().then(user => {
+      console.log(' doOpenApp : ', user);
       this.setState({ user });
     }).catch(error => {
-      console.log(error);
+      console.log('doOpenApp error :', error);
       this.setState({ user: {} })
     });
   }
 
   componentDidMount() {
     Linking.addEventListener('url', this.handleDeppLink);
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
   componentWillUnmount() {
     Linking.addEventListener('url', this.handleDeppLink);
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
   handleDeppLink(event) {
@@ -58,6 +63,20 @@ class MainComponent extends Component {
         break;
       }
     }
+  }
+
+  handleAppStateChange = (nextAppState) => {
+    console.log('handleAppStateChange :', nextAppState);
+    if (this.appState.match(/background/) && nextAppState === 'active') {
+      AppService.doOpenApp().then(user => {
+        console.log(' doOpenApp : ', user);
+        this.setState({ user });
+      }).catch(error => {
+        console.log('doOpenApp error :', error);
+        this.setState({ user: {} })
+      });
+    }
+    this.appState = nextAppState;
   }
 
   render() {

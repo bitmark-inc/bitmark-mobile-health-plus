@@ -34,23 +34,7 @@ const convertDataFromMarket = (market, marketBitmarks) => {
   return marketAssets;
 };
 
-// ===================================================================================================================
-// ===================================================================================================================
-const getListingUrl = (bitmark) => {
-  if (bitmark && bitmark.market && bitmark.market === config.markets.totemic.name) {
-    return config.market_urls.totemic + `/edition/${bitmark.id}`;
-  }
-  return '';
-};
-
-const getBalancUrl = (market) => {
-  if (market === config.markets.totemic.name) {
-    return config.market_urls.totemic + `/account-balance`;
-  }
-  return '';
-};
-
-const getBitmarks = (market, userId) => {
+const getBitmarksOnMarket = (market, userId) => {
   return new Promise((resolve, reject) => {
     if (!market || !config.market_urls[market]) {
       return reject(new Error('Invalid market!'));
@@ -74,6 +58,31 @@ const getBitmarks = (market, userId) => {
       }
       resolve(convertDataFromMarket(market, data || {}));
     }).catch(reject);
+  });
+};
+
+// ===================================================================================================================
+// ===================================================================================================================
+const getListingUrl = (bitmark) => {
+  if (bitmark && bitmark.market && bitmark.market === config.markets.totemic.name) {
+    return config.market_urls.totemic + `/edition/${bitmark.id}`;
+  }
+  return '';
+};
+
+const getBalancUrl = (market) => {
+  if (market === config.markets.totemic.name) {
+    return config.market_urls.totemic + `/account-balance`;
+  }
+  return '';
+};
+
+const getBitmarks = (market, userId) => {
+  return new Promise((resolve) => {
+    getBitmarksOnMarket(market, userId).then(resolve).catch(error => {
+      console.log(`getBitmarksOnMarket ${market} error :`, error);
+      resolve([]);
+    })
   });
 };
 

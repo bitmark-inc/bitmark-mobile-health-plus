@@ -7,6 +7,16 @@ import { config } from './../configs';
 const app_local_data_key = 'bitmark-app';
 
 
+
+// ================================================================================================
+// ================================================================================================
+// private 
+const tryRichSignMessage = (messages, sessionId) => {
+  return new Promise((resolve) => {
+    BitmarkSDK.rickySignMessage(messages, sessionId).then(resolve).catch(() => resolve());
+  });
+};
+
 // ================================================================================================
 const setLocalData = (localDataKey, data) => {
   localDataKey = localDataKey || app_local_data_key;
@@ -59,6 +69,18 @@ const startFaceTouceSessionId = async () => {
   return currentFaceTouceSessionId;
 };
 
+const doTryRickSignMessage = async (messages) => {
+  if (!currentFaceTouceSessionId) {
+    await startFaceTouceSessionId();
+  }
+  let signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
+  if (!signatures) {
+    await startFaceTouceSessionId();
+    signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
+  }
+  return signatures;
+};
+
 const createSignatureData = async (sessionId) => {
   if (!sessionId) {
     sessionId = await startFaceTouceSessionId();
@@ -80,6 +102,7 @@ let CommonService = {
   startFaceTouceSessionId,
   endNewFaceTouceSessionId,
   createSignatureData,
+  doTryRickSignMessage,
 }
 
 export {

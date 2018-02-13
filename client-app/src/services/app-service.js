@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { config } from './../configs';
 
 import { CommonService } from './common-service';
@@ -91,6 +92,28 @@ const doDepositBitmark = async (market, bitmark) => {
   return BitmarkService.doDepositBitmarks(bitamrkIds, userInfo.bitmarkAccountNumber, userInfo.markets[market].account_number);
 };
 
+const doOpenApp = async () => {
+  let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
+  let marketInfos = {};
+  for (let market in config.markets) {
+    let timestamp = moment().toDate().getTime().toString();
+    let signatures = await CommonService.doTryRickSignMessage([timestamp]);
+    let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
+    if (marketInfo) {
+      marketInfos[market] = {
+        id: marketInfo.id,
+        name: marketInfo.name,
+        email: marketInfo.email,
+        account_number: marketInfo.account_number,
+      }
+    }
+  }
+  userInfo.markets = marketInfos;
+  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  CommonService.endNewFaceTouceSessionId();
+  return userInfo;
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -105,6 +128,8 @@ let AppService = {
   getUserBalance,
   doWithdrawBitmark,
   doDepositBitmark,
+
+  doOpenApp,
 }
 
 export {

@@ -180,6 +180,7 @@ const doWithdrawBitmarks = async (bitmarkIds, localBitmarkAccount) => {
   console.log('signedTransfers :', signedTransfers);
   let timestamp = moment().toDate().getTime() + '';
   let timestampSignatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
+  await CommonService.endNewFaceTouceSessionId();
   return withdrawSecondSignature(localBitmarkAccount, timestamp, timestampSignatures, signedTransfers);
 };
 
@@ -196,6 +197,7 @@ const doDepositBitmarks = async (bitmarkIds, localBitmarkAccount, marketBitmarkA
       signature: firstSignatureData.signature,
     };
   }
+  await CommonService.endNewFaceTouceSessionId();
   return await deposit(localBitmarkAccount, timestamp, signatures, firstSignatures);
 };
 

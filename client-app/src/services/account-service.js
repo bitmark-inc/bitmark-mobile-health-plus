@@ -30,6 +30,14 @@ const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, sig
   });
 };
 
+const doCheckPairingStatus = (market, loaclBitmarkAccountNumber, timestamp, signature) => {
+  return new Promise((resolve) => {
+    checkPairingStatus(config.market_urls[market], loaclBitmarkAccountNumber, timestamp, signature).then(resolve).catch(error => {
+      resolve(null);
+      console.log(`doCheckPairingStatus ${market} error :`, error);
+    });
+  });
+};
 // ================================================================================================
 // ================================================================================================
 const createNewAccount = async () => {
@@ -42,7 +50,7 @@ const createNewAccount = async () => {
 const getCurrentAccount = async () => {
   let sessionId = await CommonService.startFaceTouceSessionId();
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
-  await BitmarkSDK.disposeSession(sessionId);
+  await CommonService.endNewFaceTouceSessionId();
   return userInfo;
 };
 
@@ -50,21 +58,28 @@ const check24Words = async (pharse24Words) => {
   return await BitmarkSDK.try24Words(pharse24Words);
 };
 
-const accessBy24Words = async (pharse24Words) => {
-  let sessionId = await BitmarkSDK.newAccountFrom24Words(pharse24Words);
-  let userInfo = await BitmarkSDK.accountInfo(sessionId);
+const checkPairingStatusAllMarket = async (sessionId, loaclBitmarkAccountNumber) => {
   let marketInfos = {};
   for (let market in config.markets) {
     let timestamp = moment().toDate().getTime().toString();
     let signatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
-    let marketInfo = await checkPairingStatus(config.market_urls[market], userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
-    marketInfos[market] = {
-      id: marketInfo.id,
-      name: marketInfo.name,
-      email: marketInfo.email,
-      account_number: marketInfo.account_number,
+    let marketInfo = await doCheckPairingStatus(market, loaclBitmarkAccountNumber, timestamp, signatures[0]);
+    if (marketInfo) {
+      marketInfos[market] = {
+        id: marketInfo.id,
+        name: marketInfo.name,
+        email: marketInfo.email,
+        account_number: marketInfo.account_number,
+      }
     }
   }
+  return marketInfos;
+};
+
+const accessBy24Words = async (pharse24Words) => {
+  let sessionId = await BitmarkSDK.newAccountFrom24Words(pharse24Words);
+  let userInfo = await BitmarkSDK.accountInfo(sessionId);
+  let marketInfos = await checkPairingStatusAllMarket(sessionId, userInfo.bitmarkAccountNumber);
   await BitmarkSDK.disposeSession(sessionId);
   userInfo.markets = marketInfos;
   return userInfo;
@@ -79,7 +94,6 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
   if (!marketUrl) {
     return null;
   }
-  console.log('marketUrl :', marketUrl);
   let requestPair = (signatures) => {
     return new Promise((resolve, reject) => {
       let statusCode = null;
@@ -113,7 +127,7 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
   let sessionId = await CommonService.startFaceTouceSessionId();
   let signatures = await BitmarkSDK.rickySignMessage([token], sessionId);
   let user = await requestPair(signatures[0]);
-  await BitmarkSDK.disposeSession(sessionId);
+  await CommonService.endNewFaceTouceSessionId();
   return user;
 };
 
@@ -175,6 +189,8 @@ let AccountService = {
   getCurrentAccount,
   check24Words,
   accessBy24Words,
+  doCheckPairingStatus,
+  checkPairingStatusAllMarket,
   logout,
   pairtMarketAccounut,
   getBalanceOnMarket,

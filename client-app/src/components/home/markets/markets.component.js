@@ -64,7 +64,7 @@ export class MarketsComponent extends React.Component {
                 !this.state.user.markets.totemic.account_number) && <Text style={marketsStyle.marketCardMessage}>
                   Blockchain-based, limited edition, collector cards. Totemic empowers content creators, fans and collectors with a completely new kind of digital asset.
               </Text>}
-              {(!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
+              {/* {(!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
                 !this.state.user.markets.totemic.account_number) && <View style={marketsStyle.marketCardButtonArea}>
                   <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
                     this.props.screenProps.homeNavigation.navigate('MarketLogin', {
@@ -74,19 +74,20 @@ export class MarketsComponent extends React.Component {
                     <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-create-account.png')} />
                     <Text style={marketsStyle.marketCardButtonItemText}>CREATE TOTEMIC ACCOUNT</Text>
                   </TouchableOpacity>
-                </View>}
-              {this.state.user && this.state.user.markets && this.state.user.markets.totemic.account_number && <TouchableOpacity style={marketsStyle.marketCardButtonArea}
-                onPress={this.openMarket}>
-                <View style={marketsStyle.pairedInfoArea}>
-                  <View style={marketsStyle.pairedAccountInfoArea}>
-                    <Text style={marketsStyle.pairedLabel}>{'WEB ACCOUNT PAIRED'}</Text>
-                    <Text style={marketsStyle.pairedEmail}>{this.state.user.markets.totemic.email}</Text>
+                </View>} */}
+              {this.state.user && this.state.user.markets && this.state.user.markets.totemic && this.state.user.markets.totemic.account_number &&
+                <TouchableOpacity style={marketsStyle.marketCardButtonArea}
+                  onPress={this.openMarket}>
+                  <View style={marketsStyle.pairedInfoArea}>
+                    <View style={marketsStyle.pairedAccountInfoArea}>
+                      <Text style={marketsStyle.pairedLabel}>{'WEB ACCOUNT PAIRED'}</Text>
+                      <Text style={marketsStyle.pairedEmail}>{this.state.user.markets.totemic.email}</Text>
+                    </View>
+                    <View style={marketsStyle.pairedIconArea}>
+                      <Image style={marketsStyle.pairedIcon} source={require('./../../../../assets/imgs/open-market-icon.png')} />
+                    </View>
                   </View>
-                  <View style={marketsStyle.pairedIconArea}>
-                    <Image style={marketsStyle.pairedIcon} source={require('./../../../../assets/imgs/open-market-icon.png')} />
-                  </View>
-                </View>
-              </TouchableOpacity>}
+                </TouchableOpacity>}
             </View>
           </View>
         </ScrollView>
