@@ -97,7 +97,7 @@ const deposit = (localBitmarkAccount, timestamp, signature, firstSignatures) => 
 const getBitmarks = (loaclBitmarkAccountNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    fetch(config.get_way_server_url + `/v1/bitmarks?owner=${loaclBitmarkAccountNumber}&asset=true`, {
+    fetch(config.get_way_server_url + `/v1/bitmarks?owner=${loaclBitmarkAccountNumber}&asset=true&pending=true`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
