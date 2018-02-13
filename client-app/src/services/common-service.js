@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import { FaceTouchId, BitmarkSDK } from './adapters'
 import { AsyncStorage } from 'react-native';
 import { config } from './../configs';
@@ -57,6 +59,15 @@ const startFaceTouceSessionId = async () => {
   return currentFaceTouceSessionId;
 };
 
+const createSignatureData = async (sessionId) => {
+  if (!sessionId) {
+    sessionId = await startFaceTouceSessionId();
+  }
+  let timestamp = moment().toDate().getTime() + '';
+  let signatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
+  return { timestamp, signature: signatures[0] };
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -68,6 +79,7 @@ let CommonService = {
   getLocalData,
   startFaceTouceSessionId,
   endNewFaceTouceSessionId,
+  createSignatureData,
 }
 
 export {

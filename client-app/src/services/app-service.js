@@ -23,6 +23,13 @@ const createNewUser = async () => {
   return userInfo;
 };
 
+const createSignatureData = async () => {
+  let userInfo = await AccountService.createNewAccount();
+  let signatureData = await CommonService.createSignatureData();
+  signatureData.account_number = userInfo.bitmarkAccountNumber;
+  return signatureData;
+};
+
 const doLogin = async (pharse24Words) => {
   let userInfo = await AccountService.accessBy24Words(pharse24Words);
   delete userInfo.pharse24Words;
@@ -90,6 +97,7 @@ const doDepositBitmark = async (market, bitmark) => {
 let AppService = {
   getCurrentUser,
   createNewUser,
+  createSignatureData,
   doLogin,
   doLogout,
   doPairMarketAccount,

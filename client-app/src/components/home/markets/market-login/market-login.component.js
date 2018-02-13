@@ -48,10 +48,14 @@ export class MarketLoginComponent extends React.Component {
               console.log(message, this.state.user.bitmarkAccountNumber);
               if (message === 'ready') {
                 this.webViewRef.postMessage(this.state.user.bitmarkAccountNumber);
+              } else if (message === 'submit') {
+                AppService.createSignatureData().then(data => {
+                  this.webViewRef.postMessage(JSON.stringify(data));
+                }).catch(error => console.log('MarketLoginComponent createSignatureData error :', error));
               }
             }}
             ref={(ref) => this.webViewRef = ref}
-            source={{ uri: config.market_urls[this.state.market] + '/login' }} />
+            source={{ uri: config.market_urls[this.state.market] + '/login?webview=true' }} />
         </View>}
       </View>
     );
