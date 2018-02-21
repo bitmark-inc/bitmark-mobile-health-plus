@@ -6,7 +6,7 @@ import {
   Platform,
 } from 'react-native';
 
-import { AppService, AccountService } from "./../../../../services";
+import { AppService, AccountService, EventEmiterService } from "./../../../../services";
 
 import accountRecoveryStyle from './account-recovery.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
@@ -25,10 +25,13 @@ class RecoveryPhraseComponent extends React.Component {
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
     const recoveryPhrase = () => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
       AccountService.getCurrentAccount().then((user) => {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         curretnUser = user;
         this.props.navigation.navigate('WriteDownRecoveryPhrase');
       }).catch(error => {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         console.log('recoveryPhrase error :', error);
       });
     };
@@ -266,7 +269,7 @@ class TryRecoveryPhraseComponent extends React.Component {
         smallerList: smallerList,
         selectedIndex: this.nextSelectedIndex(-1),
       });
-    });
+    }).catch(error => console.log('get current user error :', error));
 
     this.state = {
       testResult: '',
@@ -289,13 +292,16 @@ class TryRecoveryPhraseComponent extends React.Component {
     for (let i = 0; i < temp.length; i++) {
       inputtedWords.push(temp[i].word);
     }
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     AccountService.check24Words(inputtedWords).then((user) => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       if (this.state.user.bitmarkAccountNumber === user.bitmarkAccountNumber) {
         this.setState({ testResult: 'done' });
       } else {
         this.setState({ testResult: 'retry' });
       }
     }).catch(error => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       this.setState({ testResult: 'retry' });
       console.log('testRecoveryPhrase error:', error);
     });

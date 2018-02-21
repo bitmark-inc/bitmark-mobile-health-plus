@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 import { config } from './../../../configs';
-import { AppService } from "./../../../services";
+import { AppService, EventEmiterService } from "./../../../services";
 
 import assetsStyle from './assets.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
@@ -16,7 +16,6 @@ let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle
 });
-
 
 const SubTabs = {
   local: 'Yours',
@@ -27,6 +26,7 @@ export class AssetsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.switchSubtab = this.switchSubtab.bind(this);
+    this.addProperty = this.addProperty.bind(this);
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
 
     this.state = {
@@ -39,10 +39,13 @@ export class AssetsComponent extends React.Component {
         marketAssets: [],
       }
     };
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     AppService.getUserBitmark().then((data) => {
       this.setState({ data });
       this.switchSubtab(this.state.subtab);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
     }).catch((error) => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       console.log('getUserBitmark error :', error);
     });
   }
@@ -67,13 +70,19 @@ export class AssetsComponent extends React.Component {
     this.setState({ subtab, assets });
   }
 
+  addProperty() {
+    this.screenProps.homeNavigation.navigate('LocalAddProperty');
+  }
+
   render() {
     return (
       <View style={assetsStyle.body}>
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>Properties</Text>
-          <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={this.addProperty}>
+            <Image style={assetsStyle.addPropertyIcon} source={require('./../../../../assets/imgs/plus-icon.png')} />
+          </TouchableOpacity>
         </View>
         <View style={assetsStyle.subTabArea}>
           <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.local)}>

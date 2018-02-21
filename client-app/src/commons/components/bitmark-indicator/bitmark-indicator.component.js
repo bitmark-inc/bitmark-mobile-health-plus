@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, ActivityIndicator,
+  Text, ActivityIndicator, View,
 } from 'react-native';
 
 import { BitmarkDialogComponent } from './../bitmark-dialog';
@@ -17,7 +17,10 @@ export class BitmarkIndicatorComponent extends React.Component {
     return (
       <BitmarkDialogComponent>
         {this.state.indicator && <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />}
-        {this.props.message && <Text style={dialogStyles.indicatorMessage}>{this.props.message}</Text>}
+        <View style={dialogStyles.textArea}>
+          {this.props.title && <Text style={dialogStyles.indicatorTitle}>{this.props.title}</Text>}
+          {this.props.message && <Text style={dialogStyles.indicatorMessage}>{this.props.message}</Text>}
+        </View>
       </BitmarkDialogComponent>
     );
   }
@@ -25,6 +28,7 @@ export class BitmarkIndicatorComponent extends React.Component {
 BitmarkIndicatorComponent.propTypes = {
   indicator: PropTypes.bool,
   message: PropTypes.string,
+  title: PropTypes.string,
 }
 
 export class DefaultIndicatorComponent extends React.Component {

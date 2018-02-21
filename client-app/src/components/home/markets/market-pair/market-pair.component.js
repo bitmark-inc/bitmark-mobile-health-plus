@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import Camera from 'react-native-camera';
 
-import { AppService } from './../../../../services';
+import { AppService, EventEmiterService } from './../../../../services';
 
 import marketPairStyle from './market-pair.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
@@ -31,15 +31,18 @@ export class MarketPairComponent extends React.Component {
     let qrCodeString = e.data;
     let market = qrCodeString.substring(0, qrCodeString.indexOf(':'));
     let token = qrCodeString.substring(qrCodeString.indexOf(':') + 1);
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     AppService.doPairMarketAccount(token, market).then(() => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       if (this.props.navigation.state.params.reloadMarketsScreen) {
         this.props.navigation.state.params.reloadMarketsScreen();
       }
       this.props.navigation.goBack();
     }).catch(error => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       console.log('doPairMarketAccount error :', error);
       this.processing = false;
-    })
+    });
   }
 
   render() {

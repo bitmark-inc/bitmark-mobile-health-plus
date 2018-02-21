@@ -6,9 +6,8 @@ import {
   Platform,
 } from 'react-native';
 
-import { DefaultIndicatorComponent } from './../../../../commons/components';
 
-import { AppService } from './../../../../services';
+import { AppService, EventEmiterService } from './../../../../services';
 
 import { config } from './../../../../configs';
 import bitmarkWithdrawStyle from './bitmark-withdraw.component.style';
@@ -38,7 +37,6 @@ export class BitmarkWithdrawComponent extends React.Component {
       asset,
       bitmark,
       marketList,
-      processing: false,
     };
   }
 
@@ -51,20 +49,19 @@ export class BitmarkWithdrawComponent extends React.Component {
   }
 
   doWithdraw() {
-    this.setState({ processing: true });
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     AppService.doWithdrawBitmark(this.state.bitmark).then((data) => {
       console.log('doWithdrawBitmark success :', data);
-      this.setState({ processing: false });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       this.withdrawSuccess();
     }).catch(error => {
       console.error('doWithdrawBitmark error:', error);
-      this.setState({ processing: false });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
     });
   }
   render() {
     return (
       <View style={bitmarkWithdrawStyle.body}>
-        {this.state.processing && <DefaultIndicatorComponent />}
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>List to Market</Text>

@@ -13,10 +13,14 @@ const {
   View,
 } = ReactNative;
 
-import { LoadingComponent } from './../commons/components';
+import {
+  LoadingComponent,
+  DefaultIndicatorComponent,
+  BitmarkIndicatorComponent,
+} from './../commons/components';
 import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
-import { AppService, } from './../services';
+import { AppService, EventEmiterService } from './../services';
 
 class MainComponent extends Component {
   constructor(props) {
@@ -27,6 +31,8 @@ class MainComponent extends Component {
 
     this.state = {
       user: null,
+      processing: false,
+      submitting: null,
     };
     this.appState = AppState.currentState;
 
@@ -40,10 +46,13 @@ class MainComponent extends Component {
   }
 
   componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, (processing) => this.setState({ processing }));
+    EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, (submitting) => this.setState({ submitting }));
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.addEventListener('change', this.handleAppStateChange);
   }
   componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
@@ -86,6 +95,8 @@ class MainComponent extends Component {
     }
     return (
       <View style={{ flex: 1 }}>
+        {this.state.processing && <DefaultIndicatorComponent />}
+        {this.state.submitting && <BitmarkIndicatorComponent indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
         <DisplayedComponent style={{ borderWidth: 1 }} screenProps={{
           rootNavigation: this.props.navigation,
           refreshScaling: () => {

@@ -10,7 +10,7 @@ import { config } from './../../../../configs';
 import bitmarkDepositStyle from './bitmark-deposit.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import bitmarkDepositComponentStyle from './bitmark-deposit.component.style';
-import { AppService } from '../../../../services';
+import { AppService, EventEmiterService } from '../../../../services';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -64,14 +64,14 @@ export class BitmarkDepositComponent extends React.Component {
   }
 
   doDeposit() {
-    this.setState({ processing: true });
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     AppService.doDepositBitmark(this.state.selectedmMarket, this.state.bitmark).then((data) => {
       console.log('doDepositBitmark success :', data);
-      this.setState({ processing: false });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       this.depositSuccess();
     }).catch(error => {
       console.error('doDepositBitmark error:', error);
-      this.setState({ processing: false });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
     });
   }
 

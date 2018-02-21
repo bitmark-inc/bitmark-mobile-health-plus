@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import Video from 'react-native-video';
 
-import { DefaultIndicatorComponent, AppScaleComponent } from './../../../commons/components';
+import { AppScaleComponent } from './../../../commons/components';
 import {
   BitmarkWebsiteComponent,
   BitmarkPrivacyComponent,
@@ -25,7 +25,7 @@ import {
   // android // TODO
 } from './../../../configs';
 
-import { AppService } from './../../../services';
+import { AppService, EventEmiterService } from './../../../services';
 
 let defaultWindowSize = Platform.select({
   ios: ios.constant.defaultWindowSize,
@@ -188,7 +188,6 @@ export class NewAccountComponent extends React.Component {
     super(props);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.state = {
-      processing: false,
       showPagination: true,
       scrollEnabled: true,
       index: 0,
@@ -217,23 +216,20 @@ export class NewAccountComponent extends React.Component {
 
   render() {
     const createBitmarkAccount = () => {
-      this.setState({
-        processing: true
-      });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
+      EventEmiterService
       AppService.createNewUser().then(() => {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         this.props.navigation.navigate('FaceTouchId');
       }).catch((error) => {
         console.log('createNewUser error :', error);
-        this.setState({
-          processing: false
-        });
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       });
     };
     return (
       <AppScaleComponent ref={(r) => { this.appScaler = r; }}>
         <View style={newAccountStyle.body}>
           <StatusBar hidden={false} />
-          {this.state.processing && <DefaultIndicatorComponent />}
           <View style={newAccountStyle.main}>
             <Swiper activeDotColor='#0060F2'
               scrollEnabled={this.state.scrollEnabled}

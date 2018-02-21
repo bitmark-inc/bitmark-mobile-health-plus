@@ -18,7 +18,10 @@ export default StyleSheet.create({
     opacity: 1,
     marginTop: 5,
   },
-  indicatorMessage: {
+  textArea: {
+    marginBottom: 30,
+  },
+  indicatorTitle: {
     fontFamily: 'Arial',
     fontSize: 15.42,
     fontWeight: '700',
@@ -26,6 +29,15 @@ export default StyleSheet.create({
     width: 232,
     lineHeight: 20,
     color: '#4A4A4A',
-    marginBottom: 30,
+  },
+  indicatorMessage: {
+    fontFamily: 'Arial',
+    fontSize: 15.42,
+    fontWeight: '400',
+    textAlign: 'center',
+    width: 232,
+    lineHeight: 20,
+    color: '#4A4A4A',
+    marginTop: 10,
   },
 });

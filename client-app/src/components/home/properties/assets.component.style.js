@@ -20,6 +20,12 @@ export default StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
   },
+  addPropertyIcon: {
+    width: 25,
+    height: 25,
+    resizeMode: 'contain',
+    marginRight: 17,
+  },
   subTabArea: {
     width: '100%',
     height: 39,

@@ -5,7 +5,7 @@ import {
   Platform,
 } from 'react-native';
 
-import { AppService } from './../../../../services';
+import { AppService, EventEmiterService } from './../../../../services';
 
 import marketLoginStyle from './market-login.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
@@ -18,6 +18,8 @@ let defaultStyle = Platform.select({
 export class MarketLoginComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.onMessage = this.onMessage.bind(this);
+
     this.state = {
       market: this.props.navigation.state.params.market,
       user: null,
@@ -28,6 +30,27 @@ export class MarketLoginComponent extends React.Component {
       console.log('getCurrentUser error :', error);
       this.setState({ user: null })
     })
+  }
+
+  onMessage(event) {
+    console.log('onMessage :', event);
+    let message = event.nativeEvent.data;
+    console.log(message, this.state.user.bitmarkAccountNumber);
+    if (message === 'ready') {
+      this.webViewRef.postMessage(this.state.user.bitmarkAccountNumber);
+    } else if (message === 'submit') {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
+      AppService.createSignatureData().then(data => {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+        this.webViewRef.postMessage(JSON.stringify(data));
+      }).catch(error => {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+        console.log('MarketLoginComponent createSignatureData error :', error);
+      });
+    } else if (message === 'submit-success' && this.props.navigation.state.params.refreshMarketStatus) {
+      this.props.navigation.state.params.refreshMarketStatus(this.state.market);
+      this.props.navigation.goBack();
+    }
   }
 
   render() {
@@ -42,18 +65,7 @@ export class MarketLoginComponent extends React.Component {
         </View>
         {this.state.user && this.state.user.bitmarkAccountNumber && <View style={marketLoginStyle.main}>
           <WebView
-            onMessage={(event) => {
-              console.log('onMessage :', event);
-              let message = event.nativeEvent.data;
-              console.log(message, this.state.user.bitmarkAccountNumber);
-              if (message === 'ready') {
-                this.webViewRef.postMessage(this.state.user.bitmarkAccountNumber);
-              } else if (message === 'submit') {
-                AppService.createSignatureData().then(data => {
-                  this.webViewRef.postMessage(JSON.stringify(data));
-                }).catch(error => console.log('MarketLoginComponent createSignatureData error :', error));
-              }
-            }}
+            onMessage={this.onMessage}
             ref={(ref) => this.webViewRef = ref}
             source={{ uri: config.market_urls[this.state.market] + '/login?webview=true' }} />
         </View>}
@@ -68,7 +80,7 @@ MarketLoginComponent.propTypes = {
     goBack: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
-        reloadMarketsScreen: PropTypes.func,
+        refreshMarketStatus: PropTypes.func,
         market: PropTypes.string,
       }),
     }),

@@ -8,7 +8,7 @@ import {
   FlatList,
 } from 'react-native';
 
-import { AppService, MarketService } from "./../../../services";
+import { AppService, MarketService, EventEmiterService } from "./../../../services";
 import accountStyle from './account.component.style';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
@@ -41,7 +41,9 @@ export class AccountDetailComponent extends React.Component {
       console.log('get current account error :', error);
     });
 
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     AppService.getUserBalance().then(data => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       let balanceHistories = [];
       data.balanceHistories.forEach((history, index) => {
         balanceHistories.push({ key: index, history });
@@ -51,6 +53,7 @@ export class AccountDetailComponent extends React.Component {
         balanceHistories,
       });
     }).catch((error) => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       console.log('getUserBalance error :', error);
     });
   }

@@ -5,7 +5,7 @@ import {
   Platform,
 } from 'react-native';
 
-import { AppService } from './../../../services';
+import { AppService, EventEmiterService } from './../../../services';
 import { config } from './../../../configs';
 
 import marketsStyle from './markets.component.style';
@@ -23,6 +23,7 @@ export class MarketsComponent extends React.Component {
     super(props);
     this.reload = this.reload.bind(this);
     this.openMarket = this.openMarket.bind(this);
+    this.refreshMarketStatus = this.refreshMarketStatus.bind(this);
     this.state = { user: null };
     this.reload();
   }
@@ -32,6 +33,17 @@ export class MarketsComponent extends React.Component {
       this.setState({ user });
     }).catch(error => {
       console.log('getCurrentUser error :', error);
+    });
+  }
+
+  refreshMarketStatus(market) {
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
+    AppService.doCheckPairingStatus(market).then(user => {
+      this.setState({ user });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+    }).catch(error => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+      console.log('MarketsComponent doCheckPairingStatus error :', error);
     });
   }
 
@@ -68,7 +80,8 @@ export class MarketsComponent extends React.Component {
                 !this.state.user.markets.totemic.account_number) && <View style={marketsStyle.marketCardButtonArea}>
                   <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
                     this.props.screenProps.homeNavigation.navigate('MarketLogin', {
-                      market: config.markets.totemic.name
+                      market: config.markets.totemic.name,
+                      refreshMarketStatus: this.refreshMarketStatus,
                     });
                   }}>
                     <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-create-account.png')} />

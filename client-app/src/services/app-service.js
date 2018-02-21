@@ -60,6 +60,23 @@ const doPairMarketAccount = async (token, market) => {
   return userInfo;
 };
 
+const doCheckPairingStatus = async (market) => {
+  let userInfo = await AccountService.createNewAccount();
+  let signatureData = await CommonService.createSignatureData();
+  let marketAccountInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  if (!userInfo.markets) {
+    userInfo.markets = {};
+  }
+  userInfo.markets[market] = {
+    id: marketAccountInfo.id,
+    name: marketAccountInfo.name,
+    email: marketAccountInfo.email,
+    account_number: marketAccountInfo.account_number,
+  }
+  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  return userInfo;
+};
+
 const getUserBitmark = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let marketAssets = [];
@@ -128,6 +145,7 @@ let AppService = {
   getUserBalance,
   doWithdrawBitmark,
   doDepositBitmark,
+  doCheckPairingStatus,
 
   doOpenApp,
 }
