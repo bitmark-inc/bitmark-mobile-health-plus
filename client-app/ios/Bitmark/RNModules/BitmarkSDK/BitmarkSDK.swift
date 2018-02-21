@@ -123,6 +123,20 @@ class BitmarkSDK: NSObject {
     }
   }
   
+  @objc(computeFingerprint::)
+  func computeFingerprint(_ filePath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+    do {
+      let url = URL(fileURLWithPath: filePath)
+      let data = try Data(contentsOf: url)
+      let fingerprint = FileUtil.Fingerprint.computeFingerprint(data: data)
+      callback([true, fingerprint])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
+  
   @objc(issueThenTransferFile:::)
   func issueThenTransferFile(_ sessionId: String, _ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
