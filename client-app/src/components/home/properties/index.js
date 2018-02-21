@@ -5,3 +5,4 @@ export * from './market-asset-detail';
 export * from './market-property-detail';
 export * from './bitmark-deposit';
 export * from './bitmark-withdraw';
+export * from './local-add-property';

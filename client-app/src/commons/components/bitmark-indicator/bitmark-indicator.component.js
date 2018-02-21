@@ -18,8 +18,8 @@ export class BitmarkIndicatorComponent extends React.Component {
       <BitmarkDialogComponent>
         {this.state.indicator && <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />}
         <View style={dialogStyles.textArea}>
-          {this.props.title && <Text style={dialogStyles.indicatorTitle}>{this.props.title}</Text>}
-          {this.props.message && <Text style={dialogStyles.indicatorMessage}>{this.props.message}</Text>}
+          {!!this.props.title && <Text style={dialogStyles.indicatorTitle}>{this.props.title}</Text>}
+          {!!this.props.message && <Text style={dialogStyles.indicatorMessage}>{this.props.message}</Text>}
         </View>
       </BitmarkDialogComponent>
     );

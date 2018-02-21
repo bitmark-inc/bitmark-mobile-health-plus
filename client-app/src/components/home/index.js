@@ -4,6 +4,7 @@ import { MarketPairComponent, MarketLoginComponent, MarketViewerComponent } from
 import {
   LocalPropertyDetailComponent,
   LocalAssetDetailComponent,
+  LocalAddPropertyComponent,
   MarketPropertyDetailComponent,
   MarketAssetDetailComponent,
   BitmarkDepositComponent,
@@ -21,6 +22,7 @@ let HomeComponent = StackNavigator({
   MarketPropertyDetail: { screen: MarketPropertyDetailComponent, },
   BitmarkDeposit: { screen: BitmarkDepositComponent, },
   BitmarkWithdraw: { screen: BitmarkWithdrawComponent, },
+  LocalAddProperty: { screen: LocalAddPropertyComponent, },
 }, {
     headerMode: 'none',
     navigationOptions: {

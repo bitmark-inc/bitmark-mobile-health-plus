@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import { BitmarkService, MarketService } from './../../../../services';
+import { BitmarkService } from './../../../../services';
 import { convertWidth } from './../../../../utils';
 
 import { config } from './../../../../configs';

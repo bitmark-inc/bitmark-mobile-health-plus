@@ -7,7 +7,6 @@ import {
   FlatList,
 } from 'react-native';
 import { config } from './../../../../configs';
-import { MarketService } from './../../../../services';
 import assetDetailStyle from './local-asset-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 

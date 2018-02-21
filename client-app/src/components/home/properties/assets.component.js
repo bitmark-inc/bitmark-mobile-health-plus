@@ -28,6 +28,7 @@ export class AssetsComponent extends React.Component {
     this.switchSubtab = this.switchSubtab.bind(this);
     this.addProperty = this.addProperty.bind(this);
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
+    this.refreshPropertiesScreen = this.refreshPropertiesScreen.bind(this);
 
     this.state = {
       subtab: SubTabs.local,
@@ -39,6 +40,10 @@ export class AssetsComponent extends React.Component {
         marketAssets: [],
       }
     };
+    this.refreshPropertiesScreen();
+  }
+
+  refreshPropertiesScreen() {
     EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     AppService.getUserBitmark().then((data) => {
       this.setState({ data });
@@ -71,7 +76,9 @@ export class AssetsComponent extends React.Component {
   }
 
   addProperty() {
-    this.screenProps.homeNavigation.navigate('LocalAddProperty');
+    this.props.screenProps.homeNavigation.navigate('LocalAddProperty', {
+      refreshPropertiesScreen: this.refreshPropertiesScreen,
+    });
   }
 
   render() {

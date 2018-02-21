@@ -66,6 +66,9 @@ const startFaceTouceSessionId = async () => {
   }
   return currentFaceTouceSessionId;
 };
+const setFaceTouceSessionId = (sessionId) => {
+  currentFaceTouceSessionId = sessionId;
+};
 
 const doTryRickSignMessage = async (messages) => {
   if (!currentFaceTouceSessionId) {
@@ -101,6 +104,7 @@ let CommonService = {
   endNewFaceTouceSessionId,
   createSignatureData,
   doTryRickSignMessage,
+  setFaceTouceSessionId,
 }
 
 export {

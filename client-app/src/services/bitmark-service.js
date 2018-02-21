@@ -201,11 +201,19 @@ const doDepositBitmarks = async (bitmarkIds, localBitmarkAccount, marketBitmarkA
   return await deposit(localBitmarkAccount, timestamp, signatures, firstSignatures);
 };
 
+const issueBitmark = async (filePath, assetName, metadata, quantity) => {
+  let sessionId = await CommonService.startFaceTouceSessionId();
+  let result = await BitmarkSDK.issueFile(sessionId, filePath, assetName, metadata, quantity);
+  await CommonService.endNewFaceTouceSessionId();
+  return result;
+};
+
 let BitmarkService = {
   getBitmarks,
   getProvenance,
   doWithdrawBitmarks,
   doDepositBitmarks,
+  issueBitmark,
 };
 
 export { BitmarkService };

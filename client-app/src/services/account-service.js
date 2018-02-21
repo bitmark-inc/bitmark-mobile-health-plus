@@ -43,7 +43,7 @@ const doCheckPairingStatus = (market, loaclBitmarkAccountNumber, timestamp, sign
 const createNewAccount = async () => {
   let sessionId = await BitmarkSDK.newAccount(config.bitmark_network);
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
-  await BitmarkSDK.disposeSession(sessionId);
+  CommonService.setFaceTouceSessionId(sessionId);
   return userInfo;
 };
 
@@ -80,7 +80,7 @@ const accessBy24Words = async (pharse24Words) => {
   let sessionId = await BitmarkSDK.newAccountFrom24Words(pharse24Words);
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
   let marketInfos = await checkPairingStatusAllMarket(sessionId, userInfo.bitmarkAccountNumber);
-  await BitmarkSDK.disposeSession(sessionId);
+  CommonService.setFaceTouceSessionId(sessionId);
   userInfo.markets = marketInfos;
   return userInfo;
 };

@@ -1,10 +1,13 @@
 import moment from 'moment';
-import { config } from './../configs';
 
+import fs from 'react-native-fs';
+
+import { config } from './../configs';
 import { CommonService } from './common-service';
 import { AccountService } from './account-service';
 import { BitmarkService } from './bitmark-service';
 import { MarketService } from './market-service';
+
 
 
 // ================================================================================================
@@ -111,28 +114,47 @@ const doDepositBitmark = async (market, bitmark) => {
 
 const doOpenApp = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  let marketInfos = {};
-  for (let market in config.markets) {
-    let timestamp = moment().toDate().getTime().toString();
-    let signatures = await CommonService.doTryRickSignMessage([timestamp]);
-    let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
-    if (marketInfo) {
-      marketInfos[market] = {
-        id: marketInfo.id,
-        name: marketInfo.name,
-        email: marketInfo.email,
-        account_number: marketInfo.account_number,
+  if (userInfo && userInfo.bitmarkAccountNumber) {
+    let marketInfos = {};
+    for (let market in config.markets) {
+      let timestamp = moment().toDate().getTime().toString();
+      let signatures = await CommonService.doTryRickSignMessage([timestamp]);
+      let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
+      if (marketInfo) {
+        marketInfos[market] = {
+          id: marketInfo.id,
+          name: marketInfo.name,
+          email: marketInfo.email,
+          account_number: marketInfo.account_number,
+        }
       }
     }
+    userInfo.markets = marketInfos;
+    await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+    CommonService.endNewFaceTouceSessionId();
   }
-  userInfo.markets = marketInfos;
-  await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
-  CommonService.endNewFaceTouceSessionId();
   return userInfo;
 };
 
 // ================================================================================================
 // ================================================================================================
+// -- test
+
+const createSampleFile = async () => {
+  const folderPath = fs.DocumentDirectoryPath + '/Bitmark/test';
+  const filePath = folderPath + '/test.txt'
+  await fs.mkdir(folderPath, {
+    NSURLIsExcludedFromBackupKey: true,
+  });
+  await fs.writeFile(filePath, 'test file ' + moment().toDate().toISOString(), 'utf8');
+  return filePath;
+};
+
+const testIssueFile = async () => {
+  let fileTest = await createSampleFile();
+  return await BitmarkService.issueBitmark(fileTest, 'bachlx-test issue from mobile', { description: 'issue from mobile' }, 1);
+};
+
 // ================================================================================================
 let AppService = {
   getCurrentUser,
@@ -148,6 +170,8 @@ let AppService = {
   doCheckPairingStatus,
 
   doOpenApp,
+
+  testIssueFile,
 }
 
 export {
