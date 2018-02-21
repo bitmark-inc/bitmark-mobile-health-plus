@@ -3,7 +3,7 @@ FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/BigInt" "
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
 OTHER_CFLAGS = $(inherited) -iquote "${PODS_CONFIGURATION_BUILD_DIR}/BigInt/BigInt.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/BitmarkSDK/BitmarkSDK.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/CryptoSwift/CryptoSwift.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/KeychainAccess/KeychainAccess.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/SipHash/SipHash.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/TweetNacl/TweetNacl.framework/Headers"
-OTHER_LDFLAGS = $(inherited) -framework "BigInt" -framework "BitmarkSDK" -framework "CryptoSwift" -framework "KeychainAccess" -framework "SipHash" -framework "TweetNacl"
+OTHER_LDFLAGS = $(inherited) -ObjC -framework "BigInt" -framework "BitmarkSDK" -framework "CryptoSwift" -framework "KeychainAccess" -framework "SipHash" -framework "TweetNacl"
 OTHER_SWIFT_FLAGS = $(inherited) "-D" "COCOAPODS"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)

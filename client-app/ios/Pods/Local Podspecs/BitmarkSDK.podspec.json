@@ -17,6 +17,17 @@
     "tag": "0.0.5"
   },
   "source_files": "BitmarkSDK/**/*.{h,swift}",
+  "ios": {
+    "vendored_libraries": "BitmarkSDK/libsodium/libsodium-ios.a"
+  },
+  "osx": {
+    "vendored_libraries": "BitmarkSDK/libsodium/libsodium-osx.a"
+  },
+  "private_header_files": "BitmarkSDK/libsodium/*.h",
+  "preserve_paths": "BitmarkSDK/libsodium/module.modulemap",
+  "pod_target_xcconfig": {
+    "SWIFT_INCLUDE_PATHS": "$(PODS_TARGET_SRCROOT)/BitmarkSDK/libsodium"
+  },
   "dependencies": {
     "BigInt": [
 

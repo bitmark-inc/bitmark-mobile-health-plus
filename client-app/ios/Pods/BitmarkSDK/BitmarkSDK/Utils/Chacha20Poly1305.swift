@@ -7,67 +7,78 @@
 //
 
 import Foundation
-import CryptoSwift
+import libsodium
 
 struct Chacha20Poly1305 {
     
-    private static func roundTo16(n: Int) -> Int {
-        return 16 * ((n + 15) / 16)
-    }
-    
-    private static func paddingData(data: Data) -> Data {
-        var result = Data(count: roundTo16(n: data.count))
-        result.replaceSubrange(0..<data.count, with: data)
-        return result
-    }
-    
-    private static func countingData(data: Data) -> Data {
-        var count = data.count.littleEndian
-        return Data(bytes: &count, count: MemoryLayout.size(ofValue: count))
+    enum Chacha20Error: Error {
+        case cannotEncrypt
+        case cannotDecrypt
     }
     
     static func seal(withKey key: Data, nonce: Data, plainText: Data, additionalData: Data?) throws -> Data {
         let aData = additionalData ?? Data()
         
-        let chacha20 = try ChaCha20(key: key.bytes, iv: nonce.bytes)
-        let tagKey = try chacha20.encrypt([UInt8](repeating: 0x00, count: 64))[0..<32]
+        var cipherText = Data(count: plainText.count + Int(crypto_aead_chacha20poly1305_IETF_ABYTES) + aData.count)
+        let tmpLength = UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         
-        let cipherBytes = try chacha20.encrypt(plainText.bytes)
-        let cipherText = Data(bytes: cipherBytes)
+        let result = cipherText.withUnsafeMutableBytes({ (cipherTextPointer: UnsafeMutablePointer<UInt8>) -> Int32 in
+            return nonce.withUnsafeBytes({ (noncePointer: UnsafePointer<UInt8>) -> Int32 in
+                return key.withUnsafeBytes({ (keyPointer: UnsafePointer<UInt8>) -> Int32 in
+                    return plainText.withUnsafeBytes({ (plainTextPointer: UnsafePointer<UInt8>) -> Int32 in
+                        return aData.withUnsafeBytes({ (aPointer: UnsafePointer<UInt8>) -> Int32 in
+                            return libsodium.crypto_aead_chacha20poly1305_ietf_encrypt(cipherTextPointer,
+                                                                                       tmpLength,
+                                                                                       plainTextPointer,
+                                                                                       UInt64(plainText.count),
+                                                                                       aPointer,
+                                                                                       UInt64(aData.count),
+                                                                                       nil,
+                                                                                       noncePointer,
+                                                                                       keyPointer)
+                        })
+                    })
+                })
+            })
+        })
         
-        let tagInput = paddingData(data: aData) +
-            paddingData(data: cipherText) +
-            countingData(data: aData) +
-            countingData(data: cipherText)
+        if result != 0 {
+            throw Chacha20Error.cannotEncrypt
+        }
         
-        let poly = Poly1305(key: Array(tagKey))
-        let tagBytes = try poly.authenticate(tagInput.bytes)
-        
-        return Data(bytes: cipherBytes + tagBytes)
+        return cipherText
     }
     
     static func open(withKey key: Data, nonce: Data, cipherText: Data, additionalData: Data?) throws -> Data {
+        
         let aData = additionalData ?? Data()
+        var plainText = Data(count: cipherText.count - Int(crypto_aead_chacha20poly1305_IETF_ABYTES) - aData.count)
+        let tmpLength = UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
+
+        let result = plainText.withUnsafeMutableBytes({ (plainTextPointer: UnsafeMutablePointer<UInt8>) -> Int32 in
+            return nonce.withUnsafeBytes({ (noncePointer: UnsafePointer<UInt8>) -> Int32 in
+                return key.withUnsafeBytes({ (keyPointer: UnsafePointer<UInt8>) -> Int32 in
+                    return cipherText.withUnsafeBytes({ (cipherTextPointer: UnsafePointer<UInt8>) -> Int32 in
+                        return aData.withUnsafeBytes({ (aPointer: UnsafePointer<UInt8>) -> Int32 in
+                            return libsodium.crypto_aead_chacha20poly1305_ietf_decrypt(plainTextPointer,
+                                                                                       tmpLength,
+                                                                                       nil,
+                                                                                       cipherTextPointer,
+                                                                                       UInt64(cipherText.count),
+                                                                                       aPointer,
+                                                                                       UInt64(aData.count),
+                                                                                       noncePointer,
+                                                                                       keyPointer)
+                        })
+                    })
+                })
+            })
+        })
         
-        let tagData = cipherText.subdata(in: (cipherText.count - Poly1305.blockSize)..<cipherText.count)
-        let chacha20Cipher = cipherText.subdata(in: 0..<(cipherText.count - Poly1305.blockSize))
-        
-        let chacha20 = try ChaCha20(key: key.bytes, iv: nonce.bytes)
-        let tagKey = try chacha20.encrypt([UInt8](repeating: 0x00, count: 64))[0..<32]
-        
-        let plainBytes = try chacha20.decrypt(chacha20Cipher.bytes)
-        
-        let tagInput = paddingData(data: aData) +
-            paddingData(data: chacha20Cipher) +
-            countingData(data: aData) +
-            countingData(data: chacha20Cipher)
-        
-        let poly = Poly1305(key: Array(tagKey))
-        let tagBytes = try poly.authenticate(tagInput.bytes)
-        if tagData.bytes != tagBytes {
-            throw(BMError("Failed to authenticate with chacha20-poly1305, expect: \(tagData.hexEncodedString), actual: \(Data(bytes: tagBytes).hexEncodedString)"))
+        if result != 0 {
+            throw Chacha20Error.cannotEncrypt
         }
         
-        return Data(bytes: plainBytes)
+        return plainText
     }
 }
