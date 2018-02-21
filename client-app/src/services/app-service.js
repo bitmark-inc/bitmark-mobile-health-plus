@@ -150,9 +150,10 @@ const createSampleFile = async () => {
   return filePath;
 };
 
-const testIssueFile = async () => {
+const testIssueFile = async (filepath) => {
   let fileTest = await createSampleFile();
-  return await BitmarkService.issueBitmark(fileTest, 'bachlx-test issue from mobile', { description: 'issue from mobile' }, 1);
+  console.log('filepath :', filepath, fileTest);
+  return await BitmarkService.issueBitmark(filepath, 'bachlx-test issue from mobile', { description: 'issue from mobile' }, 1);
 };
 
 // ================================================================================================

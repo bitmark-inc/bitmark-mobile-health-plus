@@ -16,10 +16,12 @@ export class BitmarkIndicatorComponent extends React.Component {
   render() {
     return (
       <BitmarkDialogComponent>
-        {this.state.indicator && <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />}
-        <View style={dialogStyles.textArea}>
-          {!!this.props.title && <Text style={dialogStyles.indicatorTitle}>{this.props.title}</Text>}
-          {!!this.props.message && <Text style={dialogStyles.indicatorMessage}>{this.props.message}</Text>}
+        <View style={dialogStyles.content}>
+          {this.state.indicator && <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />}
+          <View style={dialogStyles.textArea}>
+            {!!this.props.title && <Text style={dialogStyles.indicatorTitle}>{this.props.title}</Text>}
+            {!!this.props.message && <Text style={dialogStyles.indicatorMessage}>{this.props.message}</Text>}
+          </View>
         </View>
       </BitmarkDialogComponent>
     );

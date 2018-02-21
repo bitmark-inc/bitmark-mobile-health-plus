@@ -8,6 +8,10 @@ import {
 } from './../../../configs';
 
 export default StyleSheet.create({
+  content: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   indicatorImage: {
     zIndex: Platform.select({
       ios: ios.constant.zIndex.indicator,

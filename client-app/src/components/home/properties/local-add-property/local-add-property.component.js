@@ -6,6 +6,8 @@ import {
   Keyboard,
 } from 'react-native';
 
+import ImagePicker from 'react-native-image-picker';
+
 import { AppService, EventEmiterService } from './../../../../services';
 
 import localAddPropertyStyle from './local-add-property.component.style';
@@ -35,16 +37,34 @@ export class LocalAddPropertyComponent extends React.Component {
     this.state = {
       step: Steps.input_file,
       metadataList,
+      filepath: '',
+      filename: '',
+      fileFormat: '',
     }
   }
 
   chooseFile() {
-    this.setState({ step: Steps.input_info });
+    let options = {
+      title: 'Select Avatar',
+      mediaType: 'mixed',
+    };
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
+    ImagePicker.showImagePicker(options, (response) => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+      if (response.error || response.didCancel) {
+        return;
+      }
+      let filepath = response.uri.replace('file://', '');
+      let filename = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
+      let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
+      this.setState({ step: Steps.input_info, filepath, filename, fileFormat });
+      console.log('response :', response);
+    });
   }
 
   register() {
     EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: true, title: 'Submitting your request to the network for confirmation…', message: '' });
-    AppService.testIssueFile().then(() => {
+    AppService.testIssueFile(this.state.filepath).then(() => {
       EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.' });
       setTimeout(() => {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);

@@ -37,6 +37,7 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B7856E9B0E4B4CF3BA90EB21 /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 295B8983183E4140AD6083BB /* libRNMail.a */; };
 		F150CA412023230B00C8FC17 /* AndaleMono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F150CA152023230B00C8FC17 /* AndaleMono.ttf */; };
+		F15F68E1203D70EC00A5A582 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15F68DE203D70DE00A5A582 /* libRNImagePicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -355,6 +356,13 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
+		F15F68DD203D70DE00A5A582 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
+			remoteInfo = RNImagePicker;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -403,6 +411,7 @@
 		E3045E478EDA4BB795BE1653 /* RNMail.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNMail.xcodeproj; path = "../node_modules/react-native-mail/RNMail.xcodeproj"; sourceTree = "<group>"; };
 		E68EEEE1542C435DA913552D /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		F150CA152023230B00C8FC17 /* AndaleMono.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AndaleMono.ttf; path = ../assets/fonts/AndaleMono.ttf; sourceTree = "<group>"; };
+		F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		FD055631D7E5490F8244DCED /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -420,6 +429,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F15F68E1203D70EC00A5A582 /* libRNImagePicker.a in Frameworks */,
 				584009D020243ABA00550ADB /* libRCTCamera.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -526,6 +536,7 @@
 		13B07FAE1A68108700A75B9A /* Bitmark */ = {
 			isa = PBXGroup;
 			children = (
+				F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */,
 				58CB488F201EC5670058B364 /* Bitmark.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				58FC1E54201B21CC00F60AF9 /* Bitmark-Bridging-Header.h */,
@@ -753,6 +764,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F15F68B0203D70DE00A5A582 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F15F68DE203D70DE00A5A582 /* libRNImagePicker.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -894,6 +913,10 @@
 				{
 					ProductGroup = 58FC1DF5201B14CB00F60AF9 /* Products */;
 					ProjectRef = A2D3611775A644B7B648A041 /* RNFS.xcodeproj */;
+				},
+				{
+					ProductGroup = F15F68B0203D70DE00A5A582 /* Products */;
+					ProjectRef = F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */;
 				},
 				{
 					ProductGroup = 58FC1DFD201B14CB00F60AF9 /* Products */;
@@ -1215,6 +1238,13 @@
 			fileType = archive.ar;
 			path = libRCTBlob.a;
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F15F68DE203D70DE00A5A582 /* libRNImagePicker.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNImagePicker.a;
+			remoteRef = F15F68DD203D70DE00A5A582 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
