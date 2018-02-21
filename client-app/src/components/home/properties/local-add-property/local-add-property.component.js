@@ -6,8 +6,6 @@ import {
   Keyboard,
 } from 'react-native';
 
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-
 import { AppService, EventEmiterService } from './../../../../services';
 
 import localAddPropertyStyle from './local-add-property.component.style';
