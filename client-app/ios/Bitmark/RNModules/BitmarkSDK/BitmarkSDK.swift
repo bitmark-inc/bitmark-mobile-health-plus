@@ -246,6 +246,25 @@ class BitmarkSDK: NSObject {
     AccountSession.shared.disposeSession(sessionId: sessionId)
     callback([true])
   }
+  
+  @objc(validateMetadata::)
+  func validateMetadata(_ metadata: [String: String], _ callback: @escaping RCTResponseSenderBlock) {
+    let tmp = metadata.reduce([]) { (result, keyvalue) -> [String] in
+      var newResult = result
+      newResult.append(keyvalue.key)
+      newResult.append(keyvalue.value)
+      return newResult
+    }
+    
+    let metadataString = tmp.joined(separator: "\u{0000}")
+    
+    if metadataString.utf8.count > 2048 {
+      callback([false])
+    }
+    else {
+      callback([true])
+    }
+  }
 }
 
 extension BitmarkSDK {
