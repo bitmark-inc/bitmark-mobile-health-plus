@@ -123,13 +123,20 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(computeFingerprint::)
-  func computeFingerprint(_ filePath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(getAssetInfo::)
+  func getAssetInfo(_ filePath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let url = URL(fileURLWithPath: filePath)
       let data = try Data(contentsOf: url)
       let fingerprint = FileUtil.Fingerprint.computeFingerprint(data: data)
-      callback([true, fingerprint])
+      
+      guard let fingerprintData = fingerprint.data(using: .utf8) else {
+        callback([false])
+        return
+      }
+      
+      let assetid = fingerprintData.sha3(.sha512).hexEncodedString
+      callback([true, assetid, fingerprint])
     }
     catch let e {
       print(e)
