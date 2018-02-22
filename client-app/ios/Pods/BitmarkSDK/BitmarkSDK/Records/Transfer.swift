@@ -211,3 +211,20 @@ public struct CountersignedTransferRecord {
         self.counterSignature = try receiverAccount.authKey.sign(message: pack)
     }
 }
+
+extension CountersignedTransferRecord: Encodable {
+    enum SessionDataKeys: String, CodingKey {
+        case link = "link"
+        case owner = "owner"
+        case signature = "signature"
+        case countersignature = "countersignature"
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: SessionDataKeys.self)
+        try container.encode(self.offer.txId, forKey: .link)
+        try container.encode(self.offer.receiver.string, forKey: .owner)
+        try container.encode(self.offer.signature?.hexEncodedString, forKey: .signature)
+        try container.encode(self.counterSignature?.hexEncodedString, forKey: .countersignature)
+    }
+}

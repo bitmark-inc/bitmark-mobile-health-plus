@@ -42,18 +42,9 @@ struct AssetEncryption {
 }
 
 extension AssetEncryption {
-    static func encryptionKey(fromSessionData sessionData: SessionData, account: Account, senderEncryptionPublicKey: Data, senderAuthPublicKey: Data) throws -> AssetEncryption {
+    static func encryptionKey(fromSessionData sessionData: SessionData, account: Account, senderEncryptionPublicKey: Data) throws -> AssetEncryption {
         // Decrypt message
         let key = try account.encryptionKey.decrypt(encryptedMessage: sessionData.encryptedDataKey, peerPublicKey: senderEncryptionPublicKey)
-        
-        print(key.hexEncodedString)
-        print(senderAuthPublicKey.hexEncodedString)
-//        
-//        // Verify signature
-//        let test = try TweetNacl.NaclSign.signDetachedVerify(message: sessionData.encryptedDataKey, sig: sessionData.encryptedDataKeySignature, publicKey: senderAuthPublicKey)
-//        if !test {
-//            throw(BMError("Signature verification failed"))
-//        }
         
         return try AssetEncryption(key: key)
     }
