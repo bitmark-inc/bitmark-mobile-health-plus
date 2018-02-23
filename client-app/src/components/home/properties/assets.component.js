@@ -129,6 +129,9 @@ export class AssetsComponent extends React.Component {
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
                 Once you pair your market account with mobile app, you can remove the property from the market and the property will transfer to yours.
                 </Text>}
+              {(this.state.subtab === SubTabs.local) && <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
+                <Text style={assetsStyle.addFirstPropertyButtonText}>{'create first property'.toUpperCase()}</Text>
+              </TouchableOpacity>}
               {(this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetContent}>
                 You can pair your market account in the “Market” section with Bitmark app to easily access every markets in the Bitmark system.
                 </Text>}

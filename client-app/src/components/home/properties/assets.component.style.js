@@ -93,6 +93,23 @@ export default StyleSheet.create({
     fontSize: 17,
     lineHeight: 19,
   },
+  addFirstPropertyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#0060F2',
+    marginTop: 30,
+    width: convertWidth(337),
+    height: 42,
+  },
+  addFirstPropertyButtonText: {
+    fontFamily: 'Avenir black',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '900',
+    color: 'white'
+  },
 
   assetRowArea: {
     width: '100%',
