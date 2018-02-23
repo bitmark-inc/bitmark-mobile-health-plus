@@ -20,7 +20,7 @@ const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, sig
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('checkPairingStatus error :' + JSON.stringify(data)));
       }
       resolve(data.user || {});
@@ -113,7 +113,7 @@ const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => 
         statusCode = response.status;
         return response.json();
       }).then((data) => {
-        if (statusCode !== 200) {
+        if (statusCode >= 400) {
           return reject(new Error('pairtMarketAccounut error :' + JSON.stringify(data)));
         }
         resolve(data.user || {});
@@ -144,7 +144,7 @@ const getBalanceOnMarket = (marketServerUrl) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('getBalanceOnMarket error :' + JSON.stringify(data)));
       }
       let ethData = (data && data.fund) ? data.fund.eth : {};
@@ -170,7 +170,7 @@ const getBalanceHistoryOnMarket = (marketServerUrl) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('getBalanceHistoryOnMarket error :' + JSON.stringify(data)));
       }
       resolve(data.history || []);

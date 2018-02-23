@@ -177,6 +177,16 @@ const BitmarkSDK = {
     });
   },
 
-
+  getAssetInfo: (filePath) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.getAssetInfo(filePath, (ok, id, fingerprint) => {
+        if (ok) {
+          resolve({ fingerprint, id });
+        } else {
+          reject(new Error('Can not getAssetInfo!'));
+        }
+      });
+    });
+  }
 };
 export { BitmarkSDK };

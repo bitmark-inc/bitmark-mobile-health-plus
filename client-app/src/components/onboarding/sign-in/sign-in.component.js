@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import defaultStyles from './../../../commons/styles';
 import signStyle from './sign-in.component.style';
-import { AutoCompleteKeyboardInput } from './../../../commons/components';
+import { BitmarkAutoCompleteComponent } from './../../../commons/components';
 import { android, ios } from './../../../configs';
 import { dictionary24Words } from './../../../utils';
 import { AppService, AccountService } from './../../../services';
@@ -164,7 +164,7 @@ export class SignInComponent extends React.Component {
     this.setState({
       remainWordNumber: 24 - countNumberInputtedWord,
     });
-    let status = countNumberInputtedWord === 24 ? AutoCompleteKeyboardInput.statuses.done : AutoCompleteKeyboardInput.statuses.inputing;
+    let status = countNumberInputtedWord === 24 ? BitmarkAutoCompleteComponent.statuses.done : BitmarkAutoCompleteComponent.statuses.inputing;
     if (this.autoCompleteElement) {
       this.autoCompleteElement.setStatus(status);
     }
@@ -302,7 +302,7 @@ export class SignInComponent extends React.Component {
             </View>
           </ScrollView>
 
-          <AutoCompleteKeyboardInput ref={(ref) => this.autoCompleteElement = ref}
+          <BitmarkAutoCompleteComponent ref={(ref) => this.autoCompleteElement = ref}
             dataSource={this.state.dataSource}
             autoCorrect={false}
             onlyDisplayWhenCalled={true}
@@ -312,7 +312,7 @@ export class SignInComponent extends React.Component {
             goToNextInputField={() => this.selectIndex((this.state.selectedIndex + 1) % 24)}
             goToPrevInputField={() => this.selectIndex((this.state.selectedIndex + 23) % 24)}
           >
-          </AutoCompleteKeyboardInput>
+          </BitmarkAutoCompleteComponent>
         </View>
       </TouchableWithoutFeedback>
     );

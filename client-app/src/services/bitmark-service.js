@@ -26,7 +26,7 @@ const withdrawFirstSignature = (localBitmarkAccount, bitmarkIds) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('withdrawFirstSignature error :' + JSON.stringify(data)));
       }
       resolve(data);
@@ -55,7 +55,7 @@ const withdrawSecondSignature = (localBitmarkAccount, timestamp, signature, sign
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('withdrawSecondSignature error :' + JSON.stringify(data)));
       }
       resolve(data);
@@ -84,10 +84,34 @@ const deposit = (localBitmarkAccount, timestamp, signature, firstSignatures) => 
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('transferUse2Signature error :' + JSON.stringify(data)));
       }
       resolve(data);
+    }).catch(reject);
+  });
+};
+
+const getAssetInformation = (assetId) => {
+  console.log('run1', assetId);
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    fetch(config.get_way_server_url + `/v1/assets/${assetId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      console.log('run2');
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      console.log('run3', data, status);
+      if (statusCode >= 400) {
+        return reject(new Error('getAssetInfo error :' + JSON.stringify(data)));
+      }
+      return data.asset;
     }).catch(reject);
   });
 };
@@ -107,7 +131,7 @@ const getBitmarks = (loaclBitmarkAccountNumber) => {
       statusCode = response.status;
       return response.json();
     }).then((localBitmarks) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('getBitmarks error :' + JSON.stringify(localBitmarks)));
       }
       let localAssets = [];
@@ -150,7 +174,7 @@ const getProvenance = (bitmark) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('getProvenance error :' + JSON.stringify(data)));
       }
       let provenance = (data.bitmark && data.bitmark.provenance) ? data.bitmark.provenance : [];
@@ -208,7 +232,20 @@ const issueBitmark = async (filePath, assetName, metadata, quantity) => {
   return result;
 };
 
+let doCheckExistingAsset = (assetId) => {
+  return new Promise((resolve) => {
+    getAssetInformation(assetId).then((data) => {
+      console.log('getAssetInformation :', data);
+      resolve(data);
+    }).catch((error) => {
+      console.log('getAssetInformation error:', error);
+      resolve();
+    });
+  });
+};
+
 let BitmarkService = {
+  doCheckExistingAsset,
   getBitmarks,
   getProvenance,
   doWithdrawBitmarks,

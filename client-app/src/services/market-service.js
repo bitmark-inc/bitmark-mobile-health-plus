@@ -50,7 +50,7 @@ const getBitmarksOnMarket = (market, userId) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('getBitmarks error :' + JSON.stringify(data)));
       }
       resolve(convertDataFromMarket(market, data || {}));
@@ -102,7 +102,7 @@ const getProvenance = (bitmark) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode !== 200) {
+      if (statusCode >= 400) {
         return reject(new Error('getProvenance error :' + JSON.stringify(data)));
       }
       let provenance = data.provenance || [];

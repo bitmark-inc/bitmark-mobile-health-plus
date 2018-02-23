@@ -5,7 +5,7 @@ import {
   Keyboard,
   Dimensions,
   Animated,
-  Image,
+  TextInput,
 } from 'react-native';
 
 let deviceSize = Dimensions.get('window');
@@ -13,10 +13,6 @@ let deviceSize = Dimensions.get('window');
 import styles from './auto-complete-keyboard-input.style';
 
 export class AutoCompleteKeyboardInput extends React.Component {
-  static statuses = {
-    done: 'done',
-    inputing: 'inputing'
-  }
   constructor(props) {
     super(props);
     this.onKeyboardWillShow = this.onKeyboardWillShow.bind(this);
@@ -26,7 +22,11 @@ export class AutoCompleteKeyboardInput extends React.Component {
     this.onKeyboardWillChangeFrame = this.onKeyboardWillChangeFrame.bind(this);
     this.onKeyboardDidChangeFrame = this.onKeyboardDidChangeFrame.bind(this);
 
+    this.onChangeText = this.onChangeText.bind(this);
+    this.onSubmitEditing = this.onSubmitEditing.bind(this);
     this.selectText = this.selectText.bind(this);
+    this.selectNext = this.selectNext.bind(this);
+    this.selectPrev = this.selectPrev.bind(this);
 
     this.doDisplayExtensionArea = this.doDisplayExtensionArea.bind(this);
     this.doHideExtensionArea = this.doHideExtensionArea.bind(this);
@@ -37,7 +37,7 @@ export class AutoCompleteKeyboardInput extends React.Component {
     this.state = {
       dataSource: this.props.dataSource || [],
       opacity: new Animated.Value(0),
-      extBottom: new Animated.Value(-50),
+      extBottom: new Animated.Value(0),
       keyboardHeight: 0,
       inputtedText: '',
       realInputtedText: '',
@@ -45,6 +45,10 @@ export class AutoCompleteKeyboardInput extends React.Component {
     }
   }
   // ==========================================================================================
+  componentWillReceiveProps(nextProps) {
+    this.setState({ dataSource: nextProps.dataSource || [] });
+  }
+
   componentDidMount() {
     this.keyboardWillShow = Keyboard.addListener('keyboardWillShow', this.onKeyboardWillShow)
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow)
@@ -79,7 +83,7 @@ export class AutoCompleteKeyboardInput extends React.Component {
   }
   doHideExtensionArea() {
     let listAnimations = [Animated.spring(this.state.extBottom, {
-      toValue: -50,
+      toValue: 0,
       duration: 1000,
     })];
     if (this.props.onlyDisplayWhenCalled) {
@@ -102,6 +106,7 @@ export class AutoCompleteKeyboardInput extends React.Component {
         }
       });
     }
+    console.log(tempDataSource);
     this.setState({ dataSource: tempDataSource });
   }
   selectText(text, index) {
@@ -110,11 +115,22 @@ export class AutoCompleteKeyboardInput extends React.Component {
     }
     this.setState({
       inputtedText: text,
+      selection: { start: this.state.realInputtedText.length, end: text.length },
       selectedIndex: index,
     });
     if (this.props.onSelectWord) {
       this.props.onSelectWord(text);
     }
+  }
+  selectNext() {
+    let selectedIndex = (this.state.selectedIndex < 0 ? 0 : (this.state.selectedIndex + 1));
+    selectedIndex = selectedIndex >= this.state.dataSource.length ? 0 : selectedIndex;
+    this.selectText(this.state.dataSource[selectedIndex].word, selectedIndex);
+  }
+  selectPrev() {
+    let selectedIndex = this.state.selectedIndex - 1;
+    selectedIndex = (selectedIndex < 0 ? (this.state.dataSource.length - 1) : selectedIndex);
+    this.selectText(this.state.dataSource[selectedIndex].word, selectedIndex);
   }
   // ==========================================================================================
   onKeyboardWillShow(keyboardEvent) {
@@ -152,6 +168,26 @@ export class AutoCompleteKeyboardInput extends React.Component {
     }
   }
 
+  onChangeText(text) {
+    this.setState({
+      inputtedText: text,
+      realInputtedText: text,
+      selection: { start: text.length, end: text.length },
+      selectedIndex: -1,
+    });
+    if (this.props.dataSource) {
+      this.doFilter(this.props.dataSource, text);
+    }
+    if (!this.props.hideInputArea && this.props.onChangeText) {
+      this.props.onChangeText(text);
+    }
+  }
+  onSubmitEditing() {
+    if (!this.props.hideInputArea && this.props.onSubmit && this.state.inputtedText) {
+      this.props.onSubmit(this.state.inputtedText);
+    }
+    this.setState({ inputtedText: '', realInputtedText: '' });
+  }
   // ==========================================================================================
   showKeyboardInput(defaultValue) {
     if (!this.mounted) {
@@ -166,10 +202,6 @@ export class AutoCompleteKeyboardInput extends React.Component {
   }
   hideKeyboardInput() {
     Keyboard.dismiss();
-  }
-
-  setStatus(status) {
-    this.setState({ status });
   }
 
   // ==========================================================================================
@@ -189,14 +221,26 @@ export class AutoCompleteKeyboardInput extends React.Component {
           bottom: this.state.extBottom,
           opacity: this.props.onlyDisplayWhenCalled ? this.state.opacity : new Animated.Value(1),
         }]}>
-          {this.onSelectWord && <View style={[styles.selectionArea, this.selectionAreaStyle]}>
-            <TouchableOpacity style={styles.nextButton} onPress={this.props.goToNextInputField}>
-              <Image style={styles.nextButtonImage} source={require('./../../../../assets/imgs/arrow_down_enable.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.prevButton} onPress={this.props.goToPrevInputField}>
-              <Image style={styles.prevButtonImage} source={require('./../../../../assets/imgs/arrow_up_enable.png')} />
-            </TouchableOpacity>
-            {this.props.dataSource && !!this.state.inputtedText && <View style={[styles.selectionList]}>
+          {!this.props.hideInputArea && <View style={[styles.inputArea, this.props.inputAreaStyle]}>
+            <TextInput style={[styles.textInputStyle, this.props.textInputStyle]}
+              ref={r => this.textInputElement = r}
+              onChangeText={this.onChangeText}
+              onSubmitEditing={this.onSubmitEditing}
+              value={this.state.inputtedText}
+              autoCorrect={this.props.autoCorrect || false}
+              caseSensitive={!!this.props.caseSensitive}
+              autoCapitalize={this.props.autoCapitalize || 'none'}
+              selection={this.state.selection}
+            />
+            {this.props.children}
+          </View>}
+          {this.props.dataSource && <View style={[styles.selectionArea, this.selectionAreaStyle]}>
+            {!!this.state.inputtedText && this.state.dataSource && this.state.dataSource.length > 0 &&
+              <TouchableOpacity style={styles.prevButton} onPress={this.selectPrev} >
+                <Text style={styles.prevButtonText} >Prev</Text>
+              </TouchableOpacity>
+            }
+            {!!this.state.inputtedText && <View style={[styles.selectionList]}>
               <FlatList
                 ref={(ref) => this.listViewElement = ref}
                 keyboardShouldPersistTaps="handled"
@@ -210,9 +254,11 @@ export class AutoCompleteKeyboardInput extends React.Component {
                 }}
               />
             </View>}
-            <TouchableOpacity style={styles.doneButton} onPress={this.hideKeyboardInput} disabled={this.state.status !== AutoCompleteKeyboardInput.statuses.done}>
-              <Text style={[styles.doneButtonText, { color: this.state.status === AutoCompleteKeyboardInput.statuses.done ? '#0060F2' : 'gray' }]}>Done</Text>
-            </TouchableOpacity>
+            {!!this.state.inputtedText && this.state.dataSource && this.state.dataSource.length > 0 &&
+              <TouchableOpacity style={styles.nextButton} onPress={this.selectNext} >
+                <Text style={styles.nextButtonText}>Next</Text>
+              </TouchableOpacity>
+            }
           </View>}
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -221,15 +267,13 @@ export class AutoCompleteKeyboardInput extends React.Component {
 }
 
 AutoCompleteKeyboardInput.propTypes = {
-  children: PropTypes.array,
+  children: PropTypes.object,
   onKeyboardWillShow: PropTypes.func,
   onKeyboardDidShow: PropTypes.func,
   onKeyboardWillHide: PropTypes.func,
   onKeyboardDidHide: PropTypes.func,
   onKeyboardWillChangeFrame: PropTypes.func,
   onKeyboardDidChangeFrame: PropTypes.func,
-  goToNextInputField: PropTypes.func,
-  goToPrevInputField: PropTypes.func,
 
   style: PropTypes.object,
   inputAreaStyle: PropTypes.object,
@@ -239,12 +283,16 @@ AutoCompleteKeyboardInput.propTypes = {
   selectedColor: PropTypes.object,
   unSelectedColor: PropTypes.object,
 
+  onSubmit: PropTypes.func,
+  onChangeText: PropTypes.func,
   onSelectWord: PropTypes.func,
 
   appScale: PropTypes.number,
   hideInputArea: PropTypes.bool,
   onlyDisplayWhenCalled: PropTypes.bool,
+  autoCorrect: PropTypes.bool,
   caseSensitive: PropTypes.bool,
   dataSource: PropTypes.array,
   zIndexExt: PropTypes.number,
+  autoCapitalize: PropTypes.string,
 };

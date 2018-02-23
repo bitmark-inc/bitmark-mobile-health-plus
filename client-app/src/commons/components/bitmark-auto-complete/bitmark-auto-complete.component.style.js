@@ -1,76 +1,96 @@
 import {
-  StyleSheet, Platform
+  StyleSheet,
 } from 'react-native';
 
-import {
-  ios,
-  // android //TODO
-} from './../../../configs';
-let constant = Platform.select({
-  ios: ios.constant,
-  android: 42, //TODO
-})
 
 export default StyleSheet.create({
-  topKeyboard: {
+  extArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
     position: 'absolute',
     width: '100%',
-    height: constant.autoCompleteHeight,
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: '#8C8E93',
-    backgroundColor: '#E4E6E8',
-    // backgroundColor: 'gray',
-    zIndex: 1,
-    borderWidth: 1
+    borderTopColor: 'rgba(0,0,0,0.1)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
+    backgroundColor: '#D1D5Db',
   },
-  previousButton: {
-    marginLeft: 10,
-    paddingLeft: 4,
-    paddingRight: 4,
-  },
-  previousButtonIcon: {
-    width: 20,
-    height: 10,
 
-    resizeMode: "contain"
-  },
-  nextButton: {
-    marginLeft: 10,
-    paddingLeft: 4,
-    paddingRight: 4,
-  },
-  nextButtonIcon: {
-    width: 20,
-    height: 10,
-    resizeMode: "contain"
-  },
-  doneInputButton: {
+  inputArea: {
+    width: '100%',
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    right: 17,
-    height: '100%',
+    height: 30,
   },
-  doneInputButtonText: {
-    fontFamily: 'Avenir Black',
-    fontSize: 16,
-    fontWeight: '700',
-    textAlign: 'center',
-    color: '#0060F2',
+  textInputStyle: {
+    height: 20,
+    fontSize: 18,
+    backgroundColor: 'white',
+    minWidth: '40%',
+    borderRadius: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
-  listAutoCompleted: {
-    width: 210,
-    overflow: 'hidden',
+  controlArea: {
+    marginLeft: 20,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingLeft: 10,
-    paddingRight: 10,
+  },
+
+  selectionArea: {
+    width: '100%',
+    marginTop: 4,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    height: 30,
+    paddingLeft: 8,
+    paddingRight: 8,
+  },
+  prevButton: {
+    marginLeft: 10,
+  },
+  prevButtonImage: {
+    width: 16,
+    height: 16,
+    resizeMode: 'contain'
+  },
+  nextButton: {
+    marginLeft: 5,
+  },
+  nextButtonImage: {
+    width: 16,
+    height: 16,
+    resizeMode: 'contain'
+  },
+  doneButton: {
+    position: 'absolute',
+    right: 10,
+  },
+  doneButtonText: {
+    fontSize: 16,
+    color: '#0060F2',
+    fontWeight: '600',
+  },
+  selectionList: {
+    width: 200,
+    height: 30,
+    marginLeft: 20,
+    marginRight: 20,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectionItem: {
+    marginLeft: 4,
+    padding: 4,
+  },
+  selectionItemText: {
+    color: 'blue'
   }
 });

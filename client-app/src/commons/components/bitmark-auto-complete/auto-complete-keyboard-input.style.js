@@ -5,7 +5,7 @@ import {
 
 export default StyleSheet.create({
   extArea: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     alignContent: 'center',
     position: 'absolute',
@@ -47,40 +47,30 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
+    justifyContent: 'space-between',
     height: 30,
     paddingLeft: 8,
     paddingRight: 8,
   },
   prevButton: {
-    marginLeft: 10,
+    padding: 4,
   },
-  prevButtonImage: {
-    width: 16,
-    height: 16,
-    resizeMode: 'contain'
+  prevButtonText: {
+    fontSize: 18,
+    color: 'blue'
   },
   nextButton: {
-    marginLeft: 5,
+    padding: 4,
   },
-  nextButtonImage: {
-    width: 16,
-    height: 16,
-    resizeMode: 'contain'
-  },
-  doneButton: {
-    position: 'absolute',
-    right: 10,
-  },
-  doneButtonText: {
-    fontSize: 16,
-    color: '#0060F2',
-    fontWeight: '600',
+  nextButtonText: {
+    fontSize: 18,
+    color: 'blue'
   },
   selectionList: {
-    width: 200,
+    width: '70%',
     height: 30,
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: 10,
+    marginRight: 10,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',

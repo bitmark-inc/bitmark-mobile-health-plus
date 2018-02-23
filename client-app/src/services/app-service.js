@@ -7,6 +7,7 @@ import { CommonService } from './common-service';
 import { AccountService } from './account-service';
 import { BitmarkService } from './bitmark-service';
 import { MarketService } from './market-service';
+import { BitmarkSDK } from './adapters';
 
 
 
@@ -136,6 +137,22 @@ const doOpenApp = async () => {
   return userInfo;
 };
 
+const doCheckingIssuance = async (filePath) => {
+  let assetInfo = await BitmarkSDK.getAssetInfo(filePath);
+  console.log('assetInfo :', assetInfo);
+  let assetInformation = await BitmarkService.doCheckExistingAsset(assetInfo.id);
+  console.log('assetInformation :', assetInformation);
+  if (!assetInformation) {
+    return assetInfo;
+  } else {
+    let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
+    if (assetInformation.registrant !== userInfo.bitmarkAccountNumber) {
+      throw Error('This file is registered by other user');
+    }
+    return assetInformation;
+  }
+};
+
 // ================================================================================================
 // ================================================================================================
 // -- test
@@ -169,6 +186,7 @@ let AppService = {
   doWithdrawBitmark,
   doDepositBitmark,
   doCheckPairingStatus,
+  doCheckingIssuance,
 
   doOpenApp,
 
