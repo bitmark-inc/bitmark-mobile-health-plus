@@ -1,11 +1,6 @@
 import {
-  StyleSheet, Platform
+  StyleSheet
 } from 'react-native';
-
-import {
-  ios,
-  // android //TODO
-} from './../../../configs';
 
 export default StyleSheet.create({
   dialogBody: {
@@ -17,14 +12,8 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     position: 'absolute',
     top: 0,
-    width: Platform.select({
-      ios: ios.constant.defaultWindowSize.width,
-      android: '100%' //TODO
-    }),
-    height: Platform.select({
-      ios: ios.constant.defaultWindowSize.height,
-      android: '100%' //TODO
-    }),
+    width: '100%',
+    height: '100%',
     zIndex: 100,
   },
   dialogContent: {
