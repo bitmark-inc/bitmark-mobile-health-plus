@@ -40,19 +40,13 @@ internal extension API {
         
         return (sessionData, 200..<300 ~= response.statusCode)
     }
-
-    internal func downloadAsset(bitmarkId: String, completion: ((Data?) -> Void)?) {
-        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v1/bitmarks/" + bitmarkId + "/asset")
-        var request = URLRequest(url: requestURL)
+    
+    internal func getAssetContent(url: String) throws -> (String?, Data?) {
+        var request = URLRequest(url: URL(string: url)!)
         request.httpMethod = "GET"
         
-        urlSession.dataTask(with: request) { (data, _, error) in
-            if let error = error {
-                print(error)
-            }
-            
-            completion?(data)
-        }.resume()
+        let result = try urlSession.synchronousDataTask(with: request)
+        return (result.response?.suggestedFilename, result.data)
     }
 }
 

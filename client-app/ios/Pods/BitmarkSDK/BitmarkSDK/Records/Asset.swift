@@ -56,7 +56,7 @@ public struct Asset {
     }
     
     static func isValidLength(metadata: String) -> Bool {
-        return metadata.count <= Config.AssetConfig.maxMetadata
+        return metadata.utf8.count <= Config.AssetConfig.maxMetadata
     }
     
     // MARK:- Internal methods
