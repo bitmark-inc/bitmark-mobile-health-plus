@@ -152,32 +152,41 @@ export default StyleSheet.create({
     flexDirection: 'row',
   },
   metadataList: {
-
   },
   metadataField: {
     flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  metadataFieldButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
+    marginBottom: 6,
+    marginLeft: convertWidth(18),
+    borderBottomWidth: 1,
+    height: '100%',
   },
   metadataFieldLabel: {
-    marginTop: 12,
-    marginLeft: convertWidth(18),
-    width: convertWidth(165),
-    borderBottomWidth: 1,
-    height: 25,
+    width: convertWidth(100),
     fontFamily: 'Andale Mono',
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 16,
   },
   metadataFieldValue: {
-    marginTop: 12,
-    marginLeft: convertWidth(18),
-    width: convertWidth(165),
-    borderBottomWidth: 1,
-    height: 25,
+    width: convertWidth(140),
     fontFamily: 'Andale Mono',
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 16,
+  },
+  metadataFieldRemove: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '300',
+    fontSize: 14,
+    lineHeight: 16,
+    color: '#0060F2',
   },
   addMetadataButton: {
     padding: 5,
@@ -264,7 +273,7 @@ export default StyleSheet.create({
     width: convertWidth(347),
   },
 
-  continueButton: {
+  issueButton: {
     width: convertWidth(337),
     height: 42,
     backgroundColor: '#0060F2',
@@ -275,7 +284,7 @@ export default StyleSheet.create({
     // position: 'absolute',
     // bottom: 0,
   },
-  continueButtonText: {
+  issueButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 17,

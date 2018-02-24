@@ -45,7 +45,6 @@ const withdrawSecondSignature = (localBitmarkAccount, timestamp, signature, sign
       signature,
     };
     let data = { items: signedTransfers };
-    console.log('withdrawSecondSignature data :', JSON.stringify(data));
     let statusCode = null;
     fetch(withdrawURL, {
       method: 'POST',
@@ -74,7 +73,6 @@ const deposit = (localBitmarkAccount, timestamp, signature, firstSignatures) => 
       timestamp,
     };
     let data = { items: firstSignatures };
-    console.log('deposit data :', JSON.stringify(data));
     let statusCode = null;
     fetch(withdrawURL, {
       method: 'POST',
@@ -93,7 +91,6 @@ const deposit = (localBitmarkAccount, timestamp, signature, firstSignatures) => 
 };
 
 const getAssetInformation = (assetId) => {
-  console.log('run1', assetId);
   return new Promise((resolve, reject) => {
     let statusCode;
     fetch(config.get_way_server_url + `/v1/assets/${assetId}`, {
@@ -103,15 +100,13 @@ const getAssetInformation = (assetId) => {
         'Content-Type': 'application/json',
       }
     }).then((response) => {
-      console.log('run2');
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      console.log('run3', data, status);
       if (statusCode >= 400) {
         return reject(new Error('getAssetInfo error :' + JSON.stringify(data)));
       }
-      return data.asset;
+      resolve(data.asset);
     }).catch(reject);
   });
 };
@@ -187,7 +182,6 @@ const getProvenance = (bitmark) => {
 const doWithdrawBitmarks = async (bitmarkIds, localBitmarkAccount) => {
   let sessionId = await CommonService.startFaceTouceSessionId();
   let firstSignatureData = await withdrawFirstSignature(localBitmarkAccount, bitmarkIds);
-  console.log('firstSignatureData :', firstSignatureData);
   let signedTransfers = [];
   for (let item of firstSignatureData.items) {
     signedTransfers.push({
@@ -201,7 +195,6 @@ const doWithdrawBitmarks = async (bitmarkIds, localBitmarkAccount) => {
     });
   }
 
-  console.log('signedTransfers :', signedTransfers);
   let timestamp = moment().toDate().getTime() + '';
   let timestampSignatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
   await CommonService.endNewFaceTouceSessionId();
@@ -235,7 +228,6 @@ const issueBitmark = async (filePath, assetName, metadata, quantity) => {
 let doCheckExistingAsset = (assetId) => {
   return new Promise((resolve) => {
     getAssetInformation(assetId).then((data) => {
-      console.log('getAssetInformation :', data);
       resolve(data);
     }).catch((error) => {
       console.log('getAssetInformation error:', error);

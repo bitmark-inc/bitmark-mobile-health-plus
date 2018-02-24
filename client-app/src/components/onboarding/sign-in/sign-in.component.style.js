@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { convertWidth } from './../../../utils'
 
 export default StyleSheet.create({
   body: {
@@ -17,7 +18,7 @@ export default StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontSize: 17,
     fontWeight: '300',
-    width: 340,
+    width: convertWidth(340),
     marginTop: 18,
   },
   writeRecoveryPhraseArea: {
@@ -54,7 +55,7 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: '300',
     color: '#D4D4D4',
-    width: 23,
+    width: convertWidth(23),
     textAlign: 'right',
   },
   recoveryPhraseWord: {
@@ -62,7 +63,7 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: '300',
     color: '#0060F2',
-    width: 107,
+    width: convertWidth(107),
     marginLeft: 6,
   },
 
@@ -81,7 +82,7 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: '300',
     textAlign: 'center',
-    width: 335,
+    width: convertWidth(335),
     marginTop: 5,
   },
   recoveringMessage: {
@@ -90,7 +91,7 @@ export default StyleSheet.create({
     fontWeight: '900',
     textAlign: 'center',
     color: '#0060F2',
-    width: 307,
+    width: convertWidth(307),
     height: 42,
     marginTop: 158,
   },
@@ -103,7 +104,7 @@ export default StyleSheet.create({
   submitButton: {
     marginTop: 20,
     minHeight: 42,
-    width: 309,
+    width: convertWidth(309),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

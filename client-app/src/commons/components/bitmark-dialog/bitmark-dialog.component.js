@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import dialogStyles from './bitmark-dialog.component.style';
@@ -10,16 +11,23 @@ import dialogStyles from './bitmark-dialog.component.style';
 export class BitmarkDialogComponent extends React.Component {
   render() {
     return (
-      <View style={[dialogStyles.dialogBody, this.props.style]}>
-        <View style={[dialogStyles.dialogContent, this.props.dialogStyle]}>
-          {this.props.children}
+      <TouchableWithoutFeedback onPress={() => {
+        if (this.props.close) { this.props.close(); }
+      }}>
+        <View style={[dialogStyles.dialogBody, this.props.style]}>
+          <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}>
+            <View style={[dialogStyles.dialogContent, this.props.dialogStyle]}>
+              {this.props.children}
+            </View>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
 
 BitmarkDialogComponent.propTypes = {
+  close: PropTypes.func,
   style: PropTypes.object,
   dialogStyle: PropTypes.object,
   children: PropTypes.object,

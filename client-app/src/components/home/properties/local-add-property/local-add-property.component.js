@@ -5,12 +5,12 @@ import {
   Platform,
   Keyboard,
 } from 'react-native';
+import { BitmarkDialogComponent } from './../../../../commons/components';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ImagePicker from 'react-native-image-picker';
 
 
-import { AutoCompleteKeyboardInput } from './../../../../commons/components';
 import { AppService, EventEmiterService } from './../../../../services';
 
 import localAddPropertyStyle from './local-add-property.component.style';
@@ -34,16 +34,125 @@ const MetadataLabelSamples = [
   'Size', 'Source', 'Subject', 'Keywords',
   'Type', 'Version'];
 
+class MetadataInputComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onChangeText = this.onChangeText.bind(this);
+    this.onSelecteLabel = this.onSelecteLabel.bind(this);
+
+    let textInput = this.props.defaultValue || '';
+    let labels = [];
+    MetadataLabelSamples.forEach((label, key) => {
+      if (!textInput || label.toLowerCase().indexOf(textInput.toLowerCase()) >= 0) {
+        labels.push({ key, label });
+      }
+    });
+    this.state = {
+      textInput,
+      labels,
+    }
+  }
+
+  componentDidMount() {
+    this.textInputRef.focus();
+  }
+
+  onChangeText(textInput) {
+    let labels = [];
+    MetadataLabelSamples.forEach((label, key) => {
+      if (!textInput || label.toLocaleLowerCase().indexOf(textInput.toLocaleLowerCase()) >= 0) {
+        labels.push({ key, label });
+      }
+    });
+    this.setState({
+      textInput,
+      labels
+    });
+  }
+
+  onSelecteLabel(textInput) {
+    this.setState({ textInput });
+    this.onChangeText(textInput);
+  }
+  render() {
+    return (
+      < BitmarkDialogComponent
+        dialogStyle={{ marginBottom: 100 }}
+        close={this.props.cancel}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={{
+            width: '100%', height: this.props.type === 'label' ? 220 : 100,
+            flexDirection: 'column', alignItems: 'center',
+          }}>
+            <TextInput
+              autoCorrect={false}
+              style={{
+                borderBottomWidth: 1, marginTop: 20, marginBottom: 20,
+                textAlign: 'center',
+                width: '100%', height: 30,
+              }} placeholder={this.props.type.toUpperCase()}
+              value={this.state.textInput}
+              onChangeText={this.onChangeText}
+              ref={(ref) => this.textInputRef = ref}
+            />
+            {this.props.type === 'label' && <View style={{
+              height: 100, width: '100%',
+              borderBottomWidth: 1,
+              flexDirection: 'column', alignItems: 'center'
+            }}>
+              <FlatList
+                data={this.state.labels}
+                extraData={this.state}
+                renderItem={({ item }) => {
+                  return <TouchableOpacity onPress={() => this.onSelecteLabel(item.label)}>
+                    <Text style={{ color: '#0060F2' }}>{item.label}</Text>
+                  </TouchableOpacity>
+                }}
+
+              />
+            </View>}
+            <View style={{
+              flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+              height: 30,
+            }}>
+              <TouchableOpacity style={{
+                backgroundColor: '#0060F2', padding: 4,
+              }}
+                onPress={() => this.props.done(this.state.textInput)}
+              >
+                <Text style={{ color: 'white' }}>Done</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{
+                backgroundColor: '#0060F2', padding: 4,
+                marginLeft: 10,
+              }}
+                onPress={this.props.cancel}
+              >
+                <Text style={{ color: 'white' }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </BitmarkDialogComponent >
+    );
+  }
+}
+
+MetadataInputComponent.propTypes = {
+  cancel: PropTypes.func,
+  done: PropTypes.func,
+  type: PropTypes.string,
+  defaultValue: PropTypes.string,
+}
 export class LocalAddPropertyComponent extends React.Component {
   constructor(props) {
     super(props);
     this.chooseFile = this.chooseFile.bind(this);
     this.register = this.register.bind(this);
-    this.continue = this.continue.bind(this);
+
     this.back = this.back.bind(this);
     this.doInputAssetName = this.doInputAssetName.bind(this);
-    this.doInputMetadataLabel = this.doInputMetadataLabel.bind(this);
-    this.doInputMetadataValue = this.doInputMetadataValue.bind(this);
     this.addNewMetadataField = this.addNewMetadataField.bind(this);
     this.checkMetadata = this.checkMetadata.bind(this);
     this.doInputQuantity = this.doInputQuantity.bind(this);
@@ -51,9 +160,9 @@ export class LocalAddPropertyComponent extends React.Component {
     this.state = {
       // step: Steps.input_file,
       step: Steps.input_info,
-
       existingAsset: false,
-      metadataList: [],
+      // metadataList: [],
+      metadataList: [{ key: 0, label: '', value: '' }],
       filepath: '',
       filename: '',
       fileFormat: '',
@@ -72,7 +181,6 @@ export class LocalAddPropertyComponent extends React.Component {
   }
 
   chooseFile() {
-    // this.autoCompleteElement.showKeyboardInput();
     let options = {
       title: 'Select Avatar',
       mediaType: 'mixed',
@@ -87,7 +195,6 @@ export class LocalAddPropertyComponent extends React.Component {
       let filename = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
       let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
       AppService.doCheckingIssuance(filepath).then(asset => {
-        console.log('asset :', asset);
         let existingAsset = !!(asset && asset.registrant);
         let metadataList = [];
         if (existingAsset) {
@@ -109,10 +216,9 @@ export class LocalAddPropertyComponent extends React.Component {
           fileFormat,
           step: Steps.input_info,
           fileError: '',
-          canIssue: (this.state.assetName && !this.state.assetNameError && this.asset.quantity && !this.state.quantityError),
+          canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError),
           canAddNewMetadata: false,
         };
-        console.log('state :', state);
         this.setState(state);
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       }).catch(error => {
@@ -121,13 +227,16 @@ export class LocalAddPropertyComponent extends React.Component {
           fileError: error.message,
         });
       });
-      console.log('response :', response);
     });
   }
 
   register() {
+    let metadata = {};
+    this.state.metadataList.forEach(item => {
+      metadata[item.label] = item.value;
+    });
     EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: true, title: 'Submitting your request to the network for confirmation…', message: '' });
-    AppService.testIssueFile(this.state.filepath).then(() => {
+    AppService.issueFile(this.state.filepath, this.state.assetName, metadata, parseInt(this.state.quantity)).then(() => {
       EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.' });
       setTimeout(() => {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
@@ -150,61 +259,54 @@ export class LocalAddPropertyComponent extends React.Component {
     }
   }
 
-  continue() {
-    if (this.state.step === Steps.input_file) {
-      this.chooseFile();
-    } else if (this.state.step === Steps.input_info) {
-      this.register();
-    }
-  }
-
   doInputAssetName(assetName) {
     let assetNameError = '';
     if (assetName.length > 64) {
       assetNameError = 'Property name must be smaller or equal 64 character!';
+    } else if (!assetName) {
+      assetNameError = 'You must input property name!';
     }
     this.setState({
       assetName, assetNameError,
-      canIssue: (assetName && assetNameError && this.asset.quantity && !this.state.quantityError),
+      canIssue: (assetName && !assetNameError && this.state.quantity && !this.state.quantityError),
     });
   }
 
   checkMetadata(metadataList) {
-    for (let index = 0; index < metadataList.length; index++) {
-      if (!this.state.metadataList[index].label && !metadataList[index].value) {
-        this.setState({
-          canAddNewMetadata: false,
-          canIssue: false,
-        });
-        return;
-      }
+    let index = metadataList.findIndex((item) => !item.label || !item.value);
+    if (index >= 0) {
+      this.setState({
+        metadataList,
+        canAddNewMetadata: false,
+        canIssue: false,
+      });
+    } else {
+      this.setState({
+        metadataList,
+        canAddNewMetadata: true,
+        canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError),
+      });
     }
-    this.setState({
-      canAddNewMetadata: true,
-      canIssue: (this.state.assetName && !this.state.assetNameError && this.asset.quantity && !this.state.quantityError),
-    });
   }
-  doInputMetadataLabel(key, label) {
-    console.log(key, label);
+
+  doneInputSelectedMetadata(text) {
     let metadataList = this.state.metadataList;
-    for (let index = 0; index < metadataList.length; index++) {
-      if (metadataList[index].key === key) {
-        metadataList[index].label = label;
-        break;
-      }
+    let index = metadataList.findIndex((item) => item.key === this.state.selectedMetadata.key);
+    if (this.state.selectedMetadata.type === 'label') {
+      metadataList[index].label = text;
+    } else {
+      metadataList[index].value = text;
     }
-    this.setState({ metadataList });
+    metadataList[index].labelError = !!((index < (metadataList.length - 1) && !metadataList[index].label) ||
+      (index === (metadataList.length - 1) && !metadataList[index].label && metadataList[index].value));
+    metadataList[index].valueError = !!((index < (metadataList.length - 1) && !metadataList[index].value) ||
+      (index === (metadataList.length - 1) && !metadataList[index].value && metadataList[index].label));
+    this.setState({ selectedMetadata: null, });
     this.checkMetadata(metadataList);
   }
-  doInputMetadataValue(key, value) {
-    let metadataList = this.state.metadataList;
-    for (let index = 0; index < metadataList.length; index++) {
-      if (metadataList[index].key === key) {
-        metadataList[index].value = value;
-        break;
-      }
-    }
-    this.setState({ metadataList });
+
+  removeMetadata(key) {
+    let metadataList = this.state.metadataList.filter((item) => item.key != key);
     this.checkMetadata(metadataList);
   }
 
@@ -223,7 +325,7 @@ export class LocalAddPropertyComponent extends React.Component {
     }
     this.setState({
       quantity, quantityError,
-      canIssue: (this.state.assetName && this.state.assetNameError && quantity && !quantityError),
+      canIssue: (this.state.assetName && !this.state.assetNameError && quantity && !quantityError),
     });
   }
 
@@ -231,15 +333,12 @@ export class LocalAddPropertyComponent extends React.Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
-          <AutoCompleteKeyboardInput ref={(ref) => this.autoCompleteElement = ref}
-            dataSource={MetadataLabelSamples}
-            autoCorrect={false}
-            onlyDisplayWhenCalled={true}
-            // onSelectWord={this.onSubmitWord}
-            onKeyboardDidShow={this.onKeyboardDidShow}
-            onKeyboardDidHide={this.onKeyboardDidHide}
-          >
-          </AutoCompleteKeyboardInput>
+          {!!this.state.selectedMetadata && <MetadataInputComponent
+            cancel={() => this.setState({ selectedMetadata: null })}
+            done={(text) => this.doneInputSelectedMetadata(text)}
+            type={this.state.selectedMetadata.type}
+            defaultValue={this.state.selectedMetadata.value}
+          />}
 
           <ScrollView style={localAddPropertyStyle.scroll}>
             <View style={localAddPropertyStyle.body} onPress={Keyboard.dismiss}>
@@ -267,13 +366,17 @@ export class LocalAddPropertyComponent extends React.Component {
                 </View>
                 <Text style={localAddPropertyStyle.assetInfoLabel}>Metadata</Text>
                 <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
-                {!this.state.existingAsset && <TextInput style={[localAddPropertyStyle.assetNameInput, {
-                  borderBottomColor: this.assetNameError ? '#FF003C' : '#0060F2'
-                }]} placeholder="64-CHARACTER MAX"
+                <TextInput
+                  autoCorrect={false}
+                  style={[localAddPropertyStyle.assetNameInput, {
+                    color: this.state.existingAsset ? '#C2C2C2' : 'black',
+                    borderBottomColor: this.stateNameError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
+                  }]} placeholder="REQUIRED and 64-CHARACTER MAX"
                   onChangeText={this.doInputAssetName}
-                />}
+                  value={this.state.assetName}
+                  editable={!this.state.existingAsset}
+                />
                 {!!this.state.assetNameError && <Text style={localAddPropertyStyle.assetNameInputError}>{this.state.assetNameError}</Text>}
-                {this.state.existingAsset && <Text style={localAddPropertyStyle.assetNameInput}>{this.state.asset}</Text>}
 
                 <Text style={localAddPropertyStyle.metadataLabel}>OPTIONAL PROPERTY METADATA (2048-BYTE LIMIT)</Text>
                 <View style={localAddPropertyStyle.metadataArea}>
@@ -283,22 +386,35 @@ export class LocalAddPropertyComponent extends React.Component {
                     renderItem={({ item }) => {
                       return (
                         <View style={localAddPropertyStyle.metadataField}>
-                          <TouchableOpacity onPress={() => {
-                            this.setState({ selectedMetadata: { key: item.key, type: 'label' } });
-                          }}>
+                          <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, {
+                            borderBottomColor: item.labelError ? '#FF003C' : '#0060F2',
+                          }]}
+                            disabled={this.state.existingAsset}
+                            onPress={() => {
+                              this.setState({ selectedMetadata: { key: item.key, type: 'label', value: item.label } });
+                            }}
+                          >
                             <Text style={[localAddPropertyStyle.metadataFieldLabel, {
-                              borderBottomColor: item.labelError ? '#FF003C' : '#0060F2',
-                              color: item.label ? 'black' : '#C2C2C2'
+                              color: (item.label && !this.state.existingAsset) ? 'black' : '#C2C2C2'
                             }]} > {item.label || 'LABEL'} </Text>
                           </TouchableOpacity>
-                          <TouchableOpacity onPress={() => {
-                            this.setState({ selectedMetadata: { key: item.key, type: 'value' } });
-                          }}>
+                          <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, {
+                            borderBottomColor: item.valueError ? '#FF003C' : '#0060F2',
+                          }]}
+                            disabled={this.state.existingAsset}
+                            onPress={() => {
+                              this.setState({ selectedMetadata: { key: item.key, type: 'description', value: item.value } });
+                            }}
+                          >
                             <Text style={[localAddPropertyStyle.metadataFieldValue, {
-                              borderBottomColor: item.valueError ? '#FF003C' : '#0060F2',
-                              color: item.value ? 'black' : '#C2C2C2'
+                              color: (item.value && !this.state.existingAsset) ? 'black' : '#C2C2C2'
                             }]} > {item.value || 'DESCRIPTION'} </Text>
                           </TouchableOpacity>
+                          {!this.state.existingAsset && <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, { borderBottomWidth: 0 }]}
+                            onPress={() => this.removeMetadata(item.key)}
+                          >
+                            <Text style={[localAddPropertyStyle.metadataFieldRemove]} >REMOVE</Text>
+                          </TouchableOpacity>}
                         </View>
                       )
                     }}
@@ -309,9 +425,11 @@ export class LocalAddPropertyComponent extends React.Component {
                 </TouchableOpacity>}
                 {!!this.state.metadataError && <Text style={localAddPropertyStyle.metadataInputError}>{this.state.metadataError}</Text>}
                 <Text style={localAddPropertyStyle.quantityLabel}>Issue Number of bitmark</Text>
-                <TextInput style={[localAddPropertyStyle.quantityInput, {
-                  borderBottomColor: this.assetNameError ? '#FF003C' : '#0060F2'
-                }]} placeholder="input number from 1 to 100"
+                <TextInput
+                  autoCorrect={false}
+                  style={[localAddPropertyStyle.quantityInput, {
+                    borderBottomColor: this.stateNameError ? '#FF003C' : '#0060F2'
+                  }]} placeholder="REQUIRED AND NUMBER from 1 to 100"
                   onChangeText={this.doInputQuantity}
                   keyboardType={'numeric'}
                 />
@@ -322,11 +440,11 @@ export class LocalAddPropertyComponent extends React.Component {
                 {!!this.state.issueError && <Text style={localAddPropertyStyle.issueError}>{this.state.issueError}</Text>}
               </KeyboardAwareScrollView>}
               {this.state.step === Steps.input_info && <TouchableOpacity
-                style={[localAddPropertyStyle.continueButton, { backgroundColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
-                onPress={this.continue}
+                style={[localAddPropertyStyle.issueButton, { backgroundColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
+                onPress={this.register}
                 disabled={!this.state.canIssue}
               >
-                <Text style={localAddPropertyStyle.continueButtonText}>{this.state.step}</Text>
+                <Text style={localAddPropertyStyle.issueButtonText}>Register</Text>
               </TouchableOpacity>}
             </View>
           </ScrollView>

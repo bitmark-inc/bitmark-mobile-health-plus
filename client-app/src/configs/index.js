@@ -17,7 +17,7 @@ let config = {
   get_way_server_url: 'https://api.test.bitmark.com',
   preive_asset_url: 'https://preview.assets.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
-  trade_server_url: 'http://trade-ex.cluster.devel.bitmark.com:30095',
+  trade_server_url: 'https://trade.devel.bitmark.com',
   market_urls: {
     totemic: '',
   },

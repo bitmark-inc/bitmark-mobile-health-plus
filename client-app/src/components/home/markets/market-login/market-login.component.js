@@ -33,9 +33,7 @@ export class MarketLoginComponent extends React.Component {
   }
 
   onMessage(event) {
-    console.log('onMessage :', event);
     let message = event.nativeEvent.data;
-    console.log(message, this.state.user.bitmarkAccountNumber);
     if (message === 'ready') {
       this.webViewRef.postMessage(this.state.user.bitmarkAccountNumber);
     } else if (message === 'submit') {

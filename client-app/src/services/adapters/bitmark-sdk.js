@@ -187,6 +187,17 @@ const BitmarkSDK = {
         }
       });
     });
+  },
+  validateMetadata: (metadata) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.validateMetadata(metadata, (ok) => {
+        if (ok) {
+          resolve();
+        } else {
+          reject(new Error('validateMetadata error'));
+        }
+      });
+    });
   }
 };
 export { BitmarkSDK };

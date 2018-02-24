@@ -139,9 +139,7 @@ const doOpenApp = async () => {
 
 const doCheckingIssuance = async (filePath) => {
   let assetInfo = await BitmarkSDK.getAssetInfo(filePath);
-  console.log('assetInfo :', assetInfo);
   let assetInformation = await BitmarkService.doCheckExistingAsset(assetInfo.id);
-  console.log('assetInformation :', assetInformation);
   if (!assetInformation) {
     return assetInfo;
   } else {
@@ -153,25 +151,13 @@ const doCheckingIssuance = async (filePath) => {
   }
 };
 
+const issueFile = async (filepath, assetName, metadata, quantity) => {
+  return await BitmarkService.issueBitmark(filepath, assetName, metadata, quantity);
+};
+
 // ================================================================================================
 // ================================================================================================
 // -- test
-
-const createSampleFile = async () => {
-  const folderPath = fs.DocumentDirectoryPath + '/Bitmark/test';
-  const filePath = folderPath + '/test.txt'
-  await fs.mkdir(folderPath, {
-    NSURLIsExcludedFromBackupKey: true,
-  });
-  await fs.writeFile(filePath, 'test file ' + moment().toDate().toISOString(), 'utf8');
-  return filePath;
-};
-
-const testIssueFile = async (filepath) => {
-  let fileTest = await createSampleFile();
-  console.log('filepath :', filepath, fileTest);
-  return await BitmarkService.issueBitmark(filepath, 'bachlx-test issue from mobile', { description: 'issue from mobile' }, 1);
-};
 
 // ================================================================================================
 let AppService = {
@@ -190,7 +176,7 @@ let AppService = {
 
   doOpenApp,
 
-  testIssueFile,
+  issueFile,
 }
 
 export {

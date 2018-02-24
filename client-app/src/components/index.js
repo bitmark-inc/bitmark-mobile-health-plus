@@ -75,7 +75,6 @@ class MainComponent extends Component {
   }
 
   handleAppStateChange = (nextAppState) => {
-    console.log('handleAppStateChange :', nextAppState);
     if (this.appState.match(/background/) && nextAppState === 'active') {
       AppService.doOpenApp().then(user => {
         console.log(' doOpenApp : ', user);

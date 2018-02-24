@@ -106,7 +106,6 @@ export class AutoCompleteKeyboardInput extends React.Component {
         }
       });
     }
-    console.log(tempDataSource);
     this.setState({ dataSource: tempDataSource });
   }
   selectText(text, index) {
