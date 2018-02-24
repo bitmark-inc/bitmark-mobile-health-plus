@@ -15,6 +15,7 @@ import { AppService, EventEmiterService } from './../../../../services';
 
 import localAddPropertyStyle from './local-add-property.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import { BitmarkSDK } from '../../../../services/adapters';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -231,12 +232,8 @@ export class LocalAddPropertyComponent extends React.Component {
   }
 
   register() {
-    let metadata = {};
-    this.state.metadataList.forEach(item => {
-      metadata[item.label] = item.value;
-    });
     EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: true, title: 'Submitting your request to the network for confirmation…', message: '' });
-    AppService.issueFile(this.state.filepath, this.state.assetName, metadata, parseInt(this.state.quantity)).then(() => {
+    AppService.issueFile(this.state.filepath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity)).then(() => {
       EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.' });
       setTimeout(() => {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
@@ -246,6 +243,7 @@ export class LocalAddPropertyComponent extends React.Component {
         }
       }, 1000);
     }).catch(error => {
+      this.setState({ issueError: 'There are problem when issue file!' });
       EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
       console.log('issue bitmark error :', error);
     });
@@ -287,6 +285,12 @@ export class LocalAddPropertyComponent extends React.Component {
         canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError),
       });
     }
+    // AppService.checkMetadata(metadataList).then(() => {
+    //   this.setState({ metadataError: '' });
+    // }).catch((error) => {
+    //   console.log('error :', error);
+    //   this.setState({ metadataError: 'METADATA is too long (2048-BYTE LIMIT)!' });
+    // });
   }
 
   doneInputSelectedMetadata(text) {

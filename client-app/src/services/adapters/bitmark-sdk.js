@@ -191,6 +191,7 @@ const BitmarkSDK = {
   validateMetadata: (metadata) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.validateMetadata(metadata, (ok) => {
+        console.log('validateMetadata :', metadata, ok);
         if (ok) {
           resolve();
         } else {

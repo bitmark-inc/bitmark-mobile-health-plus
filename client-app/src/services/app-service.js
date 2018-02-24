@@ -151,7 +151,21 @@ const doCheckingIssuance = async (filePath) => {
   }
 };
 
-const issueFile = async (filepath, assetName, metadata, quantity) => {
+const checkMetadata = async (metadatList) => {
+  let metadata = {};
+  metadatList.forEach(item => {
+    if (item.label && item.value) {
+      metadata[item.label] = item.value;
+    }
+  });
+  return await BitmarkSDK.validateMetadata(metadata);
+};
+
+const issueFile = async (filepath, assetName, metadatList, quantity) => {
+  let metadata = {};
+  metadatList.forEach(item => {
+    metadata[item.label] = item.value;
+  });
   return await BitmarkService.issueBitmark(filepath, assetName, metadata, quantity);
 };
 
@@ -176,6 +190,7 @@ let AppService = {
 
   doOpenApp,
 
+  checkMetadata,
   issueFile,
 }
 
