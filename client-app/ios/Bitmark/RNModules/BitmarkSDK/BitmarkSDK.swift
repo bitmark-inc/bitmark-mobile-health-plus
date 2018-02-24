@@ -109,13 +109,9 @@ class BitmarkSDK: NSObject {
       let metadata = input["metadata"] as! [String: String]
       let quantity = input["quantity"] as! Int
       let result = try account.issueBitmarks(assetFile: URL(fileURLWithPath: fileURL), accessibility: .privateAsset, propertyName: propertyName, propertyMetadata: metadata, quantity: quantity)
-      if let issues = result?.0 {
-        let issueIds = issues.map {$0.txId! }
-        callback([true, issueIds])
-      }
-      else {
-        callback([false])
-      }
+      let issues = result.0
+      let issueIds = issues.map {$0.txId! }
+      callback([true, issueIds])
     }
     catch let e {
       print(e)
@@ -198,10 +194,7 @@ class BitmarkSDK: NSObject {
   func sign1stForTransfer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      guard let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address) else {
-        callback([false])
-        return
-      }
+      let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address)
       
       callback([true, offer.txId, offer.signature!.hexEncodedString])
     }
