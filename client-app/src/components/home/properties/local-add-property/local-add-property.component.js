@@ -15,7 +15,6 @@ import { AppService, EventEmiterService } from './../../../../services';
 
 import localAddPropertyStyle from './local-add-property.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-import { BitmarkSDK } from '../../../../services/adapters';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -91,8 +90,9 @@ class MetadataInputComponent extends React.Component {
               style={{
                 borderBottomWidth: 1, marginTop: 20, marginBottom: 20,
                 textAlign: 'center',
-                width: '100%', height: 30,
+                width: '100%', maxHeight: 50,
               }} placeholder={this.props.type.toUpperCase()}
+              multiline={true}
               value={this.state.textInput}
               onChangeText={this.onChangeText}
               ref={(ref) => this.textInputRef = ref}
@@ -159,8 +159,8 @@ export class LocalAddPropertyComponent extends React.Component {
     this.doInputQuantity = this.doInputQuantity.bind(this);
 
     this.state = {
-      // step: Steps.input_file,
-      step: Steps.input_info,
+      step: Steps.input_file,
+      // step: Steps.input_info,
       existingAsset: false,
       // metadataList: [],
       metadataList: [{ key: 0, label: '', value: '' }],
@@ -285,12 +285,12 @@ export class LocalAddPropertyComponent extends React.Component {
         canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError),
       });
     }
-    // AppService.checkMetadata(metadataList).then(() => {
-    //   this.setState({ metadataError: '' });
-    // }).catch((error) => {
-    //   console.log('error :', error);
-    //   this.setState({ metadataError: 'METADATA is too long (2048-BYTE LIMIT)!' });
-    // });
+    AppService.checkMetadata(metadataList).then(() => {
+      this.setState({ metadataError: '' });
+    }).catch((error) => {
+      console.log('error :', error);
+      this.setState({ metadataError: 'METADATA is too long (2048-BYTE LIMIT)!' });
+    });
   }
 
   doneInputSelectedMetadata(text) {
