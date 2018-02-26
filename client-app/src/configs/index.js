@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-
 import { iosConfig, iosConstant } from './ios/ios.config';
 import { androidConfig, androidConstant } from './android/android.config';
 
@@ -9,11 +7,11 @@ let NETWORKS = {
   livenet: 'livenet',
 }
 let config = {
-  NETWORKS,
-  platform: Platform.OS,
   network: NETWORKS.testnet,
   disabel_markets: false,
   // network: NETWORKS.devnet,
+
+  NETWORKS,
   bitmark_network: NETWORKS.testnet,
   get_way_server_url: 'https://api.test.bitmark.com',
   preive_asset_url: 'https://preview.assets.test.bitmark.com',
