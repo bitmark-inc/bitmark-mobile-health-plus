@@ -49,6 +49,12 @@ public struct Account {
         let seed = try Seed(core: core, version: version, network: network)
         return seed.base58String
     }
+    
+    public func toSeed() throws -> String {
+        let seed = try Seed(core: core, version: 1, network: self.accountNumber.network)
+        return seed.base58String
+    }
+    
     // MARK:- Recover phrase
     
     public init(recoverPhrase phrases: [String]) throws {
