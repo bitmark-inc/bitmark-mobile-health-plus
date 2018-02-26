@@ -186,12 +186,11 @@ export class LocalAddPropertyComponent extends React.Component {
       title: 'Select Avatar',
       mediaType: 'mixed',
     };
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     ImagePicker.showImagePicker(options, (response) => {
       if (response.error || response.didCancel) {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         return;
       }
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
       let filepath = response.uri.replace('file://', '');
       let filename = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
       let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
