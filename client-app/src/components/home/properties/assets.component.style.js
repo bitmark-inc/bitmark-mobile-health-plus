@@ -21,8 +21,8 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   addPropertyIcon: {
-    width: 25,
-    height: 25,
+    width: 18,
+    height: 18,
     resizeMode: 'contain',
     marginRight: 17,
   },
