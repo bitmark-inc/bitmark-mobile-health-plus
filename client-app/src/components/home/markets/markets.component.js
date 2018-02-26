@@ -29,7 +29,7 @@ export class MarketsComponent extends React.Component {
   }
 
   reload() {
-    AppService.getCurrentUser().then((user) => {
+    AppService.checkPairingStatusAllMarket().then((user) => {
       this.setState({ user });
     }).catch(error => {
       console.log('getCurrentUser error :', error);
@@ -62,9 +62,9 @@ export class MarketsComponent extends React.Component {
           <Text style={defaultStyle.headerTitle}>Markets</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
-        <ScrollView style={[marketsStyle.scrollSubTabArea]}>
+        {!config.disabel_markets && <ScrollView style={[marketsStyle.scrollSubTabArea]}>
           <View style={marketsStyle.contentSubTab}>
-            {!config.disabel_markets && <View style={marketsStyle.marketCardArea}>
+            <View style={marketsStyle.marketCardArea}>
               <View style={marketsStyle.marketCardTitleArea}>
                 <Image style={marketsStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
                 <View style={marketsStyle.marketCardTitleMaketInfo}>
@@ -101,9 +101,20 @@ export class MarketsComponent extends React.Component {
                     </View>
                   </View>
                 </TouchableOpacity>}
-            </View>}
+            </View>
           </View>
-        </ScrollView>
+        </ScrollView>}
+        {config.disabel_markets && <View style={[marketsStyle.contentSubTab, { alignItems: 'flex-start' }]}>
+          <Text style={{
+            marginTop: 30,
+            marginLeft: 20,
+            fontFamily: 'Avenir Black',
+            fontWeight: '900',
+            fontSize: 16,
+            lineHeight: 18,
+            color: '#0060F2'
+          }}>{'Comming soon...'.toUpperCase()} </Text>
+        </View>}
         {!config.disabel_markets && <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
           this.props.screenProps.homeNavigation.navigate('MarketPair', {
             reloadMarketsScreen: this.reload,

@@ -180,7 +180,7 @@ const getProvenance = (bitmark) => {
 }
 
 const doWithdrawBitmarks = async (bitmarkIds, localBitmarkAccount) => {
-  let sessionId = await CommonService.startFaceTouceSessionId();
+  let sessionId = await CommonService.startFaceTouceSessionId('require message');
   let firstSignatureData = await withdrawFirstSignature(localBitmarkAccount, bitmarkIds);
   let signedTransfers = [];
   for (let item of firstSignatureData.items) {
@@ -202,7 +202,7 @@ const doWithdrawBitmarks = async (bitmarkIds, localBitmarkAccount) => {
 };
 
 const doDepositBitmarks = async (bitmarkIds, localBitmarkAccount, marketBitmarkAccount) => {
-  let sessionId = await CommonService.startFaceTouceSessionId();
+  let sessionId = await CommonService.startFaceTouceSessionId('require message');
   let timestamp = moment().toDate().getTime() + '';
   let signatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
   let firstSignatures = {};
@@ -219,7 +219,7 @@ const doDepositBitmarks = async (bitmarkIds, localBitmarkAccount, marketBitmarkA
 };
 
 const issueBitmark = async (filePath, assetName, metadata, quantity) => {
-  let sessionId = await CommonService.startFaceTouceSessionId();
+  let sessionId = await CommonService.startFaceTouceSessionId('require message');
   let result = await BitmarkSDK.issueFile(sessionId, filePath, assetName, metadata, quantity);
   await CommonService.endNewFaceTouceSessionId();
   return result;

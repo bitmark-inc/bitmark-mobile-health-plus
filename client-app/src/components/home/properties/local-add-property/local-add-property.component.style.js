@@ -175,18 +175,16 @@ export default StyleSheet.create({
     lineHeight: 16,
   },
   metadataFieldValue: {
-    width: convertWidth(140),
+    width: convertWidth(170),
     fontFamily: 'Andale Mono',
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 16,
   },
   metadataFieldRemove: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '300',
-    fontSize: 14,
-    lineHeight: 16,
-    color: '#0060F2',
+    width: 16,
+    height: 16,
+    resizeMode: 'contain',
   },
   addMetadataButton: {
     padding: 5,
@@ -276,7 +274,8 @@ export default StyleSheet.create({
   issueButton: {
     width: convertWidth(337),
     height: 42,
-    backgroundColor: '#0060F2',
+    borderTopWidth: 2,
+    backgroundColor: '#F5F5F5',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -289,6 +288,6 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 17,
     lineHeight: 20,
-    color: 'white',
+    color: '#0060F2',
   },
 });

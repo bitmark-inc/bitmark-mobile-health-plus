@@ -80,13 +80,38 @@ const doCheckPairingStatus = async (market) => {
   return userInfo;
 };
 
+const initMarketSession = async (market, userInfo) => {
+  let result = await MarketService.checkMarketSession(market);
+  if (result && result.ok) {
+    return;
+  }
+  await CommonService.startFaceTouceSessionId('require message');
+  let timestamp = moment().toDate().getTime().toString();
+  let signatures = await CommonService.doTryRickSignMessage([timestamp]);
+  let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
+  if (marketInfo) {
+    userInfo.markets[market] = {
+      id: marketInfo.id,
+      name: marketInfo.name,
+      email: marketInfo.email,
+      account_number: marketInfo.account_number,
+    }
+    await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+    return true;
+  }
+  return false;
+};
+
 const getUserBitmark = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let marketAssets = [];
   if (!config.disabel_markets) {
     for (let market in userInfo.markets) {
-      let tempBitmarks = await MarketService.getBitmarks(market, userInfo.markets[market].id);
-      marketAssets = marketAssets.concat(tempBitmarks || []);
+      let result = await initMarketSession(market, userInfo);
+      if (result) {
+        let tempBitmarks = await MarketService.getBitmarks(market, userInfo.markets[market].id);
+        marketAssets = marketAssets.concat(tempBitmarks || []);
+      }
     }
   }
   let localAssets = await BitmarkService.getBitmarks(userInfo.bitmarkAccountNumber);
@@ -114,27 +139,37 @@ const doDepositBitmark = async (market, bitmark) => {
   return BitmarkService.doDepositBitmarks(bitamrkIds, userInfo.bitmarkAccountNumber, userInfo.markets[market].account_number);
 };
 
+const checkPairingStatusAllMarket = async () => {
+  let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
+  if (!config.disabel_markets) {
+    for (let market in config.markets) {
+      await initMarketSession(market, userInfo);
+    }
+  }
+  return userInfo;
+};
+
 const doOpenApp = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  if (!config.disabel_markets && userInfo && userInfo.bitmarkAccountNumber) {
-    let marketInfos = {};
-    for (let market in config.markets) {
-      let timestamp = moment().toDate().getTime().toString();
-      let signatures = await CommonService.doTryRickSignMessage([timestamp]);
-      let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
-      if (marketInfo) {
-        marketInfos[market] = {
-          id: marketInfo.id,
-          name: marketInfo.name,
-          email: marketInfo.email,
-          account_number: marketInfo.account_number,
-        }
-      }
-    }
-    userInfo.markets = marketInfos;
-    await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
-    CommonService.endNewFaceTouceSessionId();
-  }
+  // if (!config.disabel_markets && userInfo && userInfo.bitmarkAccountNumber) {
+  //   let marketInfos = {};
+  //   for (let market in config.markets) {
+  //     let timestamp = moment().toDate().getTime().toString();
+  //     let signatures = await CommonService.doTryRickSignMessage([timestamp]);
+  //     let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
+  //     if (marketInfo) {
+  //       marketInfos[market] = {
+  //         id: marketInfo.id,
+  //         name: marketInfo.name,
+  //         email: marketInfo.email,
+  //         account_number: marketInfo.account_number,
+  //       }
+  //     }
+  //   }
+  //   userInfo.markets = marketInfos;
+  //   await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
+  //   CommonService.endNewFaceTouceSessionId();
+  // }
   return userInfo;
 };
 
@@ -188,6 +223,7 @@ let AppService = {
   doDepositBitmark,
   doCheckPairingStatus,
   doCheckingIssuance,
+  checkPairingStatusAllMarket,
 
   doOpenApp,
 

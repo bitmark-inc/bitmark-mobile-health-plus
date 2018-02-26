@@ -83,30 +83,36 @@ class MetadataInputComponent extends React.Component {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{
             width: '100%', height: this.props.type === 'label' ? 220 : 100,
-            flexDirection: 'column', alignItems: 'center',
+            flexDirection: 'column',
           }}>
             <TextInput
               autoCorrect={false}
               style={{
-                borderBottomWidth: 1, marginTop: 20, marginBottom: 20,
-                textAlign: 'center',
+                borderBottomColor: '#EDF0F4',
+                borderBottomWidth: 1,
+                marginTop: 20, marginBottom: 5, marginLeft: 10,
                 width: '100%', maxHeight: 50,
-              }} placeholder={this.props.type.toUpperCase()}
+              }} placeholder={(this.props.type === 'label') ? 'CREATE NEW LABEL' : 'DESCRIPTION'}
               multiline={true}
               value={this.state.textInput}
               onChangeText={this.onChangeText}
               ref={(ref) => this.textInputRef = ref}
+              returnKeyType="done"
+              onSubmitEditing={() => this.props.done(this.state.textInput)}
             />
             {this.props.type === 'label' && <View style={{
-              height: 100, width: '100%',
+              height: 130, width: '100%',
               borderBottomWidth: 1,
-              flexDirection: 'column', alignItems: 'center'
+              borderBottomColor: '#EDF0F4',
+              flexDirection: 'column',
+              marginLeft: 10,
             }}>
+              <Text style={{ marginBottom: 5, color: '#C9C9C9' }}>OR SELECT FROM BELOW:</Text>
               <FlatList
                 data={this.state.labels}
                 extraData={this.state}
                 renderItem={({ item }) => {
-                  return <TouchableOpacity onPress={() => this.onSelecteLabel(item.label)}>
+                  return <TouchableOpacity style={{ marginTop: 5 }} onPress={() => this.onSelecteLabel(item.label)}>
                     <Text style={{ color: '#0060F2' }}>{item.label}</Text>
                   </TouchableOpacity>
                 }}
@@ -118,20 +124,23 @@ class MetadataInputComponent extends React.Component {
               height: 30,
             }}>
               <TouchableOpacity style={{
-                backgroundColor: '#0060F2', padding: 4,
-              }}
-                onPress={() => this.props.done(this.state.textInput)}
-              >
-                <Text style={{ color: 'white' }}>Done</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{
-                backgroundColor: '#0060F2', padding: 4,
-                marginLeft: 10,
+                padding: 4,
+                width: '30%'
               }}
                 onPress={this.props.cancel}
               >
-                <Text style={{ color: 'white' }}>Cancel</Text>
+                <Text style={{ fontWeight: '700', color: '#C4C4C4' }}>Cancel</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={{
+                marginLeft: 20,
+                padding: 4,
+                width: '30%'
+              }}
+                onPress={() => this.props.done(this.state.textInput)}
+              >
+                <Text style={{ fontWeight: '700', color: '#0060F2' }}>Done</Text>
+              </TouchableOpacity>
+
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -183,7 +192,8 @@ export class LocalAddPropertyComponent extends React.Component {
 
   chooseFile() {
     let options = {
-      title: 'Select Avatar',
+      title: '',
+      takePhotoButtonTitle: '',
       mediaType: 'mixed',
     };
     ImagePicker.showImagePicker(options, (response) => {
@@ -360,21 +370,21 @@ export class LocalAddPropertyComponent extends React.Component {
                 </TouchableOpacity>
               </View>}
               {this.state.step === Steps.input_info && <KeyboardAwareScrollView style={localAddPropertyStyle.infoArea} behavior="padding">
-                <Text style={localAddPropertyStyle.fingerprintLabel}>Asset Fingerprint</Text>
+                <Text style={localAddPropertyStyle.fingerprintLabel}>{'Asset Fingerprint'.toUpperCase()}</Text>
                 <Text style={localAddPropertyStyle.fingerprintValue} numberOfLines={1} >{this.state.fingerprint}</Text>
                 <View style={localAddPropertyStyle.fingerprintInfoArea}>
                   <Text style={localAddPropertyStyle.fingerprintInfoMessage}>GENERATED FROM </Text>
                   <Text style={localAddPropertyStyle.fingerprintInfoFilename}>{this.state.filename}</Text>
                   <Text style={localAddPropertyStyle.fingerprintInfoFileFormat}>{this.state.fileFormat}</Text>
                 </View>
-                <Text style={localAddPropertyStyle.assetInfoLabel}>Metadata</Text>
+                <Text style={localAddPropertyStyle.assetInfoLabel}>METADATA</Text>
                 <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
                 <TextInput
                   autoCorrect={false}
                   style={[localAddPropertyStyle.assetNameInput, {
                     color: this.state.existingAsset ? '#C2C2C2' : 'black',
                     borderBottomColor: this.stateNameError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
-                  }]} placeholder="REQUIRED and 64-CHARACTER MAX"
+                  }]} placeholder="64-CHARACTER MAX"
                   onChangeText={this.doInputAssetName}
                   value={this.state.assetName}
                   editable={!this.state.existingAsset}
@@ -413,10 +423,10 @@ export class LocalAddPropertyComponent extends React.Component {
                               color: (item.value && !this.state.existingAsset) ? 'black' : '#C2C2C2'
                             }]} > {item.value || 'DESCRIPTION'} </Text>
                           </TouchableOpacity>
-                          {!this.state.existingAsset && <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, { borderBottomWidth: 0 }]}
+                          {!this.state.existingAsset && <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, { borderBottomWidth: 0, }]}
                             onPress={() => this.removeMetadata(item.key)}
                           >
-                            <Text style={[localAddPropertyStyle.metadataFieldRemove]} >REMOVE</Text>
+                            <Image style={localAddPropertyStyle.metadataFieldRemove} source={require('../../../../../assets/imgs/remove-icon.png')} />
                           </TouchableOpacity>}
                         </View>
                       )
@@ -427,27 +437,27 @@ export class LocalAddPropertyComponent extends React.Component {
                   <Text style={[localAddPropertyStyle.addMetadataButtonText, { color: this.state.canAddNewMetadata ? '#0060F2' : '#C2C2C2' }]}>+ ADD LABEL</Text>
                 </TouchableOpacity>}
                 {!!this.state.metadataError && <Text style={localAddPropertyStyle.metadataInputError}>{this.state.metadataError}</Text>}
-                <Text style={localAddPropertyStyle.quantityLabel}>Issue Number of bitmark</Text>
+                <Text style={localAddPropertyStyle.quantityLabel}>{'number of bitmarks TO ISSUE'.toUpperCase()}</Text>
                 <TextInput
                   autoCorrect={false}
                   style={[localAddPropertyStyle.quantityInput, {
                     borderBottomColor: this.stateNameError ? '#FF003C' : '#0060F2'
-                  }]} placeholder="REQUIRED AND NUMBER from 1 to 100"
+                  }]} placeholder="1 ~ 100"
                   onChangeText={this.doInputQuantity}
                   keyboardType={'numeric'}
                 />
                 {!!this.state.quantityError && <Text style={localAddPropertyStyle.quantityInputError}>{this.state.quantityError}</Text>}
 
-                <Text style={localAddPropertyStyle.ownershipClaimLabel}>Ownership claim</Text>
-                <Text style={localAddPropertyStyle.ownershipClaimMessage}>{'“I hereby claim that I am the legal owner of this asset and want these property to be irrevocably issued and recorded in the Bitmark blockchain.”'.toUpperCase()}</Text>
+                <Text style={localAddPropertyStyle.ownershipClaimLabel}>{'Ownership claim'.toUpperCase()}</Text>
+                <Text style={localAddPropertyStyle.ownershipClaimMessage}>{'“I hereby claim that I am the legal owner of this asset and want these property to be irrevocably issued and recorded in the Bitmark blockchain.”'}</Text>
                 {!!this.state.issueError && <Text style={localAddPropertyStyle.issueError}>{this.state.issueError}</Text>}
               </KeyboardAwareScrollView>}
               {this.state.step === Steps.input_info && <TouchableOpacity
-                style={[localAddPropertyStyle.issueButton, { backgroundColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
+                style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
                 onPress={this.register}
                 disabled={!this.state.canIssue}
               >
-                <Text style={localAddPropertyStyle.issueButtonText}>Register</Text>
+                <Text style={localAddPropertyStyle.issueButtonText}>ISSUE</Text>
               </TouchableOpacity>}
             </View>
           </ScrollView>

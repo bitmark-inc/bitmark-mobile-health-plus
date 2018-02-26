@@ -112,11 +112,39 @@ const getProvenance = (bitmark) => {
   });
 };
 
+const checkMarketSession = (market) => {
+  return new Promise((resolve, reject) => {
+
+    let marketServerUrl = config.market_urls[market];
+    let marketBitmarkUrl = marketServerUrl + `/s/api/account`;
+    let statusCode;
+    fetch(marketBitmarkUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode === 400) {
+        return resolve({ ok: false });
+      }
+      if (statusCode >= 400) {
+        return reject(new Error('getProvenance error :' + JSON.stringify(data)));
+      }
+      resolve({ ok: true });
+    }).catch(reject);
+  });
+};
+
 let MarketService = {
   getListingUrl,
   getBalancUrl,
   getBitmarks,
   getProvenance,
+  checkMarketSession,
 }
 
 export {

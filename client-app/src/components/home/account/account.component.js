@@ -136,6 +136,17 @@ export class AccountDetailComponent extends React.Component {
                 />
               </View>
             </View>}
+          {this.state.subtab === SubTabs.balance && config.disabel_markets && <View style={accountStyle.contentSubTab}>
+            <Text style={{
+              marginTop: 30,
+              marginLeft: 20,
+              fontFamily: 'Avenir Black',
+              fontWeight: '900',
+              fontSize: 16,
+              lineHeight: 18,
+              color: '#0060F2'
+            }}>{'Comming soon...'.toUpperCase()} </Text>
+          </View>}
 
           {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
             <Text style={accountStyle.accountNumberLabel}>My Bitmark Account Number</Text>

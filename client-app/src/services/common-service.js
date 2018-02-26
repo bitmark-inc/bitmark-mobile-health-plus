@@ -59,10 +59,10 @@ const endNewFaceTouceSessionId = async () => {
   }
 };
 
-const startFaceTouceSessionId = async () => {
+const startFaceTouceSessionId = async (message) => {
   await endNewFaceTouceSessionId();
   if (!currentFaceTouceSessionId) {
-    currentFaceTouceSessionId = await BitmarkSDK.requestSession(config.bitmark_network);
+    currentFaceTouceSessionId = await BitmarkSDK.requestSession(config.bitmark_network, message);
   }
   return currentFaceTouceSessionId;
 };

@@ -8,7 +8,7 @@ let NETWORKS = {
 }
 let config = {
   network: NETWORKS.testnet,
-  disabel_markets: false,
+  disabel_markets: true,
   // network: NETWORKS.devnet,
 
   NETWORKS,

@@ -53,7 +53,7 @@ const createNewAccount = async () => {
 };
 
 const getCurrentAccount = async () => {
-  let sessionId = await CommonService.startFaceTouceSessionId();
+  let sessionId = await CommonService.startFaceTouceSessionId('require message');
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
   await CommonService.endNewFaceTouceSessionId();
   return userInfo;
@@ -128,7 +128,7 @@ const pairtMarketAccounut = async (localBitmarkAccountNumber, token, market) => 
     });
   }
 
-  let sessionId = await CommonService.startFaceTouceSessionId();
+  let sessionId = await CommonService.startFaceTouceSessionId('require message');
   let signatures = await BitmarkSDK.rickySignMessage([token], sessionId);
   let user = await requestPair(signatures[0]);
   await CommonService.endNewFaceTouceSessionId();

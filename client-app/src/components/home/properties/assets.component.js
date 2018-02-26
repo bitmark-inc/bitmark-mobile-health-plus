@@ -95,7 +95,7 @@ export class AssetsComponent extends React.Component {
           <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.local)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local}({this.state.data.localAssets.length})</Text>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local} ({this.state.data.localAssets.length})</Text>
               </View>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.local ? '#0060F2' : 'white' }]}></View>
             </View>
@@ -103,7 +103,7 @@ export class AssetsComponent extends React.Component {
           <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.market)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.market}({this.state.data.marketAssets.length})</Text>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.market} ({this.state.data.marketAssets.length})</Text>
               </View>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.market ? '#0060F2' : 'white' }]}></View>
             </View>
@@ -124,15 +124,15 @@ export class AssetsComponent extends React.Component {
                 {'YOu DO not owned any property currently YET.'.toUpperCase()}
               </Text>}
               {(this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
-                {'YOu have not paired any markets.'.toUpperCase()}
+                {(config.disabel_markets ? 'Coming soon...' : 'YOu have not paired any markets.').toUpperCase()}
               </Text>}
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
-                Once you pair your market account with mobile app, you can remove the property from the market and the property will transfer to yours.
+                Here you will issue property titles (bitmarks), view and manage your properties, and have general account access and control.
                 </Text>}
               {(this.state.subtab === SubTabs.local) && <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
                 <Text style={assetsStyle.addFirstPropertyButtonText}>{'create first property'.toUpperCase()}</Text>
               </TouchableOpacity>}
-              {(this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetContent}>
+              {(this.state.subtab === SubTabs.market && !config.disabel_markets) && <Text style={assetsStyle.messageNoAssetContent}>
                 You can pair your market account in the “Market” section with Bitmark app to easily access every markets in the Bitmark system.
                 </Text>}
             </View>}
@@ -150,7 +150,6 @@ export class AssetsComponent extends React.Component {
                 }} >
                   <Image style={assetsStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + item.asset.asset_id }} />
                   <View style={assetsStyle.assetInfoArea}>
-                    <Text style={assetsStyle.assetCreatedDate} >{item.asset.created_at}</Text>
                     <Text style={assetsStyle.assetName} numberOfLines={1}>{item.asset.name}</Text>
                     <Text style={assetsStyle.assetCreator} numberOfLines={1}>{item.asset.issuer}</Text>
                   </View>

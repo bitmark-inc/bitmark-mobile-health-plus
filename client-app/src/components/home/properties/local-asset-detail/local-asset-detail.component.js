@@ -73,7 +73,7 @@ export class LocalAssetDetailComponent extends React.Component {
             </View>
             <View style={assetDetailStyle.bottomImageBar}></View>
             <Text style={assetDetailStyle.assetName}>{this.state.asset.name}</Text>
-            <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>Issued on {this.state.asset.created_at} by {this.state.asset.issuer}</Text>
+            <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>Issued by {this.state.asset.issuer}</Text>
             <View style={assetDetailStyle.bottomAssetNameBar}></View>
             <View style={assetDetailStyle.metadataArea}>
               <FlatList

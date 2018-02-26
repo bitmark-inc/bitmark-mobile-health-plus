@@ -25,9 +25,9 @@ const BitmarkSDK = {
       });
     });
   },
-  requestSession: (network) => {
+  requestSession: (network, message) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.requestSession(network, (ok, sessionId) => {
+      SwiftBitmarkSDK.requestSession(network, message, (ok, sessionId) => {
         if (ok && sessionId) {
           resolve(sessionId);
         } else {

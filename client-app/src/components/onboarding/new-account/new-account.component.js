@@ -44,7 +44,7 @@ class PropertyPrivateYourDataComponent extends React.Component {
   render() {
     return (
       <View style={newAccountStyle.swipePage}>
-        <View style={defaultStyle.header}></View>
+        <View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>
         <Text style={[newAccountStyle.introductionTitle,]}>
           {'Property IS Privacy'.toUpperCase()}
         </Text>
@@ -126,7 +126,7 @@ class BuildDigitalAssetComponent extends React.Component {
   render() {
     return (
       <View style={newAccountStyle.swipePage}>
-        <View style={defaultStyle.header}></View>
+        <View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>
         <Text style={[newAccountStyle.introductionTitle]}>
           {'BUILD A DIGITAL ESTATE'.toUpperCase()}
         </Text>
@@ -252,7 +252,7 @@ export class NewAccountComponent extends React.Component {
               }>
 
               <View style={newAccountStyle.swipePage}>
-                <View style={defaultStyle.header}>
+                <View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
                   <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
                     <Image style={defaultStyle.headerLeftIcon} source={require('../../../../assets/imgs/header_back_icon_study_setting.png')} />
                   </TouchableOpacity>
@@ -282,7 +282,7 @@ export class NewAccountComponent extends React.Component {
               </View>
 
               <View style={newAccountStyle.swipePage}>
-                <View style={defaultStyle.header}></View>
+                <View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>
                 <Text style={[newAccountStyle.introductionTitle]}>{'authenticate property'.toUpperCase()}</Text>
                 <Text style={[newAccountStyle.introductionDescription,]}>
                   Your data is authenticated by ‘bitmarking’ and recording to the Bitmark blockchain. The blockchain holds secure and verifiable records of ownership of digital assets.
