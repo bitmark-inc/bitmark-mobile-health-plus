@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView,
-  // Image,
+  View, Text, TouchableOpacity, ScrollView, Image,
   Platform,
 } from 'react-native';
 
@@ -65,7 +64,7 @@ export class MarketsComponent extends React.Component {
         </View>
         <ScrollView style={[marketsStyle.scrollSubTabArea]}>
           <View style={marketsStyle.contentSubTab}>
-            {/* <View style={marketsStyle.marketCardArea}>
+            <View style={marketsStyle.marketCardArea}>
               <View style={marketsStyle.marketCardTitleArea}>
                 <Image style={marketsStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
                 <View style={marketsStyle.marketCardTitleMaketInfo}>
@@ -77,7 +76,7 @@ export class MarketsComponent extends React.Component {
                 !this.state.user.markets.totemic.account_number) && <Text style={marketsStyle.marketCardMessage}>
                   Blockchain-based, limited edition, collector cards. Totemic empowers content creators, fans and collectors with a completely new kind of digital asset.
               </Text>}
-              {(!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
+              {/* {(!this.state.user || !this.state.user.markets || !this.state.user.markets.totemic ||
                 !this.state.user.markets.totemic.account_number) && <View style={marketsStyle.marketCardButtonArea}>
                   <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
                     this.props.screenProps.homeNavigation.navigate('MarketLogin', {
@@ -88,7 +87,7 @@ export class MarketsComponent extends React.Component {
                     <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-create-account.png')} />
                     <Text style={marketsStyle.marketCardButtonItemText}>CREATE TOTEMIC ACCOUNT</Text>
                   </TouchableOpacity>
-                </View>}
+                </View>} */}
               {this.state.user && this.state.user.markets && this.state.user.markets.totemic && this.state.user.markets.totemic.account_number &&
                 <TouchableOpacity style={marketsStyle.marketCardButtonArea}
                   onPress={this.openMarket}>
@@ -102,17 +101,17 @@ export class MarketsComponent extends React.Component {
                     </View>
                   </View>
                 </TouchableOpacity>}
-            </View> */}
+            </View>
           </View>
         </ScrollView>
-        {/* <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
+        <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
           this.props.screenProps.homeNavigation.navigate('MarketPair', {
             reloadMarketsScreen: this.reload,
           });
         }}>
           <Image style={marketsStyle.marketCardButtonItemIcon} source={require('./../../../../assets/imgs/market-pair-account.png')} />
           <Text style={marketsStyle.marketCardButtonItemText}>PAIR WITH EXISTING ACCOUNT</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View >
     );
   }
