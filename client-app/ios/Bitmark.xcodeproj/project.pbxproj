@@ -536,7 +536,6 @@
 		13B07FAE1A68108700A75B9A /* Bitmark */ = {
 			isa = PBXGroup;
 			children = (
-				F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */,
 				58CB488F201EC5670058B364 /* Bitmark.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				58FC1E54201B21CC00F60AF9 /* Bitmark-Bridging-Header.h */,
@@ -689,6 +688,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */,
 				5840099F20243AA700550ADB /* RCTCamera.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,

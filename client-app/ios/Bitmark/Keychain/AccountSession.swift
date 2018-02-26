@@ -15,6 +15,10 @@ class AccountSession {
   private var sessionMap = [String: Account]()
   
   func requestSession(network: String) throws -> String? {
+    if let (key, _) = sessionMap.first {
+      return key
+    }
+    
     let uuid = UUID().uuidString.lowercased()
     guard let account = try AccountSession.getAccount(network: network) else {
       return nil
