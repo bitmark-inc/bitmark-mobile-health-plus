@@ -46,8 +46,8 @@ export class MarketLoginComponent extends React.Component {
         console.log('MarketLoginComponent createSignatureData error :', error);
       });
     } else if (message === 'submit-success' && this.props.navigation.state.params.refreshMarketStatus) {
-      this.props.navigation.state.params.refreshMarketStatus(this.state.market);
       this.props.navigation.goBack();
+      this.props.navigation.state.params.refreshMarketStatus(this.state.market);
     }
   }
 

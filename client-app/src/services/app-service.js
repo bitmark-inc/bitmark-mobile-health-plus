@@ -28,7 +28,7 @@ const createNewUser = async () => {
 };
 
 const createSignatureData = async () => {
-  let userInfo = await AccountService.createNewAccount();
+  let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let signatureData = await CommonService.createSignatureData();
   signatureData.account_number = userInfo.bitmarkAccountNumber;
   return signatureData;
@@ -64,7 +64,7 @@ const doPairMarketAccount = async (token, market) => {
 };
 
 const doCheckPairingStatus = async (market) => {
-  let userInfo = await AccountService.createNewAccount();
+  let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let signatureData = await CommonService.createSignatureData();
   let marketAccountInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   if (!userInfo.markets) {
