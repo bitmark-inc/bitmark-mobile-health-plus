@@ -81,15 +81,17 @@ const doCheckPairingStatus = async (market) => {
 };
 
 const initMarketSession = async (market, userInfo) => {
-  let result = await MarketService.checkMarketSession(market);
-  if (result && result.ok) {
-    return;
+  let marketInfo = await MarketService.checkMarketSession(market);
+  if (!marketInfo) {
+    await CommonService.startFaceTouceSessionId('Please sign to pair the bitmark account with market.');
+    let timestamp = moment().toDate().getTime().toString();
+    let signatures = await CommonService.doTryRickSignMessage([timestamp]);
+    marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
   }
-  await CommonService.startFaceTouceSessionId('Please sign to pair the bitmark account with market.');
-  let timestamp = moment().toDate().getTime().toString();
-  let signatures = await CommonService.doTryRickSignMessage([timestamp]);
-  let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
   if (marketInfo) {
+    if (!userInfo.markets) {
+      userInfo.markets = {};
+    }
     userInfo.markets[market] = {
       id: marketInfo.id,
       name: marketInfo.name,

@@ -128,13 +128,13 @@ const checkMarketSession = (market) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode === 400) {
-        return resolve({ ok: false });
+      if (statusCode === 401) {
+        return resolve(null);
       }
       if (statusCode >= 400) {
-        return reject(new Error('getProvenance error :' + JSON.stringify(data)));
+        return reject(new Error('checkMarketSession error :' + JSON.stringify(data)));
       }
-      resolve({ ok: true });
+      resolve(data.user);
     }).catch(reject);
   });
 };
