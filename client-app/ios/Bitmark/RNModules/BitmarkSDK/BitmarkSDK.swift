@@ -219,7 +219,7 @@ class BitmarkSDK: NSObject {
   }
   
   @objc(requestSession:::)
-  func requestSession(_ reason: String, _ network: String, _ callback: @escaping RCTResponseSenderBlock) {
+  func requestSession(_ network: String, _ reason: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       guard let sessionId = try AccountSession.shared.requestSession(reason: reason, network: network) else {
         callback([false])
