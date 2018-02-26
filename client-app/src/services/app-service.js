@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-import fs from 'react-native-fs';
 
 import { config } from './../configs';
 import { CommonService } from './common-service';
@@ -84,9 +83,11 @@ const doCheckPairingStatus = async (market) => {
 const getUserBitmark = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let marketAssets = [];
-  for (let market in userInfo.markets) {
-    let tempBitmarks = await MarketService.getBitmarks(market, userInfo.markets[market].id);
-    marketAssets = marketAssets.concat(tempBitmarks || []);
+  if (!config.disabel_markets) {
+    for (let market in userInfo.markets) {
+      let tempBitmarks = await MarketService.getBitmarks(market, userInfo.markets[market].id);
+      marketAssets = marketAssets.concat(tempBitmarks || []);
+    }
   }
   let localAssets = await BitmarkService.getBitmarks(userInfo.bitmarkAccountNumber);
   return {
@@ -115,7 +116,7 @@ const doDepositBitmark = async (market, bitmark) => {
 
 const doOpenApp = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  if (userInfo && userInfo.bitmarkAccountNumber) {
+  if (!config.disabel_markets && userInfo && userInfo.bitmarkAccountNumber) {
     let marketInfos = {};
     for (let market in config.markets) {
       let timestamp = moment().toDate().getTime().toString();

@@ -12,6 +12,7 @@ let config = {
   NETWORKS,
   platform: Platform.OS,
   network: NETWORKS.testnet,
+  disabel_markets: false,
   // network: NETWORKS.devnet,
   bitmark_network: NETWORKS.testnet,
   get_way_server_url: 'https://api.test.bitmark.com',
