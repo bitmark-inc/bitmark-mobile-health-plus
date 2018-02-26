@@ -14,13 +14,9 @@ class AccountSession {
   
   private var sessionMap = [String: Account]()
   
-  func requestSession(network: String) throws -> String? {
-    if let (key, _) = sessionMap.first {
-      return key
-    }
-    
+  func requestSession(reason: String, network: String) throws -> String? {
     let uuid = UUID().uuidString.lowercased()
-    guard let account = try AccountSession.getAccount(network: network) else {
+    guard let account = try AccountSession.getAccount(reason: reason, network: network) else {
       return nil
     }
     
@@ -58,9 +54,9 @@ extension AccountSession {
     }
   }
   
-  static func getAccount(network: String) throws -> Account? {
+  static func getAccount(reason: String, network: String) throws -> Account? {
     let network = networkWithName(name: network)
-    guard let core = try KeychainUtil.getCore() else {
+    guard let core = try KeychainUtil.getCore(reason: reason) else {
       return nil
     }
     
