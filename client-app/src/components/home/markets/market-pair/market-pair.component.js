@@ -41,6 +41,7 @@ export class MarketPairComponent extends React.Component {
     }).catch(error => {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       console.log('doPairMarketAccount error :', error);
+      this.props.navigation.goBack();
       this.processing = false;
     });
   }
