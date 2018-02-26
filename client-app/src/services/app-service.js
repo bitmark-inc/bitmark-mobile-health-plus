@@ -144,7 +144,7 @@ const doDepositBitmark = async (market, bitmark) => {
 const checkPairingStatusAllMarket = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   if (!config.disabel_markets) {
-    for (let market in config.markets) {
+    for (let market in userInfo.markets) {
       await initMarketSession(market, userInfo);
     }
   }
