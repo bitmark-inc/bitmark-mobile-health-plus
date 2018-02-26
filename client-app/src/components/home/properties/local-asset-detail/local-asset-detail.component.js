@@ -69,7 +69,7 @@ export class LocalAssetDetailComponent extends React.Component {
               </TouchableOpacity>
             </View>}
             <View style={assetDetailStyle.bottomImageBar}></View>
-            <Text style={assetDetailStyle.assetName}>{this.state.asset.name}</Text>
+            <Text style={assetDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
             <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>Issued by {this.state.asset.registrant}</Text>
             <View style={assetDetailStyle.bottomAssetNameBar}></View>
             <View style={assetDetailStyle.metadataArea}>

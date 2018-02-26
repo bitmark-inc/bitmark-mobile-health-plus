@@ -91,7 +91,7 @@ export class MarketAssetDetailComponent extends React.Component {
               </View>}
             </View>
             <View style={assetDetailStyle.bottomImageBar}></View>
-            <Text style={assetDetailStyle.assetName}>{this.state.asset.name}</Text>
+            <Text style={assetDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
             <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>Issued on {this.state.asset.created_at} by {this.state.asset.registrant}</Text>
             <View style={assetDetailStyle.bottomAssetNameBar}></View>
             <View style={assetDetailStyle.marketArea}>

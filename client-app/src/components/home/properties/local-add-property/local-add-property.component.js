@@ -387,6 +387,7 @@ export class LocalAddPropertyComponent extends React.Component {
                   }]} placeholder="64-CHARACTER MAX"
                   onChangeText={this.doInputAssetName}
                   value={this.state.assetName}
+                  numberOfLines={1}
                   editable={!this.state.existingAsset}
                 />
                 {!!this.state.assetNameError && <Text style={localAddPropertyStyle.assetNameInputError}>{this.state.assetNameError}</Text>}
