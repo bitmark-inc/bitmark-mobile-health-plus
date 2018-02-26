@@ -6,9 +6,9 @@ import {
   Platform,
   FlatList,
 } from 'react-native';
-import { config } from './../../../../configs';
 import assetDetailStyle from './local-asset-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import { config } from '../../../../configs';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -55,25 +55,22 @@ export class LocalAssetDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>
           <ScrollView style={assetDetailStyle.content}>
-            <View style={assetDetailStyle.topArea}>
-              <Image style={assetDetailStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + this.state.asset.asset_id }} />
-              {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
-                <TouchableOpacity style={assetDetailStyle.downloadAssetButton}>
-                  <Text style={assetDetailStyle.downloadAssetButtonText}>Download Asset</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
-                  Clipboard.setString(this.state.asset.asset_id);
-                  this.setState({ copied: true });
-                  setTimeout(() => { this.setState({ copied: false }) }, 1000);
-                }}>
-                  <Text style={assetDetailStyle.copyAssetIddButtonText}>Copy Asset ID</Text>
-                  {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
-                </TouchableOpacity>
-              </View>}
-            </View>
+            {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
+              <TouchableOpacity style={assetDetailStyle.downloadAssetButton}>
+                <Text style={assetDetailStyle.downloadAssetButtonText}>Download Asset</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
+                Clipboard.setString(this.state.asset.asset_id);
+                this.setState({ copied: true });
+                setTimeout(() => { this.setState({ copied: false }) }, 1000);
+              }}>
+                <Text style={assetDetailStyle.copyAssetIddButtonText}>Copy Asset ID</Text>
+                {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+              </TouchableOpacity>
+            </View>}
             <View style={assetDetailStyle.bottomImageBar}></View>
             <Text style={assetDetailStyle.assetName}>{this.state.asset.name}</Text>
-            <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>Issued by {this.state.asset.issuer}</Text>
+            <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>Issued by {this.state.asset.registrant}</Text>
             <View style={assetDetailStyle.bottomAssetNameBar}></View>
             <View style={assetDetailStyle.metadataArea}>
               <FlatList
@@ -104,7 +101,7 @@ export class LocalAssetDetailComponent extends React.Component {
                       this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                     }}>
                       <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                      <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
+                      {!config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
                         this.props.navigation.navigate('BitmarkDeposit', {
                           asset: this.state.asset,
                           bitmark: item.bitmark
@@ -112,7 +109,10 @@ export class LocalAssetDetailComponent extends React.Component {
                       }}>
                         {item.bitmark.status !== 'pending' && <Text style={assetDetailStyle.bitmarksRowListingButtonText}>{'List to Market'.toUpperCase()}</Text>}
                         {item.bitmark.status === 'pending' && <Text style={assetDetailStyle.bitmarkPending}>PENDING...</Text>}
-                      </TouchableOpacity>
+                      </TouchableOpacity>}
+                      {config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={true}>
+                        <Text style={assetDetailStyle.bitmarksRowListingButtonText}>{'Comming soon...'.toUpperCase()}</Text>
+                      </TouchableOpacity>}
                     </TouchableOpacity>);
                   }}
                 />

@@ -53,29 +53,26 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name}</Text>
               <Text style={[defaultStyle.headerTitle]}>({this.state.asset.bitmarks.indexOf(this.state.bitmark) + 1}/{this.state.asset.bitmarks.length})</Text>
             </View>
-            <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
+            <TouchableOpacity style={[defaultStyle.headerRight, { padding: 4 }]} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
               <Image style={propertyDetailStyle.threeDotIcon} source={this.state.displayTopButton
                 ? require('../../../../../assets/imgs/three-dot-blue.png')
                 : require('../../../../../assets/imgs/three-dot-black.png')} />
             </TouchableOpacity>
           </View>
           <ScrollView style={propertyDetailStyle.content}>
-            <View style={propertyDetailStyle.topArea}>
-              <Image style={propertyDetailStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + this.state.asset.asset_id }} />
-              {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-                <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
-                  Clipboard.setString(this.state.asset.asset_id);
-                  this.setState({ copied: true });
-                  setTimeout(() => { this.setState({ copied: false }) }, 1000);
-                }}>
-                  <Text style={propertyDetailStyle.copyBitmarkIddButtonText}>Copy Bitmark ID</Text>
-                  {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
-                </TouchableOpacity>
-              </View>}
-            </View>
+            {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
+              <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
+                Clipboard.setString(this.state.asset.asset_id);
+                this.setState({ copied: true });
+                setTimeout(() => { this.setState({ copied: false }) }, 1000);
+              }}>
+                <Text style={propertyDetailStyle.copyBitmarkIddButtonText}>Copy Bitmark ID</Text>
+                {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+              </TouchableOpacity>
+            </View>}
             <View style={propertyDetailStyle.bottomImageBar}></View>
             <Text style={propertyDetailStyle.assetName}>{this.state.asset.name}</Text>
-            <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>Issued on {this.state.bitmark.created_at} by {this.state.asset.issuer}</Text>
+            <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>Issued on {this.state.bitmark.created_at} by {this.state.asset.registrant}</Text>
             <View style={propertyDetailStyle.bottomAssetNameBar}></View>
             <Text style={propertyDetailStyle.provenanceLabel}>Provenance</Text>
             <View style={propertyDetailStyle.provenancesArea}>
@@ -90,14 +87,14 @@ export class LocalPropertyDetailComponent extends React.Component {
                   data={this.state.histories || []}
                   renderItem={({ item }) => {
                     return (<View style={propertyDetailStyle.provenancesRow}>
-                      <Text style={propertyDetailStyle.provenancesHeaderLabel}>{item.history.created_at}</Text>
-                      <Text style={propertyDetailStyle.provenancesHeaderLabel}>{item.history.owner}</Text>
+                      <Text style={propertyDetailStyle.provenancesRowLabel} numberOfLines={1}>{item.history.created_at}</Text>
+                      <Text style={propertyDetailStyle.provenancesRowLabel} numberOfLines={1}>{item.history.owner}</Text>
                     </View>);
                   }}
                 />
               </View>
             </View>
-            <View style={propertyDetailStyle.listingButtonArea} >
+            {!config.disabel_markets && <View style={propertyDetailStyle.listingButtonArea} >
               <TouchableOpacity style={[propertyDetailStyle.listingButton, { backgroundColor: this.state.bitmark.status === 'pending' ? '#CCCCCC' : '#0060F2' }]}
                 disabled={this.state.bitmark.status === 'pending'}
                 onPress={() => {
@@ -108,7 +105,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                 }}>
                 <Text style={propertyDetailStyle.listingButtonText}>{'LIST THIS BITMARK TO MARKET'.toUpperCase()}</Text>
               </TouchableOpacity>
-            </View>
+            </View>}
           </ScrollView>
         </View>
       </TouchableWithoutFeedback>

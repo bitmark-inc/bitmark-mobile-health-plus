@@ -20,7 +20,7 @@ const convertDataFromMarket = (market, marketBitmarks) => {
             asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
             asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss');
             let issuer = (marketBitmarks.users || []).find((user) => user.id === asset.creator_id);
-            asset.issuer = issuer ? issuer.account_number : null;
+            asset.registrant = issuer ? issuer.account_number : null;
             asset.bitmarks.push(bitmark);
           }
         });

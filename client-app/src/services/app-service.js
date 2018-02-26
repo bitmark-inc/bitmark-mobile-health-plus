@@ -85,7 +85,7 @@ const initMarketSession = async (market, userInfo) => {
   if (result && result.ok) {
     return;
   }
-  await CommonService.startFaceTouceSessionId('require message');
+  await CommonService.startFaceTouceSessionId('Please sign to pair the bitmark account with market.');
   let timestamp = moment().toDate().getTime().toString();
   let signatures = await CommonService.doTryRickSignMessage([timestamp]);
   let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);

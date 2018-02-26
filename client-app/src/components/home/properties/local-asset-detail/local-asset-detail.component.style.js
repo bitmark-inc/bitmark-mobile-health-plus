@@ -9,6 +9,7 @@ export default StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
+    zIndex: 1,
   },
   threeDotIcon: {
     width: 20,
@@ -19,22 +20,13 @@ export default StyleSheet.create({
   content: {
     flexDirection: 'column',
   },
-  topArea: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    minHeight: 147,
-    width: convertWidth(375),
-  },
-  assetImage: {
-    height: 130,
-    width: 130,
-    resizeMode: 'contain',
-    marginLeft: 19,
-    marginTop: 17,
-  },
   topButtonsArea: {
-    height: 90,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 10,
     width: convertWidth(160),
+    height: 80,
     backgroundColor: '#F5F5F5',
   },
   downloadAssetButton: {
@@ -76,7 +68,6 @@ export default StyleSheet.create({
     borderWidth: 2,
     width: 130,
     marginLeft: 19,
-    marginTop: 26,
   },
   assetName: {
     fontFamily: 'Avenir Black',
@@ -84,7 +75,7 @@ export default StyleSheet.create({
     fontSize: 18,
     lineHeight: 21,
     marginLeft: 19,
-    marginTop: 7,
+    marginTop: 30,
     height: 29,
   },
   assetCreateAt: {
@@ -94,6 +85,7 @@ export default StyleSheet.create({
     lineHeight: 16,
     marginLeft: 19,
     height: 29,
+    width: convertWidth(320),
   },
   bottomAssetNameBar: {
     borderWidth: 1,

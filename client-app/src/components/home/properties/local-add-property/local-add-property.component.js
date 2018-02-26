@@ -82,7 +82,7 @@ class MetadataInputComponent extends React.Component {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{
-            width: '100%', height: this.props.type === 'label' ? 220 : 100,
+            width: '100%', height: this.props.type === 'label' ? 220 : 110,
             flexDirection: 'column',
           }}>
             <TextInput
@@ -90,8 +90,8 @@ class MetadataInputComponent extends React.Component {
               style={{
                 borderBottomColor: '#EDF0F4',
                 borderBottomWidth: 1,
-                marginTop: 20, marginBottom: 5, marginLeft: 10,
-                width: '100%', maxHeight: 50,
+                marginTop: 20, marginBottom: 5, marginLeft: '5%',
+                width: '90%', maxHeight: 50,
               }} placeholder={(this.props.type === 'label') ? 'CREATE NEW LABEL' : 'DESCRIPTION'}
               multiline={true}
               value={this.state.textInput}
@@ -101,11 +101,11 @@ class MetadataInputComponent extends React.Component {
               onSubmitEditing={() => this.props.done(this.state.textInput)}
             />
             {this.props.type === 'label' && <View style={{
-              height: 130, width: '100%',
+              height: 130, width: '90%',
               borderBottomWidth: 1,
               borderBottomColor: '#EDF0F4',
               flexDirection: 'column',
-              marginLeft: 10,
+              marginLeft: '5%',
             }}>
               <Text style={{ marginBottom: 5, color: '#C9C9C9' }}>OR SELECT FROM BELOW:</Text>
               <FlatList
@@ -168,8 +168,8 @@ export class LocalAddPropertyComponent extends React.Component {
     this.doInputQuantity = this.doInputQuantity.bind(this);
 
     this.state = {
-      step: Steps.input_file,
-      // step: Steps.input_info,
+      // step: Steps.input_file,
+      step: Steps.input_info,
       existingAsset: false,
       // metadataList: [],
       metadataList: [{ key: 0, label: '', value: '' }],
@@ -409,7 +409,9 @@ export class LocalAddPropertyComponent extends React.Component {
                           >
                             <Text style={[localAddPropertyStyle.metadataFieldLabel, {
                               color: (item.label && !this.state.existingAsset) ? 'black' : '#C2C2C2'
-                            }]} > {item.label || 'LABEL'} </Text>
+                            }]}
+                              numberOfLines={1}
+                            > {item.label || 'LABEL'} </Text>
                           </TouchableOpacity>
                           <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, {
                             borderBottomColor: item.valueError ? '#FF003C' : '#0060F2',
@@ -421,7 +423,9 @@ export class LocalAddPropertyComponent extends React.Component {
                           >
                             <Text style={[localAddPropertyStyle.metadataFieldValue, {
                               color: (item.value && !this.state.existingAsset) ? 'black' : '#C2C2C2'
-                            }]} > {item.value || 'DESCRIPTION'} </Text>
+                            }]}
+                              numberOfLines={1}
+                            > {item.value || 'DESCRIPTION'} </Text>
                           </TouchableOpacity>
                           {!this.state.existingAsset && <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, { borderBottomWidth: 0, }]}
                             onPress={() => this.removeMetadata(item.key)}

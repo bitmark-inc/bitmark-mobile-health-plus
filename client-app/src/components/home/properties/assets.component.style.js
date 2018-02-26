@@ -113,9 +113,10 @@ export default StyleSheet.create({
 
   assetRowArea: {
     width: '100%',
-    height: 100,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
+    borderBottomColor: '#EDF0F4',
+    borderBottomWidth: 1,
   },
   assetImage: {
     width: 62,
@@ -125,35 +126,30 @@ export default StyleSheet.create({
   },
   assetInfoArea: {
     flexDirection: 'column',
-    justifyContent: 'space-between',
     marginLeft: 20,
-    height: 62,
-    width: 140,
-  },
-  assetCreatedDate: {
-    fontFamily: 'Andale Mono',
-    fontSize: 10,
-    lineHeight: 12,
+    width: '100%',
   },
   assetName: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 12,
     lineHeight: 14,
+    width: '100%',
   },
   assetCreator: {
     fontFamily: 'Avenir Light',
     fontWeight: '500',
     fontSize: 12,
     lineHeight: 14,
-    width: 140,
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
   },
-
-  assetBitmark: {
-    height: 62,
-    width: 130,
+  assetBitmarkTitle: {
+    height: 30,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
   },
   assetBitmarkPending: {
     fontFamily: 'Avenir Heavy',
@@ -161,13 +157,8 @@ export default StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: '#999999',
-    marginRight: 10,
-    fontStyle: 'italic'
-  },
-  assetBitmarkNormal: {
-    width: 40,
-    height: 62,
-    flexDirection: 'row',
+    width: convertWidth(280),
+    marginLeft: 10,
   },
   assetBitmarksNumber: {
     fontFamily: 'Avenir Black',
@@ -175,6 +166,7 @@ export default StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: '#0060F2',
+    paddingTop: 3,
     marginRight: 5,
   },
   assetBitmarksDetail: {

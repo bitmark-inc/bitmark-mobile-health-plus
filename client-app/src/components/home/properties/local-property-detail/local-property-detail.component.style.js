@@ -33,8 +33,12 @@ export default StyleSheet.create({
     marginTop: 17,
   },
   topButtonsArea: {
-    height: 56,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 10,
     width: convertWidth(160),
+    height: 50,
     backgroundColor: '#F5F5F5',
   },
   copyBitmarkIddButton: {
@@ -64,7 +68,6 @@ export default StyleSheet.create({
     borderWidth: 2,
     width: 130,
     marginLeft: 19,
-    marginTop: 26,
   },
   assetName: {
     fontFamily: 'Avenir Black',
@@ -72,7 +75,7 @@ export default StyleSheet.create({
     fontSize: 18,
     lineHeight: 21,
     marginLeft: 19,
-    marginTop: 7,
+    marginTop: 30,
     height: 29,
   },
   assetCreateAt: {
@@ -82,6 +85,7 @@ export default StyleSheet.create({
     lineHeight: 16,
     marginLeft: 19,
     height: 29,
+    width: convertWidth(320),
   },
   bottomAssetNameBar: {
     borderWidth: 1,
@@ -91,8 +95,8 @@ export default StyleSheet.create({
 
   provenanceLabel: {
     fontFamily: 'Avenir Black',
-    fontSize: 10,
-    lineHeight: 12,
+    fontSize: 14,
+    lineHeight: 16,
     fontWeight: '900',
     marginLeft: 19,
     marginTop: 29,
@@ -108,9 +112,9 @@ export default StyleSheet.create({
   },
   provenancesHeaderLabel: {
     fontFamily: 'Andale Mono',
-    fontSize: 10,
-    lineHeight: 12,
-    minWidth: 170,
+    fontSize: 12,
+    lineHeight: 14,
+    width: convertWidth(150),
   },
   provenanceListArea: {
     flexDirection: 'row',
@@ -125,7 +129,7 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 12,
     lineHeight: 14,
-    minWidth: 70,
+    width: convertWidth(150),
   },
   listingButtonArea: {
     flexDirection: 'column',
