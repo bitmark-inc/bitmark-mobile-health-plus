@@ -1,18 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+// import moment from 'moment';
 import {
-  View, Text, TouchableOpacity, ScrollView, Image,
+  View, Text, TouchableOpacity, ScrollView,
+  //  Image,
   Clipboard,
   Platform,
-  FlatList,
+  // FlatList,
 } from 'react-native';
 
-import { AppService, MarketService, EventEmiterService } from "./../../../services";
+import {
+  AppService,
+  // MarketService,
+  EventEmiterService
+} from "./../../../services";
 import accountStyle from './account.component.style';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
-import { config } from '../../../configs/index';
+// import { config } from '../../../configs/index';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -89,7 +94,7 @@ export class AccountDetailComponent extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView style={[accountStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
-          {this.state.subtab === SubTabs.balance && this.state.markets && this.state.markets.totemic && this.state.markets.totemic.account_number &&
+          {/* {this.state.subtab === SubTabs.balance && this.state.markets && this.state.markets.totemic && this.state.markets.totemic.account_number &&
             <View style={accountStyle.contentSubTab}>
               <Image style={accountStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
               <View style={accountStyle.marketBalance}>
@@ -135,7 +140,7 @@ export class AccountDetailComponent extends React.Component {
                   }}
                 />
               </View>
-            </View>}
+            </View>} */}
 
           {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
             <Text style={accountStyle.accountNumberLabel}>My Bitmark Account Number</Text>
