@@ -6,16 +6,21 @@ import { config } from './../configs';
 
 // ================================================================================================
 // ================================================================================================
-const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, signature) => {
+const checkPairingStatus = (marketUrl, localBitmarkAccountNumber, timestamp, signature) => {
   return new Promise((resolve, reject) => {
-    let urlCheck = marketUrl + `/s/api/mobile/pairing-account?timestamp=${timestamp}&account_number=${loaclBitmarkAccountNumber}&signature=${signature}`;
+    let urlCheck = marketUrl + `/s/api/mobile/access`;
     let statusCode = null;
     fetch(urlCheck, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-      }
+      },
+      body: JSON.stringify({
+        pair_account_number: localBitmarkAccountNumber,
+        timestamp,
+        signature,
+      })
     }).then((response) => {
       statusCode = response.status;
       return response.json();
@@ -30,9 +35,9 @@ const checkPairingStatus = (marketUrl, loaclBitmarkAccountNumber, timestamp, sig
   });
 };
 
-const doCheckPairingStatus = (market, loaclBitmarkAccountNumber, timestamp, signature) => {
+const doCheckPairingStatus = (market, localBitmarkAccountNumber, timestamp, signature) => {
   return new Promise((resolve) => {
-    checkPairingStatus(config.market_urls[market], loaclBitmarkAccountNumber, timestamp, signature).then(resolve).catch(error => {
+    checkPairingStatus(config.market_urls[market], localBitmarkAccountNumber, timestamp, signature).then(resolve).catch(error => {
       resolve(null);
       console.log(`doCheckPairingStatus ${market} error :`, error);
     });
@@ -58,12 +63,12 @@ const check24Words = async (pharse24Words) => {
   return await BitmarkSDK.try24Words(pharse24Words);
 };
 
-const checkPairingStatusAllMarket = async (sessionId, loaclBitmarkAccountNumber) => {
+const checkPairingStatusAllMarket = async (sessionId, localBitmarkAccountNumber) => {
   let marketInfos = {};
   for (let market in config.markets) {
     let timestamp = moment().toDate().getTime().toString();
     let signatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
-    let marketInfo = await doCheckPairingStatus(market, loaclBitmarkAccountNumber, timestamp, signatures[0]);
+    let marketInfo = await doCheckPairingStatus(market, localBitmarkAccountNumber, timestamp, signatures[0]);
     if (marketInfo) {
       marketInfos[market] = {
         id: marketInfo.id,
@@ -89,25 +94,24 @@ const logout = async () => {
   return await BitmarkSDK.removeAccount();
 }
 
-const pairtMarketAccounut = async (loaclBitmarkAccountNumber, token, market) => {
+const pairtMarketAccounut = async (localBitmarkAccountNumber, token, market) => {
   let marketUrl = config.market_urls[market];
   if (!marketUrl) {
     return null;
   }
-  let requestPair = (signatures) => {
+  let requestPair = (signature) => {
     return new Promise((resolve, reject) => {
       let statusCode = null;
-      fetch(marketUrl + '/s/api/mobile/qrcode', {
+      fetch(marketUrl + '/s/api/mobile/token-pair-confirmation', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          account_number: loaclBitmarkAccountNumber,
-          action: 'pair',
-          code: token,
-          signature: signatures,
+          pair_account_number: localBitmarkAccountNumber,
+          token,
+          signature,
         })
       }).then((response) => {
         statusCode = response.status;
