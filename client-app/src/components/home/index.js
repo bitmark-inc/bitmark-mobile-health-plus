@@ -1,6 +1,6 @@
 import { StackNavigator, } from 'react-navigation';
 import { UserComponent } from './user.component';
-// import { MarketPairComponent, MarketLoginComponent, MarketViewerComponent } from './markets';
+import { MarketPairComponent, MarketLoginComponent, MarketViewerComponent } from './markets';
 import {
   LocalPropertyDetailComponent,
   LocalAssetDetailComponent,
@@ -13,9 +13,9 @@ import {
 
 let HomeComponent = StackNavigator({
   User: { screen: UserComponent, },
-  // MarketPair: { screen: MarketPairComponent, },
-  // MarketLogin: { screen: MarketLoginComponent, },
-  // MarketViewer: { screen: MarketViewerComponent, },
+  MarketPair: { screen: MarketPairComponent, },
+  MarketLogin: { screen: MarketLoginComponent, },
+  MarketViewer: { screen: MarketViewerComponent, },
   LocalAssetDetail: { screen: LocalAssetDetailComponent, },
   LocalPropertyDetail: { screen: LocalPropertyDetailComponent, },
   MarketAssetDetail: { screen: MarketAssetDetailComponent, },

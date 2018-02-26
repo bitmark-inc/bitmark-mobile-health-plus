@@ -65,7 +65,8 @@ export class BitmarkDepositComponent extends React.Component {
 
   doDeposit() {
     EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.doDepositBitmark(this.state.selectedmMarket, this.state.bitmark).then(() => {
+    AppService.doDepositBitmark(this.state.selectedmMarket, this.state.bitmark).then((data) => {
+      console.log('doDepositBitmark success :', data);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       this.depositSuccess();
     }).catch(error => {
