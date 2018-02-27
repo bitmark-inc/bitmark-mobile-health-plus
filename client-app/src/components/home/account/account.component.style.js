@@ -148,7 +148,7 @@ export default StyleSheet.create({
     marginLeft: 39,
     backgroundColor: 'white',
     height: 43,
-    width: convertWidth(337),
+    width: convertWidth(300),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
@@ -181,7 +181,7 @@ export default StyleSheet.create({
   marketBalanceButtonArea: {
     marginTop: 16,
     marginLeft: 39,
-    width: convertWidth(337),
+    width: convertWidth(300),
     height: 30,
     flexDirection: 'row',
     alignItems: 'center',
@@ -189,7 +189,7 @@ export default StyleSheet.create({
   },
   marketBalanceButton: {
     backgroundColor: '#0060F2',
-    width: convertWidth(165),
+    width: convertWidth(140),
     height: 30,
     flexDirection: 'row',
     alignItems: 'center',
@@ -215,7 +215,7 @@ export default StyleSheet.create({
   },
   marketBalanceHistoryItem: {
     marginLeft: 39,
-    width: convertWidth(338),
+    width: convertWidth(300),
     height: 49,
     backgroundColor: 'white',
     borderWidth: 1,

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import {
   View, Text, TouchableOpacity, Image, WebView,
   Platform,
@@ -65,7 +66,7 @@ export class MarketLoginComponent extends React.Component {
           <WebView
             onMessage={this.onMessage}
             ref={(ref) => this.webViewRef = ref}
-            source={{ uri: config.market_urls[this.state.market] + '/login?webview=true' }} />
+            source={{ uri: config.market_urls[this.state.market] + `/login?webview=true&hash=${moment().toDate().getTime()}` }} />
         </View>}
       </View>
     );

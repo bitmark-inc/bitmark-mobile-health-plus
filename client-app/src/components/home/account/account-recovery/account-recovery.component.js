@@ -396,6 +396,14 @@ class TryRecoveryPhraseComponent extends React.Component {
 
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
+    let remainRandomeWords = [];
+    (this.state.randomWords || []).forEach((item, index) => {
+      if (!item.cannotReset) {
+        let tempItem = Object.assign({}, item);
+        tempItem.index = index;
+        remainRandomeWords.push(tempItem);
+      }
+    })
     return (
       <View style={accountRecoveryStyle.body}>
         <View style={[defaultStyle.header, { backgroundColor: 'white', borderBottomColor: '#C0CCDF', borderBottomWidth: 2, }]}>
@@ -454,29 +462,25 @@ class TryRecoveryPhraseComponent extends React.Component {
             </View>
           </View>
           {this.state.testResult.length === 0 && <View style={accountRecoveryStyle.ranDomWordsArea}>
-            <FlatList data={this.state.randomWords}
+            <FlatList data={remainRandomeWords}
               scrollEnabled={false}
-              horizontal={true}
-              contentContainerStyle={{
-                flexDirection: 'column',
-                flexWrap: 'wrap'
-              }}
+              horizontal={false}
+              numColumns={isSignOut ? 1 : 4}
+              contentContainerStyle={{ flexDirection: 'column' }}
               extraData={this.state}
-              renderItem={({ item, index }) => {
-                if (item.cannotReset) {
-                  return;
+              renderItem={({ item }) => {
+                if (!item.cannotReset) {
+                  return (
+                    <View style={accountRecoveryStyle.recoveryPhraseChoose}>
+                      {!item.selected && <TouchableOpacity style={accountRecoveryStyle.recoveryPhraseChooseButton}
+                        onPress={() => this.selectRandomWord(item, item.index)}
+                      >
+                        <Text style={[accountRecoveryStyle.recoveryPhraseChooseButtonText]}>{item.word}</Text>
+                      </TouchableOpacity>}
+                    </View>
+                  )
                 }
-                return (
-                  <View style={accountRecoveryStyle.recoveryPhraseChoose}>
-                    {!item.selected && <TouchableOpacity style={accountRecoveryStyle.recoveryPhraseChooseButton}
-                      onPress={() => this.selectRandomWord(item, index)}
-                    >
-                      <Text style={[accountRecoveryStyle.recoveryPhraseChooseButtonText]}>{item.word}</Text>
-                    </TouchableOpacity>}
-                  </View>
-                )
               }}
-              wordWrap={true}
             />
           </View>}
           {this.state.testResult === 'done' && <View style={accountRecoveryStyle.recoveryPhraseTestResult}>
