@@ -31,7 +31,7 @@ class MainComponent extends Component {
 
     this.state = {
       user: null,
-      processing: false,
+      processing: true,
       submitting: null,
     };
     this.appState = AppState.currentState;
@@ -100,7 +100,6 @@ class MainComponent extends Component {
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
         <View style={{
           flex: 1,
-          display: (!this.state.processing && !this.state.processing) ? 'flex' : 'none',
         }}><DisplayedComponent screenProps={{
           rootNavigation: this.props.navigation,
           refreshScaling: () => {
