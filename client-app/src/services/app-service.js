@@ -27,9 +27,9 @@ const createNewUser = async () => {
   return userInfo;
 };
 
-const createSignatureData = async () => {
+const createSignatureData = async (touchFaceIdMessage) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  let signatureData = await CommonService.createSignatureData();
+  let signatureData = await CommonService.createSignatureData(touchFaceIdMessage);
   signatureData.account_number = userInfo.bitmarkAccountNumber;
   return signatureData;
 };
@@ -65,7 +65,7 @@ const doPairMarketAccount = async (token, market) => {
 
 const doCheckPairingStatus = async (market) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  let signatureData = await CommonService.createSignatureData();
+  let signatureData = await CommonService.createSignatureData('Please sign to pair the bitmark account with market.');
   let marketAccountInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   if (!userInfo.markets) {
     userInfo.markets = {};
@@ -83,9 +83,8 @@ const doCheckPairingStatus = async (market) => {
 const initMarketSession = async (market, userInfo) => {
   let marketInfo = await MarketService.checkMarketSession(market);
   if (!marketInfo) {
-    await CommonService.startFaceTouceSessionId('Please sign to pair the bitmark account with market.');
     let timestamp = moment().toDate().getTime().toString();
-    let signatures = await CommonService.doTryRickSignMessage([timestamp]);
+    let signatures = await CommonService.doTryRickSignMessage([timestamp], 'Please sign to pair the bitmark account with market.');
     marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
   }
   if (marketInfo) {
@@ -157,7 +156,7 @@ const doOpenApp = async () => {
   //   let marketInfos = {};
   //   for (let market in config.markets) {
   //     let timestamp = moment().toDate().getTime().toString();
-  //     let signatures = await CommonService.doTryRickSignMessage([timestamp]);
+  //     let signatures = await CommonService.doTryRickSignMessage([timestamp],'Please sign to pair the bitmark account with market.');
   //     let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
   //     if (marketInfo) {
   //       marketInfos[market] = {

@@ -59,10 +59,10 @@ const endNewFaceTouceSessionId = async () => {
   }
 };
 
-const startFaceTouceSessionId = async (message) => {
+const startFaceTouceSessionId = async (touchFaceIdMessage) => {
   await endNewFaceTouceSessionId();
   if (!currentFaceTouceSessionId) {
-    currentFaceTouceSessionId = await BitmarkSDK.requestSession(config.bitmark_network, message);
+    currentFaceTouceSessionId = await BitmarkSDK.requestSession(config.bitmark_network, touchFaceIdMessage);
   }
   return currentFaceTouceSessionId;
 };
@@ -70,24 +70,21 @@ const setFaceTouceSessionId = (sessionId) => {
   currentFaceTouceSessionId = sessionId;
 };
 
-const doTryRickSignMessage = async (messages) => {
+const doTryRickSignMessage = async (messages, touchFaceIdMessage) => {
   if (!currentFaceTouceSessionId) {
-    await startFaceTouceSessionId();
+    await startFaceTouceSessionId(touchFaceIdMessage);
   }
   let signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
   if (!signatures) {
-    await startFaceTouceSessionId();
+    await startFaceTouceSessionId(touchFaceIdMessage);
     signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
   }
   return signatures;
 };
 
-const createSignatureData = async (sessionId) => {
-  if (!sessionId) {
-    sessionId = await startFaceTouceSessionId();
-  }
+const createSignatureData = async (touchFaceIdMessage) => {
   let timestamp = moment().toDate().getTime() + '';
-  let signatures = await BitmarkSDK.rickySignMessage([timestamp], sessionId);
+  let signatures = await doTryRickSignMessage(timestamp, touchFaceIdMessage);
   return { timestamp, signature: signatures[0] };
 };
 
