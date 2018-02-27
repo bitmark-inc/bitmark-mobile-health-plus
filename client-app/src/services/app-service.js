@@ -55,7 +55,7 @@ const doLogout = async () => {
 const doPairMarketAccount = async (token, market) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let marketAccountInfo = await AccountService.pairtMarketAccounut(userInfo.bitmarkAccountNumber, token, market);
-  if (marketAccountInfo) {
+  if (!marketAccountInfo) {
     return null;
   }
 
