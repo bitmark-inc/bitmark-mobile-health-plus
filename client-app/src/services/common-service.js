@@ -91,6 +91,9 @@ const doTryRickSignMessage = async (messages, touchFaceIdMessage) => {
 const createSignatureData = async (touchFaceIdMessage) => {
   let timestamp = moment().toDate().getTime() + '';
   let signatures = await doTryRickSignMessage(timestamp, touchFaceIdMessage);
+  if (!signatures) {
+    return null;
+  }
   return { timestamp, signature: signatures[0] };
 };
 
