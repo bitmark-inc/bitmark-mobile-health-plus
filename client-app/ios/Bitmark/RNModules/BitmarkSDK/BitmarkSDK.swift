@@ -28,8 +28,14 @@ class BitmarkSDK: NSObject {
       callback([true, sessionId])
     }
     catch let e {
-      print(e)
-      callback([false])
+      if let status = e as? KeychainAccess.Status,
+        status == KeychainAccess.Status.userCanceled {
+        callback([true])
+      }
+      else {
+        print(e)
+        callback([false])
+      }
     }
   }
   
@@ -43,8 +49,14 @@ class BitmarkSDK: NSObject {
       callback([true, sessionId])
     }
     catch let e {
-      print(e)
-      callback([false])
+      if let status = e as? KeychainAccess.Status,
+        status == KeychainAccess.Status.userCanceled {
+        callback([true])
+      }
+      else {
+        print(e)
+        callback([false])
+      }
     }
   }
   
@@ -231,8 +243,14 @@ class BitmarkSDK: NSObject {
       callback([true, sessionId])
     }
     catch let e {
-      print(e)
-      callback([false])
+      if let status = e as? KeychainAccess.Status,
+        status == KeychainAccess.Status.userCanceled {
+        callback([true])
+      }
+      else {
+        print(e)
+        callback([false])
+      }
     }
   }
   
