@@ -114,8 +114,7 @@ export class MarketAssetDetailComponent extends React.Component {
                     return (<TouchableOpacity style={assetDetailStyle.bitmarksRow} onPress={() => {
                       this.props.navigation.navigate('MarketPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                     }}>
-                      <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-
+                      <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>#{item.bitmark.number}</Text>
                       {item.bitmark.status !== 'pending' && item.bitmark.order_price && <Text style={assetDetailStyle.bitmarksListedPrice}>
                         {Math.floor(item.bitmark.order_price / 1E4) / 1E5} ETH
                       </Text>}

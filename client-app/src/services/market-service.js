@@ -22,6 +22,11 @@ const convertDataFromMarket = (market, marketBitmarks) => {
             let issuer = (marketBitmarks.users || []).find((user) => user.id === asset.creator_id);
             asset.registrant = issuer ? issuer.account_number : null;
             asset.bitmarks.push(bitmark);
+            asset.bitmarks.sort((a, b) => {
+              if (!a || !a.created_at) { return 1; }
+              if (!b || !b.created_at) { return 1; }
+              return moment(a.created_at).toDate() > moment(b.created_at).toDate();
+            });
           }
         });
         marketAssets.push(asset);
