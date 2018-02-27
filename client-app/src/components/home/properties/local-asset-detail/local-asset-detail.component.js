@@ -117,7 +117,9 @@ export class LocalAssetDetailComponent extends React.Component {
                         {item.bitmark.status === 'pending' && <Text style={assetDetailStyle.bitmarkPending}>PENDING...</Text>}
                       </TouchableOpacity>}
                       {config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={true}>
-                        <Text style={assetDetailStyle.bitmarksRowListingButtonText}>VIEW</Text>
+                        <Text style={[assetDetailStyle.bitmarksRowListingButtonText, {
+                          color: item.bitmark.status !== 'pending' ? '#0060F2' : '#999999'
+                        }]}>{item.bitmark.status !== 'pending' ? 'VIEW' : 'PENDING'}</Text>
                       </TouchableOpacity>}
                     </TouchableOpacity>);
                   }}

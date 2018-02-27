@@ -169,8 +169,8 @@ export class LocalAddPropertyComponent extends React.Component {
     this.doInputQuantity = this.doInputQuantity.bind(this);
 
     this.state = {
-      // step: Steps.input_file,
-      step: Steps.input_info,
+      step: Steps.input_file,
+      // step: Steps.input_info,
       existingAsset: false,
       // metadataList: [],
       metadataList: [{ key: 0, label: '', value: '' }],

@@ -151,16 +151,16 @@ export class AssetsComponent extends React.Component {
                   {!!item.asset.market && <Image style={assetsStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + item.asset.asset_id }} />}
                   <View style={assetsStyle.assetBitmarkTitle}>
                     <Text style={assetsStyle.assetBitmarkPending}>{item.asset.totalPending === 0 ? '' : 'PENDING...'}</Text>
-                    <Text style={assetsStyle.assetBitmarksNumber}>{(item.asset.totalPending > 0 ? (item.asset.totalPending + '/') : '') + item.asset.bitmarks.length}</Text>
+                    <Text style={[assetsStyle.assetBitmarksNumber, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]}>{(item.asset.totalPending > 0 ? (item.asset.totalPending + '/') : '') + item.asset.bitmarks.length}</Text>
                     <Image style={assetsStyle.assetBitmarksDetail} source={item.asset.totalPending > 0 ? require('./../../../../assets/imgs/next-icon.png') : require('./../../../../assets/imgs/next-icon-blue.png')} />
                     <Image style={assetsStyle.assetBitmarksDetail} source={item.asset.totalPending > 0 ? require('./../../../../assets/imgs/next-icon.png') : require('./../../../../assets/imgs/next-icon-blue.png')} />
                   </View>
                   <View style={assetsStyle.assetInfoArea}>
-                    <Text style={assetsStyle.assetName} numberOfLines={1}>{item.asset.name}</Text>
+                    <Text style={[assetsStyle.assetName, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
-                      <Text style={assetsStyle.assetCreatorBound}>[</Text>
-                      <Text style={assetsStyle.assetCreator} numberOfLines={1}>{item.asset.registrant}</Text>
-                      <Text style={assetsStyle.assetCreatorBound}>]</Text>
+                      <Text style={[assetsStyle.assetCreatorBound, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]}>[</Text>
+                      <Text style={[assetsStyle.assetCreator, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.registrant}</Text>
+                      <Text style={[assetsStyle.assetCreatorBound, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]}>]</Text>
                     </View>
                   </View>
                 </TouchableOpacity>)
