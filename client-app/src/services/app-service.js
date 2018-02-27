@@ -30,8 +30,14 @@ const createNewUser = async () => {
   return userInfo;
 };
 
-const createSignatureData = async (touchFaceIdMessage) => {
+const createSignatureData = async (touchFaceIdMessage, newSession) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
+  if (newSession) {
+    let sessionId = await CommonService.startFaceTouceSessionId(touchFaceIdMessage);
+    if (!sessionId) {
+      return null;
+    }
+  }
   let signatureData = await CommonService.createSignatureData(touchFaceIdMessage);
   if (!signatureData) {
     return null;
