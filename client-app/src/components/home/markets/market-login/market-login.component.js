@@ -41,6 +41,9 @@ export class MarketLoginComponent extends React.Component {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
       AppService.createSignatureData('Please sign to pair the bitmark account with market.').then(data => {
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+        if (!data) {
+          this.props.navigation.goBack();
+        }
         this.webViewRef.postMessage(JSON.stringify(data));
       }).catch(error => {
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);

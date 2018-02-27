@@ -33,6 +33,9 @@ const createNewUser = async () => {
 const createSignatureData = async (touchFaceIdMessage) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let signatureData = await CommonService.createSignatureData(touchFaceIdMessage);
+  if (!signatureData) {
+    return null;
+  }
   signatureData.account_number = userInfo.bitmarkAccountNumber;
   return signatureData;
 };
@@ -75,6 +78,9 @@ const doPairMarketAccount = async (token, market) => {
 const doCheckPairingStatus = async (market) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let signatureData = await CommonService.createSignatureData('Please sign to pair the bitmark account with market.');
+  if (!signatureData) {
+    return userInfo;
+  }
   let marketAccountInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   if (!userInfo.markets) {
     userInfo.markets = {};
