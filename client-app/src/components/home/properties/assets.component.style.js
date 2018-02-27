@@ -132,18 +132,18 @@ export default StyleSheet.create({
   assetName: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 12,
-    lineHeight: 14,
+    fontSize: 14,
+    lineHeight: 16,
     width: '100%',
   },
   assetCreator: {
     fontFamily: 'Avenir Light',
     fontWeight: '500',
-    fontSize: 12,
-    lineHeight: 14,
-    width: '100%',
+    fontSize: 14,
+    lineHeight: 16,
     marginTop: 10,
     marginBottom: 10,
+    width: convertWidth(350),
   },
   assetBitmarkTitle: {
     height: 30,
@@ -157,7 +157,7 @@ export default StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: '#999999',
-    width: convertWidth(280),
+    width: convertWidth(320),
     marginLeft: 10,
   },
   assetBitmarksNumber: {
