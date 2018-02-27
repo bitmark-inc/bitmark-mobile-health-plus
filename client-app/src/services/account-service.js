@@ -143,7 +143,6 @@ const pairtMarketAccounut = async (localBitmarkAccountNumber, token, market) => 
   }
   let signatures = await BitmarkSDK.rickySignMessage([token], sessionId);
   let user = await requestPair(signatures[0]);
-  await CommonService.endNewFaceTouceSessionId();
   return user;
 };
 
