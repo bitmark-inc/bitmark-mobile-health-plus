@@ -195,6 +195,7 @@ export class LocalAddPropertyComponent extends React.Component {
       title: '',
       takePhotoButtonTitle: '',
       mediaType: 'mixed',
+      noData: true,
     };
     ImagePicker.showImagePicker(options, (response) => {
       if (response.error || response.didCancel) {
