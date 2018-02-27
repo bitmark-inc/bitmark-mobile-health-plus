@@ -17,6 +17,7 @@ export default StyleSheet.create({
     width: convertWidth(70),
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    height: '100%'
   },
   headerLeftIcon: {
     marginLeft: convertWidth(20),
@@ -28,6 +29,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     maxWidth: convertWidth(375) - convertWidth(140),
+    height: '100%'
   },
   headerTitle: {
     textAlign: 'center',
@@ -40,6 +42,7 @@ export default StyleSheet.create({
     width: convertWidth(70),
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    height: '100%'
   },
   headerRightText: {
     fontFamily: 'Avenir Light',
