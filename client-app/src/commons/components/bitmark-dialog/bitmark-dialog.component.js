@@ -12,17 +12,17 @@ export class BitmarkDialogComponent extends React.Component {
   render() {
     return (
       <View style={[dialogStyles.dialogBody, this.props.style]}>
-        <TouchableWithoutFeedback onPress={() => {
+        {/* <TouchableWithoutFeedback onPress={() => {
           if (this.props.close) { this.props.close(); }
-        }}>
-          <View style={[dialogStyles.dialogBodyContent]}>
-            <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}>
-              <View style={[dialogStyles.dialogContent, this.props.dialogStyle]}>
-                {this.props.children}
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
+        }}> */}
+        {/* <View style={[dialogStyles.dialogBodyContent]}> */}
+        {/* <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}> */}
+        <View style={[dialogStyles.dialogContent, this.props.dialogStyle]}>
+          {this.props.children}
+        </View>
+        {/* </TouchableWithoutFeedback> */}
+        {/* </View> */}
+        {/* </TouchableWithoutFeedback> */}
       </View>
     );
   }
