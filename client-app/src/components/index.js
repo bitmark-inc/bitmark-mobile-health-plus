@@ -28,6 +28,8 @@ class MainComponent extends Component {
 
     this.handleDeppLink = this.handleDeppLink.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
+    this.handerProcessingEvent = this.handerProcessingEvent.bind(this);
+    this.handerSumittinggEvent = this.handerSumittinggEvent.bind(this);
 
     this.state = {
       user: null,
@@ -46,16 +48,23 @@ class MainComponent extends Component {
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, (processing) => this.setState({ processing }));
-    EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, (submitting) => this.setState({ submitting }));
+    EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
+    EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.addEventListener('change', this.handleAppStateChange);
   }
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING);
-    EventEmiterService.remove(EventEmiterService.events.APP_SUBMITTING);
+    EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
+    EventEmiterService.remove(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
+  handerProcessingEvent(processing) {
+    this.setState({ processing });
+  }
+  handerSumittinggEvent(submitting) {
+    this.setState({ submitting });
   }
 
   handleDeppLink(event) {
