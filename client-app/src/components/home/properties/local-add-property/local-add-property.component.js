@@ -381,10 +381,9 @@ export class LocalAddPropertyComponent extends React.Component {
                 </View>
                 <Text style={localAddPropertyStyle.assetInfoLabel}>METADATA</Text>
                 <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
-                <TextInput
+                {!this.state.existingAsset && <TextInput
                   autoCorrect={false}
                   style={[localAddPropertyStyle.assetNameInput, {
-                    fontWeight: this.state.existingAsset ? '900' : '300',
                     color: this.state.existingAsset ? '#C2C2C2' : 'black',
                     borderBottomColor: this.stateNameError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
                   }]} placeholder="64-CHARACTER MAX"
@@ -394,7 +393,10 @@ export class LocalAddPropertyComponent extends React.Component {
                   editable={!this.state.existingAsset}
                   returnKeyType="done"
                   returnKeyLabel="Done"
-                />
+                />}
+                {this.state.existingAsset && <View style={localAddPropertyStyle.existAssetName}>
+                  <Text style={[localAddPropertyStyle.existAssetNameText]}>{this.state.assetName}</Text>
+                </View>}
                 {!!this.state.assetNameError && <Text style={localAddPropertyStyle.assetNameInputError}>{this.state.assetNameError}</Text>}
 
                 <Text style={localAddPropertyStyle.metadataLabel}>OPTIONAL PROPERTY METADATA (2048-BYTE LIMIT)</Text>
@@ -406,7 +408,7 @@ export class LocalAddPropertyComponent extends React.Component {
                       return (
                         <View style={localAddPropertyStyle.metadataField}>
                           <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, {
-                            borderBottomColor: item.labelError ? '#FF003C' : '#0060F2',
+                            borderBottomColor: item.labelError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2'),
                           }]}
                             disabled={this.state.existingAsset}
                             onPress={() => {
@@ -414,13 +416,13 @@ export class LocalAddPropertyComponent extends React.Component {
                             }}
                           >
                             <Text style={[localAddPropertyStyle.metadataFieldLabel, {
-                              color: (item.label && !this.state.existingAsset) ? 'black' : '#C2C2C2'
+                              color: (item.label && !this.state.existingAsset) ? 'black' : '#C2C2C2',
                             }]}
                               numberOfLines={1}
                             > {item.label || 'LABEL'} </Text>
                           </TouchableOpacity>
                           <TouchableOpacity style={[localAddPropertyStyle.metadataFieldButton, {
-                            borderBottomColor: item.valueError ? '#FF003C' : '#0060F2',
+                            borderBottomColor: item.valueError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2'),
                           }]}
                             disabled={this.state.existingAsset}
                             onPress={() => {
@@ -428,7 +430,7 @@ export class LocalAddPropertyComponent extends React.Component {
                             }}
                           >
                             <Text style={[localAddPropertyStyle.metadataFieldValue, {
-                              color: (item.value && !this.state.existingAsset) ? 'black' : '#C2C2C2'
+                              color: (item.value && !this.state.existingAsset) ? 'black' : '#C2C2C2',
                             }]}
                               numberOfLines={1}
                             > {item.value || 'DESCRIPTION'} </Text>
