@@ -149,6 +149,11 @@ const getBitmarks = (loaclBitmarkAccountNumber) => {
               asset.bitmarks.push(bitmark);
             }
           });
+          asset.bitmarks.sort((a, b) => {
+            if (!a || !a.created_at) { return 1; }
+            if (!b || !b.created_at) { return 1; }
+            return moment(a.created_at).toDate() > moment(b.created_at).toDate();
+          });
           localAssets.push(asset);
         });
       }
