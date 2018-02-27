@@ -383,6 +383,7 @@ export class LocalAddPropertyComponent extends React.Component {
                 <TextInput
                   autoCorrect={false}
                   style={[localAddPropertyStyle.assetNameInput, {
+                    fontWeight: this.state.existingAsset ? '900' : '300',
                     color: this.state.existingAsset ? '#C2C2C2' : 'black',
                     borderBottomColor: this.stateNameError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
                   }]} placeholder="64-CHARACTER MAX"
