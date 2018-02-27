@@ -471,7 +471,7 @@ export class LocalAddPropertyComponent extends React.Component {
                 onPress={this.register}
                 disabled={!this.state.canIssue}
               >
-                <Text style={localAddPropertyStyle.issueButtonText}>ISSUE</Text>
+                <Text style={[localAddPropertyStyle.issueButtonText, { color: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}>ISSUE</Text>
               </TouchableOpacity>}
             </View>
           </ScrollView>
