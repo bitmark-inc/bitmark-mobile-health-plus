@@ -1,8 +1,10 @@
 import { StyleSheet, Platform } from 'react-native';
 import {
   ios,
-  android // TODO
+  android, // TODO
+  config
 } from './../../configs';
+import { convertWidth } from '../../utils';
 
 let constant = Platform.select({
   ios: ios.constant,
@@ -34,7 +36,7 @@ export default StyleSheet.create({
   },
 
   bottomTabButton: {
-    width: 84,
+    width: convertWidth(config.disabel_markets ? 180 : 84),
     flexDirection: 'column',
     alignItems: "center",
   },

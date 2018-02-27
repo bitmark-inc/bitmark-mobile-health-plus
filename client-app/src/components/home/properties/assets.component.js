@@ -100,14 +100,14 @@ export class AssetsComponent extends React.Component {
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.local ? '#0060F2' : 'white' }]}></View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.market)}>
+          {!config.disabel_markets && <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.market)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={assetsStyle.subTabButtonTextArea}>
                 <Text style={assetsStyle.subTabButtonText}>{SubTabs.market} ({this.state.data.marketAssets.length})</Text>
               </View>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.market ? '#0060F2' : 'white' }]}></View>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>}
           <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.global)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={assetsStyle.subTabButtonTextArea}>
@@ -123,7 +123,7 @@ export class AssetsComponent extends React.Component {
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'YOu DO not owned any property currently YET.'.toUpperCase()}
               </Text>}
-              {(this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
+              {(!config.disabel_markets && this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {(config.disabel_markets ? 'Coming soon...' : 'YOu have not paired any markets.').toUpperCase()}
               </Text>}
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>

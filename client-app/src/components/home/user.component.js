@@ -12,6 +12,7 @@ import { AssetsComponent } from './properties';
 import { AppService } from "./../../services";
 
 import userStyle from './user.component.style';
+import { config } from '../../configs';
 
 const MainTabs = {
   properties: 'Properties',
@@ -65,12 +66,12 @@ export class UserComponent extends React.Component {
               : require('./../../../assets/imgs/properties-icon-disable.png')} />
             <Text style={[userStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.properties ? '#0060F2' : '#999999' }]}>{MainTabs.properties}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.markets })}>
+          {!config.disabel_markets && <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.markets })}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.markets
               ? require('./../../../assets/imgs/markets-icon-enable.png')
               : require('./../../../assets/imgs/markets-icon-disable.png')} />
             <Text style={[userStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.markets ? '#0060F2' : '#999999' }]}>{MainTabs.markets}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.account })}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.account
               ? require('./../../../assets/imgs/account-icon-enable.png')

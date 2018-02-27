@@ -28,7 +28,7 @@ export class AccountDetailComponent extends React.Component {
     super(props);
     this.switchSubtab = this.switchSubtab.bind(this);
     this.state = {
-      subtab: SubTabs.balance,
+      subtab: config.disabel_markets ? SubTabs.settings : SubTabs.balance,
       accountNumber: '',
       markets: {},
       copyText: 'COPY',
@@ -70,7 +70,7 @@ export class AccountDetailComponent extends React.Component {
           <Text style={defaultStyle.headerTitle}>Account</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
-        <View style={accountStyle.subTabArea}>
+        {!config.disabel_markets && <View style={accountStyle.subTabArea}>
           <TouchableOpacity style={accountStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.balance)}>
             <View style={accountStyle.subTabButtonArea}>
               <View style={accountStyle.subTabButtonTextArea}>
@@ -87,7 +87,7 @@ export class AccountDetailComponent extends React.Component {
               <View style={[accountStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.settings ? '#0060F2' : 'white' }]}></View>
             </View>
           </TouchableOpacity>
-        </View>
+        </View>}
         <ScrollView style={[accountStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
           {this.state.subtab === SubTabs.balance && !config.disabel_markets && this.state.markets && this.state.markets.totemic && this.state.markets.totemic.account_number &&
             <View style={accountStyle.contentSubTab}>

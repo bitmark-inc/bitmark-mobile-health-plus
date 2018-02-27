@@ -1,7 +1,8 @@
 import { StyleSheet, Platform, Dimensions } from 'react-native';
 import {
   ios,
-  android
+  android,
+  config
 } from './../../../configs';
 import { convertWidth } from '../../../utils/index';
 
@@ -34,7 +35,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   subTabButton: {
-    width: '33.3%',
+    width: config.disabel_markets ? '50%' : '33.3%',
     height: '100%',
     flexDirection: 'row',
     alignItems: 'center',

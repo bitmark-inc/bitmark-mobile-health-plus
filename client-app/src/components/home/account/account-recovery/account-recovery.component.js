@@ -86,9 +86,6 @@ RecoveryPhraseComponent.propTypes = {
 class WriteDownRecoveryPhraseComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      smallerList: [], biggerList: []
-    };
     let userInfo = curretnUser;
     let smallerList = [];
     let biggerList = [];
