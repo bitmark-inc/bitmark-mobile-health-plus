@@ -98,7 +98,10 @@ class MainComponent extends Component {
         {!!this.state.processing && <DefaultIndicatorComponent />}
         {!!this.state.submitting && <BitmarkIndicatorComponent
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
-        {!this.state.processing && !this.state.processing && <DisplayedComponent style={{ borderWidth: 1 }} screenProps={{
+        <View style={{
+          flex: 1,
+          display: (!this.state.processing && !this.state.processing) ? 'flex' : 'none',
+        }}><DisplayedComponent screenProps={{
           rootNavigation: this.props.navigation,
           refreshScaling: () => {
             if (this.appScaler) {
@@ -106,7 +109,8 @@ class MainComponent extends Component {
             }
           }
         }}>
-        </DisplayedComponent>}
+          </DisplayedComponent>
+        </View>
       </View>
     )
   }
