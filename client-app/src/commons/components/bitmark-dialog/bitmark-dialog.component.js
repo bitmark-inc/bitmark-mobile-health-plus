@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View,
-  TouchableWithoutFeedback
+  // TouchableWithoutFeedback
 } from 'react-native';
 
 import dialogStyles from './bitmark-dialog.component.style';
