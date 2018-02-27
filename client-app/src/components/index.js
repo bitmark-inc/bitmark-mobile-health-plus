@@ -53,6 +53,7 @@ class MainComponent extends Component {
   }
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING);
+    EventEmiterService.remove(EventEmiterService.events.APP_SUBMITTING);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
@@ -94,8 +95,8 @@ class MainComponent extends Component {
     }
     return (
       <View style={{ flex: 1 }}>
-        {this.state.processing && <DefaultIndicatorComponent />}
-        {this.state.submitting && <BitmarkIndicatorComponent
+        {!!this.state.processing && <DefaultIndicatorComponent />}
+        {!!this.state.submitting && <BitmarkIndicatorComponent
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
         <DisplayedComponent style={{ borderWidth: 1 }} screenProps={{
           rootNavigation: this.props.navigation,
