@@ -244,7 +244,11 @@ export class LocalAddPropertyComponent extends React.Component {
 
   register() {
     EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: true, title: 'Submitting your request to the network for confirmation…', message: '' });
-    AppService.issueFile(this.state.filepath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity)).then(() => {
+    AppService.issueFile(this.state.filepath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity)).then((data) => {
+      if (!data) {
+        EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
+        return;
+      }
       EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.' });
       setTimeout(() => {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);

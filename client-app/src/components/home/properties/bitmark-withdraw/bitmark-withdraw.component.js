@@ -53,7 +53,9 @@ export class BitmarkWithdrawComponent extends React.Component {
     AppService.doWithdrawBitmark(this.state.bitmark).then((data) => {
       console.log('doWithdrawBitmark success :', data);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
-      this.withdrawSuccess();
+      if (data) {
+        this.withdrawSuccess();
+      }
     }).catch(error => {
       console.error('doWithdrawBitmark error:', error);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);

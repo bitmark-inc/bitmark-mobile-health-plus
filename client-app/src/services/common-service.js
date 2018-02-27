@@ -73,10 +73,16 @@ const setFaceTouceSessionId = (sessionId) => {
 const doTryRickSignMessage = async (messages, touchFaceIdMessage) => {
   if (!currentFaceTouceSessionId) {
     await startFaceTouceSessionId(touchFaceIdMessage);
+    if (!currentFaceTouceSessionId) {
+      return null;
+    }
   }
   let signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
   if (!signatures) {
     await startFaceTouceSessionId(touchFaceIdMessage);
+    if (!currentFaceTouceSessionId) {
+      return null;
+    }
     signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
   }
   return signatures;

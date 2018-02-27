@@ -218,9 +218,11 @@ export class NewAccountComponent extends React.Component {
     const createBitmarkAccount = () => {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
       EventEmiterService
-      AppService.createNewUser().then(() => {
+      AppService.createNewUser().then((userInfo) => {
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
-        this.props.navigation.navigate('FaceTouchId');
+        if (userInfo) {
+          this.props.navigation.navigate('FaceTouchId');
+        }
       }).catch((error) => {
         console.log('createNewUser error :', error);
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);

@@ -3,16 +3,6 @@ import {
 } from 'react-native';
 
 export default StyleSheet.create({
-  body: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    alignContent: 'center',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    zIndex: 100,
-  },
   dialogBody: {
     flex: 1,
     alignItems: 'center',
@@ -25,6 +15,14 @@ export default StyleSheet.create({
     width: '100%',
     height: '100%',
     zIndex: 100,
+  },
+  dialogBodyContent: {
+    alignItems: 'center',
+    alignContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
   },
   dialogContent: {
     width: 270,

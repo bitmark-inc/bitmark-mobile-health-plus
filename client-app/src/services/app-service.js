@@ -22,6 +22,9 @@ const getCurrentUser = async () => {
 
 const createNewUser = async () => {
   let userInfo = await AccountService.createNewAccount();
+  if (!userInfo) {
+    return null;
+  }
   delete userInfo.pharse24Words;
   await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
   return userInfo;
@@ -36,6 +39,9 @@ const createSignatureData = async (touchFaceIdMessage) => {
 
 const doLogin = async (pharse24Words) => {
   let userInfo = await AccountService.accessBy24Words(pharse24Words);
+  if (!userInfo) {
+    return null;
+  }
   delete userInfo.pharse24Words;
   await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
   return userInfo;
@@ -49,6 +55,9 @@ const doLogout = async () => {
 const doPairMarketAccount = async (token, market) => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let marketAccountInfo = await AccountService.pairtMarketAccounut(userInfo.bitmarkAccountNumber, token, market);
+  if (marketAccountInfo) {
+    return null;
+  }
 
   if (!userInfo.markets) {
     userInfo.markets = {};
@@ -85,6 +94,9 @@ const initMarketSession = async (market, userInfo) => {
   if (!marketInfo) {
     let timestamp = moment().toDate().getTime().toString();
     let signatures = await CommonService.doTryRickSignMessage([timestamp], 'Please sign to pair the bitmark account with market.');
+    if (!signatures) {
+      return null;
+    }
     marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
   }
   if (marketInfo) {
@@ -106,16 +118,23 @@ const initMarketSession = async (market, userInfo) => {
 const getUserBitmark = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   let marketAssets = [];
+  let localAssets = [];
   if (!config.disabel_markets) {
     for (let market in userInfo.markets) {
       let result = await initMarketSession(market, userInfo);
+      if (result === null) {
+        return {
+          localAssets,
+          marketAssets
+        };
+      }
       if (result) {
         let tempBitmarks = await MarketService.getBitmarks(market, userInfo.markets[market].id);
         marketAssets = marketAssets.concat(tempBitmarks || []);
       }
     }
   }
-  let localAssets = await BitmarkService.getBitmarks(userInfo.bitmarkAccountNumber);
+  localAssets = await BitmarkService.getBitmarks(userInfo.bitmarkAccountNumber);
   return {
     localAssets,
     marketAssets
@@ -144,7 +163,10 @@ const checkPairingStatusAllMarket = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
   if (!config.disabel_markets) {
     for (let market in config.markets) {
-      await initMarketSession(market, userInfo);
+      let result = await initMarketSession(market, userInfo);
+      if (result === null) {
+        return userInfo;
+      }
     }
   }
   return userInfo;
@@ -152,25 +174,6 @@ const checkPairingStatusAllMarket = async () => {
 
 const doOpenApp = async () => {
   let userInfo = await CommonService.getLocalData(CommonService.app_local_data_key);
-  // if (!config.disabel_markets && userInfo && userInfo.bitmarkAccountNumber) {
-  //   let marketInfos = {};
-  //   for (let market in config.markets) {
-  //     let timestamp = moment().toDate().getTime().toString();
-  //     let signatures = await CommonService.doTryRickSignMessage([timestamp],'Please sign to pair the bitmark account with market.');
-  //     let marketInfo = await AccountService.doCheckPairingStatus(market, userInfo.bitmarkAccountNumber, timestamp, signatures[0]);
-  //     if (marketInfo) {
-  //       marketInfos[market] = {
-  //         id: marketInfo.id,
-  //         name: marketInfo.name,
-  //         email: marketInfo.email,
-  //         account_number: marketInfo.account_number,
-  //       }
-  //     }
-  //   }
-  //   userInfo.markets = marketInfos;
-  //   await CommonService.setLocalData(CommonService.app_local_data_key, userInfo);
-  //   CommonService.endNewFaceTouceSessionId();
-  // }
   return userInfo;
 };
 

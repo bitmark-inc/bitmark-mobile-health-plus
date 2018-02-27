@@ -28,7 +28,7 @@ const BitmarkSDK = {
   requestSession: (network, message) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.requestSession(network, message, (ok, sessionId) => {
-        if (ok && sessionId) {
+        if (ok) {
           resolve(sessionId);
         } else {
           reject(new Error('Can not reuest session!'));

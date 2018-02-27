@@ -32,12 +32,15 @@ export class MarketPairComponent extends React.Component {
     let market = qrCodeString.substring(0, qrCodeString.indexOf(':'));
     let token = qrCodeString.substring(qrCodeString.indexOf(':') + 1);
     EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.doPairMarketAccount(token, market).then(() => {
+    AppService.doPairMarketAccount(token, market).then(userInfo => {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+      this.props.navigation.goBack();
+      if (!userInfo) {
+        return;
+      }
       if (this.props.navigation.state.params.reloadMarketsScreen) {
         this.props.navigation.state.params.reloadMarketsScreen();
       }
-      this.props.navigation.goBack();
     }).catch(error => {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       console.log('doPairMarketAccount error :', error);

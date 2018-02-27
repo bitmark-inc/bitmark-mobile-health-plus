@@ -11,17 +11,19 @@ import dialogStyles from './bitmark-dialog.component.style';
 export class BitmarkDialogComponent extends React.Component {
   render() {
     return (
-      <TouchableWithoutFeedback style={dialogStyles.body} onPress={() => {
-        if (this.props.close) { this.props.close(); }
-      }}>
-        <View style={[dialogStyles.dialogBody, this.props.style]}>
-          <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}>
-            <View style={[dialogStyles.dialogContent, this.props.dialogStyle]}>
-              {this.props.children}
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
+      <View style={[dialogStyles.dialogBody, this.props.style]}>
+        <TouchableWithoutFeedback onPress={() => {
+          if (this.props.close) { this.props.close(); }
+        }}>
+          <View style={[dialogStyles.dialogBodyContent]}>
+            <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}>
+              <View style={[dialogStyles.dialogContent, this.props.dialogStyle]}>
+                {this.props.children}
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
     );
   }
 }

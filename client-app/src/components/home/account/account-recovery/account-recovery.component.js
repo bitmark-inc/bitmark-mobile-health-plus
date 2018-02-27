@@ -28,8 +28,10 @@ class RecoveryPhraseComponent extends React.Component {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
       AccountService.getCurrentAccount(isSignOut ? 'Please sign to remove access.' : 'Please sign to access the bitmark recovery phrases.').then((user) => {
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
-        curretnUser = user;
-        this.props.navigation.navigate('WriteDownRecoveryPhrase');
+        if (user) {
+          curretnUser = user;
+          this.props.navigation.navigate('WriteDownRecoveryPhrase');
+        }
       }).catch(error => {
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         console.log('recoveryPhrase error :', error);

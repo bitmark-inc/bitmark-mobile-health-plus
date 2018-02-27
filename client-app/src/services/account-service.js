@@ -47,6 +47,9 @@ const doCheckPairingStatus = (market, localBitmarkAccountNumber, timestamp, sign
 // ================================================================================================
 const createNewAccount = async () => {
   let sessionId = await BitmarkSDK.newAccount(config.bitmark_network);
+  if (!sessionId) {
+    return null;
+  }
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
   CommonService.setFaceTouceSessionId(sessionId);
   return userInfo;
@@ -54,6 +57,9 @@ const createNewAccount = async () => {
 
 const getCurrentAccount = async (message) => {
   let sessionId = await CommonService.startFaceTouceSessionId(message);
+  if (!sessionId) {
+    return null;
+  }
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
   await CommonService.endNewFaceTouceSessionId();
   return userInfo;
@@ -83,6 +89,9 @@ const checkPairingStatusAllMarket = async (sessionId, localBitmarkAccountNumber)
 
 const accessBy24Words = async (pharse24Words) => {
   let sessionId = await BitmarkSDK.newAccountFrom24Words(pharse24Words);
+  if (!sessionId) {
+    return null;
+  }
   let userInfo = await BitmarkSDK.accountInfo(sessionId);
   let marketInfos = await checkPairingStatusAllMarket(sessionId, userInfo.bitmarkAccountNumber);
   CommonService.setFaceTouceSessionId(sessionId);
@@ -129,6 +138,9 @@ const pairtMarketAccounut = async (localBitmarkAccountNumber, token, market) => 
   }
 
   let sessionId = await CommonService.startFaceTouceSessionId('Please sign to pair the bitmark account with market.');
+  if (!sessionId) {
+    return null;
+  }
   let signatures = await BitmarkSDK.rickySignMessage([token], sessionId);
   let user = await requestPair(signatures[0]);
   await CommonService.endNewFaceTouceSessionId();
