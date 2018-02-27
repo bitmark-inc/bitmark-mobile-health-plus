@@ -31,7 +31,7 @@ class MainComponent extends Component {
 
     this.state = {
       user: null,
-      processing: true,
+      processing: false,
       submitting: null,
     };
     this.appState = AppState.currentState;
