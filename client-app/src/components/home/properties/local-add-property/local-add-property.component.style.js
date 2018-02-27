@@ -267,7 +267,6 @@ export default StyleSheet.create({
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 16,
-    color: '#C1C1C1',
     marginLeft: convertWidth(20),
     width: convertWidth(332),
     marginTop: 12,
