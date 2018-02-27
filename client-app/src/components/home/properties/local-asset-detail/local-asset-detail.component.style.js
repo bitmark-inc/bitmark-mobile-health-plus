@@ -118,9 +118,9 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     fontWeight: '900',
-    height: 25,
   },
   metadataItemValue: {
+    marginTop: 3,
     fontFamily: 'Avenir Black',
     fontSize: 14,
     lineHeight: 16,
@@ -133,7 +133,7 @@ export default StyleSheet.create({
     lineHeight: 16,
     fontWeight: '900',
     marginLeft: convertWidth(20),
-    marginTop: 29,
+    marginTop: 30,
     height: 25,
   },
   bitmarksArea: {

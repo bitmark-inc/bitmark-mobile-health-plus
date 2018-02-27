@@ -26,8 +26,10 @@ export class LocalAssetDetailComponent extends React.Component {
       bitmarks.push({ key: index, bitmark });
     });
     let metadata = [];
-    for (let key in asset.metadata) {
-      metadata.push({ key, value: asset.metadata[key] });
+    let index = 0;
+    for (let label in asset.metadata) {
+      metadata.push({ key: index, label, value: asset.metadata[label] });
+      index++;
     }
     this.state = {
       asset,
@@ -84,8 +86,8 @@ export class LocalAssetDetailComponent extends React.Component {
                 extraData={this.state}
                 data={this.state.metadata || []}
                 renderItem={({ item }) => {
-                  return (<View style={assetDetailStyle.metadataItem}>
-                    <Text style={assetDetailStyle.metadataItemLabel}>{item.key}:</Text>
+                  return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
+                    <Text style={assetDetailStyle.metadataItemLabel}>{item.label}:</Text>
                     <Text style={assetDetailStyle.metadataItemValue}>{item.value}</Text>
                   </View>);
                 }}
