@@ -62,7 +62,7 @@ export class LocalPropertyDetailComponent extends React.Component {
           <ScrollView style={propertyDetailStyle.content}>
             {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
               <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
-                Clipboard.setString(this.state.asset.asset_id);
+                Clipboard.setString(this.state.bitmark.bitmark_id);
                 this.setState({ copied: true });
                 setTimeout(() => { this.setState({ copied: false }) }, 1000);
               }}>

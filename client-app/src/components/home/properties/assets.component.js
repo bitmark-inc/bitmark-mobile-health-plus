@@ -157,7 +157,11 @@ export class AssetsComponent extends React.Component {
                   </View>
                   <View style={assetsStyle.assetInfoArea}>
                     <Text style={assetsStyle.assetName} numberOfLines={1}>{item.asset.name}</Text>
-                    <Text style={assetsStyle.assetCreator} numberOfLines={1}>{item.asset.registrant}</Text>
+                    <View style={assetsStyle.assetCreatorRow}>
+                      <Text style={assetsStyle.assetCreatorBound}>[</Text>
+                      <Text style={assetsStyle.assetCreator} numberOfLines={1}>{item.asset.registrant}</Text>
+                      <Text style={assetsStyle.assetCreatorBound}>]</Text>
+                    </View>
                   </View>
                 </TouchableOpacity>)
               }}

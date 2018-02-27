@@ -15,6 +15,7 @@ import { AppService, EventEmiterService } from './../../../../services';
 
 import localAddPropertyStyle from './local-add-property.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import { convertWidth } from '../../../../utils';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -107,12 +108,12 @@ class MetadataInputComponent extends React.Component {
               flexDirection: 'column',
               marginLeft: '5%',
             }}>
-              <Text style={{ marginBottom: 5, color: '#C9C9C9' }}>OR SELECT FROM BELOW:</Text>
+              <Text style={{ marginBottom: 10, color: '#C9C9C9' }}>OR SELECT FROM BELOW:</Text>
               <FlatList
                 data={this.state.labels}
                 extraData={this.state}
                 renderItem={({ item }) => {
-                  return <TouchableOpacity style={{ marginTop: 5 }} onPress={() => this.onSelecteLabel(item.label)}>
+                  return <TouchableOpacity style={{ padding: 4, marginTop: 3 }} onPress={() => this.onSelecteLabel(item.label)}>
                     <Text style={{ color: '#0060F2' }}>{item.label}</Text>
                   </TouchableOpacity>
                 }}
@@ -125,16 +126,16 @@ class MetadataInputComponent extends React.Component {
             }}>
               <TouchableOpacity style={{
                 padding: 4,
-                width: '30%'
+                width: convertWidth(60)
               }}
                 onPress={this.props.cancel}
               >
                 <Text style={{ fontWeight: '700', color: '#C4C4C4' }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{
-                marginLeft: 20,
+                marginLeft: 5,
                 padding: 4,
-                width: '30%'
+                width: convertWidth(60)
               }}
                 onPress={() => this.props.done(this.state.textInput)}
               >
@@ -168,8 +169,8 @@ export class LocalAddPropertyComponent extends React.Component {
     this.doInputQuantity = this.doInputQuantity.bind(this);
 
     this.state = {
-      step: Steps.input_file,
-      // step: Steps.input_info,
+      // step: Steps.input_file,
+      step: Steps.input_info,
       existingAsset: false,
       // metadataList: [],
       metadataList: [{ key: 0, label: '', value: '' }],
@@ -242,7 +243,6 @@ export class LocalAddPropertyComponent extends React.Component {
   }
 
   register() {
-    EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: true, title: 'Submitting your request to the network for confirmation…', message: '' });
     AppService.issueFile(this.state.filepath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity)).then(() => {
       EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.' });
       setTimeout(() => {
@@ -391,6 +391,8 @@ export class LocalAddPropertyComponent extends React.Component {
                   value={this.state.assetName}
                   numberOfLines={1}
                   editable={!this.state.existingAsset}
+                  returnKeyType="done"
+                  returnKeyLabel="Done"
                 />
                 {!!this.state.assetNameError && <Text style={localAddPropertyStyle.assetNameInputError}>{this.state.assetNameError}</Text>}
 
@@ -452,6 +454,8 @@ export class LocalAddPropertyComponent extends React.Component {
                   }]} placeholder="1 ~ 100"
                   onChangeText={this.doInputQuantity}
                   keyboardType={'numeric'}
+                  returnKeyType="done"
+                  returnKeyLabel="Done"
                 />
                 {!!this.state.quantityError && <Text style={localAddPropertyStyle.quantityInputError}>{this.state.quantityError}</Text>}
 

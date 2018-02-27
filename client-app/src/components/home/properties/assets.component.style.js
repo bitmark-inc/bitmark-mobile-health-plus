@@ -136,14 +136,24 @@ export default StyleSheet.create({
     lineHeight: 16,
     width: '100%',
   },
+  assetCreatorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  assetCreatorBound: {
+    fontFamily: 'Avenir Light',
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 16,
+  },
   assetCreator: {
     fontFamily: 'Avenir Light',
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 16,
-    marginTop: 10,
-    marginBottom: 10,
-    width: convertWidth(350),
+    width: convertWidth(200),
   },
   assetBitmarkTitle: {
     height: 30,

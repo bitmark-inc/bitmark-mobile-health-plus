@@ -5,7 +5,6 @@ import { convertWidth } from './../../../../utils';
 export default StyleSheet.create({
   body: {
     flexDirection: 'column',
-    alignItems: 'center',
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
@@ -40,7 +39,8 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 14,
     lineHeight: 16,
-    marginLeft: 23,
+    marginLeft: convertWidth(20),
+    color: 'gray'
   },
   copyAssetIddButton: {
     width: '100%',
@@ -52,7 +52,7 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 14,
     lineHeight: 16,
-    marginLeft: 23,
+    marginLeft: convertWidth(20),
   },
   copiedAssetIddButtonText: {
     fontFamily: 'Avenir Black',
@@ -61,36 +61,48 @@ export default StyleSheet.create({
     lineHeight: 9,
     fontStyle: 'italic',
     color: '#0060F2',
-    marginLeft: 23,
+    marginLeft: convertWidth(20),
     marginTop: 5,
   },
   bottomImageBar: {
     borderWidth: 2,
     width: 130,
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
   },
   assetName: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 18,
     lineHeight: 21,
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     marginTop: 30,
     height: 29,
+  },
+  assetCreatorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: convertWidth(20),
+    height: 29,
+  },
+  assetCreatorBound: {
+    fontFamily: 'Avenir Light',
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 16,
   },
   assetCreateAt: {
     fontFamily: 'Avenir Light',
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 16,
-    marginLeft: 19,
-    height: 29,
-    width: convertWidth(320),
+    width: convertWidth(150),
   },
   bottomAssetNameBar: {
     borderWidth: 1,
     width: 130,
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
   },
   metadataArea: {
     marginTop: 26,
@@ -99,7 +111,7 @@ export default StyleSheet.create({
   metadataItem: {
     width: convertWidth(340),
     flexDirection: 'column',
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
   },
   metadataItemLabel: {
     fontFamily: 'Avenir Black',
@@ -120,7 +132,7 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     fontWeight: '900',
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     marginTop: 29,
     height: 25,
   },
@@ -130,7 +142,7 @@ export default StyleSheet.create({
   bitmarksHeader: {
     flexDirection: 'row',
     width: convertWidth(340),
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     height: 25,
   },
   bitmarksHeaderLabel: {
@@ -145,7 +157,7 @@ export default StyleSheet.create({
   bitmarksRow: {
     flexDirection: 'row',
     width: convertWidth(340),
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     height: 25,
   },
   bitmarksRowNo: {

@@ -29,7 +29,7 @@ export default StyleSheet.create({
     height: 130,
     width: convertWidth(130),
     resizeMode: 'contain',
-    marginLeft: 19,
+    marginLeft: 20,
     marginTop: 17,
   },
   topButtonsArea: {
@@ -75,7 +75,7 @@ export default StyleSheet.create({
   bottomImageBar: {
     borderWidth: 2,
     width: convertWidth(130),
-    marginLeft: 19,
+    marginLeft: 20,
     marginTop: 26,
   },
   assetName: {
@@ -83,7 +83,7 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 18,
     lineHeight: 21,
-    marginLeft: 19,
+    marginLeft: 20,
     marginTop: 7,
     height: 29,
   },
@@ -92,20 +92,20 @@ export default StyleSheet.create({
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 16,
-    marginLeft: 19,
+    marginLeft: 20,
     height: 29,
   },
   bottomAssetNameBar: {
     borderWidth: 1,
     width: convertWidth(130),
-    marginLeft: 19,
+    marginLeft: 20,
   },
   marketArea: {
     flexDirection: 'column',
   },
   marketLabel: {
     marginTop: 25,
-    marginLeft: 19,
+    marginLeft: 20,
     height: 28,
     fontFamily: 'Avenir Light',
     fontWeight: '800',
@@ -116,7 +116,7 @@ export default StyleSheet.create({
     width: convertWidth(135),
     height: convertWidth(135) * 33 / 102,
     resizeMode: 'contain',
-    marginLeft: 19,
+    marginLeft: 20,
   },
 
   bitmarkLabel: {
@@ -124,7 +124,7 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     fontWeight: '900',
-    marginLeft: 19,
+    marginLeft: 20,
     marginTop: 29,
     height: 25,
   },
@@ -134,7 +134,7 @@ export default StyleSheet.create({
   bitmarksHeader: {
     flexDirection: 'row',
     width: convertWidth(340),
-    marginLeft: 19,
+    marginLeft: 20,
     height: 25,
   },
   bitmarksHeaderLabelNo: {
@@ -161,7 +161,7 @@ export default StyleSheet.create({
   bitmarksRow: {
     flexDirection: 'row',
     width: convertWidth(340),
-    marginLeft: 19,
+    marginLeft: 20,
     height: 25,
   },
   bitmarksRowNo: {

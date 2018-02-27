@@ -113,7 +113,7 @@ export class MarketsComponent extends React.Component {
             fontSize: 16,
             lineHeight: 18,
             color: '#0060F2'
-          }}>{'Comming soon...'.toUpperCase()} </Text>
+          }}>{'Coming soon...'.toUpperCase()} </Text>
         </View>}
         {!config.disabel_markets && <TouchableOpacity style={marketsStyle.marketCardButtonItem} onPress={() => {
           this.props.screenProps.homeNavigation.navigate('MarketPair', {

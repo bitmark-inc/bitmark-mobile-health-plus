@@ -19,7 +19,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
   },
   headerLeftIcon: {
-    marginLeft: 23,
+    marginLeft: convertWidth(20),
     width: 10,
     height: 19,
     resizeMode: 'contain'

@@ -56,7 +56,7 @@ export class LocalAssetDetailComponent extends React.Component {
           </View>
           <ScrollView style={assetDetailStyle.content}>
             {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
-              <TouchableOpacity style={assetDetailStyle.downloadAssetButton}>
+              <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={true}>
                 <Text style={assetDetailStyle.downloadAssetButtonText}>Download Asset</Text>
               </TouchableOpacity>
               <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
@@ -69,8 +69,14 @@ export class LocalAssetDetailComponent extends React.Component {
               </TouchableOpacity>
             </View>}
             <View style={assetDetailStyle.bottomImageBar}></View>
+
             <Text style={assetDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
-            <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>Issued by {this.state.asset.registrant}</Text>
+            <View style={assetDetailStyle.assetCreatorRow}>
+              <Text style={assetDetailStyle.assetCreatorBound}>Issued by [</Text>
+              <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>{this.state.asset.registrant}</Text>
+              <Text style={assetDetailStyle.assetCreatorBound}>]</Text>
+            </View>
+
             <View style={assetDetailStyle.bottomAssetNameBar}></View>
             <View style={assetDetailStyle.metadataArea}>
               <FlatList

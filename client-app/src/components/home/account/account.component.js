@@ -145,7 +145,7 @@ export class AccountDetailComponent extends React.Component {
               fontSize: 16,
               lineHeight: 18,
               color: '#0060F2'
-            }}>{'Comming soon...'.toUpperCase()} </Text>
+            }}>{'Cmming soon...'.toUpperCase()} </Text>
           </View>}
 
           {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>

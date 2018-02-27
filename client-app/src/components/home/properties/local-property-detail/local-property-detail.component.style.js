@@ -5,7 +5,6 @@ import { convertWidth } from './../../../../utils';
 export default StyleSheet.create({
   body: {
     flexDirection: 'column',
-    alignItems: 'center',
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
@@ -29,7 +28,7 @@ export default StyleSheet.create({
     height: 130,
     width: 130,
     resizeMode: 'contain',
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     marginTop: 17,
   },
   topButtonsArea: {
@@ -51,7 +50,7 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 14,
     lineHeight: 16,
-    marginLeft: 23,
+    marginLeft: convertWidth(20),
     marginTop: 13,
   },
   copiedAssetIddButtonText: {
@@ -60,21 +59,21 @@ export default StyleSheet.create({
     fontSize: 8,
     lineHeight: 9,
     color: '#0060F2',
-    marginLeft: 23,
+    marginLeft: convertWidth(20),
     marginTop: 5,
     fontStyle: 'italic'
   },
   bottomImageBar: {
     borderWidth: 2,
     width: 130,
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
   },
   assetName: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 18,
     lineHeight: 21,
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     marginTop: 30,
     height: 29,
   },
@@ -83,14 +82,14 @@ export default StyleSheet.create({
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 16,
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     height: 29,
     width: convertWidth(320),
   },
   bottomAssetNameBar: {
     borderWidth: 1,
     width: 130,
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
   },
 
   provenanceLabel: {
@@ -98,7 +97,7 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     fontWeight: '900',
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     marginTop: 29,
     height: 25,
   },
@@ -107,7 +106,7 @@ export default StyleSheet.create({
   provenancesHeader: {
     flexDirection: 'row',
     width: convertWidth(340),
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     height: 25,
   },
   provenancesHeaderLabel: {
@@ -122,7 +121,7 @@ export default StyleSheet.create({
   provenancesRow: {
     flexDirection: 'row',
     width: convertWidth(340),
-    marginLeft: 19,
+    marginLeft: convertWidth(20),
     height: 25,
   },
   provenancesRowLabel: {
