@@ -52,6 +52,7 @@ class MetadataInputComponent extends React.Component {
     this.state = {
       textInput,
       labels,
+      placeholder: (props.type === 'label') ? 'CREATE NEW LABEL' : 'DESCRIPTION'
     }
   }
 
@@ -84,7 +85,7 @@ class MetadataInputComponent extends React.Component {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{
-            width: '100%', height: this.props.type === 'label' ? 220 : 110,
+            width: '100%', height: this.props.type === 'label' ? 220 : 90,
             flexDirection: 'column',
           }}>
             <TextInput
@@ -94,7 +95,8 @@ class MetadataInputComponent extends React.Component {
                 borderBottomWidth: 1,
                 marginTop: 20, marginBottom: 5, marginLeft: '5%',
                 width: '90%', maxHeight: 50,
-              }} placeholder={(this.props.type === 'label') ? 'CREATE NEW LABEL' : 'DESCRIPTION'}
+                height: 30,
+              }} placeholder={this.state.placeholder}
               multiline={true}
               value={this.state.textInput}
               onChangeText={this.onChangeText}
@@ -127,20 +129,20 @@ class MetadataInputComponent extends React.Component {
             }}>
               <TouchableOpacity style={{
                 padding: 4,
-                width: convertWidth(60)
+                width: convertWidth(80)
               }}
                 onPress={this.props.cancel}
               >
-                <Text style={{ fontWeight: '700', color: '#C4C4C4' }}>Cancel</Text>
+                <Text style={{ fontWeight: '700', textAlign: 'center', color: '#C4C4C4' }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{
                 marginLeft: 5,
                 padding: 4,
-                width: convertWidth(60)
+                width: convertWidth(80)
               }}
                 onPress={() => this.props.done(this.state.textInput)}
               >
-                <Text style={{ fontWeight: '700', color: '#0060F2' }}>Done</Text>
+                <Text style={{ fontWeight: '700', textAlign: 'center', color: '#0060F2' }}>Done</Text>
               </TouchableOpacity>
 
             </View>
@@ -335,8 +337,10 @@ export class LocalAddPropertyComponent extends React.Component {
     quantity = quantity.replace(/[^0-9]/g, '');
     let quantityNumber = parseInt(quantity);
     let quantityError = '';
-    if (isNaN(quantityNumber) || quantityNumber <= 0 || quantityNumber > 100) {
-      quantityError = 'Quantity only accept from 1 to 100';
+    if (isNaN(quantityNumber) || quantityNumber <= 0) {
+      quantityError = 'Minimum quantity of one bitmark is required.';
+    } else if (quantityNumber > 100) {
+      quantityError = 'Maximum quantity of one bitmark is 100';
     }
     this.setState({
       quantity, quantityError,
@@ -368,7 +372,8 @@ export class LocalAddPropertyComponent extends React.Component {
                 <Text style={localAddPropertyStyle.addFileLabel}>Upload Asset</Text>
                 {!!this.state.fileError && <Text style={localAddPropertyStyle.fileInputError}>{this.state.fileError}</Text>}
                 <TouchableOpacity style={localAddPropertyStyle.addFileButton} onPress={this.chooseFile}>
-                  <Text style={localAddPropertyStyle.addFileButtonText}>+ ADD A FILE</Text>
+                  <Image style={localAddPropertyStyle.addFileIcon} source={require('../../../../../assets/imgs/plus-icon.png')} />
+                  <Text style={localAddPropertyStyle.addFileButtonText}>ADD A FILE</Text>
                 </TouchableOpacity>
               </View>}
               {this.state.step === Steps.input_info && <KeyboardAwareScrollView style={localAddPropertyStyle.infoArea} behavior="padding">

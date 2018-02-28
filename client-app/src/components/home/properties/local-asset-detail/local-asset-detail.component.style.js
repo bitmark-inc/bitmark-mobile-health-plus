@@ -12,7 +12,7 @@ export default StyleSheet.create({
   },
   threeDotIcon: {
     width: 20,
-    height: 5,
+    height: 20,
     resizeMode: 'contain',
     marginRight: 15,
   },
@@ -24,8 +24,8 @@ export default StyleSheet.create({
     top: 0,
     right: 0,
     zIndex: 10,
-    width: convertWidth(160),
-    height: 80,
+    width: convertWidth(194),
+    height: 90,
     backgroundColor: '#F5F5F5',
   },
   downloadAssetButton: {
@@ -37,10 +37,9 @@ export default StyleSheet.create({
   downloadAssetButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 14,
-    lineHeight: 16,
+    fontSize: 16,
     marginLeft: convertWidth(20),
-    color: 'gray'
+    color: '#A4B5CD'
   },
   copyAssetIddButton: {
     width: '100%',
@@ -50,9 +49,9 @@ export default StyleSheet.create({
   copyAssetIddButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 14,
-    lineHeight: 16,
+    fontSize: 16,
     marginLeft: convertWidth(20),
+    color: '#0060F2',
   },
   copiedAssetIddButtonText: {
     fontFamily: 'Avenir Black',
@@ -66,7 +65,7 @@ export default StyleSheet.create({
   },
   bottomImageBar: {
     borderWidth: 2,
-    width: 130,
+    width: convertWidth(126),
     marginLeft: convertWidth(20),
   },
   assetName: {
@@ -75,15 +74,15 @@ export default StyleSheet.create({
     fontSize: 18,
     lineHeight: 21,
     marginLeft: convertWidth(20),
-    marginTop: 30,
+    marginTop: 34,
     height: 29,
   },
   assetCreatorRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
     marginBottom: 10,
     marginLeft: convertWidth(20),
+    width: convertWidth(336),
     height: 29,
   },
   assetCreatorBound: {
@@ -97,11 +96,11 @@ export default StyleSheet.create({
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 16,
-    width: convertWidth(150),
+    width: convertWidth(265),
   },
   bottomAssetNameBar: {
     borderWidth: 1,
-    width: 130,
+    width: convertWidth(126),
     marginLeft: convertWidth(20),
   },
   metadataArea: {

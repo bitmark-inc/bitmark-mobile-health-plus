@@ -23,10 +23,10 @@ export class WelcomeComponent extends React.Component {
             }}>
               <Text style={[welcomeComponentStyle.welcomeButtonText,]}>{'OPEN NEW ACCOUNT'.toUpperCase()}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[welcomeComponentStyle.welcomeButton]} onPress={() => {
+            <TouchableOpacity style={[welcomeComponentStyle.welcomeButton, { backgroundColor: 'white' }]} onPress={() => {
               this.props.navigation.navigate('SignIn');
             }}>
-              <Text style={[welcomeComponentStyle.welcomeButtonText,]}>{'Sign in Existing Account'.toUpperCase()}</Text>
+              <Text style={[welcomeComponentStyle.welcomeButtonText, { color: '#0060F2' }]}>{'RECOVER YOUR ACCOUNT'.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
         </View>
