@@ -1,0 +1,9 @@
+lane :tester do 
+    git_pull
+    increment_build_number
+    sync_code_signing(type:"adhoc")
+    build_app(scheme: "Bitmark",
+            workspace: "ios/Bitmark.xcworkspace",
+            include_bitcode: true)
+    hockey(api_token: "[d5a9df285c894aad95a68c723e9f1844]")
+end
