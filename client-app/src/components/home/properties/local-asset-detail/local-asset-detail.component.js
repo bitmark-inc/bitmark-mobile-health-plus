@@ -59,14 +59,14 @@ export class LocalAssetDetailComponent extends React.Component {
           <ScrollView style={assetDetailStyle.content}>
             {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
               <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={true}>
-                <Text style={assetDetailStyle.downloadAssetButtonText}>Download Asset</Text>
+                <Text style={assetDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
               </TouchableOpacity>
               <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
                 Clipboard.setString(this.state.asset.asset_id);
                 this.setState({ copied: true });
                 setTimeout(() => { this.setState({ copied: false }) }, 1000);
               }}>
-                <Text style={assetDetailStyle.copyAssetIddButtonText}>Copy Asset ID</Text>
+                <Text style={assetDetailStyle.copyAssetIddButtonText}>COPY ASSET ID</Text>
                 {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
               </TouchableOpacity>
             </View>}

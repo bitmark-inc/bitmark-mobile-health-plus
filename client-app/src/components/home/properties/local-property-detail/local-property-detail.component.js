@@ -77,8 +77,8 @@ export class LocalPropertyDetailComponent extends React.Component {
             <Text style={propertyDetailStyle.provenanceLabel}>Provenance</Text>
             <View style={propertyDetailStyle.provenancesArea}>
               <View style={propertyDetailStyle.provenancesHeader}>
-                <Text style={propertyDetailStyle.provenancesHeaderLabel}>TIMESTAMP</Text>
-                <Text style={propertyDetailStyle.provenancesHeaderLabel}>OWNER</Text>
+                <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
+                <Text style={propertyDetailStyle.provenancesHeaderLabelOwner}>OWNER</Text>
               </View>
               <View style={propertyDetailStyle.provenanceListArea}>
                 <FlatList
@@ -87,8 +87,8 @@ export class LocalPropertyDetailComponent extends React.Component {
                   data={this.state.histories || []}
                   renderItem={({ item }) => {
                     return (<View style={propertyDetailStyle.provenancesRow}>
-                      <Text style={propertyDetailStyle.provenancesRowLabel} numberOfLines={1}>{item.history.created_at}</Text>
-                      <Text style={propertyDetailStyle.provenancesRowLabel} numberOfLines={1}>{item.history.owner}</Text>
+                      <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.history.created_at}</Text>
+                      <Text style={propertyDetailStyle.provenancesRowOwner} numberOfLines={1}>{item.history.owner}</Text>
                     </View>);
                   }}
                 />

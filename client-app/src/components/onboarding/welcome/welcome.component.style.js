@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-
+import { convertWidth } from './../../../utils';
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -16,8 +16,8 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   welcomeLogo: {
-    width: 309,
-    height: 113,
+    width: 225,
+    height: 37,
     resizeMode: 'contain',
   },
   welcomeButtonArea: {
@@ -28,8 +28,8 @@ export default StyleSheet.create({
   },
   welcomeButton: {
     marginTop: 10,
-    minHeight: 42,
-    width: 309,
+    minHeight: 44,
+    width: convertWidth(225),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

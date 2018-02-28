@@ -11,7 +11,7 @@ export default StyleSheet.create({
   },
   threeDotIcon: {
     width: 20,
-    height: 5,
+    height: 20,
     resizeMode: 'contain',
     marginRight: 15,
   },
@@ -26,7 +26,7 @@ export default StyleSheet.create({
   },
   assetImage: {
     height: 130,
-    width: 130,
+    width: convertWidth(130),
     resizeMode: 'contain',
     marginLeft: convertWidth(20),
     marginTop: 17,
@@ -52,6 +52,7 @@ export default StyleSheet.create({
     lineHeight: 16,
     marginLeft: convertWidth(20),
     marginTop: 13,
+    color: '#0060F2',
   },
   copiedAssetIddButtonText: {
     fontFamily: 'Avenir Black',
@@ -65,7 +66,7 @@ export default StyleSheet.create({
   },
   bottomImageBar: {
     borderWidth: 2,
-    width: 130,
+    width: convertWidth(130),
     marginLeft: convertWidth(20),
   },
   assetName: {
@@ -74,7 +75,7 @@ export default StyleSheet.create({
     fontSize: 18,
     lineHeight: 21,
     marginLeft: convertWidth(20),
-    marginTop: 30,
+    marginTop: 34,
     height: 29,
   },
   assetCreateAt: {
@@ -84,11 +85,11 @@ export default StyleSheet.create({
     lineHeight: 16,
     marginLeft: convertWidth(20),
     height: 29,
-    width: convertWidth(320),
+    width: convertWidth(337),
   },
   bottomAssetNameBar: {
     borderWidth: 1,
-    width: 130,
+    width: convertWidth(130),
     marginLeft: convertWidth(20),
   },
 
@@ -105,15 +106,21 @@ export default StyleSheet.create({
   },
   provenancesHeader: {
     flexDirection: 'row',
-    width: convertWidth(340),
+    width: convertWidth(337),
     marginLeft: convertWidth(20),
     height: 25,
   },
-  provenancesHeaderLabel: {
+  provenancesHeaderLabelTimestamp: {
     fontFamily: 'Andale Mono',
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 14,
-    width: convertWidth(150),
+    width: convertWidth(176),
+  },
+  provenancesHeaderLabelOwner: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    lineHeight: 14,
+    width: convertWidth(161),
   },
   provenanceListArea: {
     flexDirection: 'row',
@@ -124,11 +131,18 @@ export default StyleSheet.create({
     marginLeft: convertWidth(20),
     height: 25,
   },
-  provenancesRowLabel: {
+  provenancesRowTimestamp: {
     fontFamily: 'Andale Mono',
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 14,
-    width: convertWidth(150),
+    width: convertWidth(157),
+  },
+  provenancesRowOwner: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    lineHeight: 14,
+    marginLeft: convertWidth(19),
+    width: convertWidth(118),
   },
   listingButtonArea: {
     flexDirection: 'column',

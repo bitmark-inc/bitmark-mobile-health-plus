@@ -45,6 +45,13 @@ export default StyleSheet.create({
     borderBottomColor: '#0060F2',
     borderBottomWidth: 1,
     width: convertWidth(330),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  addFileIcon: {
+    width: 14,
+    height: 14,
+    resizeMode: 'contain',
   },
   addFileButtonText: {
     fontFamily: 'Avenir Black',
@@ -52,6 +59,7 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     color: '#C2C2C2',
+    marginLeft: 7,
   },
 
   infoArea: {
