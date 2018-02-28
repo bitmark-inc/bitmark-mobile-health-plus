@@ -20,7 +20,8 @@ import {
 } from './../commons/components';
 import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
-import { AppService, EventEmiterService } from './../services';
+import { EventEmiterService } from './../services';
+import { AppController } from '../controllers';
 
 class MainComponent extends Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class MainComponent extends Component {
     };
     this.appState = AppState.currentState;
 
-    AppService.doOpenApp().then(user => {
+    AppController.doOpenApp().then(user => {
       console.log(' doOpenApp : ', user);
       this.setState({ user });
     }).catch(error => {
@@ -72,9 +73,6 @@ class MainComponent extends Component {
     const params = route.split('/');
     switch (params[0]) {
       // case 'login': {
-      //   AppService.doPairMarketAccount(params[2], params[1]).then(() => {
-      //     console.log('handleDeppLink doPairMarketAccount success!');
-      //   }).catch(error => console.log('handleDeppLink doPairMarketAccount error :', error));
       //   break;
       // }
       default: {
@@ -86,7 +84,7 @@ class MainComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
-      AppService.doOpenApp().then(user => {
+      AppController.doOpenApp().then(user => {
         console.log(' doOpenApp : ', user);
         this.setState({ user });
       }).catch(error => {

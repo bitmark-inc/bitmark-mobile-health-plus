@@ -5,11 +5,11 @@ import {
   Platform,
 } from 'react-native';
 
-import { AppService, EventEmiterService } from './../../../services';
 import { config } from './../../../configs';
 
 import marketsStyle from './markets.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
+import { AppController } from '../../../controllers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -29,7 +29,7 @@ export class MarketsComponent extends React.Component {
   }
 
   reload() {
-    AppService.checkPairingStatusAllMarket().then((user) => {
+    AppController.doTryAccessToAllMarkets().then((user) => {
       this.setState({ user });
     }).catch(error => {
       console.log('getCurrentUser error :', error);
@@ -37,12 +37,9 @@ export class MarketsComponent extends React.Component {
   }
 
   refreshMarketStatus(market) {
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.doCheckPairingStatus(market).then(user => {
+    AppController.doTryAccessToMarket(market).then(user => {
       this.setState({ user });
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
     }).catch(error => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       console.log('MarketsComponent doCheckPairingStatus error :', error);
     });
   }

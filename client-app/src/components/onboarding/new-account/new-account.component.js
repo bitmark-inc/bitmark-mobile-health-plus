@@ -25,7 +25,7 @@ import {
   // android // TODO
 } from './../../../configs';
 
-import { AppService, EventEmiterService } from './../../../services';
+import { AppController } from '../../../controllers';
 
 let defaultWindowSize = Platform.select({
   ios: ios.constant.defaultWindowSize,
@@ -216,16 +216,12 @@ export class NewAccountComponent extends React.Component {
 
   render() {
     const createBitmarkAccount = () => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-      EventEmiterService
-      AppService.createNewUser().then((userInfo) => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+      AppController.doCreateNewAccount().then((userInfo) => {
         if (userInfo) {
           this.props.navigation.navigate('FaceTouchId');
         }
       }).catch((error) => {
         console.log('createNewUser error :', error);
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       });
     };
     return (

@@ -9,10 +9,10 @@ import { AccountComponent } from './account';
 import { MarketsComponent } from './markets';
 import { AssetsComponent } from './properties';
 
-import { AppService } from "./../../services";
 
 import userStyle from './user.component.style';
 import { config } from '../../configs';
+import { AppController } from '../../controllers';
 
 const MainTabs = {
   properties: 'Properties',
@@ -31,7 +31,7 @@ export class UserComponent extends React.Component {
   }
 
   logout() {
-    AppService.doLogout().then(() => {
+    AppController.doLogout().then(() => {
       const resetMainPage = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Main', params: { justCreatedBitmarkAccount: true } })]

@@ -11,11 +11,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import ImagePicker from 'react-native-image-picker';
 
 
-import { AppService, EventEmiterService } from './../../../../services';
+import { BitmarkService } from './../../../../services';
 
 import localAddPropertyStyle from './local-add-property.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { convertWidth } from '../../../../utils';
+import { AppController } from '../../../../controllers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -202,11 +203,10 @@ export class LocalAddPropertyComponent extends React.Component {
       if (response.error || response.didCancel) {
         return;
       }
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
       let filepath = response.uri.replace('file://', '');
       let filename = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
       let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
-      AppService.doCheckingIssuance(filepath).then(asset => {
+      AppController.doCheckFileToIssue(filepath).then(asset => {
         let existingAsset = !!(asset && asset.registrant);
         let metadataList = [];
         if (existingAsset) {
@@ -232,9 +232,7 @@ export class LocalAddPropertyComponent extends React.Component {
           canAddNewMetadata: false,
         };
         this.setState(state);
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       }).catch(error => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         this.setState({
           fileError: error.message,
         });
@@ -243,25 +241,23 @@ export class LocalAddPropertyComponent extends React.Component {
   }
 
   register() {
-    EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: true, title: 'Submitting your request to the network for confirmation…', message: '' });
-    AppService.issueFile(this.state.filepath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity)).then((data) => {
-      if (!data) {
-        EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
-        return;
-      }
-      EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.' });
-      setTimeout(() => {
-        EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
-        if (this.props.navigation.state.params.refreshPropertiesScreen) {
-          this.props.navigation.state.params.refreshPropertiesScreen();
-          this.props.navigation.goBack();
+    AppController.doIssueFile(this.state.filepath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), {
+      indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
+    }, {
+        indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
+      }).then((data) => {
+        if (data) {
+          setTimeout(() => {
+            if (this.props.navigation.state.params.refreshPropertiesScreen) {
+              this.props.navigation.state.params.refreshPropertiesScreen();
+              this.props.navigation.goBack();
+            }
+          }, 1000);
         }
-      }, 1000);
-    }).catch(error => {
-      this.setState({ issueError: 'There are problem when issue file!' });
-      EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
-      console.log('issue bitmark error :', error);
-    });
+      }).catch(error => {
+        this.setState({ issueError: 'There are problem when issue file!' });
+        console.log('issue bitmark error :', error);
+      });
   }
 
   back() {
@@ -300,7 +296,7 @@ export class LocalAddPropertyComponent extends React.Component {
         canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError),
       });
     }
-    AppService.checkMetadata(metadataList).then(() => {
+    BitmarkService.doCheckMetadata(metadataList).then(() => {
       this.setState({ metadataError: '' });
     }).catch((error) => {
       console.log('error :', error);

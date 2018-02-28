@@ -10,7 +10,8 @@ import { config } from './../../../../configs';
 import bitmarkDepositStyle from './bitmark-deposit.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import bitmarkDepositComponentStyle from './bitmark-deposit.component.style';
-import { AppService, EventEmiterService } from '../../../../services';
+import { UserService } from '../../../../services';
+import { AppController } from '../../../../controllers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -40,7 +41,7 @@ export class BitmarkDepositComponent extends React.Component {
       selectedmMarket: '',
     };
 
-    AppService.getCurrentUser().then(user => {
+    UserService.doGetCurrentUser().then(user => {
       let index = 0;
       let marketList = [];
       for (let market in user.markets) {
@@ -64,16 +65,13 @@ export class BitmarkDepositComponent extends React.Component {
   }
 
   doDeposit() {
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.doDepositBitmark(this.state.selectedmMarket, this.state.bitmark).then((data) => {
+    AppController.doDepositBitmark(this.state.bitmark, this.state.selectedmMarket).then((data) => {
       console.log('doDepositBitmark success :', data);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       if (data) {
         this.depositSuccess();
       }
     }).catch(error => {
       console.error('doDepositBitmark error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
     });
   }
 

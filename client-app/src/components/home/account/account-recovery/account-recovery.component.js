@@ -6,7 +6,8 @@ import {
   Platform,
 } from 'react-native';
 
-import { AppService, AccountService, EventEmiterService } from "./../../../../services";
+import { UserService } from "./../../../../services";
+import { AppController } from './../../../../controllers';
 
 import accountRecoveryStyle from './account-recovery.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
@@ -25,15 +26,12 @@ class RecoveryPhraseComponent extends React.Component {
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
     const recoveryPhrase = () => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-      AccountService.getCurrentAccount(isSignOut ? 'Please sign to remove access.' : 'Please sign to access the bitmark recovery phrases.').then((user) => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+      AppController.doGetCurrentAccount(isSignOut ? 'Please sign to remove access.' : 'Please sign to access the bitmark recovery phrases.').then((user) => {
         if (user) {
           curretnUser = user;
           this.props.navigation.navigate('WriteDownRecoveryPhrase');
         }
       }).catch(error => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         console.log('recoveryPhrase error :', error);
       });
     };
@@ -204,7 +202,7 @@ class TryRecoveryPhraseComponent extends React.Component {
         biggerList.push({ key: index });
       }
     }
-    AppService.getCurrentUser().then(user => {
+    UserService.doGetCurrentUser().then(user => {
       let result = [];
       for (let index in curretnUser.pharse24Words) {
         result.push({ key: index, word: curretnUser.pharse24Words[index] });
@@ -291,16 +289,13 @@ class TryRecoveryPhraseComponent extends React.Component {
     for (let i = 0; i < temp.length; i++) {
       inputtedWords.push(temp[i].word);
     }
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AccountService.check24Words(inputtedWords).then((user) => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+    AppController.doCheck24Words(inputtedWords).then((user) => {
       if (this.state.user.bitmarkAccountNumber === user.bitmarkAccountNumber) {
         this.setState({ testResult: 'done' });
       } else {
         this.setState({ testResult: 'retry' });
       }
     }).catch(error => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       this.setState({ testResult: 'retry' });
       console.log('testRecoveryPhrase error:', error);
     });

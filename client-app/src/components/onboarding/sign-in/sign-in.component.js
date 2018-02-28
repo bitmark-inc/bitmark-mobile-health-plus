@@ -14,7 +14,8 @@ import signStyle from './sign-in.component.style';
 import { BitmarkAutoCompleteComponent } from './../../../commons/components';
 import { android, ios } from './../../../configs';
 import { dictionary24Words } from './../../../utils';
-import { AppService, AccountService } from './../../../services';
+import { AccountService } from './../../../services';
+import { AppController } from '../../../controllers';
 
 let deviceSize = Dimensions.get('window');
 let constant = Platform.select({ ios: ios.constant, android: android.constant });
@@ -199,7 +200,7 @@ export class SignInComponent extends React.Component {
     let inputtedWords = [];
     this.state.smallerList.forEach(item => inputtedWords.push(item.word));
     this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-    AppService.doLogin(inputtedWords).then((userInfo) => {
+    AppController.doLogin(inputtedWords).then((userInfo) => {
       if (userInfo) {
         this.props.navigation.navigate('FaceTouchId');
       }

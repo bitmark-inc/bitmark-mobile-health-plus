@@ -9,14 +9,14 @@ const app_local_data_key = 'bitmark-app';
 // ================================================================================================
 // ================================================================================================
 // private 
-const tryRichSignMessage = (messages, sessionId) => {
+const doTyryRichSignMessage = (messages, sessionId) => {
   return new Promise((resolve) => {
     BitmarkSDK.rickySignMessage(messages, sessionId).then(resolve).catch(() => resolve());
   });
 };
 
 // ================================================================================================
-const setLocalData = (localDataKey, data) => {
+const doSetLocalData = (localDataKey, data) => {
   localDataKey = localDataKey || app_local_data_key;
   data = data || {};
   return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ const setLocalData = (localDataKey, data) => {
     });
   });
 };
-const getLocalData = (localDataKey) => {
+const doGetLocalData = (localDataKey) => {
   localDataKey = localDataKey || app_local_data_key;
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem(localDataKey, (error, data) => {
@@ -39,28 +39,28 @@ const getLocalData = (localDataKey) => {
       try {
         localData = JSON.parse(data);
       } catch (error) {
-        setLocalData(localDataKey, localData);
+        doSetLocalData(localDataKey, localData);
       }
       resolve(localData || {});
     });
   });
 };
 // ================================================================================================
-const checkFaceTouchId = async () => {
+const doCheckFaceTouchId = async () => {
   return await FaceTouchId.isSupported();
 }
 // ================================================================================================
 let currentFaceTouceSessionId = null;
 
-const endNewFaceTouceSessionId = async () => {
+const doEndNewFaceTouceSessionId = async () => {
   if (currentFaceTouceSessionId) {
     await BitmarkSDK.disposeSession(currentFaceTouceSessionId);
     currentFaceTouceSessionId = null;
   }
 };
 
-const startFaceTouceSessionId = async (touchFaceIdMessage) => {
-  await endNewFaceTouceSessionId();
+const doStartFaceTouceSessionId = async (touchFaceIdMessage) => {
+  await doEndNewFaceTouceSessionId();
   if (!currentFaceTouceSessionId) {
     currentFaceTouceSessionId = await BitmarkSDK.requestSession(config.bitmark_network, touchFaceIdMessage);
   }
@@ -72,23 +72,23 @@ const setFaceTouceSessionId = (sessionId) => {
 
 const doTryRickSignMessage = async (messages, touchFaceIdMessage) => {
   if (!currentFaceTouceSessionId) {
-    await startFaceTouceSessionId(touchFaceIdMessage);
+    await doStartFaceTouceSessionId(touchFaceIdMessage);
     if (!currentFaceTouceSessionId) {
       return null;
     }
   }
-  let signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
+  let signatures = await doTyryRichSignMessage(messages, currentFaceTouceSessionId);
   if (!signatures) {
-    await startFaceTouceSessionId(touchFaceIdMessage);
+    await doStartFaceTouceSessionId(touchFaceIdMessage);
     if (!currentFaceTouceSessionId) {
       return null;
     }
-    signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
+    signatures = await doTyryRichSignMessage(messages, currentFaceTouceSessionId);
   }
   return signatures;
 };
 
-const createSignatureData = async (touchFaceIdMessage) => {
+const doCreateSignatureData = async (touchFaceIdMessage) => {
   let timestamp = moment().toDate().getTime() + '';
   let signatures = await doTryRickSignMessage([timestamp], touchFaceIdMessage);
   if (!signatures) {
@@ -101,18 +101,18 @@ const createSignatureData = async (touchFaceIdMessage) => {
 // ================================================================================================
 // ================================================================================================
 
-let CommonService = {
+let CommonModel = {
   app_local_data_key,
-  checkFaceTouchId,
-  setLocalData,
-  getLocalData,
-  startFaceTouceSessionId,
-  endNewFaceTouceSessionId,
-  createSignatureData,
+  doCheckFaceTouchId,
+  doSetLocalData,
+  doGetLocalData,
+  doStartFaceTouceSessionId,
+  doEndNewFaceTouceSessionId,
+  doCreateSignatureData,
   doTryRickSignMessage,
   setFaceTouceSessionId,
 }
 
 export {
-  CommonService
+  CommonModel
 }

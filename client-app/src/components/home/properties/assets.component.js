@@ -7,10 +7,9 @@ import {
 } from 'react-native';
 
 import { config } from './../../../configs';
-import { AppService, EventEmiterService } from "./../../../services";
-
 import assetsStyle from './assets.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
+import { AppController } from '../../../controllers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -44,13 +43,10 @@ export class AssetsComponent extends React.Component {
   }
 
   refreshPropertiesScreen() {
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.getUserBitmark().then((data) => {
+    AppController.doGetBitmarks().then((data) => {
       this.setState({ data });
       this.switchSubtab(this.state.subtab);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
     }).catch((error) => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       console.log('getUserBitmark error :', error);
     });
   }

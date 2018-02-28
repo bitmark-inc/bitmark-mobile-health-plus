@@ -8,11 +8,12 @@ import {
   FlatList,
 } from 'react-native';
 
-import { AppService, MarketService, EventEmiterService } from "./../../../services";
+import { MarketService, UserService } from "./../../../services";
 import accountStyle from './account.component.style';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 import { config } from '../../../configs/index';
+import { AppController } from '../../../controllers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -35,25 +36,23 @@ export class AccountDetailComponent extends React.Component {
       balance: 0,
       balanceHistories: [],
     };
-    AppService.getCurrentUser().then((info) => {
+    UserService.doGetCurrentUser().then((info) => {
       this.setState({ accountNumber: info.bitmarkAccountNumber, markets: info.markets });
     }).catch((error) => {
       console.log('get current account error :', error);
     });
 
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.getUserBalance().then(data => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+    AppController.doGetBalance().then(data => {
+      let totemicBalance = data[config.markets.totemic.name];
       let balanceHistories = [];
-      data.balanceHistories.forEach((history, index) => {
+      totemicBalance.balanceHistories.forEach((history, index) => {
         balanceHistories.push({ key: index, history });
       });
       this.setState({
-        balance: data.balance,
+        balance: totemicBalance.balance,
         balanceHistories,
       });
     }).catch((error) => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       console.log('getUserBalance error :', error);
     });
   }
