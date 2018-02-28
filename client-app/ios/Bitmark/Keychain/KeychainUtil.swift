@@ -13,7 +13,29 @@ struct KeychainUtil {
 
   private static let bitmarkSeedCoreKey = "bitmark_core"
   
-  static func getKeychain(reason: String) -> Keychain {
+  static func getKeychain(reason: String) throws -> Keychain {
+    #if (arch(i386) || arch(x86_64)) && os(iOS)
+      let semaphore = DispatchSemaphore(value: 0)
+      var cancel = false
+      
+      let alert = UIAlertController(title: "Keychain access request", message: reason, preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+        semaphore.signal()
+      }))
+      alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+        cancel = true
+        semaphore.signal()
+      }))
+      UIApplication.shared.delegate?.window??.rootViewController?.present(alert, animated: true, completion: nil)
+      
+      _ = semaphore.wait(timeout: .distantFuture)
+      
+      alert.dismiss(animated: true, completion: nil)
+      if cancel {
+        throw KeychainAccess.Status.userCanceled
+      }
+    #endif
+
     return Keychain(service: "com.bitmark.bitmarkios.account",
                     accessGroup: "Z5CE7A3A7N.com.bitmark.bitmarkios") // Z5CE7A3A7N is the app prefix
             .accessibility(.whenPasscodeSetThisDeviceOnly, authenticationPolicy: .userPresence)
