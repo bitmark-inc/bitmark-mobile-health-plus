@@ -51,6 +51,7 @@ class MetadataInputComponent extends React.Component {
     this.state = {
       textInput,
       labels,
+      placeholder: (props.type === 'label') ? 'CREATE NEW LABEL' : 'DESCRIPTION'
     }
   }
 
@@ -83,7 +84,7 @@ class MetadataInputComponent extends React.Component {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{
-            width: '100%', height: this.props.type === 'label' ? 220 : 110,
+            width: '100%', height: this.props.type === 'label' ? 220 : 90,
             flexDirection: 'column',
           }}>
             <TextInput
@@ -93,7 +94,8 @@ class MetadataInputComponent extends React.Component {
                 borderBottomWidth: 1,
                 marginTop: 20, marginBottom: 5, marginLeft: '5%',
                 width: '90%', maxHeight: 50,
-              }} placeholder={(this.props.type === 'label') ? 'CREATE NEW LABEL' : 'DESCRIPTION'}
+                height: 30,
+              }} placeholder={this.state.placeholder}
               multiline={true}
               value={this.state.textInput}
               onChangeText={this.onChangeText}
@@ -126,20 +128,20 @@ class MetadataInputComponent extends React.Component {
             }}>
               <TouchableOpacity style={{
                 padding: 4,
-                width: convertWidth(60)
+                width: convertWidth(80)
               }}
                 onPress={this.props.cancel}
               >
-                <Text style={{ fontWeight: '700', color: '#C4C4C4' }}>Cancel</Text>
+                <Text style={{ fontWeight: '700', textAlign: 'center', color: '#C4C4C4' }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{
                 marginLeft: 5,
                 padding: 4,
-                width: convertWidth(60)
+                width: convertWidth(80)
               }}
                 onPress={() => this.props.done(this.state.textInput)}
               >
-                <Text style={{ fontWeight: '700', color: '#0060F2' }}>Done</Text>
+                <Text style={{ fontWeight: '700', textAlign: 'center', color: '#0060F2' }}>Done</Text>
               </TouchableOpacity>
 
             </View>
@@ -169,8 +171,8 @@ export class LocalAddPropertyComponent extends React.Component {
     this.doInputQuantity = this.doInputQuantity.bind(this);
 
     this.state = {
-      step: Steps.input_file,
-      // step: Steps.input_info,
+      // step: Steps.input_file,
+      step: Steps.input_info,
       existingAsset: false,
       // metadataList: [],
       metadataList: [{ key: 0, label: '', value: '' }],

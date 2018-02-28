@@ -121,7 +121,7 @@ export class AssetsComponent extends React.Component {
           <View style={assetsStyle.contentSubTab}>
             {(!this.state.assets || this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
-                {'YOu DO not owned any property currently YET.'.toUpperCase()}
+                {'currently you own no property.'.toUpperCase()}
               </Text>}
               {(!config.disabel_markets && this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {(config.disabel_markets ? 'Coming soon...' : 'YOu have not paired any markets.').toUpperCase()}
