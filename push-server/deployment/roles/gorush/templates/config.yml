@@ -41,13 +41,13 @@ android:
 ios:
   enabled: true
   key_path: ""
-  key_base64: "{{ ios_certificate_base64 }}" # load iOS key from base64 input
+  key_base64: "{{ secure_config.gorush.ios_certificate_base64 }}" # load iOS key from base64 input
   key_type: "p12" # could be pem, p12 or p8 type
   password: "" # certificate password, default as empty string.
-  production: false
+  production: {{ gorush.production }}
   max_retry: 0 # resend fail notification, default value zero is disabled
   key_id: "" # KeyID from developer account (Certificates, Identifiers & Profiles -> Keys)
-  team_id: "Z5CE7A3A7N" # TeamID from developer account (View Account -> Membership)
+  team_id: "{{ gorush.team_id }}" # TeamID from developer account (View Account -> Membership)
 
 log:
   format: "string" # string or json
