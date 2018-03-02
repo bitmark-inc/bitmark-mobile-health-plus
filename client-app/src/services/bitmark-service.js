@@ -18,10 +18,6 @@ const doCheckFileToIssue = async (filePath) => {
   if (!assetInformation) {
     return assetInfo;
   } else {
-    let userInfo = await UserService.doGetCurrentUser();
-    if (assetInformation.registrant !== userInfo.bitmarkAccountNumber) {
-      throw Error('This file is registered by other user');
-    }
     return assetInformation;
   }
 };
