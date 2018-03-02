@@ -20,6 +20,12 @@ export default StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
   },
+  bitmarkAccountHelpIcon: {
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
+    marginRight: 7,
+  },
   subTabArea: {
     width: '100%',
     height: 39,

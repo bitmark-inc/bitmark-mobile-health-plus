@@ -91,7 +91,11 @@ export class AccountDetailComponent extends React.Component {
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>Account</Text>
-          <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+            this.props.screenProps.homeNavigation.navigate('ApplicationDetail');
+          }}>
+            <Image style={accountStyle.bitmarkAccountHelpIcon} source={require('./../../../../assets/imgs/icon_help.png')} />
+          </TouchableOpacity>
         </View>
         {!config.disabel_markets && <View style={accountStyle.subTabArea}>
           <TouchableOpacity style={accountStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.balance)}>

@@ -1,3 +1,5 @@
+import DeviceInfo from 'react-native-device-info';
+
 import { UserService, EventEmiterService, AccountService, NotificationService } from "../services";
 
 let userInformation = {};
@@ -143,6 +145,14 @@ const getUserBalance = () => {
   };
 };
 
+const getApplicationVersion = () => {
+  return DeviceInfo.getVersion();
+};
+
+const getApplicationBuildNumber = () => {
+  return DeviceInfo.getBuildNumber();
+};
+
 const DataController = {
   doActiveApplication,
   doDeactiveApplication,
@@ -151,6 +161,8 @@ const DataController = {
   getUserBalance,
   getUserBitmarks,
   getUserInformation,
+  getApplicationVersion,
+  getApplicationBuildNumber,
 };
 
 export { DataController };
