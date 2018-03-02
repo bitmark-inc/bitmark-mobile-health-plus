@@ -36,12 +36,18 @@ class MainComponent extends Component {
       user: null,
       processing: false,
       submitting: null,
+      justCreatedBitmarkAccount: false,
     };
     this.appState = AppState.currentState;
   }
 
   componentDidMount() {
-    AppController.doOpenApp().then(user => {
+    let justCreatedBitmarkAccount = false;
+    if (this.props.navigation.state && this.props.navigation.state.params) {
+      justCreatedBitmarkAccount = !!this.props.navigation.state.params.justCreatedBitmarkAccount;
+      this.setState({ justCreatedBitmarkAccount });
+    }
+    AppController.doOpenApp(justCreatedBitmarkAccount).then(user => {
       console.log(' doOpenApp : ', user);
       this.setState({ user });
     }).catch(error => {
@@ -125,6 +131,11 @@ class MainComponent extends Component {
 MainComponent.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        justCreatedBitmarkAccount: PropTypes.bool,
+      }),
+    }),
   })
 }
 

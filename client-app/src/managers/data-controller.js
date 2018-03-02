@@ -104,11 +104,11 @@ const stopInterval = () => {
 
 // ================================================================================================================================================
 // ================================================================================================================================================
-const doActiveApplication = async () => {
+const doActiveApplication = async (justCreatedBitmarkAccount) => {
   configNotification();
   await runOnBackground();
   startInterval();
-  if (userInformation && userInformation.bitmarkAccountNumber) {
+  if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
     await NotificationService.doCheckNotificaitonPermission();
   }
   return userInformation;

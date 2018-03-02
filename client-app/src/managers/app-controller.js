@@ -148,8 +148,8 @@ const doGetProvenance = async (bitmark) => {
 
 
 
-const doOpenApp = async () => {
-  return await processing(DataController.doActiveApplication());
+const doOpenApp = async (justCreatedBitmarkAccount) => {
+  return await processing(DataController.doActiveApplication(justCreatedBitmarkAccount));
 };
 // ================================================================================================
 // ================================================================================================
