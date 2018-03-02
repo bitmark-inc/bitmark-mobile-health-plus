@@ -8,12 +8,12 @@ import {
   FlatList,
 } from 'react-native';
 
-import { MarketService, UserService } from "./../../../services";
+import { MarketService, EventEmiterService } from "./../../../services";
 import accountStyle from './account.component.style';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 import { config } from '../../../configs/index';
-import { AppController } from '../../../controllers';
+import { DataController } from '../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -28,33 +28,50 @@ export class AccountDetailComponent extends React.Component {
   constructor(props) {
     super(props);
     this.switchSubtab = this.switchSubtab.bind(this);
+    this.handerChangeLocalBalance = this.handerChangeLocalBalance.bind(this);
+    this.handerChangeMarketBalance = this.handerChangeMarketBalance.bind(this);
+
+    let localBalance = DataController.getUserBalance().localBalance;
+    //TODO with local balance
+    let marketBalances = DataController.getUserBalance().marketBalances;
+    for (let market in marketBalances) {
+      marketBalances[market].balanceHistories.forEach((item, index) => {
+        item.key = index;
+      });
+    }
     this.state = {
       subtab: config.disabel_markets ? SubTabs.settings : SubTabs.balance,
-      accountNumber: '',
-      markets: {},
+      accountNumber: DataController.getUserInformation().bitmarkAccountNumber,
+      markets: DataController.getUserInformation().markets,
       copyText: 'COPY',
-      balance: 0,
-      balanceHistories: [],
+      localBalance,
+      marketBalances,
     };
-    UserService.doGetCurrentUser().then((info) => {
-      this.setState({ accountNumber: info.bitmarkAccountNumber, markets: info.markets });
-    }).catch((error) => {
-      console.log('get current account error :', error);
-    });
+  }
 
-    AppController.doGetBalance().then(data => {
-      let totemicBalance = data[config.markets.totemic.name];
-      let balanceHistories = [];
-      totemicBalance.balanceHistories.forEach((history, index) => {
-        balanceHistories.push({ key: index, history });
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE, this.handerChangeLocalBalance);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE, this.handerChangeMarketBalance);
+  }
+
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE, this.handerChangeLocalBalance);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE, this.handerChangeMarketBalance);
+  }
+
+  handerChangeLocalBalance() {
+    let localBalance = DataController.getUserBalance().localBalannce || {};
+    this.setState({ localBalance });
+  }
+
+  handerChangeMarketBalance() {
+    let marketBalances = DataController.getUserBalance().marketBalances || [];
+    for (let market in marketBalances) {
+      marketBalances[market].balanceHistories.forEach((item, index) => {
+        item.key = index;
       });
-      this.setState({
-        balance: totemicBalance.balance,
-        balanceHistories,
-      });
-    }).catch((error) => {
-      console.log('getUserBalance error :', error);
-    });
+    }
+    this.setState({ marketBalances });
   }
 
   switchSubtab(subtab) {
@@ -88,7 +105,7 @@ export class AccountDetailComponent extends React.Component {
           </TouchableOpacity>
         </View>}
         <ScrollView style={[accountStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
-          {this.state.subtab === SubTabs.balance && !config.disabel_markets && this.state.markets && this.state.markets.totemic && this.state.markets.totemic.account_number &&
+          {this.state.subtab === SubTabs.balance && !config.disabel_markets && this.state.marketBalances && this.state.marketBalances.totemic &&
             <View style={accountStyle.contentSubTab}>
               <Image style={accountStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
               <View style={accountStyle.marketBalance}>
@@ -97,7 +114,7 @@ export class AccountDetailComponent extends React.Component {
                   <Text style={accountStyle.marketBalanceName}>ETH</Text>
                   <Text style={accountStyle.marketBalanceNameFull}>(Ethereum)</Text>
                 </View>
-                <Text style={accountStyle.marketBalanceValue}>{Math.floor(this.state.balance / 1E4) / 1E5}</Text>
+                <Text style={accountStyle.marketBalanceValue}>{Math.floor(this.state.marketBalances.totemic.balance / 1E4) / 1E5}</Text>
               </View>
               <View style={accountStyle.marketBalanceButtonArea}>
                 <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
@@ -119,16 +136,16 @@ export class AccountDetailComponent extends React.Component {
               </View>
               <View style={accountStyle.marketBalanceHistory}>
                 <Text style={accountStyle.marketBalanceHistoryLabel}>Balance History </Text>
-                <FlatList data={this.state.balanceHistories}
+                <FlatList data={this.state.marketBalances.totemic.balanceHistories}
                   scrollEnabled={false}
                   extraData={this.state}
                   renderItem={({ item }) => {
                     return (
                       <View style={accountStyle.marketBalanceHistoryItem}>
-                        <Text style={accountStyle.marketBalanceHistoryItemAction}>{item.history.action}</Text>
-                        <Text style={accountStyle.marketBalanceHistoryItemAmount}>{item.history.data.currency.toUpperCase() + ' ' + (Math.floor(item.history.data.amount / 1E4) / 1E5)}</Text>
-                        <Text style={accountStyle.marketBalanceHistoryItemCreatedAt}>{moment(item.history.createdAt).format('YYYY-MM-DD HH:mm:ss')}</Text>
-                        <Text style={accountStyle.marketBalanceHistoryItemStatus}>{item.history.status.toUpperCase()}</Text>
+                        <Text style={accountStyle.marketBalanceHistoryItemAction}>{item.action}</Text>
+                        <Text style={accountStyle.marketBalanceHistoryItemAmount}>{item.data.currency.toUpperCase() + ' ' + (Math.floor(item.data.amount / 1E4) / 1E5)}</Text>
+                        <Text style={accountStyle.marketBalanceHistoryItemCreatedAt}>{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</Text>
+                        <Text style={accountStyle.marketBalanceHistoryItemStatus}>{item.status.toUpperCase()}</Text>
                       </View>
                     )
                   }}

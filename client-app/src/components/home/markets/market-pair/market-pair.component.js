@@ -8,7 +8,7 @@ import Camera from 'react-native-camera';
 
 import marketPairStyle from './market-pair.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-import { AppController } from '../../../../controllers';
+import { AppController } from '../../../../managers';
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle

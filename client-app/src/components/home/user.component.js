@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image,
+  View, TouchableOpacity, Image, Text,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -12,10 +12,11 @@ import { AssetsComponent } from './properties';
 
 import userStyle from './user.component.style';
 import { config } from '../../configs';
-import { AppController } from '../../controllers';
+import { AppController } from '../../managers';
 
 const MainTabs = {
   properties: 'Properties',
+  transaction: 'Transactions',
   markets: 'Markets',
   account: 'Account',
 };
@@ -27,6 +28,7 @@ export class UserComponent extends React.Component {
     this.logout = this.logout.bind(this);
     this.state = {
       mainTab: MainTabs.properties,
+      transactionNumber: 10,
     };
   }
 
@@ -64,19 +66,24 @@ export class UserComponent extends React.Component {
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.properties
               ? require('./../../../assets/imgs/properties-icon-enable.png')
               : require('./../../../assets/imgs/properties-icon-disable.png')} />
-            <Text style={[userStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.properties ? '#0060F2' : '#999999' }]}>{MainTabs.properties}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.transaction })}>
+            <View style={userStyle.transactionNumber}>
+              <Text style={userStyle.transactionNumberText}>{this.state.transactionNumber}</Text>
+            </View>
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.transaction
+              ? require('./../../../assets/imgs/transaction-icon-enable.png')
+              : require('./../../../assets/imgs/transaction-icon-disable.png')} />
           </TouchableOpacity>
           {!config.disabel_markets && <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.markets })}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.markets
               ? require('./../../../assets/imgs/markets-icon-enable.png')
               : require('./../../../assets/imgs/markets-icon-disable.png')} />
-            <Text style={[userStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.markets ? '#0060F2' : '#999999' }]}>{MainTabs.markets}</Text>
           </TouchableOpacity>}
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.account })}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.account
               ? require('./../../../assets/imgs/account-icon-enable.png')
               : require('./../../../assets/imgs/account-icon-disable.png')} />
-            <Text style={[userStyle.bottomTabButtonText, { color: this.state.mainTab === MainTabs.account ? '#0060F2' : '#999999' }]}>{MainTabs.account}</Text>
           </TouchableOpacity>
         </View>
       </View>

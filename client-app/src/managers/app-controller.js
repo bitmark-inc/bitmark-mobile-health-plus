@@ -1,5 +1,6 @@
-import { CommonModel, AccountModel } from './../models';
+import { CommonModel, AccountModel, BitmarkModel } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, MarketService, UserService } from './../services'
+import { DataController } from './data-controller';
 
 // ================================================================================================
 // ================================================================================================
@@ -61,7 +62,8 @@ const doCheck24Words = async (pharse24Words) => {
 };
 
 const doLogin = async (pharse24Words) => {
-  let touchFaceIdSession = await AccountService.doLogin(pharse24Words);
+  let touchFaceIdSession = await AccountModel.doLogin(pharse24Words);
+  console.log('AppController doLogin touchFaceIdSession :', touchFaceIdSession);
   if (!touchFaceIdSession) {
     return null;
   }
@@ -124,8 +126,9 @@ const doTryAccessToAllMarkets = async () => {
 };
 
 const doGetBitmarks = async () => {
-  return await processing(AccountService.doGetBitmarks());
+  await processing(DataController.doGetBitmarks());
 };
+
 const doCheckFileToIssue = async (filepath) => {
   return await processing(BitmarkService.doCheckFileToIssue(filepath));
 };
@@ -139,12 +142,14 @@ const doIssueFile = async (filepath, assetName, metadatList, quantity, processin
   return await submitting(BitmarkService.doIssueFile(touchFaceIdSession, filepath, assetName, metadatList, quantity), processingInfo, successInfo);
 };
 
+const doGetProvenance = async (bitmark) => {
+  return await processing(BitmarkModel.doGetProvenance(bitmark));
+};
 
 
 
 const doOpenApp = async () => {
-  //TODO
-  return await UserService.doGetCurrentUser();
+  return await processing(DataController.doActiveApplication());
 };
 // ================================================================================================
 // ================================================================================================
@@ -167,6 +172,7 @@ let AppController = {
   doGetBitmarks,
   doCheckFileToIssue,
   doIssueFile,
+  doGetProvenance,
 
   doOpenApp,
 }

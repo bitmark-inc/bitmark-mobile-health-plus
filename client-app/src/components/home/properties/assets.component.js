@@ -9,7 +9,8 @@ import {
 import { config } from './../../../configs';
 import assetsStyle from './assets.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
-import { AppController } from '../../../controllers';
+import { AppController, DataController } from '../../../managers';
+import { EventEmiterService } from '../../../services';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -28,6 +29,8 @@ export class AssetsComponent extends React.Component {
     this.addProperty = this.addProperty.bind(this);
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
     this.refreshPropertiesScreen = this.refreshPropertiesScreen.bind(this);
+    this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
+    this.handerChangeMarketBitmarks = this.handerChangeMarketBitmarks.bind(this);
 
     this.state = {
       subtab: SubTabs.local,
@@ -35,11 +38,30 @@ export class AssetsComponent extends React.Component {
       copyText: 'COPY',
       assets: [],
       data: {
-        localAssets: [],
-        marketAssets: [],
+        localAssets: DataController.getUserBitmarks().localAssets || [],
+        marketAssets: DataController.getUserBitmarks().marketAssets || [],
       }
     };
-    this.refreshPropertiesScreen();
+  }
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BITMARKS, this.handerChangeMarketBitmarks);
+    this.switchSubtab(this.state.subtab);
+  }
+
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BITMARKS, this.handerChangeMarketBitmarks);
+  }
+
+  handerChangeLocalBitmarks() {
+    this.setState({ localAssets: DataController.getUserBitmarks().localAssets || [] });
+    this.switchSubtab(this.state.subtab);
+  }
+
+  handerChangeMarketBitmarks() {
+    this.setState({ localAssets: DataController.getUserBitmarks().localAssets || [] });
+    this.switchSubtab(this.state.subtab);
   }
 
   refreshPropertiesScreen() {

@@ -20,7 +20,7 @@ export class FaceTouchIdComponent extends React.Component {
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'Main', params: { justCreatedBitmarkAccount: true } })]
     });
-    FaceTouchId.isSupported.then(() => {
+    FaceTouchId.isSupported().then(() => {
       this.props.screenProps.rootNavigation.dispatch(resetMainPage);
     }).catch(error => {
       console.log('checkFaceTouchId erorr :', error);

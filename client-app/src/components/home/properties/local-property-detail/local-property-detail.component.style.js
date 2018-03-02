@@ -164,4 +164,26 @@ export default StyleSheet.create({
     lineHeight: 16,
     color: 'white',
   },
+
+  transferButtonArea: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: 37,
+  },
+  transferButton: {
+    width: convertWidth(330),
+    height: 42,
+    borderTopWidth: 2,
+    backgroundColor: '#F5F5F5',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  transferButtonText: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 17,
+    lineHeight: 20,
+    color: '#0060F2',
+  },
 });

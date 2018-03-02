@@ -7,9 +7,9 @@ import {
 } from 'react-native';
 
 import { config } from './../../../../configs';
-import bitmarkWithdrawStyle from './bitmark-withdraw.component.style';
+import bitmarkWithdrawStyle from './market-bitmark-withdraw.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-import { AppController } from '../../../../controllers';
+import { AppController } from '../../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -17,7 +17,7 @@ let defaultStyle = Platform.select({
 });
 
 
-export class BitmarkWithdrawComponent extends React.Component {
+export class MarketBitmarkWithdrawComponent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -77,7 +77,7 @@ export class BitmarkWithdrawComponent extends React.Component {
   }
 }
 
-BitmarkWithdrawComponent.propTypes = {
+MarketBitmarkWithdrawComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,

@@ -16,7 +16,7 @@ import { BitmarkService } from './../../../../services';
 import localAddPropertyStyle from './local-add-property.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { convertWidth } from '../../../../utils';
-import { AppController } from '../../../../controllers';
+import { AppController } from '../../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,

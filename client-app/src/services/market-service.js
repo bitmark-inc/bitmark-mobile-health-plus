@@ -55,7 +55,7 @@ const doTryAccessToMarket = (market, localBitmarkAccountNumber, touchFaceIdMessa
       return MarketModel.doAccessToMarket(market, localBitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
     }).then(resolve).catch(error => {
       resolve(null);
-      console.log(`doCheckPairingStatus ${market} error :`, error);
+      console.log(`doTryAccessToMarket ${market} error :`, error, error.stack);
     });
   });
 };
@@ -91,7 +91,7 @@ const doAccessToMarket = async (market, userInfo) => {
 
 const doTryAccessToAllMarkets = async (userInfo) => {
   for (let market in config.markets) {
-    userInfo = await doAccessToMarket(market, userInfo.bitmarkAccountNumber);
+    userInfo = (await doAccessToMarket(market, userInfo)) || userInfo;
   }
   return userInfo;
 };

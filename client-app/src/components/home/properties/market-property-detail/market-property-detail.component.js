@@ -55,8 +55,8 @@ export class MarketPropertyDetailComponent extends React.Component {
             </View>
             <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
               <Image style={propertyDetailStyle.threeDotIcon} source={this.state.displayTopButton
-                ? require('../../../../../assets/imgs/three-dot-blue.png')
-                : require('../../../../../assets/imgs/three-dot-black.png')} />
+                ? require('../../../../../assets/imgs/three-dot-active.png')
+                : require('../../../../../assets/imgs/three-dot-deactive.png')} />
             </TouchableOpacity>
           </View>
           <ScrollView style={propertyDetailStyle.content}>
@@ -114,7 +114,7 @@ export class MarketPropertyDetailComponent extends React.Component {
               }]}
                 disabled={this.state.bitmark.status === 'pending'}
                 onPress={() => {
-                  this.props.navigation.navigate('BitmarkWithdraw', {
+                  this.props.navigation.navigate('MarketBitmarkWithdraw', {
                     asset: this.state.asset,
                     bitmark: this.state.bitmark,
                   });

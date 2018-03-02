@@ -2,7 +2,6 @@ import { StyleSheet, Platform } from 'react-native';
 import {
   ios,
   android, // TODO
-  config
 } from './../../configs';
 import { convertWidth } from '../../utils';
 
@@ -36,13 +35,15 @@ export default StyleSheet.create({
   },
 
   bottomTabButton: {
-    width: convertWidth(config.disabel_markets ? 180 : 84),
+    width: convertWidth(75),
+    height: '100%',
     flexDirection: 'column',
     alignItems: "center",
+    justifyContent: 'center',
   },
   bottomTabButtonIcon: {
-    width: 25,
-    height: 25,
+    width: 75,
+    height: 28,
     resizeMode: 'contain'
   },
   bottomTabButtonText: {
@@ -54,4 +55,27 @@ export default StyleSheet.create({
     height: 14,
     color: '#0060F2'
   },
+
+  transactionNumber: {
+    backgroundColor: '#FF003C',
+    position: 'absolute',
+    borderRadius: 7,
+    borderColor: '#FF003C',
+    borderWidth: 1,
+    top: 5,
+    left: 49,
+    width: 14,
+    height: 14,
+    flexDirection: 'column',
+    alignItems: "center",
+    justifyContent: 'center',
+  },
+  transactionNumberText: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 8,
+    lineHeight: 9,
+    color: '#FFFFFF',
+    textAlign: 'center',
+  }
 });

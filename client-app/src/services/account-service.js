@@ -13,7 +13,7 @@ const doCreateAccount = async (touchFaceIdSession) => {
 
 const doLogin = async (touchFaceIdSession) => {
   let userInfo = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
-  userInfo = await MarketService.doCheckPairingStatusAllMarkets(touchFaceIdSession, userInfo);
+  userInfo = await MarketService.doTryAccessToAllMarkets(userInfo);
   await UserService.doUpdateUserInfo(userInfo);
   return userInfo;
 };
@@ -79,6 +79,8 @@ const doGetBitmarks = async () => {
 const doGetBalance = async () => {
   let userInfo = await UserService.doGetCurrentUser();
   const localBalannce = {};
+  //TODO
+
   const marketBalances = {};
   if (!config.disabel_markets) {
     for (let market in userInfo.markets) {
@@ -86,11 +88,11 @@ const doGetBalance = async () => {
       if (result === null) {
         return {
           localBalannce,
-          marketBalances: [],
+          marketBalances: {},
         };
       }
       if (result) {
-        let tempMarketBlance = await MarketService.doGetBitmarks(market, userInfo.markets[market]);
+        let tempMarketBlance = await MarketService.doGetBalance(market, userInfo.markets[market]);
         marketBalances[market] = tempMarketBlance;
       }
     }

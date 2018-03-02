@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 import { UserService } from "./../../../../services";
-import { AppController } from './../../../../controllers';
+import { AppController } from './../../../../managers';
 
 import accountRecoveryStyle from './account-recovery.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';

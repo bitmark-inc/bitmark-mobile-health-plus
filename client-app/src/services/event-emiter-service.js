@@ -5,6 +5,11 @@ let EventEmiterService = {
   events: {
     APP_PROCESSING: 'app-processing',
     APP_SUBMITTING: 'app-submitting',
+    CHANGE_USER_INFO: 'change-user-info',
+    CHANGE_USER_DATA_LOCAL_BITMARKS: 'change-user-data:local-bitmarks',
+    CHANGE_USER_DATA_MARKET_BITMARKS: 'change-user-data:market-bitmarks',
+    CHANGE_USER_DATA_LOCAL_BALANCE: 'change-user-data:local-balance',
+    CHANGE_USER_DATA_MARKET_BALANCE: 'change-user-data:market-balance',
   },
   on: (eventName, func) => {
     NativeAppEventEmitter.addListener(eventName, func);

@@ -11,7 +11,7 @@ import { EventEmiterService, UserService } from './../../../../services';
 import marketLoginStyle from './market-login.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { config } from '../../../../configs';
-import { AppController } from '../../../../controllers';
+import { AppController } from '../../../../managers';
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle

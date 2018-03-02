@@ -9,7 +9,8 @@ import { config } from './../../../configs';
 
 import marketsStyle from './markets.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
-import { AppController } from '../../../controllers';
+import { AppController, DataController } from '../../../managers';
+import { EventEmiterService } from '../../../services';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -24,8 +25,21 @@ export class MarketsComponent extends React.Component {
     this.reload = this.reload.bind(this);
     this.openMarket = this.openMarket.bind(this);
     this.refreshMarketStatus = this.refreshMarketStatus.bind(this);
-    this.state = { user: null };
-    this.reload();
+    this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
+
+    this.state = { user: DataController.getUserInformation() };
+  }
+
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
+  }
+
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeUserInfo);
+  }
+
+  handerChangeUserInfo() {
+    this.setState({ user: DataController.getUserInformation() });
   }
 
   reload() {
@@ -40,7 +54,7 @@ export class MarketsComponent extends React.Component {
     AppController.doTryAccessToMarket(market).then(user => {
       this.setState({ user });
     }).catch(error => {
-      console.log('MarketsComponent doCheckPairingStatus error :', error);
+      console.log('MarketsComponent doTryAccessToMarket error :', error);
     });
   }
 

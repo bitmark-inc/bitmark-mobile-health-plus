@@ -21,7 +21,7 @@ import {
 import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
 import { EventEmiterService } from './../services';
-import { AppController } from '../controllers';
+import { AppController } from '../managers';
 
 class MainComponent extends Component {
   constructor(props) {

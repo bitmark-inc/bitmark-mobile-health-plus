@@ -7,11 +7,10 @@ import {
   FlatList,
 } from 'react-native';
 import { config } from './../../../../configs';
-import bitmarkDepositStyle from './bitmark-deposit.component.style';
+import bitmarkDepositStyle from './market-bitmark-deposit.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-import bitmarkDepositComponentStyle from './bitmark-deposit.component.style';
 import { UserService } from '../../../../services';
-import { AppController } from '../../../../controllers';
+import { AppController } from '../../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -23,7 +22,7 @@ const Steps = {
   depost: 2,
 }
 
-export class BitmarkDepositComponent extends React.Component {
+export class MarketBitmarkDepositComponent extends React.Component {
   constructor(props) {
     super(props);
     this.selectMarket = this.selectMarket.bind(this);
@@ -49,7 +48,7 @@ export class BitmarkDepositComponent extends React.Component {
         index++;
       }
       this.setState({ marketList });
-    }).catch(error => console.log('BitmarkDepositComponent error :', error));
+    }).catch(error => console.log('MarketBitmarkDepositComponent error :', error));
   }
 
   selectMarket(selectedmMarket) {
@@ -77,7 +76,7 @@ export class BitmarkDepositComponent extends React.Component {
 
   render() {
     return (
-      <ScrollView style={bitmarkDepositComponentStyle.scroll}>
+      <ScrollView style={bitmarkDepositStyle.scroll}>
         <View style={bitmarkDepositStyle.body}>
           <View style={defaultStyle.header}>
             <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
@@ -118,7 +117,7 @@ export class BitmarkDepositComponent extends React.Component {
   }
 }
 
-BitmarkDepositComponent.propTypes = {
+MarketBitmarkDepositComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
