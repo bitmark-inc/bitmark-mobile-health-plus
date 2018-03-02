@@ -30,6 +30,7 @@ export class AccountDetailComponent extends React.Component {
     this.switchSubtab = this.switchSubtab.bind(this);
     this.handerChangeLocalBalance = this.handerChangeLocalBalance.bind(this);
     this.handerChangeMarketBalance = this.handerChangeMarketBalance.bind(this);
+    this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
 
     let localBalance = DataController.getUserBalance().localBalance;
     //TODO with local balance
@@ -41,9 +42,9 @@ export class AccountDetailComponent extends React.Component {
     }
     this.state = {
       subtab: config.disabel_markets ? SubTabs.settings : SubTabs.balance,
-      accountNumber: DataController.getUserInformation().bitmarkAccountNumber,
       markets: DataController.getUserInformation().markets,
-      copyText: 'COPY',
+      accountNumberCopyText: 'COPY',
+      notificationUUIDCopyText: 'COPY',
       localBalance,
       marketBalances,
       userInfo: DataController.getUserInformation(),
@@ -173,13 +174,13 @@ export class AccountDetailComponent extends React.Component {
           {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
             <Text style={accountStyle.accountNumberLabel}>My Bitmark Account Number</Text>
             <View style={accountStyle.accountNumberArea}>
-              <Text style={accountStyle.accountNumberValue} numberOfLines={1}>{this.state.accountNumber}</Text>
+              <Text style={accountStyle.accountNumberValue} numberOfLines={1}>{this.state.userInfo.bitmarkAccountNumber}</Text>
               <TouchableOpacity style={accountStyle.accountNumberCopyButton} onPress={() => {
-                Clipboard.setString(this.state.accountNumber);
-                this.setState({ copyText: 'COPIED' });
-                setTimeout(() => { this.setState({ copyText: 'COPY' }) }, 1000);
+                Clipboard.setString(this.state.userInfo.bitmarkAccountNumber);
+                this.setState({ accountNumberCopyText: 'COPIED' });
+                setTimeout(() => { this.setState({ accountNumberCopyText: 'COPY' }) }, 1000);
               }}>
-                <Text style={accountStyle.accountNumberCopyButtonText}>{this.state.copyText}</Text>
+                <Text style={accountStyle.accountNumberCopyButtonText}>{this.state.accountNumberCopyText}</Text>
               </TouchableOpacity>
             </View>
             <Text style={accountStyle.accountMessage}>To protect your privacy, you are identified in the Bitmark system by an anonymous public account number. You can safely share this public account number with others without compromising your account security.</Text>
@@ -192,6 +193,19 @@ export class AccountDetailComponent extends React.Component {
               <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device  »'.toUpperCase()} </Text>
             </TouchableOpacity>
           </View >}
+
+
+          <Text style={accountStyle.accountNumberLabel}>My Device Notification UUID :</Text>
+          <View style={accountStyle.accountNumberArea}>
+            <Text style={accountStyle.accountNumberValue} numberOfLines={1}>{this.state.userInfo.notificationUID}</Text>
+            <TouchableOpacity style={accountStyle.accountNumberCopyButton} onPress={() => {
+              Clipboard.setString(this.state.userInfo.notificationUID);
+              this.setState({ notificationUUIDCopyText: 'COPIED' });
+              setTimeout(() => { this.setState({ notificationUUIDCopyText: 'COPY' }) }, 1000);
+            }}>
+              <Text style={accountStyle.accountNumberCopyButtonText}>{this.state.notificationUUIDCopyText}</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View >
     );
