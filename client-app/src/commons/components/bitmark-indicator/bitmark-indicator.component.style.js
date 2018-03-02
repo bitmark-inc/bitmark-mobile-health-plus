@@ -4,8 +4,9 @@ import {
 
 import {
   ios,
-  // android //TODO
+  android //TODO
 } from './../../../configs';
+const constant = Platform.select({ ios: ios.constant, android: android.constant });
 
 export default StyleSheet.create({
   content: {
@@ -13,10 +14,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   indicatorImage: {
-    zIndex: Platform.select({
-      ios: ios.constant.zIndex.indicator,
-      android: 0, // TODO
-    }),
+    zIndex: constant.zIndex.indicator,
     width: 90,
     height: 90,
     opacity: 1,

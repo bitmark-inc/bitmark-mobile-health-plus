@@ -8,7 +8,7 @@ const {
   Linking,
   // Alert,
   AppState,
-  // NetInfo,
+  NetInfo,
   // PushNotificationIOS,
   View,
 } = ReactNative;
@@ -17,6 +17,7 @@ import {
   LoadingComponent,
   DefaultIndicatorComponent,
   BitmarkIndicatorComponent,
+  BitmarkInternetOffComponent,
 } from './../commons/components';
 import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
@@ -31,12 +32,14 @@ class MainComponent extends Component {
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.handerProcessingEvent = this.handerProcessingEvent.bind(this);
     this.handerSumittinggEvent = this.handerSumittinggEvent.bind(this);
+    this.handleNetworkChange = this.handleNetworkChange.bind(this);
 
     this.state = {
       user: null,
       processing: false,
       submitting: null,
       justCreatedBitmarkAccount: false,
+      networkStatus: true,
     };
     this.appState = AppState.currentState;
   }
@@ -54,16 +57,21 @@ class MainComponent extends Component {
       console.log('doOpenApp error :', error);
       this.setState({ user: {} })
     });
+
     EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.addEventListener('change', this.handleAppStateChange);
+    NetInfo.isConnected.fetch().then().done(() => {
+      NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
+    });
   }
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.remove(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
   }
 
   handerProcessingEvent(processing) {
@@ -101,6 +109,19 @@ class MainComponent extends Component {
     this.appState = nextAppState;
   }
 
+  handleNetworkChange(networkStatus) {
+    this.setState({ networkStatus });
+    if (networkStatus) {
+      AppController.doOpenApp(this.state.justCreatedBitmarkAccount).then(user => {
+        console.log(' doOpenApp : ', user);
+        this.setState({ user });
+      }).catch(error => {
+        console.log('doOpenApp error :', error);
+        this.setState({ user: {} })
+      });
+    }
+  }
+
   render() {
     let DisplayedComponent = LoadingComponent;
     if (this.state.user) {
@@ -108,6 +129,7 @@ class MainComponent extends Component {
     }
     return (
       <View style={{ flex: 1 }}>
+        {!this.state.networkStatus && <BitmarkInternetOffComponent />}
         {!!this.state.processing && <DefaultIndicatorComponent />}
         {!!this.state.submitting && <BitmarkIndicatorComponent
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
