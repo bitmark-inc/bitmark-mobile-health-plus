@@ -30,9 +30,9 @@ const getListingUrl = (bitmark) => {
   return '';
 };
 
-const getBalancUrl = (market) => {
+const getBalancUrl = (market, option) => {
   if (market === config.markets.totemic.name) {
-    return config.market_urls.totemic + `/account-balance`;
+    return config.market_urls.totemic + `/account-balance` + (option.stage ? `?stage=#${option.stage}` : '');
   }
   return '';
 };

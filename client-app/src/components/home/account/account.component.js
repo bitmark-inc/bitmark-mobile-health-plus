@@ -13,7 +13,7 @@ import accountStyle from './account.component.style';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 import { config } from '../../../configs/index';
-import { DataController } from '../../../managers';
+import { DataController, AppController } from '../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -31,14 +31,18 @@ export class AccountDetailComponent extends React.Component {
     this.handerChangeLocalBalance = this.handerChangeLocalBalance.bind(this);
     this.handerChangeMarketBalance = this.handerChangeMarketBalance.bind(this);
     this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
+    this.reloadBalance = this.reloadBalance.bind(this);
 
     let localBalance = DataController.getUserBalance().localBalance;
     //TODO with local balance
-    let marketBalances = DataController.getUserBalance().marketBalances;
-    for (let market in marketBalances) {
-      marketBalances[market].balanceHistories.forEach((item, index) => {
-        item.key = index;
-      });
+    let marketBalances = {};
+    if (!config.disabel_markets) {
+      marketBalances = DataController.getUserBalance().marketBalances;
+      for (let market in marketBalances) {
+        marketBalances[market].balanceHistories.forEach((item, index) => {
+          item.key = index;
+        });
+      }
     }
     this.state = {
       subtab: config.disabel_markets ? SubTabs.settings : SubTabs.balance,
@@ -71,13 +75,34 @@ export class AccountDetailComponent extends React.Component {
   }
 
   handerChangeMarketBalance() {
-    let marketBalances = DataController.getUserBalance().marketBalances || [];
-    for (let market in marketBalances) {
-      marketBalances[market].balanceHistories.forEach((item, index) => {
-        item.key = index;
-      });
+    if (!config.disabel_markets) {
+      let marketBalances = DataController.getUserBalance().marketBalances || [];
+      for (let market in marketBalances) {
+        marketBalances[market].balanceHistories.forEach((item, index) => {
+          item.key = index;
+        });
+      }
+      this.setState({ marketBalances });
     }
-    this.setState({ marketBalances });
+  }
+
+  reloadBalance() {
+    AppController.doGetBalance().then((data) => {
+      let localBalance = data.localBalance;
+      //TODO with local balance
+      let marketBalances = {};
+      if (!config.disabel_markets) {
+        marketBalances = data.marketBalances;
+        for (let market in marketBalances) {
+          marketBalances[market].balanceHistories.forEach((item, index) => {
+            item.key = index;
+          });
+        }
+      }
+      this.setState({ localBalance, marketBalances });
+    }).catch((error) => {
+      console.log('getUserBitmark error :', error);
+    });
   }
 
   switchSubtab(subtab) {
@@ -129,16 +154,18 @@ export class AccountDetailComponent extends React.Component {
               <View style={accountStyle.marketBalanceButtonArea}>
                 <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-                    url: MarketService.getBalancUrl(config.markets.totemic.name),
-                    name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1)
+                    url: MarketService.getBalancUrl(config.markets.totemic.name, { action: 'deposit' }),
+                    name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1),
+                    realoadPreivewScreen: this.reloadBalance,
                   });
                 }}>
                   <Text style={accountStyle.marketBalanceButtonText}>DEPOSIT</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-                    url: MarketService.getBalancUrl(config.markets.totemic.name),
-                    name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1)
+                    url: MarketService.getBalancUrl(config.markets.totemic.name, { action: 'withdraw' }),
+                    name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1),
+                    realoadPreivewScreen: this.reloadBalance,
                   });
                 }}>
                   <Text style={accountStyle.marketBalanceButtonText}>WITHDRAWAL</Text>

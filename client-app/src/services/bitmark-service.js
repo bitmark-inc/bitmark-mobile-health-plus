@@ -21,14 +21,16 @@ const doCheckFileToIssue = async (filePath) => {
   }
 };
 
-const doCheckMetadata = async (metadatList) => {
+const doCheckMetadata = (metadatList) => {
   let metadata = {};
   metadatList.forEach(item => {
     if (item.label && item.value) {
       metadata[item.label] = item.value;
     }
   });
-  return await BitmarkModel.doCheckMetadata(metadata);
+  return new Promise((resolve) => {
+    BitmarkModel.doCheckMetadata(metadata).then(resolve).catch(resolve);
+  });
 };
 
 const doIssueFile = async (touchFaceIdSession, filepath, assetName, metadatList, quantity) => {

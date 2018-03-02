@@ -235,8 +235,9 @@ export class LocalAddPropertyComponent extends React.Component {
         };
         this.setState(state);
       }).catch(error => {
+        console.log('choose file error:', error);
         this.setState({
-          fileError: error.message,
+          fileError: 'Error when checking file!',
         });
       });
     });
@@ -257,7 +258,7 @@ export class LocalAddPropertyComponent extends React.Component {
           }, 1000);
         }
       }).catch(error => {
-        this.setState({ issueError: 'There are problem when issue file!' });
+        this.setState({ issueError: 'Issue file error!' });
         console.log('issue bitmark error :', error);
       });
   }
@@ -283,26 +284,15 @@ export class LocalAddPropertyComponent extends React.Component {
     });
   }
 
-  checkMetadata(metadataList) {
-    let index = metadataList.findIndex((item) => !item.label || !item.value);
-    if (index >= 0) {
-      this.setState({
-        metadataList,
-        canAddNewMetadata: false,
-        canIssue: false,
-      });
-    } else {
-      this.setState({
-        metadataList,
-        canAddNewMetadata: true,
-        canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError),
-      });
-    }
-    BitmarkService.doCheckMetadata(metadataList).then(() => {
-      this.setState({ metadataError: '' });
-    }).catch((error) => {
-      console.log('error :', error);
-      this.setState({ metadataError: 'METADATA is too long (2048-BYTE LIMIT)!' });
+  async checkMetadata(metadataList) {
+    let error = await BitmarkService.doCheckMetadata();
+    let metadataError = error ? 'METADATA is too long (2048-BYTE LIMIT)!' : '';
+    let index = metadataList.findIndex((item) => ((!item.label && item.value) || (item.label && !item.value)));
+    this.setState({
+      metadataList,
+      metadataError,
+      canAddNewMetadata: (index < 0) && !metadataError,
+      canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError && !metadataError),
     });
   }
 

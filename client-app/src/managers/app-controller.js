@@ -125,6 +125,10 @@ const doGetBitmarks = async () => {
   await processing(DataController.doGetBitmarks());
 };
 
+const doGetBalance = async () => {
+  await processing(DataController.doGetBalance());
+};
+
 const doGetSignRequests = async () => {
   await processing(DataController.doGetSignRequests());
 };
@@ -171,6 +175,7 @@ let AppController = {
   doGetBitmarks,
   doCheckFileToIssue,
   doIssueFile,
+  doGetBalance,
   doGetProvenance,
   doGetSignRequests,
 

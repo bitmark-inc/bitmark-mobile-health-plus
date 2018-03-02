@@ -1,4 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
+import { merge } from 'lodash';
 
 import {
   UserService,
@@ -149,7 +150,10 @@ const doGetBitmarks = async () => {
   let data = await AccountService.doGetBitmarks(userInformation);
   userData.localAssets = data.localAssets;
   userData.marketAssets = data.marketAssets;
-  return data;
+  return merge({}, {
+    localAssets: userData.localAssets || [],
+    marketAssets: userData.marketAssets || [],
+  });
 };
 
 const doTryAccessToAllMarkets = async () => {
@@ -160,39 +164,36 @@ const doTryAccessToAllMarkets = async () => {
 
 const doGetSignRequests = async () => {
   let data = await TransactionService.doTryGetSignRequests();
-  if (userData.pendingTransactions === null || JSON.stringify(data.pendingTransactions) !== JSON.stringify(userData.pendingTransactions)) {
-    userData.pendingTransactions = data.pendingTransactions;
-  }
-  if (userData.completedTransactions === null || JSON.stringify(data.completedTransactions) !== JSON.stringify(userData.completedTransactions)) {
-    userData.completedTransactions = data.completedTransactions;
-  }
-  return {
+  userData.pendingTransactions = data.pendingTransactions;
+  userData.completedTransactions = data.completedTransactions;
+  return merge({}, {
     pendingTransactions: userData.pendingTransactions,
     completedTransactions: userData.completedTransactions,
-  }
+  });
 };
 
 const doGetBalance = async () => {
   let data = await AccountService.doGetBalance(userInformation);
-  if (userData.localBalannce === null || JSON.stringify(data.localBalannce) !== JSON.stringify(userData.localBalannce)) {
-    userData.localBalannce = data.localBalannce;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE);
-  }
-  if (userData.marketBalances === null || JSON.stringify(data.marketBalances) !== JSON.stringify(userData.marketBalances)) {
-    userData.marketBalances = data.marketBalances;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE);
-  }
-  return {
-    localBalannce: userData.localBalannce,
-    marketBalances: userData.marketBalances,
-  }
+  userData.localBalannce = data.localBalannce;
+  userData.marketBalances = data.marketBalances;
+  return merge({}, {
+    localBalannce: userData.localBalannce || {},
+    marketBalances: userData.marketBalances || {},
+  });
 };
 
+
+const getSignRequests = () => {
+  return merge({}, {
+    pendingTransactions: userData.pendingTransactions || [],
+    completedTransactions: userData.completedTransactions || [],
+  });
+}
 const getUserBitmarks = () => {
-  return {
-    localAssets: userData.localAssets,
-    marketAssets: userData.marketAssets,
-  }
+  return merge({}, {
+    localAssets: userData.localAssets || [],
+    marketAssets: userData.marketAssets || [],
+  });
 };
 
 const getUserInformation = () => {
@@ -200,10 +201,10 @@ const getUserInformation = () => {
 };
 
 const getUserBalance = () => {
-  return {
-    localBalannce: userData.localBalannce,
-    marketBalances: userData.marketBalances,
-  };
+  return merge({}, {
+    localBalannce: userData.localBalannce || {},
+    marketBalances: userData.marketBalances || {},
+  });
 };
 
 const getApplicationVersion = () => {
@@ -222,6 +223,7 @@ const DataController = {
   doTryAccessToAllMarkets,
   doGetSignRequests,
 
+  getSignRequests,
   getUserBalance,
   getUserBitmarks,
   getUserInformation,

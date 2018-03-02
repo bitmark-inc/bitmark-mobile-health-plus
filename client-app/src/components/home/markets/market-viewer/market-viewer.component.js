@@ -18,6 +18,7 @@ export class MarketViewerComponent extends React.Component {
     super(props);
     this.onNavigationStateChange = this.onNavigationStateChange.bind(this);
     this.reloadWebView = this.reloadWebView.bind(this);
+    this.onGoBack = this.onGoBack.bind(this);
     this.share = this.share.bind(this);
 
     this.state = {
@@ -39,14 +40,23 @@ export class MarketViewerComponent extends React.Component {
       this.webViewRef.reload();
     }
   }
+
   share() {
     Share.share({ title: this.state.marketName, message: this.state.marketName, url: this.state.currentUrl });
   }
+
+  onGoBack() {
+    if (this.props.navigation.state.params.realoadPreivewScreen) {
+      this.props.navigation.state.params.realoadPreivewScreen();
+    }
+    this.props.navigation.goBack();
+  }
+
   render() {
     return (
       <View style={termsStyles.body}>
         <View style={defaultStyles.header}>
-          <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity style={defaultStyles.headerLeft} onPress={this.onGoBack}>
             <Image style={defaultStyles.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
           </TouchableOpacity>
           <Text style={defaultStyles.headerTitle}>{this.state.marketName}</Text>
@@ -85,6 +95,7 @@ MarketViewerComponent.propTypes = {
       params: PropTypes.shape({
         url: PropTypes.string,
         name: PropTypes.string,
+        realoadPreivewScreen: PropTypes.func,
       }),
     }),
   }),

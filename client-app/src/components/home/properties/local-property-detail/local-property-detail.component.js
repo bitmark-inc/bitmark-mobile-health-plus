@@ -72,7 +72,9 @@ export class LocalPropertyDetailComponent extends React.Component {
             </View>}
             <View style={propertyDetailStyle.bottomImageBar}></View>
             <Text style={propertyDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
-            <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>Issued on {this.state.bitmark.created_at} by {this.state.asset.registrant}</Text>
+            <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
+              Issued {isNaN(this.state.bitmark.created_at) ? '' : ('on' + this.state.bitmark.created_at)} by {this.state.asset.registrant}
+            </Text>
             <View style={propertyDetailStyle.bottomAssetNameBar}></View>
             <Text style={propertyDetailStyle.provenanceLabel}>Provenance</Text>
             <View style={propertyDetailStyle.provenancesArea}>
