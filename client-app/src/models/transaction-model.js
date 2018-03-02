@@ -1,0 +1,3 @@
+let TransactionModel = {};
+
+export { TransactionModel };
