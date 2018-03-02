@@ -351,23 +351,23 @@ export class LocalAddPropertyComponent extends React.Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
+        <View style={localAddPropertyStyle.body}>
           {!!this.state.selectedMetadata && <MetadataInputComponent
             cancel={() => this.setState({ selectedMetadata: null })}
             done={(text) => this.doneInputSelectedMetadata(text)}
             type={this.state.selectedMetadata.type}
             defaultValue={this.state.selectedMetadata.value}
           />}
+          <View style={defaultStyle.header}>
+            <TouchableOpacity style={defaultStyle.headerLeft} onPress={this.back}>
+              <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
+            </TouchableOpacity>
+            <Text style={defaultStyle.headerTitle}>Create Properties</Text>
+            <TouchableOpacity style={defaultStyle.headerRight} />
+          </View>
 
           <ScrollView style={localAddPropertyStyle.scroll}>
-            <View style={localAddPropertyStyle.body} onPress={Keyboard.dismiss}>
-              <View style={defaultStyle.header}>
-                <TouchableOpacity style={defaultStyle.headerLeft} onPress={this.back}>
-                  <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
-                </TouchableOpacity>
-                <Text style={defaultStyle.headerTitle}>Create Properties</Text>
-                <TouchableOpacity style={defaultStyle.headerRight} />
-              </View>
+            <View style={localAddPropertyStyle.body}>
               {this.state.step === Steps.input_file && <View style={localAddPropertyStyle.addFileArea}>
                 <Text style={localAddPropertyStyle.addFileLabel}>Upload Asset</Text>
                 {!!this.state.fileError && <Text style={localAddPropertyStyle.fileInputError}>{this.state.fileError}</Text>}

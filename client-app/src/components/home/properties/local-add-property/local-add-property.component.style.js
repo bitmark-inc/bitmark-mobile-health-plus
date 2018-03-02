@@ -5,7 +5,6 @@ import { convertWidth } from './../../../../utils';
 export default StyleSheet.create({
   scroll: {
     flexDirection: 'column',
-    height: '100%',
     width: '100%',
     backgroundColor: 'white',
   },

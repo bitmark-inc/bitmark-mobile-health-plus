@@ -76,15 +76,15 @@ export class MarketBitmarkDepositComponent extends React.Component {
 
   render() {
     return (
-      <ScrollView style={bitmarkDepositStyle.scroll}>
-        <View style={bitmarkDepositStyle.body}>
-          <View style={defaultStyle.header}>
-            <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
-            <Text style={defaultStyle.headerTitle}>List to Market</Text>
-            <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
-              <Text style={defaultStyle.headerRightText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
+      <View style={bitmarkDepositStyle.body}>
+        <View style={defaultStyle.header}>
+          <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
+          <Text style={defaultStyle.headerTitle}>List to Market</Text>
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
+            <Text style={defaultStyle.headerRightText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={bitmarkDepositStyle.content}>
           {this.state.step === Steps.chooseMarket && <View style={bitmarkDepositStyle.chooseMarketArea}>
             <Text style={bitmarkDepositStyle.stepLabel}>Choose a market to list</Text>
             <Text style={bitmarkDepositStyle.stepMessage}>We found one market that accepts listings for this property. Tap the market’s logo to continue.</Text>
@@ -111,8 +111,8 @@ export class MarketBitmarkDepositComponent extends React.Component {
               <Text style={bitmarkDepositStyle.continueButtonText}>CONTINUE</Text>
             </TouchableOpacity>
           </View>}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
