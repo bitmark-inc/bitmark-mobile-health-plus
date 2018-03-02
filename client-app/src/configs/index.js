@@ -13,6 +13,7 @@ let config = {
 
   NETWORKS,
   bitmark_network: NETWORKS.testnet,
+  appLink: 'https://itunes.apple.com/us/app/bitmark/id1213686437?ls=1&mt=8',
   get_way_server_url: 'https://api.test.bitmark.com',
   preive_asset_url: 'https://preview.assets.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',

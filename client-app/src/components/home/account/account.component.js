@@ -42,7 +42,6 @@ export class AccountDetailComponent extends React.Component {
     }
     this.state = {
       subtab: config.disabel_markets ? SubTabs.settings : SubTabs.balance,
-      markets: DataController.getUserInformation().markets,
       accountNumberCopyText: 'COPY',
       notificationUUIDCopyText: 'COPY',
       localBalance,
