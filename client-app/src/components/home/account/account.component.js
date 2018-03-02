@@ -46,19 +46,25 @@ export class AccountDetailComponent extends React.Component {
       copyText: 'COPY',
       localBalance,
       marketBalances,
+      userInfo: DataController.getUserInformation(),
     };
   }
 
   componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE, this.handerChangeLocalBalance);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE, this.handerChangeMarketBalance);
   }
 
   componentWillUnmount() {
+    EventEmiterService.removeon(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE, this.handerChangeLocalBalance);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE, this.handerChangeMarketBalance);
   }
 
+  handerChangeUserInfo() {
+    this.setState({ userInfo: DataController.getUserInformation() });
+  }
   handerChangeLocalBalance() {
     let localBalance = DataController.getUserBalance().localBalannce || {};
     this.setState({ localBalance });

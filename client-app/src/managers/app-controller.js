@@ -1,5 +1,5 @@
 import { CommonModel, AccountModel, BitmarkModel } from './../models';
-import { AccountService, BitmarkService, EventEmiterService, MarketService, UserService } from './../services'
+import { AccountService, BitmarkService, EventEmiterService, MarketService } from './../services'
 import { DataController } from './data-controller';
 
 // ================================================================================================
