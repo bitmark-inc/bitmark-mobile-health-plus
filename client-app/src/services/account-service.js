@@ -54,8 +54,7 @@ const doTryAccessToMarket = async (market) => {
   return null;
 };
 
-const doGetBitmarks = async () => {
-  let userInfo = await UserService.doGetCurrentUser();
+const doGetBitmarks = async (userInfo) => {
   let localAssets = await BitmarkService.doGetBitmarks(userInfo.bitmarkAccountNumber);
   let marketAssets = [];
   if (!config.disabel_markets) {
@@ -76,11 +75,9 @@ const doGetBitmarks = async () => {
   return { localAssets, marketAssets };
 };
 
-const doGetBalance = async () => {
-  let userInfo = await UserService.doGetCurrentUser();
+const doGetBalance = async (userInfo) => {
   const localBalannce = {};
   //TODO
-
   const marketBalances = {};
   if (!config.disabel_markets) {
     for (let market in userInfo.markets) {

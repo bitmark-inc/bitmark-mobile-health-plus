@@ -1,6 +1,12 @@
 import DeviceInfo from 'react-native-device-info';
 
-import { UserService, EventEmiterService, AccountService, NotificationService } from "../services";
+import {
+  UserService,
+  EventEmiterService,
+  AccountService,
+  NotificationService,
+  TransactionService
+} from "../services";
 
 let userInformation = {};
 let userData = {
@@ -8,38 +14,48 @@ let userData = {
   marketAssets: null,
   localBalannce: null,
   marketBalances: null,
+  pendingTransactions: null,
+  completedTransactions: null,
 };
 // ================================================================================================================================================
 // ================================================================================================================================================
-let configNotification = () => {
-  let onRegisterred = (registerredNotificaitonInfo) => {
-    let notificationUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
-    if (userInformation.notificationUID !== notificationUID) {
-      userInformation.notificationUID = notificationUID;
-      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
+const runGetTransactionsInBackground = (checkDoneProcess) => {
+  TransactionService.doGetSignRequests().then(data => {
+    if (userData.pendingTransactions === null || JSON.stringify(data.pendingTransactions) !== JSON.stringify(userData.pendingTransactions)) {
+      userData.pendingTransactions = data.pendingTransactions;
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS);
     }
-  };
-  let onReceivedNotification = () => {
-    //TODO
-  };
-  NotificationService.configure(onRegisterred, onReceivedNotification);
-};
-
-let runGetUserInformationInBackground = (checkDoneProcess) => {
-  UserService.doGetCurrentUser().then(userInfo => {
-    if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
-      userInformation = userInfo;
-      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
+    if (userData.completedTransactions === null || JSON.stringify(data.completedTransactions) !== JSON.stringify(userData.completedTransactions)) {
+      userData.completedTransactions = data.completedTransactions;
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_COMPLETED_TRANSACTIONS);
     }
     checkDoneProcess();
   }).catch(error => {
     checkDoneProcess();
-    console.log('runOnBackground  doGetCurrentUser error :', error);
-  });
+    console.log('runOnBackground  runGetTransactionsInBackground error :', error);
+  })
 };
 
-let runGetUserBitmarksInBackground = (checkDoneProcess) => {
-  AccountService.doGetBitmarks().then(data => {
+const configNotification = () => {
+  const onRegisterred = (registerredNotificaitonInfo) => {
+    let notificationUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
+    if (userInformation.notificationUID !== notificationUID) {
+      userInformation.notificationUID = notificationUID;
+      // TODO reigster uuid
+      // NotificationService.doTryRegisterNotificationInfo({});
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
+    }
+  };
+  const onReceivedNotification = (data) => {
+    console.log('onReceivedNotification data:', data);
+    runGetTransactionsInBackground();
+    NotificationService.setApplicationIconBadgeNumber(0);
+  };
+  NotificationService.configure(onRegisterred, onReceivedNotification);
+};
+
+const runGetUserBitmarksInBackground = (checkDoneProcess) => {
+  AccountService.doGetBitmarks(userInformation).then(data => {
     if (userData.localAssets === null || JSON.stringify(data.localAssets) !== JSON.stringify(userData.localAssets)) {
       userData.localAssets = data.localAssets;
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
@@ -55,8 +71,8 @@ let runGetUserBitmarksInBackground = (checkDoneProcess) => {
   });
 };
 
-let runGetUserBalanceInBackground = (checkDoneProcess) => {
-  AccountService.doGetBalance().then(data => {
+const runGetUserBalanceInBackground = (checkDoneProcess) => {
+  AccountService.doGetBalance(userInformation).then(data => {
     if (userData.localBalannce === null || JSON.stringify(data.localBalannce) !== JSON.stringify(userData.localBalannce)) {
       userData.localBalannce = data.localBalannce;
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE);
@@ -72,21 +88,31 @@ let runGetUserBalanceInBackground = (checkDoneProcess) => {
   });
 };
 
-let runOnBackground = () => {
+const runOnBackground = () => {
   return new Promise((resolve) => {
-    let countProcess = 0;
-    let processList = [
-      runGetUserInformationInBackground,
-      runGetUserBitmarksInBackground,
-      runGetUserBalanceInBackground,
-    ]
-    let checkDoneProcess = () => {
-      countProcess++;
-      if (countProcess >= processList.length) {
+    UserService.doTryGetCurrentUser().then(userInfo => {
+      if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
+        userInformation = userInfo;
+        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
+      }
+      if (userInformation) {
+        let countProcess = 0;
+        let processList = [
+          runGetUserBitmarksInBackground,
+          runGetUserBalanceInBackground,
+          // runGetTransactionsInBackground,
+        ]
+        let checkDoneProcess = () => {
+          countProcess++;
+          if (countProcess >= processList.length) {
+            resolve();
+          }
+        }
+        processList.forEach(process => process(checkDoneProcess));
+      } else {
         resolve();
       }
-    }
-    processList.forEach(process => process(checkDoneProcess));
+    });
   });
 };
 // ================================================================================================================================================
@@ -94,7 +120,7 @@ let runOnBackground = () => {
 let dataInterval = null;
 const startInterval = () => {
   stopInterval();
-  dataInterval = setInterval(runOnBackground, 5 * 1000);
+  dataInterval = setInterval(runOnBackground, 10 * 1000);
 };
 
 const stopInterval = () => {
@@ -107,8 +133,8 @@ const stopInterval = () => {
 // ================================================================================================================================================
 // ================================================================================================================================================
 const doActiveApplication = async (justCreatedBitmarkAccount) => {
-  configNotification();
   await runOnBackground();
+  configNotification();
   startInterval();
   if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
     await NotificationService.doCheckNotificaitonPermission();
@@ -119,12 +145,47 @@ const doActiveApplication = async (justCreatedBitmarkAccount) => {
 const doDeactiveApplication = async () => {
   stopInterval();
 };
-
 const doGetBitmarks = async () => {
-  let data = await AccountService.doGetBitmarks();
+  let data = await AccountService.doGetBitmarks(userInformation);
   userData.localAssets = data.localAssets;
   userData.marketAssets = data.marketAssets;
   return data;
+};
+
+const doTryAccessToAllMarkets = async () => {
+  await AccountService.doTryAccessToAllMarkets();
+  userInformation = await UserService.doGetCurrentUser();
+  return userInformation;
+};
+
+const doGetSignRequests = async () => {
+  let data = await TransactionService.doTryGetSignRequests();
+  if (userData.pendingTransactions === null || JSON.stringify(data.pendingTransactions) !== JSON.stringify(userData.pendingTransactions)) {
+    userData.pendingTransactions = data.pendingTransactions;
+  }
+  if (userData.completedTransactions === null || JSON.stringify(data.completedTransactions) !== JSON.stringify(userData.completedTransactions)) {
+    userData.completedTransactions = data.completedTransactions;
+  }
+  return {
+    pendingTransactions: userData.pendingTransactions,
+    completedTransactions: userData.completedTransactions,
+  }
+};
+
+const doGetBalance = async () => {
+  let data = await AccountService.doGetBalance(userInformation);
+  if (userData.localBalannce === null || JSON.stringify(data.localBalannce) !== JSON.stringify(userData.localBalannce)) {
+    userData.localBalannce = data.localBalannce;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE);
+  }
+  if (userData.marketBalances === null || JSON.stringify(data.marketBalances) !== JSON.stringify(userData.marketBalances)) {
+    userData.marketBalances = data.marketBalances;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE);
+  }
+  return {
+    localBalannce: userData.localBalannce,
+    marketBalances: userData.marketBalances,
+  }
 };
 
 const getUserBitmarks = () => {
@@ -157,6 +218,9 @@ const DataController = {
   doActiveApplication,
   doDeactiveApplication,
   doGetBitmarks,
+  doGetBalance,
+  doTryAccessToAllMarkets,
+  doGetSignRequests,
 
   getUserBalance,
   getUserBitmarks,

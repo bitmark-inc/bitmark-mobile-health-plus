@@ -53,7 +53,7 @@ const doGetCurrentAccount = async (touchFaceIdMessage) => {
     return null;
   }
   let userInfo = await processing(AccountModel.doGetCurrentAccount(touchFaceIdSession));
-  await CommonModel.endNewFaceTouceSessionId();
+  await CommonModel.doEndNewFaceTouceSessionId();
   return userInfo;
 };
 
@@ -113,21 +113,22 @@ const check24Words = async (pharse24Words) => {
   return await processing(AccountModel.doCheck24Words(pharse24Words));
 };
 
-const doGetBalance = async () => {
-  return await processing(AccountService.doGetBalance());
-};
-
 const doTryAccessToMarket = async (market) => {
   return await processing(AccountService.doTryAccessToMarket(market));
 };
 
 const doTryAccessToAllMarkets = async () => {
-  return await processing(AccountService.doTryAccessToAllMarkets());
+  return await processing(DataController.doTryAccessToAllMarkets());
 };
 
 const doGetBitmarks = async () => {
   await processing(DataController.doGetBitmarks());
 };
+
+const doGetSignRequests = async () => {
+  await processing(DataController.doGetSignRequests());
+};
+
 
 const doCheckFileToIssue = async (filepath) => {
   return await processing(BitmarkService.doCheckFileToIssue(filepath));
@@ -145,7 +146,6 @@ const doIssueFile = async (filepath, assetName, metadatList, quantity, processin
 const doGetProvenance = async (bitmark) => {
   return await processing(BitmarkModel.doGetProvenance(bitmark));
 };
-
 
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
@@ -166,13 +166,13 @@ let AppController = {
   doWithdrawBitmark,
   doDepositBitmark,
   check24Words,
-  doGetBalance,
   doTryAccessToMarket,
   doTryAccessToAllMarkets,
   doGetBitmarks,
   doCheckFileToIssue,
   doIssueFile,
   doGetProvenance,
+  doGetSignRequests,
 
   doOpenApp,
 }

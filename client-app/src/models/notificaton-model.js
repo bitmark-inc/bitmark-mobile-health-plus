@@ -1,16 +1,17 @@
+import PushNotification from 'react-native-push-notification';
 
-
-const doGetSignRequest = () => {
+const doRegisterNotificationInfo = (deviceInfo) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     //TODO
     let tempURL = '';
     fetch(tempURL, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-      }
+      },
+      body: JSON.stringify(deviceInfo),
     }).then((response) => {
       statusCode = response.status;
       return response.json();
@@ -24,17 +25,18 @@ const doGetSignRequest = () => {
   });
 };
 
-const doGetSignRequests = () => {
+const doDeregisterNotificationInfo = (deviceInfo) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     //TODO
     let tempURL = '';
     fetch(tempURL, {
-      method: 'GET',
+      method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-      }
+      },
+      body: JSON.stringify(deviceInfo),
     }).then((response) => {
       statusCode = response.status;
       return response.json();
@@ -48,18 +50,29 @@ const doGetSignRequests = () => {
   });
 };
 
-const doSubmitSignRequest = () => {
-
-};
-const doSubmitCounterSignRequest = () => {
-
-};
-
-let TransactionModel = {
-  doGetSignRequest,
-  doGetSignRequests,
-  doSubmitSignRequest,
-  doSubmitCounterSignRequest,
+let configure = (onRegister, onNotification) => {
+  PushNotification.configure({
+    onRegister: onRegister,
+    onNotification: onNotification,
+    requestPermissions: false,
+  });
 };
 
-export { TransactionModel };
+let doRequestNotificationPermissions = async () => {
+  return await PushNotification.requestPermissions();
+};
+
+let setApplicationIconBadgeNumber = (number) => {
+  return PushNotification.setApplicationIconBadgeNumber(number);
+};
+
+let NotificationModel = {
+  doRegisterNotificationInfo,
+  doDeregisterNotificationInfo,
+
+  configure,
+  doRequestNotificationPermissions,
+  setApplicationIconBadgeNumber,
+};
+
+export { NotificationModel };

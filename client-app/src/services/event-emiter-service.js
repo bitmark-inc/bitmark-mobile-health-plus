@@ -10,6 +10,8 @@ let EventEmiterService = {
     CHANGE_USER_DATA_MARKET_BITMARKS: 'change-user-data:market-bitmarks',
     CHANGE_USER_DATA_LOCAL_BALANCE: 'change-user-data:local-balance',
     CHANGE_USER_DATA_MARKET_BALANCE: 'change-user-data:market-balance',
+    CHANGE_USER_DATA_PENDING_TRANSACTIONS: 'change-user-data:pending-transactions',
+    CHANGE_USER_DATA_COMPLETED_TRANSACTIONS: 'change-user-data:completed-transactions',
   },
   on: (eventName, func) => {
     NativeAppEventEmitter.addListener(eventName, func);

@@ -1,12 +1,7 @@
-import PushNotification from 'react-native-push-notification';
+import { NotificationModel } from './../models';
 
 let configure = (onRegister, onNotification) => {
-  PushNotification.configure({
-    onRegister: onRegister,
-    onNotification: onNotification,
-    //ios default all permission
-    requestPermissions: false,
-  });
+  return NotificationModel.configure(onRegister, onNotification);
 };
 
 let isRequesting = false;
@@ -28,14 +23,14 @@ let doRequestNotificationPermissions = async () => {
     return await waitRequestPermistion();
   }
   isRequesting = true;
-  requestResult = await PushNotification.requestPermissions();
+  requestResult = await NotificationModel.doRequestNotificationPermissions();
   isRequesting = false;
   return requestResult;
 };
 
 let doCheckNotificaitonPermission = () => {
   return new Promise((resolve) => {
-    NotificationService.doRequestNotificationPermissions().then(resolve).catch(error => {
+    doRequestNotificationPermissions().then(resolve).catch(error => {
       console.log('NotificationService doCheckNotificaitonPermission error :', error);
       resolve();
     })
@@ -43,14 +38,35 @@ let doCheckNotificaitonPermission = () => {
 };
 
 let setApplicationIconBadgeNumber = (number) => {
-  return PushNotification.setApplicationIconBadgeNumber(number);
+  return NotificationModel.setApplicationIconBadgeNumber(number);
+};
+
+let doTryRegisterNotificationInfo = (deviceInfo) => {
+  return new Promise((resolve) => {
+    NotificationModel.doRegisterNotificationInfo(deviceInfo).then(resolve).catch(error => {
+      console.log('NotificationService doTryRegisterNotificationInfo error :', error);
+    })
+  });
+};
+
+let doTryDeregisterNotificationInfo = (deviceInfo) => {
+  return new Promise((resolve) => {
+    NotificationModel.doDeregisterNotificationInfo(deviceInfo).then(resolve).catch(error => {
+      console.log('NotificationService doTryRegisterNotificationInfo error :', error);
+    });
+  });
 };
 
 let NotificationService = {
   configure,
+  setApplicationIconBadgeNumber,
+
   doRequestNotificationPermissions,
   doCheckNotificaitonPermission,
-  setApplicationIconBadgeNumber,
+  doTryRegisterNotificationInfo,
+  doTryDeregisterNotificationInfo,
+  doRegisterNotificationInfo: NotificationModel.doRegisterNotificationInfo,
+  doDeregisterNotificationInfo: NotificationModel.doDeregisterNotificationInfo,
 };
 
 export { NotificationService };
