@@ -4,12 +4,14 @@ import { WelcomeComponent } from './welcome';
 import { NewAccountComponent } from './new-account';
 import { SignInComponent } from './sign-in';
 import { FaceTouchIdComponent } from './face-touch-id';
+import { NotificationComponent } from './notification';
 
 
 let OnboardingComponent = StackNavigator({
   Welcome: { screen: WelcomeComponent, },
   NewAccount: { screen: NewAccountComponent, },
   SignIn: { screen: SignInComponent, },
+  Notification: { screen: NotificationComponent, },
   FaceTouchId: { screen: FaceTouchIdComponent, },
 }, {
     headerMode: 'none',

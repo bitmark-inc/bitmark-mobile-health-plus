@@ -218,7 +218,7 @@ export class NewAccountComponent extends React.Component {
     const createBitmarkAccount = () => {
       AppController.doCreateNewAccount().then((userInfo) => {
         if (userInfo) {
-          this.props.navigation.navigate('FaceTouchId');
+          this.props.navigation.navigate('Notification');
         }
       }).catch((error) => {
         console.log('createNewUser error :', error);

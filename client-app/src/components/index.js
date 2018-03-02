@@ -38,7 +38,9 @@ class MainComponent extends Component {
       submitting: null,
     };
     this.appState = AppState.currentState;
+  }
 
+  componentDidMount() {
     AppController.doOpenApp().then(user => {
       console.log(' doOpenApp : ', user);
       this.setState({ user });
@@ -46,9 +48,6 @@ class MainComponent extends Component {
       console.log('doOpenApp error :', error);
       this.setState({ user: {} })
     });
-  }
-
-  componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
     Linking.addEventListener('url', this.handleDeppLink);
@@ -84,6 +83,7 @@ class MainComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
+      console.log('active component');
       AppController.doOpenApp().then(user => {
         console.log(' doOpenApp : ', user);
         this.setState({ user });

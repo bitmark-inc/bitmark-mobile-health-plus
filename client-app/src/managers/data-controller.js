@@ -23,16 +23,6 @@ let configNotification = () => {
   NotificationService.configure(onRegisterred, onReceivedNotification);
 };
 
-let doRequestNotification = () => {
-  console.log('run request notification =============================================');
-  return new Promise((resolve) => {
-    NotificationService.doRequestPermissions().then(resolve).catch(error => {
-      console.log('DataController doRequestNotification error :', error);
-      resolve();
-    })
-  });
-};
-
 let runGetUserInformationInBackground = (checkDoneProcess) => {
   UserService.doGetCurrentUser().then(userInfo => {
     if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
@@ -116,10 +106,11 @@ const stopInterval = () => {
 // ================================================================================================================================================
 const doActiveApplication = async () => {
   configNotification();
-  await doRequestNotification();
-
   await runOnBackground();
   startInterval();
+  if (userInformation && userInformation.bitmarkAccountNumber) {
+    await NotificationService.doCheckNotificaitonPermission();
+  }
   return userInformation;
 };
 
