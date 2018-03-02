@@ -1,0 +1,16 @@
+- set_fact:
+    ios_certificate_base64: "{{ lookup('file', 'cers/cer_b64_encoded') }}"
+- name: Switch workspace
+  shell: kubectl config use-context cluster.{{ network_slug }}.bitmark.com
+- name: Add config
+  command: kubectl apply -f -
+  args:
+    stdin: "{{ lookup('template', 'gorush-secret.yaml') }}"
+- name: Add deployment
+  command: kubectl apply -f
+  args:
+    stdin: 'templates/gorush-deployment.yaml'
+- name: Create the Service Controller for AWS ELB
+  command: kubectl apply -f -
+  args:
+    stdin: 'templates/gorush-service.yaml'

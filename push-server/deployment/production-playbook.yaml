@@ -1,0 +1,9 @@
+- hosts: all
+  vars_files:
+    - ./vars/production-global.yaml
+    - ./vars/production-enc.yaml
+  roles:
+    - logger
+    # - art-trading
+    - core-api
+    - registry-server
