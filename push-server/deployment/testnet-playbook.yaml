@@ -1,0 +1,11 @@
+- hosts: all
+  vars_files:
+    - ./vars/testnet-global.yaml
+    - ./vars/testnet-enc.yaml
+  roles:
+    - logger
+    - totemic
+    - art-trading
+    - core-api
+    - registry-server
+    - trade-service
