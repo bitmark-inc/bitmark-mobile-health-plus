@@ -11,11 +11,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import ImagePicker from 'react-native-image-picker';
 
 
-import { AppService, EventEmiterService } from './../../../../services';
+import { BitmarkService } from './../../../../services';
 
 import localAddPropertyStyle from './local-add-property.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { convertWidth } from '../../../../utils';
+import { AppController } from '../../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -51,7 +52,8 @@ class MetadataInputComponent extends React.Component {
     this.state = {
       textInput,
       labels,
-      placeholder: (props.type === 'label') ? 'CREATE NEW LABEL' : 'DESCRIPTION'
+      placeholder: (props.type === 'label') ? 'SELECT OR CREATE NEW LABEL' : 'DESCRIPTION',
+      numberOfLines: (props.type === 'label') ? 1 : 5,
     }
   }
 
@@ -84,7 +86,7 @@ class MetadataInputComponent extends React.Component {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{
-            width: '100%', height: this.props.type === 'label' ? 220 : 90,
+            width: '100%', maxHeight: 230,
             flexDirection: 'column',
           }}>
             <TextInput
@@ -92,15 +94,17 @@ class MetadataInputComponent extends React.Component {
               style={{
                 borderBottomColor: '#EDF0F4',
                 borderBottomWidth: 1,
-                marginTop: 20, marginBottom: 5, marginLeft: '5%',
-                width: '90%', maxHeight: 50,
-                height: 30,
+                marginTop: 10, marginBottom: 10, marginLeft: '5%',
+                width: '90%',
+                minHeight: 30,
+                maxHeight: 100,
               }} placeholder={this.state.placeholder}
-              multiline={true}
+              multiline={this.state.numberOfLines > 1}
               value={this.state.textInput}
               onChangeText={this.onChangeText}
               ref={(ref) => this.textInputRef = ref}
               returnKeyType="done"
+              numberOfLines={this.state.numberOfLines}
               onSubmitEditing={() => this.props.done(this.state.textInput)}
             />
             {this.props.type === 'label' && <View style={{
@@ -110,12 +114,11 @@ class MetadataInputComponent extends React.Component {
               flexDirection: 'column',
               marginLeft: '5%',
             }}>
-              <Text style={{ marginBottom: 10, color: '#C9C9C9' }}>OR SELECT FROM BELOW:</Text>
               <FlatList
                 data={this.state.labels}
                 extraData={this.state}
                 renderItem={({ item }) => {
-                  return <TouchableOpacity style={{ padding: 4, marginTop: 3 }} onPress={() => this.onSelecteLabel(item.label)}>
+                  return <TouchableOpacity style={{ paddingTo: 4, paddingBottom: 4, marginTop: 3 }} onPress={() => this.onSelecteLabel(item.label)}>
                     <Text style={{ color: '#0060F2' }}>{item.label}</Text>
                   </TouchableOpacity>
                 }}
@@ -167,7 +170,7 @@ export class LocalAddPropertyComponent extends React.Component {
     this.back = this.back.bind(this);
     this.doInputAssetName = this.doInputAssetName.bind(this);
     this.addNewMetadataField = this.addNewMetadataField.bind(this);
-    this.checkMetadata = this.checkMetadata.bind(this);
+    this.checkIssuance = this.checkIssuance.bind(this);
     this.doInputQuantity = this.doInputQuantity.bind(this);
 
     this.state = {
@@ -180,10 +183,10 @@ export class LocalAddPropertyComponent extends React.Component {
       filename: '',
       fileFormat: '',
       fileError: '',
-      assetName: '',
+      assetName: null,
       canAddNewMetadata: false,
       canIssue: false,
-      quantity: '',
+      quantity: null,
       selectedMetadata: null,
 
       assetNameError: '',
@@ -197,18 +200,17 @@ export class LocalAddPropertyComponent extends React.Component {
     let options = {
       title: '',
       takePhotoButtonTitle: '',
-      mediaType: 'mixed',
+      mediaType: 'photo',
       noData: true,
     };
     ImagePicker.showImagePicker(options, (response) => {
       if (response.error || response.didCancel) {
         return;
       }
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
       let filepath = response.uri.replace('file://', '');
       let filename = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
       let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
-      AppService.doCheckingIssuance(filepath).then(asset => {
+      AppController.doCheckFileToIssue(filepath).then(asset => {
         let existingAsset = !!(asset && asset.registrant);
         let metadataList = [];
         if (existingAsset) {
@@ -234,79 +236,99 @@ export class LocalAddPropertyComponent extends React.Component {
           canAddNewMetadata: false,
         };
         this.setState(state);
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       }).catch(error => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+        console.log('choose file error:', error);
         this.setState({
-          fileError: error.message,
+          fileError: 'Checking file error!',
         });
       });
     });
   }
 
   register() {
-    EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: true, title: 'Submitting your request to the network for confirmation…', message: '' });
-    AppService.issueFile(this.state.filepath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity)).then((data) => {
-      if (!data) {
-        EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
-        return;
-      }
-      EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, { indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.' });
-      setTimeout(() => {
-        EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
-        if (this.props.navigation.state.params.refreshPropertiesScreen) {
-          this.props.navigation.state.params.refreshPropertiesScreen();
-          this.props.navigation.goBack();
+    AppController.doIssueFile(this.state.filepath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), {
+      indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
+    }, {
+        indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
+      }).then((data) => {
+        if (data) {
+          setTimeout(() => {
+            if (this.props.navigation.state.params.refreshPropertiesScreen) {
+              this.props.navigation.state.params.refreshPropertiesScreen();
+              this.props.navigation.goBack();
+            }
+          }, 1000);
         }
-      }, 1000);
-    }).catch(error => {
-      this.setState({ issueError: 'There are problem when issue file!' });
-      EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
-      console.log('issue bitmark error :', error);
-    });
+      }).catch(error => {
+        this.setState({ issueError: 'Issue file error!' });
+        console.log('issue bitmark error :', error);
+      });
   }
 
   back() {
     if (this.state.step === Steps.input_file) {
       this.props.navigation.goBack();
     } else if (this.state.step === Steps.input_info) {
-      this.setState({ step: Steps.input_file });
+      this.setState({
+        step: Steps.input_file,
+        existingAsset: false,
+        metadataList: [{ key: 0, label: '', value: '' }],
+        filepath: '',
+        filename: '',
+        fileFormat: '',
+        fileError: '',
+        assetName: null,
+        canAddNewMetadata: false,
+        canIssue: false,
+        quantity: null,
+        selectedMetadata: null,
+        assetNameError: '',
+        quantityError: '',
+        metadataError: '',
+        issueError: '',
+      });
     }
   }
 
   doInputAssetName(assetName) {
-    let assetNameError = '';
-    if (assetName.length > 64) {
-      assetNameError = 'Property name must be smaller or equal 64 character!';
-    } else if (!assetName) {
-      assetNameError = 'You must input property name!';
-    }
-    this.setState({
-      assetName, assetNameError,
-      canIssue: (assetName && !assetNameError && this.state.quantity && !this.state.quantityError),
-    });
+    this.checkIssuance(assetName, this.state.metadataList, this.state.quantity);
   }
 
-  checkMetadata(metadataList) {
-    let index = metadataList.findIndex((item) => !item.label || !item.value);
-    if (index >= 0) {
-      this.setState({
-        metadataList,
-        canAddNewMetadata: false,
-        canIssue: false,
-      });
-    } else {
-      this.setState({
-        metadataList,
-        canAddNewMetadata: true,
-        canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError),
-      });
+  async checkIssuance(assetName, metadataList, quantity) {
+    let assetNameError = '';
+    if (typeof (assetName) === 'string') {
+      if (assetName.length > 64) {
+        assetNameError = 'Property name must be smaller or equal 64 character!';
+      } else if (!assetName) {
+        assetNameError = 'You must input property name!';
+      }
     }
-    AppService.checkMetadata(metadataList).then(() => {
-      this.setState({ metadataError: '' });
-    }).catch((error) => {
-      console.log('error :', error);
-      this.setState({ metadataError: 'METADATA is too long (2048-BYTE LIMIT)!' });
+    let quantityError = '';
+    if (typeof (quantity) === 'string') {
+      quantity = quantity.replace(/[^0-9]/g, '');
+      let quantityNumber = parseInt(quantity);
+      if (isNaN(quantityNumber) || quantityNumber <= 0) {
+        quantityError = 'Minimum quantity of one bitmark is required.';
+      } else if (quantityNumber > 100) {
+        quantityError = 'Maximum number of bitmarks 100 exceeded.';
+      }
+    }
+
+    let error = await BitmarkService.doCheckMetadata(metadataList);
+    let metadataError = error ? 'METADATA is too long (2048-BYTE LIMIT)!' : '';
+    let metadataFieldErrorIndex = metadataList.findIndex((item) => ((!item.label && item.value) || (item.label && !item.value)));
+    let metadataFieldEmptyIndex = metadataList.findIndex((item) => (!item.label && !item.value));
+    this.setState({
+      assetName,
+      assetNameError,
+      quantity,
+      quantityError,
+      metadataList,
+      metadataError,
+      canAddNewMetadata: (metadataFieldErrorIndex < 0) && !metadataError && (metadataFieldEmptyIndex < 0),
+      canIssue: (metadataFieldErrorIndex < 0 && !metadataError &&
+        assetName && !assetNameError &&
+        quantity && !quantityError),
     });
   }
 
@@ -323,55 +345,44 @@ export class LocalAddPropertyComponent extends React.Component {
     metadataList[index].valueError = !!((index < (metadataList.length - 1) && !metadataList[index].value) ||
       (index === (metadataList.length - 1) && !metadataList[index].value && metadataList[index].label));
     this.setState({ selectedMetadata: null, });
-    this.checkMetadata(metadataList);
+    this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
   }
 
   removeMetadata(key) {
     let metadataList = this.state.metadataList.filter((item) => item.key != key);
-    this.checkMetadata(metadataList);
+    this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
   }
 
   addNewMetadataField() {
     let metadataList = this.state.metadataList;
     metadataList.push({ key: metadataList.length, label: '', value: '' });
-    this.setState({ metadataList, canAddNewMetadata: false, canIssue: false, });
+    this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
   }
 
   doInputQuantity(quantity) {
-    quantity = quantity.replace(/[^0-9]/g, '');
-    let quantityNumber = parseInt(quantity);
-    let quantityError = '';
-    if (isNaN(quantityNumber) || quantityNumber <= 0) {
-      quantityError = 'Minimum quantity of one bitmark is required.';
-    } else if (quantityNumber > 100) {
-      quantityError = 'Maximum quantity of one bitmark is 100';
-    }
-    this.setState({
-      quantity, quantityError,
-      canIssue: (this.state.assetName && !this.state.assetNameError && quantity && !quantityError),
-    });
+    this.checkIssuance(this.state.assetName, this.state.metadataList, quantity);
   }
 
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
+        <View style={localAddPropertyStyle.body}>
           {!!this.state.selectedMetadata && <MetadataInputComponent
             cancel={() => this.setState({ selectedMetadata: null })}
             done={(text) => this.doneInputSelectedMetadata(text)}
             type={this.state.selectedMetadata.type}
             defaultValue={this.state.selectedMetadata.value}
           />}
+          <View style={defaultStyle.header}>
+            <TouchableOpacity style={defaultStyle.headerLeft} onPress={this.back}>
+              <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
+            </TouchableOpacity>
+            <Text style={defaultStyle.headerTitle}>Create Properties</Text>
+            <TouchableOpacity style={defaultStyle.headerRight} />
+          </View>
 
           <ScrollView style={localAddPropertyStyle.scroll}>
-            <View style={localAddPropertyStyle.body} onPress={Keyboard.dismiss}>
-              <View style={defaultStyle.header}>
-                <TouchableOpacity style={defaultStyle.headerLeft} onPress={this.back}>
-                  <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
-                </TouchableOpacity>
-                <Text style={defaultStyle.headerTitle}>Create Properties</Text>
-                <TouchableOpacity style={defaultStyle.headerRight} />
-              </View>
+            <View style={localAddPropertyStyle.body}>
               {this.state.step === Steps.input_file && <View style={localAddPropertyStyle.addFileArea}>
                 <Text style={localAddPropertyStyle.addFileLabel}>Upload Asset</Text>
                 {!!this.state.fileError && <Text style={localAddPropertyStyle.fileInputError}>{this.state.fileError}</Text>}

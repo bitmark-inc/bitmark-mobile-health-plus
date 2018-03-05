@@ -26,11 +26,16 @@ struct KeychainUtil {
         cancel = true
         semaphore.signal()
       }))
-      UIApplication.shared.delegate?.window??.rootViewController?.present(alert, animated: true, completion: nil)
       
+      DispatchQueue.main.async {
+        UIApplication.shared.delegate?.window??.rootViewController?.present(alert, animated: true, completion: nil)
+      }
       _ = semaphore.wait(timeout: .distantFuture)
       
-      alert.dismiss(animated: true, completion: nil)
+      DispatchQueue.main.async {
+        alert.dismiss(animated: true, completion: nil)
+      }
+      
       if cancel {
         throw KeychainAccess.Status.userCanceled
       }

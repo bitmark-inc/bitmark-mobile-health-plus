@@ -1,70 +1,28 @@
 import { config } from './../configs';
-import moment from 'moment';
+import { MarketModel, CommonModel } from './../models';
+import { UserService } from './user-service';
 
-// ===================================================================================================================
-// ===================================================================================================================
-const convertDataFromMarket = (market, marketBitmarks) => {
-  let marketAssets = [];
-  if (market === config.markets.totemic.name) {
-    if (marketBitmarks && marketBitmarks.editions && marketBitmarks.cards) {
-      marketBitmarks.cards.forEach((asset) => {
-        asset.market = market;
-        marketBitmarks.editions.forEach((bitmark) => {
-          if (!asset.bitmarks) {
-            asset.bitmarks = [];
-            asset.totalPending = 0;
-          }
-          bitmark.market = market;
-          if (bitmark.card_id === asset.id) {
-            asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
-            asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-            asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss');
-            let issuer = (marketBitmarks.users || []).find((user) => user.id === asset.creator_id);
-            asset.registrant = issuer ? issuer.account_number : null;
-            asset.bitmarks.push(bitmark);
-            asset.bitmarks.sort((a, b) => {
-              if (!a || !a.created_at) { return 1; }
-              if (!b || !b.created_at) { return 1; }
-              return moment(a.created_at).toDate() > moment(b.created_at).toDate();
-            });
-          }
-        });
-        marketAssets.push(asset);
-      });
-    }
-  }
-  return marketAssets;
-};
-
-const getBitmarksOnMarket = (market, userId) => {
-  return new Promise((resolve, reject) => {
-    if (!market || !config.market_urls[market]) {
-      return reject(new Error('Invalid market!'));
-    }
-    let marketServerUrl = config.market_urls[market];
-    let marketBitmarkUrl = marketServerUrl +
-      `/s/api/editions?owner=${userId}&include_card=true&include_user=true&include_order=true`;
-    let statusCode;
-    fetch(marketBitmarkUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((response) => {
-      statusCode = response.status;
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('getBitmarks error :' + JSON.stringify(data)));
-      }
-      resolve(convertDataFromMarket(market, data || {}));
-    }).catch(reject);
+// ================================================================================================
+// ================================================================================================
+const doGetCurrentBalance = (market) => {
+  return new Promise((resolve) => {
+    MarketModel.doGetCurrentBalance(market).then(resolve).catch(error => {
+      console.log('MarketService doGetCurrentBalance error: ', error);
+      resolve({ balance: 0, pending: 0 });
+    })
   });
 };
 
-// ===================================================================================================================
-// ===================================================================================================================
+const doGetBalanceHistory = (market) => {
+  return new Promise((resolve) => {
+    MarketModel.doGetBalanceHistory(market).then(resolve).catch(error => {
+      console.log('MarketService doGetBalanceHistory error: ', error);
+      resolve([]);
+    })
+  });
+};
+// ================================================================================================
+// ================================================================================================
 const getListingUrl = (bitmark) => {
   if (bitmark && bitmark.market && bitmark.market === config.markets.totemic.name) {
     return config.market_urls.totemic + `/edition/${bitmark.id}`;
@@ -72,84 +30,121 @@ const getListingUrl = (bitmark) => {
   return '';
 };
 
-const getBalancUrl = (market) => {
+const getBalancUrl = (market, option) => {
   if (market === config.markets.totemic.name) {
-    return config.market_urls.totemic + `/account-balance`;
+    return config.market_urls.totemic + `/account-balance` + (option.stage ? `?stage=#${option.stage}` : '');
   }
   return '';
 };
 
-const getBitmarks = (market, userId) => {
+const doCheckMarketSession = (market) => {
   return new Promise((resolve) => {
-    getBitmarksOnMarket(market, userId).then(resolve).catch(error => {
-      console.log(`getBitmarksOnMarket ${market} error :`, error);
+    MarketModel.doCheckMarketSession(market).then(resolve).catch(error => {
+      console.log('MarketService doCheckMarketSession error: ', error);
+      resolve(null);
+    })
+  });
+};
+
+const doTryAccessToMarket = (market, localBitmarkAccountNumber, touchFaceIdMessage) => {
+  return new Promise((resolve) => {
+    CommonModel.doCreateSignatureData(touchFaceIdMessage).then(signatureData => {
+      if (!signatureData) {
+        resolve(null);
+      }
+      return MarketModel.doAccessToMarket(market, localBitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+    }).then(resolve).catch(error => {
+      resolve(null);
+      console.log(`doTryAccessToMarket ${market} error :`, error, error.stack);
+    });
+  });
+};
+
+const doGetBitmarks = (market, marketUserInfo) => {
+  return new Promise((resolve) => {
+    MarketModel.doGetBitmarks(market, marketUserInfo).then(resolve).catch(error => {
+      console.log('MarketService doGetBitmarks error: ', error);
       resolve([]);
     })
   });
 };
 
-const getProvenance = (bitmark) => {
-  return new Promise((resolve, reject) => {
-    if (!bitmark.market || !config.market_urls[bitmark.market]) {
-      return reject(new Error('Invalid market!'));
+const doAccessToMarket = async (market, userInfo) => {
+  let marketInfo = await doCheckMarketSession(market);
+  if (!marketInfo) {
+    marketInfo = await doTryAccessToMarket(market, userInfo.bitmarkAccountNumber, 'Please sign to pair the bitmark account with market.');
+  }
+  if (marketInfo) {
+    if (!userInfo.markets) {
+      userInfo.markets = {};
     }
-    let marketServerUrl = config.market_urls[bitmark.market];
-    let marketBitmarkUrl = marketServerUrl +
-      `/s/api/editions/${bitmark.id}?include_provenance=true`;
-    let statusCode;
-    fetch(marketBitmarkUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((response) => {
-      statusCode = response.status;
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('getProvenance error :' + JSON.stringify(data)));
-      }
-      let provenance = data.provenance || [];
-      provenance.forEach(item => item.created_at = moment(item.created_at).format('YYYY MMM DD HH:mm:ss'));
-      resolve(provenance);
-    }).catch(reject);
-  });
+    userInfo.markets[market] = {
+      id: marketInfo.id,
+      name: marketInfo.name,
+      email: marketInfo.email,
+      account_number: marketInfo.account_number,
+    }
+    return userInfo;
+  }
+  return null;
 };
 
-const checkMarketSession = (market) => {
-  return new Promise((resolve, reject) => {
-
-    let marketServerUrl = config.market_urls[market];
-    let marketBitmarkUrl = marketServerUrl + `/s/api/account`;
-    let statusCode;
-    fetch(marketBitmarkUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    }).then((response) => {
-      statusCode = response.status;
-      return response.json();
-    }).then((data) => {
-      if (statusCode === 401) {
-        return resolve(null);
-      }
-      if (statusCode >= 400) {
-        return reject(new Error('checkMarketSession error :' + JSON.stringify(data)));
-      }
-      resolve(data.user);
-    }).catch(reject);
-  });
+const doTryAccessToAllMarkets = async (userInfo) => {
+  for (let market in config.markets) {
+    userInfo = (await doAccessToMarket(market, userInfo)) || userInfo;
+  }
+  return userInfo;
 };
+
+const doPairAccount = async (touchFaceIdSession, token, market) => {
+  let userInfo = await UserService.doGetCurrentUser();
+  let marketAccountInfo = await MarketModel.doPairAccount(touchFaceIdSession, userInfo.bitmarkAccountNumber, token, market);
+  if (!userInfo.markets) {
+    userInfo.markets = {};
+  }
+  userInfo.markets[market] = {
+    id: marketAccountInfo.id,
+    name: marketAccountInfo.name,
+    email: marketAccountInfo.email,
+    account_number: marketAccountInfo.account_number,
+  }
+  await UserService.doUpdateUserInfo(userInfo);
+  return userInfo;
+};
+
+const doGetBalance = async (market) => {
+  let balanceResult = await doGetCurrentBalance(market);
+  let balanceHistories = await doGetBalanceHistory(market);
+  return { balance: balanceResult.balance, pending: balanceResult.pending, balanceHistories };
+};
+
+const doWithdrawBitmarks = async (touchFaceIdSession, bitmarkIds) => {
+  let userInfo = await UserService.doGetCurrentUser();
+  return await MarketModel.doWithdrawBitmarks(touchFaceIdSession, bitmarkIds, userInfo.bitmarkAccountNumber);
+};
+
+const doDepositBitmarks = async (touchFaceIdSession, bitmarkIds, market) => {
+  let userInfo = await UserService.doGetCurrentUser();
+  if (userInfo && userInfo.markets && userInfo.markets[market] && userInfo.markets[market].account_number) {
+    return await MarketModel.doDepositBitmarks(touchFaceIdSession, bitmarkIds, userInfo.bitmarkAccountNumber, userInfo.markets[market].account_number);
+  }
+  throw new Error('Market is not paired!');
+};
+
+// ================================================================================================
+// ================================================================================================
 
 let MarketService = {
   getListingUrl,
   getBalancUrl,
-  getBitmarks,
-  getProvenance,
-  checkMarketSession,
+  doAccessToMarket,
+  doTryAccessToAllMarkets,
+  doPairAccount,
+  doTryAccessToMarket,
+  doGetBitmarks,
+  doGetBalance,
+  doWithdrawBitmarks,
+  doDepositBitmarks,
 }
 
 export {

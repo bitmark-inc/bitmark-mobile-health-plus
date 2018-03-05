@@ -6,12 +6,10 @@ import {
   Platform,
 } from 'react-native';
 
-
-import { AppService, EventEmiterService } from './../../../../services';
-
 import { config } from './../../../../configs';
-import bitmarkWithdrawStyle from './bitmark-withdraw.component.style';
+import bitmarkWithdrawStyle from './market-bitmark-withdraw.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import { AppController } from '../../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -19,7 +17,7 @@ let defaultStyle = Platform.select({
 });
 
 
-export class BitmarkWithdrawComponent extends React.Component {
+export class MarketBitmarkWithdrawComponent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -49,16 +47,13 @@ export class BitmarkWithdrawComponent extends React.Component {
   }
 
   doWithdraw() {
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.doWithdrawBitmark(this.state.bitmark).then((data) => {
+    AppController.doWithdrawBitmark(this.state.bitmark).then((data) => {
       console.log('doWithdrawBitmark success :', data);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       if (data) {
         this.withdrawSuccess();
       }
     }).catch(error => {
       console.error('doWithdrawBitmark error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
     });
   }
   render() {
@@ -82,7 +77,7 @@ export class BitmarkWithdrawComponent extends React.Component {
   }
 }
 
-BitmarkWithdrawComponent.propTypes = {
+MarketBitmarkWithdrawComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,

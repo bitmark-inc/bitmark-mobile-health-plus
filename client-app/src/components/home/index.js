@@ -7,9 +7,12 @@ import {
   LocalAddPropertyComponent,
   MarketPropertyDetailComponent,
   MarketAssetDetailComponent,
-  BitmarkDepositComponent,
-  BitmarkWithdrawComponent,
+  MarketBitmarkDepositComponent,
+  MarketBitmarkWithdrawComponent,
+  LocalPropertyTransferComponent,
 } from './properties';
+import { ApplicationDetailComponent } from './application-detail';
+import { BitmarkPrivacyComponent, BitmarkTermsComponent } from './../../commons/components';
 
 let HomeComponent = StackNavigator({
   User: { screen: UserComponent, },
@@ -18,11 +21,15 @@ let HomeComponent = StackNavigator({
   MarketViewer: { screen: MarketViewerComponent, },
   LocalAssetDetail: { screen: LocalAssetDetailComponent, },
   LocalPropertyDetail: { screen: LocalPropertyDetailComponent, },
+  LocalPropertyTransfer: { screen: LocalPropertyTransferComponent, },
   MarketAssetDetail: { screen: MarketAssetDetailComponent, },
   MarketPropertyDetail: { screen: MarketPropertyDetailComponent, },
-  BitmarkDeposit: { screen: BitmarkDepositComponent, },
-  BitmarkWithdraw: { screen: BitmarkWithdrawComponent, },
+  MarketBitmarkDeposit: { screen: MarketBitmarkDepositComponent, },
+  MarketBitmarkWithdraw: { screen: MarketBitmarkWithdrawComponent, },
   LocalAddProperty: { screen: LocalAddPropertyComponent, },
+  ApplicationDetail: { screen: ApplicationDetailComponent, },
+  BitmarkPrivacy: { screen: BitmarkPrivacyComponent, },
+  BitmarkTerms: { screen: BitmarkTermsComponent, },
 }, {
     headerMode: 'none',
     navigationOptions: {

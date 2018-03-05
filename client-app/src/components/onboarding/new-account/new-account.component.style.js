@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { convertWidth } from '../../../utils';
 
 export default StyleSheet.create({
   body: {
@@ -37,7 +38,7 @@ export default StyleSheet.create({
   },
   introductionTitle: {
     marginTop: 48,
-    left: 50,
+    left: convertWidth(50),
     fontFamily: 'Avenir black',
     color: '#0060F2',
     fontSize: 17,
@@ -45,7 +46,7 @@ export default StyleSheet.create({
   },
   introductionDescription: {
     marginTop: 50,
-    left: 50,
+    left: convertWidth(50),
     width: 265,
     fontFamily: 'Avenir light',
     fontWeight: '300',
@@ -54,7 +55,7 @@ export default StyleSheet.create({
   introductionLinkButton: {
     position: 'absolute',
     top: 349,
-    left: 50,
+    left: convertWidth(50),
   },
   introductionLink: {
     fontFamily: 'Avenir light',
@@ -76,7 +77,7 @@ export default StyleSheet.create({
   },
   introductionTermPrivacy: {
     marginTop: 66,
-    left: 50,
+    left: convertWidth(50),
     width: 272,
   },
   termPrivacySecondLine: {

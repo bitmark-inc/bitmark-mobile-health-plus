@@ -25,7 +25,7 @@ import {
   // android // TODO
 } from './../../../configs';
 
-import { AppService, EventEmiterService } from './../../../services';
+import { AppController } from '../../../managers';
 
 let defaultWindowSize = Platform.select({
   ios: ios.constant.defaultWindowSize,
@@ -49,7 +49,7 @@ class PropertyPrivateYourDataComponent extends React.Component {
           {'Property IS Privacy'.toUpperCase()}
         </Text>
         <Text style={[newAccountStyle.introductionDescription,]}>
-          <Text style={[newAccountStyle.introductionDescription,]}>You can bitmark any type of data to build your digital estate: photos, music, videos, location data, documents, etc. If it’s digital, it can be bitmarked.</Text>
+          <Text style={[newAccountStyle.introductionDescription,]}>Bitmark gives you the power of privacy over your digital property. No third parties will have access to your data, including us. You choose who has access to your property.</Text>
         </Text>
         <View style={newAccountStyle.introductionTermPrivacy}>
           <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark</Text>
@@ -216,16 +216,12 @@ export class NewAccountComponent extends React.Component {
 
   render() {
     const createBitmarkAccount = () => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-      EventEmiterService
-      AppService.createNewUser().then((userInfo) => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+      AppController.doCreateNewAccount().then((userInfo) => {
         if (userInfo) {
-          this.props.navigation.navigate('FaceTouchId');
+          this.props.navigation.navigate('Notification');
         }
       }).catch((error) => {
         console.log('createNewUser error :', error);
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       });
     };
     return (

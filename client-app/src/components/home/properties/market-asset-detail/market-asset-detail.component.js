@@ -50,7 +50,7 @@ export class MarketAssetDetailComponent extends React.Component {
   }
 
   goToWithdraw(bitmark) {
-    this.props.navigation.navigate('BitmarkWithdraw', {
+    this.props.navigation.navigate('MarketBitmarkWithdraw', {
       asset: this.state.asset,
       bitmark: bitmark,
     });
@@ -69,8 +69,8 @@ export class MarketAssetDetailComponent extends React.Component {
             <Text style={[defaultStyle.headerTitle]} numberOfLines={1}>{this.state.asset.name}</Text>
             <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
               <Image style={assetDetailStyle.threeDotIcon} source={this.state.displayTopButton
-                ? require('../../../../../assets/imgs/three-dot-blue.png')
-                : require('../../../../../assets/imgs/three-dot-black.png')} />
+                ? require('../../../../../assets/imgs/three-dot-active.png')
+                : require('../../../../../assets/imgs/three-dot-deactive.png')} />
             </TouchableOpacity>
           </View>
           <ScrollView style={assetDetailStyle.content}>

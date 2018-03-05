@@ -3,18 +3,15 @@ import { StyleSheet, } from 'react-native';
 import { convertWidth } from './../../../../utils';
 
 export default StyleSheet.create({
-  scroll: {
-    flexDirection: 'column',
-    height: '100%',
-    width: '100%',
-    backgroundColor: 'white',
-  },
   body: {
     flexDirection: 'column',
     alignItems: 'center',
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
+  },
+  content: {
+    flexDirection: 'column',
   },
 
   chooseMarketArea: {

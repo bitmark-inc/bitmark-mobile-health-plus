@@ -7,12 +7,12 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import { BitmarkService } from './../../../../services';
 import { convertWidth } from './../../../../utils';
 
 import { config } from './../../../../configs';
 import propertyDetailStyle from './local-property-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import { AppController } from '../../../../managers/app-controller';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -32,7 +32,7 @@ export class LocalPropertyDetailComponent extends React.Component {
       copied: false,
       displayTopButton: false,
     };
-    BitmarkService.getProvenance(bitmark).then(provenance => {
+    AppController.doGetProvenance(bitmark).then(provenance => {
       let histories = [];
       provenance.forEach((history, key) => {
         histories.push({ key, history });
@@ -55,8 +55,8 @@ export class LocalPropertyDetailComponent extends React.Component {
             </View>
             <TouchableOpacity style={[defaultStyle.headerRight, { padding: 4 }]} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
               <Image style={propertyDetailStyle.threeDotIcon} source={this.state.displayTopButton
-                ? require('../../../../../assets/imgs/three-dot-blue.png')
-                : require('../../../../../assets/imgs/three-dot-black.png')} />
+                ? require('../../../../../assets/imgs/three-dot-active.png')
+                : require('../../../../../assets/imgs/three-dot-deactive.png')} />
             </TouchableOpacity>
           </View>
           <ScrollView style={propertyDetailStyle.content}>
@@ -72,7 +72,9 @@ export class LocalPropertyDetailComponent extends React.Component {
             </View>}
             <View style={propertyDetailStyle.bottomImageBar}></View>
             <Text style={propertyDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
-            <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>Issued on {this.state.bitmark.created_at} by {this.state.asset.registrant}</Text>
+            <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
+              Issued {isNaN(this.state.bitmark.created_at) ? '' : ('on' + this.state.bitmark.created_at)} by {this.state.asset.registrant}
+            </Text>
             <View style={propertyDetailStyle.bottomAssetNameBar}></View>
             <Text style={propertyDetailStyle.provenanceLabel}>Provenance</Text>
             <View style={propertyDetailStyle.provenancesArea}>
@@ -98,7 +100,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               <TouchableOpacity style={[propertyDetailStyle.listingButton, { backgroundColor: this.state.bitmark.status === 'pending' ? '#CCCCCC' : '#0060F2' }]}
                 disabled={this.state.bitmark.status === 'pending'}
                 onPress={() => {
-                  this.props.navigation.navigate('BitmarkDeposit', {
+                  this.props.navigation.navigate('MarketBitmarkDeposit', {
                     asset: this.state.asset,
                     bitmark: this.state.bitmark
                   });
@@ -106,6 +108,18 @@ export class LocalPropertyDetailComponent extends React.Component {
                 <Text style={propertyDetailStyle.listingButtonText}>{'LIST THIS BITMARK TO MARKET'.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>}
+
+            <View style={propertyDetailStyle.transferButtonArea} >
+              <TouchableOpacity style={[propertyDetailStyle.transferButton, {
+                borderTopColor: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
+              }]}
+                disabled={this.state.bitmark.status === 'pending'}
+                onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark })}>
+                <Text style={[propertyDetailStyle.transferButtonText, {
+                  color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
+                }]}>TRANSFER</Text>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </View>
       </TouchableWithoutFeedback>

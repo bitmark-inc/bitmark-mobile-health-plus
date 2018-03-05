@@ -9,14 +9,14 @@ const app_local_data_key = 'bitmark-app';
 // ================================================================================================
 // ================================================================================================
 // private 
-const tryRichSignMessage = (messages, sessionId) => {
+const doRichSignMessage = (messages, sessionId) => {
   return new Promise((resolve) => {
     BitmarkSDK.rickySignMessage(messages, sessionId).then(resolve).catch(() => resolve());
   });
 };
 
 // ================================================================================================
-const setLocalData = (localDataKey, data) => {
+const doSetLocalData = (localDataKey, data) => {
   localDataKey = localDataKey || app_local_data_key;
   data = data || {};
   return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ const setLocalData = (localDataKey, data) => {
     });
   });
 };
-const getLocalData = (localDataKey) => {
+const doGetLocalData = (localDataKey) => {
   localDataKey = localDataKey || app_local_data_key;
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem(localDataKey, (error, data) => {
@@ -39,31 +39,47 @@ const getLocalData = (localDataKey) => {
       try {
         localData = JSON.parse(data);
       } catch (error) {
-        setLocalData(localDataKey, localData);
+        doSetLocalData(localDataKey, localData);
       }
       resolve(localData || {});
     });
   });
 };
 // ================================================================================================
-const checkFaceTouchId = async () => {
+const doCheckFaceTouchId = async () => {
   return await FaceTouchId.isSupported();
 }
 // ================================================================================================
 let currentFaceTouceSessionId = null;
+let isRequestingSessionId = false;
+let doWaitRequestionSessionId = async () => {
+  let isRequesting = isRequestingSessionId;
+  return new Promise((resolve) => {
+    let checRequestingFinish = () => {
+      if (!isRequestingSessionId) {
+        resolve(isRequesting);
+      } else {
+        setTimeout(checRequestingFinish, 500);
+      }
+    };
+    checRequestingFinish();
+  });
 
-const endNewFaceTouceSessionId = async () => {
+};
+const doEndNewFaceTouceSessionId = async () => {
   if (currentFaceTouceSessionId) {
     await BitmarkSDK.disposeSession(currentFaceTouceSessionId);
     currentFaceTouceSessionId = null;
   }
 };
 
-const startFaceTouceSessionId = async (touchFaceIdMessage) => {
-  await endNewFaceTouceSessionId();
+const doStartFaceTouceSessionId = async (touchFaceIdMessage) => {
+  await doEndNewFaceTouceSessionId();
   if (!currentFaceTouceSessionId) {
+    isRequestingSessionId = true;
     currentFaceTouceSessionId = await BitmarkSDK.requestSession(config.bitmark_network, touchFaceIdMessage);
   }
+  isRequestingSessionId = false;
   return currentFaceTouceSessionId;
 };
 const setFaceTouceSessionId = (sessionId) => {
@@ -71,28 +87,47 @@ const setFaceTouceSessionId = (sessionId) => {
 };
 
 const doTryRickSignMessage = async (messages, touchFaceIdMessage) => {
+  let result = await doWaitRequestionSessionId();
+  if (result && !currentFaceTouceSessionId) {
+    return null;
+  }
   if (!currentFaceTouceSessionId) {
-    await startFaceTouceSessionId(touchFaceIdMessage);
+    await doStartFaceTouceSessionId(touchFaceIdMessage);
     if (!currentFaceTouceSessionId) {
       return null;
     }
   }
-  let signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
+  let signatures = await doRichSignMessage(messages, currentFaceTouceSessionId);
   if (!signatures) {
-    await startFaceTouceSessionId(touchFaceIdMessage);
+    await doStartFaceTouceSessionId(touchFaceIdMessage);
     if (!currentFaceTouceSessionId) {
       return null;
     }
-    signatures = await tryRichSignMessage(messages, currentFaceTouceSessionId);
+    signatures = await doRichSignMessage(messages, currentFaceTouceSessionId);
   }
   return signatures;
 };
 
-const createSignatureData = async (touchFaceIdMessage) => {
-  let timestamp = moment().toDate().getTime() + '';
-  let signatures = await doTryRickSignMessage([timestamp], touchFaceIdMessage);
-  if (!signatures) {
+const doCreateSignatureData = async (touchFaceIdMessage) => {
+  let result = await doWaitRequestionSessionId();
+  if (result && !currentFaceTouceSessionId) {
     return null;
+  }
+  if (!currentFaceTouceSessionId) {
+    await doStartFaceTouceSessionId(touchFaceIdMessage);
+    if (!currentFaceTouceSessionId) {
+      return null;
+    }
+  }
+  let timestamp = moment().toDate().getTime() + '';
+  let signatures = await doRichSignMessage([timestamp], currentFaceTouceSessionId);
+  if (!signatures) {
+    await doStartFaceTouceSessionId(touchFaceIdMessage);
+    if (!currentFaceTouceSessionId) {
+      return null;
+    }
+    timestamp = moment().toDate().getTime() + '';
+    signatures = await doRichSignMessage([timestamp], currentFaceTouceSessionId);
   }
   return { timestamp, signature: signatures[0] };
 };
@@ -101,18 +136,18 @@ const createSignatureData = async (touchFaceIdMessage) => {
 // ================================================================================================
 // ================================================================================================
 
-let CommonService = {
+let CommonModel = {
   app_local_data_key,
-  checkFaceTouchId,
-  setLocalData,
-  getLocalData,
-  startFaceTouceSessionId,
-  endNewFaceTouceSessionId,
-  createSignatureData,
+  doCheckFaceTouchId,
+  doSetLocalData,
+  doGetLocalData,
+  doStartFaceTouceSessionId,
+  doEndNewFaceTouceSessionId,
+  doCreateSignatureData,
   doTryRickSignMessage,
   setFaceTouceSessionId,
 }
 
 export {
-  CommonService
+  CommonModel
 }

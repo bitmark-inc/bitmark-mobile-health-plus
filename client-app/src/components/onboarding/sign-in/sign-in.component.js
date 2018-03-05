@@ -14,7 +14,7 @@ import signStyle from './sign-in.component.style';
 import { BitmarkAutoCompleteComponent } from './../../../commons/components';
 import { android, ios } from './../../../configs';
 import { dictionary24Words } from './../../../utils';
-import { AppService, AccountService } from './../../../services';
+import { AppController } from '../../../managers';
 
 let deviceSize = Dimensions.get('window');
 let constant = Platform.select({ ios: ios.constant, android: android.constant });
@@ -24,8 +24,30 @@ let PreCheckResults = {
   error: 'RETRY'
 };
 
-// let testWords = ['absurd', 'defy', 'group', 'forward', 'curious', 'erase', 'dwarf', 'seminar', 'stairs',
-//   'abandon', 'earn', 'civil', 'amount', 'junk', 'stove', 'army', 'install', 'goat', 'tunnel', 'tunnel', 'eagle', 'sell', 'ridge', 'guess'];
+// let testWords = ["account",
+//   "pulse",
+//   "disease",
+//   "funny",
+//   "sound",
+//   "aim",
+//   "rice",
+//   "ozone",
+//   "clay",
+//   "skate",
+//   "garbage",
+//   "bottom",
+//   "credit",
+//   "club",
+//   "easily",
+//   "lumber",
+//   "song",
+//   "noodle",
+//   "gaze",
+//   "duty",
+//   "enable",
+//   "butter",
+//   "citizen",
+//   "cradle",];
 
 export class SignInComponent extends React.Component {
 
@@ -152,7 +174,7 @@ export class SignInComponent extends React.Component {
       let inputtedWords = [];
       this.state.smallerList.forEach(item => inputtedWords.push(item.word));
       this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-      AccountService.check24Words(inputtedWords).then(() => {
+      AppController.doCheck24Words(inputtedWords).then(() => {
         this.setState({ preCheckResult: PreCheckResults.success });
       }).catch((error) => {
         console.log('check24Words error: ', error);
@@ -199,9 +221,9 @@ export class SignInComponent extends React.Component {
     let inputtedWords = [];
     this.state.smallerList.forEach(item => inputtedWords.push(item.word));
     this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-    AppService.doLogin(inputtedWords).then((userInfo) => {
+    AppController.doLogin(inputtedWords).then((userInfo) => {
       if (userInfo) {
-        this.props.navigation.navigate('FaceTouchId');
+        this.props.navigation.navigate('Notification');
       }
     }).catch((error) => {
       console.log('login error: ', error);

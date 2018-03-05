@@ -6,11 +6,12 @@ import {
   Platform,
 } from 'react-native';
 
-import { AppService, EventEmiterService } from './../../../../services';
+import { EventEmiterService, UserService } from './../../../../services';
 
 import marketLoginStyle from './market-login.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { config } from '../../../../configs';
+import { AppController } from '../../../../managers';
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle
@@ -27,18 +28,17 @@ export class MarketLoginComponent extends React.Component {
       connecting: true,
     };
     this.ready = false;
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.getCurrentUser().then(user => {
+    UserService.getCurrentUser().then(user => {
       this.setState({ user });
     }).catch((error) => {
       console.log('getCurrentUser error :', error);
       this.setState({ user: null })
     });
+    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
     setTimeout(() => {
       if (!this.ready) {
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         this.setState({ connecting: false })
-        // this.props.navigation.goBack();
       }
     }, 5 * 1000);
   }
@@ -57,16 +57,13 @@ export class MarketLoginComponent extends React.Component {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       this.webViewRef.postMessage(this.state.user.bitmarkAccountNumber);
     } else if (message === 'submit') {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-      AppService.createSignatureData('Please sign to pair the bitmark account with market.', true).then(data => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+      AppController.doCreateSignatureData('Please sign to pair the bitmark account with market.', true).then(data => {
         if (!data) {
           this.props.navigation.goBack();
           return;
         }
         this.webViewRef.postMessage(JSON.stringify(data));
       }).catch(error => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
         console.log('MarketLoginComponent createSignatureData error :', error);
       });
     }

@@ -8,7 +8,7 @@ const {
   Linking,
   // Alert,
   AppState,
-  // NetInfo,
+  NetInfo,
   // PushNotificationIOS,
   View,
 } = ReactNative;
@@ -17,10 +17,12 @@ import {
   LoadingComponent,
   DefaultIndicatorComponent,
   BitmarkIndicatorComponent,
+  BitmarkInternetOffComponent,
 } from './../commons/components';
 import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
-import { AppService, EventEmiterService } from './../services';
+import { EventEmiterService } from './../services';
+import { AppController } from '../managers';
 
 class MainComponent extends Component {
   constructor(props) {
@@ -30,34 +32,46 @@ class MainComponent extends Component {
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.handerProcessingEvent = this.handerProcessingEvent.bind(this);
     this.handerSumittinggEvent = this.handerSumittinggEvent.bind(this);
+    this.handleNetworkChange = this.handleNetworkChange.bind(this);
 
     this.state = {
       user: null,
       processing: false,
       submitting: null,
+      justCreatedBitmarkAccount: false,
+      networkStatus: true,
     };
     this.appState = AppState.currentState;
+  }
 
-    AppService.doOpenApp().then(user => {
+  componentDidMount() {
+    let justCreatedBitmarkAccount = false;
+    if (this.props.navigation.state && this.props.navigation.state.params) {
+      justCreatedBitmarkAccount = !!this.props.navigation.state.params.justCreatedBitmarkAccount;
+      this.setState({ justCreatedBitmarkAccount });
+    }
+    AppController.doOpenApp(justCreatedBitmarkAccount).then(user => {
       console.log(' doOpenApp : ', user);
       this.setState({ user });
     }).catch(error => {
       console.log('doOpenApp error :', error);
       this.setState({ user: {} })
     });
-  }
 
-  componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.addEventListener('change', this.handleAppStateChange);
+    NetInfo.isConnected.fetch().then().done(() => {
+      NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
+    });
   }
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.remove(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
   }
 
   handerProcessingEvent(processing) {
@@ -72,9 +86,6 @@ class MainComponent extends Component {
     const params = route.split('/');
     switch (params[0]) {
       // case 'login': {
-      //   AppService.doPairMarketAccount(params[2], params[1]).then(() => {
-      //     console.log('handleDeppLink doPairMarketAccount success!');
-      //   }).catch(error => console.log('handleDeppLink doPairMarketAccount error :', error));
       //   break;
       // }
       default: {
@@ -86,7 +97,8 @@ class MainComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
-      AppService.doOpenApp().then(user => {
+      console.log('active component');
+      AppController.doOpenApp().then(user => {
         console.log(' doOpenApp : ', user);
         this.setState({ user });
       }).catch(error => {
@@ -97,6 +109,19 @@ class MainComponent extends Component {
     this.appState = nextAppState;
   }
 
+  handleNetworkChange(networkStatus) {
+    this.setState({ networkStatus });
+    if (networkStatus) {
+      AppController.doOpenApp(this.state.justCreatedBitmarkAccount).then(user => {
+        console.log(' doOpenApp : ', user);
+        this.setState({ user });
+      }).catch(error => {
+        console.log('doOpenApp error :', error);
+        this.setState({ user: {} })
+      });
+    }
+  }
+
   render() {
     let DisplayedComponent = LoadingComponent;
     if (this.state.user) {
@@ -104,6 +129,7 @@ class MainComponent extends Component {
     }
     return (
       <View style={{ flex: 1 }}>
+        {!this.state.networkStatus && <BitmarkInternetOffComponent />}
         {!!this.state.processing && <DefaultIndicatorComponent />}
         {!!this.state.submitting && <BitmarkIndicatorComponent
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
@@ -127,6 +153,11 @@ class MainComponent extends Component {
 MainComponent.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        justCreatedBitmarkAccount: PropTypes.bool,
+      }),
+    }),
   })
 }
 

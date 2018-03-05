@@ -7,10 +7,10 @@ import {
   FlatList,
 } from 'react-native';
 import { config } from './../../../../configs';
-import bitmarkDepositStyle from './bitmark-deposit.component.style';
+import bitmarkDepositStyle from './market-bitmark-deposit.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-import bitmarkDepositComponentStyle from './bitmark-deposit.component.style';
-import { AppService, EventEmiterService } from '../../../../services';
+import { UserService } from '../../../../services';
+import { AppController } from '../../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -22,7 +22,7 @@ const Steps = {
   depost: 2,
 }
 
-export class BitmarkDepositComponent extends React.Component {
+export class MarketBitmarkDepositComponent extends React.Component {
   constructor(props) {
     super(props);
     this.selectMarket = this.selectMarket.bind(this);
@@ -40,7 +40,7 @@ export class BitmarkDepositComponent extends React.Component {
       selectedmMarket: '',
     };
 
-    AppService.getCurrentUser().then(user => {
+    UserService.doGetCurrentUser().then(user => {
       let index = 0;
       let marketList = [];
       for (let market in user.markets) {
@@ -48,7 +48,7 @@ export class BitmarkDepositComponent extends React.Component {
         index++;
       }
       this.setState({ marketList });
-    }).catch(error => console.log('BitmarkDepositComponent error :', error));
+    }).catch(error => console.log('MarketBitmarkDepositComponent error :', error));
   }
 
   selectMarket(selectedmMarket) {
@@ -64,30 +64,27 @@ export class BitmarkDepositComponent extends React.Component {
   }
 
   doDeposit() {
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
-    AppService.doDepositBitmark(this.state.selectedmMarket, this.state.bitmark).then((data) => {
+    AppController.doDepositBitmark(this.state.bitmark, this.state.selectedmMarket).then((data) => {
       console.log('doDepositBitmark success :', data);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       if (data) {
         this.depositSuccess();
       }
     }).catch(error => {
       console.error('doDepositBitmark error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
     });
   }
 
   render() {
     return (
-      <ScrollView style={bitmarkDepositComponentStyle.scroll}>
-        <View style={bitmarkDepositStyle.body}>
-          <View style={defaultStyle.header}>
-            <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
-            <Text style={defaultStyle.headerTitle}>List to Market</Text>
-            <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
-              <Text style={defaultStyle.headerRightText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
+      <View style={bitmarkDepositStyle.body}>
+        <View style={defaultStyle.header}>
+          <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
+          <Text style={defaultStyle.headerTitle}>List to Market</Text>
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
+            <Text style={defaultStyle.headerRightText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={bitmarkDepositStyle.content}>
           {this.state.step === Steps.chooseMarket && <View style={bitmarkDepositStyle.chooseMarketArea}>
             <Text style={bitmarkDepositStyle.stepLabel}>Choose a market to list</Text>
             <Text style={bitmarkDepositStyle.stepMessage}>We found one market that accepts listings for this property. Tap the market’s logo to continue.</Text>
@@ -114,13 +111,13 @@ export class BitmarkDepositComponent extends React.Component {
               <Text style={bitmarkDepositStyle.continueButtonText}>CONTINUE</Text>
             </TouchableOpacity>
           </View>}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
 
-BitmarkDepositComponent.propTypes = {
+MarketBitmarkDepositComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,

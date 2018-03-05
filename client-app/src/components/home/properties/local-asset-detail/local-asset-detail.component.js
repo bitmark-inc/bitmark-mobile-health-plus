@@ -21,6 +21,7 @@ export class LocalAssetDetailComponent extends React.Component {
     super(props);
     let asset;
     asset = this.props.navigation.state.params.asset;
+    console.log('asset :', asset);
     let bitmarks = [];
     asset.bitmarks.forEach((bitmark, index) => {
       bitmarks.push({ key: index, bitmark });
@@ -52,8 +53,8 @@ export class LocalAssetDetailComponent extends React.Component {
             <Text style={[defaultStyle.headerTitle]} numberOfLines={1}>{this.state.asset.name}</Text>
             <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
               <Image style={assetDetailStyle.threeDotIcon} source={this.state.displayTopButton
-                ? require('../../../../../assets/imgs/three-dot-blue.png')
-                : require('../../../../../assets/imgs/three-dot-black.png')} />
+                ? require('../../../../../assets/imgs/three-dot-active.png')
+                : require('../../../../../assets/imgs/three-dot-deactive.png')} />
             </TouchableOpacity>
           </View>
           <ScrollView style={assetDetailStyle.content}>
@@ -110,7 +111,7 @@ export class LocalAssetDetailComponent extends React.Component {
                     }}>
                       <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
                       {!config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
-                        this.props.navigation.navigate('BitmarkDeposit', {
+                        this.props.navigation.navigate('MarketBitmarkDeposit', {
                           asset: this.state.asset,
                           bitmark: item.bitmark
                         });

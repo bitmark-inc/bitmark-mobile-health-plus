@@ -1,7 +1,12 @@
 import {
-  StyleSheet
+  StyleSheet, Platform
 } from 'react-native';
 
+import {
+  ios,
+  android //TODO
+} from './../../../configs';
+const constant = Platform.select({ ios: ios.constant, android: android.constant });
 export default StyleSheet.create({
   dialogBody: {
     flex: 1,
@@ -14,7 +19,7 @@ export default StyleSheet.create({
     top: 0,
     width: '100%',
     height: '100%',
-    zIndex: 100,
+    zIndex: constant.zIndex.indicator,
   },
   dialogBodyContent: {
     alignItems: 'center',
