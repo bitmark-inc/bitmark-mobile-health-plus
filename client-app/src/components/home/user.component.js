@@ -8,7 +8,7 @@ import { NavigationActions } from 'react-navigation';
 import { AccountComponent } from './account';
 import { MarketsComponent } from './markets';
 import { AssetsComponent } from './properties';
-import { TransactionComponent } from './transaction';
+import { TransactionsComponent } from './transactions';
 
 
 import userStyle from './user.component.style';
@@ -54,7 +54,7 @@ export class UserComponent extends React.Component {
         {this.state.mainTab === MainTabs.markets && <MarketsComponent screenProps={{
           homeNavigation: this.props.navigation,
         }} />}
-        {this.state.mainTab === MainTabs.transaction && <TransactionComponent screenProps={{
+        {this.state.mainTab === MainTabs.transaction && <TransactionsComponent screenProps={{
           homeNavigation: this.props.navigation,
         }} />}
         {this.state.mainTab === MainTabs.account && <View style={{ width: '100%', flex: 1, }}>

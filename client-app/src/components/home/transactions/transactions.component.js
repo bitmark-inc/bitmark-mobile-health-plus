@@ -7,7 +7,7 @@ import {
 
 import { DataController } from './../../../managers';
 
-import transactionStyle from './transaction.component.style';
+import transactionStyle from './transactions.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 import { EventEmiterService } from '../../../services';
 
@@ -20,7 +20,7 @@ const SubTabs = {
   required: 'ACTION REQUIRED',
   completed: 'COMPLETED',
 }
-export class TransactionComponent extends React.Component {
+export class TransactionsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.switchSubtab = this.switchSubtab.bind(this);
@@ -155,7 +155,7 @@ export class TransactionComponent extends React.Component {
   }
 }
 
-TransactionComponent.propTypes = {
+TransactionsComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
