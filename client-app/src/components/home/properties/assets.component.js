@@ -55,12 +55,10 @@ export class AssetsComponent extends React.Component {
   }
 
   handerChangeLocalBitmarks() {
-    this.setState({ localAssets: DataController.getUserBitmarks().localAssets || [] });
     this.switchSubtab(this.state.subtab);
   }
 
   handerChangeMarketBitmarks() {
-    this.setState({ localAssets: DataController.getUserBitmarks().localAssets || [] });
     this.switchSubtab(this.state.subtab);
   }
 
@@ -82,15 +80,15 @@ export class AssetsComponent extends React.Component {
   }
 
   switchSubtab(subtab) {
+    let marketAssets = DataController.getUserBitmarks().marketAssets || [];
+    let localAssets = DataController.getUserBitmarks().localAssets || [];
     let assets = [];
     if (subtab === SubTabs.local) {
-      assets = this.convertToFlatListData(this.state.data.localAssets);
+      assets = this.convertToFlatListData(localAssets);
     } else if (subtab === SubTabs.market) {
-      assets = this.convertToFlatListData(this.state.data.marketAssets);
-    } else if (subtab === SubTabs.global) {
-      assets = this.convertToFlatListData(this.state.data.localAssets.concat(this.state.data.marketAssets));
+      assets = this.convertToFlatListData(marketAssets);
     }
-    this.setState({ subtab, assets });
+    this.setState({ subtab, assets, data: { localAssets, marketAssets } });
   }
 
   addProperty() {
