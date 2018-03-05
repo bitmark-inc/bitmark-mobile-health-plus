@@ -2,6 +2,7 @@ import moment from 'moment';
 
 import { config } from './../configs';
 import { BitmarkSDK } from './adapters';
+import { sortList } from './../utils';
 
 // ===================================================================================================================
 // ===================================================================================================================
@@ -25,11 +26,11 @@ const convertDataFromMarket = (market, marketBitmarks) => {
             let issuer = (marketBitmarks.users || []).find((user) => user.id === asset.creator_id);
             asset.registrant = issuer ? issuer.account_number : null;
             asset.bitmarks.push(bitmark);
-            asset.bitmarks.sort((a, b) => {
-              if (!a || !a.created_at) { return 1; }
-              if (!b || !b.created_at) { return 1; }
-              return moment(a.created_at).toDate() > moment(b.created_at).toDate();
-            });
+            asset.bitmarks = sortList(asset.bitmarks, ((a, b) => {
+              if (!a || !a.created_at || a.status === 'pending') { return -1; }
+              if (!b || !b.created_at || b.status === 'pending') { return -1; }
+              return moment(a.created_at).toDate().getTime() < moment(b.created_at).toDate().getTime();
+            }));
           }
         });
         marketAssets.push(asset);

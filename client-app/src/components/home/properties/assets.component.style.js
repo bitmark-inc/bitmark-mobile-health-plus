@@ -168,7 +168,7 @@ export default StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: '#999999',
-    width: convertWidth(320),
+    width: convertWidth(310),
     marginLeft: 10,
   },
   assetBitmarksNumber: {

@@ -2,6 +2,7 @@ import moment from 'moment';
 
 import { config } from './../configs';
 import { BitmarkSDK } from './adapters';
+import { sortList } from './../utils';
 
 // ===================================================================================================================
 // ===================================================================================================================
@@ -39,7 +40,7 @@ const doGetAllBitmarks = (accountNumber) => {
           data.assets.forEach((item) => {
             let index = totalData.assets.findIndex(asset => asset.id === item.id);
             if (index < 0) {
-              totalData.push(item);
+              totalData.assets.push(item);
             }
           });
           totalData.bitmarks = totalData.bitmarks.concat(data.bitmarks);
@@ -78,17 +79,30 @@ const doGetBitmarks = async (accountNumber) => {
           asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
           asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
           asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
+          if (asset.totalPending === 0 && bitmark.status !== 'pending') {
+            let bitmarkCreatedAt = moment(bitmark.created_at).toDate();
+            asset.newest_created_at = !asset.newest_created_at ? bitmarkCreatedAt :
+              (asset.newest_created_at.getTime() < bitmarkCreatedAt.getTime() ? bitmarkCreatedAt : asset.newest_created_at);
+          } else {
+            asset.newest_created_at = null;
+          }
           asset.bitmarks.push(bitmark);
         }
       });
-      asset.bitmarks.sort((a, b) => {
-        if (!a || !a.created_at) { return 1; }
-        if (!b || !b.created_at) { return 1; }
-        return moment(a.created_at).toDate() > moment(b.created_at).toDate();
-      });
+      asset.bitmarks = sortList(asset.bitmarks, ((a, b) => {
+        if (!a || !a.created_at || a.status === 'pending') { return -1; }
+        if (!b || !b.created_at || b.status === 'pending') { return -1; }
+        return moment(a.created_at).toDate().getTime() < moment(b.created_at).toDate().getTime();
+      }));
       localAssets.push(asset);
     });
   }
+  console.log('localAssets :', localAssets);
+  localAssets = sortList(localAssets, ((a, b) => {
+    if (!a || !a.newest_created_at || a.totalPending > 0) { return -1; }
+    if (!b || !b.newest_created_at || b.totalPending > 0) { return -1; }
+    return moment(a.newest_created_at).toDate().getTime() < moment(b.newest_created_at).toDate().getTime();
+  }));
   return localAssets;
 };
 

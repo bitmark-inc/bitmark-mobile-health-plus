@@ -52,7 +52,8 @@ class MetadataInputComponent extends React.Component {
     this.state = {
       textInput,
       labels,
-      placeholder: (props.type === 'label') ? 'CREATE NEW LABEL' : 'DESCRIPTION'
+      placeholder: (props.type === 'label') ? 'SELECT OR CREATE NEW LABEL' : 'DESCRIPTION',
+      numberOfLines: (props.type === 'label') ? 1 : 5,
     }
   }
 
@@ -85,7 +86,7 @@ class MetadataInputComponent extends React.Component {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{
-            width: '100%', height: this.props.type === 'label' ? 220 : 90,
+            width: '100%', maxHeight: 230,
             flexDirection: 'column',
           }}>
             <TextInput
@@ -93,15 +94,17 @@ class MetadataInputComponent extends React.Component {
               style={{
                 borderBottomColor: '#EDF0F4',
                 borderBottomWidth: 1,
-                marginTop: 20, marginBottom: 5, marginLeft: '5%',
-                width: '90%', maxHeight: 50,
-                height: 30,
+                marginTop: 10, marginBottom: 10, marginLeft: '5%',
+                width: '90%',
+                minHeight: 30,
+                maxHeight: 100,
               }} placeholder={this.state.placeholder}
-              multiline={true}
+              multiline={this.state.numberOfLines > 1}
               value={this.state.textInput}
               onChangeText={this.onChangeText}
               ref={(ref) => this.textInputRef = ref}
               returnKeyType="done"
+              numberOfLines={this.state.numberOfLines}
               onSubmitEditing={() => this.props.done(this.state.textInput)}
             />
             {this.props.type === 'label' && <View style={{
@@ -111,12 +114,11 @@ class MetadataInputComponent extends React.Component {
               flexDirection: 'column',
               marginLeft: '5%',
             }}>
-              <Text style={{ marginBottom: 10, color: '#C9C9C9' }}>OR SELECT FROM BELOW:</Text>
               <FlatList
                 data={this.state.labels}
                 extraData={this.state}
                 renderItem={({ item }) => {
-                  return <TouchableOpacity style={{ padding: 4, marginTop: 3 }} onPress={() => this.onSelecteLabel(item.label)}>
+                  return <TouchableOpacity style={{ paddingTo: 4, paddingBottom: 4, marginTop: 3 }} onPress={() => this.onSelecteLabel(item.label)}>
                     <Text style={{ color: '#0060F2' }}>{item.label}</Text>
                   </TouchableOpacity>
                 }}
@@ -308,7 +310,7 @@ export class LocalAddPropertyComponent extends React.Component {
       if (isNaN(quantityNumber) || quantityNumber <= 0) {
         quantityError = 'Minimum quantity of one bitmark is required.';
       } else if (quantityNumber > 100) {
-        quantityError = 'Maximum quantity of one bitmark is 100';
+        quantityError = 'Maximum number of bitmarks 100 exceeded.';
       }
     }
 
