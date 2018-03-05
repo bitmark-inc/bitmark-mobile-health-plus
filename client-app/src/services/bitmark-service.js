@@ -21,21 +21,34 @@ const doCheckFileToIssue = async (filePath) => {
   }
 };
 
-const doCheckMetadata = (metadatList) => {
+const doCheckMetadata = (metadataList) => {
   let metadata = {};
-  metadatList.forEach(item => {
-    if (item.label && item.value) {
-      metadata[item.label] = item.value;
-    }
-  });
+  let existFields = {};
   return new Promise((resolve) => {
-    BitmarkModel.doCheckMetadata(metadata).then(resolve).catch(resolve);
+    for (let index = 0; index < metadataList.length; index++) {
+      let item = metadataList[index];
+      item.labelError = !!((index < (metadataList.length - 1) && !item.label) ||
+        (index === (metadataList.length - 1) && !item.label && item.value));
+      item.valueError = !!((index < (metadataList.length - 1) && !item.value) ||
+        (index === (metadataList.length - 1) && !item.value && item.label));
+      if (item.label && existFields[item.label.toLowerCase()] >= 0) {
+        item.labelError = true;
+        metadataList[existFields[item.label.toLowerCase()]].labelError = true;
+        return resolve('Duplicated labels: ' + item.label);
+      }
+      if (item.label && item.value) {
+        existFields[item.label.toLowerCase()] = index;
+        metadata[item.label] = item.value;
+      }
+    }
+
+    BitmarkModel.doCheckMetadata(metadata).then(resolve).catch(() => resolve('METADATA is too long (2048-BYTE LIMIT)!'));
   });
 };
 
-const doIssueFile = async (touchFaceIdSession, filepath, assetName, metadatList, quantity) => {
+const doIssueFile = async (touchFaceIdSession, filepath, assetName, metadataList, quantity) => {
   let metadata = {};
-  metadatList.forEach(item => {
+  metadataList.forEach(item => {
     if (item.label && item.value) {
       metadata[item.label] = item.value;
     }

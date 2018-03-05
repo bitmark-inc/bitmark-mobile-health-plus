@@ -314,8 +314,7 @@ export class LocalAddPropertyComponent extends React.Component {
       }
     }
 
-    let error = await BitmarkService.doCheckMetadata(metadataList);
-    let metadataError = error ? 'METADATA is too long (2048-BYTE LIMIT)!' : '';
+    let metadataError = await BitmarkService.doCheckMetadata(metadataList);
     let metadataFieldErrorIndex = metadataList.findIndex((item) => ((!item.label && item.value) || (item.label && !item.value)));
     let metadataFieldEmptyIndex = metadataList.findIndex((item) => (!item.label && !item.value));
     this.setState({
@@ -340,10 +339,6 @@ export class LocalAddPropertyComponent extends React.Component {
     } else {
       metadataList[index].value = text;
     }
-    metadataList[index].labelError = !!((index < (metadataList.length - 1) && !metadataList[index].label) ||
-      (index === (metadataList.length - 1) && !metadataList[index].label && metadataList[index].value));
-    metadataList[index].valueError = !!((index < (metadataList.length - 1) && !metadataList[index].value) ||
-      (index === (metadataList.length - 1) && !metadataList[index].value && metadataList[index].label));
     this.setState({ selectedMetadata: null, });
     this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
   }
