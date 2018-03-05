@@ -71,14 +71,14 @@ export class UserComponent extends React.Component {
               ? require('./../../../assets/imgs/properties-icon-enable.png')
               : require('./../../../assets/imgs/properties-icon-disable.png')} />
           </TouchableOpacity>
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.transaction })}>
+          {/* <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.transaction })}>
             {this.state.transactionNumber > 0 && <View style={userStyle.transactionNumber}>
               <Text style={userStyle.transactionNumberText}>{this.state.transactionNumber}</Text>
             </View>}
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.transaction
               ? require('./../../../assets/imgs/transaction-icon-enable.png')
               : require('./../../../assets/imgs/transaction-icon-disable.png')} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {!config.disabel_markets && <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.markets })}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.markets
               ? require('./../../../assets/imgs/markets-icon-enable.png')
