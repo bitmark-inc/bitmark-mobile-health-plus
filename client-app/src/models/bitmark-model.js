@@ -97,10 +97,9 @@ const doGetBitmarks = async (accountNumber) => {
       localAssets.push(asset);
     });
   }
-  console.log('localAssets :', localAssets);
   localAssets = sortList(localAssets, ((a, b) => {
-    if (!a || !a.newest_created_at || a.totalPending > 0) { return -1; }
-    if (!b || !b.newest_created_at || b.totalPending > 0) { return -1; }
+    if (!a || !a.newest_created_at || a.totalPending > 0) { return 1; }
+    if (!b || !b.newest_created_at || b.totalPending > 0) { return 1; }
     return moment(a.newest_created_at).toDate().getTime() < moment(b.newest_created_at).toDate().getTime();
   }));
   return localAssets;
