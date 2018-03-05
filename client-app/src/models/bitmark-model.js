@@ -36,7 +36,12 @@ const doGetAllBitmarks = (accountNumber) => {
         if (!totalData) {
           totalData = data;
         } else {
-          totalData.assets = totalData.assets.concat(data.assets);
+          data.assets.forEach((item) => {
+            let index = totalData.assets.findIndex(asset => asset.id === item.id);
+            if (index < 0) {
+              totalData.push(item);
+            }
+          });
           totalData.bitmarks = totalData.bitmarks.concat(data.bitmarks);
         }
         if (data.bitmarks.length < 100) {
