@@ -225,7 +225,7 @@ export class AccountDetailComponent extends React.Component {
           </View >}
 
 
-          <Text style={accountStyle.accountNumberLabel}>My Device Notification UUID :</Text>
+          {/* <Text style={accountStyle.accountNumberLabel}>My Device Notification UUID :</Text>
           <View style={accountStyle.accountNumberArea}>
             <Text style={accountStyle.accountNumberValue} numberOfLines={1}>{this.state.userInfo.notificationUID}</Text>
             <TouchableOpacity style={accountStyle.accountNumberCopyButton} onPress={() => {
@@ -235,7 +235,7 @@ export class AccountDetailComponent extends React.Component {
             }}>
               <Text style={accountStyle.accountNumberCopyButtonText}>{this.state.notificationUUIDCopyText}</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </ScrollView>
       </View >
     );
