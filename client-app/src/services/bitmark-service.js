@@ -12,7 +12,7 @@ let doGetBitmarks = (bitmarkAccountNumber) => {
 };
 
 const doCheckFileToIssue = async (filePath) => {
-  let assetInfo = BitmarkModel.doPrepareAssetInfo(filePath);
+  let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
   let assetInformation = await BitmarkModel.doGetAssetInformation(assetInfo.id);
   if (!assetInformation) {
     return assetInfo;
