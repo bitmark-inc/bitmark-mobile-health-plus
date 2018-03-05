@@ -3,7 +3,7 @@ import {
   ios,
   android // TODO
 } from './../../../configs';
-// import { convertWidth } from './../../../utils'
+import { convertWidth } from '../../../utils';
 
 const deviceSize = Dimensions.get('window');
 
@@ -70,6 +70,63 @@ export default StyleSheet.create({
   contentSubTab: {
     width: '100%',
     flexDirection: 'column',
+  },
+
+  signRequestRow: {
+    width: '100%',
+    marginTop: 18,
+    minHeight: 107,
+    flexDirection: 'column',
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
+    borderBottomColor: '#EFEFEF',
+    borderBottomWidth: 1,
+  },
+  signRequestTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  signRequestTitleType: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#0060F2',
+    width: convertWidth(220),
+  },
+  signRequestTitleTime: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    fontWeight: '700',
+    width: convertWidth(90),
+    marginLeft: convertWidth(12),
+  },
+  signRequestTitleIcon: {
+    width: 12,
+    height: 12,
+    resizeMode: 'contain',
+    marginLeft: convertWidth(3),
+  },
+  signRequestContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  signRequestSenderFix: {
+    fontFamily: 'Andale Mono',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  signRequestSenderName: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  signRequestAssetName: {
+    fontFamily: 'Avenir black',
+    fontSize: 13,
+    fontWeight: '900',
+    width: convertWidth(150),
   },
 
 });

@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView, FlatList,
+  View, Text, TouchableOpacity, ScrollView, FlatList, Image,
   Platform,
 } from 'react-native';
+import moment from 'moment';
 
 import { DataController } from './../../../managers';
 
-import transactionStyle from './transactions.component.style';
+import transactionsStyle from './transactions.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 import { EventEmiterService } from '../../../services';
 
@@ -73,60 +74,61 @@ export class TransactionsComponent extends React.Component {
 
   render() {
     return (
-      <View style={transactionStyle.body}>
+      <View style={transactionsStyle.body}>
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>TRANSACTIONS</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
-        <View style={transactionStyle.subTabArea}>
-          <TouchableOpacity style={transactionStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.required)}>
-            <View style={transactionStyle.subTabButtonArea}>
-              <View style={transactionStyle.subTabButtonTextArea}>
-                <Text style={transactionStyle.subTabButtonText}>{SubTabs.required}</Text>
+        <View style={transactionsStyle.subTabArea}>
+          <TouchableOpacity style={transactionsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.required)}>
+            <View style={transactionsStyle.subTabButtonArea}>
+              <View style={transactionsStyle.subTabButtonTextArea}>
+                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.required}</Text>
               </View>
-              <View style={[transactionStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.required ? '#0060F2' : 'white' }]}></View>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.required ? '#0060F2' : 'white' }]}></View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={transactionStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.completed)}>
-            <View style={transactionStyle.subTabButtonArea}>
-              <View style={transactionStyle.subTabButtonTextArea}>
-                <Text style={transactionStyle.subTabButtonText}>{SubTabs.completed}</Text>
+          <TouchableOpacity style={transactionsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.completed)}>
+            <View style={transactionsStyle.subTabButtonArea}>
+              <View style={transactionsStyle.subTabButtonTextArea}>
+                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.completed}</Text>
               </View>
-              <View style={[transactionStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.completed ? '#0060F2' : 'white' }]}></View>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.completed ? '#0060F2' : 'white' }]}></View>
             </View>
           </TouchableOpacity>
         </View>
-        <ScrollView style={[transactionStyle.scrollSubTabArea]}>
-          {this.state.subtab === SubTabs.required && <View style={transactionStyle.contentSubTab}>
+        <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
+          {this.state.subtab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
             <FlatList data={this.state.pendingTransactions}
               extraData={this.state}
               renderItem={({ item }) => {
                 return (
-                  <View style={{}}>
-                    <View>
-                      <Text>{item.type}</Text>
-                      <Text>{item.time}</Text>
+                  <TouchableOpacity style={transactionsStyle.signRequestRow}>
+                    <View style={transactionsStyle.signRequestTitle}>
+                      <Text style={transactionsStyle.signRequestTitleType}>{item.type}</Text>
+                      <Text style={transactionsStyle.signRequestTitleTime} >{item.time}</Text>
+                      <Image style={transactionsStyle.signRequestTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                     </View>
-                    <View style={{}}>
-                      <Text>[</Text>
-                      <Text>{item.sender}</Text>
-                      <Text>]</Text>
-                      <Text> has transferred the property </Text>
-                      <Text>{item.assetName}</Text>
-                      <Text> to you. Please sign for receipt to accept the property transfer. </Text>
-                    </View>
-                  </View>
+                    <Text style={transactionsStyle.signRequestContent}>
+                      <Text style={transactionsStyle.signRequestSenderFix}>[</Text>
+                      <Text style={transactionsStyle.signRequestSenderName} numberOfLines={1}>{item.sender.substring(0, 12)}...</Text>
+                      <Text style={transactionsStyle.signRequestSenderFix}>]</Text>
+                      has transferred the property
+                      <Text style={transactionsStyle.signRequestAssetName}> {item.assetName} </Text>
+                      to you. Please sign for receipt to accept the property transfer.
+                    </Text>
+                  </TouchableOpacity>
                 )
               }} />
           </View>}
 
-          {this.state.subtab === SubTabs.completed && <View style={transactionStyle.contentSubTab}>
+          {this.state.subtab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
             <FlatList data={this.state.completedTransactions}
               extraData={this.state}
               renderItem={({ item }) => {
                 return (
-                  <View style={{}}>
+                  <TouchableOpacity style={{}}>
                     <View>
                       <Text>{item.type}</Text>
                       <Text>{item.time || item.status}</Text>
@@ -145,7 +147,7 @@ export class TransactionsComponent extends React.Component {
                         <Text>{item.recipient}</Text>
                       </View>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 )
               }} />
           </View >}

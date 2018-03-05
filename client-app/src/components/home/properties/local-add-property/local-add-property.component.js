@@ -168,7 +168,7 @@ export class LocalAddPropertyComponent extends React.Component {
     this.back = this.back.bind(this);
     this.doInputAssetName = this.doInputAssetName.bind(this);
     this.addNewMetadataField = this.addNewMetadataField.bind(this);
-    this.checkMetadata = this.checkMetadata.bind(this);
+    this.checkIssuance = this.checkIssuance.bind(this);
     this.doInputQuantity = this.doInputQuantity.bind(this);
 
     this.state = {
@@ -181,10 +181,10 @@ export class LocalAddPropertyComponent extends React.Component {
       filename: '',
       fileFormat: '',
       fileError: '',
-      assetName: '',
+      assetName: null,
       canAddNewMetadata: false,
       canIssue: false,
-      quantity: '',
+      quantity: null,
       selectedMetadata: null,
 
       assetNameError: '',
@@ -237,7 +237,7 @@ export class LocalAddPropertyComponent extends React.Component {
       }).catch(error => {
         console.log('choose file error:', error);
         this.setState({
-          fileError: 'Error when checking file!',
+          fileError: 'Checking file error!',
         });
       });
     });
@@ -272,27 +272,44 @@ export class LocalAddPropertyComponent extends React.Component {
   }
 
   doInputAssetName(assetName) {
-    let assetNameError = '';
-    if (assetName.length > 64) {
-      assetNameError = 'Property name must be smaller or equal 64 character!';
-    } else if (!assetName) {
-      assetNameError = 'You must input property name!';
-    }
-    this.setState({
-      assetName, assetNameError,
-      canIssue: (assetName && !assetNameError && this.state.quantity && !this.state.quantityError),
-    });
+    this.checkIssuance(assetName, this.state.metadataList, this.state.quantity);
   }
 
-  async checkMetadata(metadataList) {
-    let error = await BitmarkService.doCheckMetadata();
+  async checkIssuance(assetName, metadataList, quantity) {
+    let assetNameError = '';
+    if (typeof (assetName) === 'string') {
+      if (assetName.length > 64) {
+        assetNameError = 'Property name must be smaller or equal 64 character!';
+      } else if (!assetName) {
+        assetNameError = 'You must input property name!';
+      }
+    }
+    let quantityError = '';
+    if (typeof (quantity) === 'string') {
+      quantity = quantity.replace(/[^0-9]/g, '');
+      let quantityNumber = parseInt(quantity);
+      if (isNaN(quantityNumber) || quantityNumber <= 0) {
+        quantityError = 'Minimum quantity of one bitmark is required.';
+      } else if (quantityNumber > 100) {
+        quantityError = 'Maximum quantity of one bitmark is 100';
+      }
+    }
+
+    let error = await BitmarkService.doCheckMetadata(metadataList);
     let metadataError = error ? 'METADATA is too long (2048-BYTE LIMIT)!' : '';
-    let index = metadataList.findIndex((item) => ((!item.label && item.value) || (item.label && !item.value)));
+    let metadataFieldErrorIndex = metadataList.findIndex((item) => ((!item.label && item.value) || (item.label && !item.value)));
+    let metadataFieldEmptyIndex = metadataList.findIndex((item) => (!item.label && !item.value));
     this.setState({
+      assetName,
+      assetNameError,
+      quantity,
+      quantityError,
       metadataList,
       metadataError,
-      canAddNewMetadata: (index < 0) && !metadataError,
-      canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError && !metadataError),
+      canAddNewMetadata: (metadataFieldErrorIndex < 0) && !metadataError && (metadataFieldEmptyIndex < 0),
+      canIssue: (metadataFieldErrorIndex < 0 && !metadataError &&
+        assetName && !assetNameError &&
+        quantity && !quantityError),
     });
   }
 
@@ -309,33 +326,22 @@ export class LocalAddPropertyComponent extends React.Component {
     metadataList[index].valueError = !!((index < (metadataList.length - 1) && !metadataList[index].value) ||
       (index === (metadataList.length - 1) && !metadataList[index].value && metadataList[index].label));
     this.setState({ selectedMetadata: null, });
-    this.checkMetadata(metadataList);
+    this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
   }
 
   removeMetadata(key) {
     let metadataList = this.state.metadataList.filter((item) => item.key != key);
-    this.checkMetadata(metadataList);
+    this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
   }
 
   addNewMetadataField() {
     let metadataList = this.state.metadataList;
     metadataList.push({ key: metadataList.length, label: '', value: '' });
-    this.setState({ metadataList, canAddNewMetadata: false, canIssue: false, });
+    this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
   }
 
   doInputQuantity(quantity) {
-    quantity = quantity.replace(/[^0-9]/g, '');
-    let quantityNumber = parseInt(quantity);
-    let quantityError = '';
-    if (isNaN(quantityNumber) || quantityNumber <= 0) {
-      quantityError = 'Minimum quantity of one bitmark is required.';
-    } else if (quantityNumber > 100) {
-      quantityError = 'Maximum quantity of one bitmark is 100';
-    }
-    this.setState({
-      quantity, quantityError,
-      canIssue: (this.state.assetName && !this.state.assetNameError && quantity && !quantityError),
-    });
+    this.checkIssuance(this.state.assetName, this.state.metadataList, quantity);
   }
 
   render() {
