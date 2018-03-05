@@ -267,7 +267,24 @@ export class LocalAddPropertyComponent extends React.Component {
     if (this.state.step === Steps.input_file) {
       this.props.navigation.goBack();
     } else if (this.state.step === Steps.input_info) {
-      this.setState({ step: Steps.input_file });
+      this.setState({
+        step: Steps.input_file,
+        existingAsset: false,
+        metadataList: [{ key: 0, label: '', value: '' }],
+        filepath: '',
+        filename: '',
+        fileFormat: '',
+        fileError: '',
+        assetName: null,
+        canAddNewMetadata: false,
+        canIssue: false,
+        quantity: null,
+        selectedMetadata: null,
+        assetNameError: '',
+        quantityError: '',
+        metadataError: '',
+        issueError: '',
+      });
     }
   }
 

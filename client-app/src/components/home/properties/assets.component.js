@@ -63,8 +63,7 @@ export class AssetsComponent extends React.Component {
   }
 
   refreshPropertiesScreen() {
-    AppController.doGetBitmarks().then((data) => {
-      this.setState({ data });
+    AppController.doGetBitmarks().then(() => {
       this.switchSubtab(this.state.subtab);
     }).catch((error) => {
       console.log('getUserBitmark error :', error);
