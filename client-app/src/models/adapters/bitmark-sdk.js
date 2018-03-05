@@ -1,37 +1,43 @@
 import { NativeModules } from 'react-native'
 let SwiftBitmarkSDK = NativeModules.BitmarkSDK;
 
+const newError = (reason, defaultMessage) => {
+  let message = (reason && typeof (reason) === 'string') ? reason : defaultMessage;
+  message = message || 'Interal application error!'
+  return new Error(message);
+}
+
 const BitmarkSDK = {
   // return session id
   newAccount: (network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccount(network, (ok, sessionId) => {
+      SwiftBitmarkSDK.newAccount(network, (ok, result) => {
         if (ok) {
-          resolve(sessionId);
+          resolve(result);
         } else {
-          reject(new Error('Can not create new Account!'));
+          reject(newError(result, 'Can not create new Account!'));
         }
       });
     });
   },
   newAccountFrom24Words: (pharse24Words) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFrom24Words(pharse24Words, (ok, sessionId) => {
+      SwiftBitmarkSDK.newAccountFrom24Words(pharse24Words, (ok, result) => {
         if (ok) {
-          resolve(sessionId);
+          resolve(result);
         } else {
-          reject(new Error('Can not recovery account from 24 words!'));
+          reject(newError(result, 'Can not recovery account from 24 words!'));
         }
       });
     });
   },
   requestSession: (network, message) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.requestSession(network, message, (ok, sessionId) => {
+      SwiftBitmarkSDK.requestSession(network, message, (ok, result) => {
         if (ok) {
-          resolve(sessionId);
+          resolve(result);
         } else {
-          reject(new Error('Can not reuest session!'));
+          reject(newError(result, 'Can not reuest session!'));
         }
       });
     });
@@ -40,11 +46,11 @@ const BitmarkSDK = {
   // one time
   removeAccount: () => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.removeAccount((ok) => {
+      SwiftBitmarkSDK.removeAccount((ok, result) => {
         if (ok) {
           resolve();
         } else {
-          reject(new Error('Can not remove account!'));
+          reject(newError(result, 'Can not remove account!'));
         }
       });
     });
@@ -53,55 +59,55 @@ const BitmarkSDK = {
   // use session id
   disposeSession: (sessionId) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.disposeSession(sessionId, (ok) => {
+      SwiftBitmarkSDK.disposeSession(sessionId, (ok, result) => {
         if (ok && sessionId) {
           resolve(sessionId);
         } else {
-          reject(new Error('Can not dispose session!'));
+          reject(newError(result, 'Can not dispose session!'));
         }
       });
     });
   },
   accountInfo: (sessionId) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.accountInfo(sessionId, (ok, bitmarkAccountNumber, pharse24Words) => {
+      SwiftBitmarkSDK.accountInfo(sessionId, (ok, result, pharse24Words) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber, pharse24Words });
+          resolve({ bitmarkAccountNumber: result, pharse24Words });
         } else {
-          reject(new Error('Can not get current account!'));
+          reject(newError(result, 'Can not get current account!'));
         }
       });
     });
   },
   signMessage: (message, sessionId) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.sign(sessionId, message, (ok, signature) => {
+      SwiftBitmarkSDK.sign(sessionId, message, (ok, result) => {
         if (ok) {
-          resolve(signature);
+          resolve(result);
         } else {
-          reject(new Error('Can not sign message!'));
+          reject(newError(result, 'Can not sign message!'));
         }
       });
     });
   },
   rickySignMessage: (messages, sessionId) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.rickySign(sessionId, messages, (ok, signatures) => {
-        if (ok && signatures && signatures.length === messages.length) {
-          resolve(signatures);
+      SwiftBitmarkSDK.rickySign(sessionId, messages, (ok, results) => {
+        if (ok && results && results.length === messages.length) {
+          resolve(results);
         } else {
-          reject(new Error('Can not sign message!'));
+          reject(new Error(results || 'Can not sign message!'));
         }
       });
     });
   },
   registerAccessPublicKey: (sessionId) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.registerAccessPublicKey(sessionId, (ok, accessPublicKey) => {
-        if (ok && accessPublicKey) {
-          resolve(accessPublicKey);
+      SwiftBitmarkSDK.registerAccessPublicKey(sessionId, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
         } else {
-          reject(new Error('Can not registerAccessPublicKey!'));
+          reject(newError(result, 'Can not register access public key!'));
         }
       });
     });
@@ -114,11 +120,11 @@ const BitmarkSDK = {
         property_name,
         metadata,
         quantity,
-      }, (ok, bitmarkIds) => {
-        if (ok && bitmarkIds) {
-          resolve(bitmarkIds);
+      }, (ok, results) => {
+        if (ok && results) {
+          resolve(results);
         } else {
-          reject(new Error('Can not issueFile!'));
+          reject(new Error(results || 'Can not issue file!'));
         }
       });
     });
@@ -131,11 +137,11 @@ const BitmarkSDK = {
         property_name,
         metadata,
         receiver,
-      }, (ok, bitmarkId) => {
-        if (ok && bitmarkId) {
-          resolve(bitmarkId);
+      }, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
         } else {
-          reject(new Error('Can not registerAccessPublicKey!'));
+          reject(newError(result, 'Can not issue then transfer file!'));
         }
       });
     });
@@ -143,22 +149,22 @@ const BitmarkSDK = {
 
   sign1stForTransfer: (sessionId, bitmarkId, receiver) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.sign1stForTransfer(sessionId, bitmarkId, receiver, (ok, txid, signature) => {
-        if (ok && txid && signature) {
-          resolve({ txid, signature });
+      SwiftBitmarkSDK.sign1stForTransfer(sessionId, bitmarkId, receiver, (ok, result, signature) => {
+        if (ok && result && signature) {
+          resolve({ txid: result, signature });
         } else {
-          reject(new Error('Can not sign1stForTransfer!'));
+          reject(newError(result, 'Can not sign first signature for transfer!'));
         }
       });
     });
   },
   sign2ndForTransfer: (sessionId, txid, signature1) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.sign2ndForTransfer(sessionId, txid, signature1, (ok, signature2) => {
-        if (ok && signature2) {
-          resolve(signature2);
+      SwiftBitmarkSDK.sign2ndForTransfer(sessionId, txid, signature1, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
         } else {
-          reject(new Error('Can not sign2ndForTransfer!'));
+          reject(newError(result, 'Can not sign second signature for transfer!'));
         }
       });
     });
@@ -167,11 +173,11 @@ const BitmarkSDK = {
   // don use session di
   try24Words: (pharse24Words) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.try24Words(pharse24Words, (ok, bitmarkAccountNumber, pharse24Words) => {
+      SwiftBitmarkSDK.try24Words(pharse24Words, (ok, result, pharse24Words) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber, pharse24Words });
+          resolve({ bitmarkAccountNumber: result, pharse24Words });
         } else {
-          reject(new Error('Can not try 24 words!'));
+          reject(newError(result, 'Can not try 24 words!'));
         }
       });
     });
@@ -179,23 +185,22 @@ const BitmarkSDK = {
 
   getAssetInfo: (filePath) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.getAssetInfo(filePath, (ok, id, fingerprint) => {
+      SwiftBitmarkSDK.getAssetInfo(filePath, (ok, result, fingerprint) => {
         if (ok) {
-          resolve({ fingerprint, id });
+          resolve({ fingerprint, id: result });
         } else {
-          reject(new Error('Can not getAssetInfo!'));
+          reject(newError(result, 'Can not get basic asset information!'));
         }
       });
     });
   },
   validateMetadata: (metadata) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.validateMetadata(metadata, (ok) => {
-        console.log('validateMetadata :', metadata, ok);
+      SwiftBitmarkSDK.validateMetadata(metadata, (ok, result) => {
         if (ok) {
           resolve();
         } else {
-          reject(new Error('validateMetadata error'));
+          reject(newError(result, 'metadata invalid!'));
         }
       });
     });
