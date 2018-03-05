@@ -36,7 +36,9 @@ const doCheckMetadata = (metadatList) => {
 const doIssueFile = async (touchFaceIdSession, filepath, assetName, metadatList, quantity) => {
   let metadata = {};
   metadatList.forEach(item => {
-    metadata[item.label] = item.value;
+    if (item.label && item.value) {
+      metadata[item.label] = item.value;
+    }
   });
   return await BitmarkModel.doIssueFile(touchFaceIdSession, filepath, assetName, metadata, quantity);
 };
