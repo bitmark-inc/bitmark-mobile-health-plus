@@ -240,7 +240,7 @@ export class SignInComponent extends React.Component {
             <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
               <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_back_icon_study_setting.png')} />
             </TouchableOpacity>
-            <Text style={defaultStyles.headerTitle}>RECOVERY PHRASE SIGN-IN</Text>
+            <Text style={defaultStyles.headerTitle}>RECOVERY PHRASE{'\n'}SIGN-IN</Text>
             <TouchableOpacity style={defaultStyles.headerRight}>
             </TouchableOpacity>
           </View>
