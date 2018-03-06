@@ -59,18 +59,18 @@ export class LocalPropertyDetailComponent extends React.Component {
                 : require('../../../../../assets/imgs/three-dot-deactive.png')} />
             </TouchableOpacity>
           </View>
+          {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
+            <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
+              Clipboard.setString(this.state.bitmark.bitmark_id);
+              this.setState({ copied: true });
+              setTimeout(() => { this.setState({ copied: false }) }, 1000);
+            }}>
+              <Text style={propertyDetailStyle.copyBitmarkIddButtonText}>Copy Bitmark ID</Text>
+              {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+            </TouchableOpacity>
+          </View>}
           <ScrollView style={propertyDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-                <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
-                  Clipboard.setString(this.state.bitmark.bitmark_id);
-                  this.setState({ copied: true });
-                  setTimeout(() => { this.setState({ copied: false }) }, 1000);
-                }}>
-                  <Text style={propertyDetailStyle.copyBitmarkIddButtonText}>Copy Bitmark ID</Text>
-                  {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
-                </TouchableOpacity>
-              </View>}
               <View style={propertyDetailStyle.bottomImageBar}></View>
               <Text style={propertyDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
               <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
