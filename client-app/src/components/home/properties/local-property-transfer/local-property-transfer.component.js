@@ -49,7 +49,7 @@ export class LocalPropertyTransferComponent extends React.Component {
             <TouchableOpacity style={[defaultStyle.headerRight]} />
           </View>
           <ScrollView style={propertyTransferStyle.content}>
-            <View style={propertyTransferStyle.mainContent}>
+            <TouchableOpacity activeOpacity={1} style={propertyTransferStyle.mainContent}>
               <TextInput style={propertyTransferStyle.inputAccountNumber} placeholder='BITMARK ACCOUNT'
                 onChangeText={(bitmarkAccount) => this.setState({ bitmarkAccount })}
                 onSubmitEditing={this.onFinishInputAccountNumber}
@@ -64,7 +64,7 @@ export class LocalPropertyTransferComponent extends React.Component {
                   color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
                 }]}>SEND</Text>
               </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
           </ScrollView>
         </View>
       </TouchableWithoutFeedback>

@@ -60,66 +60,68 @@ export class LocalPropertyDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>
           <ScrollView style={propertyDetailStyle.content}>
-            {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-              <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
-                Clipboard.setString(this.state.bitmark.bitmark_id);
-                this.setState({ copied: true });
-                setTimeout(() => { this.setState({ copied: false }) }, 1000);
-              }}>
-                <Text style={propertyDetailStyle.copyBitmarkIddButtonText}>Copy Bitmark ID</Text>
-                {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
-              </TouchableOpacity>
-            </View>}
-            <View style={propertyDetailStyle.bottomImageBar}></View>
-            <Text style={propertyDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
-            <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
-              Issued {isNaN(this.state.bitmark.created_at) ? '' : ('on' + this.state.bitmark.created_at)} by {this.state.asset.registrant}
-            </Text>
-            <View style={propertyDetailStyle.bottomAssetNameBar}></View>
-            <Text style={propertyDetailStyle.provenanceLabel}>Provenance</Text>
-            <View style={propertyDetailStyle.provenancesArea}>
-              <View style={propertyDetailStyle.provenancesHeader}>
-                <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
-                <Text style={propertyDetailStyle.provenancesHeaderLabelOwner}>OWNER</Text>
-              </View>
-              <View style={propertyDetailStyle.provenanceListArea}>
-                <FlatList
-                  scrollEnabled={false}
-                  extraData={this.state}
-                  data={this.state.histories || []}
-                  renderItem={({ item }) => {
-                    return (<View style={propertyDetailStyle.provenancesRow}>
-                      <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.history.created_at}</Text>
-                      <Text style={propertyDetailStyle.provenancesRowOwner} numberOfLines={1}>{item.history.owner}</Text>
-                    </View>);
-                  }}
-                />
-              </View>
-            </View>
-            {!config.disabel_markets && <View style={propertyDetailStyle.listingButtonArea} >
-              <TouchableOpacity style={[propertyDetailStyle.listingButton, { backgroundColor: this.state.bitmark.status === 'pending' ? '#CCCCCC' : '#0060F2' }]}
-                disabled={this.state.bitmark.status === 'pending'}
-                onPress={() => {
-                  this.props.navigation.navigate('MarketBitmarkDeposit', {
-                    asset: this.state.asset,
-                    bitmark: this.state.bitmark
-                  });
+            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+              {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
+                <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
+                  Clipboard.setString(this.state.bitmark.bitmark_id);
+                  this.setState({ copied: true });
+                  setTimeout(() => { this.setState({ copied: false }) }, 1000);
                 }}>
-                <Text style={propertyDetailStyle.listingButtonText}>{'LIST THIS BITMARK TO MARKET'.toUpperCase()}</Text>
-              </TouchableOpacity>
-            </View>}
+                  <Text style={propertyDetailStyle.copyBitmarkIddButtonText}>Copy Bitmark ID</Text>
+                  {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+                </TouchableOpacity>
+              </View>}
+              <View style={propertyDetailStyle.bottomImageBar}></View>
+              <Text style={propertyDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
+              <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
+                Issued {isNaN(this.state.bitmark.created_at) ? '' : ('on' + this.state.bitmark.created_at)} by {this.state.asset.registrant}
+              </Text>
+              <View style={propertyDetailStyle.bottomAssetNameBar}></View>
+              <Text style={propertyDetailStyle.provenanceLabel}>Provenance</Text>
+              <View style={propertyDetailStyle.provenancesArea}>
+                <View style={propertyDetailStyle.provenancesHeader}>
+                  <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
+                  <Text style={propertyDetailStyle.provenancesHeaderLabelOwner}>OWNER</Text>
+                </View>
+                <View style={propertyDetailStyle.provenanceListArea}>
+                  <FlatList
+                    scrollEnabled={false}
+                    extraData={this.state}
+                    data={this.state.histories || []}
+                    renderItem={({ item }) => {
+                      return (<View style={propertyDetailStyle.provenancesRow}>
+                        <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.history.created_at}</Text>
+                        <Text style={propertyDetailStyle.provenancesRowOwner} numberOfLines={1}>{item.history.owner}</Text>
+                      </View>);
+                    }}
+                  />
+                </View>
+              </View>
+              {!config.disabel_markets && <View style={propertyDetailStyle.listingButtonArea} >
+                <TouchableOpacity style={[propertyDetailStyle.listingButton, { backgroundColor: this.state.bitmark.status === 'pending' ? '#CCCCCC' : '#0060F2' }]}
+                  disabled={this.state.bitmark.status === 'pending'}
+                  onPress={() => {
+                    this.props.navigation.navigate('MarketBitmarkDeposit', {
+                      asset: this.state.asset,
+                      bitmark: this.state.bitmark
+                    });
+                  }}>
+                  <Text style={propertyDetailStyle.listingButtonText}>{'LIST THIS BITMARK TO MARKET'.toUpperCase()}</Text>
+                </TouchableOpacity>
+              </View>}
 
-            <View style={propertyDetailStyle.transferButtonArea} >
-              <TouchableOpacity style={[propertyDetailStyle.transferButton, {
-                borderTopColor: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
-              }]}
-                disabled={this.state.bitmark.status === 'pending'}
-                onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark })}>
-                <Text style={[propertyDetailStyle.transferButtonText, {
-                  color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
-                }]}>TRANSFER</Text>
-              </TouchableOpacity>
-            </View>
+              <View style={propertyDetailStyle.transferButtonArea} >
+                <TouchableOpacity style={[propertyDetailStyle.transferButton, {
+                  borderTopColor: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
+                }]}
+                  disabled={this.state.bitmark.status === 'pending'}
+                  onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark })}>
+                  <Text style={[propertyDetailStyle.transferButtonText, {
+                    color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
+                  }]}>TRANSFER</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           </ScrollView>
         </View>
       </TouchableWithoutFeedback>

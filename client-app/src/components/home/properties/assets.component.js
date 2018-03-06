@@ -133,7 +133,7 @@ export class AssetsComponent extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView style={[assetsStyle.scrollSubTabArea]}>
-          <View style={assetsStyle.contentSubTab}>
+          <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
             {(!this.state.assets || this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'currently you own no property.'.toUpperCase()}
@@ -184,7 +184,7 @@ export class AssetsComponent extends React.Component {
             {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
               <WebView source={{ uri: config.registry_server_url }} />
             </View>}
-          </View>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     );

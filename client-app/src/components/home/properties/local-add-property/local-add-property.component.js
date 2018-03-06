@@ -377,7 +377,7 @@ export class LocalAddPropertyComponent extends React.Component {
           </View>
 
           <ScrollView style={localAddPropertyStyle.scroll}>
-            <TouchableOpacity style={localAddPropertyStyle.body} activeOpacity={1}>
+            <TouchableOpacity activeOpacity={1} style={localAddPropertyStyle.body}>
               {this.state.step === Steps.input_file && <View style={localAddPropertyStyle.addFileArea}>
                 <Text style={localAddPropertyStyle.addFileLabel}>Upload Asset</Text>
                 {!!this.state.fileError && <Text style={localAddPropertyStyle.fileInputError}>{this.state.fileError}</Text>}

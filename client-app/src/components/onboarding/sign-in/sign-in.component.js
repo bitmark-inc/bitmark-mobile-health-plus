@@ -246,84 +246,86 @@ export class SignInComponent extends React.Component {
           </View>
 
           <ScrollView scrollEnabled={this.state.keyBoardHeight === 0}>
-            <View style={signStyle.mainContent}>
-              <Text style={[signStyle.writeRecoveryPhraseContentMessage,]}>
-                Please type all 24 words of your recovery phrase in the exact sequence below:
+            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+              <View style={signStyle.mainContent}>
+                <Text style={[signStyle.writeRecoveryPhraseContentMessage,]}>
+                  Please type all 24 words of your recovery phrase in the exact sequence below:
              </Text>
-              <View style={[signStyle.writeRecoveryPhraseArea, {
-                height: (this.state.keyBoardHeight
-                  ? deviceSize.height - constant.headerSize.height - this.state.keyBoardHeight - constant.autoCompleteHeight - 66
-                  : 'auto')
-              }]}>
-                <ScrollView alwaysBounceVertical={true} alwaysBounceHorizontal={false} ref={(sr) => { this.scrollRef = sr; }}>
-                  <View style={signStyle.writeRecoveryPhraseContentList}>
-                    <View style={signStyle.writeRecoveryPhraseContentHalfList}>
-                      <FlatList data={this.state.smallerList}
-                        scrollEnabled={false}
-                        extraData={this.state}
-                        renderItem={({ item }) => {
-                          return (<View style={signStyle.recoveryPhraseSet}>
-                            <Text style={signStyle.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                            <TextInput
-                              style={[signStyle.recoveryPhraseWord, {
-                                backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-                                borderColor: '#0060F2',
-                                borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
-                              }]}
-                              ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                              onChangeText={(text) => this.onChangeText(item.key, text)}
-                              onFocus={() => this.onFocus(item.key)}
-                              value={item.word}
-                              autoCorrect={false}
-                              autoCapitalize="none"
-                              onSubmitEditing={() => this.onSubmitWord(item.word)}
-                            />
-                          </View>)
-                        }}
-                      />
-                    </View>
-                    <View style={[signStyle.writeRecoveryPhraseContentHalfList, { marginLeft: 33, }]}>
-                      <FlatList data={this.state.biggerList}
-                        scrollEnabled={false}
-                        extraData={this.state}
-                        renderItem={({ item }) => {
-                          return (<View style={signStyle.recoveryPhraseSet}>
-                            <Text style={signStyle.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                            <TextInput
-                              style={[signStyle.recoveryPhraseWord, {
-                                backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-                                borderColor: '#0060F2',
-                                borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
-                              }]}
-                              ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                              onChangeText={(text) => this.onChangeText(item.key, text)}
-                              onFocus={() => this.onFocus(item.key)}
-                              value={item.word}
-                              autoCorrect={false}
-                              autoCapitalize="none"
-                              onSubmitEditing={() => this.onSubmitWord(item.word)}
-                            />
-                          </View>)
-                        }}
-                      />
-                    </View>
-                  </View>
-                </ScrollView>
+                <View style={[signStyle.writeRecoveryPhraseArea, {
+                  height: (this.state.keyBoardHeight
+                    ? deviceSize.height - constant.headerSize.height - this.state.keyBoardHeight - constant.autoCompleteHeight - 66
+                    : 'auto')
+                }]}>
+                  <ScrollView alwaysBounceVertical={true} alwaysBounceHorizontal={false} ref={(sr) => { this.scrollRef = sr; }}>
+                    <TouchableOpacity activeOpacity={1} style={signStyle.writeRecoveryPhraseContentList}>
+                      <View style={signStyle.writeRecoveryPhraseContentHalfList}>
+                        <FlatList data={this.state.smallerList}
+                          scrollEnabled={false}
+                          extraData={this.state}
+                          renderItem={({ item }) => {
+                            return (<View style={signStyle.recoveryPhraseSet}>
+                              <Text style={signStyle.recoveryPhraseIndex}>{item.key + 1}.</Text>
+                              <TextInput
+                                style={[signStyle.recoveryPhraseWord, {
+                                  backgroundColor: (item.word ? 'white' : '#F5F5F5'),
+                                  borderColor: '#0060F2',
+                                  borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
+                                }]}
+                                ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                onChangeText={(text) => this.onChangeText(item.key, text)}
+                                onFocus={() => this.onFocus(item.key)}
+                                value={item.word}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                onSubmitEditing={() => this.onSubmitWord(item.word)}
+                              />
+                            </View>)
+                          }}
+                        />
+                      </View>
+                      <View style={[signStyle.writeRecoveryPhraseContentHalfList, { marginLeft: 33, }]}>
+                        <FlatList data={this.state.biggerList}
+                          scrollEnabled={false}
+                          extraData={this.state}
+                          renderItem={({ item }) => {
+                            return (<View style={signStyle.recoveryPhraseSet}>
+                              <Text style={signStyle.recoveryPhraseIndex}>{item.key + 1}.</Text>
+                              <TextInput
+                                style={[signStyle.recoveryPhraseWord, {
+                                  backgroundColor: (item.word ? 'white' : '#F5F5F5'),
+                                  borderColor: '#0060F2',
+                                  borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
+                                }]}
+                                ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                onChangeText={(text) => this.onChangeText(item.key, text)}
+                                onFocus={() => this.onFocus(item.key)}
+                                value={item.word}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                onSubmitEditing={() => this.onSubmitWord(item.word)}
+                              />
+                            </View>)
+                          }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </ScrollView>
+                </View>
+                {this.state.preCheckResult && <View style={signStyle.recoveryPhraseTestResult}>
+                  <Text style={[signStyle.recoveryPhraseTestTitle, { color: this.state.preCheckResult === PreCheckResults.success ? '#0060F2' : '#FF003C' }]}>
+                    {this.state.preCheckResult === PreCheckResults.success ? 'Success!' : 'Wrong Recovery Phrase!'}
+                  </Text>
+                  <Text style={[signStyle.recoveryPhraseTestMessage, { color: this.state.preCheckResult === PreCheckResults.success ? '#0060F2' : '#FF003C' }]}>
+                    {this.state.preCheckResult === PreCheckResults.success ? 'Keep your written copy private in a secure and safe location.' : 'Please try again!'}
+                  </Text>
+                </View>}
+                {!this.state.keyBoardHeight && <TouchableOpacity style={[signStyle.submitButton, {
+                  backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'
+                }]} onPress={this.submit24Words} disabled={this.state.remainWordNumber > 0}>
+                  <Text style={[signStyle.submitButtonText]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
+                </TouchableOpacity>}
               </View>
-              {this.state.preCheckResult && <View style={signStyle.recoveryPhraseTestResult}>
-                <Text style={[signStyle.recoveryPhraseTestTitle, { color: this.state.preCheckResult === PreCheckResults.success ? '#0060F2' : '#FF003C' }]}>
-                  {this.state.preCheckResult === PreCheckResults.success ? 'Success!' : 'Wrong Recovery Phrase!'}
-                </Text>
-                <Text style={[signStyle.recoveryPhraseTestMessage, { color: this.state.preCheckResult === PreCheckResults.success ? '#0060F2' : '#FF003C' }]}>
-                  {this.state.preCheckResult === PreCheckResults.success ? 'Keep your written copy private in a secure and safe location.' : 'Please try again!'}
-                </Text>
-              </View>}
-              {!this.state.keyBoardHeight && <TouchableOpacity style={[signStyle.submitButton, {
-                backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'
-              }]} onPress={this.submit24Words} disabled={this.state.remainWordNumber > 0}>
-                <Text style={[signStyle.submitButtonText]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
-              </TouchableOpacity>}
-            </View>
+            </TouchableOpacity>
           </ScrollView>
 
           <BitmarkAutoCompleteComponent ref={(ref) => this.autoCompleteElement = ref}

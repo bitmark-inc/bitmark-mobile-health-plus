@@ -74,7 +74,7 @@ export class MarketsComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
         {!config.disabel_markets && <ScrollView style={[marketsStyle.scrollSubTabArea]}>
-          <View style={marketsStyle.contentSubTab}>
+          <TouchableOpacity activeOpacity={1} style={marketsStyle.contentSubTab}>
             <View style={marketsStyle.marketCardArea}>
               <View style={marketsStyle.marketCardTitleArea}>
                 <Image style={marketsStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
@@ -113,7 +113,7 @@ export class MarketsComponent extends React.Component {
                   </View>
                 </TouchableOpacity>}
             </View>
-          </View>
+          </TouchableOpacity>
         </ScrollView>}
         {config.disabel_markets && <View style={[marketsStyle.contentSubTab, { alignItems: 'flex-start' }]}>
           <Text style={{

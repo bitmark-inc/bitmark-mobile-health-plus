@@ -85,32 +85,34 @@ export class MarketBitmarkDepositComponent extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView style={bitmarkDepositStyle.content}>
-          {this.state.step === Steps.chooseMarket && <View style={bitmarkDepositStyle.chooseMarketArea}>
-            <Text style={bitmarkDepositStyle.stepLabel}>Choose a market to list</Text>
-            <Text style={bitmarkDepositStyle.stepMessage}>We found one market that accepts listings for this property. Tap the market’s logo to continue.</Text>
-            <View style={bitmarkDepositStyle.martketListArea}>
-              <FlatList
-                scrollEnabled={false}
-                extraData={this.state}
-                data={this.state.marketList || []}
-                renderItem={({ item }) => {
-                  return (<TouchableOpacity style={[bitmarkDepositStyle.marketButton,]} onPress={() => this.selectMarket(item.market)} >
-                    <Image style={bitmarkDepositStyle.marketButtonIcon} source={config.markets[item.market].sourceIcon} />
-                  </TouchableOpacity>)
-                }}
-              />
-            </View>
-          </View>}
-          {this.state.step === Steps.depost && <View style={bitmarkDepositStyle.depositArea}>
-            <Text style={bitmarkDepositStyle.stepLabel}>By continuing...</Text>
-            <Text style={bitmarkDepositStyle.stepMessage}>You are transferring your bitmark to the market you chose.</Text>
-            <Image style={bitmarkDepositStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + this.state.asset.asset_id }} />
-            <Text style={bitmarkDepositStyle.assetName}>{this.state.asset.name}</Text>
-            <Text style={bitmarkDepositStyle.depositMessage}>Your bitmark will be listed on the market.{'\n'}You can remove it from the market anytime.</Text>
-            <TouchableOpacity style={bitmarkDepositStyle.continueButton} onPress={this.doDeposit}>
-              <Text style={bitmarkDepositStyle.continueButtonText}>CONTINUE</Text>
-            </TouchableOpacity>
-          </View>}
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            {this.state.step === Steps.chooseMarket && <View style={bitmarkDepositStyle.chooseMarketArea}>
+              <Text style={bitmarkDepositStyle.stepLabel}>Choose a market to list</Text>
+              <Text style={bitmarkDepositStyle.stepMessage}>We found one market that accepts listings for this property. Tap the market’s logo to continue.</Text>
+              <View style={bitmarkDepositStyle.martketListArea}>
+                <FlatList
+                  scrollEnabled={false}
+                  extraData={this.state}
+                  data={this.state.marketList || []}
+                  renderItem={({ item }) => {
+                    return (<TouchableOpacity style={[bitmarkDepositStyle.marketButton,]} onPress={() => this.selectMarket(item.market)} >
+                      <Image style={bitmarkDepositStyle.marketButtonIcon} source={config.markets[item.market].sourceIcon} />
+                    </TouchableOpacity>)
+                  }}
+                />
+              </View>
+            </View>}
+            {this.state.step === Steps.depost && <View style={bitmarkDepositStyle.depositArea}>
+              <Text style={bitmarkDepositStyle.stepLabel}>By continuing...</Text>
+              <Text style={bitmarkDepositStyle.stepMessage}>You are transferring your bitmark to the market you chose.</Text>
+              <Image style={bitmarkDepositStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + this.state.asset.asset_id }} />
+              <Text style={bitmarkDepositStyle.assetName}>{this.state.asset.name}</Text>
+              <Text style={bitmarkDepositStyle.depositMessage}>Your bitmark will be listed on the market.{'\n'}You can remove it from the market anytime.</Text>
+              <TouchableOpacity style={bitmarkDepositStyle.continueButton} onPress={this.doDeposit}>
+                <Text style={bitmarkDepositStyle.continueButtonText}>CONTINUE</Text>
+              </TouchableOpacity>
+            </View>}
+          </TouchableOpacity>
         </ScrollView>
       </View>
     );

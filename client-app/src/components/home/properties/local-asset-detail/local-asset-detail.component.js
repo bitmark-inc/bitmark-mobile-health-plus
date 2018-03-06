@@ -58,77 +58,79 @@ export class LocalAssetDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>
           <ScrollView style={assetDetailStyle.content}>
-            {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
-              <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={true}>
-                <Text style={assetDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
-                Clipboard.setString(this.state.asset.asset_id);
-                this.setState({ copied: true });
-                setTimeout(() => { this.setState({ copied: false }) }, 1000);
-              }}>
-                <Text style={assetDetailStyle.copyAssetIddButtonText}>COPY ASSET ID</Text>
-                {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
-              </TouchableOpacity>
-            </View>}
-            <View style={assetDetailStyle.bottomImageBar}></View>
+            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+              {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
+                <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={true}>
+                  <Text style={assetDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
+                  Clipboard.setString(this.state.asset.asset_id);
+                  this.setState({ copied: true });
+                  setTimeout(() => { this.setState({ copied: false }) }, 1000);
+                }}>
+                  <Text style={assetDetailStyle.copyAssetIddButtonText}>COPY ASSET ID</Text>
+                  {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+                </TouchableOpacity>
+              </View>}
+              <View style={assetDetailStyle.bottomImageBar}></View>
 
-            <Text style={assetDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
-            <View style={assetDetailStyle.assetCreatorRow}>
-              <Text style={assetDetailStyle.assetCreatorBound}>Issued by [</Text>
-              <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>{this.state.asset.registrant}</Text>
-              <Text style={assetDetailStyle.assetCreatorBound}>]</Text>
-            </View>
-
-            <View style={assetDetailStyle.bottomAssetNameBar}></View>
-            <View style={assetDetailStyle.metadataArea}>
-              <FlatList
-                scrollEnabled={false}
-                extraData={this.state}
-                data={this.state.metadata || []}
-                renderItem={({ item }) => {
-                  return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
-                    <Text style={assetDetailStyle.metadataItemLabel}>{item.label}:</Text>
-                    <Text style={assetDetailStyle.metadataItemValue}>{item.value}</Text>
-                  </View>);
-                }}
-              />
-            </View>
-            <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
-            <View style={assetDetailStyle.bitmarksArea}>
-              <View style={assetDetailStyle.bitmarksHeader}>
-                <Text style={assetDetailStyle.bitmarksHeaderLabel}>No.</Text>
-                <Text style={assetDetailStyle.bitmarksHeaderLabel}>ACTION</Text>
+              <Text style={assetDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
+              <View style={assetDetailStyle.assetCreatorRow}>
+                <Text style={assetDetailStyle.assetCreatorBound}>Issued by [</Text>
+                <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>{this.state.asset.registrant}</Text>
+                <Text style={assetDetailStyle.assetCreatorBound}>]</Text>
               </View>
-              <View style={assetDetailStyle.bitmarkListArea}>
+
+              <View style={assetDetailStyle.bottomAssetNameBar}></View>
+              <View style={assetDetailStyle.metadataArea}>
                 <FlatList
                   scrollEnabled={false}
                   extraData={this.state}
-                  data={this.state.bitmarks || []}
+                  data={this.state.metadata || []}
                   renderItem={({ item }) => {
-                    return (<TouchableOpacity style={assetDetailStyle.bitmarksRow} onPress={() => {
-                      this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
-                    }}>
-                      <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                      {!config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
-                        this.props.navigation.navigate('MarketBitmarkDeposit', {
-                          asset: this.state.asset,
-                          bitmark: item.bitmark
-                        });
-                      }}>
-                        {item.bitmark.status !== 'pending' && <Text style={assetDetailStyle.bitmarksRowListingButtonText}>{'List to Market'.toUpperCase()}</Text>}
-                        {item.bitmark.status === 'pending' && <Text style={assetDetailStyle.bitmarkPending}>PENDING...</Text>}
-                      </TouchableOpacity>}
-                      {config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={true}>
-                        <Text style={[assetDetailStyle.bitmarksRowListingButtonText, {
-                          color: item.bitmark.status !== 'pending' ? '#0060F2' : '#999999'
-                        }]}>{item.bitmark.status !== 'pending' ? 'VIEW' : 'PENDING'}</Text>
-                      </TouchableOpacity>}
-                    </TouchableOpacity>);
+                    return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
+                      <Text style={assetDetailStyle.metadataItemLabel}>{item.label}:</Text>
+                      <Text style={assetDetailStyle.metadataItemValue}>{item.value}</Text>
+                    </View>);
                   }}
                 />
               </View>
-            </View>
+              <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
+              <View style={assetDetailStyle.bitmarksArea}>
+                <View style={assetDetailStyle.bitmarksHeader}>
+                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>No.</Text>
+                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>ACTION</Text>
+                </View>
+                <View style={assetDetailStyle.bitmarkListArea}>
+                  <FlatList
+                    scrollEnabled={false}
+                    extraData={this.state}
+                    data={this.state.bitmarks || []}
+                    renderItem={({ item }) => {
+                      return (<TouchableOpacity style={assetDetailStyle.bitmarksRow} onPress={() => {
+                        this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
+                      }}>
+                        <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                        {!config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
+                          this.props.navigation.navigate('MarketBitmarkDeposit', {
+                            asset: this.state.asset,
+                            bitmark: item.bitmark
+                          });
+                        }}>
+                          {item.bitmark.status !== 'pending' && <Text style={assetDetailStyle.bitmarksRowListingButtonText}>{'List to Market'.toUpperCase()}</Text>}
+                          {item.bitmark.status === 'pending' && <Text style={assetDetailStyle.bitmarkPending}>PENDING...</Text>}
+                        </TouchableOpacity>}
+                        {config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={true}>
+                          <Text style={[assetDetailStyle.bitmarksRowListingButtonText, {
+                            color: item.bitmark.status !== 'pending' ? '#0060F2' : '#999999'
+                          }]}>{item.bitmark.status !== 'pending' ? 'VIEW' : 'PENDING'}</Text>
+                        </TouchableOpacity>}
+                      </TouchableOpacity>);
+                    }}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
           </ScrollView>
         </View>
       </ TouchableWithoutFeedback>
