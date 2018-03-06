@@ -118,16 +118,16 @@ export default StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#EDF0F4',
     borderBottomWidth: 1,
+    paddingLeft: convertWidth(20),
+    paddingRight: convertWidth(20),
   },
   assetImage: {
     width: 62,
     height: 62,
     resizeMode: 'contain',
-    marginLeft: 20,
   },
   assetInfoArea: {
     flexDirection: 'column',
-    marginLeft: 20,
     width: '100%',
   },
   assetName: {
@@ -168,8 +168,6 @@ export default StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: '#999999',
-    width: convertWidth(310),
-    marginLeft: 10,
   },
   assetBitmarksNumber: {
     fontFamily: 'Avenir Black',
@@ -177,13 +175,16 @@ export default StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: '#0060F2',
-    paddingTop: 3,
-    marginRight: 5,
+    position: 'absolute',
+    top: 9,
+    right: 20,
   },
   assetBitmarksDetail: {
     width: 7,
     height: 14,
     resizeMode: 'contain',
+    position: 'absolute',
+    right: 0,
   },
 
   globalArea: {

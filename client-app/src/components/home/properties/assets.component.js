@@ -168,7 +168,7 @@ export class AssetsComponent extends React.Component {
                     <Text style={assetsStyle.assetBitmarkPending}>{item.asset.totalPending === 0 ? '' : 'PENDING...'}</Text>
                     <Text style={[assetsStyle.assetBitmarksNumber, { color: item.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{(item.asset.totalPending > 0 ? (item.asset.totalPending + '/') : '') + item.asset.bitmarks.length}</Text>
                     <Image style={assetsStyle.assetBitmarksDetail} source={item.asset.totalPending > 0 ? require('./../../../../assets/imgs/next-icon.png') : require('./../../../../assets/imgs/next-icon-blue.png')} />
-                    <Image style={assetsStyle.assetBitmarksDetail} source={item.asset.totalPending > 0 ? require('./../../../../assets/imgs/next-icon.png') : require('./../../../../assets/imgs/next-icon-blue.png')} />
+                    <Image style={[assetsStyle.assetBitmarksDetail, { right: 7 }]} source={item.asset.totalPending > 0 ? require('./../../../../assets/imgs/next-icon.png') : require('./../../../../assets/imgs/next-icon-blue.png')} />
                   </View>
                   <View style={assetsStyle.assetInfoArea}>
                     <Text style={[assetsStyle.assetName, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.name}</Text>

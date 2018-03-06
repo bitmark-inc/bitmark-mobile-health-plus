@@ -79,29 +79,15 @@ const doGetBitmarks = async (accountNumber) => {
           asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
           asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
           asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-          if (asset.totalPending === 0 && bitmark.status !== 'pending') {
-            let bitmarkCreatedAt = moment(bitmark.created_at).toDate();
-            asset.newest_created_at = !asset.newest_created_at ? bitmarkCreatedAt :
-              (asset.newest_created_at.getTime() < bitmarkCreatedAt.getTime() ? bitmarkCreatedAt : asset.newest_created_at);
-          } else {
-            asset.newest_created_at = null;
-          }
+          asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
           asset.bitmarks.push(bitmark);
         }
       });
-      asset.bitmarks = sortList(asset.bitmarks, ((a, b) => {
-        if (!a || !a.created_at || a.status === 'pending') { return -1; }
-        if (!b || !b.created_at || b.status === 'pending') { return -1; }
-        return moment(a.created_at).toDate().getTime() < moment(b.created_at).toDate().getTime();
-      }));
+      asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
       localAssets.push(asset);
     });
   }
-  localAssets = sortList(localAssets, ((a, b) => {
-    if (!a || !a.newest_created_at || a.totalPending > 0) { return 1; }
-    if (!b || !b.newest_created_at || b.totalPending > 0) { return 1; }
-    return moment(a.newest_created_at).toDate().getTime() < moment(b.newest_created_at).toDate().getTime();
-  }));
+  localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
   return localAssets;
 };
 
