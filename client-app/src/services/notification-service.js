@@ -1,4 +1,5 @@
-import { NotificationModel } from './../models';
+import { Platform } from 'react-native';
+import { NotificationModel, CommonModel } from './../models';
 
 let configure = (onRegister, onNotification) => {
   return NotificationModel.configure(onRegister, onNotification);
@@ -41,20 +42,13 @@ let setApplicationIconBadgeNumber = (number) => {
   return NotificationModel.setApplicationIconBadgeNumber(number);
 };
 
-let doTryRegisterNotificationInfo = (deviceInfo) => {
-  return new Promise((resolve) => {
-    NotificationModel.doRegisterNotificationInfo(deviceInfo).then(resolve).catch(error => {
-      console.log('NotificationService doTryRegisterNotificationInfo error :', error);
-    })
-  });
+let doRegisterNotificationInfo = async (accountNumber, token, signatureData) => {
+
+  return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token);
 };
 
-let doTryDeregisterNotificationInfo = (deviceInfo) => {
-  return new Promise((resolve) => {
-    NotificationModel.doDeregisterNotificationInfo(deviceInfo).then(resolve).catch(error => {
-      console.log('NotificationService doTryRegisterNotificationInfo error :', error);
-    });
-  });
+let doDeregisterNotificationInfo = async (accountNumber, token, signatureData) => {
+  return await NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token);
 };
 
 let NotificationService = {
@@ -63,10 +57,8 @@ let NotificationService = {
 
   doRequestNotificationPermissions,
   doCheckNotificaitonPermission,
-  doTryRegisterNotificationInfo,
-  doTryDeregisterNotificationInfo,
-  doRegisterNotificationInfo: NotificationModel.doRegisterNotificationInfo,
-  doDeregisterNotificationInfo: NotificationModel.doDeregisterNotificationInfo,
+  doRegisterNotificationInfo,
+  doDeregisterNotificationInfo,
 };
 
 export { NotificationService };

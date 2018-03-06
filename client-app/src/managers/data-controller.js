@@ -40,11 +40,10 @@ let userData = {
 const configNotification = () => {
   const onRegisterred = (registerredNotificaitonInfo) => {
     let notificationUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
-    if (userInformation.notificationUID !== notificationUID) {
-      userInformation.notificationUID = notificationUID;
-      // TODO reigster uuid
-      // NotificationService.doTryRegisterNotificationInfo({});
-      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
+    if (notificationUID && userInformation.notificationUID !== notificationUID) {
+      // AccountService.doRegisterNotificationInfo(notificationUID).catch(error => {
+      //   console.log('DataController doRegisterNotificationInfo error:', error);
+      // });
     }
   };
   const onReceivedNotification = (data) => {

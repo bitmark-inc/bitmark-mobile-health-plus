@@ -3,6 +3,7 @@ import { MarketService } from './market-service';
 import { UserService } from './user-service';
 import { BitmarkService } from './bitmark-service';
 import { config } from '../configs';
+import { NotificationService } from '.';
 
 // ================================================================================================\
 const doCreateAccount = async (touchFaceIdSession) => {
@@ -29,6 +30,11 @@ const doCreateSignatureData = async (touchFaceIdMessage) => {
 };
 
 const doLogout = async () => {
+  let userInfo = await UserService.doGetCurrentUser();
+  if (userInfo.notificationUUID) {
+    let signatureData = await CommonModel.doCreateSignatureData('Please sign to remove account!')
+    await NotificationService.doDeregisterNotificationInfo(userInfo.bitmarkAccountNumber, userInfo.notificationUUID, signatureData);
+  }
   await AccountModel.doLogout();
   await UserService.doRemoveUserInfo();
 };
@@ -103,6 +109,14 @@ const doTryAccessToAllMarkets = async () => {
   await UserService.doUpdateUserInfo(userInfo);
 };
 
+const doRegisterNotificationInfo = async (notificationUUID) => {
+  let userInfo = await UserService.doGetCurrentUser();
+  let signatureData = CommonModel.doCreateSignatureData('Please sign to register your device and recive notification!');
+  await NotificationService.doRegisterNotificationInfo(userInfo.bitmarkAccountNumber, notificationUUID, signatureData);
+  userInfo.notificationUUID = notificationUUID;
+  await UserService.doUpdateUserInfo(userInfo);
+};
+
 // ================================================================================================
 // ================================================================================================
 
@@ -115,6 +129,7 @@ let AccountService = {
   doGetBitmarks,
   doGetBalance,
   doTryAccessToAllMarkets,
+  doRegisterNotificationInfo,
 };
 
 export { AccountService };
