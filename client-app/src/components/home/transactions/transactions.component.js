@@ -99,58 +99,60 @@ export class TransactionsComponent extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
-          {this.state.subtab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
-            <FlatList data={this.state.pendingTransactions}
-              extraData={this.state}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity style={transactionsStyle.signRequestRow}>
-                    <View style={transactionsStyle.signRequestTitle}>
-                      <Text style={transactionsStyle.signRequestTitleType}>{item.type}</Text>
-                      <Text style={transactionsStyle.signRequestTitleTime} >{item.time}</Text>
-                      <Image style={transactionsStyle.signRequestTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
-                    </View>
-                    <Text style={transactionsStyle.signRequestContent}>
-                      <Text style={transactionsStyle.signRequestSenderFix}>[</Text>
-                      <Text style={transactionsStyle.signRequestSenderName} numberOfLines={1}>{item.sender.substring(0, 12)}...</Text>
-                      <Text style={transactionsStyle.signRequestSenderFix}>]</Text>
-                      has transferred the property
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            {this.state.subtab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
+              <FlatList data={this.state.pendingTransactions}
+                extraData={this.state}
+                renderItem={({ item }) => {
+                  return (
+                    <TouchableOpacity style={transactionsStyle.signRequestRow}>
+                      <View style={transactionsStyle.signRequestTitle}>
+                        <Text style={transactionsStyle.signRequestTitleType}>{item.type}</Text>
+                        <Text style={transactionsStyle.signRequestTitleTime} >{item.time}</Text>
+                        <Image style={transactionsStyle.signRequestTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
+                      </View>
+                      <Text style={transactionsStyle.signRequestContent}>
+                        <Text style={transactionsStyle.signRequestSenderFix}>[</Text>
+                        <Text style={transactionsStyle.signRequestSenderName} numberOfLines={1}>{item.sender.substring(0, 12)}...</Text>
+                        <Text style={transactionsStyle.signRequestSenderFix}>]</Text>
+                        has transferred the property
                       <Text style={transactionsStyle.signRequestAssetName}> {item.assetName} </Text>
-                      to you. Please sign for receipt to accept the property transfer.
+                        to you. Please sign for receipt to accept the property transfer.
                     </Text>
-                  </TouchableOpacity>
-                )
-              }} />
-          </View>}
+                    </TouchableOpacity>
+                  )
+                }} />
+            </View>}
 
-          {this.state.subtab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
-            <FlatList data={this.state.completedTransactions}
-              extraData={this.state}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity style={{}}>
-                    <View>
-                      <Text>{item.type}</Text>
-                      <Text>{item.time || item.status}</Text>
-                    </View>
-                    <View style={{}}>
+            {this.state.subtab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
+              <FlatList data={this.state.completedTransactions}
+                extraData={this.state}
+                renderItem={({ item }) => {
+                  return (
+                    <TouchableOpacity style={{}}>
                       <View>
-                        <Text>PROPERTY</Text>
-                        <Text>{item.assetName}</Text>
+                        <Text>{item.type}</Text>
+                        <Text>{item.time || item.status}</Text>
                       </View>
-                      <View>
-                        <Text>FROM</Text>
-                        <Text>{item.sender}</Text>
+                      <View style={{}}>
+                        <View>
+                          <Text>PROPERTY</Text>
+                          <Text>{item.assetName}</Text>
+                        </View>
+                        <View>
+                          <Text>FROM</Text>
+                          <Text>{item.sender}</Text>
+                        </View>
+                        <View>
+                          <Text>To</Text>
+                          <Text>{item.recipient}</Text>
+                        </View>
                       </View>
-                      <View>
-                        <Text>To</Text>
-                        <Text>{item.recipient}</Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                )
-              }} />
-          </View >}
+                    </TouchableOpacity>
+                  )
+                }} />
+            </View >}
+          </TouchableOpacity>
         </ScrollView>
       </View >
     );

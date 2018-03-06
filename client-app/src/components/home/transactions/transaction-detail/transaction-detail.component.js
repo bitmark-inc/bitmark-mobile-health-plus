@@ -44,7 +44,8 @@ export class TransactionDetailComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
         <ScrollView style={[transactionDetailStyle.content]}>
-
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+          </TouchableOpacity>
         </ScrollView>
       </View >
     );
