@@ -80,19 +80,21 @@ RCT_EXPORT_METHOD(authenticate: (NSString *)reason
          }
          
          NSLog(@"Authentication failed: %@", errorReason);
-         callback(@[RCTMakeError(errorReason, nil, nil)]);
+         callback(@[@NO, RCTMakeError(errorReason, nil, nil)]);
          return;
        }
        
        // Authenticated Successfully
-       callback(@[[NSNull null], @"Authenticat with Touch ID."]);
+       callback(@[@YES]);
      }];
     
     // Device does not support TouchID
   } else {
-    callback(@[RCTMakeError(@"RCTTouchIDNotSupported", nil, nil)]);
+    callback(@[@NO]);
     return;
   }
 }
+
+
 
 @end
