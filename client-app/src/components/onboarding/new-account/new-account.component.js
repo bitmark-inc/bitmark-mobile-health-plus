@@ -72,7 +72,7 @@ class PropertyPrivateYourDataComponent extends React.Component {
         </View>
         <View style={newAccountStyle.letDoItButtonArea}>
           <TouchableOpacity style={[newAccountStyle.letDoItButton]} onPress={() => {
-            this.props.screenProps.createBitmarkAccount();
+            this.props.screenProps.newAccountNavigation.navigate('FaceTouchId', { doContinue: this.props.screenProps.createBitmarkAccount });
           }}>
             <Text style={[newAccountStyle.letDoItButtonText]}>LET’S DO IT!</Text>
           </TouchableOpacity>
@@ -83,6 +83,9 @@ class PropertyPrivateYourDataComponent extends React.Component {
 }
 PropertyPrivateYourDataComponent.propTypes = {
   screenProps: PropTypes.shape({
+    newAccountNavigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }),
     createBitmarkAccount: PropTypes.func,
     setShowPagination: PropTypes.func,
   }),
@@ -215,15 +218,6 @@ export class NewAccountComponent extends React.Component {
   }
 
   render() {
-    const createBitmarkAccount = () => {
-      AppController.doCreateNewAccount().then((userInfo) => {
-        if (userInfo) {
-          this.props.navigation.navigate('Notification');
-        }
-      }).catch((error) => {
-        console.log('createNewUser error :', error);
-      });
-    };
     return (
       <AppScaleComponent ref={(r) => { this.appScaler = r; }}>
         <View style={newAccountStyle.body}>
@@ -308,7 +302,8 @@ export class NewAccountComponent extends React.Component {
                 }}
               />
               <FullPropertyPrivateYourDataComponent screenProps={{
-                createBitmarkAccount: createBitmarkAccount,
+                newAccountNavigation: this.props.navigation,
+                createBitmarkAccount: AppController.doCreateNewAccount,
                 setShowPagination: (show) => {
                   this.setState({
                     showPagination: show,

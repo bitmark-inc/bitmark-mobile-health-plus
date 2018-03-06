@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, Image, TouchableOpacity,
 } from 'react-native'
+import { NavigationActions } from 'react-navigation';
 
 import { AppScaleComponent } from './../../../commons/components';
 import notificationStyle from './notification.component.style';
@@ -13,9 +14,14 @@ export class NotificationComponent extends React.Component {
     super(props);
   }
   render() {
+    const resetMainPage = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'Main', params: { justCreatedBitmarkAccount: true } })]
+    });
+
     let requestNotification = () => {
       NotificationService.doRequestNotificationPermissions().then(() => {
-        this.props.navigation.navigate('FaceTouchId');
+        this.props.screenProps.rootNavigation.dispatch(resetMainPage);
       }).catch(error => {
         console.log('NotificationComponent requestNotification error:', error);
       });
@@ -32,7 +38,9 @@ export class NotificationComponent extends React.Component {
             <TouchableOpacity style={[notificationStyle.enableButton]} onPress={requestNotification}>
               <Text style={notificationStyle.enableButtonText}>ENABLE</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[notificationStyle.enableButton, { backgroundColor: 'white', borderColor: '#0060F2', borderWidth: 1, }]} onPress={() => { this.props.navigation.navigate('FaceTouchId'); }}>
+            <TouchableOpacity style={[notificationStyle.enableButton, { backgroundColor: 'white', borderColor: '#0060F2', borderWidth: 1, }]} onPress={() => {
+              this.props.screenProps.rootNavigation.dispatch(resetMainPage);
+            }}>
               <Text style={[notificationStyle.enableButtonText, { color: '#0060F2' }]}>LATER</Text>
             </TouchableOpacity>
           </View>

@@ -46,9 +46,9 @@ const doGetLocalData = (localDataKey) => {
   });
 };
 // ================================================================================================
-const doCheckFaceTouchId = async () => {
+const doCheckPasscodeAndFaceTouchId = async () => {
   return await FaceTouchId.isSupported();
-}
+};
 // ================================================================================================
 let currentFaceTouceSessionId = null;
 let isRequestingSessionId = false;
@@ -138,7 +138,7 @@ const doCreateSignatureData = async (touchFaceIdMessage) => {
 
 let CommonModel = {
   app_local_data_key,
-  doCheckFaceTouchId,
+  doCheckPasscodeAndFaceTouchId,
   doSetLocalData,
   doGetLocalData,
   doStartFaceTouceSessionId,

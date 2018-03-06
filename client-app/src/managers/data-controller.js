@@ -96,7 +96,7 @@ const runOnBackground = () => {
         userInformation = userInfo;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
       }
-      if (userInformation) {
+      if (userInformation && userInformation.bitmarkAccountNumber) {
         let countProcess = 0;
         let processList = [
           runGetUserBitmarksInBackground,
@@ -133,7 +133,7 @@ const stopInterval = () => {
 
 // ================================================================================================================================================
 // ================================================================================================================================================
-const doActiveApplication = async (justCreatedBitmarkAccount) => {
+const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   await runOnBackground();
   configNotification();
   startInterval();
@@ -170,6 +170,11 @@ const doGetSignRequests = async () => {
     pendingTransactions: userData.pendingTransactions,
     completedTransactions: userData.completedTransactions,
   });
+};
+
+const doOpenApp = async () => {
+  userInformation = await UserService.doTryGetCurrentUser();
+  return userInformation;
 };
 
 const doGetBalance = async () => {
@@ -216,7 +221,8 @@ const getApplicationBuildNumber = () => {
 };
 
 const DataController = {
-  doActiveApplication,
+  doOpenApp,
+  doStartBackgroundProcess,
   doDeactiveApplication,
   doGetBitmarks,
   doGetBalance,

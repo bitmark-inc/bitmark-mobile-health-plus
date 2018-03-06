@@ -6,7 +6,7 @@ import ReactNative from 'react-native';
 
 const {
   Linking,
-  // Alert,
+  Alert,
   AppState,
   NetInfo,
   // PushNotificationIOS,
@@ -22,7 +22,8 @@ import {
 import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
 import { EventEmiterService } from './../services';
-import { AppController } from '../managers';
+import { AppController, DataController } from '../managers';
+import { CommonModel } from '../models';
 
 class MainComponent extends Component {
   constructor(props) {
@@ -33,6 +34,7 @@ class MainComponent extends Component {
     this.handerProcessingEvent = this.handerProcessingEvent.bind(this);
     this.handerSumittinggEvent = this.handerSumittinggEvent.bind(this);
     this.handleNetworkChange = this.handleNetworkChange.bind(this);
+    this.doOpenApp = this.doOpenApp.bind(this);
 
     this.state = {
       user: null,
@@ -50,13 +52,7 @@ class MainComponent extends Component {
       justCreatedBitmarkAccount = !!this.props.navigation.state.params.justCreatedBitmarkAccount;
       this.setState({ justCreatedBitmarkAccount });
     }
-    AppController.doOpenApp(justCreatedBitmarkAccount).then(user => {
-      console.log(' doOpenApp : ', user);
-      this.setState({ user });
-    }).catch(error => {
-      console.log('doOpenApp error :', error);
-      this.setState({ user: {} })
-    });
+    this.doOpenApp();
 
     EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
@@ -98,13 +94,7 @@ class MainComponent extends Component {
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
       console.log('active component');
-      AppController.doOpenApp().then(user => {
-        console.log(' doOpenApp : ', user);
-        this.setState({ user });
-      }).catch(error => {
-        console.log('doOpenApp error :', error);
-        this.setState({ user: {} })
-      });
+      this.doOpenApp();
     }
     this.appState = nextAppState;
   }
@@ -112,14 +102,31 @@ class MainComponent extends Component {
   handleNetworkChange(networkStatus) {
     this.setState({ networkStatus });
     if (networkStatus) {
-      AppController.doOpenApp(this.state.justCreatedBitmarkAccount).then(user => {
-        console.log(' doOpenApp : ', user);
-        this.setState({ user });
-      }).catch(error => {
-        console.log('doOpenApp error :', error);
-        this.setState({ user: {} })
-      });
+      this.doOpenApp();
     }
+  }
+
+  doOpenApp() {
+    DataController.doOpenApp().then(user => {
+      this.setState({ user });
+      if (user && user.bitmarkAccountNumber) {
+        CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
+          if (ok) {
+            AppController.doStartBackgroundProcess();
+          } else {
+            if (!this.requiringTouchId) {
+              this.requiringTouchId = true;
+              Alert.alert('Touch/Face ID or a passcode is required to authorize your transactions.', '', [{
+                text: 'ENABLE', onPress: () => {
+                  Linking.openURL('app-settings:');
+                  this.requiringTouchId = false;
+                }
+              }]);
+            }
+          }
+        });
+      }
+    });
   }
 
   render() {

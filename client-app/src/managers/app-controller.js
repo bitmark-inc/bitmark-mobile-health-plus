@@ -1,6 +1,8 @@
-import { CommonModel, AccountModel, BitmarkModel } from './../models';
+import { Platform } from 'react-native';
+import { CommonModel, AccountModel, BitmarkModel, FaceTouchId } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, MarketService } from './../services'
 import { DataController } from './data-controller';
+import { ios } from '../configs';
 
 // ================================================================================================
 // ================================================================================================
@@ -39,6 +41,9 @@ let submitting = (promise, procesingData, successData) => {
 // ================================================================================================
 // ================================================================================================
 const doCreateNewAccount = async () => {
+  if (Platform.OS === 'ios' && ios.config.isIPhoneX) {
+    await FaceTouchId.authenticate();
+  }
   let touchFaceIdSession = await AccountModel.doCreateAccount();
   if (!touchFaceIdSession) {
     return null;
@@ -62,8 +67,10 @@ const doCheck24Words = async (pharse24Words) => {
 };
 
 const doLogin = async (pharse24Words) => {
+  if (Platform.OS === 'ios' && ios.config.isIPhoneX) {
+    await FaceTouchId.authenticate();
+  }
   let touchFaceIdSession = await AccountModel.doLogin(pharse24Words);
-  console.log('AppController doLogin touchFaceIdSession :', touchFaceIdSession);
   if (!touchFaceIdSession) {
     return null;
   }
@@ -152,8 +159,8 @@ const doGetProvenance = async (bitmark) => {
 };
 
 
-const doOpenApp = async (justCreatedBitmarkAccount) => {
-  return await processing(DataController.doActiveApplication(justCreatedBitmarkAccount));
+const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
+  return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
 };
 // ================================================================================================
 // ================================================================================================
@@ -179,7 +186,7 @@ let AppController = {
   doGetProvenance,
   doGetSignRequests,
 
-  doOpenApp,
+  doStartBackgroundProcess,
 }
 
 export {

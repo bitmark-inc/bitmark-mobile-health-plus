@@ -192,7 +192,7 @@ export class SignInComponent extends React.Component {
     }
   }
 
-  submit24Words() {
+  async submit24Words() {
     if (this.state.preCheckResult === PreCheckResults.error) {
       let smallerList = [];
       let biggerList = [];
@@ -221,14 +221,7 @@ export class SignInComponent extends React.Component {
     let inputtedWords = [];
     this.state.smallerList.forEach(item => inputtedWords.push(item.word));
     this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-    AppController.doLogin(inputtedWords).then((userInfo) => {
-      if (userInfo) {
-        this.props.navigation.navigate('Notification');
-      }
-    }).catch((error) => {
-      console.log('login error: ', error);
-      this.setState({ preCheckResult: PreCheckResults.error });
-    });
+    return await AppController.doLogin(inputtedWords);
   }
 
   render() {
@@ -321,7 +314,7 @@ export class SignInComponent extends React.Component {
                 </View>}
                 {!this.state.keyBoardHeight && <TouchableOpacity style={[signStyle.submitButton, {
                   backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'
-                }]} onPress={this.submit24Words} disabled={this.state.remainWordNumber > 0}>
+                }]} onPress={() => this.props.navigation.navigate('FaceTouchId', { doContinue: this.submit24Words })} disabled={this.state.remainWordNumber > 0}>
                   <Text style={[signStyle.submitButtonText]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
                 </TouchableOpacity>}
               </View>

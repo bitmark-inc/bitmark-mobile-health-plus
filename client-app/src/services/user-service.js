@@ -9,8 +9,8 @@ const doTryGetCurrentUser = () => {
   return new Promise((resolve) => {
     doGetCurrentUser().then(resolve).catch(error => {
       console.log('UserService doTryGetCurrentUser error:', error);
-      resolve(null);
-    })
+      resolve({});
+    });
   });
 };
 

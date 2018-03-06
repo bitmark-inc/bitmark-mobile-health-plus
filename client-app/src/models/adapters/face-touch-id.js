@@ -3,15 +3,23 @@ let SwiftFaceTouchId = NativeModules.TouchID;
 
 const FaceTouchId = {
   isSupported: () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       SwiftFaceTouchId.isSupported((ok) => {
-        if (ok) {
-          resolve();
-        } else {
-          reject(new Error('Can not check [Face or Touch Id] feature in this device!'));
-        }
+        resolve(ok);
       });
     });
   },
+  authenticate: () => {
+    return new Promise((resolve, reject) => {
+      SwiftFaceTouchId.authenticate('Touch/Face ID or a passcode is required to authorize your transactions.', (ok) => {
+        console.log('authenticate :', ok);
+        if (ok) {
+          resolve();
+        } else {
+          reject(new Error('authenticate error'));
+        }
+      });
+    });
+  }
 };
 export { FaceTouchId };

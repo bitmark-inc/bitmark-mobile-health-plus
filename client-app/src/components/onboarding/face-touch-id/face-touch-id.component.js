@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavigationActions } from 'react-navigation';
 import {
   View, Text, Image, TouchableOpacity,
   Linking,
+  AppState,
   // NativeModules,
 } from 'react-native'
-import { FaceTouchId } from './../../../models';
+import { CommonModel } from './../../../models';
 
 import { AppScaleComponent } from './../../../commons/components';
 import faceTouchIdStyle from './face-touch-id.component.style';
@@ -14,17 +14,51 @@ import faceTouchIdStyle from './face-touch-id.component.style';
 export class FaceTouchIdComponent extends React.Component {
   constructor(props) {
     super(props);
+    console.log('props :', props);
+    this.handleAppStateChange = this.handleAppStateChange.bind(this);
+    this.checkSupportFaceTouchId = this.checkSupportFaceTouchId.bind(this);
+    this.doContinue = this.doContinue.bind(this);
+
+    this.state = {
+      supported: true,
+      errorMessage: '',
+    }
+    this.appState = AppState.currentState;
   }
-  render() {
-    const resetMainPage = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Main', params: { justCreatedBitmarkAccount: true } })]
+
+  componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
+  handleAppStateChange = (nextAppState) => {
+    if (this.appState.match(/background/) && nextAppState === 'active') {
+      this.checkSupportFaceTouchId();
+    }
+    this.appState = nextAppState;
+  }
+
+  checkSupportFaceTouchId() {
+    CommonModel.doCheckPasscodeAndFaceTouchId().then((supported) => {
+      this.setState({ supported });
     });
-    FaceTouchId.isSupported().then(() => {
-      this.props.screenProps.rootNavigation.dispatch(resetMainPage);
+  }
+
+  doContinue() {
+    this.props.navigation.state.params.doContinue().then((user) => {
+      if (user) {
+        this.props.navigation.navigate('Notification');
+      }
     }).catch(error => {
-      console.log('checkFaceTouchId erorr :', error);
+      console.log('error :', error);
+      this.setState({ errorMessage: 'Can not create or access bitmark account!' })
     });
+  }
+
+  render() {
     return (
       <AppScaleComponent ref={(r) => { this.appScaler = r; }}>
         <View style={[faceTouchIdStyle.body]}>
@@ -41,8 +75,11 @@ export class FaceTouchIdComponent extends React.Component {
           <View style={faceTouchIdStyle.enableButtonArea}>
             <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
               onPress={() => {
-                Linking.openURL('app-settings:');
-                this.props.screenProps.rootNavigation.dispatch(resetMainPage);
+                if (!this.state.supported) {
+                  Linking.openURL('app-settings:');
+                } else {
+                  this.doContinue();
+                }
               }}>
               <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
             </TouchableOpacity>
@@ -57,6 +94,11 @@ FaceTouchIdComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        doContinue: PropTypes.func,
+      }),
+    }),
   }),
   screenProps: PropTypes.shape({
     rootNavigation: PropTypes.shape({
