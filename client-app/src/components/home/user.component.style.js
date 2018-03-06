@@ -40,9 +40,6 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: "center",
     justifyContent: 'center',
-    //TODO remove
-    marginLeft: convertWidth(35),
-    marginRight: convertWidth(35),
   },
   bottomTabButtonIcon: {
     width: 75,
