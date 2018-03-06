@@ -118,7 +118,7 @@ class MetadataInputComponent extends React.Component {
                 data={this.state.labels}
                 extraData={this.state}
                 renderItem={({ item }) => {
-                  return <TouchableOpacity style={{ paddingTo: 4, paddingBottom: 4, marginTop: 3 }} onPress={() => this.onSelecteLabel(item.label)}>
+                  return <TouchableOpacity style={{ paddingTop: 4, paddingBottom: 4, marginTop: 3 }} onPress={() => this.onSelecteLabel(item.label)}>
                     <Text style={{ color: '#0060F2' }}>{item.label}</Text>
                   </TouchableOpacity>
                 }}
@@ -200,7 +200,7 @@ export class LocalAddPropertyComponent extends React.Component {
     let options = {
       title: '',
       takePhotoButtonTitle: '',
-      mediaType: 'photo',
+      mediaType: 'mixed',
       noData: true,
     };
     ImagePicker.showImagePicker(options, (response) => {
