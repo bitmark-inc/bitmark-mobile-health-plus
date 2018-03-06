@@ -58,7 +58,6 @@ const doGetCurrentAccount = async (touchFaceIdMessage) => {
     return null;
   }
   let userInfo = await processing(AccountModel.doGetCurrentAccount(touchFaceIdSession));
-  await CommonModel.doEndNewFaceTouceSessionId();
   return userInfo;
 };
 
