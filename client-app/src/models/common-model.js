@@ -142,7 +142,6 @@ let CommonModel = {
   doSetLocalData,
   doGetLocalData,
   doStartFaceTouceSessionId,
-  doEndNewFaceTouceSessionId,
   doCreateSignatureData,
   doTryRickSignMessage,
   setFaceTouceSessionId,

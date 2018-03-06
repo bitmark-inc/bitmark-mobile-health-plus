@@ -57,21 +57,21 @@ export class LocalAssetDetailComponent extends React.Component {
                 : require('../../../../../assets/imgs/three-dot-deactive.png')} />
             </TouchableOpacity>
           </View>
+          {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
+            <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={true}>
+              <Text style={assetDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
+              Clipboard.setString(this.state.asset.asset_id);
+              this.setState({ copied: true });
+              setTimeout(() => { this.setState({ copied: false }) }, 1000);
+            }}>
+              <Text style={assetDetailStyle.copyAssetIddButtonText}>COPY ASSET ID</Text>
+              {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+            </TouchableOpacity>
+          </View>}
           <ScrollView style={assetDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
-                <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={true}>
-                  <Text style={assetDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
-                  Clipboard.setString(this.state.asset.asset_id);
-                  this.setState({ copied: true });
-                  setTimeout(() => { this.setState({ copied: false }) }, 1000);
-                }}>
-                  <Text style={assetDetailStyle.copyAssetIddButtonText}>COPY ASSET ID</Text>
-                  {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
-                </TouchableOpacity>
-              </View>}
               <View style={assetDetailStyle.bottomImageBar}></View>
 
               <Text style={assetDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
