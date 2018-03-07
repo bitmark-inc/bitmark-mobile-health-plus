@@ -1,14 +1,15 @@
 import { config } from './../configs';
 
-const doGetSignRequest = (bitmarkId) => {
+const doGetSignRequest = (accountNumber, bitmarkId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer_offers/${bitmarkId}`;
+    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        requester: 'user/' + accountNumber,
       }
     }).then((response) => {
       statusCode = response.status;
@@ -22,22 +23,24 @@ const doGetSignRequest = (bitmarkId) => {
   });
 };
 
-const doAllGetSignRequests = (accountNumber) => {
+const doGetAllGetSignRequests = (accountNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer_offers?receiver=${accountNumber}`;
+    let tempURL = config.trade_server_url + `/transfer-offers?receiver=${accountNumber}`;
     fetch(tempURL, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        requester: 'user/' + accountNumber,
       }
     }).then((response) => {
       statusCode = response.status;
-      return response.json();
+      return response.text();
     }).then((data) => {
+      console.log('doGetAllGetSignRequests data:', tempURL, data);
       if (statusCode >= 400) {
-        return reject(new Error('doAllGetSignRequests error :' + JSON.stringify(data)));
+        return reject(new Error('doGetAllGetSignRequests error :' + JSON.stringify(data)));
       }
       //TODO
       resolve(data);
@@ -45,15 +48,16 @@ const doAllGetSignRequests = (accountNumber) => {
   });
 };
 
-const doSubmitSignRequest = (bitmarkId, link, signature, owner) => {
+const doSubmitSignRequest = (accountNumber, bitmarkId, link, signature, owner) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer_offers/${bitmarkId}`;
+    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        requester: 'user/' + accountNumber,
       },
       body: JSON.stringify({
         owner, signature, link
@@ -71,15 +75,16 @@ const doSubmitSignRequest = (bitmarkId, link, signature, owner) => {
   });
 };
 
-const doSubmitCounterSignRequest = (bitmarkId, countersignature) => {
+const doSubmitCounterSignRequest = (accountNumber, bitmarkId, countersignature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer_offers/${bitmarkId}`;
+    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'PATCH',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        requester: 'user/' + accountNumber,
       },
       body: JSON.stringify({
         countersignature,
@@ -97,16 +102,17 @@ const doSubmitCounterSignRequest = (bitmarkId, countersignature) => {
   });
 };
 
-const doCancelSignRequest = (bitmarkId) => {
+const doCancelSignRequest = (accountNumber, bitmarkId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     //TODO
-    let tempURL = config.trade_server_url + `/transfer_offers/${bitmarkId}`;
+    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        requester: 'user/' + accountNumber,
       }
     }).then((response) => {
       statusCode = response.status;
@@ -123,7 +129,7 @@ const doCancelSignRequest = (bitmarkId) => {
 
 let TransactionModel = {
   doGetSignRequest,
-  doAllGetSignRequests,
+  doGetAllGetSignRequests,
   doSubmitSignRequest,
   doSubmitCounterSignRequest,
   doCancelSignRequest,

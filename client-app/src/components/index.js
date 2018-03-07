@@ -108,6 +108,7 @@ class MainComponent extends Component {
 
   doOpenApp() {
     DataController.doOpenApp().then(user => {
+      console.log('user: ', user);
       this.setState({ user });
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {

@@ -20,35 +20,35 @@ let userData = {
 };
 // ================================================================================================================================================
 // ================================================================================================================================================
-// const runGetTransactionsInBackground = (checkDoneProcess) => {
-//   TransactionService.doGetSignRequests().then(data => {
-//     if (userData.pendingTransactions === null || JSON.stringify(data.pendingTransactions) !== JSON.stringify(userData.pendingTransactions)) {
-//       userData.pendingTransactions = data.pendingTransactions;
-//       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS);
-//     }
-//     if (userData.completedTransactions === null || JSON.stringify(data.completedTransactions) !== JSON.stringify(userData.completedTransactions)) {
-//       userData.completedTransactions = data.completedTransactions;
-//       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_COMPLETED_TRANSACTIONS);
-//     }
-//     checkDoneProcess();
-//   }).catch(error => {
-//     checkDoneProcess();
-//     console.log('runOnBackground  runGetTransactionsInBackground error :', error);
-//   })
-// };
+const runGetTransactionsInBackground = (checkDoneProcess) => {
+  TransactionService.doGetAllSignRequests(userInformation.bitmarkAccountNumber).then(data => {
+    if (userData.pendingTransactions === null || JSON.stringify(data.pendingTransactions) !== JSON.stringify(userData.pendingTransactions)) {
+      userData.pendingTransactions = data.pendingTransactions;
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS);
+    }
+    if (userData.completedTransactions === null || JSON.stringify(data.completedTransactions) !== JSON.stringify(userData.completedTransactions)) {
+      userData.completedTransactions = data.completedTransactions;
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_COMPLETED_TRANSACTIONS);
+    }
+    checkDoneProcess();
+  }).catch(error => {
+    checkDoneProcess();
+    console.log('runOnBackground  runGetTransactionsInBackground error :', error);
+  })
+};
 
 const configNotification = () => {
   const onRegisterred = (registerredNotificaitonInfo) => {
-    let notificationUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
-    if (notificationUID && userInformation.notificationUID !== notificationUID) {
-      // AccountService.doRegisterNotificationInfo(notificationUID).catch(error => {
-      //   console.log('DataController doRegisterNotificationInfo error:', error);
-      // });
+    let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
+    if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
+      AccountService.doRegisterNotificationInfo(notificationUUID).catch(error => {
+        console.log('DataController doRegisterNotificationInfo error:', error);
+      });
     }
   };
   const onReceivedNotification = (data) => {
     console.log('onReceivedNotification data:', data);
-    // runGetTransactionsInBackground();
+    runGetTransactionsInBackground();
     NotificationService.setApplicationIconBadgeNumber(0);
   };
   NotificationService.configure(onRegisterred, onReceivedNotification);
@@ -100,7 +100,7 @@ const runOnBackground = () => {
         let processList = [
           runGetUserBitmarksInBackground,
           runGetUserBalanceInBackground,
-          // runGetTransactionsInBackground,
+          runGetTransactionsInBackground,
         ]
         let checkDoneProcess = () => {
           countProcess++;

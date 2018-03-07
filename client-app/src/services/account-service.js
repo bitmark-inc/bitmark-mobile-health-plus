@@ -9,6 +9,8 @@ import { NotificationService } from '.';
 const doCreateAccount = async (touchFaceIdSession) => {
   let userInfo = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
   await UserService.doUpdateUserInfo(userInfo);
+  let signatureData = await CommonModel.doCreateSignatureData();
+  await NotificationService.doRegisterNotificationInfo(userInfo.bitmarkAccountNumber, null, signatureData);
   return userInfo;
 }
 
@@ -16,11 +18,13 @@ const doLogin = async (touchFaceIdSession) => {
   let userInfo = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
   userInfo = await MarketService.doTryAccessToAllMarkets(userInfo);
   await UserService.doUpdateUserInfo(userInfo);
+  let signatureData = await CommonModel.doCreateSignatureData();
+  await NotificationService.doRegisterNotificationInfo(userInfo.bitmarkAccountNumber, null, signatureData);
   return userInfo;
 };
 
 const doCreateSignatureData = async (touchFaceIdMessage) => {
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdMessage);
+  let signatureData = await CommonModel.doTryCreateSignatureData(touchFaceIdMessage);
   if (!signatureData) {
     return null;
   }
@@ -32,7 +36,7 @@ const doCreateSignatureData = async (touchFaceIdMessage) => {
 const doLogout = async () => {
   let userInfo = await UserService.doGetCurrentUser();
   if (userInfo.notificationUUID) {
-    let signatureData = await CommonModel.doCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions')
+    let signatureData = await CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions')
     await NotificationService.doDeregisterNotificationInfo(userInfo.bitmarkAccountNumber, userInfo.notificationUUID, signatureData);
   }
   await AccountModel.doLogout();
@@ -111,8 +115,9 @@ const doTryAccessToAllMarkets = async () => {
 
 const doRegisterNotificationInfo = async (notificationUUID) => {
   let userInfo = await UserService.doGetCurrentUser();
-  let signatureData = CommonModel.doCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions');
+  let signatureData = CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions');
   await NotificationService.doRegisterNotificationInfo(userInfo.bitmarkAccountNumber, notificationUUID, signatureData);
+  console.log('doRegisterNotificationInfo success', notificationUUID);
   userInfo.notificationUUID = notificationUUID;
   await UserService.doUpdateUserInfo(userInfo);
 };

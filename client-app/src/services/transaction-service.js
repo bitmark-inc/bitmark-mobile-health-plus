@@ -1,13 +1,13 @@
 import { TransactionModel } from "../models";
 
-let doGetSignRequests = async () => {
-  return await TransactionModel.doGetSignRequests();
+let doGetAllSignRequests = async (accountNumber) => {
+  return await TransactionModel.doGetAllGetSignRequests(accountNumber);
 };
 
-let doTryGetSignRequests = () => {
+let doTryGetAllSignRequests = (accountNumber) => {
   return new Promise((resolve) => {
-    TransactionModel.doGetSignRequests().then(resolve).catch(error => {
-      console.log('TransactionService doTryGetSignRequests error :', error)
+    TransactionModel.doGetAllGetSignRequests(accountNumber).then(resolve).catch(error => {
+      console.log('TransactionService doTryGetAllSignRequests error :', error)
       resolve({
         pendingTransactions: [],
         completedTransactions: [],
@@ -17,8 +17,8 @@ let doTryGetSignRequests = () => {
 };
 
 let TransactionService = {
-  doGetSignRequests,
-  doTryGetSignRequests
+  doGetAllSignRequests,
+  doTryGetAllSignRequests
 };
 
 export { TransactionService };
