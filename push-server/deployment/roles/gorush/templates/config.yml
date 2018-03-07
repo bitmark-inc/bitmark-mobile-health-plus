@@ -21,7 +21,7 @@ core:
     host: "" # which domains the Let's Encrypt will attempt
 
 grpc:
-  enabled: false # enabale gRPC server
+  enabled: true # enabale gRPC server
   port: 9000
 
 api:
@@ -34,7 +34,7 @@ api:
   health_uri: "/healthz"
 
 android:
-  enabled: true
+  enabled: false
   apikey: "YOUR_API_KEY"
   max_retry: 0 # resend fail notification, default value zero is disabled
 
@@ -52,7 +52,7 @@ ios:
 log:
   format: "string" # string or json
   access_log: "stdout" # stdout: output to console, or define log path like "log/access_log"
-  access_level: "debug"
+  access_level: "info"
   error_log: "stderr" # stderr: output to console, or define log path like "log/error_log"
   error_level: "error"
   hide_token: true

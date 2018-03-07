@@ -8,7 +8,3 @@
   command: kubectl apply -f -
   args:
     stdin: "{{ lookup('template', 'gorush-deployment.yaml') }}"
-- name: Create the Service Controller for AWS ELB
-  command: kubectl apply -f -
-  args:
-    stdin: "{{ lookup('template', 'gorush-service.yaml') }}"

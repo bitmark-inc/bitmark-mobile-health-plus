@@ -2,11 +2,6 @@ network_slug: test
 bitmark_network: testnet
 aws_ssl_arn: arn:aws:acm:ap-northeast-1:083397868157:certificate/8358a64e-28f8-4f05-ae1d-2da26714268d
 
-totemic:
-  domain_name: https://totemic.test.bitmark.com
-  mail_server_host: "10.0.31.61"
-  mail_server_port: 2587
-  core_api_server: https://api.test.bitmark.com
-  preview_url: https://preview.assets.test.bitmark.com
-  ws_port: 3000
-  trade_url: https://trade.test.bitmark.com
+gorush:
+  production: true
+  team_id: Z5CE7A3A7N
