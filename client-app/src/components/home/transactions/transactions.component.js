@@ -116,7 +116,7 @@ export class TransactionsComponent extends React.Component {
                         <Text style={transactionsStyle.signRequestSenderName} numberOfLines={1}>{item.sender.substring(0, 12)}...</Text>
                         <Text style={transactionsStyle.signRequestSenderFix}>]</Text>
                         has transferred the property
-                      <Text style={transactionsStyle.signRequestAssetName}> {item.assetName} </Text>
+                      <Text style={transactionsStyle.signRequestAssetName}> {item.asset.name} </Text>
                         to you. Please sign for receipt to accept the property transfer.
                     </Text>
                     </TouchableOpacity>

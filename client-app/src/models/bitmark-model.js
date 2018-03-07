@@ -151,6 +151,52 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadata, qu
   return result;
 };
 
+const doGetTransactionInformation = (txid) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.get_way_server_url +
+      `/v1/txs/${txid}?pending=true`;
+    fetch(bitmarkUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doGetBitmarkInformation error :' + JSON.stringify(data)));
+      }
+      resolve(data.tx);
+    }).catch(reject);
+  });
+};
+
+const doGetBitmarkInformation = (bitmarkId) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.get_way_server_url +
+      `/v1/bitmarks/${bitmarkId}?asset=true&pending=true&provenance=true`;
+    fetch(bitmarkUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doGetBitmarkInformation error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 let BitmarkModel = {
   doGetAssetInformation,
   doGetBitmarks,
@@ -158,6 +204,8 @@ let BitmarkModel = {
   doPrepareAssetInfo,
   doIssueFile,
   doCheckMetadata,
+  doGetBitmarkInformation,
+  doGetTransactionInformation,
 };
 
 export { BitmarkModel };

@@ -1,9 +1,9 @@
-import { AccountModel, CommonModel } from './../models';
+import { AccountModel, CommonModel, BitmarkSDK } from './../models';
 import { MarketService } from './market-service';
 import { UserService } from './user-service';
 import { BitmarkService } from './bitmark-service';
 import { config } from '../configs';
-import { NotificationService } from '.';
+import { NotificationService } from './notification-service';
 
 // ================================================================================================\
 const doCreateAccount = async (touchFaceIdSession) => {
@@ -122,6 +122,10 @@ const doRegisterNotificationInfo = async (notificationUUID) => {
   await UserService.doUpdateUserInfo(userInfo);
 };
 
+const doValidateBitmarkAccountNumber = async (accountNumber) => {
+  return await BitmarkSDK.validateAccountNumber(accountNumber, config.bitmark_network);
+}
+
 // ================================================================================================
 // ================================================================================================
 
@@ -135,6 +139,7 @@ let AccountService = {
   doGetBalance,
   doTryAccessToAllMarkets,
   doRegisterNotificationInfo,
+  doValidateBitmarkAccountNumber,
 };
 
 export { AccountService };

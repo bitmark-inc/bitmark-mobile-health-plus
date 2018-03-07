@@ -6,7 +6,7 @@ import {
   EventEmiterService,
   AccountService,
   NotificationService,
-  TransactionService
+  TransactionService,
 } from "../services";
 
 let userInformation = {};

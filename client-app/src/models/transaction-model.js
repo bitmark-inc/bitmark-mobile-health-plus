@@ -15,10 +15,11 @@ const doGetSignRequest = (accountNumber, bitmarkId) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
+      console.log('data: ', data);
       if (statusCode >= 400) {
         return reject(new Error('doGetSignRequest error :' + JSON.stringify(data)));
       }
-      resolve(data);
+      resolve(data.offer);
     }).catch(reject);
   });
 };
@@ -38,17 +39,16 @@ const doGetAllGetSignRequests = (accountNumber) => {
       statusCode = response.status;
       return response.text();
     }).then((data) => {
-      console.log('doGetAllGetSignRequests data:', tempURL, data);
+      console.log('doGetAllGetSignRequests data:', data);
       if (statusCode >= 400) {
         return reject(new Error('doGetAllGetSignRequests error :' + JSON.stringify(data)));
       }
-      //TODO
-      resolve(data);
+      resolve(data.offers);
     }).catch(reject);
   });
 };
 
-const doSubmitSignRequest = (accountNumber, bitmarkId, link, signature, owner) => {
+const doSubmitSignRequest = (owner, bitmarkId, link, signature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
@@ -57,7 +57,7 @@ const doSubmitSignRequest = (accountNumber, bitmarkId, link, signature, owner) =
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        requester: 'user/' + accountNumber,
+        requester: 'user/' + owner,
       },
       body: JSON.stringify({
         owner, signature, link
@@ -66,10 +66,10 @@ const doSubmitSignRequest = (accountNumber, bitmarkId, link, signature, owner) =
       statusCode = response.status;
       return response.json();
     }).then((data) => {
+      console.log('data: ', data);
       if (statusCode >= 400) {
         return reject(new Error('doSubmitSignRequest error :' + JSON.stringify(data)));
       }
-      //TODO
       resolve(data);
     }).catch(reject);
   });
@@ -93,19 +93,18 @@ const doSubmitCounterSignRequest = (accountNumber, bitmarkId, countersignature) 
       statusCode = response.status;
       return response.json();
     }).then((data) => {
+      console.log('data: ', data)
       if (statusCode >= 400) {
         return reject(new Error('doSubmitCounterSignRequest error :' + JSON.stringify(data)));
       }
-      //TODO
       resolve(data);
     }).catch(reject);
   });
 };
 
-const doCancelSignRequest = (accountNumber, bitmarkId) => {
+const doRejectlSignRequest = (accountNumber, bitmarkId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    //TODO
     let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'DELETE',
@@ -118,10 +117,34 @@ const doCancelSignRequest = (accountNumber, bitmarkId) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
+      console.log('data: ', data)
       if (statusCode >= 400) {
         return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
       }
-      //TODO
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doCancelSignRequest = (accountNumber, bitmarkId) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
+    fetch(tempURL, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: 'user/' + accountNumber,
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      console.log('data: ', data)
+      if (statusCode >= 400) {
+        return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
+      }
       resolve(data);
     }).catch(reject);
   });
@@ -132,6 +155,7 @@ let TransactionModel = {
   doGetAllGetSignRequests,
   doSubmitSignRequest,
   doSubmitCounterSignRequest,
+  doRejectlSignRequest,
   doCancelSignRequest,
 };
 

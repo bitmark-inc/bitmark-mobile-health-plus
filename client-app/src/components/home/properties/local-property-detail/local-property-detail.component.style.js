@@ -44,22 +44,25 @@ export default StyleSheet.create({
     right: 0,
     zIndex: 10,
     width: convertWidth(160),
-    height: 50,
+    height: 90,
     backgroundColor: '#F5F5F5',
   },
-  copyBitmarkIddButton: {
+  topButton: {
     width: '100%',
-    height: 31,
+    height: 45,
     flexDirection: 'column',
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
+    paddingTop: 12,
+    paddingBottom: 12,
   },
-  copyBitmarkIddButtonText: {
+  topButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 14,
     lineHeight: 16,
-    marginLeft: convertWidth(20),
-    marginTop: 13,
     color: '#0060F2',
+    textAlign: 'right',
   },
   copiedAssetIddButtonText: {
     fontFamily: 'Avenir Black',
@@ -67,9 +70,9 @@ export default StyleSheet.create({
     fontSize: 8,
     lineHeight: 9,
     color: '#0060F2',
-    marginLeft: convertWidth(20),
     marginTop: 5,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
+    textAlign: 'right',
   },
   bottomImageBar: {
     borderWidth: 2,
@@ -170,27 +173,5 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     color: 'white',
-  },
-
-  transferButtonArea: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginTop: 37,
-  },
-  transferButton: {
-    width: convertWidth(330),
-    height: 42,
-    borderTopWidth: 2,
-    backgroundColor: '#F5F5F5',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  transferButtonText: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 17,
-    lineHeight: 20,
-    color: '#0060F2',
   },
 });

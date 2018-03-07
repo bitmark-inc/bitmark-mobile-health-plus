@@ -60,13 +60,20 @@ export class LocalPropertyDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>
           {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-            <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
+            <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
               Clipboard.setString(this.state.bitmark.bitmark_id);
               this.setState({ copied: true });
               setTimeout(() => { this.setState({ copied: false }) }, 1000);
             }}>
-              <Text style={propertyDetailStyle.copyBitmarkIddButtonText}>Copy Bitmark ID</Text>
+              <Text style={propertyDetailStyle.topButtonText}>BITMARK ID</Text>
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+            </TouchableOpacity>
+            <TouchableOpacity style={propertyDetailStyle.topButton}
+              disabled={this.state.bitmark.status === 'pending'}
+              onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
+              <Text style={[propertyDetailStyle.topButtonText, {
+                color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
+              }]}>TRANSFER</Text>
             </TouchableOpacity>
           </View>}
           <ScrollView style={propertyDetailStyle.content}>
@@ -109,18 +116,6 @@ export class LocalPropertyDetailComponent extends React.Component {
                   <Text style={propertyDetailStyle.listingButtonText}>{'LIST THIS BITMARK TO MARKET'.toUpperCase()}</Text>
                 </TouchableOpacity>
               </View>}
-
-              <View style={propertyDetailStyle.transferButtonArea} >
-                <TouchableOpacity style={[propertyDetailStyle.transferButton, {
-                  borderTopColor: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
-                }]}
-                  disabled={this.state.bitmark.status === 'pending'}
-                  onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark })}>
-                  <Text style={[propertyDetailStyle.transferButtonText, {
-                    color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
-                  }]}>TRANSFER</Text>
-                </TouchableOpacity>
-              </View>
             </TouchableOpacity>
           </ScrollView>
         </View>

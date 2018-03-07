@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import { CommonModel, AccountModel, BitmarkModel, FaceTouchId } from './../models';
-import { AccountService, BitmarkService, EventEmiterService, MarketService } from './../services'
+import { AccountService, BitmarkService, EventEmiterService, MarketService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
 
@@ -157,6 +157,15 @@ const doGetProvenance = async (bitmark) => {
   return await processing(BitmarkModel.doGetProvenance(bitmark));
 };
 
+const doTransferBitmark = async (bitmark, receiver) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
+};
+
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
@@ -184,6 +193,7 @@ let AppController = {
   doGetBalance,
   doGetProvenance,
   doGetSignRequests,
+  doTransferBitmark,
 
   doStartBackgroundProcess,
 }
