@@ -82,7 +82,7 @@ export class LocalPropertyTransferComponent extends React.Component {
                 <TextInput style={propertyTransferStyle.inputAccountNumber} placeholder='BITMARK ACCOUNT'
                   onChangeText={(bitmarkAccount) => this.setState({ bitmarkAccount })}
                   returnKeyType="done"
-                  onFocus={() => { this.setState({ bitmarkAccountError: false }) }}
+                  onFocus={() => { this.setState({ bitmarkAccountError: false, transferError: '' }) }}
                   onEndEditing={this.onFinishInputAccountNumber}
                 />
               </View>
@@ -97,6 +97,7 @@ export class LocalPropertyTransferComponent extends React.Component {
                   color: this.state.canTransfer ? '#0060F2' : '#C2C2C2'
                 }]}>SEND</Text>
               </TouchableOpacity>
+              <Text style={propertyTransferStyle.accountNumberError}>{this.state.transferError}</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
