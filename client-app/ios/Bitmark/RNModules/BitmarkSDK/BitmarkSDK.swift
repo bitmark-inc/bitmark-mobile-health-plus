@@ -302,6 +302,17 @@ class BitmarkSDK: NSObject {
       callback([true])
     }
   }
+  
+  @objc(validateAccountNumber::)
+  func validateAccountNumber(_ address: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let _ = try AccountNumber(address: address)
+      callback([true])
+    }
+    catch {
+      callback([false])
+    }
+  }
 }
 
 extension BitmarkSDK {
