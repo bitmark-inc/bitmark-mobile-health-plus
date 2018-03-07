@@ -303,11 +303,16 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(validateAccountNumber::)
-  func validateAccountNumber(_ address: String, _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(validateAccountNumber:::)
+  func validateAccountNumber(_ address: String, _ network: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
-      let _ = try AccountNumber(address: address)
-      callback([true])
+      let account = try AccountNumber(address: address)
+      let n = BitmarkSDK.networkWithName(name: network)
+      if account.network == n {
+        callback([true])
+      } else {
+        callback([false])
+      }
     }
     catch {
       callback([false])
