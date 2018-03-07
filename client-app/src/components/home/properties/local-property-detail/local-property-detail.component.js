@@ -110,7 +110,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                 </TouchableOpacity>
               </View>}
 
-              <View style={propertyDetailStyle.transferButtonArea} >
+              {/* <View style={propertyDetailStyle.transferButtonArea} >
                 <TouchableOpacity style={[propertyDetailStyle.transferButton, {
                   borderTopColor: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
                 }]}
@@ -120,7 +120,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                     color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
                   }]}>TRANSFER</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </TouchableOpacity>
           </ScrollView>
         </View>
