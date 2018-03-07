@@ -251,13 +251,9 @@ export class LocalAddPropertyComponent extends React.Component {
     }, {
         indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
       }).then((data) => {
-        if (data) {
-          setTimeout(() => {
-            if (this.props.navigation.state.params.refreshPropertiesScreen) {
-              this.props.navigation.state.params.refreshPropertiesScreen();
-              this.props.navigation.goBack();
-            }
-          }, 1000);
+        if (data !== null && this.props.navigation.state.params.refreshPropertiesScreen) {
+          this.props.navigation.state.params.refreshPropertiesScreen();
+          this.props.navigation.goBack();
         }
       }).catch(error => {
         this.setState({ issueError: 'Issue file error!' });

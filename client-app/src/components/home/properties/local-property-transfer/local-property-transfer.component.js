@@ -25,12 +25,12 @@ export class LocalPropertyTransferComponent extends React.Component {
 
     let bitmark = this.props.navigation.state.params.bitmark;
     let asset = this.props.navigation.state.params.asset;
-    let bitamrkIndexNumber = asset.bitmarks.findIndex(item => item.id === bitmark.id);
-    bitamrkIndexNumber = (bitamrkIndexNumber + 1) + '/' + asset.bitmarks.length;
+    let bitmarkIndexNumber = asset.bitmarks.findIndex(item => item.id === bitmark.id);
+    bitmarkIndexNumber = (bitmarkIndexNumber + 1) + '/' + asset.bitmarks.length;
     this.state = {
       bitmark,
       asset,
-      bitamrkIndexNumber,
+      bitmarkIndexNumber,
       bitmarkAccount: '',
       bitmarkAccountError: '',
       transferError: '',
@@ -71,7 +71,7 @@ export class LocalPropertyTransferComponent extends React.Component {
             </TouchableOpacity>
             <View style={defaultStyle.headerCenter}>
               <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name}</Text>
-              <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.bitamrkIndexNumber}</Text>
+              <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.bitmarkIndexNumber}</Text>
             </View>
             <TouchableOpacity style={[defaultStyle.headerRight]} />
           </View>

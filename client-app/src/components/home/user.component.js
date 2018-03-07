@@ -13,7 +13,8 @@ import { TransactionsComponent } from './transactions';
 
 import userStyle from './user.component.style';
 import { config } from '../../configs';
-import { AppController } from '../../managers';
+import { AppController, DataController } from '../../managers';
+import { EventEmiterService } from '../../services';
 
 const MainTabs = {
   properties: 'Properties',
@@ -27,11 +28,26 @@ export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
     this.logout = this.logout.bind(this);
+    this.handerChangePendingTransactions = this.handerChangePendingTransactions.bind(this);
+
     this.state = {
       mainTab: MainTabs.properties,
-      transactionNumber: 0,
+      transactionNumber: DataController.getSignRequests().pendingTransactions.length,
     };
   }
+
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
+  }
+
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
+  }
+
+  handerChangePendingTransactions() {
+    this.setState({ transactionNumber: DataController.getSignRequests().pendingTransactions.length, });
+  }
+
 
   logout() {
     AppController.doLogout().then(() => {

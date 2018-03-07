@@ -10,17 +10,30 @@ import dialogStyles from './bitmark-indicator.component.style';
 export class BitmarkIndicatorComponent extends React.Component {
   constructor(props) {
     super(props);
-    let indicator = this.props.indicator === false ? false : true;
-    this.state = { indicator: indicator }
+    this.state = {
+      indicator: this.props.indicator,
+      message: this.props.message,
+      title: this.props.title,
+    };
   }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      indicator: nextProps.indicator,
+      message: nextProps.message,
+      title: nextProps.title,
+    });
+  }
+
   render() {
     return (
       <BitmarkDialogComponent>
         <View style={dialogStyles.content}>
-          {this.state.indicator && <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />}
+          {!!this.state.indicator && <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />}
           <View style={dialogStyles.textArea}>
-            {!!this.props.title && <Text style={dialogStyles.indicatorTitle}>{this.props.title}</Text>}
-            {!!this.props.message && <Text style={dialogStyles.indicatorMessage}>{this.props.message}</Text>}
+            {!!this.state.title && <Text style={[dialogStyles.indicatorTitle, {
+              marginTop: this.state.indicator ? 0 : 30,
+            }]}>{this.state.title}</Text>}
+            {!!this.state.message && <Text style={dialogStyles.indicatorMessage}>{this.state.message}</Text>}
           </View>
         </View>
       </BitmarkDialogComponent>

@@ -139,7 +139,9 @@ class MainComponent extends Component {
       <View style={{ flex: 1 }}>
         {!this.state.networkStatus && <BitmarkInternetOffComponent />}
         {!!this.state.processing && <DefaultIndicatorComponent />}
-        {!!this.state.submitting && <BitmarkIndicatorComponent
+
+        {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}
+        {!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message) && <BitmarkIndicatorComponent
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
         <View style={{
           flex: 1,

@@ -102,7 +102,8 @@ const doSubmitCounterSignRequest = (accountNumber, bitmarkId, countersignature) 
   });
 };
 
-const doRejectlSignRequest = (accountNumber, bitmarkId) => {
+const doRejectlSignRequest = (accountNumber, bitmarkId, signatureData) => {
+  console.log('signatureData :', signatureData);
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;

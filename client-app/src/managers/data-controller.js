@@ -162,7 +162,7 @@ const doTryAccessToAllMarkets = async () => {
 };
 
 const doGetSignRequests = async () => {
-  let data = await TransactionService.doTryGetSignRequests();
+  let data = await TransactionService.doGetAllSignRequests();
   userData.pendingTransactions = data.pendingTransactions;
   userData.completedTransactions = data.completedTransactions;
   return merge({}, {

@@ -123,7 +123,7 @@ const doGetTransactionInformation = (txid) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = config.get_way_server_url +
-      `/v1/txs/${txid}?pending=true`;
+      `/v1/txs/${txid}?pending=true&block=true`;
     fetch(bitmarkUrl, {
       method: 'GET',
       headers: {
@@ -135,9 +135,9 @@ const doGetTransactionInformation = (txid) => {
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doGetBitmarkInformation error :' + JSON.stringify(data)));
+        return reject(new Error('doGetTransactionInformation error :' + JSON.stringify(data)));
       }
-      resolve(data.tx);
+      resolve(data);
     }).catch(reject);
   });
 };
@@ -158,7 +158,7 @@ const doGetBitmarkInformation = (bitmarkId) => {
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doGetBitmarkInformation error :' + JSON.stringify(data)));
+        return reject(new Error(`doGetBitmarkInformation ${bitmarkId} error :` + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);

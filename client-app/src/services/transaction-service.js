@@ -1,11 +1,13 @@
-import { TransactionModel, BitmarkSDK, BitmarkModel } from '../models';
+import { TransactionModel, BitmarkSDK, BitmarkModel, CommonModel } from '../models';
 import { UserService } from './user-service';
 
 const doGetAllSignRequests = async (accountNumber) => {
   let signRequests = await TransactionModel.doGetAllGetSignRequests(accountNumber);
   for (let signRequest of signRequests) {
-    let transactionData = await BitmarkModel.doGetBitmarkInformation(signRequest.half_signed_transfer.link);
-    let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.bitmark_id);
+    let transactionData = await BitmarkModel.doGetTransactionInformation(signRequest.half_signed_transfer.link);
+    let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
+    signRequest.tx = transactionData.tx;
+    signRequest.block = transactionData.block;
     signRequest.asset = bitmarkInformation.asset;
     signRequest.bitmark = bitmarkInformation.bitmark;
   }
@@ -13,17 +15,6 @@ const doGetAllSignRequests = async (accountNumber) => {
   return { pendingTransactions: signRequests };
 };
 
-const doTryGetAllSignRequests = (accountNumber) => {
-  return new Promise((resolve) => {
-    TransactionModel.doGetAllGetSignRequests(accountNumber).then(resolve).catch(error => {
-      console.log('TransactionService doTryGetAllSignRequests error :', error)
-      resolve({
-        pendingTransactions: [],
-        completedTransactions: [],
-      })
-    });
-  });
-};
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
   let userInfo = await UserService.doGetCurrentUser();
@@ -37,8 +28,10 @@ const doAcceptTransferBitmark = async (touchFaceIdSession, bitmarkId, txid, firs
   return await TransactionModel.doSubmitCounterSignRequest(userInfo.bitmarkAccountNumber, bitmarkId, counterSigature);
 };
 
-const doRejectTransferBitmark = async () => {
-  //TODO
+const doRejectTransferBitmark = async (accountNumber, bitmarkId) => {
+  let userInfo = await UserService.doGetCurrentUser();
+  let signatureData = CommonModel.doCreateSignatureData();
+  return await TransactionModel.doRejectlSignRequest(userInfo.bitmarkAccountNumber, bitmarkId, signatureData);
 };
 const doCancelTransferBitmark = async () => {
   //TODO
@@ -47,7 +40,6 @@ const doCancelTransferBitmark = async () => {
 const TransactionService = {
   doTransferBitmark,
   doGetAllSignRequests,
-  doTryGetAllSignRequests,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doCancelTransferBitmark,

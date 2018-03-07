@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 
-import { DataController } from './../../../managers';
+import { DataController, AppController } from './../../../managers';
 
 import transactionsStyle from './transactions.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
@@ -27,6 +27,7 @@ export class TransactionsComponent extends React.Component {
     this.switchSubtab = this.switchSubtab.bind(this);
     this.handerChangePendingTransactions = this.handerChangePendingTransactions.bind(this);
     this.handerChangeCompletedTransaction = this.handerChangeCompletedTransaction.bind(this);
+    this.refreshTransactionScreen = this.refreshTransactionScreen.bind(this);
 
     let signRequests = DataController.getSignRequests();
     signRequests.pendingTransactions.forEach((item, key) => {
@@ -43,9 +44,9 @@ export class TransactionsComponent extends React.Component {
   }
 
   componentDidMount() {
+    this.switchSubtab(this.state.subtab);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_COMPLETED_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
-    this.switchSubtab(this.state.subtab);
   }
 
   componentWillUnmount() {
@@ -55,17 +56,34 @@ export class TransactionsComponent extends React.Component {
 
   handerChangePendingTransactions() {
     let pendingTransactions = DataController.getSignRequests().pendingTransactions;
-    pendingTransactions.forEach((item, key) => {
-      item.key = key;
+    pendingTransactions.forEach((item, index) => {
+      item.key = index;
     });
     this.setState({ pendingTransactions });
   }
   handerChangeCompletedTransaction() {
     let completedTransactions = DataController.getSignRequests().completedTransactions;
-    completedTransactions.forEach((item, key) => {
-      item.key = key;
+    completedTransactions.forEach((item, index) => {
+      item.key = index;
     });
     this.setState({ completedTransactions });
+  }
+
+  refreshTransactionScreen() {
+    AppController.doGetSignRequests().then((signRequests) => {
+      signRequests.pendingTransactions.forEach((item, index) => {
+        item.key = index;
+      });
+      signRequests.completedTransactions.forEach((item, index) => {
+        item.key = index;
+      });
+      this.setState({
+        pendingTransactions: signRequests.pendingTransactions,
+        completedTransactions: signRequests.completedTransactions,
+      });
+    }).catch((error) => {
+      console.log('getUserBitmark error :', error);
+    });
   }
 
   switchSubtab(subtab) {
@@ -105,10 +123,13 @@ export class TransactionsComponent extends React.Component {
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (
-                    <TouchableOpacity style={transactionsStyle.signRequestRow}>
+                    <TouchableOpacity style={transactionsStyle.signRequestRow} onPress={() => this.props.screenProps.homeNavigation.navigate('TransactionDetail', {
+                      signRequest: item,
+                      refreshTransactionScreen: this.refreshTransactionScreen,
+                    })}>
                       <View style={transactionsStyle.signRequestTitle}>
-                        <Text style={transactionsStyle.signRequestTitleType}>{item.type}</Text>
-                        <Text style={transactionsStyle.signRequestTitleTime} >{item.time}</Text>
+                        <Text style={transactionsStyle.signRequestTitleType}>Property Transfer Request</Text>
+                        <Text style={transactionsStyle.signRequestTitleTime} >{item.create_at || 'JUST NOW'}</Text>
                         <Image style={transactionsStyle.signRequestTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                       </View>
                       <Text style={transactionsStyle.signRequestContent}>
@@ -116,9 +137,9 @@ export class TransactionsComponent extends React.Component {
                         <Text style={transactionsStyle.signRequestSenderName} numberOfLines={1}>{item.sender.substring(0, 12)}...</Text>
                         <Text style={transactionsStyle.signRequestSenderFix}>]</Text>
                         has transferred the property
-                      <Text style={transactionsStyle.signRequestAssetName}> {item.asset.name} </Text>
+                        <Text style={transactionsStyle.signRequestAssetName}> {item.asset.name} </Text>
                         to you. Please sign for receipt to accept the property transfer.
-                    </Text>
+                      </Text>
                     </TouchableOpacity>
                   )
                 }} />
