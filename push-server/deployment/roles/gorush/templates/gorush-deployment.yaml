@@ -40,3 +40,21 @@ spec:
           items:
             - key: config.yaml
               path: config.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gorush
+  labels:
+    app: gorush
+    tier: frontend
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8088
+  - port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: gorush
