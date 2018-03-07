@@ -123,6 +123,10 @@ const doRegisterNotificationInfo = async (notificationUUID) => {
 };
 
 const doValidateBitmarkAccountNumber = async (accountNumber) => {
+  let userInfo = await UserService.doGetCurrentUser();
+  if (userInfo.bitmarkAccountNumber === accountNumber) {
+    throw new Error('Can not transfer for current user!');
+  }
   return await BitmarkSDK.validateAccountNumber(accountNumber, config.bitmark_network);
 }
 

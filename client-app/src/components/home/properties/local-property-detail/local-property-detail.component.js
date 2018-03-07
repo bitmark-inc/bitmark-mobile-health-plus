@@ -24,20 +24,19 @@ export class LocalPropertyDetailComponent extends React.Component {
     super(props);
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
-    let histories = [];
+
     this.state = {
       asset,
-      histories,
       bitmark,
       copied: false,
       displayTopButton: false,
     };
     AppController.doGetProvenance(bitmark).then(provenance => {
-      let histories = [];
-      provenance.forEach((history, key) => {
-        histories.push({ key, history });
+      bitmark.provenance = provenance;
+      bitmark.provenance.forEach((history, index) => {
+        history.key = index;
       });
-      this.setState({ histories });
+      this.setState({ bitmark });
     }).catch(error => console.log('getProvenance error', error));
   }
 
@@ -94,11 +93,11 @@ export class LocalPropertyDetailComponent extends React.Component {
                   <FlatList
                     scrollEnabled={false}
                     extraData={this.state}
-                    data={this.state.histories || []}
+                    data={this.state.bitmark.provenance || []}
                     renderItem={({ item }) => {
                       return (<View style={propertyDetailStyle.provenancesRow}>
-                        <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.history.created_at}</Text>
-                        <Text style={propertyDetailStyle.provenancesRowOwner} numberOfLines={1}>{item.history.owner}</Text>
+                        <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at}</Text>
+                        <Text style={propertyDetailStyle.provenancesRowOwner} numberOfLines={1}>{item.owner}</Text>
                       </View>);
                     }}
                   />

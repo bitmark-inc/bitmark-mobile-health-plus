@@ -48,6 +48,15 @@ export default StyleSheet.create({
     marginTop: 12,
     height: 20,
   },
+  accountNumberError: {
+    fontFamily: 'Avenir Light',
+    fontSize: 14,
+    lineHeight: 16,
+    width: convertWidth(325),
+    marginTop: 12,
+    height: 20,
+    color: '#FF003C',
+  },
   transferMessage: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',

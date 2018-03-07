@@ -34,14 +34,18 @@ export class LocalPropertyTransferComponent extends React.Component {
       bitmarkAccount: '',
       bitmarkAccountError: '',
       transferError: '',
+      canTransfer: false,
     };
   }
   onFinishInputAccountNumber() {
     AccountService.doValidateBitmarkAccountNumber(this.state.bitmarkAccount).then(() => {
-      this.setState({ bitmarkAccountError: '' });
+      this.setState({
+        bitmarkAccountError: '',
+        canTransfer: this.state.bitmark.status !== 'pending',
+      });
     }).catch(error => {
       console.log('onFinishInputAccountNumber doValidateBitmarkAccountNumber :', error);
-      this.setState({ bitmarkAccountError: 'Invalid bitmark account number!' });
+      this.setState({ bitmarkAccountError: 'Invalid bitmark account number!', canTransfer: false, });
     });
   }
 
@@ -77,17 +81,20 @@ export class LocalPropertyTransferComponent extends React.Component {
               <View style={propertyTransferStyle.inputAccountNumberBar} >
                 <TextInput style={propertyTransferStyle.inputAccountNumber} placeholder='BITMARK ACCOUNT'
                   onChangeText={(bitmarkAccount) => this.setState({ bitmarkAccount })}
-                  onSubmitEditing={this.onFinishInputAccountNumber}
+                  returnKeyType="done"
+                  onFocus={() => { this.setState({ bitmarkAccountError: false }) }}
+                  onEndEditing={this.onFinishInputAccountNumber}
                 />
               </View>
+              <Text style={propertyTransferStyle.accountNumberError}>{this.state.bitmarkAccountError}</Text>
               <Text style={propertyTransferStyle.transferMessage}>Enter the Bitmark account address to which you would like to transfer ownership of this property.</Text>
               <TouchableOpacity style={[propertyTransferStyle.sendButton, {
-                borderTopColor: ((this.state.bitmark.status === 'pending') || this.state.bitmarkAccountError || !this.state.bitmarkAccount) ? '#A4B5CD' : '#0060F2'
+                borderTopColor: this.state.canTransfer ? '#0060F2' : '#A4B5CD'
               }]}
-                disabled={((this.state.bitmark.status === 'pending') || this.state.bitmarkAccountError || !this.state.bitmarkAccount)}
-                onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark })}>
+                disabled={!this.state.canTransfer}
+                onPress={this.onSendProperty}>
                 <Text style={[propertyTransferStyle.sendButtonText, {
-                  color: ((this.state.bitmark.status === 'pending') || this.state.bitmarkAccountError || !this.state.bitmarkAccount) ? '#C2C2C2' : '#0060F2'
+                  color: this.state.canTransfer ? '#0060F2' : '#C2C2C2'
                 }]}>SEND</Text>
               </TouchableOpacity>
             </TouchableOpacity>

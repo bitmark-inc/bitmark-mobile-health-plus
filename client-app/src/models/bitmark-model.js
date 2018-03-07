@@ -2,7 +2,6 @@ import moment from 'moment';
 
 import { config } from './../configs';
 import { BitmarkSDK } from './adapters';
-import { sortList } from './../utils';
 
 // ===================================================================================================================
 // ===================================================================================================================
@@ -58,37 +57,6 @@ const doGetAllBitmarks = (accountNumber) => {
     };
     tryMineBitmark();
   });
-};
-
-const doGetBitmarks = async (accountNumber) => {
-  let data = await doGetAllBitmarks(accountNumber);
-  let localAssets = [];
-  if (data && data.bitmarks && data.assets) {
-    data.assets.forEach((asset) => {
-      asset.asset_id = asset.id;
-      data.bitmarks.forEach((bitmark) => {
-        bitmark.created_at = moment(bitmark.created_at).format('YYYY MMM DD HH:mm:ss')
-        if (!bitmark.bitmark_id) {
-          bitmark.bitmark_id = bitmark.id;
-        }
-        if (bitmark.asset_id === asset.id) {
-          if (!asset.bitmarks) {
-            asset.bitmarks = [];
-            asset.totalPending = 0;
-          }
-          asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
-          asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
-          asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-          asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
-          asset.bitmarks.push(bitmark);
-        }
-      });
-      asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
-      localAssets.push(asset);
-    });
-  }
-  localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
-  return localAssets;
 };
 
 const doGetProvenance = (bitmark) => {
@@ -199,7 +167,7 @@ const doGetBitmarkInformation = (bitmarkId) => {
 
 let BitmarkModel = {
   doGetAssetInformation,
-  doGetBitmarks,
+  doGetAllBitmarks,
   doGetProvenance,
   doPrepareAssetInfo,
   doIssueFile,

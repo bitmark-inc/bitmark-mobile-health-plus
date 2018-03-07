@@ -37,7 +37,7 @@ const doGetAllGetSignRequests = (accountNumber) => {
       }
     }).then((response) => {
       statusCode = response.status;
-      return response.text();
+      return response.json();
     }).then((data) => {
       console.log('doGetAllGetSignRequests data:', data);
       if (statusCode >= 400) {
@@ -119,7 +119,7 @@ const doRejectlSignRequest = (accountNumber, bitmarkId) => {
     }).then((data) => {
       console.log('data: ', data)
       if (statusCode >= 400) {
-        return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
+        return reject(new Error('doRejectlSignRequest error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
@@ -143,7 +143,7 @@ const doCancelSignRequest = (accountNumber, bitmarkId) => {
     }).then((data) => {
       console.log('data: ', data)
       if (statusCode >= 400) {
-        return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
+        return reject(new Error('doCancelSignRequest error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);

@@ -20,7 +20,7 @@ const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platfor
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
+        return reject(new Error('doRegisterNotificationInfo error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
@@ -45,7 +45,7 @@ const doDeregisterNotificationInfo = (accountNumber, timestamp, signature, token
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
+        return reject(new Error('doDeregisterNotificationInfo error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);

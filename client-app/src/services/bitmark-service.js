@@ -1,14 +1,38 @@
+import moment from 'moment';
 import { BitmarkModel } from "../models";
+import { sortList } from './../utils';
 
 // ================================================================================================
 // ================================================================================================
-let doGetBitmarks = (bitmarkAccountNumber) => {
-  return new Promise((resolve) => {
-    BitmarkModel.doGetBitmarks(bitmarkAccountNumber).then(resolve).catch(error => {
-      resolve([]);
-      console.log('BitmarkService doGetBitmarks error :', error);
-    })
-  })
+let doGetBitmarks = async (bitmarkAccountNumber) => {
+  let data = await BitmarkModel.doGetAllBitmarks(bitmarkAccountNumber);
+  let localAssets = [];
+  if (data && data.bitmarks && data.assets) {
+    for (let asset of data.assets) {
+      asset.asset_id = asset.id;
+      for (let bitmark of data.bitmarks) {
+        bitmark.created_at = moment(bitmark.created_at).format('YYYY MMM DD HH:mm:ss')
+        if (!bitmark.bitmark_id) {
+          bitmark.bitmark_id = bitmark.id;
+        }
+        if (bitmark.asset_id === asset.id) {
+          if (!asset.bitmarks) {
+            asset.bitmarks = [];
+            asset.totalPending = 0;
+          }
+          asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
+          asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
+          asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
+          asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
+          asset.bitmarks.push(bitmark);
+        }
+      }
+      asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
+      localAssets.push(asset);
+    }
+  }
+  localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
+  return localAssets;
 };
 
 const doCheckFileToIssue = async (filePath) => {
