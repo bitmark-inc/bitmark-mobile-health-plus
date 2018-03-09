@@ -65,23 +65,43 @@ export class UserComponent extends React.Component {
       AppController.doGetTransactionData().then(() => {
         return TransactionService.doGetTransferOfferDetail(data.bitmark_id);
       }).then(transferOfferDetail => {
-        this.props.navigation.navigate('TransactionDetail', {
-          transferOffer: transferOfferDetail,
-          refreshTransactionScreen: () => {
-            AppController.doGetTransactionData().then(() => {
-            }).catch((error) => {
-              console.log('AppController.doGetTransactionData error :', error);
-            });
-            this.switchMainTab(MainTabs.transaction);
-          }
-        })
+        const resetHomePage = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({ routeName: 'User' }),
+            NavigationActions.navigate({
+              routeName: 'TransactionDetail',
+              params: {
+                transferOffer: transferOfferDetail,
+                refreshTransactionScreen: () => {
+                  AppController.doGetTransactionData().then(() => {
+                  }).catch((error) => {
+                    console.log('AppController.doGetTransactionData error :', error);
+                  });
+                  this.switchMainTab(MainTabs.transaction);
+                }
+              }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
       }).catch(error => {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
     } else if (data.event === 'transfer_rejected') {
       AppController.doGetBitmarks().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
-        this.props.navigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
+        const resetHomePage = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({ routeName: 'User' }),
+            NavigationActions.navigate({
+              routeName: 'LocalPropertyDetail',
+              params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
       }).catch(error => {
         console.log('handerReceivedNotification transfer_rejected error :', error);
       });
@@ -90,7 +110,17 @@ export class UserComponent extends React.Component {
     } else if (data.event === 'transfer_failed') {
       AppController.doGetBitmarks().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
-        this.props.navigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
+        const resetHomePage = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({ routeName: 'User' }),
+            NavigationActions.navigate({
+              routeName: 'LocalPropertyDetail',
+              params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
       }).catch(error => {
         console.log('handerReceivedNotification transfer_rejected error :', error);
       });
@@ -164,6 +194,7 @@ UserComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+    dispatch: PropTypes.func,
   }),
   screenProps: PropTypes.shape({
     rootNavigation: PropTypes.shape({
