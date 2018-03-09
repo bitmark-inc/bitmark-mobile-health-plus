@@ -63,10 +63,11 @@ const configNotification = () => {
       });
     }
   };
-  const onReceivedNotification = (data) => {
-    console.log('onReceivedNotification data:', data);
-    EventEmiterService.emit(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, data);
-    //TODO handler data event
+  const onReceivedNotification = async (notificationData) => {
+    console.log('onReceivedNotification notificationData:', notificationData);
+    if (!notificationData.foreground) {
+      EventEmiterService.emit(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
+    }
     NotificationService.setApplicationIconBadgeNumber(0);
   };
   NotificationService.configure(onRegisterred, onReceivedNotification);
@@ -251,6 +252,15 @@ const getApplicationBuildNumber = () => {
   return DeviceInfo.getBuildNumber();
 };
 
+const getLocalBitmarkInformation = (bitmarkId) => {
+  let bitmark;
+  let asset = userData.localAssets.find(localAsset => {
+    bitmark = localAsset.bitmarks.find(localBitmark => localBitmark.id === bitmarkId);
+    return !!bitmark;
+  });
+  return { bitmark, asset };
+};
+
 const DataController = {
   doOpenApp,
   doStartBackgroundProcess,
@@ -267,6 +277,7 @@ const DataController = {
   getUserInformation,
   getApplicationVersion,
   getApplicationBuildNumber,
+  getLocalBitmarkInformation,
 };
 
 export { DataController };

@@ -19,4 +19,10 @@ const sortList = (list, compare) => {
   return list;
 };
 
-export { convertWidth, sortList };
+const runPromiseWithoutError = (promise) => {
+  return new Promise((resolve) => {
+    promise.then(resolve).catch(error => resolve({ error }));
+  });
+}
+
+export { convertWidth, sortList, runPromiseWithoutError };

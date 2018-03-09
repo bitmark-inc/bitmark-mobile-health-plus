@@ -51,7 +51,6 @@ export class UserComponent extends React.Component {
   }
 
   handerChangeActiveIncomingTransferOffer() {
-    console.log('UserComponent handerChangeActiveIncomingTransferOffer CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER');
     this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length, });
   }
 
@@ -61,8 +60,11 @@ export class UserComponent extends React.Component {
   }
 
   handerReceivedNotification(data) {
+    console.log('UserComponent handerReceivedNotification data :', data);
     if (data.event === 'transfer_required' && data.bitmark_id) {
-      TransactionService.doGetTransferOfferDetail(data.bitmark_id).then(transferOfferDetail => {
+      AppController.doGetTransactionData().then(() => {
+        return TransactionService.doGetTransferOfferDetail(data.bitmark_id);
+      }).then(transferOfferDetail => {
         this.props.navigation.navigate('TransactionDetail', {
           transferOffer: transferOfferDetail,
           refreshTransactionScreen: () => {
@@ -77,18 +79,20 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
     } else if (data.event === 'transfer_rejected') {
-      BitmarkService.doGetBitmarkInformation(data.bitmark_id).then(data => {
-        this.props.navigation.navigate('LocalPropertyDetail', { asset: data.asset, bitmark: data.bitmark });
+      AppController.doGetBitmarks().then(() => {
+        let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
+        this.props.navigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
       }).catch(error => {
         console.log('handerReceivedNotification transfer_rejected error :', error);
       });
     } else if (data.event === 'transfer_completed') {
       this.setState({ displayedTab: { mainTab: MainTabs.transaction, subTab: 'COMPLETED' } });
     } else if (data.event === 'transfer_failed') {
-      BitmarkService.doGetBitmarkInformation(data.bitmark_id).then(data => {
-        this.props.navigation.navigate('LocalPropertyDetail', { asset: data.asset, bitmark: data.bitmark });
+      AppController.doGetBitmarks().then(() => {
+        let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
+        this.props.navigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
       }).catch(error => {
-        console.log('handerReceivedNotification transfer_failed error :', error);
+        console.log('handerReceivedNotification transfer_rejected error :', error);
       });
     }
   }
