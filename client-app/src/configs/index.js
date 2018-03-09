@@ -14,7 +14,7 @@ let config = {
   NETWORKS,
   bitmark_network: NETWORKS.testnet,
   appLink: 'https://itunes.apple.com/us/app/bitmark/id1213686437?ls=1&mt=8',
-  get_way_server_url: 'https://api.test.bitmark.com',
+  api_server_url: 'https://api.test.bitmark.com',
   preive_asset_url: 'https://preview.assets.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
   trade_server_url: 'https://trade.devel.bitmark.com',
@@ -36,7 +36,7 @@ if (config.network === NETWORKS.testnet) {
   config.market_urls.totemic = 'https://totemic.test.bitmark.com';
   config.trade_server_url = 'https://trade.test.bitmark.com';
 } else if (config.network === NETWORKS.livenet) {
-  config.get_way_server_url = 'https://api.bitmark.com';
+  config.api_server_url = 'https://api.bitmark.com';
   config.preive_asset_url = 'https://preview.assets.bitmark.com';
   config.registry_server_url = 'https://registry.bitmark.com';
   config.bitmark_network = NETWORKS.livenet;

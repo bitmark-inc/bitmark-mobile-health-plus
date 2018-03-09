@@ -4,6 +4,7 @@ import {
   View, Text, TouchableOpacity, Image, TextInput, ScrollView, TouchableWithoutFeedback,
   Platform,
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 
 import { convertWidth } from './../../../../utils';
 
@@ -51,9 +52,12 @@ export class LocalPropertyTransferComponent extends React.Component {
 
   onSendProperty() {
     AppController.doTransferBitmark(this.state.bitmark, this.state.bitmarkAccount).then((result) => {
-      if (result && this.props.navigation.state.params.refreshPropertiesScreen) {
-        this.props.navigation.state.params.refreshPropertiesScreen();
-        this.props.navigation.goBack();
+      if (result) {
+        const resetMainPage = NavigationActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'User' })]
+        });
+        this.props.navigation.dispatch(resetMainPage);
       }
     }).catch(error => {
       this.setState({ transferError: 'Transfer property error!' });
@@ -110,6 +114,7 @@ LocalPropertyTransferComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+    dispatch: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
         bitmark: PropTypes.object,

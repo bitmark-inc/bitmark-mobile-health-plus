@@ -4,7 +4,6 @@ import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image,
   Platform,
 } from 'react-native';
-import moment from 'moment';
 
 import { DataController, AppController } from './../../../managers';
 
@@ -22,6 +21,7 @@ const SubTabs = {
   completed: 'COMPLETED',
 }
 export class TransactionsComponent extends React.Component {
+  static SubTabs = SubTabs;
   constructor(props) {
     super(props);
     this.switchSubtab = this.switchSubtab.bind(this);
@@ -29,57 +29,59 @@ export class TransactionsComponent extends React.Component {
     this.handerChangeCompletedTransaction = this.handerChangeCompletedTransaction.bind(this);
     this.refreshTransactionScreen = this.refreshTransactionScreen.bind(this);
 
-    let signRequests = DataController.getSignRequests();
-    signRequests.pendingTransactions.forEach((item, key) => {
+    let transactionData = DataController.getTransactionData();
+    transactionData.activeIncompingTransferOffers.forEach((item, key) => {
       item.key = key;
     });
-    signRequests.completedTransactions.forEach((item, key) => {
+    transactionData.transactions.forEach((item, key) => {
       item.key = key;
     });
     this.state = {
-      subtab: SubTabs.required,
-      pendingTransactions: signRequests.pendingTransactions,
-      completedTransactions: signRequests.completedTransactions,
+      currentUser: DataController.getUserInformation(),
+      subtab: (this.props.subtab === SubTabs.required || this.props.subtab === SubTabs.completed) ? this.props.subtab : SubTabs.required,
+      activeIncompingTransferOffers: transactionData.activeIncompingTransferOffers,
+      transactions: transactionData.transactions,
     };
   }
 
   componentDidMount() {
     this.switchSubtab(this.state.subtab);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_COMPLETED_TRANSACTIONS, this.handerChangeCompletedTransaction);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_COMPLETED_TRANSACTIONS, this.handerChangeCompletedTransaction);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
   }
 
   handerChangePendingTransactions() {
-    let pendingTransactions = DataController.getSignRequests().pendingTransactions;
-    pendingTransactions.forEach((item, index) => {
+    let activeIncompingTransferOffers = DataController.getTransactionData().activeIncompingTransferOffers;
+    activeIncompingTransferOffers.forEach((item, index) => {
       item.key = index;
     });
-    this.setState({ pendingTransactions });
+    this.setState({ activeIncompingTransferOffers });
   }
   handerChangeCompletedTransaction() {
-    let completedTransactions = DataController.getSignRequests().completedTransactions;
-    completedTransactions.forEach((item, index) => {
+    let transactions = DataController.getTransactionData().transactions;
+    transactions.forEach((item, index) => {
       item.key = index;
     });
-    this.setState({ completedTransactions });
+    this.setState({ transactions });
   }
 
   refreshTransactionScreen() {
-    AppController.doGetSignRequests().then((signRequests) => {
-      signRequests.pendingTransactions.forEach((item, index) => {
+    AppController.doGetTransactionData().then(() => {
+      let transactionData = DataController.getTransactionData();
+      transactionData.activeIncompingTransferOffers.forEach((item, index) => {
         item.key = index;
       });
-      signRequests.completedTransactions.forEach((item, index) => {
+      transactionData.transactions.forEach((item, index) => {
         item.key = index;
       });
       this.setState({
-        pendingTransactions: signRequests.pendingTransactions,
-        completedTransactions: signRequests.completedTransactions,
+        activeIncompingTransferOffers: transactionData.activeIncompingTransferOffers,
+        transactions: transactionData.transactions,
       });
     }).catch((error) => {
       console.log('getUserBitmark error :', error);
@@ -119,26 +121,23 @@ export class TransactionsComponent extends React.Component {
         <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             {this.state.subtab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
-              <FlatList data={this.state.pendingTransactions}
+              <FlatList data={this.state.activeIncompingTransferOffers}
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (
-                    <TouchableOpacity style={transactionsStyle.signRequestRow} onPress={() => this.props.screenProps.homeNavigation.navigate('TransactionDetail', {
-                      signRequest: item,
+                    <TouchableOpacity style={transactionsStyle.transferOfferRow} onPress={() => this.props.screenProps.homeNavigation.navigate('TransactionDetail', {
+                      transferOffer: item,
                       refreshTransactionScreen: this.refreshTransactionScreen,
                     })}>
-                      <View style={transactionsStyle.signRequestTitle}>
-                        <Text style={transactionsStyle.signRequestTitleType}>Property Transfer Request</Text>
-                        <Text style={transactionsStyle.signRequestTitleTime} >{item.create_at || 'JUST NOW'}</Text>
-                        <Image style={transactionsStyle.signRequestTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
+                      <View style={transactionsStyle.transferOfferTitle}>
+                        <Text style={transactionsStyle.transferOfferTitleType}>Property Transfer Request</Text>
+                        <Text style={transactionsStyle.transferOfferTitleTime} >{item.created_at}</Text>
+                        <Image style={transactionsStyle.transferOfferTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                       </View>
-                      <Text style={transactionsStyle.signRequestContent}>
-                        <Text style={transactionsStyle.signRequestSenderFix}>[</Text>
-                        <Text style={transactionsStyle.signRequestSenderName} numberOfLines={1}>{item.sender.substring(0, 12)}...</Text>
-                        <Text style={transactionsStyle.signRequestSenderFix}>]</Text>
-                        has transferred the property
-                        <Text style={transactionsStyle.signRequestAssetName}> {item.asset.name} </Text>
-                        to you. Please sign for receipt to accept the property transfer.
+                      <Text style={transactionsStyle.transferOfferContent}>
+                        Sign to accept the property
+                        <Text style={transactionsStyle.transferOfferAssetName}> {item.asset.name} </Text>
+                        transfer request.
                       </Text>
                     </TouchableOpacity>
                   )
@@ -146,27 +145,31 @@ export class TransactionsComponent extends React.Component {
             </View>}
 
             {this.state.subtab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
-              <FlatList data={this.state.completedTransactions}
+              <FlatList data={this.state.transactions}
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (
-                    <TouchableOpacity style={{}}>
-                      <View>
-                        <Text>{item.type}</Text>
-                        <Text>{item.time || item.status}</Text>
+                    <TouchableOpacity style={transactionsStyle.completedTransfer}>
+                      <View style={transactionsStyle.completedTransferHeader}>
+                        <Text style={[transactionsStyle.completedTransferHeaderTitle, {
+                          color: item.status === 'pending' ? '#999999' : '#0060F2'
+                        }]}>TRANSFER</Text>
+                        <Text style={[transactionsStyle.completedTransferHeaderValue, {
+                          color: item.status === 'pending' ? '#999999' : '#0060F2'
+                        }]}>{item.status === 'pending' ? 'PENDING' : item.timestamp}</Text>
                       </View>
-                      <View style={{}}>
-                        <View>
-                          <Text>PROPERTY</Text>
-                          <Text>{item.assetName}</Text>
+                      <View style={transactionsStyle.completedTransferContent}>
+                        <View style={transactionsStyle.completedTransferContentRow}>
+                          <Text style={transactionsStyle.completedTransferContentRowLabel}>PROPERTY</Text>
+                          <Text style={[transactionsStyle.completedTransferContentRowValue, { fontWeight: '900' }]}>{item.assetName}</Text>
                         </View>
-                        <View>
-                          <Text>FROM</Text>
-                          <Text>{item.sender}</Text>
+                        <View style={transactionsStyle.completedTransferContentRow}>
+                          <Text style={transactionsStyle.completedTransferContentRowLabel}>FROM</Text>
+                          <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.from === this.state.currentUser.bitmarkAccountNumber ? 'YOU' : item.from}</Text>
                         </View>
-                        <View>
-                          <Text>To</Text>
-                          <Text>{item.recipient}</Text>
+                        <View style={transactionsStyle.completedTransferContentRow}>
+                          <Text style={transactionsStyle.completedTransferContentRowLabel}>To</Text>
+                          <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.to === this.state.currentUser.bitmarkAccountNumber ? 'YOU' : item.to}</Text>
                         </View>
                       </View>
                     </TouchableOpacity>
@@ -181,6 +184,7 @@ export class TransactionsComponent extends React.Component {
 }
 
 TransactionsComponent.propTypes = {
+  subtab: PropTypes.string,
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,

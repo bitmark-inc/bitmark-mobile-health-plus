@@ -144,8 +144,8 @@ const doGetBalance = async () => {
   await processing(DataController.doGetBalance());
 };
 
-const doGetSignRequests = async () => {
-  await processing(DataController.doGetSignRequests());
+const doGetTransactionData = async () => {
+  await processing(DataController.doGetTransactionData());
 };
 
 
@@ -172,16 +172,16 @@ const doTransferBitmark = async (bitmark, receiver) => {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
+  return await processing(DataController.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
 };
 
-const doAcceptTransferBitmark = async (bitmarkId, txid, firstSignature, processingInfo, successInfo, errorInfo) => {
+const doAcceptTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
   if (!touchFaceIdSession) {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await submitting(TransactionService.doAcceptTransferBitmark(touchFaceIdSession, bitmarkId, txid, firstSignature), processingInfo, successInfo, errorInfo);
+  return await submitting(TransactionService.doAcceptTransferBitmark(touchFaceIdSession, bitmarkId), processingInfo, successInfo, errorInfo);
 };
 
 const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
@@ -218,7 +218,7 @@ let AppController = {
   doIssueFile,
   doGetBalance,
   doGetProvenance,
-  doGetSignRequests,
+  doGetTransactionData,
   doTransferBitmark,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,

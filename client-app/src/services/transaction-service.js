@@ -1,45 +1,102 @@
+import moment from 'moment';
 import { TransactionModel, BitmarkSDK, BitmarkModel, CommonModel } from '../models';
 import { UserService } from './user-service';
 
-const doGetAllSignRequests = async (accountNumber) => {
-  let signRequests = await TransactionModel.doGetAllGetSignRequests(accountNumber);
-  for (let signRequest of signRequests) {
-    let transactionData = await BitmarkModel.doGetTransactionInformation(signRequest.half_signed_transfer.link);
-    let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
-    signRequest.tx = transactionData.tx;
-    signRequest.block = transactionData.block;
-    signRequest.asset = bitmarkInformation.asset;
-    signRequest.bitmark = bitmarkInformation.bitmark;
+
+const getAllTransactions = async (accountNumber) => {
+  let allTransactions = await TransactionModel.getAllTransactions(accountNumber);
+  let completedTransfers = [];
+  for (let transaction of allTransactions) {
+    if (transaction.owner === accountNumber) {
+      if (transaction.previous_id) {
+        let previousTransactionData = await TransactionModel.getTransactionDetail(transaction.previous_id);
+        completedTransfers.push({
+          assetName: previousTransactionData.asset.name,
+          from: previousTransactionData.tx.owner,
+          to: accountNumber,
+          timestamp: moment(transaction.block.created_at).format('YYYY MMM DD HH:mm:ss'),
+          status: transaction.status,
+        });
+      }
+    } else {
+      let nextTransactionData = await TransactionModel.getTransactionDetail(transaction.previous_id);
+      completedTransfers.push({
+        assetName: nextTransactionData.asset.name,
+        from: accountNumber,
+        to: transaction.owner,
+        timestamp: moment(nextTransactionData.block.created_at).format('YYYY MMM DD HH:mm:ss'),
+        status: nextTransactionData.tx.status,
+      });
+    }
   }
-  //TODO distinguish action and completed
-  return { pendingTransactions: signRequests };
+  return completedTransfers;
 };
 
+const doGetActiveIncomingTransferOffers = async (accountNumber) => {
+  let activeIncomingTransferOffers = [];
+  let allIncomingTransferOffers = await TransactionModel.doGetIncomingTransferOffers(accountNumber);
+  for (let incomingTransferOffer of allIncomingTransferOffers) {
+    if (incomingTransferOffer.status === 'waiting') {
+      let transactionData = await BitmarkModel.doGetTransactionInformation(incomingTransferOffer.link);
+      let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
+      incomingTransferOffer.tx = transactionData.tx;
+      incomingTransferOffer.block = transactionData.block;
+      incomingTransferOffer.asset = bitmarkInformation.asset;
+      incomingTransferOffer.bitmark = bitmarkInformation.bitmark;
+      incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at).format('YYYY MMM DD');
+      activeIncomingTransferOffers.push(incomingTransferOffer);
+    }
+  }
+  return activeIncomingTransferOffers;
+};
+
+const doGetActiveOutgoinTransferOffers = async (accountNumber) => {
+  let outgoinTransferOffers = await TransactionModel.doGetOutgoingTransferOffers(accountNumber);
+  return outgoinTransferOffers.filter(item => item.status === 'waiting');
+};
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
   let userInfo = await UserService.doGetCurrentUser();
   let firstSignatureData = await BitmarkSDK.sign1stForTransfer(touchFaceIdSession, bitmarkId, receiver);
-  return await TransactionModel.doSubmitSignRequest(userInfo.bitmarkAccountNumber, bitmarkId, firstSignatureData.txid, firstSignatureData.signature);
+  return await TransactionModel.doSubmitTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, firstSignatureData.txid, firstSignatureData.signature, receiver);
 };
 
-const doAcceptTransferBitmark = async (touchFaceIdSession, bitmarkId, txid, firstSignature) => {
+const doAcceptTransferBitmark = async (touchFaceIdSession, bitmarkId) => {
   let userInfo = await UserService.doGetCurrentUser();
-  let counterSigature = await BitmarkSDK.sign2ndForTransfer(touchFaceIdSession, txid, firstSignature);
-  return await TransactionModel.doSubmitCounterSignRequest(userInfo.bitmarkAccountNumber, bitmarkId, counterSigature);
+  let incomingTransferOffer = await TransactionModel.doGetTransferOfferDetail(userInfo.bitmarkAccountNumber, bitmarkId);
+  let counterSigature = await BitmarkSDK.sign2ndForTransfer(touchFaceIdSession, incomingTransferOffer.link, incomingTransferOffer.signature);
+  return await TransactionModel.doAccepTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, counterSigature);
+};
+
+const doGetTransferOfferDetail = async (bitmarkId) => {
+  let userInfo = await UserService.doGetCurrentUser();
+  let incomingTransferOffer = TransactionModel.doGetTransferOfferDetail(userInfo.bitmarkAccountNumber, bitmarkId);
+  let transactionData = await BitmarkModel.doGetTransactionInformation(incomingTransferOffer.link);
+  let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
+  incomingTransferOffer.tx = transactionData.tx;
+  incomingTransferOffer.block = transactionData.block;
+  incomingTransferOffer.asset = bitmarkInformation.asset;
+  incomingTransferOffer.bitmark = bitmarkInformation.bitmark;
+  incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at).format('YYYY MMM DD');
+  return incomingTransferOffer;
 };
 
 const doRejectTransferBitmark = async (accountNumber, bitmarkId) => {
   let userInfo = await UserService.doGetCurrentUser();
-  let signatureData = CommonModel.doCreateSignatureData();
-  return await TransactionModel.doRejectlSignRequest(userInfo.bitmarkAccountNumber, bitmarkId, signatureData);
+  let signatureData = await CommonModel.doCreateSignatureData();
+  return await TransactionModel.doRejectTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, signatureData);
 };
+
 const doCancelTransferBitmark = async () => {
   //TODO
 };
 
 const TransactionService = {
+  getAllTransactions,
   doTransferBitmark,
-  doGetAllSignRequests,
+  doGetTransferOfferDetail,
+  doGetActiveIncomingTransferOffers,
+  doGetActiveOutgoinTransferOffers,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doCancelTransferBitmark,

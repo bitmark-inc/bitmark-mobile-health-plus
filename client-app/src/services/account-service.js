@@ -9,8 +9,6 @@ import { NotificationService } from './notification-service';
 const doCreateAccount = async (touchFaceIdSession) => {
   let userInfo = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
   await UserService.doUpdateUserInfo(userInfo);
-  let signatureData = await CommonModel.doCreateSignatureData();
-  await NotificationService.doRegisterNotificationInfo(userInfo.bitmarkAccountNumber, null, signatureData);
   return userInfo;
 }
 
@@ -18,8 +16,6 @@ const doLogin = async (touchFaceIdSession) => {
   let userInfo = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
   userInfo = await MarketService.doTryAccessToAllMarkets(userInfo);
   await UserService.doUpdateUserInfo(userInfo);
-  let signatureData = await CommonModel.doCreateSignatureData();
-  await NotificationService.doRegisterNotificationInfo(userInfo.bitmarkAccountNumber, null, signatureData);
   return userInfo;
 };
 

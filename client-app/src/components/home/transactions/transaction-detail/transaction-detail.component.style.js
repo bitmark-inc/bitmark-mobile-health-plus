@@ -26,21 +26,21 @@ export default StyleSheet.create({
     fontWeight: '900',
     marginTop: 38,
   },
-  signRequestContent: {
+  transferOfferContent: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 32,
   },
-  signRequestSenderFix: {
+  transferOfferSenderFix: {
     fontFamily: 'Avenir black',
     fontSize: 12,
     fontWeight: '700',
   },
-  signRequestSenderName: {
+  transferOfferSenderName: {
     fontFamily: 'Avenir black',
     fontSize: 13,
   },
-  signRequestAssetName: {
+  transferOfferAssetName: {
     fontFamily: 'Avenir black',
     fontSize: 13,
     fontWeight: '900',

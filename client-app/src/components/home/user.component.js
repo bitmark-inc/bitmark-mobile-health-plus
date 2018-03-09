@@ -14,7 +14,7 @@ import { TransactionsComponent } from './transactions';
 import userStyle from './user.component.style';
 import { config } from '../../configs';
 import { AppController, DataController } from '../../managers';
-import { EventEmiterService } from '../../services';
+import { EventEmiterService, TransactionService, BitmarkService } from '../../services';
 
 const MainTabs = {
   properties: 'Properties',
@@ -23,31 +23,75 @@ const MainTabs = {
   account: 'Account',
 };
 
-
 export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
     this.logout = this.logout.bind(this);
-    this.handerChangePendingTransactions = this.handerChangePendingTransactions.bind(this);
+    this.switchMainTab = this.switchMainTab.bind(this);
+    this.handerChangeActiveIncomingTransferOffer = this.handerChangeActiveIncomingTransferOffer.bind(this);
+    this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
 
     this.state = {
-      mainTab: MainTabs.properties,
-      transactionNumber: DataController.getSignRequests().pendingTransactions.length,
+      displayedTab: {
+        mainTab: MainTabs.properties,
+        subTab: null,
+      },
+      transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length,
     };
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
+    EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
+    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
   }
 
-  handerChangePendingTransactions() {
-    this.setState({ transactionNumber: DataController.getSignRequests().pendingTransactions.length, });
+  handerChangeActiveIncomingTransferOffer() {
+    console.log('UserComponent handerChangeActiveIncomingTransferOffer CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER');
+    this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length, });
   }
 
+  switchMainTab(mainTab) {
+    let displayedTab = { mainTab, subTab: null };
+    this.setState({ displayedTab });
+  }
+
+  handerReceivedNotification(data) {
+    if (data.event === 'transfer_required' && data.bitmark_id) {
+      TransactionService.doGetTransferOfferDetail(data.bitmark_id).then(transferOfferDetail => {
+        this.props.navigation.navigate('TransactionDetail', {
+          transferOffer: transferOfferDetail,
+          refreshTransactionScreen: () => {
+            AppController.doGetTransactionData().then(() => {
+            }).catch((error) => {
+              console.log('AppController.doGetTransactionData error :', error);
+            });
+            this.switchMainTab(MainTabs.transaction);
+          }
+        })
+      }).catch(error => {
+        console.log('handerReceivedNotification transfer_required error :', error);
+      });
+    } else if (data.event === 'transfer_rejected') {
+      BitmarkService.doGetBitmarkInformation(data.bitmark_id).then(data => {
+        this.props.navigation.navigate('LocalPropertyDetail', { asset: data.asset, bitmark: data.bitmark });
+      }).catch(error => {
+        console.log('handerReceivedNotification transfer_rejected error :', error);
+      });
+    } else if (data.event === 'transfer_completed') {
+      this.setState({ displayedTab: { mainTab: MainTabs.transaction, subTab: 'COMPLETED' } });
+    } else if (data.event === 'transfer_failed') {
+      BitmarkService.doGetBitmarkInformation(data.bitmark_id).then(data => {
+        this.props.navigation.navigate('LocalPropertyDetail', { asset: data.asset, bitmark: data.bitmark });
+      }).catch(error => {
+        console.log('handerReceivedNotification transfer_failed error :', error);
+      });
+    }
+  }
 
   logout() {
     AppController.doLogout().then(() => {
@@ -64,16 +108,17 @@ export class UserComponent extends React.Component {
   render() {
     return (
       <View style={userStyle.body}>
-        {this.state.mainTab === MainTabs.properties && <AssetsComponent screenProps={{
+        {this.state.displayedTab.mainTab === MainTabs.properties && <AssetsComponent screenProps={{
           homeNavigation: this.props.navigation,
         }} />}
-        {this.state.mainTab === MainTabs.markets && <MarketsComponent screenProps={{
+        {this.state.displayedTab.mainTab === MainTabs.markets && <MarketsComponent screenProps={{
           homeNavigation: this.props.navigation,
         }} />}
-        {this.state.mainTab === MainTabs.transaction && <TransactionsComponent screenProps={{
+        {this.state.displayedTab.mainTab === MainTabs.transaction && <TransactionsComponent screenProps={{
           homeNavigation: this.props.navigation,
+          subTab: this.state.subTab,
         }} />}
-        {this.state.mainTab === MainTabs.account && <View style={{ width: '100%', flex: 1, }}>
+        {this.state.displayedTab.mainTab === MainTabs.account && <View style={{ width: '100%', flex: 1, }}>
           <AccountComponent screenProps={{
             homeNavigation: this.props.navigation,
             logout: this.logout
@@ -82,26 +127,26 @@ export class UserComponent extends React.Component {
         }
 
         <View style={userStyle.bottomTabArea}>
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.properties })}>
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.properties
+          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.properties)}>
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.properties
               ? require('./../../../assets/imgs/properties-icon-enable.png')
               : require('./../../../assets/imgs/properties-icon-disable.png')} />
           </TouchableOpacity>
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.transaction })}>
+          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.transaction)}>
             {this.state.transactionNumber > 0 && <View style={userStyle.transactionNumber}>
               <Text style={userStyle.transactionNumberText}>{this.state.transactionNumber}</Text>
             </View>}
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.transaction
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.transaction
               ? require('./../../../assets/imgs/transaction-icon-enable.png')
               : require('./../../../assets/imgs/transaction-icon-disable.png')} />
           </TouchableOpacity>
-          {!config.disabel_markets && <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.markets })}>
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.markets
+          {!config.disabel_markets && <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.markets)}>
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.markets
               ? require('./../../../assets/imgs/markets-icon-enable.png')
               : require('./../../../assets/imgs/markets-icon-disable.png')} />
           </TouchableOpacity>}
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.setState({ mainTab: MainTabs.account })}>
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.account
+          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.account)}>
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.account
               ? require('./../../../assets/imgs/account-icon-enable.png')
               : require('./../../../assets/imgs/account-icon-disable.png')} />
           </TouchableOpacity>

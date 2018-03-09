@@ -1,17 +1,22 @@
 import moment from 'moment';
 import { BitmarkModel } from "../models";
 import { sortList } from './../utils';
+import { TransactionService } from '.';
 
 // ================================================================================================
 // ================================================================================================
 let doGetBitmarks = async (bitmarkAccountNumber) => {
   let data = await BitmarkModel.doGetAllBitmarks(bitmarkAccountNumber);
+  let outgoingTransferOffers = await TransactionService.doGetActiveOutgoinTransferOffers(bitmarkAccountNumber);
+
   let localAssets = [];
   if (data && data.bitmarks && data.assets) {
     for (let asset of data.assets) {
       asset.asset_id = asset.id;
       for (let bitmark of data.bitmarks) {
-        bitmark.created_at = moment(bitmark.created_at).format('YYYY MMM DD HH:mm:ss')
+        let isTransferring = outgoingTransferOffers.findIndex(item => item.bitmark_id === bitmark.id);
+        bitmark.status = isTransferring >= 0 ? 'pending' : bitmark.status;
+        bitmark.created_at = moment(bitmark.created_at).format('YYYY MMM DD HH:mm:ss');
         if (!bitmark.bitmark_id) {
           bitmark.bitmark_id = bitmark.id;
         }
@@ -80,6 +85,13 @@ const doIssueFile = async (touchFaceIdSession, filepath, assetName, metadataList
   return await BitmarkModel.doIssueFile(touchFaceIdSession, filepath, assetName, metadata, quantity);
 };
 
+const doGetBitmarkInformation = async (bitmarkId) => {
+  let data = await BitmarkModel.doGetBitmarkInformation(bitmarkId);
+  data.bitmark.created_at = moment(data.bitmark.created_at).format('YYYY MMM DD HH:mm:ss');
+  data.bitmark.bitmark_id = data.bitmark.id;
+  return data;
+};
+
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
@@ -87,6 +99,7 @@ let BitmarkService = {
   doCheckFileToIssue,
   doCheckMetadata,
   doIssueFile,
+  doGetBitmarkInformation,
 };
 
 export { BitmarkService };

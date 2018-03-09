@@ -35,7 +35,7 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#0060F2',
     width: convertWidth(336),
-    height: 45,
+    height: 35,
     paddingLeft: convertWidth(7),
     paddingRight: convertWidth(7),
     marginTop: 8,
