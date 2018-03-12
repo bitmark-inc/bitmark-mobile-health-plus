@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { TransactionModel, BitmarkSDK, BitmarkModel, CommonModel } from '../models';
+import { TransactionModel, BitmarkSDK, BitmarkModel } from '../models';
 import { UserService } from './user-service';
 
 
@@ -83,8 +83,10 @@ const doGetTransferOfferDetail = async (bitmarkId) => {
 
 const doRejectTransferBitmark = async (accountNumber, bitmarkId) => {
   let userInfo = await UserService.doGetCurrentUser();
-  let signatureData = await CommonModel.doCreateSignatureData();
-  return await TransactionModel.doRejectTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, signatureData);
+  //TODO need signature
+  // let signatureData = await CommonModel.doCreateSignatureData();
+  // return await TransactionModel.doRejectTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, signatureData);
+  return await TransactionModel.doRejectTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, null);
 };
 
 const doCancelTransferBitmark = async () => {

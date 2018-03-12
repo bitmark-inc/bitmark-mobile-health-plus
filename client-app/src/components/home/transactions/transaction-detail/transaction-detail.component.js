@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, ScrollView, Image, FlatList,
   Platform,
+  Alert,
 } from 'react-native';
 
 import transactionDetailStyle from './transaction-detail.component.style';
@@ -36,20 +37,27 @@ export class TransactionDetailComponent extends React.Component {
   }
 
   doReject() {
-    AppController.doRejectTransferBitmark(this.state.transferOffer.bitmark.id, { indicator: true, }, {
-      indicator: false, title: 'Transfer Rejected!', message: 'You’ve rejected the bitmark transfer request! '
+    Alert.alert('Are you sure you want to reject this property transfer request?', '', [{
+      text: 'YES',
+      onPress: () => {
+        AppController.doRejectTransferBitmark(this.state.transferOffer.bitmark.id, { indicator: true, }, {
+          indicator: false, title: 'Transfer Rejected!', message: 'You’ve rejected the bitmark transfer request! '
+        }, {
+            indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.'
+          }).then(data => {
+            if (data) {
+              if (this.props.navigation.state.params.refreshTransactionScreen) {
+                this.props.navigation.state.params.refreshTransactionScreen();
+              }
+              this.props.navigation.goBack();
+            }
+          }).catch(error => {
+            console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
+          });
+      },
     }, {
-        indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.'
-      }).then(data => {
-        if (data) {
-          if (this.props.navigation.state.params.refreshTransactionScreen) {
-            this.props.navigation.state.params.refreshTransactionScreen();
-          }
-          this.props.navigation.goBack();
-        }
-      }).catch(error => {
-        console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
-      });
+      text: 'NO',
+    }]);
   }
   doAccept() {
     AppController.doAcceptTransferBitmark(this.state.transferOffer.bitmark.id, {

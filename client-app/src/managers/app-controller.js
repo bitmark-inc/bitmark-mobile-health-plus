@@ -185,12 +185,15 @@ const doAcceptTransferBitmark = async (bitmarkId, processingInfo, successInfo, e
 };
 
 const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await submitting(TransactionService.doRejectTransferBitmark(touchFaceIdSession, bitmarkId), processingInfo, successInfo, errorInfo);
+  // TODO need signature
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  // CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  // return await submitting(TransactionService.doRejectTransferBitmark(touchFaceIdSession, bitmarkId), processingInfo, successInfo, errorInfo);
+
+  return await submitting(TransactionService.doRejectTransferBitmark(null, bitmarkId), processingInfo, successInfo, errorInfo);
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {

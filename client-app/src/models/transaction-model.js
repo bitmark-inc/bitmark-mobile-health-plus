@@ -130,6 +130,7 @@ const doAccepTransferOffer = (accountNumber, bitmarkId, countersignature) => {
 };
 
 const doRejectTransferOffer = (accountNumber, bitmarkId, signatureData) => {
+  //TODO need signature
   console.log('signatureData :', signatureData);
   return new Promise((resolve, reject) => {
     let statusCode;
