@@ -15,7 +15,6 @@ const doGetTransferOfferDetail = (accountNumber, bitmarkId) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      console.log('doGetTransferOfferDetail data: ', data);
       if (statusCode >= 400) {
         return reject(new Error('doGetTransferOfferDetail error :' + JSON.stringify(data)));
       }
@@ -39,7 +38,6 @@ const doGetIncomingTransferOffers = (accountNumber) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      console.log('doGetIncomingTransferOffers data:', data);
       if (statusCode >= 400) {
         return reject(new Error('doGetIncomingTransferOffers error :' + JSON.stringify(data)));
       }
@@ -63,7 +61,6 @@ const doGetOutgoingTransferOffers = (accountNumber) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      console.log('doGetOutgoingTransferOffers data:', data);
       if (statusCode >= 400) {
         return reject(new Error('doGetOutgoingTransferOffers error :' + JSON.stringify(data)));
       }
@@ -92,7 +89,6 @@ const doSubmitTransferOffer = (accountNumber, bitmarkId, link, signature, receiv
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      console.log('data: ', data);
       if (statusCode >= 400) {
         return reject(new Error('doSubmitTransferOffer error :' + JSON.stringify(data)));
       }
@@ -120,7 +116,6 @@ const doAccepTransferOffer = (accountNumber, bitmarkId, countersignature) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      console.log('data: ', data)
       if (statusCode >= 400) {
         return reject(new Error('doAccepTransferOffer error :' + JSON.stringify(data)));
       }
@@ -148,7 +143,6 @@ const doRejectTransferOffer = (accountNumber, bitmarkId, signatureData) => {
       statusCode = response.status;
       return response.text();
     }).then((data) => {
-      console.log('data: ', tempURL, data)
       if (statusCode >= 400) {
         return reject(new Error('doRejectTransferOffer error :' + JSON.stringify(data)));
       }
@@ -174,7 +168,6 @@ const doCancelTransferOffer = (accountNumber, bitmarkId) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      console.log('data: ', data)
       if (statusCode >= 400) {
         return reject(new Error('doCancelTransferOffer error :' + JSON.stringify(data)));
       }
@@ -201,7 +194,6 @@ const get100Transactions = (accountNumber, offsetNumber) => {
       if (statusCode >= 400) {
         return reject(new Error('get100Transactions error :' + JSON.stringify(data)));
       }
-      console.log('get100Transactions success:', tempURL);
       resolve(data);
     }).catch(reject);
   });
@@ -248,9 +240,8 @@ const getTransactionDetail = (txid) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      console.log('getTransactionDetail data: ', data);
       if (statusCode >= 400) {
-        return reject(new Error('get100Transactions error :' + JSON.stringify(data)));
+        return reject(new Error('getTransactionDetail error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);

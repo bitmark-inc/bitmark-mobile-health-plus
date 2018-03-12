@@ -8,7 +8,7 @@ const getAllTransactions = async (accountNumber) => {
   let completedTransfers = [];
   for (let transaction of allTransactions) {
     if (transaction.owner === accountNumber) {
-      if (transaction.previous_id) {
+      if (transaction.id && transaction.previous_id) {
         let previousTransactionData = await TransactionModel.getTransactionDetail(transaction.previous_id);
         completedTransfers.push({
           assetName: previousTransactionData.asset.name,
@@ -18,7 +18,7 @@ const getAllTransactions = async (accountNumber) => {
           status: transaction.status,
         });
       }
-    } else {
+    } else if (transaction.id) {
       let nextTransactionData = await TransactionModel.getTransactionDetail(transaction.id);
       completedTransfers.push({
         assetName: nextTransactionData.asset.name,
