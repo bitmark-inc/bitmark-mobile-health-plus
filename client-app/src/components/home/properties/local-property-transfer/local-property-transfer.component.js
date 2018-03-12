@@ -74,7 +74,7 @@ export class LocalPropertyTransferComponent extends React.Component {
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
             </TouchableOpacity>
             <View style={defaultStyle.headerCenter}>
-              <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name}</Text>
+              <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name} </Text>
               <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.bitmarkIndexNumber}</Text>
             </View>
             <TouchableOpacity style={[defaultStyle.headerRight]} />
