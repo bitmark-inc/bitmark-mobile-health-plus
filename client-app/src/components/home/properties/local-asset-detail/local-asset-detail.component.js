@@ -73,11 +73,11 @@ export class LocalAssetDetailComponent extends React.Component {
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
               <View style={assetDetailStyle.bottomImageBar}></View>
 
-              <Text style={assetDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
+              <Text style={[assetDetailStyle.assetName, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{this.state.asset.name}</Text>
               <View style={assetDetailStyle.assetCreatorRow}>
-                <Text style={assetDetailStyle.assetCreatorBound}>Issued by [</Text>
-                <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>{this.state.asset.registrant}</Text>
-                <Text style={assetDetailStyle.assetCreatorBound}>]</Text>
+                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>ISSUED BY [</Text>
+                <Text style={[assetDetailStyle.assetCreateAt, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{this.state.asset.registrant}</Text>
+                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>]</Text>
               </View>
 
               <View style={assetDetailStyle.bottomAssetNameBar}></View>
@@ -88,8 +88,8 @@ export class LocalAssetDetailComponent extends React.Component {
                   data={this.state.metadata || []}
                   renderItem={({ item }) => {
                     return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
-                      <Text style={assetDetailStyle.metadataItemLabel}>{item.label}:</Text>
-                      <Text style={assetDetailStyle.metadataItemValue}>{item.value}</Text>
+                      <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{item.label}:</Text>
+                      <Text style={[assetDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
                     </View>);
                   }}
                 />
@@ -97,7 +97,7 @@ export class LocalAssetDetailComponent extends React.Component {
               <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
               <View style={assetDetailStyle.bitmarksArea}>
                 <View style={assetDetailStyle.bitmarksHeader}>
-                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>No.</Text>
+                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>NO.</Text>
                   <Text style={assetDetailStyle.bitmarksHeaderLabel}>ACTION</Text>
                 </View>
                 <View style={assetDetailStyle.bitmarkListArea}>

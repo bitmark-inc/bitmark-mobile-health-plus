@@ -102,17 +102,17 @@ export default StyleSheet.create({
     height: 29,
   },
   assetCreatorBound: {
-    fontFamily: 'Avenir Light',
+    fontFamily: 'Andale Mono',
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 16,
   },
   assetCreateAt: {
-    fontFamily: 'Avenir Light',
+    fontFamily: 'Andale Mono',
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 16,
-    width: convertWidth(265),
+    width: convertWidth(240),
   },
   bottomAssetNameBar: {
     borderWidth: 1,
@@ -125,14 +125,17 @@ export default StyleSheet.create({
   },
   metadataItem: {
     width: convertWidth(340),
-    flexDirection: 'column',
+    flexDirection: 'row',
+    alignItems: 'center',
     marginLeft: convertWidth(20),
   },
   metadataItemLabel: {
-    fontFamily: 'Avenir Black',
-    fontSize: 14,
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
     lineHeight: 16,
     fontWeight: '900',
+    color: '#0060F2',
+    width: convertWidth(117),
   },
   metadataItemValue: {
     marginTop: 3,
@@ -140,6 +143,8 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     fontWeight: '400',
+    width: convertWidth(196),
+    marginLeft: convertWidth(22),
   },
 
   bitmarkLabel: {
@@ -164,7 +169,7 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 10,
     lineHeight: 12,
-    minWidth: convertWidth(70),
+    minWidth: convertWidth(117),
   },
   bitmarkListArea: {
     flexDirection: 'row',
@@ -173,27 +178,29 @@ export default StyleSheet.create({
     flexDirection: 'row',
     width: convertWidth(340),
     marginLeft: convertWidth(20),
-    height: 25,
+    height: 36,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   bitmarksRowNo: {
     fontFamily: 'Andale Mono',
     fontSize: 10,
-    lineHeight: 12,
-    minWidth: convertWidth(70),
+    lineHeight: 13,
+    minWidth: convertWidth(117),
   },
   bitmarksRowNoPending: {
     fontFamily: 'Andale Mono',
     fontSize: 10,
-    lineHeight: 12,
-    minWidth: convertWidth(70),
+    lineHeight: 13,
+    minWidth: convertWidth(117),
     color: '#CCCCCC',
   },
   bitmarkViewButton: {
     height: 25,
   },
   bitmarkViewButtonText: {
-    fontFamily: 'Avenir Black',
-    fontSize: 14,
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
     lineHeight: 16,
     color: '#0060F2'
   },
@@ -202,8 +209,8 @@ export default StyleSheet.create({
     marginLeft: convertWidth(80),
   },
   bitmarkTransferButtonText: {
-    fontFamily: 'Avenir Black',
-    fontSize: 14,
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
     lineHeight: 16,
     color: '#0060F2'
   },

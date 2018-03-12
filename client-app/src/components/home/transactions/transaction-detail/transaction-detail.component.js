@@ -24,9 +24,9 @@ export class TransactionDetailComponent extends React.Component {
 
     let transferOffer = this.props.navigation.state.params.transferOffer;
     let metadataList = [];
-    if (transferOffer.bitmark) {
-      for (let key in transferOffer.bitmark.metadata) {
-        metadataList.push({ key, description: transferOffer.bitmark.metadata[key] })
+    if (transferOffer.asset) {
+      for (let key in transferOffer.asset.metadata) {
+        metadataList.push({ key, description: transferOffer.asset.metadata[key] })
       }
     }
     this.state = {

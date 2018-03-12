@@ -14,7 +14,7 @@ import { TransactionsComponent } from './transactions';
 import userStyle from './user.component.style';
 import { config } from '../../configs';
 import { AppController, DataController } from '../../managers';
-import { EventEmiterService, TransactionService, BitmarkService } from '../../services';
+import { EventEmiterService, TransactionService } from '../../services';
 
 const MainTabs = {
   properties: 'Properties',

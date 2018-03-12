@@ -74,11 +74,11 @@ export default StyleSheet.create({
 
   transferOfferRow: {
     width: '100%',
-    marginTop: 18,
-    minHeight: 107,
     flexDirection: 'column',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
+    paddingBottom: 18,
+    paddingTop: 18,
     borderBottomColor: '#EFEFEF',
     borderBottomWidth: 1,
   },
