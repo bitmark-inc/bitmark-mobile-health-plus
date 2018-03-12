@@ -1,9 +1,11 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 import {
   ios,
   android // TODO
 } from './../../../../configs';
 import { convertWidth } from './../../../../utils';
+
+let currentSize = Dimensions.get('window');
 
 let constant = Platform.select({
   ios: ios.constant,
@@ -22,7 +24,7 @@ export default StyleSheet.create({
     paddingLeft: convertWidth(33),
     paddingRight: convertWidth(33),
     backgroundColor: 'white',
-    height: constant.defaultWindowSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter,
+    height: currentSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter,
   },
   recoveryPhraseWarningIcon: {
     width: 137,
