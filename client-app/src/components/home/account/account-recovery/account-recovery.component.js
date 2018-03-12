@@ -41,9 +41,9 @@ class RecoveryPhraseComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.screenProps.accountNavigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_back_icon_study_setting.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>Recovery Phrase</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => { this.props.screenProps.accountNavigation.goBack() }}>
-            <Text style={defaultStyle.headerRightText}>Cancel</Text>
+          <Text style={defaultStyle.headerTitle}>{(isSignOut ? 'Remove Access' : 'Recovery Phrase').toUpperCase()}</Text>
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => { this.props.screenProps.accountNavigation.goBack() }} disabled={isSignOut}>
+            {!isSignOut && <Text style={defaultStyle.headerRightText}>Cancel</Text>}
           </TouchableOpacity>
         </View>
         <View style={accountRecoveryStyle.recoveryPhraseContent}>
@@ -105,7 +105,7 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_back_icon_study_setting.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>Write Down Recovery Phrase</Text>
+          <Text style={defaultStyle.headerTitle}>{(isSignOut ? 'Recovery Phrase' : 'Test Phrase').toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
         <View style={accountRecoveryStyle.recoveryPhraseContent}>
@@ -402,7 +402,7 @@ class TryRecoveryPhraseComponent extends React.Component {
       <View style={accountRecoveryStyle.body}>
         <View style={[defaultStyle.header, { backgroundColor: 'white', borderBottomColor: '#C0CCDF', borderBottomWidth: 2, }]}>
           <TouchableOpacity style={defaultStyle.headerLeft} />
-          <Text style={defaultStyle.headerTitle}>Test Recovery Phrase</Text>
+          <Text style={defaultStyle.headerTitle}>{'Test Phrase'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.screenProps.accountNavigation.goBack()} >
             <Text style={defaultStyle.headerRightText}>Cancel</Text>
           </TouchableOpacity>
