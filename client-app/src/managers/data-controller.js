@@ -194,6 +194,7 @@ const doGetTransactionData = async () => {
     userData.transactions = transactions;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
   }
+  await doGetBitmarks();
 };
 
 const doOpenApp = async () => {
