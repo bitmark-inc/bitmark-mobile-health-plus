@@ -32,13 +32,13 @@ export class NotificationComponent extends React.Component {
           <Text style={[notificationStyle.notificationTitle]}>NOTIFICATIONS</Text>
           <Image style={[notificationStyle.notificationImage]} source={require('../../../../assets/imgs/notification.png')} />
           <Text style={[notificationStyle.notificationDescription,]}>
-            Enable push notifications to stay updated on donations, study tasks, and app updates.
-        </Text>
+            Enable push notifications to stay updated on property transfer requests and app updates.
+          </Text>
           <View style={notificationStyle.enableButtonArea}>
             <TouchableOpacity style={[notificationStyle.enableButton]} onPress={requestNotification}>
               <Text style={notificationStyle.enableButtonText}>ENABLE</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[notificationStyle.enableButton, { backgroundColor: 'white', borderColor: '#0060F2', borderWidth: 1, }]} onPress={() => {
+            <TouchableOpacity style={[notificationStyle.enableButton, { backgroundColor: 'white' }]} onPress={() => {
               this.props.screenProps.rootNavigation.dispatch(resetMainPage);
             }}>
               <Text style={[notificationStyle.enableButtonText, { color: '#0060F2' }]}>LATER</Text>

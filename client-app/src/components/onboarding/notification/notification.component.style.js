@@ -3,8 +3,9 @@ export default StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
     backgroundColor: 'white',
+    paddingLeft: 51,
+    paddingRight: 51,
   },
 
   // notification
@@ -13,36 +14,32 @@ export default StyleSheet.create({
     color: '#0060F2',
     fontSize: 20,
     fontWeight: '900',
-    marginTop: 123,
+    marginTop: 73,
   },
 
   notificationImage: {
-    marginTop: 73,
-    width: 307,
-    height: 207,
+    marginTop: 63,
+    width: 275,
+    height: 215,
     resizeMode: 'contain',
   },
 
   notificationDescription: {
-    marginTop: 40,
-    width: 280,
+    marginTop: 37,
+    width: 275,
     fontFamily: 'Avenir light',
     fontWeight: '300',
     fontSize: 17,
-    lineHeight: 20,
   },
 
   enableButtonArea: {
     marginTop: 40,
     flexDirection: 'column',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
     width: '100%',
   },
   enableButton: {
     minHeight: 42,
-    width: 309,
+    width: 275,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
