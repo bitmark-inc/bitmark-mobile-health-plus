@@ -168,7 +168,7 @@ export class UserComponent extends React.Component {
             {this.state.displayedTab.mainTab === MainTabs.properties && <Text style={userStyle.bottomTabButtonText}>{MainTabs.properties}</Text>}
           </TouchableOpacity>
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.transaction)}>
-            {this.state.transactionNumber > 0 && <View style={userStyle.transactionNumber}>
+            {this.state.transactionNumber > 0 && <View style={[userStyle.transactionNumber, { top: this.state.displayedTab.mainTab === MainTabs.transaction ? 2 : 5 }]}>
               <Text style={userStyle.transactionNumberText}>{this.state.transactionNumber}</Text>
             </View>}
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.transaction

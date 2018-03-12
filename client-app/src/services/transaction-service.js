@@ -64,7 +64,7 @@ const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
 const doAcceptTransferBitmark = async (touchFaceIdSession, bitmarkId) => {
   let userInfo = await UserService.doGetCurrentUser();
   let incomingTransferOffer = await TransactionModel.doGetTransferOfferDetail(userInfo.bitmarkAccountNumber, bitmarkId);
-  let counterSigature = await BitmarkSDK.sign2ndForTransfer(touchFaceIdSession, incomingTransferOffer.link, incomingTransferOffer.signature);
+  let counterSigature = await BitmarkSDK.sign2ndForTransfer(touchFaceIdSession, incomingTransferOffer.half_signed_transfer.link, incomingTransferOffer.half_signed_transfer.signature);
   return await TransactionModel.doAccepTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, counterSigature);
 };
 

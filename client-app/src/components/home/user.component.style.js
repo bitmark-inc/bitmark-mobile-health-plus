@@ -63,12 +63,14 @@ export default StyleSheet.create({
     borderColor: '#FF003C',
     borderWidth: 1,
     top: 5,
-    left: 49,
+    right: 16,
     width: 14,
     height: 14,
     flexDirection: 'column',
     alignItems: "center",
+    alignContent: 'center',
     justifyContent: 'center',
+    zIndex: 1,
   },
   transactionNumberText: {
     fontFamily: 'Avenir Black',
@@ -77,5 +79,6 @@ export default StyleSheet.create({
     lineHeight: 9,
     color: '#FFFFFF',
     textAlign: 'center',
+    width: '100%',
   }
 });
