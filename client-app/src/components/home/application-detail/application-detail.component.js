@@ -60,7 +60,7 @@ export class ApplicationDetailComponent extends React.Component {
         <View style={defaultStyles.header}>
           <TouchableOpacity style={defaultStyles.headerLeft} >
           </TouchableOpacity>
-          <Text style={defaultStyles.headerTitle}>Details</Text>
+          <Text style={defaultStyles.headerTitle}>DETAILS</Text>
           <TouchableOpacity style={defaultStyles.headerRight} onPress={() => this.props.navigation.goBack()} >
             <Text style={defaultStyles.headerRightText}>Done</Text>
           </TouchableOpacity>
@@ -68,13 +68,12 @@ export class ApplicationDetailComponent extends React.Component {
 
         <View style={applicationDetailStyle.bodyContent}>
           <View style={applicationDetailStyle.topArea}>
-            <View style={applicationDetailStyle.lineSetting}></View>
             <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { this.props.navigation.navigate('BitmarkTerms') }}>
-              <Text style={applicationDetailStyle.itemSettingText}>Terms of Service</Text>
+              <Text style={applicationDetailStyle.itemSettingText}>{'Terms of Service'.toUpperCase()}</Text>
             </TouchableOpacity>
             <View style={applicationDetailStyle.lineSetting}></View>
             <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { this.props.navigation.navigate('BitmarkPrivacy') }}>
-              <Text style={applicationDetailStyle.itemSettingText}>Privacy Policy</Text>
+              <Text style={applicationDetailStyle.itemSettingText}>{'Privacy Policy'.toUpperCase()}</Text>
             </TouchableOpacity>
             <View style={applicationDetailStyle.lineSetting}></View>
           </View>
@@ -86,15 +85,15 @@ export class ApplicationDetailComponent extends React.Component {
           <View style={applicationDetailStyle.bottomArea}>
             <View style={applicationDetailStyle.lineSetting}></View>
             <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => rateApp()}>
-              <Text style={applicationDetailStyle.itemSettingText}>App Store Rating & Review</Text>
+              <Text style={applicationDetailStyle.itemSettingText}>{'App Store Rating & Review'.toUpperCase()}</Text>
             </TouchableOpacity>
             <View style={applicationDetailStyle.lineSetting}></View>
             <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { shareApp() }}>
-              <Text style={applicationDetailStyle.itemSettingText}>Share This App</Text>
+              <Text style={applicationDetailStyle.itemSettingText}>{'Share This App'.toUpperCase()}</Text>
             </TouchableOpacity>
             <View style={applicationDetailStyle.lineSetting}></View>
             <TouchableOpacity style={[defaultStyles.bottomButton, applicationDetailStyle.rowSetting]} onPress={() => { requestSendFeedback() }}>
-              <Text style={applicationDetailStyle.itemSettingText}>Send Feedback</Text>
+              <Text style={applicationDetailStyle.itemSettingText}>{'Send Feedback'.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -21,7 +21,7 @@ export class BitmarkPrivacyComponent extends React.Component {
         <View style={defaultStyles.header}>
           <TouchableOpacity style={defaultStyles.headerLeft}>
           </TouchableOpacity>
-          <Text style={defaultStyles.headerTitle}>Privacy Policy</Text>
+          <Text style={defaultStyles.headerTitle}>{'Privacy Policy'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyles.headerRight} onPress={() => {
             if (this.props.screenProps && this.props.screenProps.setShowPagination) {
               this.props.screenProps.setShowPagination(true);

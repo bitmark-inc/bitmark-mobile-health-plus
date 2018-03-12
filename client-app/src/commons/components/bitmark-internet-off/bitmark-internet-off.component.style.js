@@ -1,6 +1,8 @@
 import {
-  StyleSheet, Platform
+  StyleSheet, Platform, Dimensions,
 } from 'react-native';
+
+const currentSize = Dimensions.get('window');
 
 import {
   ios,
@@ -11,14 +13,14 @@ let constant = Platform.select({ ios: ios.constant, android: android.constant })
 export default StyleSheet.create({
   body: {
     zIndex: constant.zIndex.internetOff,
-    flex: 1,
     alignItems: 'center',
     alignContent: 'center',
     flexDirection: 'column',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     position: 'absolute',
-    width: constant.defaultWindowSize.width,
-    height: constant.defaultWindowSize.height,
+    width: '100%',
+    height: currentSize.height - constant.headerSize.paddingTop,
+    top: constant.headerSize.paddingTop,
   },
   title: {
     width: '100%',
@@ -29,7 +31,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    bottom: 0,
+    top: 0,
   },
   titleText: {
     fontFamily: 'Avenir black',
