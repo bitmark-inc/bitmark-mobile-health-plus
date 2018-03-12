@@ -19,7 +19,7 @@ const getAllTransactions = async (accountNumber) => {
         });
       }
     } else {
-      let nextTransactionData = await TransactionModel.getTransactionDetail(transaction.previous_id);
+      let nextTransactionData = await TransactionModel.getTransactionDetail(transaction.id);
       completedTransfers.push({
         assetName: nextTransactionData.asset.name,
         from: accountNumber,
