@@ -135,7 +135,7 @@ const doRejectTransferOffer = (accountNumber, bitmarkId, signatureData) => {
     let statusCode;
     let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
     fetch(tempURL, {
-      method: 'DELETE',
+      method: 'PATCH',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
