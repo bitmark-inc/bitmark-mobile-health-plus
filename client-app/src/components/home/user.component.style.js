@@ -27,8 +27,6 @@ export default StyleSheet.create({
     height: constant.bottomTabsHeight + constant.blankFooter,
     width: '100%',
     paddingLeft: 5,
-    borderTopColor: '#CDD3DC',
-    borderTopWidth: 1,
     paddingRight: 5,
     paddingBottom: constant.blankFooter,
     backgroundColor: '#F5F5F5',

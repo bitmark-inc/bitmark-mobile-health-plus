@@ -61,7 +61,7 @@ export class UserComponent extends React.Component {
 
   handerReceivedNotification(data) {
     console.log('UserComponent handerReceivedNotification data :', data);
-    if (data.event === 'transfer_required' && data.bitmark_id) {
+    if (data.event === 'transfer_request' && data.bitmark_id) {
       AppController.doGetTransactionData().then(() => {
         return TransactionService.doGetTransferOfferDetail(data.bitmark_id);
       }).then(transferOfferDetail => {
