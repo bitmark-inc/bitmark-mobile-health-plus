@@ -41,7 +41,7 @@ $ pod install
 ```
 
 ### Swift Package Manager
-Coming soon....
+Comming soon....
 
 ## Set up
 
