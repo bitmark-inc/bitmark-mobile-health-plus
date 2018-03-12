@@ -88,7 +88,7 @@ export class TransactionDetailComponent extends React.Component {
               <Text style={transactionDetailStyle.transferOfferSenderName} numberOfLines={1}>{this.state.transferOffer.sender.substring(0, 12)}...</Text>
               <Text style={transactionDetailStyle.transferOfferSenderFix}>] </Text>
               has transferred the property
-              <Text style={transactionDetailStyle.transferOfferAssetName}> {this.state.transferOffer.asset.name}</Text>
+              <Text style={transactionDetailStyle.transferOfferAssetName}> {this.state.transferOffer.asset.name} </Text>
               to you. Please sign for receipt to accept the property transfer.
             </Text>
             <View style={transactionDetailStyle.extenalArea}>

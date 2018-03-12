@@ -165,6 +165,7 @@ export class UserComponent extends React.Component {
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.properties
               ? require('./../../../assets/imgs/properties-icon-enable.png')
               : require('./../../../assets/imgs/properties-icon-disable.png')} />
+            {this.state.displayedTab.mainTab === MainTabs.properties && <Text style={userStyle.bottomTabButtonText}>{MainTabs.properties}</Text>}
           </TouchableOpacity>
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.transaction)}>
             {this.state.transactionNumber > 0 && <View style={userStyle.transactionNumber}>
@@ -173,16 +174,19 @@ export class UserComponent extends React.Component {
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.transaction
               ? require('./../../../assets/imgs/transaction-icon-enable.png')
               : require('./../../../assets/imgs/transaction-icon-disable.png')} />
+            {this.state.displayedTab.mainTab === MainTabs.transaction && <Text style={userStyle.bottomTabButtonText}>{MainTabs.transaction}</Text>}
           </TouchableOpacity>
           {!config.disabel_markets && <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.markets)}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.markets
               ? require('./../../../assets/imgs/markets-icon-enable.png')
               : require('./../../../assets/imgs/markets-icon-disable.png')} />
+            {this.state.displayedTab.mainTab === MainTabs.markets && <Text style={userStyle.bottomTabButtonText}>{MainTabs.markets}</Text>}
           </TouchableOpacity>}
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.account)}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.account
               ? require('./../../../assets/imgs/account-icon-enable.png')
               : require('./../../../assets/imgs/account-icon-disable.png')} />
+            {this.state.displayedTab.mainTab === MainTabs.account && <Text style={userStyle.bottomTabButtonText}>{MainTabs.account}</Text>}
           </TouchableOpacity>
         </View>
       </View>

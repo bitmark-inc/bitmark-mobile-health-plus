@@ -188,14 +188,23 @@ export default StyleSheet.create({
     minWidth: convertWidth(70),
     color: '#CCCCCC',
   },
-  bitmarksRowListingButton: {
+  bitmarkViewButton: {
     height: 25,
   },
-  bitmarksRowListingButtonText: {
+  bitmarkViewButtonText: {
     fontFamily: 'Avenir Black',
     fontSize: 14,
     lineHeight: 16,
-    fontWeight: '900',
+    color: '#0060F2'
+  },
+  bitmarkTransferButton: {
+    height: 25,
+    marginLeft: convertWidth(80),
+  },
+  bitmarkTransferButtonText: {
+    fontFamily: 'Avenir Black',
+    fontSize: 14,
+    lineHeight: 16,
     color: '#0060F2'
   },
   bitmarkPending: {

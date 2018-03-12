@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import assetDetailStyle from './local-asset-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-import { config } from '../../../../configs';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -111,19 +110,15 @@ export class LocalAssetDetailComponent extends React.Component {
                         this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                       }}>
                         <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                        {!config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
-                          this.props.navigation.navigate('MarketBitmarkDeposit', {
-                            asset: this.state.asset,
-                            bitmark: item.bitmark
-                          });
-                        }}>
-                          {item.bitmark.status !== 'pending' && <Text style={assetDetailStyle.bitmarksRowListingButtonText}>{'List to Market'.toUpperCase()}</Text>}
-                          {item.bitmark.status === 'pending' && <Text style={assetDetailStyle.bitmarkPending}>PENDING...</Text>}
-                        </TouchableOpacity>}
-                        {config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={true}>
-                          <Text style={[assetDetailStyle.bitmarksRowListingButtonText, {
+                        <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
+                          <Text style={[assetDetailStyle.bitmarkViewButtonText, {
                             color: item.bitmark.status !== 'pending' ? '#0060F2' : '#999999'
                           }]}>{item.bitmark.status !== 'pending' ? 'VIEW' : 'PENDING'}</Text>
+                        </TouchableOpacity>
+                        {item.bitmark.status === 'confirmed' && <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
+                          this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset })
+                        }}>
+                          <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>TRANSFER</Text>
                         </TouchableOpacity>}
                       </TouchableOpacity>);
                     }}
