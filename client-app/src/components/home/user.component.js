@@ -14,7 +14,7 @@ import { TransactionsComponent } from './transactions';
 import userStyle from './user.component.style';
 import { config } from '../../configs';
 import { AppController, DataController } from '../../managers';
-import { EventEmiterService, TransactionService } from '../../services';
+import { EventEmiterService } from '../../services';
 
 const MainTabs = {
   properties: 'Properties',
@@ -63,7 +63,7 @@ export class UserComponent extends React.Component {
     console.log('UserComponent handerReceivedNotification data :', data);
     if (data.event === 'transfer_request' && data.bitmark_id) {
       AppController.doGetTransactionData().then(() => {
-        return TransactionService.doGetTransferOfferDetail(data.bitmark_id);
+        return AppController.doGetTransferOfferDetail(data.bitmark_id);
       }).then(transferOfferDetail => {
         const resetHomePage = NavigationActions.reset({
           index: 1,

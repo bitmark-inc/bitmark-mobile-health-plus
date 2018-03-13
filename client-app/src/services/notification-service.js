@@ -1,5 +1,9 @@
-import { Platform } from 'react-native';
-import { NotificationModel, CommonModel } from './../models';
+import ReactNative from 'react-native';
+const {
+  PushNotificationIOS,
+  Platform,
+} = ReactNative;
+import { NotificationModel } from './../models';
 
 let configure = (onRegister, onNotification) => {
   return NotificationModel.configure(onRegister, onNotification);
@@ -51,9 +55,14 @@ let doDeregisterNotificationInfo = async (accountNumber, token, signatureData) =
   return await NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token);
 };
 
+let removeAllDeliveredNotifications = () => {
+  PushNotificationIOS.removeAllDeliveredNotifications();
+};
+
 let NotificationService = {
   configure,
   setApplicationIconBadgeNumber,
+  removeAllDeliveredNotifications,
 
   doRequestNotificationPermissions,
   doCheckNotificaitonPermission,

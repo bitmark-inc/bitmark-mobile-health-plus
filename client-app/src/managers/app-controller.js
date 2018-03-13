@@ -148,6 +148,10 @@ const doGetTransactionData = async () => {
   await processing(DataController.doGetTransactionData());
 };
 
+const doGetTransferOfferDetail = async (bitmarkId) => {
+  return await processing(TransactionService.doGetTransferOfferDetail(bitmarkId));
+};
+
 
 const doCheckFileToIssue = async (filepath) => {
   return await processing(BitmarkService.doCheckFileToIssue(filepath));
@@ -222,6 +226,7 @@ let AppController = {
   doGetBalance,
   doGetProvenance,
   doGetTransactionData,
+  doGetTransferOfferDetail,
   doTransferBitmark,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,

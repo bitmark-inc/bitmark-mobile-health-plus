@@ -71,6 +71,7 @@ const configNotification = () => {
     NotificationService.setApplicationIconBadgeNumber(0);
   };
   NotificationService.configure(onRegisterred, onReceivedNotification);
+  NotificationService.removeAllDeliveredNotifications();
 };
 
 const runGetUserBitmarksInBackground = (checkDoneProcess) => {
