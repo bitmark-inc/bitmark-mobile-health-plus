@@ -215,11 +215,6 @@ const doGetBalance = async () => {
   }
 };
 
-let doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
-  let result = await TransactionService.doTransferBitmark(touchFaceIdSession, bitmarkId, receiver);
-  return result;
-};
-
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers || [],
@@ -270,7 +265,6 @@ const DataController = {
   doGetBalance,
   doTryAccessToAllMarkets,
   doGetTransactionData,
-  doTransferBitmark,
 
   getTransactionData,
   getUserBalance,

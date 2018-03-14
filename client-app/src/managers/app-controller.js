@@ -176,7 +176,7 @@ const doTransferBitmark = async (bitmark, receiver) => {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
+  return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
 };
 
 const doAcceptTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
