@@ -1825,7 +1825,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios;
 				PRODUCT_NAME = Bitmark;
-				PROVISIONING_PROFILE = "6131b19c-0238-4017-82f8-20aa5f53ef4b";
+				PROVISIONING_PROFILE = "ec8c2df5-b898-40a3-aef5-2c8cd142e097";
 				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -1859,7 +1859,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios;
 				PRODUCT_NAME = Bitmark;
-				PROVISIONING_PROFILE = "c180a026-b25d-4773-bdc6-657698759f33";
+				PROVISIONING_PROFILE = "abdad772-db33-44ea-a5a8-b01a8b92c56b";
 				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Distribution";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
