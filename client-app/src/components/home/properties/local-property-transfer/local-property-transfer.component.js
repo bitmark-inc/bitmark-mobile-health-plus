@@ -11,7 +11,7 @@ import { convertWidth } from './../../../../utils';
 import propertyTransferStyle from './local-property-transfer.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { AppController } from '../../../../managers/app-controller';
-import { AccountService } from '../../../../services';
+import { AccountService, EventEmiterService } from '../../../../services';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -49,6 +49,7 @@ export class LocalPropertyTransferComponent extends React.Component {
             actions: [NavigationActions.navigate({ routeName: 'User' })]
           });
           this.props.navigation.dispatch(resetMainPage);
+          EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_DATA);
         }
       }).catch(error => {
         this.setState({ transferError: 'Transfer property error!' });

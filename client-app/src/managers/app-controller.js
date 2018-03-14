@@ -200,6 +200,10 @@ const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, e
   return await submitting(TransactionService.doRejectTransferBitmark(null, bitmarkId), processingInfo, successInfo, errorInfo);
 };
 
+const reloadData = async () => {
+  return await processing(DataController.reloadData());
+};
+
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
 };
@@ -230,6 +234,7 @@ let AppController = {
   doTransferBitmark,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
+  reloadData,
 
   doStartBackgroundProcess,
 }

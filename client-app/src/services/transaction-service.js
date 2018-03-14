@@ -14,7 +14,7 @@ const getAllTransactions = async (accountNumber) => {
           assetName: previousTransactionData.asset.name,
           from: previousTransactionData.tx.owner,
           to: accountNumber,
-          timestamp: moment(transaction.block.created_at).format('YYYY MMM DD HH:mm:ss'),
+          timestamp: transaction.block ? moment(transaction.block.created_at).format('YYYY MMM DD HH:mm:ss') : '',
           status: transaction.status,
         });
       }
@@ -24,7 +24,7 @@ const getAllTransactions = async (accountNumber) => {
         assetName: nextTransactionData.asset.name,
         from: accountNumber,
         to: transaction.owner,
-        timestamp: moment(nextTransactionData.block.created_at).format('YYYY MMM DD HH:mm:ss'),
+        timestamp: nextTransactionData.block ? moment(nextTransactionData.block.created_at).format('YYYY MMM DD HH:mm:ss') : '',
         status: nextTransactionData.tx.status,
       });
     }

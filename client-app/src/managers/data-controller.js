@@ -217,8 +217,6 @@ const doGetBalance = async () => {
 
 let doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
   let result = await TransactionService.doTransferBitmark(touchFaceIdSession, bitmarkId, receiver);
-  await doGetBitmarks();
-  await doGetTransactionData();
   return result;
 };
 
@@ -264,6 +262,7 @@ const getLocalBitmarkInformation = (bitmarkId) => {
 };
 
 const DataController = {
+  reloadData: runOnBackground,
   doOpenApp,
   doStartBackgroundProcess,
   doDeactiveApplication,

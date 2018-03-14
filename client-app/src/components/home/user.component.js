@@ -27,6 +27,7 @@ export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
     this.logout = this.logout.bind(this);
+    this.reloadData = this.reloadData.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerChangeActiveIncomingTransferOffer = this.handerChangeActiveIncomingTransferOffer.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
@@ -43,15 +44,21 @@ export class UserComponent extends React.Component {
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
     EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
+    EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_DATA, this.reloadData);
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
     EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
+    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_DATA, this.reloadData);
   }
 
   handerChangeActiveIncomingTransferOffer() {
     this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length, });
+  }
+
+  reloadData() {
+    AppController.reloadData();
   }
 
   switchMainTab(mainTab) {

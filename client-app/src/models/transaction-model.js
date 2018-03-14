@@ -206,8 +206,8 @@ const getAllTransactions = async (accountNumber) => {
   while (canContinue) {
     let data = await get100Transactions(accountNumber, lastOffset);
     data.txs.forEach(tx => {
-      tx.block = data.blocks.findIndex(block => block.number === tx.block_number);
-    })
+      tx.block = data.blocks.find(block => block.number === tx.block_number);
+    });
     if (!totalTxs) {
       totalTxs = data.txs;
     } else {
