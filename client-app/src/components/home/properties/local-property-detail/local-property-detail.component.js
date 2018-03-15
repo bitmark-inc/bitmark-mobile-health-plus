@@ -59,6 +59,9 @@ export class LocalPropertyDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>
           {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
+            <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={true}>
+              <Text style={propertyDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
               Clipboard.setString(this.state.bitmark.bitmark_id);
               this.setState({ copied: true });
@@ -82,7 +85,6 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
                 ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + this.state.bitmark.created_at.toUpperCase())} BY {this.state.asset.registrant}
               </Text>
-              <View style={propertyDetailStyle.bottomAssetNameBar}></View>
               <Text style={propertyDetailStyle.provenanceLabel}>PROVENANCE</Text>
               <View style={propertyDetailStyle.provenancesArea}>
                 <View style={propertyDetailStyle.provenancesHeader}>

@@ -91,7 +91,6 @@ export default StyleSheet.create({
     lineHeight: 21,
     marginLeft: convertWidth(20),
     marginTop: 34,
-    height: 29,
   },
   assetCreatorRow: {
     flexDirection: 'row',
@@ -153,7 +152,7 @@ export default StyleSheet.create({
     lineHeight: 16,
     fontWeight: '900',
     marginLeft: convertWidth(20),
-    marginTop: 30,
+    marginTop: 27,
     height: 25,
   },
   bitmarksArea: {
