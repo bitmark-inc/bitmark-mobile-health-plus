@@ -167,13 +167,23 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 14,
-    width: convertWidth(157),
+    width: convertWidth(176),
+  },
+  provenancesRowOwnerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  provenancesRowOwnerBound: {
+    fontFamily: 'Andale Mono',
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 16,
   },
   provenancesRowOwner: {
     fontFamily: 'Andale Mono',
-    fontSize: 13,
-    lineHeight: 14,
-    marginLeft: convertWidth(19),
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 16,
     width: convertWidth(118),
   },
   listingButtonArea: {

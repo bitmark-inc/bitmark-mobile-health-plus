@@ -178,13 +178,13 @@ export class LocalAddPropertyComponent extends React.Component {
       // step: Steps.input_info,
       existingAsset: false,
       // metadataList: [],
-      metadataList: [{ key: 0, label: '', value: '' }],
+      metadataList: [],
       filepath: '',
       filename: '',
       fileFormat: '',
       fileError: '',
       assetName: null,
-      canAddNewMetadata: false,
+      canAddNewMetadata: true,
       canIssue: false,
       quantity: null,
       selectedMetadata: null,
@@ -219,12 +219,10 @@ export class LocalAddPropertyComponent extends React.Component {
             metadataList.push({ key, label, value: asset.metadata[label] });
             key++;
           }
-        } else {
-          metadataList.push({ key: 0, label: '', value: '' });
         }
         let state = {
           fingerprint: asset.fingerprint,
-          assetName: asset.name || '',
+          assetName: asset.name || null,
           existingAsset,
           metadataList,
           filepath,
@@ -233,7 +231,7 @@ export class LocalAddPropertyComponent extends React.Component {
           step: Steps.input_info,
           fileError: '',
           canIssue: (this.state.assetName && !this.state.assetNameError && this.state.quantity && !this.state.quantityError),
-          canAddNewMetadata: false,
+          canAddNewMetadata: true,
         };
         this.setState(state);
       }).catch(error => {
@@ -368,14 +366,14 @@ export class LocalAddPropertyComponent extends React.Component {
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={this.back}>
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
             </TouchableOpacity>
-            <Text style={defaultStyle.headerTitle}>Create Properties</Text>
+            <Text style={defaultStyle.headerTitle}>{'Create Properties'.toUpperCase()}</Text>
             <TouchableOpacity style={defaultStyle.headerRight} />
           </View>
 
           <ScrollView style={localAddPropertyStyle.scroll}>
             <TouchableOpacity activeOpacity={1} style={localAddPropertyStyle.body}>
               {this.state.step === Steps.input_file && <View style={localAddPropertyStyle.addFileArea}>
-                <Text style={localAddPropertyStyle.addFileLabel}>Upload Asset</Text>
+                <Text style={localAddPropertyStyle.addFileLabel}>UPLOAD ASSET</Text>
                 {!!this.state.fileError && <Text style={localAddPropertyStyle.fileInputError}>{this.state.fileError}</Text>}
                 <TouchableOpacity style={localAddPropertyStyle.addFileButton} onPress={this.chooseFile}>
                   <Image style={localAddPropertyStyle.addFileIcon} source={require('../../../../../assets/imgs/plus-icon.png')} />
@@ -390,7 +388,6 @@ export class LocalAddPropertyComponent extends React.Component {
                   <Text style={localAddPropertyStyle.fingerprintInfoFilename} numberOfLines={1} >{this.state.filename}</Text>
                   <Text style={localAddPropertyStyle.fingerprintInfoFileFormat}>{this.state.fileFormat}</Text>
                 </View>
-                <Text style={localAddPropertyStyle.assetInfoLabel}>METADATA</Text>
                 <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
                 {!this.state.existingAsset && <TextInput
                   style={[localAddPropertyStyle.assetNameInput, {
@@ -410,7 +407,8 @@ export class LocalAddPropertyComponent extends React.Component {
                 </View>}
                 {!!this.state.assetNameError && <Text style={localAddPropertyStyle.assetNameInputError}>{this.state.assetNameError}</Text>}
 
-                <Text style={localAddPropertyStyle.metadataLabel}>OPTIONAL PROPERTY METADATA (2048-BYTE LIMIT)</Text>
+                <Text style={localAddPropertyStyle.metadataLabel}>METADATA</Text>
+                <Text style={localAddPropertyStyle.metadataDescription}>OPTIONAL PROPERTY METADATA (2048-BYTE LIMIT)</Text>
                 <View style={localAddPropertyStyle.metadataArea}>
                   <FlatList style={localAddPropertyStyle.metadataList}
                     data={this.state.metadataList}

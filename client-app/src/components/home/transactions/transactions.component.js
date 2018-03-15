@@ -160,7 +160,7 @@ export class TransactionsComponent extends React.Component {
                     })}>
                       <View style={transactionsStyle.transferOfferTitle}>
                         <Text style={transactionsStyle.transferOfferTitleType}>{'Property Transfer Request'.toUpperCase()}</Text>
-                        <Text style={transactionsStyle.transferOfferTitleTime} >{item.created_at}</Text>
+                        <Text style={transactionsStyle.transferOfferTitleTime} >{item.created_at.toUpperCase()}</Text>
                         <Image style={transactionsStyle.transferOfferTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                       </View>
                       <Text style={transactionsStyle.transferOfferContent}>
@@ -185,12 +185,12 @@ export class TransactionsComponent extends React.Component {
                         }]}>TRANSFER</Text>
                         <Text style={[transactionsStyle.completedTransferHeaderValue, {
                           color: item.status === 'pending' ? '#999999' : '#0060F2'
-                        }]}>{item.status === 'pending' ? 'PENDING' : item.timestamp}</Text>
+                        }]}>{item.status === 'pending' ? 'PENDING' : item.timestamp.toUpperCase()}</Text>
                       </View>
                       <View style={transactionsStyle.completedTransferContent}>
                         <View style={transactionsStyle.completedTransferContentRow}>
                           <Text style={transactionsStyle.completedTransferContentRowLabel}>PROPERTY</Text>
-                          <Text style={[transactionsStyle.completedTransferContentRowValue, { fontWeight: '900' }]}>{item.assetName}</Text>
+                          <Text style={[transactionsStyle.completedTransferContentRowPropertyName]}>{item.assetName}</Text>
                         </View>
                         <View style={transactionsStyle.completedTransferContentRow}>
                           <Text style={transactionsStyle.completedTransferContentRowLabel}>FROM</Text>

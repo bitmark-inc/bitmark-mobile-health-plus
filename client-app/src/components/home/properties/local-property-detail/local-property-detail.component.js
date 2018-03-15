@@ -99,7 +99,11 @@ export class LocalPropertyDetailComponent extends React.Component {
                     renderItem={({ item }) => {
                       return (<View style={propertyDetailStyle.provenancesRow}>
                         <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
-                        <Text style={propertyDetailStyle.provenancesRowOwner} numberOfLines={1}>{item.owner}</Text>
+                        <View style={propertyDetailStyle.provenancesRowOwnerRow}>
+                          <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>[</Text>
+                          <Text style={[propertyDetailStyle.provenancesRowOwner]} numberOfLines={1}>{item.owner}</Text>
+                          <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>]</Text>
+                        </View>
                       </View>);
                     }}
                   />

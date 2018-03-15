@@ -172,10 +172,17 @@ export default StyleSheet.create({
     fontSize: 13,
     width: convertWidth(102),
   },
+  completedTransferContentRowPropertyName: {
+    width: convertWidth(220),
+    marginLeft: convertWidth(15),
+    fontFamily: 'Avenir Light',
+    fontSize: 14,
+    fontWeight: '900',
+  },
   completedTransferContentRowValue: {
     width: convertWidth(220),
     marginLeft: convertWidth(15),
-    fontFamily: 'Avenir Black',
+    fontFamily: 'Andale Mono',
     fontSize: 13,
   }
 
