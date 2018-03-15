@@ -197,16 +197,17 @@ export default StyleSheet.create({
   },
   bitmarkViewButton: {
     height: 25,
+    width: convertWidth(60),
   },
   bitmarkViewButtonText: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 16,
-    color: '#0060F2'
+    color: '#0060F2',
   },
   bitmarkTransferButton: {
     height: 25,
-    marginLeft: convertWidth(80),
+    marginLeft: convertWidth(58),
   },
   bitmarkTransferButtonText: {
     fontFamily: 'Andale Mono',

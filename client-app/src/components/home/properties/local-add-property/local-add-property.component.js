@@ -90,7 +90,7 @@ class MetadataInputComponent extends React.Component {
             flexDirection: 'column',
           }}>
             <TextInput
-              autoCorrect={false}
+              autoCorrect={true}
               style={{
                 borderBottomColor: '#EDF0F4',
                 borderBottomWidth: 1,
@@ -256,7 +256,7 @@ export class LocalAddPropertyComponent extends React.Component {
           this.props.navigation.goBack();
         }
       }).catch(error => {
-        this.setState({ issueError: 'Issue file error!' });
+        this.setState({ issueError: 'There was a problem issuing bitmarks. Please try again.' });
         console.log('issue bitmark error :', error);
       });
   }
@@ -296,7 +296,7 @@ export class LocalAddPropertyComponent extends React.Component {
       if (assetName.length > 64) {
         assetNameError = 'Property name must be smaller or equal 64 character!';
       } else if (!assetName) {
-        assetNameError = 'You must input property name!';
+        assetNameError = 'Please enter a property name.';
       }
     }
     let quantityError = '';
@@ -304,9 +304,9 @@ export class LocalAddPropertyComponent extends React.Component {
       quantity = quantity.replace(/[^0-9]/g, '');
       let quantityNumber = parseInt(quantity);
       if (isNaN(quantityNumber) || quantityNumber <= 0) {
-        quantityError = 'Minimum quantity of one bitmark is required.';
+        quantityError = 'You must create at least one bitmark. ';
       } else if (quantityNumber > 100) {
-        quantityError = 'Maximum number of bitmarks 100 exceeded.';
+        quantityError = 'You cannot issue more than 100 bitmarks.';
       }
     }
 
@@ -387,17 +387,17 @@ export class LocalAddPropertyComponent extends React.Component {
                 <Text style={localAddPropertyStyle.fingerprintValue} numberOfLines={1} >{this.state.fingerprint}</Text>
                 <View style={localAddPropertyStyle.fingerprintInfoArea}>
                   <Text style={localAddPropertyStyle.fingerprintInfoMessage}>GENERATED FROM </Text>
-                  <Text style={localAddPropertyStyle.fingerprintInfoFilename}>{this.state.filename}</Text>
+                  <Text style={localAddPropertyStyle.fingerprintInfoFilename} numberOfLines={1} >{this.state.filename}</Text>
                   <Text style={localAddPropertyStyle.fingerprintInfoFileFormat}>{this.state.fileFormat}</Text>
                 </View>
                 <Text style={localAddPropertyStyle.assetInfoLabel}>METADATA</Text>
                 <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
                 {!this.state.existingAsset && <TextInput
-                  autoCorrect={false}
                   style={[localAddPropertyStyle.assetNameInput, {
                     color: this.state.existingAsset ? '#C2C2C2' : 'black',
                     borderBottomColor: this.stateNameError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
                   }]} placeholder="64-CHARACTER MAX"
+                  autoCorrect={true}
                   onChangeText={this.doInputAssetName}
                   value={this.state.assetName}
                   numberOfLines={1}
@@ -462,7 +462,7 @@ export class LocalAddPropertyComponent extends React.Component {
                 {!!this.state.metadataError && <Text style={localAddPropertyStyle.metadataInputError}>{this.state.metadataError}</Text>}
                 <Text style={localAddPropertyStyle.quantityLabel}>{'number of bitmarks TO ISSUE'.toUpperCase()}</Text>
                 <TextInput
-                  autoCorrect={false}
+                  autoCorrect={true}
                   style={[localAddPropertyStyle.quantityInput, {
                     borderBottomColor: this.stateNameError ? '#FF003C' : '#0060F2'
                   }]} placeholder="1 ~ 100"

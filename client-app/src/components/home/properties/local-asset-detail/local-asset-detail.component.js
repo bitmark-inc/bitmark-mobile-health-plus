@@ -106,11 +106,11 @@ export class LocalAssetDetailComponent extends React.Component {
                     extraData={this.state}
                     data={this.state.bitmarks || []}
                     renderItem={({ item }) => {
-                      return (<TouchableOpacity style={assetDetailStyle.bitmarksRow} onPress={() => {
-                        this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
-                      }}>
+                      return (<TouchableOpacity style={assetDetailStyle.bitmarksRow} >
                         <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                        <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
+                        <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
+                          this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
+                        }}>
                           <Text style={[assetDetailStyle.bitmarkViewButtonText, {
                             color: item.bitmark.status !== 'pending' ? '#0060F2' : '#999999'
                           }]}>{item.bitmark.status !== 'pending' ? 'VIEW' : 'PENDING'}</Text>

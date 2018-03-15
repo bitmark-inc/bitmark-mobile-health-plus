@@ -101,22 +101,51 @@ export class TransactionsComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
         <View style={transactionsStyle.subTabArea}>
-          <TouchableOpacity style={transactionsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.required)}>
+          {this.state.subtab === SubTabs.required && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+            shadowOffset: { width: 2 },
+            shadowOpacity: 0.15,
+          }]}>
             <View style={transactionsStyle.subTabButtonArea}>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={transactionsStyle.subTabButtonTextArea}>
-                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.required}</Text>
+                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.required.toUpperCase()}</Text>
               </View>
-              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.required ? '#0060F2' : 'white' }]}></View>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={transactionsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.completed)}>
+          </TouchableOpacity>}
+          {this.state.subtab !== SubTabs.required && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.required)}>
             <View style={transactionsStyle.subTabButtonArea}>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={transactionsStyle.subTabButtonTextArea}>
-                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.completed}</Text>
+                <Text style={[transactionsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.required.toUpperCase()}</Text>
               </View>
-              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.completed ? '#0060F2' : 'white' }]}></View>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>}
+
+          {this.state.subtab === SubTabs.completed && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+            shadowOffset: { width: -2 },
+            shadowOpacity: 0.15,
+          }]}>
+            <View style={transactionsStyle.subTabButtonArea}>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
+              <View style={transactionsStyle.subTabButtonTextArea}>
+                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.completed.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+          {this.state.subtab !== SubTabs.completed && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.completed)}>
+            <View style={transactionsStyle.subTabButtonArea}>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
+              <View style={transactionsStyle.subTabButtonTextArea}>
+                <Text style={[transactionsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.completed.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
         </View>
         <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
@@ -130,7 +159,7 @@ export class TransactionsComponent extends React.Component {
                       refreshTransactionScreen: this.refreshTransactionScreen,
                     })}>
                       <View style={transactionsStyle.transferOfferTitle}>
-                        <Text style={transactionsStyle.transferOfferTitleType}>Property Transfer Request</Text>
+                        <Text style={transactionsStyle.transferOfferTitleType}>{'Property Transfer Request'.toUpperCase()}</Text>
                         <Text style={transactionsStyle.transferOfferTitleTime} >{item.created_at}</Text>
                         <Image style={transactionsStyle.transferOfferTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                       </View>

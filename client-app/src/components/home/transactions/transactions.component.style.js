@@ -39,6 +39,10 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset: { height: 0 },
+    shadowRadius: 3,
+    zIndex: 1,
   },
   subTabButtonArea: {
     width: '100%',
@@ -65,7 +69,8 @@ export default StyleSheet.create({
   scrollSubTabArea: {
     width: '100%',
     flexDirection: 'column',
-    alignContent: 'center'
+    alignContent: 'center',
+    backgroundColor: 'white',
   },
   contentSubTab: {
     width: '100%',

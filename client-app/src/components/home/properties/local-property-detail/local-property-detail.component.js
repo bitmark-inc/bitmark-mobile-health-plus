@@ -24,7 +24,7 @@ export class LocalPropertyDetailComponent extends React.Component {
     super(props);
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
-
+    console.log('bitmark: ', bitmark);
     this.state = {
       asset,
       bitmark,
@@ -80,10 +80,10 @@ export class LocalPropertyDetailComponent extends React.Component {
               <View style={propertyDetailStyle.bottomImageBar}></View>
               <Text style={propertyDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
               <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
-                Issued {isNaN(this.state.bitmark.created_at) ? '' : ('on' + this.state.bitmark.created_at)} by {this.state.asset.registrant}
+                ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + this.state.bitmark.created_at.toUpperCase())} BY {this.state.asset.registrant}
               </Text>
               <View style={propertyDetailStyle.bottomAssetNameBar}></View>
-              <Text style={propertyDetailStyle.provenanceLabel}>Provenance</Text>
+              <Text style={propertyDetailStyle.provenanceLabel}>PROVENANCE</Text>
               <View style={propertyDetailStyle.provenancesArea}>
                 <View style={propertyDetailStyle.provenancesHeader}>
                   <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
@@ -96,7 +96,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                     data={this.state.bitmark.provenance || []}
                     renderItem={({ item }) => {
                       return (<View style={propertyDetailStyle.provenancesRow}>
-                        <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at}</Text>
+                        <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
                         <Text style={propertyDetailStyle.provenancesRowOwner} numberOfLines={1}>{item.owner}</Text>
                       </View>);
                     }}

@@ -91,7 +91,7 @@ export default StyleSheet.create({
   assetCreateAt: {
     fontFamily: 'Avenir Light',
     fontWeight: '400',
-    fontSize: 14,
+    fontSize: 13,
     lineHeight: 16,
     marginLeft: convertWidth(20),
     height: 29,
