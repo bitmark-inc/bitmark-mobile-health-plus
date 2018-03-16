@@ -81,7 +81,7 @@ export class LocalPropertyDetailComponent extends React.Component {
           <ScrollView style={propertyDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
               <View style={propertyDetailStyle.bottomImageBar}></View>
-              <Text style={propertyDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
+              <Text style={propertyDetailStyle.assetName}>{this.state.asset.name}</Text>
               <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
                 ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + this.state.bitmark.created_at.toUpperCase())} BY {this.state.asset.registrant}
               </Text>
