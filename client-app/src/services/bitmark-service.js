@@ -15,7 +15,7 @@ let doGetBitmarks = async (bitmarkAccountNumber) => {
       asset.asset_id = asset.id;
       for (let bitmark of data.bitmarks) {
         let isTransferring = outgoingTransferOffers.findIndex(item => item.bitmark_id === bitmark.id);
-        bitmark.status = isTransferring >= 0 ? 'pending' : bitmark.status;
+        bitmark.status = isTransferring >= 0 ? 'transferring' : bitmark.status;
         bitmark.created_at = moment(bitmark.created_at).format('YYYY MMM DD HH:mm:ss');
         if (!bitmark.bitmark_id) {
           bitmark.bitmark_id = bitmark.id;

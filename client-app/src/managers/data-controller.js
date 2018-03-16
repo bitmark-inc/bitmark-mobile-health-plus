@@ -54,26 +54,6 @@ const runGetTransactionsInBackground = (checkDoneProcess) => {
   });
 };
 
-const configNotification = () => {
-  const onRegisterred = (registerredNotificaitonInfo) => {
-    let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
-    if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-      AccountService.doRegisterNotificationInfo(notificationUUID).catch(error => {
-        console.log('DataController doRegisterNotificationInfo error:', error);
-      });
-    }
-  };
-  const onReceivedNotification = async (notificationData) => {
-    console.log('onReceivedNotification notificationData:', notificationData);
-    if (!notificationData.foreground) {
-      EventEmiterService.emit(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
-    }
-    NotificationService.setApplicationIconBadgeNumber(0);
-  };
-  NotificationService.configure(onRegisterred, onReceivedNotification);
-  NotificationService.removeAllDeliveredNotifications();
-};
-
 const runGetUserBitmarksInBackground = (checkDoneProcess) => {
   AccountService.doGetBitmarks(userInformation).then(data => {
     if (userData.localAssets === null || JSON.stringify(data.localAssets) !== JSON.stringify(userData.localAssets)) {
@@ -106,6 +86,32 @@ const runGetUserBalanceInBackground = (checkDoneProcess) => {
     checkDoneProcess();
     console.log('runOnBackground  doGetBalance error :', error);
   });
+};
+
+const configNotification = () => {
+  const onRegisterred = (registerredNotificaitonInfo) => {
+    let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
+    if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
+      AccountService.doRegisterNotificationInfo(notificationUUID).catch(error => {
+        console.log('DataController doRegisterNotificationInfo error:', error);
+      });
+    }
+  };
+  const onReceivedNotification = async (notificationData) => {
+    console.log('onReceivedNotification notificationData:', notificationData);
+    if (!notificationData.foreground) {
+      EventEmiterService.emit(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
+    } else if (notificationData.event === 'transfer_request' || notificationData.event === 'transfer_completed' ||
+      notificationData.event === 'transfer_accepted') {
+      runGetActiveIncomingTransferOfferInBackground();
+      runGetTransactionsInBackground();
+    } else if (notificationData.event === 'transfer_rejected' || notificationData.event === 'transfer_failed') {
+      runGetUserBitmarksInBackground();
+    }
+    NotificationService.setApplicationIconBadgeNumber(0);
+  };
+  NotificationService.configure(onRegisterred, onReceivedNotification);
+  NotificationService.removeAllDeliveredNotifications();
 };
 
 const runOnBackground = () => {
@@ -166,7 +172,7 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 const doDeactiveApplication = async () => {
   stopInterval();
 };
-const doGetBitmarks = async () => {
+const reloadBitmarks = async () => {
   let data = await AccountService.doGetBitmarks(userInformation);
   if (userData.localAssets === null || JSON.stringify(data.localAssets) !== JSON.stringify(userData.localAssets)) {
     userData.localAssets = data.localAssets;
@@ -195,7 +201,7 @@ const doGetTransactionData = async () => {
     userData.transactions = transactions;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
   }
-  await doGetBitmarks();
+  await reloadBitmarks();
 };
 
 const doOpenApp = async () => {
@@ -247,12 +253,20 @@ const getApplicationBuildNumber = () => {
   return DeviceInfo.getBuildNumber();
 };
 
-const getLocalBitmarkInformation = (bitmarkId) => {
+const getLocalBitmarkInformation = (bitmarkId, assetId) => {
   let bitmark;
-  let asset = userData.localAssets.find(localAsset => {
-    bitmark = localAsset.bitmarks.find(localBitmark => localBitmark.id === bitmarkId);
-    return !!bitmark;
-  });
+  let asset;
+  if (assetId) {
+    asset = userData.localAssets.find(localAsset => localAsset.id === assetId);
+    if (bitmarkId) {
+      bitmark = (asset ? asset.bitmarks : []).find(localBitmark => localBitmark.id === bitmarkId);
+    }
+  } else if (bitmarkId) {
+    asset = userData.localAssets.find(localAsset => {
+      bitmark = localAsset.bitmarks.find(localBitmark => localBitmark.id === bitmarkId);
+      return !!bitmark;
+    });
+  }
   return { bitmark, asset };
 };
 
@@ -261,7 +275,7 @@ const DataController = {
   doOpenApp,
   doStartBackgroundProcess,
   doDeactiveApplication,
-  doGetBitmarks,
+  reloadBitmarks,
   doGetBalance,
   doTryAccessToAllMarkets,
   doGetTransactionData,

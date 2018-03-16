@@ -19,7 +19,7 @@ export default StyleSheet.create({
     top: 0,
     width: '100%',
     height: '100%',
-    zIndex: constant.zIndex.indicator,
+    zIndex: constant.zIndex.dialog,
   },
   dialogBodyContent: {
     alignItems: 'center',

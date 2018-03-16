@@ -9,12 +9,14 @@ import {
 const constant = Platform.select({ ios: ios.constant, android: android.constant });
 
 export default StyleSheet.create({
+  dialog: {
+    zIndex: constant.zIndex.indicator,
+  },
   content: {
     flexDirection: 'column',
     alignItems: 'center',
   },
   indicatorImage: {
-    zIndex: constant.zIndex.indicator,
     width: 90,
     height: 90,
     opacity: 1,

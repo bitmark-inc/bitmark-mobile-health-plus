@@ -35,6 +35,8 @@ class MainComponent extends Component {
     this.handerProcessingEvent = this.handerProcessingEvent.bind(this);
     this.handerSumittinggEvent = this.handerSumittinggEvent.bind(this);
     this.handleNetworkChange = this.handleNetworkChange.bind(this);
+    this.handerProcessErrorEvent = this.handerProcessErrorEvent.bind(this);
+
     this.doOpenApp = this.doOpenApp.bind(this);
 
     this.state = {
@@ -83,6 +85,7 @@ class MainComponent extends Component {
 
     EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
+    EventEmiterService.on(EventEmiterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.addEventListener('change', this.handleAppStateChange);
     NetInfo.isConnected.fetch().then().done(() => {
@@ -92,6 +95,7 @@ class MainComponent extends Component {
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.remove(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
+    EventEmiterService.remove(EventEmiterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
@@ -101,6 +105,20 @@ class MainComponent extends Component {
     let processingCount = this.state.processingCount + (processing ? 1 : -1);
     this.setState({ processingCount });
   }
+
+  handerProcessErrorEvent(processError) {
+    Alert.alert((processError && processError.title) ? processError.title : "We’re sorry!",
+      (processError && processError.message) ? processError.message : 'Something went wrong.\nPlease try again.',
+      [{
+        text: 'OK',
+        onPress: () => {
+          if (processError.onClose) {
+            processError.onClose();
+          }
+        }
+      }]);
+  }
+
   handerSumittinggEvent(submitting) {
     this.setState({ submitting });
   }

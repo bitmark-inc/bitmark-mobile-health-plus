@@ -106,7 +106,7 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
     } else if (data.event === 'transfer_rejected') {
-      AppController.doGetBitmarks().then(() => {
+      AppController.reloadBitmarks().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
         const resetHomePage = NavigationActions.reset({
           index: 1,
@@ -135,7 +135,7 @@ export class UserComponent extends React.Component {
       });
       this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'transfer_failed') {
-      AppController.doGetBitmarks().then(() => {
+      AppController.reloadBitmarks().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
         const resetHomePage = NavigationActions.reset({
           index: 1,

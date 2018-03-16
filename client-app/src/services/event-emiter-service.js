@@ -5,6 +5,7 @@ let EventEmiterService = {
   events: {
     APP_PROCESSING: 'app-processing',
     APP_SUBMITTING: 'app-submitting',
+    APP_PROCESS_ERROR: 'app-process-error',
     APP_RECEIVED_NOTIFICATION: 'app-received-notification',
     NEED_RELOAD_DATA: 'need-reload-data',
     CHANGE_USER_INFO: 'change-user-info',

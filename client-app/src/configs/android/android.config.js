@@ -18,8 +18,9 @@ const androidConstant = {
   },
   zIndex: {
     internetOff: 1000,
-    versionUpdate: 900,
-    indicator: 100,
+    error: 300,
+    indicator: 200,
+    dialog: 100,
   },
 };
 const androidConfig = {};

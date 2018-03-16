@@ -26,7 +26,7 @@ export class BitmarkIndicatorComponent extends React.Component {
 
   render() {
     return (
-      <BitmarkDialogComponent>
+      <BitmarkDialogComponent style={dialogStyles.dialog}>
         <View style={dialogStyles.content}>
           {!!this.state.indicator && <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />}
           <View style={dialogStyles.textArea}>
@@ -49,7 +49,7 @@ BitmarkIndicatorComponent.propTypes = {
 export class DefaultIndicatorComponent extends React.Component {
   render() {
     return (
-      <BitmarkDialogComponent dialogStyle={{ backgroundColor: 'rgba(0, 0, 0, 0)', }}>
+      <BitmarkDialogComponent style={dialogStyles.dialog} dialogStyle={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
         <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />
       </BitmarkDialogComponent>
     );

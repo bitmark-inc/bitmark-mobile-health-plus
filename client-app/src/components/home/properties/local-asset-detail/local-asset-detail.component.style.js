@@ -164,7 +164,7 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 10,
     lineHeight: 12,
-    minWidth: convertWidth(117),
+    minWidth: convertWidth(59),
   },
   bitmarkListArea: {
     flexDirection: 'row',
@@ -181,18 +181,18 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 10,
     lineHeight: 13,
-    minWidth: convertWidth(117),
+    minWidth: convertWidth(59),
   },
   bitmarksRowNoPending: {
     fontFamily: 'Andale Mono',
     fontSize: 10,
     lineHeight: 13,
-    minWidth: convertWidth(117),
+    minWidth: convertWidth(59),
     color: '#CCCCCC',
   },
   bitmarkViewButton: {
     height: 25,
-    width: convertWidth(60),
+    width: convertWidth(102),
   },
   bitmarkViewButtonText: {
     fontFamily: 'Andale Mono',
@@ -202,7 +202,7 @@ export default StyleSheet.create({
   },
   bitmarkTransferButton: {
     height: 25,
-    marginLeft: convertWidth(58),
+    marginLeft: convertWidth(15),
   },
   bitmarkTransferButtonText: {
     fontFamily: 'Andale Mono',

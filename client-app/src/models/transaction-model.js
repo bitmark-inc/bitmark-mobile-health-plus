@@ -156,14 +156,12 @@ const doCancelTransferOffer = (accountNumber, bitmarkId) => {
     let statusCode;
     let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
     fetch(tempURL, {
-      method: 'PATCH',
+      method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         requester: 'user/' + accountNumber,
-      }, body: JSON.stringify({
-        "status": "rejected"
-      })
+      }
     }).then((response) => {
       statusCode = response.status;
       return response.json();
