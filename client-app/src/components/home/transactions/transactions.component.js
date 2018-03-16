@@ -38,14 +38,18 @@ export class TransactionsComponent extends React.Component {
     });
     this.state = {
       currentUser: DataController.getUserInformation(),
-      subtab: (this.props.subtab === SubTabs.required || this.props.subtab === SubTabs.completed) ? this.props.subtab : SubTabs.required,
+      subTab: (this.props.screenProps.subTab === SubTabs.required || this.props.screenProps.subTab === SubTabs.completed) ? this.props.screenProps.subTab : SubTabs.required,
       activeIncompingTransferOffers: transactionData.activeIncompingTransferOffers,
       transactions: transactionData.transactions,
     };
   }
 
+  componentWillReceiveProps(nexpProps) {
+    this.setState({ subTab: (nexpProps.subTab === SubTabs.required || nexpProps.subTab === SubTabs.completed) ? nexpProps.subTab : this.state.subTab });
+  }
+
   componentDidMount() {
-    this.switchSubtab(this.state.subtab);
+    this.switchSubtab(this.state.subTab);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
   }
@@ -88,8 +92,8 @@ export class TransactionsComponent extends React.Component {
     });
   }
 
-  switchSubtab(subtab) {
-    this.setState({ subtab });
+  switchSubtab(subTab) {
+    this.setState({ subTab });
   }
 
   render() {
@@ -101,7 +105,7 @@ export class TransactionsComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
         <View style={transactionsStyle.subTabArea}>
-          {this.state.subtab === SubTabs.required && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+          {this.state.subTab === SubTabs.required && <TouchableOpacity style={[transactionsStyle.subTabButton, {
             shadowOffset: { width: 2 },
             shadowOpacity: 0.15,
           }]}>
@@ -112,7 +116,7 @@ export class TransactionsComponent extends React.Component {
               </View>
             </View>
           </TouchableOpacity>}
-          {this.state.subtab !== SubTabs.required && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+          {this.state.subTab !== SubTabs.required && <TouchableOpacity style={[transactionsStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
           }]} onPress={() => this.switchSubtab(SubTabs.required)}>
@@ -124,7 +128,7 @@ export class TransactionsComponent extends React.Component {
             </View>
           </TouchableOpacity>}
 
-          {this.state.subtab === SubTabs.completed && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+          {this.state.subTab === SubTabs.completed && <TouchableOpacity style={[transactionsStyle.subTabButton, {
             shadowOffset: { width: -2 },
             shadowOpacity: 0.15,
           }]}>
@@ -135,7 +139,7 @@ export class TransactionsComponent extends React.Component {
               </View>
             </View>
           </TouchableOpacity>}
-          {this.state.subtab !== SubTabs.completed && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+          {this.state.subTab !== SubTabs.completed && <TouchableOpacity style={[transactionsStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
           }]} onPress={() => this.switchSubtab(SubTabs.completed)}>
@@ -149,7 +153,7 @@ export class TransactionsComponent extends React.Component {
         </View>
         <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.subtab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
               <FlatList data={this.state.activeIncompingTransferOffers}
                 extraData={this.state}
                 renderItem={({ item }) => {
@@ -173,7 +177,7 @@ export class TransactionsComponent extends React.Component {
                 }} />
             </View>}
 
-            {this.state.subtab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
               <FlatList data={this.state.transactions}
                 extraData={this.state}
                 renderItem={({ item }) => {
@@ -213,12 +217,12 @@ export class TransactionsComponent extends React.Component {
 }
 
 TransactionsComponent.propTypes = {
-  subtab: PropTypes.string,
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
   }),
   screenProps: PropTypes.shape({
+    subTab: PropTypes.string,
     logout: PropTypes.func,
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,

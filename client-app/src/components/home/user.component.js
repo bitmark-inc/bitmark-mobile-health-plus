@@ -32,10 +32,20 @@ export class UserComponent extends React.Component {
     this.handerChangeActiveIncomingTransferOffer = this.handerChangeActiveIncomingTransferOffer.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
 
+    let subTab;
+    let mainTab = MainTabs.properties;
+    if (this.props.navigation.state && this.props.navigation.state.params && this.props.navigation.state.params.displayedTab) {
+      mainTab = this.props.navigation.state.params.displayedTab.mainTab;
+      if (mainTab !== MainTabs.properties && mainTab !== MainTabs.transaction && mainTab !== MainTabs.account && mainTab !== MainTabs.markets) {
+        mainTab = MainTabs.properties;
+      }
+      subTab = this.props.navigation.state.params.displayedTab.subTab;
+      console.log('mainTab , subTab :', mainTab, subTab);
+    }
     this.state = {
       displayedTab: {
-        mainTab: MainTabs.properties,
-        subTab: null,
+        mainTab,
+        subTab,
       },
       transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length,
     };
@@ -112,8 +122,18 @@ export class UserComponent extends React.Component {
       }).catch(error => {
         console.log('handerReceivedNotification transfer_rejected error :', error);
       });
-    } else if (data.event === 'transfer_completed') {
-      this.setState({ displayedTab: { mainTab: MainTabs.transaction, subTab: 'COMPLETED' } });
+    } else if (data.event === 'transfer_completed' || data.event === 'transfer_accepted') {
+      const resetHomePage = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: {
+              displayedTab: { mainTab: MainTabs.transaction, subTab: 'COMPLETED' }
+            }
+          }),
+        ]
+      });
+      this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'transfer_failed') {
       AppController.doGetBitmarks().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
@@ -138,7 +158,7 @@ export class UserComponent extends React.Component {
     AppController.doLogout().then(() => {
       const resetMainPage = NavigationActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Main', params: { justCreatedBitmarkAccount: true } })]
+        actions: [NavigationActions.navigate({ routeName: 'Main' })]
       });
       this.props.screenProps.rootNavigation.dispatch(resetMainPage);
     }).catch((error) => {
@@ -157,7 +177,7 @@ export class UserComponent extends React.Component {
         }} />}
         {this.state.displayedTab.mainTab === MainTabs.transaction && <TransactionsComponent screenProps={{
           homeNavigation: this.props.navigation,
-          subTab: this.state.subTab,
+          subTab: this.state.displayedTab.subTab,
         }} />}
         {this.state.displayedTab.mainTab === MainTabs.account && <View style={{ width: '100%', flex: 1, }}>
           <AccountComponent screenProps={{
@@ -206,6 +226,14 @@ UserComponent.propTypes = {
     navigate: PropTypes.func,
     goBack: PropTypes.func,
     dispatch: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        displayedTab: PropTypes.shape({
+          mainTab: PropTypes.string,
+          subTab: PropTypes.string,
+        }),
+      }),
+    }),
   }),
   screenProps: PropTypes.shape({
     rootNavigation: PropTypes.shape({
