@@ -40,9 +40,12 @@ struct KeychainUtil {
         throw KeychainAccess.Status.userCanceled
       }
     #endif
+    
+    guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
+        throw("Cannot get app information")
+    }
 
-    return Keychain(service: "com.bitmark.bitmarkios.account",
-                    accessGroup: "Z5CE7A3A7N.com.bitmark.bitmarkios") // Z5CE7A3A7N is the app prefix
+    return Keychain(service: bundleIdentifier) // Z5CE7A3A7N is the app prefix
             .accessibility(.whenPasscodeSetThisDeviceOnly, authenticationPolicy: .userPresence)
             .authenticationPrompt(reason)
   }
