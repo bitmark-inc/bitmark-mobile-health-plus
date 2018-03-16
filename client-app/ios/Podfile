@@ -1,20 +1,29 @@
 platform :ios, '10.0'
 
+def pods
+    # Pods for Bitmark
+    
+    pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
+    pod 'KeychainAccess'
+end
+
 target 'Bitmark' do
   use_frameworks!
 
-  # Pods for Bitmark
-
-  pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
-  pod 'KeychainAccess'
-
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  pods
 
   target 'BitmarkTests' do
     inherit! :search_paths
     # Pods for testing
   end
 
+end
+
+target 'Bitmark beta' do
+    use_frameworks!
+    
+    pods
+    
 end
 
 post_install do |installer|

@@ -24,20 +24,19 @@ export class LocalPropertyDetailComponent extends React.Component {
     super(props);
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
-    let histories = [];
+    console.log('bitmark: ', bitmark);
     this.state = {
       asset,
-      histories,
       bitmark,
       copied: false,
       displayTopButton: false,
     };
     AppController.doGetProvenance(bitmark).then(provenance => {
-      let histories = [];
-      provenance.forEach((history, key) => {
-        histories.push({ key, history });
+      bitmark.provenance = provenance;
+      bitmark.provenance.forEach((history, index) => {
+        history.key = index;
       });
-      this.setState({ histories });
+      this.setState({ bitmark });
     }).catch(error => console.log('getProvenance error', error));
   }
 
@@ -60,13 +59,23 @@ export class LocalPropertyDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>
           {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-            <TouchableOpacity style={propertyDetailStyle.copyBitmarkIddButton} onPress={() => {
+            <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={true}>
+              <Text style={propertyDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
               Clipboard.setString(this.state.bitmark.bitmark_id);
               this.setState({ copied: true });
               setTimeout(() => { this.setState({ copied: false }) }, 1000);
             }}>
-              <Text style={propertyDetailStyle.copyBitmarkIddButtonText}>Copy Bitmark ID</Text>
+              <Text style={propertyDetailStyle.topButtonText}>BITMARK ID</Text>
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+            </TouchableOpacity>
+            <TouchableOpacity style={propertyDetailStyle.topButton}
+              disabled={this.state.bitmark.status === 'pending'}
+              onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
+              <Text style={[propertyDetailStyle.topButtonText, {
+                color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
+              }]}>TRANSFER</Text>
             </TouchableOpacity>
           </View>}
           <ScrollView style={propertyDetailStyle.content}>
@@ -74,10 +83,9 @@ export class LocalPropertyDetailComponent extends React.Component {
               <View style={propertyDetailStyle.bottomImageBar}></View>
               <Text style={propertyDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
               <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
-                Issued {isNaN(this.state.bitmark.created_at) ? '' : ('on' + this.state.bitmark.created_at)} by {this.state.asset.registrant}
+                ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + this.state.bitmark.created_at.toUpperCase())} BY {this.state.asset.registrant}
               </Text>
-              <View style={propertyDetailStyle.bottomAssetNameBar}></View>
-              <Text style={propertyDetailStyle.provenanceLabel}>Provenance</Text>
+              <Text style={propertyDetailStyle.provenanceLabel}>PROVENANCE</Text>
               <View style={propertyDetailStyle.provenancesArea}>
                 <View style={propertyDetailStyle.provenancesHeader}>
                   <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
@@ -87,11 +95,15 @@ export class LocalPropertyDetailComponent extends React.Component {
                   <FlatList
                     scrollEnabled={false}
                     extraData={this.state}
-                    data={this.state.histories || []}
+                    data={this.state.bitmark.provenance || []}
                     renderItem={({ item }) => {
                       return (<View style={propertyDetailStyle.provenancesRow}>
-                        <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.history.created_at}</Text>
-                        <Text style={propertyDetailStyle.provenancesRowOwner} numberOfLines={1}>{item.history.owner}</Text>
+                        <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
+                        <View style={propertyDetailStyle.provenancesRowOwnerRow}>
+                          <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>[</Text>
+                          <Text style={[propertyDetailStyle.provenancesRowOwner]} numberOfLines={1}>{item.owner}</Text>
+                          <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>]</Text>
+                        </View>
                       </View>);
                     }}
                   />
@@ -109,18 +121,6 @@ export class LocalPropertyDetailComponent extends React.Component {
                   <Text style={propertyDetailStyle.listingButtonText}>{'LIST THIS BITMARK TO MARKET'.toUpperCase()}</Text>
                 </TouchableOpacity>
               </View>}
-
-              {/* <View style={propertyDetailStyle.transferButtonArea} >
-                <TouchableOpacity style={[propertyDetailStyle.transferButton, {
-                  borderTopColor: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
-                }]}
-                  disabled={this.state.bitmark.status === 'pending'}
-                  onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark })}>
-                  <Text style={[propertyDetailStyle.transferButtonText, {
-                    color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
-                  }]}>TRANSFER</Text>
-                </TouchableOpacity>
-              </View> */}
             </TouchableOpacity>
           </ScrollView>
         </View>

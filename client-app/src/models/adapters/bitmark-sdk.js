@@ -204,6 +204,18 @@ const BitmarkSDK = {
         }
       });
     });
-  }
+  },
+  validateAccountNumber: (accountNumber, netowrk) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.validateAccountNumber(accountNumber, netowrk, (ok, result) => {
+        if (ok) {
+          resolve();
+        } else {
+          reject(newError(result, 'account invalid!'));
+        }
+      });
+    });
+  },
+
 };
 export { BitmarkSDK };

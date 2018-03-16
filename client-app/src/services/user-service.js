@@ -1,8 +1,14 @@
 import { CommonModel } from './../models';
 import { merge } from 'lodash';
+import { config } from '../configs';
 
 const doGetCurrentUser = async () => {
-  return await CommonModel.doGetLocalData(CommonModel.app_local_data_key);
+  let userInfo = await CommonModel.doGetLocalData(CommonModel.app_local_data_key);
+  if (userInfo.network !== config.network) {
+    await doRemoveUserInfo();
+    return {};
+  }
+  return userInfo;
 };
 
 const doTryGetCurrentUser = () => {
@@ -17,6 +23,7 @@ const doTryGetCurrentUser = () => {
 const doUpdateUserInfo = async (userInfo) => {
   let currentUser = await doGetCurrentUser();
   currentUser = merge({}, currentUser, userInfo);
+  currentUser.network = config.network;
   return await CommonModel.doSetLocalData(CommonModel.app_local_data_key, currentUser);
 };
 

@@ -114,7 +114,7 @@ export class AccountDetailComponent extends React.Component {
       <View style={accountStyle.body}>
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>Account</Text>
+          <Text style={defaultStyle.headerTitle}>ACCOUNT</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
             this.props.screenProps.homeNavigation.navigate('ApplicationDetail');
           }}>
@@ -192,7 +192,9 @@ export class AccountDetailComponent extends React.Component {
               </View>}
 
             {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
+              <Text style={accountStyle.settingLabel}>SETTINGS</Text>
               <Text style={accountStyle.accountNumberLabel}>My Bitmark Account Number</Text>
+
               <View style={accountStyle.accountNumberArea}>
                 <Text style={accountStyle.accountNumberValue} numberOfLines={1}>{this.state.userInfo.bitmarkAccountNumber}</Text>
                 <TouchableOpacity style={accountStyle.accountNumberCopyButton} onPress={() => {

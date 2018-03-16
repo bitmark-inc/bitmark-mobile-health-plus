@@ -108,7 +108,7 @@ const doTryRickSignMessage = async (messages, touchFaceIdMessage) => {
   return signatures;
 };
 
-const doCreateSignatureData = async (touchFaceIdMessage) => {
+const doTryCreateSignatureData = async (touchFaceIdMessage) => {
   let result = await doWaitRequestionSessionId();
   if (result && !currentFaceTouceSessionId) {
     return null;
@@ -132,6 +132,12 @@ const doCreateSignatureData = async (touchFaceIdMessage) => {
   return { timestamp, signature: signatures[0] };
 };
 
+const doCreateSignatureData = async () => {
+  let timestamp = moment().toDate().getTime() + '';
+  let signatures = await doRichSignMessage([timestamp], currentFaceTouceSessionId);
+  return { timestamp, signature: signatures[0] };
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -143,6 +149,7 @@ let CommonModel = {
   doGetLocalData,
   doStartFaceTouceSessionId,
   doCreateSignatureData,
+  doTryCreateSignatureData,
   doTryRickSignMessage,
   setFaceTouceSessionId,
 }

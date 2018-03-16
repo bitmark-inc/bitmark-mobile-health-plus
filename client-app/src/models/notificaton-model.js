@@ -1,50 +1,52 @@
 import PushNotification from 'react-native-push-notification';
+import { config } from '../configs';
 
-const doRegisterNotificationInfo = (deviceInfo) => {
+const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platform, token) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    //TODO
-    let tempURL = '';
+    let tempURL = `${config.trade_server_url}/mobile/push_tokens`;
     fetch(tempURL, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        requester: 'user/' + accountNumber,
+        timestamp,
+        signature,
       },
-      body: JSON.stringify(deviceInfo),
+      body: JSON.stringify({ platform, token }),
     }).then((response) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
+        return reject(new Error('doRegisterNotificationInfo error :' + JSON.stringify(data)));
       }
-      //TODO
       resolve(data);
     }).catch(reject);
   });
 };
 
-const doDeregisterNotificationInfo = (deviceInfo) => {
+const doDeregisterNotificationInfo = (accountNumber, timestamp, signature, token) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    //TODO
-    let tempURL = '';
+    let tempURL = `${config.trade_server_url}/mobile/push_tokens/${token}`;
     fetch(tempURL, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        requester: 'user/' + accountNumber,
+        timestamp,
+        signature,
       },
-      body: JSON.stringify(deviceInfo),
     }).then((response) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
+        return reject(new Error('doDeregisterNotificationInfo error :' + JSON.stringify(data)));
       }
-      //TODO
       resolve(data);
     }).catch(reject);
   });

@@ -99,44 +99,65 @@ export class AssetsComponent extends React.Component {
   render() {
     return (
       <View style={assetsStyle.body}>
-        <View style={defaultStyle.header}>
+        <View style={[defaultStyle.header, { zIndex: 1 }]}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>Properties</Text>
+          <Text style={defaultStyle.headerTitle}>{'Properties'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={this.addProperty}>
             <Image style={assetsStyle.addPropertyIcon} source={require('./../../../../assets/imgs/plus-icon.png')} />
           </TouchableOpacity>
         </View>
         <View style={assetsStyle.subTabArea}>
-          <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.local)}>
+          {this.state.subtab === SubTabs.local && <TouchableOpacity style={[assetsStyle.subTabButton, {
+            shadowOffset: { width: 2 },
+            shadowOpacity: 0.15,
+          }]}>
             <View style={assetsStyle.subTabButtonArea}>
+              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local} ({this.state.data.localAssets.length})</Text>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({this.state.data.localAssets.length})</Text>
               </View>
-              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.local ? '#0060F2' : 'white' }]}></View>
-            </View>
-          </TouchableOpacity>
-          {!config.disabel_markets && <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.market)}>
-            <View style={assetsStyle.subTabButtonArea}>
-              <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.market} ({this.state.data.marketAssets.length})</Text>
-              </View>
-              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.market ? '#0060F2' : 'white' }]}></View>
             </View>
           </TouchableOpacity>}
-          <TouchableOpacity style={assetsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.global)}>
+          {this.state.subtab !== SubTabs.local && <TouchableOpacity style={[assetsStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.local)}>
             <View style={assetsStyle.subTabButtonArea}>
+              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.global}</Text>
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.local.toUpperCase()} ({this.state.data.localAssets.length})</Text>
               </View>
-              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.global ? '#0060F2' : 'white' }]}></View>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>}
+
+          {this.state.subtab === SubTabs.global && <TouchableOpacity style={[assetsStyle.subTabButton, {
+            shadowOffset: { width: -2 },
+            shadowOpacity: 0.15,
+          }]}>
+            <View style={assetsStyle.subTabButtonArea}>
+              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
+              <View style={assetsStyle.subTabButtonTextArea}>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.global.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+          {this.state.subtab !== SubTabs.global && <TouchableOpacity style={[assetsStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.global)}>
+            <View style={assetsStyle.subTabButtonArea}>
+              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
+              <View style={assetsStyle.subTabButtonTextArea}>
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.global.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
         </View>
         <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
             {(!this.state.assets || this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
-                {'currently you own no property.'.toUpperCase()}
+                {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
               </Text>}
               {(!config.disabel_markets && this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {(config.disabel_markets ? 'Coming soon...' : 'YOu have not paired any markets.').toUpperCase()}
@@ -164,12 +185,14 @@ export class AssetsComponent extends React.Component {
                   }
                 }} >
                   {!!item.asset.market && <Image style={assetsStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + item.asset.asset_id }} />}
-                  <View style={assetsStyle.assetBitmarkTitle}>
-                    <Text style={assetsStyle.assetBitmarkPending}>{item.asset.totalPending === 0 ? '' : 'PENDING...'}</Text>
-                    <Text style={[assetsStyle.assetBitmarksNumber, { color: item.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{(item.asset.totalPending > 0 ? (item.asset.totalPending + '/') : '') + item.asset.bitmarks.length}</Text>
-                    <Image style={assetsStyle.assetBitmarksDetail} source={item.asset.totalPending > 0 ? require('./../../../../assets/imgs/next-icon.png') : require('./../../../../assets/imgs/next-icon-blue.png')} />
-                    <Image style={[assetsStyle.assetBitmarksDetail, { right: 7 }]} source={item.asset.totalPending > 0 ? require('./../../../../assets/imgs/next-icon.png') : require('./../../../../assets/imgs/next-icon-blue.png')} />
-                  </View>
+                  {item.asset.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
+                    <Text style={[assetsStyle.assetBitmarksNumber, { color: '#0060F2' }]}>{item.asset.bitmarks.length}</Text>
+                    <Image style={assetsStyle.assetBitmarksDetail} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
+                    <Image style={[assetsStyle.assetBitmarksDetail, { marginRight: 7 }]} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
+                  </View>}
+                  {item.asset.totalPending > 0 && <View style={assetsStyle.assetBitmarkTitle}>
+                    <Text style={assetsStyle.assetBitmarkPending}>PENDING... ({item.asset.totalPending + '/' + item.asset.bitmarks.length})</Text>
+                  </View>}
                   <View style={assetsStyle.assetInfoArea}>
                     <Text style={[assetsStyle.assetName, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>

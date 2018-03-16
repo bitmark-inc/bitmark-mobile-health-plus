@@ -40,6 +40,10 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset: { height: 0 },
+    shadowRadius: 3,
+    zIndex: 1,
   },
   subTabButtonArea: {
     width: '100%',
@@ -66,7 +70,8 @@ export default StyleSheet.create({
   scrollSubTabArea: {
     width: '100%',
     flexDirection: 'column',
-    alignContent: 'center'
+    alignContent: 'center',
+    backgroundColor: 'white',
   },
   contentSubTab: {
     width: '100%',
@@ -120,6 +125,8 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     paddingLeft: convertWidth(20),
     paddingRight: convertWidth(20),
+    paddingTop: 18,
+    paddingBottom: 30,
   },
   assetImage: {
     width: 62,
@@ -141,7 +148,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
-    marginBottom: 10,
   },
   assetCreatorBound: {
     fontFamily: 'Avenir Light',
@@ -160,37 +166,31 @@ export default StyleSheet.create({
     height: 30,
     flexDirection: 'row',
     alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'flex-end',
     width: '100%',
   },
   assetBitmarkPending: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: 'Andale Mono',
     fontWeight: '500',
-    fontSize: 12,
-    lineHeight: 14,
+    fontSize: 13,
     color: '#999999',
   },
   assetBitmarksNumber: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 12,
-    lineHeight: 14,
+    fontSize: 13,
     color: '#0060F2',
-    position: 'absolute',
-    top: 9,
-    right: 20,
+    marginRight: 5,
   },
   assetBitmarksDetail: {
-    width: 7,
-    height: 14,
+    width: 6,
+    height: 12,
     resizeMode: 'contain',
-    position: 'absolute',
-    right: 0,
   },
 
   globalArea: {
     flexDirection: 'row',
-    borderTopColor: '#C0CCDF',
-    borderTopWidth: 1,
     height: deviceSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter - constant.subTabSizeHeight,
     backgroundColor: 'white',
   },

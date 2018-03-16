@@ -2,6 +2,7 @@ import {
   StyleSheet,
   //  Platform,
 } from 'react-native'
+import { convertWidth } from '../../../utils';
 // import {
 //   ios,
 //   android //TODO
@@ -20,9 +21,11 @@ export default StyleSheet.create({
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#EDF0F4',
     width: '100%',
     height: 600,
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
+    backgroundColor: 'white',
   },
 
   rowSetting: {
@@ -36,25 +39,27 @@ export default StyleSheet.create({
   },
   lineSetting: {
     width: '100%',
-    borderWidth: 0.25,
+    borderWidth: 0.5,
     borderColor: '#C0CCDF',
   },
 
   itemSettingText: {
-    marginLeft: 14,
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Avenir Black',
     color: '#0060F2',
-    fontWeight: '800',
+    fontWeight: '900',
   },
 
   topArea: {
     width: '100%',
+    marginTop: 38,
   },
   bottomArea: {
     position: 'absolute',
     width: '100%',
     bottom: 0,
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
   },
 
   donorInfo: {
@@ -63,10 +68,9 @@ export default StyleSheet.create({
   },
 
   version: {
-    marginLeft: 14,
-    fontSize: 15,
+    fontSize: 14,
     color: '#838383',
-    fontFamily: 'Avenir Black'
+    fontFamily: 'Andale Mono'
   },
 
   sendFeedbackPopupTitle: {

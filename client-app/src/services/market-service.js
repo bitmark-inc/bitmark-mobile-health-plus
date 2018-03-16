@@ -48,7 +48,7 @@ const doCheckMarketSession = (market) => {
 
 const doTryAccessToMarket = (market, localBitmarkAccountNumber, touchFaceIdMessage) => {
   return new Promise((resolve) => {
-    CommonModel.doCreateSignatureData(touchFaceIdMessage).then(signatureData => {
+    CommonModel.doTryCreateSignatureData(touchFaceIdMessage).then(signatureData => {
       if (!signatureData) {
         resolve(null);
       }

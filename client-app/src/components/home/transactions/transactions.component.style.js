@@ -39,6 +39,10 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset: { height: 0 },
+    shadowRadius: 3,
+    zIndex: 1,
   },
   subTabButtonArea: {
     width: '100%',
@@ -65,68 +69,121 @@ export default StyleSheet.create({
   scrollSubTabArea: {
     width: '100%',
     flexDirection: 'column',
-    alignContent: 'center'
+    alignContent: 'center',
+    backgroundColor: 'white',
   },
   contentSubTab: {
     width: '100%',
     flexDirection: 'column',
   },
 
-  signRequestRow: {
+  transferOfferRow: {
     width: '100%',
-    marginTop: 18,
-    minHeight: 107,
     flexDirection: 'column',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
+    paddingBottom: 18,
+    paddingTop: 18,
     borderBottomColor: '#EFEFEF',
     borderBottomWidth: 1,
   },
-  signRequestTitle: {
+  transferOfferTitle: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
   },
-  signRequestTitleType: {
+  transferOfferTitleType: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     fontWeight: '700',
     color: '#0060F2',
     width: convertWidth(220),
   },
-  signRequestTitleTime: {
+  transferOfferTitleTime: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     fontWeight: '700',
     width: convertWidth(90),
     marginLeft: convertWidth(12),
   },
-  signRequestTitleIcon: {
+  transferOfferTitleIcon: {
     width: 12,
     height: 12,
     resizeMode: 'contain',
     marginLeft: convertWidth(3),
   },
-  signRequestContent: {
+  transferOfferContent: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 12,
   },
-  signRequestSenderFix: {
+  transferOfferSenderFix: {
     fontFamily: 'Andale Mono',
     fontSize: 12,
     fontWeight: '700',
   },
-  signRequestSenderName: {
+  transferOfferSenderName: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     fontWeight: '900',
   },
-  signRequestAssetName: {
+  transferOfferAssetName: {
     fontFamily: 'Avenir black',
     fontSize: 13,
     fontWeight: '900',
     width: convertWidth(150),
   },
+
+  completedTransfer: {
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
+    paddingTop: 18,
+    paddingBottom: 10,
+    flexDirection: 'column',
+    width: '100%',
+  },
+  completedTransferHeader: {
+    flexDirection: 'row',
+    height: 20,
+  },
+  completedTransferHeaderTitle: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    color: '#0060F2',
+    width: convertWidth(102),
+  },
+  completedTransferHeaderValue: {
+    width: convertWidth(220),
+    marginLeft: convertWidth(15),
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    color: '#0060F2',
+  },
+  completedTransferContent: {
+    marginTop: 9,
+    flexDirection: 'column',
+  },
+  completedTransferContentRow: {
+    flexDirection: 'row',
+    height: 20,
+  },
+  completedTransferContentRowLabel: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    width: convertWidth(102),
+  },
+  completedTransferContentRowPropertyName: {
+    width: convertWidth(220),
+    marginLeft: convertWidth(15),
+    fontFamily: 'Avenir Light',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  completedTransferContentRowValue: {
+    width: convertWidth(220),
+    marginLeft: convertWidth(15),
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+  }
 
 });

@@ -37,13 +37,13 @@ class RecoveryPhraseComponent extends React.Component {
     };
     return (
       <View style={accountRecoveryStyle.body}>
-        <View style={[defaultStyle.header, { backgroundColor: 'white', borderBottomColor: '#C0CCDF', borderBottomWidth: 2, }]}>
+        <View style={[defaultStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.screenProps.accountNavigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_back_icon_study_setting.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>Recovery Phrase</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => { this.props.screenProps.accountNavigation.goBack() }}>
-            <Text style={defaultStyle.headerRightText}>Cancel</Text>
+          <Text style={defaultStyle.headerTitle}>{(isSignOut ? 'Remove Access' : 'Recovery Phrase').toUpperCase()}</Text>
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => { this.props.screenProps.accountNavigation.goBack() }} disabled={isSignOut}>
+            {!isSignOut && <Text style={defaultStyle.headerRightText}>Cancel</Text>}
           </TouchableOpacity>
         </View>
         <View style={accountRecoveryStyle.recoveryPhraseContent}>
@@ -85,6 +85,7 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
   constructor(props) {
     super(props);
     let userInfo = curretnUser;
+    console.log('curretnUser :', curretnUser);
     let smallerList = [];
     let biggerList = [];
     for (let index in userInfo.pharse24Words) {
@@ -101,11 +102,11 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
     return (
       <View style={accountRecoveryStyle.body}>
-        <View style={[defaultStyle.header, { backgroundColor: 'white', borderBottomColor: '#C0CCDF', borderBottomWidth: 2, }]}>
+        <View style={[defaultStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_back_icon_study_setting.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>Write Down Recovery Phrase</Text>
+          <Text style={defaultStyle.headerTitle}>{(isSignOut ? 'Recovery Phrase' : 'Test Phrase').toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
         <View style={accountRecoveryStyle.recoveryPhraseContent}>
@@ -125,7 +126,7 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
                 }}
               />
             </View>
-            <View style={[accountRecoveryStyle.writeRecoveryPhraseContentHalfList, { marginLeft: 29, }]}>
+            <View style={[accountRecoveryStyle.writeRecoveryPhraseContentHalfList, { marginLeft: 15, }]}>
               <FlatList data={this.state.biggerList}
                 scrollEnabled={false}
                 extraData={this.state.biggerList}
@@ -400,9 +401,9 @@ class TryRecoveryPhraseComponent extends React.Component {
     })
     return (
       <View style={accountRecoveryStyle.body}>
-        <View style={[defaultStyle.header, { backgroundColor: 'white', borderBottomColor: '#C0CCDF', borderBottomWidth: 2, }]}>
+        <View style={[defaultStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft} />
-          <Text style={defaultStyle.headerTitle}>Test Recovery Phrase</Text>
+          <Text style={defaultStyle.headerTitle}>{'Test Phrase'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.screenProps.accountNavigation.goBack()} >
             <Text style={defaultStyle.headerRightText}>Cancel</Text>
           </TouchableOpacity>
@@ -432,7 +433,7 @@ class TryRecoveryPhraseComponent extends React.Component {
                 }}
               />
             </View>
-            <View style={[accountRecoveryStyle.writeRecoveryPhraseContentHalfList, { marginLeft: 29, }]}>
+            <View style={[accountRecoveryStyle.writeRecoveryPhraseContentHalfList, { marginLeft: 15, }]}>
               <FlatList data={this.state.biggerList}
                 scrollEnabled={false}
                 extraData={this.state}
@@ -466,10 +467,14 @@ class TryRecoveryPhraseComponent extends React.Component {
                 if (!item.cannotReset) {
                   return (
                     <View style={accountRecoveryStyle.recoveryPhraseChoose}>
-                      {!item.selected && <TouchableOpacity style={accountRecoveryStyle.recoveryPhraseChooseButton}
+                      {<TouchableOpacity style={[accountRecoveryStyle.recoveryPhraseChooseButton, {
+                        borderColor: item.selected ? 'white' : '#0060F2',
+                      }]} disabled={item.selected}
                         onPress={() => this.selectRandomWord(item, item.index)}
                       >
-                        <Text style={[accountRecoveryStyle.recoveryPhraseChooseButtonText]}>{item.word}</Text>
+                        <Text style={[accountRecoveryStyle.recoveryPhraseChooseButtonText, {
+                          color: item.selected ? 'white' : 'black'
+                        }]}>{item.word}</Text>
                       </TouchableOpacity>}
                     </View>
                   )

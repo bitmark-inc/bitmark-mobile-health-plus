@@ -1,9 +1,11 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 import {
   ios,
   android // TODO
 } from './../../../../configs';
 import { convertWidth } from './../../../../utils';
+
+let currentSize = Dimensions.get('window');
 
 let constant = Platform.select({
   ios: ios.constant,
@@ -19,15 +21,17 @@ export default StyleSheet.create({
 
   recoveryPhraseContent: {
     flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: '#EDF0F4',
-    height: constant.defaultWindowSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter,
+    paddingLeft: convertWidth(33),
+    paddingRight: convertWidth(33),
+    backgroundColor: 'white',
+    height: currentSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter,
   },
   recoveryPhraseWarningIcon: {
     width: 137,
     height: 36,
     resizeMode: 'contain',
     marginTop: 41,
+    marginLeft: convertWidth(85),
   },
   recoveryDescription: {
     fontFamily: 'Avenir Heavy',
@@ -35,10 +39,10 @@ export default StyleSheet.create({
     fontWeight: '700',
     lineHeight: 18,
     marginTop: 23,
-    width: 296,
+    width: convertWidth(309),
   },
   recoveryPhraseBottomButton: {
-    width: convertWidth(337),
+    width: convertWidth(309),
     height: 42,
     backgroundColor: '#0060F2',
     flexDirection: 'row',
@@ -56,9 +60,9 @@ export default StyleSheet.create({
 
   writeRecoveryPhraseContentMessage: {
     fontFamily: 'Avenir Light',
-    fontSize: 14,
+    fontSize: 17,
     fontWeight: '300',
-    width: 351,
+    width: convertWidth(309),
     marginTop: 20,
   },
 
@@ -67,11 +71,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     height: 283,
-    paddingLeft: 73,
-    paddingRight: 73,
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   writeRecoveryPhraseContentHalfList: {
     flexDirection: 'column',
@@ -95,16 +95,15 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: '300',
     color: '#D4D4D4',
-    width: 23,
-    textAlign: 'right',
+    width: convertWidth(39),
+    textAlign: 'left',
   },
   recoveryPhraseWord: {
     fontFamily: 'Avenir Light',
     fontSize: 15,
     fontWeight: '300',
     color: '#0060F2',
-    width: 80,
-    marginLeft: 6,
+    width: convertWidth(108),
   },
 
   ranDomWordsArea: {
@@ -116,14 +115,14 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
-    width: 90,
+    marginRight: 7,
   },
   recoveryPhraseChooseButton: {
     borderWidth: 1,
     borderColor: '#0060F2',
     backgroundColor: 'white',
-    paddingLeft: 9,
-    paddingRight: 9,
+    paddingLeft: 7,
+    paddingRight: 7,
     borderRadius: 2,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -151,7 +150,7 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: '300',
     textAlign: 'center',
-    width: 335,
+    width: convertWidth(309),
     marginTop: 11,
   },
 });

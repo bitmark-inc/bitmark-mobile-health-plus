@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import { CommonModel, AccountModel, BitmarkModel, FaceTouchId } from './../models';
-import { AccountService, BitmarkService, EventEmiterService, MarketService } from './../services'
+import { AccountService, BitmarkService, EventEmiterService, MarketService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
 
@@ -18,7 +18,7 @@ let processing = (promise) => {
     });
   })
 };
-let submitting = (promise, procesingData, successData) => {
+let submitting = (promise, procesingData, successData, errorData) => {
   EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, procesingData);
   return new Promise((resolve, reject) => {
     promise.then((data) => {
@@ -26,14 +26,23 @@ let submitting = (promise, procesingData, successData) => {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, successData);
         setTimeout(() => {
           EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
-        }, 1000);
+          resolve(data);
+        }, 2000);
       } else {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
+        resolve(data);
       }
-      resolve(data);
     }).catch(error => {
-      EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
-      reject(error);
+      if (errorData) {
+        EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, errorData);
+        setTimeout(() => {
+          EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
+          reject(error);
+        }, 2000);
+      } else {
+        EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
+        reject(error);
+      }
     });
   })
 };
@@ -135,8 +144,12 @@ const doGetBalance = async () => {
   await processing(DataController.doGetBalance());
 };
 
-const doGetSignRequests = async () => {
-  await processing(DataController.doGetSignRequests());
+const doGetTransactionData = async () => {
+  await processing(DataController.doGetTransactionData());
+};
+
+const doGetTransferOfferDetail = async (bitmarkId) => {
+  return await processing(TransactionService.doGetTransferOfferDetail(bitmarkId));
 };
 
 
@@ -157,6 +170,39 @@ const doGetProvenance = async (bitmark) => {
   return await processing(BitmarkModel.doGetProvenance(bitmark));
 };
 
+const doTransferBitmark = async (bitmark, receiver) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
+};
+
+const doAcceptTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await submitting(TransactionService.doAcceptTransferBitmark(touchFaceIdSession, bitmarkId), processingInfo, successInfo, errorInfo);
+};
+
+const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
+  // TODO need signature
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  // CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  // return await submitting(TransactionService.doRejectTransferBitmark(touchFaceIdSession, bitmarkId), processingInfo, successInfo, errorInfo);
+
+  return await submitting(TransactionService.doRejectTransferBitmark(null, bitmarkId), processingInfo, successInfo, errorInfo);
+};
+
+const reloadData = async () => {
+  return await processing(DataController.reloadData());
+};
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
@@ -183,7 +229,12 @@ let AppController = {
   doIssueFile,
   doGetBalance,
   doGetProvenance,
-  doGetSignRequests,
+  doGetTransactionData,
+  doGetTransferOfferDetail,
+  doTransferBitmark,
+  doAcceptTransferBitmark,
+  doRejectTransferBitmark,
+  reloadData,
 
   doStartBackgroundProcess,
 }

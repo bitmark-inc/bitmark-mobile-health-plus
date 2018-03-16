@@ -24,7 +24,7 @@ export class BitmarkTermsComponent extends React.Component {
         <View style={defaultStyles.header}>
           <TouchableOpacity style={defaultStyles.headerLeft}>
           </TouchableOpacity>
-          <Text style={defaultStyles.headerTitle}>Terms of Service</Text>
+          <Text style={defaultStyles.headerTitle}>{'Terms of Service'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyles.headerRight} onPress={() => {
             if (this.props.screenProps && this.props.screenProps.setShowPagination) {
               this.props.screenProps.setShowPagination(true);

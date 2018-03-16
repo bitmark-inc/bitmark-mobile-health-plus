@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import ReactNative from 'react-native';
+// import PushNotification from 'react-native-push-notification';
 
 const {
   Linking,
@@ -38,12 +39,38 @@ class MainComponent extends Component {
 
     this.state = {
       user: null,
-      processing: false,
+      processingCount: false,
       submitting: null,
       justCreatedBitmarkAccount: false,
       networkStatus: true,
     };
     this.appState = AppState.currentState;
+
+
+    // setTimeout(() => {
+    //   console.log('send notification');
+    //   PushNotification.localNotification({
+    //     title: 'Donate data',
+    //     message: 'Your daily data donation for <date range> has been sent to the <institution> <study name>. Thanks for donating!',
+    //     userInfo: {
+    //       event: 'transfer_required',
+    //       bitmark_id: '6a2617f125303e25a8bd78de0b16c94f34c281fde4f934babbb4a29dcae1540b',
+    //     }
+    //   });
+    // }, 4000);
+
+    // setTimeout(() => {
+    //   console.log('send notification');
+    //   PushNotification.localNotification({
+    //     title: 'Donate data',
+    //     message: 'Your daily data donation for <date range> has been sent to the <institution> <study name>. Thanks for donating!',
+    //     userInfo: {
+    //       event: 'transfer_rejected',
+    //       bitmark_id: 'e683dc72c6b20f1e4c4e8c70b4139bca6e08ed646ac55a51478f5c0ede1a04b1',
+    //     }
+    //   });
+    // }, 4000);
+
   }
 
   componentDidMount() {
@@ -71,7 +98,8 @@ class MainComponent extends Component {
   }
 
   handerProcessingEvent(processing) {
-    this.setState({ processing });
+    let processingCount = this.state.processingCount + (processing ? 1 : -1);
+    this.setState({ processingCount });
   }
   handerSumittinggEvent(submitting) {
     this.setState({ submitting });
@@ -108,6 +136,7 @@ class MainComponent extends Component {
 
   doOpenApp() {
     DataController.doOpenApp().then(user => {
+      console.log('user: ', user);
       this.setState({ user });
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
@@ -137,8 +166,10 @@ class MainComponent extends Component {
     return (
       <View style={{ flex: 1 }}>
         {!this.state.networkStatus && <BitmarkInternetOffComponent />}
-        {!!this.state.processing && <DefaultIndicatorComponent />}
-        {!!this.state.submitting && <BitmarkIndicatorComponent
+        {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
+
+        {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}
+        {!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message) && <BitmarkIndicatorComponent
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
         <View style={{
           flex: 1,

@@ -4,9 +4,8 @@ import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image,
   Platform,
 } from 'react-native';
-import moment from 'moment';
 
-import { DataController } from './../../../managers';
+import { DataController, AppController } from './../../../managers';
 
 import transactionsStyle from './transactions.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
@@ -22,50 +21,71 @@ const SubTabs = {
   completed: 'COMPLETED',
 }
 export class TransactionsComponent extends React.Component {
+  static SubTabs = SubTabs;
   constructor(props) {
     super(props);
     this.switchSubtab = this.switchSubtab.bind(this);
     this.handerChangePendingTransactions = this.handerChangePendingTransactions.bind(this);
     this.handerChangeCompletedTransaction = this.handerChangeCompletedTransaction.bind(this);
+    this.refreshTransactionScreen = this.refreshTransactionScreen.bind(this);
 
-    let signRequests = DataController.getSignRequests();
-    signRequests.pendingTransactions.forEach((item, key) => {
+    let transactionData = DataController.getTransactionData();
+    transactionData.activeIncompingTransferOffers.forEach((item, key) => {
       item.key = key;
     });
-    signRequests.completedTransactions.forEach((item, key) => {
+    transactionData.transactions.forEach((item, key) => {
       item.key = key;
     });
     this.state = {
-      subtab: SubTabs.required,
-      pendingTransactions: signRequests.pendingTransactions,
-      completedTransactions: signRequests.completedTransactions,
+      currentUser: DataController.getUserInformation(),
+      subtab: (this.props.subtab === SubTabs.required || this.props.subtab === SubTabs.completed) ? this.props.subtab : SubTabs.required,
+      activeIncompingTransferOffers: transactionData.activeIncompingTransferOffers,
+      transactions: transactionData.transactions,
     };
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_COMPLETED_TRANSACTIONS, this.handerChangeCompletedTransaction);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
     this.switchSubtab(this.state.subtab);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_COMPLETED_TRANSACTIONS, this.handerChangeCompletedTransaction);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_PENDING_TRANSACTIONS, this.handerChangePendingTransactions);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
   }
 
   handerChangePendingTransactions() {
-    let pendingTransactions = DataController.getSignRequests().pendingTransactions;
-    pendingTransactions.forEach((item, key) => {
-      item.key = key;
+    let activeIncompingTransferOffers = DataController.getTransactionData().activeIncompingTransferOffers;
+    activeIncompingTransferOffers.forEach((item, index) => {
+      item.key = index;
     });
-    this.setState({ pendingTransactions });
+    this.setState({ activeIncompingTransferOffers });
   }
   handerChangeCompletedTransaction() {
-    let completedTransactions = DataController.getSignRequests().completedTransactions;
-    completedTransactions.forEach((item, key) => {
-      item.key = key;
+    let transactions = DataController.getTransactionData().transactions;
+    transactions.forEach((item, index) => {
+      item.key = index;
     });
-    this.setState({ completedTransactions });
+    this.setState({ transactions });
+  }
+
+  refreshTransactionScreen() {
+    AppController.doGetTransactionData().then(() => {
+      let transactionData = DataController.getTransactionData();
+      transactionData.activeIncompingTransferOffers.forEach((item, index) => {
+        item.key = index;
+      });
+      transactionData.transactions.forEach((item, index) => {
+        item.key = index;
+      });
+      this.setState({
+        activeIncompingTransferOffers: transactionData.activeIncompingTransferOffers,
+        transactions: transactionData.transactions,
+      });
+    }).catch((error) => {
+      console.log('getUserBitmark error :', error);
+    });
   }
 
   switchSubtab(subtab) {
@@ -81,76 +101,111 @@ export class TransactionsComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
         <View style={transactionsStyle.subTabArea}>
-          <TouchableOpacity style={transactionsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.required)}>
+          {this.state.subtab === SubTabs.required && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+            shadowOffset: { width: 2 },
+            shadowOpacity: 0.15,
+          }]}>
             <View style={transactionsStyle.subTabButtonArea}>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={transactionsStyle.subTabButtonTextArea}>
-                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.required}</Text>
+                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.required.toUpperCase()}</Text>
               </View>
-              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.required ? '#0060F2' : 'white' }]}></View>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={transactionsStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.completed)}>
+          </TouchableOpacity>}
+          {this.state.subtab !== SubTabs.required && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.required)}>
             <View style={transactionsStyle.subTabButtonArea}>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={transactionsStyle.subTabButtonTextArea}>
-                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.completed}</Text>
+                <Text style={[transactionsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.required.toUpperCase()}</Text>
               </View>
-              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.completed ? '#0060F2' : 'white' }]}></View>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>}
+
+          {this.state.subtab === SubTabs.completed && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+            shadowOffset: { width: -2 },
+            shadowOpacity: 0.15,
+          }]}>
+            <View style={transactionsStyle.subTabButtonArea}>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
+              <View style={transactionsStyle.subTabButtonTextArea}>
+                <Text style={transactionsStyle.subTabButtonText}>{SubTabs.completed.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+          {this.state.subtab !== SubTabs.completed && <TouchableOpacity style={[transactionsStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.completed)}>
+            <View style={transactionsStyle.subTabButtonArea}>
+              <View style={[transactionsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
+              <View style={transactionsStyle.subTabButtonTextArea}>
+                <Text style={[transactionsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.completed.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
         </View>
         <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
-          {this.state.subtab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
-            <FlatList data={this.state.pendingTransactions}
-              extraData={this.state}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity style={transactionsStyle.signRequestRow}>
-                    <View style={transactionsStyle.signRequestTitle}>
-                      <Text style={transactionsStyle.signRequestTitleType}>{item.type}</Text>
-                      <Text style={transactionsStyle.signRequestTitleTime} >{item.time}</Text>
-                      <Image style={transactionsStyle.signRequestTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
-                    </View>
-                    <Text style={transactionsStyle.signRequestContent}>
-                      <Text style={transactionsStyle.signRequestSenderFix}>[</Text>
-                      <Text style={transactionsStyle.signRequestSenderName} numberOfLines={1}>{item.sender.substring(0, 12)}...</Text>
-                      <Text style={transactionsStyle.signRequestSenderFix}>]</Text>
-                      has transferred the property
-                      <Text style={transactionsStyle.signRequestAssetName}> {item.assetName} </Text>
-                      to you. Please sign for receipt to accept the property transfer.
-                    </Text>
-                  </TouchableOpacity>
-                )
-              }} />
-          </View>}
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            {this.state.subtab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
+              <FlatList data={this.state.activeIncompingTransferOffers}
+                extraData={this.state}
+                renderItem={({ item }) => {
+                  return (
+                    <TouchableOpacity style={transactionsStyle.transferOfferRow} onPress={() => this.props.screenProps.homeNavigation.navigate('TransactionDetail', {
+                      transferOffer: item,
+                      refreshTransactionScreen: this.refreshTransactionScreen,
+                    })}>
+                      <View style={transactionsStyle.transferOfferTitle}>
+                        <Text style={transactionsStyle.transferOfferTitleType}>{'Property Transfer Request'.toUpperCase()}</Text>
+                        <Text style={transactionsStyle.transferOfferTitleTime} >{item.created_at.toUpperCase()}</Text>
+                        <Image style={transactionsStyle.transferOfferTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
+                      </View>
+                      <Text style={transactionsStyle.transferOfferContent}>
+                        Sign to accept the property
+                        <Text style={transactionsStyle.transferOfferAssetName}> {item.asset.name} </Text>
+                        transfer request.
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                }} />
+            </View>}
 
-          {this.state.subtab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
-            <FlatList data={this.state.completedTransactions}
-              extraData={this.state}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity style={{}}>
-                    <View>
-                      <Text>{item.type}</Text>
-                      <Text>{item.time || item.status}</Text>
-                    </View>
-                    <View style={{}}>
-                      <View>
-                        <Text>PROPERTY</Text>
-                        <Text>{item.assetName}</Text>
+            {this.state.subtab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
+              <FlatList data={this.state.transactions}
+                extraData={this.state}
+                renderItem={({ item }) => {
+                  return (
+                    <TouchableOpacity style={transactionsStyle.completedTransfer}>
+                      <View style={transactionsStyle.completedTransferHeader}>
+                        <Text style={[transactionsStyle.completedTransferHeaderTitle, {
+                          color: item.status === 'pending' ? '#999999' : '#0060F2'
+                        }]}>TRANSFER</Text>
+                        <Text style={[transactionsStyle.completedTransferHeaderValue, {
+                          color: item.status === 'pending' ? '#999999' : '#0060F2'
+                        }]}>{item.status === 'pending' ? 'PENDING' : item.timestamp.toUpperCase()}</Text>
                       </View>
-                      <View>
-                        <Text>FROM</Text>
-                        <Text>{item.sender}</Text>
+                      <View style={transactionsStyle.completedTransferContent}>
+                        <View style={transactionsStyle.completedTransferContentRow}>
+                          <Text style={transactionsStyle.completedTransferContentRowLabel}>PROPERTY</Text>
+                          <Text style={[transactionsStyle.completedTransferContentRowPropertyName]}>{item.assetName}</Text>
+                        </View>
+                        <View style={transactionsStyle.completedTransferContentRow}>
+                          <Text style={transactionsStyle.completedTransferContentRowLabel}>FROM</Text>
+                          <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.from === this.state.currentUser.bitmarkAccountNumber ? 'YOU' : item.from}</Text>
+                        </View>
+                        <View style={transactionsStyle.completedTransferContentRow}>
+                          <Text style={transactionsStyle.completedTransferContentRowLabel}>To</Text>
+                          <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.to === this.state.currentUser.bitmarkAccountNumber ? 'YOU' : item.to}</Text>
+                        </View>
                       </View>
-                      <View>
-                        <Text>To</Text>
-                        <Text>{item.recipient}</Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                )
-              }} />
-          </View >}
+                    </TouchableOpacity>
+                  )
+                }} />
+            </View >}
+          </TouchableOpacity>
         </ScrollView>
       </View >
     );
@@ -158,6 +213,7 @@ export class TransactionsComponent extends React.Component {
 }
 
 TransactionsComponent.propTypes = {
+  subtab: PropTypes.string,
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,

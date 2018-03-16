@@ -13,7 +13,7 @@ import defaultStyles from './../../../commons/styles';
 import signStyle from './sign-in.component.style';
 import { BitmarkAutoCompleteComponent } from './../../../commons/components';
 import { android, ios } from './../../../configs';
-import { dictionary24Words } from './../../../utils';
+import { dictionary24Words, convertWidth } from './../../../utils';
 import { AppController } from '../../../managers';
 
 let deviceSize = Dimensions.get('window');
@@ -230,11 +230,11 @@ export class SignInComponent extends React.Component {
         <View style={signStyle.body}>
           <StatusBar hidden={false} />
           <View style={[defaultStyles.header, { backgroundColor: '#F5F5F5' }]}>
-            <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
+            <TouchableOpacity style={[defaultStyles.headerLeft, { width: convertWidth(50) }]} onPress={() => { this.props.navigation.goBack() }}>
               <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_back_icon_study_setting.png')} />
             </TouchableOpacity>
-            <Text style={defaultStyles.headerTitle}>RECOVERY PHRASE{'\n'}SIGN-IN</Text>
-            <TouchableOpacity style={defaultStyles.headerRight}>
+            <Text style={[defaultStyles.headerTitle, { maxWidth: convertWidth(285) }]}>RECOVERY PHRASE SIGN-IN</Text>
+            <TouchableOpacity style={[defaultStyles.headerRight, { width: convertWidth(50) }]}>
             </TouchableOpacity>
           </View>
 

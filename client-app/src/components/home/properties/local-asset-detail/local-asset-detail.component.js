@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import assetDetailStyle from './local-asset-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-import { config } from '../../../../configs';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -41,7 +40,6 @@ export class LocalAssetDetailComponent extends React.Component {
     };
   }
 
-
   render() {
     return (
       <TouchableWithoutFeedback style={assetDetailStyle.body} onPress={() => this.setState({ displayTopButton: false })}>
@@ -50,7 +48,7 @@ export class LocalAssetDetailComponent extends React.Component {
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
             </TouchableOpacity>
-            <Text style={[defaultStyle.headerTitle]} numberOfLines={1}>{this.state.asset.name}</Text>
+            <Text style={[defaultStyle.headerTitle]}>{this.state.asset.name}</Text>
             <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
               <Image style={assetDetailStyle.threeDotIcon} source={this.state.displayTopButton
                 ? require('../../../../../assets/imgs/three-dot-active.png')
@@ -66,7 +64,7 @@ export class LocalAssetDetailComponent extends React.Component {
               this.setState({ copied: true });
               setTimeout(() => { this.setState({ copied: false }) }, 1000);
             }}>
-              <Text style={assetDetailStyle.copyAssetIddButtonText}>COPY ASSET ID</Text>
+              <Text style={assetDetailStyle.copyAssetIddButtonText}>ASSET ID</Text>
               {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
           </View>}
@@ -74,31 +72,30 @@ export class LocalAssetDetailComponent extends React.Component {
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
               <View style={assetDetailStyle.bottomImageBar}></View>
 
-              <Text style={assetDetailStyle.assetName} numberOfLines={1}>{this.state.asset.name}</Text>
+              <Text style={[assetDetailStyle.assetName, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} >{this.state.asset.name}</Text>
               <View style={assetDetailStyle.assetCreatorRow}>
-                <Text style={assetDetailStyle.assetCreatorBound}>Issued by [</Text>
-                <Text style={assetDetailStyle.assetCreateAt} numberOfLines={1}>{this.state.asset.registrant}</Text>
-                <Text style={assetDetailStyle.assetCreatorBound}>]</Text>
+                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>ISSUED BY [</Text>
+                <Text style={[assetDetailStyle.assetCreateAt, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{this.state.asset.registrant}</Text>
+                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>]</Text>
               </View>
 
-              <View style={assetDetailStyle.bottomAssetNameBar}></View>
-              <View style={assetDetailStyle.metadataArea}>
+              {this.state.metadata && this.state.metadata.length > 0 && <View style={assetDetailStyle.metadataArea}>
                 <FlatList
                   scrollEnabled={false}
                   extraData={this.state}
                   data={this.state.metadata || []}
                   renderItem={({ item }) => {
                     return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
-                      <Text style={assetDetailStyle.metadataItemLabel}>{item.label}:</Text>
-                      <Text style={assetDetailStyle.metadataItemValue}>{item.value}</Text>
+                      <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{item.label}:</Text>
+                      <Text style={[assetDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
                     </View>);
                   }}
                 />
-              </View>
+              </View>}
               <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
               <View style={assetDetailStyle.bitmarksArea}>
                 <View style={assetDetailStyle.bitmarksHeader}>
-                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>No.</Text>
+                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>NO.</Text>
                   <Text style={assetDetailStyle.bitmarksHeaderLabel}>ACTION</Text>
                 </View>
                 <View style={assetDetailStyle.bitmarkListArea}>
@@ -107,23 +104,19 @@ export class LocalAssetDetailComponent extends React.Component {
                     extraData={this.state}
                     data={this.state.bitmarks || []}
                     renderItem={({ item }) => {
-                      return (<TouchableOpacity style={assetDetailStyle.bitmarksRow} onPress={() => {
-                        this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
-                      }}>
+                      return (<TouchableOpacity style={assetDetailStyle.bitmarksRow} >
                         <Text style={item.bitmark.status === 'pending' ? assetDetailStyle.bitmarksRowNoPending : assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                        {!config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
-                          this.props.navigation.navigate('MarketBitmarkDeposit', {
-                            asset: this.state.asset,
-                            bitmark: item.bitmark
-                          });
+                        <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={item.bitmark.status === 'pending'} onPress={() => {
+                          this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                         }}>
-                          {item.bitmark.status !== 'pending' && <Text style={assetDetailStyle.bitmarksRowListingButtonText}>{'List to Market'.toUpperCase()}</Text>}
-                          {item.bitmark.status === 'pending' && <Text style={assetDetailStyle.bitmarkPending}>PENDING...</Text>}
-                        </TouchableOpacity>}
-                        {config.disabel_markets && <TouchableOpacity style={assetDetailStyle.bitmarksRowListingButton} disabled={true}>
-                          <Text style={[assetDetailStyle.bitmarksRowListingButtonText, {
+                          <Text style={[assetDetailStyle.bitmarkViewButtonText, {
                             color: item.bitmark.status !== 'pending' ? '#0060F2' : '#999999'
                           }]}>{item.bitmark.status !== 'pending' ? 'VIEW' : 'PENDING'}</Text>
+                        </TouchableOpacity>
+                        {item.bitmark.status === 'confirmed' && <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
+                          this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset })
+                        }}>
+                          <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>TRANSFER</Text>
                         </TouchableOpacity>}
                       </TouchableOpacity>);
                     }}

@@ -70,75 +70,75 @@ export default StyleSheet.create({
   contentSubTab: {
     width: '100%',
     flexDirection: 'column',
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
   },
 
-  //settings 
-  accountNumberLabel: {
+  //settings
+  settingLabel: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 15,
-    lineHeight: 18,
-    marginLeft: convertWidth(20),
-    marginTop: 23,
+    fontSize: 16,
+    marginTop: 38,
   },
+  accountNumberLabel: {
+    fontFamily: 'Avenir Light',
+    fontSize: 14,
+    marginTop: 14,
+  },
+
   accountNumberArea: {
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#C0CCDF',
-    borderTopWidth: 1,
-    borderTopColor: '#C0CCDF',
+    borderBottomColor: '#0060F2',
     flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    height: 48,
+    justifyContent: 'space-between',
+    width: convertWidth(337),
+    height: 30,
   },
   accountNumberValue: {
     fontFamily: 'Andale Mono',
     fontWeight: '900',
-    fontSize: 15,
-    lineHeight: 18,
-    marginLeft: convertWidth(20),
-    width: convertWidth(285),
+    fontSize: 13,
+    width: convertWidth(280),
+    marginLeft: convertWidth(7),
   },
   accountNumberCopyButton: {
-    marginLeft: 20,
+    marginRight: 7,
   },
   accountNumberCopyButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 12,
+    fontSize: 13,
     color: '#0060F2',
   },
   accountMessage: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
     fontSize: 14,
-    marginLeft: convertWidth(20),
-    marginTop: 21,
+    marginTop: 20,
     width: convertWidth(309),
   },
   accountWriteDownButton: {
     marginTop: 21,
-    marginLeft: convertWidth(20),
     paddingTop: 4,
     paddingBottom: 4,
   },
   accountWriteDownButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 12,
+    fontSize: 14,
     color: '#0060F2',
   },
   accountRemoveButton: {
-    marginTop: 10,
-    marginLeft: convertWidth(20),
+    marginTop: 2,
     paddingTop: 4,
     paddingBottom: 4,
   },
   accountRemoveButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 12,
+    fontSize: 14,
     color: '#0060F2',
   },
 
@@ -146,12 +146,10 @@ export default StyleSheet.create({
     width: 133,
     height: 30,
     resizeMode: 'contain',
-    marginLeft: convertWidth(20),
     marginTop: 23,
   },
   marketBalance: {
     marginTop: 16,
-    marginLeft: convertWidth(20),
     backgroundColor: 'white',
     height: 43,
     width: convertWidth(330),
@@ -186,7 +184,6 @@ export default StyleSheet.create({
   },
   marketBalanceButtonArea: {
     marginTop: 16,
-    marginLeft: convertWidth(20),
     width: convertWidth(330),
     height: 30,
     flexDirection: 'row',
@@ -213,14 +210,12 @@ export default StyleSheet.create({
     flexDirection: 'column',
   },
   marketBalanceHistoryLabel: {
-    marginLeft: convertWidth(20),
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 14,
     lineHeight: 16,
   },
   marketBalanceHistoryItem: {
-    marginLeft: convertWidth(20),
     width: convertWidth(330),
     height: 49,
     backgroundColor: 'white',
@@ -234,14 +229,12 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 8,
     lineHeight: 9,
-    marginLeft: convertWidth(20),
   },
   marketBalanceHistoryItemAmount: {
     fontFamily: 'Avenir Heavy',
     fontWeight: '900',
     fontSize: 8,
     lineHeight: 9,
-    marginLeft: convertWidth(20),
     minWidth: 70,
   },
   marketBalanceHistoryItemCreatedAt: {
@@ -249,14 +242,12 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 8,
     lineHeight: 9,
-    marginLeft: convertWidth(20),
   },
   marketBalanceHistoryItemStatus: {
     fontFamily: 'Avenir Medium',
     fontWeight: '700',
     fontSize: 8,
     lineHeight: 9,
-    marginLeft: convertWidth(20),
   },
 
 });
