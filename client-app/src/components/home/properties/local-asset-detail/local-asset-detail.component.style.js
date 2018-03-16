@@ -125,22 +125,18 @@ export default StyleSheet.create({
   metadataItem: {
     width: convertWidth(340),
     flexDirection: 'row',
-    alignItems: 'center',
     marginLeft: convertWidth(20),
   },
   metadataItemLabel: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
-    lineHeight: 16,
     fontWeight: '900',
     color: '#0060F2',
     width: convertWidth(117),
   },
   metadataItemValue: {
-    marginTop: 3,
     fontFamily: 'Avenir Black',
     fontSize: 14,
-    lineHeight: 16,
     fontWeight: '400',
     width: convertWidth(196),
     marginLeft: convertWidth(22),
