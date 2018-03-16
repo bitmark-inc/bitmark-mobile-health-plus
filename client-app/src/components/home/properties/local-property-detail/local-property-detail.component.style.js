@@ -106,8 +106,7 @@ export default StyleSheet.create({
     height: 29,
   },
   assetCreateAt: {
-    fontFamily: 'Avenir Light',
-    fontWeight: '400',
+    fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 16,
     marginLeft: convertWidth(20),

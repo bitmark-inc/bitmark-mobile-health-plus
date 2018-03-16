@@ -94,7 +94,7 @@ export class IssueFileComponent extends React.Component {
     let assetNameError = '';
     if (typeof (assetName) === 'string') {
       if (assetName.length > 64) {
-        assetNameError = 'Property name must be smaller or equal 64 character!';
+        assetNameError = 'You have exceeded the maximum number of characters in this field.';
       } else if (!assetName) {
         assetNameError = 'Please enter a property name.';
       }
@@ -237,7 +237,8 @@ export class IssueFileComponent extends React.Component {
                                 color: (item.label && !this.state.existingAsset) ? 'black' : '#C1C1C1',
                                 width: convertWidth(this.state.isEditingMetadata ? 286 : 302),
                               }]}>{item.label || 'LABEL'}</Text>
-                              {!this.state.existingAsset && <Image style={localAddPropertyStyle.metadataFieldKeyEditIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
+                              {!this.state.existingAsset && <Image style={localAddPropertyStyle.metadataFieldKeyEditIcon}
+                                source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
                             </TouchableOpacity>
                             <TextInput style={[localAddPropertyStyle.metadataFieldValue, {
                               color: (item.label && !this.state.existingAsset) ? 'black' : '#C1C1C1',
@@ -263,15 +264,16 @@ export class IssueFileComponent extends React.Component {
                 </View>
                 {!this.state.existingAsset && <View style={localAddPropertyStyle.metadataFieldButtons}>
                   <TouchableOpacity style={localAddPropertyStyle.addMetadataButton} disabled={!this.state.canAddNewMetadata} onPress={this.addNewMetadataField}>
-                    <Image style={localAddPropertyStyle.addMetadataButtonIcon} source={require('./../../../../../../assets/imgs/plus-white-blue-icon.png')} />
+                    <Image style={localAddPropertyStyle.addMetadataButtonIcon} source={
+                      this.state.canAddNewMetadata ? require('./../../../../../../assets/imgs/plus-white-blue-icon.png') : require('./../../../../../../assets/imgs/plus-white-blue-icon-disable.png')} />
                     <Text style={[localAddPropertyStyle.addMetadataButtonText, { color: this.state.canAddNewMetadata ? '#0060F2' : '#C2C2C2' }]}> ADD LABEL</Text>
                   </TouchableOpacity>
 
                   {this.state.isEditingMetadata && <TouchableOpacity style={[localAddPropertyStyle.addMetadataButton]} onPress={() => this.setState({ isEditingMetadata: false })}>
-                    <Text style={[localAddPropertyStyle.addMetadataButtonText, { color: '#0060F2' }]}>Done</Text>
+                    <Text style={[localAddPropertyStyle.addMetadataButtonText, { color: '#0060F2' }]}>DONE</Text>
                   </TouchableOpacity>}
                   {!this.state.isEditingMetadata && this.state.metadataList.length > 0 && <TouchableOpacity style={[localAddPropertyStyle.addMetadataButton]} onPress={() => this.setState({ isEditingMetadata: true })}>
-                    <Text style={[localAddPropertyStyle.addMetadataButtonText, { color: this.state.isEditingMetadata ? '#C2C2C2' : '#0060F2' }]}>Edit</Text>
+                    <Text style={[localAddPropertyStyle.addMetadataButtonText, { color: this.state.isEditingMetadata ? '#C2C2C2' : '#0060F2' }]}>EDIT</Text>
                   </TouchableOpacity>}
                 </View>}
                 {!!this.state.metadataError && <Text style={localAddPropertyStyle.metadataInputError}>{this.state.metadataError}</Text>}
