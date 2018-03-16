@@ -141,7 +141,10 @@ class MainComponent extends Component {
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
           if (ok) {
-            AppController.doStartBackgroundProcess();
+            AppController.doStartBackgroundProcess(this.state.justCreatedBitmarkAccount);
+            setTimeout(() => {
+              this.setState({ justCreatedBitmarkAccount: false });
+            }, 5000);
           } else {
             if (!this.requiringTouchId) {
               this.requiringTouchId = true;
