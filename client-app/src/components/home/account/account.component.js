@@ -193,7 +193,7 @@ export class AccountDetailComponent extends React.Component {
 
             {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
               <Text style={accountStyle.settingLabel}>SETTINGS</Text>
-              <Text style={accountStyle.accountNumberLabel}>My Bitmark Account Number</Text>
+              <Text style={accountStyle.accountNumberLabel}>{'My Bitmark Account Number'.toUpperCase()}</Text>
 
               <View style={accountStyle.accountNumberArea}>
                 <Text style={accountStyle.accountNumberValue} numberOfLines={1}>{this.state.userInfo.bitmarkAccountNumber}</Text>

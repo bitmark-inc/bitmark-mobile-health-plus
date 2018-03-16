@@ -201,7 +201,7 @@ export class TransactionsComponent extends React.Component {
                           <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.from === this.state.currentUser.bitmarkAccountNumber ? 'YOU' : item.from}</Text>
                         </View>
                         <View style={transactionsStyle.completedTransferContentRow}>
-                          <Text style={transactionsStyle.completedTransferContentRowLabel}>To</Text>
+                          <Text style={transactionsStyle.completedTransferContentRowLabel}>TO</Text>
                           <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.to === this.state.currentUser.bitmarkAccountNumber ? 'YOU' : item.to}</Text>
                         </View>
                       </View>
