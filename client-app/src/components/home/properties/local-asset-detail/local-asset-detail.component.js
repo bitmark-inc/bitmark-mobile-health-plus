@@ -48,7 +48,7 @@ export class LocalAssetDetailComponent extends React.Component {
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
             </TouchableOpacity>
-            <Text style={[defaultStyle.headerTitle]}>{this.state.asset.name}</Text>
+            <Text style={[defaultStyle.headerTitle]} numberOfLines={1}>{this.state.asset.name}</Text>
             <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
               <Image style={assetDetailStyle.threeDotIcon} source={this.state.displayTopButton
                 ? require('../../../../../assets/imgs/three-dot-active.png')
