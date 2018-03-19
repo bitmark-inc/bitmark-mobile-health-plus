@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View,
-  TouchableWithoutFeedback
+  View, TouchableWithoutFeedback,
+  ViewPropTypes,
 } from 'react-native';
 
 import dialogStyles from './bitmark-dialog.component.style';
@@ -30,7 +30,7 @@ export class BitmarkDialogComponent extends React.Component {
 
 BitmarkDialogComponent.propTypes = {
   close: PropTypes.func,
-  style: View.propTypes.style,
+  style: ViewPropTypes.style,
   dialogStyle: PropTypes.object,
   children: PropTypes.object,
 };
