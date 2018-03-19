@@ -67,7 +67,6 @@ export class EditLabelComponent extends React.Component {
             onSubmitEditing={this.onEndChangeMetadataValue}
             returnKeyLabel="done"
             returnKeyType="done"
-            disabled={this.state.existingAsset}
           />
           <View style={localAddPropertyStyle.inputLabelBar} />
           <View style={localAddPropertyStyle.suggesionsList}>

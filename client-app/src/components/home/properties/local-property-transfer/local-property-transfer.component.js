@@ -52,7 +52,9 @@ export class LocalPropertyTransferComponent extends React.Component {
           EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_DATA);
         }
       }).catch(error => {
-        this.setState({ transferError: 'We’re sorry! Something went wrong. Please try again.' });
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
+          onClose: this.props.navigation.goBack
+        });
         console.log('transfer bitmark error :', error);
       });
     }).catch(error => {
