@@ -41,4 +41,26 @@ platform :ios do
       notify: "Anh Nguyen"
       )
   end
+  lane :enterprise do
+    version_number = latest_hockey_build_number(
+      api_token: "58599adb15fb45e588c850af7b79a432"
+    ).to_i
+    increment_build_number(
+      xcodeproj: "Bitmark.xcodeproj",
+      build_number: (version_number + 1).to_i
+    )
+    cert
+    sigh(
+      force: false,
+      adhoc: true
+    )
+    build_app(
+      workspace: "Bitmark.xcworkspace", 
+      scheme: "Bitmark beta",
+      include_bitcode: false
+    )
+    hockey(
+      api_token: "58599adb15fb45e588c850af7b79a432"
+      )
+  end
 end
