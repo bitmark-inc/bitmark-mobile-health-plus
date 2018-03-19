@@ -153,7 +153,12 @@ export class TransactionsComponent extends React.Component {
         </View>
         <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.subTab === SubTabs.required && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.required && this.state.activeIncompingTransferOffers.length === 0 && <View style={transactionsStyle.contentSubTab}>
+              <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO ACTIONS REQUIRED.</Text>
+              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where you will receive any requests that require your signature.</Text>
+            </View>}
+
+            {this.state.subTab === SubTabs.required && this.state.activeIncompingTransferOffers.length > 0 && <View style={transactionsStyle.contentSubTab}>
               <FlatList data={this.state.activeIncompingTransferOffers}
                 extraData={this.state}
                 renderItem={({ item }) => {
@@ -177,7 +182,11 @@ export class TransactionsComponent extends React.Component {
                 }} />
             </View>}
 
-            {this.state.subTab === SubTabs.completed && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.completed && this.state.transactions.length === 0 && <View style={transactionsStyle.contentSubTab}>
+              <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY</Text>
+              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where your history of completed transaction will be stored.</Text>
+            </View>}
+            {this.state.subTab === SubTabs.completed && this.state.transactions.length > 0 && <View style={transactionsStyle.contentSubTab}>
               <FlatList data={this.state.transactions}
                 extraData={this.state}
                 renderItem={({ item }) => {

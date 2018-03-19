@@ -77,6 +77,27 @@ export default StyleSheet.create({
     flexDirection: 'column',
   },
 
+  titleNoRequiredTransferOffer: {
+    marginTop: 18,
+    marginLeft: convertWidth(19),
+    width: convertWidth(337),
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 17,
+    lineHeight: 19,
+    color: '#0060F2'
+  },
+
+  messageNoRequiredTransferOffer: {
+    marginTop: 30,
+    marginLeft: convertWidth(19),
+    width: convertWidth(337),
+    fontFamily: 'Avenir Light',
+    fontWeight: '300',
+    fontSize: 17,
+    lineHeight: 19,
+  },
+
   transferOfferRow: {
     width: '100%',
     flexDirection: 'column',
