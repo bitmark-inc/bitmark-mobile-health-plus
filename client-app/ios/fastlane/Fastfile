@@ -51,8 +51,7 @@ platform :ios do
     )
     cert
     sigh(
-      force: false,
-      adhoc: true
+      force: false
     )
     build_app(
       workspace: "Bitmark.xcworkspace", 
