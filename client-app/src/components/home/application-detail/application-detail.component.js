@@ -20,6 +20,15 @@ let defaultStyles = Platform.select({
   android: androidDefaultStyle
 });
 
+import {
+  ios,
+  android // TODO
+} from '../../../configs';
+let constant = Platform.select({
+  ios: ios.constant,
+  android: android.constant
+});
+
 export class ApplicationDetailComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -92,7 +101,7 @@ export class ApplicationDetailComponent extends React.Component {
               <Text style={applicationDetailStyle.itemSettingText}>{'Share This App'.toUpperCase()}</Text>
             </TouchableOpacity>
             <View style={applicationDetailStyle.lineSetting}></View>
-            <TouchableOpacity style={[defaultStyles.bottomButton, applicationDetailStyle.rowSetting]} onPress={() => { requestSendFeedback() }}>
+            <TouchableOpacity style={[applicationDetailStyle.rowSetting, { marginBottom: constant.blankFooter, }]} onPress={() => { requestSendFeedback() }}>
               <Text style={applicationDetailStyle.itemSettingText}>{'Send Feedback'.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
