@@ -26,6 +26,7 @@ const runGetActiveIncomingTransferOfferInBackground = (checkDoneProcess) => {
     if (checkDoneProcess) {
       checkDoneProcess();
     }
+    console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground success :');
   }).catch(error => {
     if (checkDoneProcess) {
       checkDoneProcess();
@@ -43,6 +44,7 @@ const runGetTransactionsInBackground = (checkDoneProcess) => {
     if (checkDoneProcess) {
       checkDoneProcess();
     }
+    console.log('runOnBackground  runGetTransactionsInBackground success :');
   }).catch(error => {
     if (checkDoneProcess) {
       checkDoneProcess();
@@ -58,9 +60,10 @@ const runGetUserBitmarksInBackground = (checkDoneProcess) => {
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
     }
     checkDoneProcess();
+    console.log('runOnBackground  runGetUserBitmarksInBackground success :');
   }).catch(error => {
     checkDoneProcess();
-    console.log('runOnBackground  doGetBitmarks error :', error);
+    console.log('runOnBackground  runGetUserBitmarksInBackground error :', error);
   });
 };
 

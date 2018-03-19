@@ -83,7 +83,7 @@ export class TransactionDetailComponent extends React.Component {
       <View style={transactionDetailStyle.body}>
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
-            <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
+            <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>TRANSFER REQUEST</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>

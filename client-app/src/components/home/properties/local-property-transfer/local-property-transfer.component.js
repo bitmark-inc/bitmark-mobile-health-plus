@@ -67,7 +67,7 @@ export class LocalPropertyTransferComponent extends React.Component {
         <View style={propertyTransferStyle.body}>
           <View style={defaultStyle.header}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
-              <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_back_icon_study_setting.png')} />
+              <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
             <View style={defaultStyle.headerCenter}>
               <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name} </Text>

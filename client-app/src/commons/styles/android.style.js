@@ -16,6 +16,7 @@ export default StyleSheet.create({
   headerLeft: {
     width: convertWidth(70),
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-start',
     height: '100%'
   },
@@ -41,8 +42,9 @@ export default StyleSheet.create({
   headerRight: {
     width: convertWidth(70),
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-end',
-    height: '100%'
+    height: '100%',
   },
   headerRightText: {
     fontFamily: 'Avenir Light',

@@ -8,6 +8,7 @@ import { NavigationActions } from 'react-navigation';
 import { AccountComponent } from './account';
 import { AssetsComponent } from './properties';
 import { TransactionsComponent } from './transactions';
+import { DonationComponent } from './donation';
 
 
 import userStyle from './user.component.style';
@@ -17,6 +18,7 @@ import { EventEmiterService } from '../../services';
 const MainTabs = {
   properties: 'Properties',
   transaction: 'Transactions',
+  donation: 'Donation',
   account: 'Account',
 };
 
@@ -33,7 +35,7 @@ export class UserComponent extends React.Component {
     let mainTab = MainTabs.properties;
     if (this.props.navigation.state && this.props.navigation.state.params && this.props.navigation.state.params.displayedTab) {
       mainTab = this.props.navigation.state.params.displayedTab.mainTab;
-      if (mainTab !== MainTabs.properties && mainTab !== MainTabs.transaction && mainTab !== MainTabs.account) {
+      if (mainTab !== MainTabs.properties && mainTab !== MainTabs.transaction && mainTab !== MainTabs.account && mainTab !== MainTabs.donation) {
         mainTab = MainTabs.properties;
       }
       subTab = this.props.navigation.state.params.displayedTab.subTab;
@@ -173,6 +175,10 @@ export class UserComponent extends React.Component {
           homeNavigation: this.props.navigation,
           subTab: this.state.displayedTab.subTab,
         }} />}
+        {this.state.displayedTab.mainTab === MainTabs.donation && <DonationComponent screenProps={{
+          homeNavigation: this.props.navigation,
+          subTab: this.state.displayedTab.subTab,
+        }} />}
         {this.state.displayedTab.mainTab === MainTabs.account && <View style={{ width: '100%', flex: 1, }}>
           <AccountComponent screenProps={{
             homeNavigation: this.props.navigation,
@@ -188,6 +194,7 @@ export class UserComponent extends React.Component {
               : require('./../../../assets/imgs/properties-icon-disable.png')} />
             {this.state.displayedTab.mainTab === MainTabs.properties && <Text style={userStyle.bottomTabButtonText}>{MainTabs.properties}</Text>}
           </TouchableOpacity>
+
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.transaction)}>
             {this.state.transactionNumber > 0 && <View style={[userStyle.transactionNumber, { top: this.state.displayedTab.mainTab === MainTabs.transaction ? 2 : 5 }]}>
               <Text style={userStyle.transactionNumberText}>{this.state.transactionNumber}</Text>
@@ -197,6 +204,17 @@ export class UserComponent extends React.Component {
               : require('./../../../assets/imgs/transaction-icon-disable.png')} />
             {this.state.displayedTab.mainTab === MainTabs.transaction && <Text style={userStyle.bottomTabButtonText}>{MainTabs.transaction}</Text>}
           </TouchableOpacity>
+
+          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.donation)}>
+            {this.state.donationNumber > 0 && <View style={[userStyle.donationNumber, { top: this.state.displayedTab.mainTab === MainTabs.donation ? 2 : 5 }]}>
+              <Text style={userStyle.donationNumberText}>{this.state.donationNumber}</Text>
+            </View>}
+            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.donation
+              ? require('./../../../assets/imgs/donation-icon-enable.png')
+              : require('./../../../assets/imgs/donation-icon-disable.png')} />
+            {this.state.displayedTab.mainTab === MainTabs.donation && <Text style={userStyle.bottomTabButtonText}>{MainTabs.donation}</Text>}
+          </TouchableOpacity>
+
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.account)}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.account
               ? require('./../../../assets/imgs/account-icon-enable.png')

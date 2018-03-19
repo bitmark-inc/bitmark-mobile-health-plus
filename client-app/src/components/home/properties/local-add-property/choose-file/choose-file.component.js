@@ -63,7 +63,7 @@ export class ChooseFileComponent extends React.Component {
       <View style={localAddPropertyStyle.body}>
         <View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.screenProps.addPropertyNavigation.goBack()}>
-            <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_back_icon_study_setting.png')} />
+            <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>{'Create Properties'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />

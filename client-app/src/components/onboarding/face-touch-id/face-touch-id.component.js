@@ -49,6 +49,7 @@ export class FaceTouchIdComponent extends React.Component {
 
   doContinue() {
     this.props.navigation.state.params.doContinue().then((user) => {
+      console.log('doContinue success:');
       if (user) {
         this.props.navigation.navigate('Notification');
       }

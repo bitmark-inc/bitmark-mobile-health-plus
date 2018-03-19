@@ -8,10 +8,10 @@ import {
 
 import { config } from './../../../configs';
 import assetsStyle from './assets.component.style';
-import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 import { AppController, DataController } from '../../../managers';
 import { EventEmiterService } from '../../../services';
 
+import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle
