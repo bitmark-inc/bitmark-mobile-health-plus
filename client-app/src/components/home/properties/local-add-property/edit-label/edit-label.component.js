@@ -99,7 +99,7 @@ EditLabelComponent.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         label: PropTypes.string,
-        key: PropTypes.string,
+        key: PropTypes.number,
         onEndChangeMetadataKey: PropTypes.func,
       }),
     }),

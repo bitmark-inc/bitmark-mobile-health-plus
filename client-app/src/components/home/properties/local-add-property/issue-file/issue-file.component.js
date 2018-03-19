@@ -251,7 +251,7 @@ export class IssueFileComponent extends React.Component {
                               returnKeyLabel="done"
                               returnKeyType="done"
                               blurOnSubmit={true}
-                              disabled={this.state.existingAsset}
+                              editable={!this.state.existingAsset}
                             />
                             <View style={[localAddPropertyStyle.metadataFieldValueBar, {
                               borderBottomColor: item.valueError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')

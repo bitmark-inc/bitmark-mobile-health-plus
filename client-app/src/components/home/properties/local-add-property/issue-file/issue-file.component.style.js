@@ -1,6 +1,14 @@
-import { StyleSheet, } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 import { convertWidth } from './../../../../../utils';
+import {
+  ios,
+  android // TODO
+} from './../../../../../configs';
+let constant = Platform.select({
+  ios: ios.constant,
+  android: android.constant
+});
 
 export default StyleSheet.create({
   scroll: {
@@ -109,10 +117,10 @@ export default StyleSheet.create({
   },
 
   metadataLabel: {
-    fontFamily: 'Avenir Light',
+    fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 14,
-    lineHeight: 16,
+    fontSize: 16,
+    lineHeight: 19,
     marginLeft: convertWidth(19),
     marginTop: 29,
   },
@@ -134,6 +142,7 @@ export default StyleSheet.create({
     width: '100%',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
+    marginBottom: 15,
   },
   metadataFieldKeyRemoveButton: {
     flexDirection: 'row',
@@ -175,7 +184,7 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontWeight: '300',
     fontSize: 14,
-    minHeight: 20,
+    minHeight: 25,
     marginLeft: 7,
     marginTop: 8,
     marginBottom: 8,
@@ -195,8 +204,9 @@ export default StyleSheet.create({
   addMetadataButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 5,
-    marginTop: 18,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingRight: 5,
     height: 36,
   },
   addMetadataButtonIcon: {
@@ -205,8 +215,7 @@ export default StyleSheet.create({
     resizeMode: 'contain',
   },
   addMetadataButtonText: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '400',
+    fontFamily: 'Andale Mono',
     fontSize: 14,
     color: '#C2C2C2',
   },
@@ -290,6 +299,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 40,
+    marginBottom: constant.blankFooter,
   },
   issueButtonText: {
     fontFamily: 'Avenir Black',
