@@ -1,112 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import {
   View, Text, TouchableOpacity, ScrollView, Image,
   Clipboard,
   Platform,
-  FlatList,
 } from 'react-native';
 
-import { MarketService, EventEmiterService } from "./../../../services";
+import { EventEmiterService } from "./../../../services";
 import accountStyle from './account.component.style';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
-import { config } from '../../../configs/index';
-import { DataController, AppController } from '../../../managers';
+import { DataController } from '../../../managers';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle
 });
 
-const SubTabs = {
-  balance: 'Balance',
-  settings: 'Settings',
-}
 export class AccountDetailComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.switchSubtab = this.switchSubtab.bind(this);
-    this.handerChangeLocalBalance = this.handerChangeLocalBalance.bind(this);
-    this.handerChangeMarketBalance = this.handerChangeMarketBalance.bind(this);
     this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
-    this.reloadBalance = this.reloadBalance.bind(this);
 
-    let localBalance = DataController.getUserBalance().localBalance;
-    //TODO with local balance
-    let marketBalances = {};
-    if (!config.disabel_markets) {
-      marketBalances = DataController.getUserBalance().marketBalances;
-      for (let market in marketBalances) {
-        marketBalances[market].balanceHistories.forEach((item, index) => {
-          item.key = index;
-        });
-      }
-    }
     this.state = {
-      subtab: config.disabel_markets ? SubTabs.settings : SubTabs.balance,
       accountNumberCopyText: 'COPY',
       notificationUUIDCopyText: 'COPY',
-      localBalance,
-      marketBalances,
       userInfo: DataController.getUserInformation(),
     };
   }
 
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE, this.handerChangeLocalBalance);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE, this.handerChangeMarketBalance);
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE, this.handerChangeLocalBalance);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE, this.handerChangeMarketBalance);
   }
 
   handerChangeUserInfo() {
     this.setState({ userInfo: DataController.getUserInformation() });
-  }
-  handerChangeLocalBalance() {
-    let localBalance = DataController.getUserBalance().localBalannce || {};
-    this.setState({ localBalance });
-  }
-
-  handerChangeMarketBalance() {
-    if (!config.disabel_markets) {
-      let marketBalances = DataController.getUserBalance().marketBalances || [];
-      for (let market in marketBalances) {
-        marketBalances[market].balanceHistories.forEach((item, index) => {
-          item.key = index;
-        });
-      }
-      this.setState({ marketBalances });
-    }
-  }
-
-  reloadBalance() {
-    AppController.doGetBalance().then((data) => {
-      let localBalance = data.localBalance;
-      //TODO with local balance
-      let marketBalances = {};
-      if (!config.disabel_markets) {
-        marketBalances = data.marketBalances;
-        for (let market in marketBalances) {
-          marketBalances[market].balanceHistories.forEach((item, index) => {
-            item.key = index;
-          });
-        }
-      }
-      this.setState({ localBalance, marketBalances });
-    }).catch((error) => {
-      console.log('getUserBitmark error :', error);
-    });
-  }
-
-  switchSubtab(subtab) {
-    this.setState({ subtab });
   }
 
   render() {
@@ -121,77 +53,9 @@ export class AccountDetailComponent extends React.Component {
             <Image style={accountStyle.bitmarkAccountHelpIcon} source={require('./../../../../assets/imgs/icon_help.png')} />
           </TouchableOpacity>
         </View>
-        {!config.disabel_markets && <View style={accountStyle.subTabArea}>
-          <TouchableOpacity style={accountStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.balance)}>
-            <View style={accountStyle.subTabButtonArea}>
-              <View style={accountStyle.subTabButtonTextArea}>
-                <Text style={accountStyle.subTabButtonText}>{SubTabs.balance}</Text>
-              </View>
-              <View style={[accountStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.balance ? '#0060F2' : 'white' }]}></View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={accountStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.settings)}>
-            <View style={accountStyle.subTabButtonArea}>
-              <View style={accountStyle.subTabButtonTextArea}>
-                <Text style={accountStyle.subTabButtonText}>{SubTabs.settings}</Text>
-              </View>
-              <View style={[accountStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.settings ? '#0060F2' : 'white' }]}></View>
-            </View>
-          </TouchableOpacity>
-        </View>}
-        <ScrollView style={[accountStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
+        <ScrollView style={[accountStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.subtab === SubTabs.balance && !config.disabel_markets && this.state.marketBalances && this.state.marketBalances.totemic &&
-              <View style={accountStyle.contentSubTab}>
-                <Image style={accountStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
-                <View style={accountStyle.marketBalance}>
-                  <View style={accountStyle.marketBalanceLabel}>
-                    <Image style={accountStyle.marketBalanceIcon} source={require('./../../../../assets/imgs/ETH-alt.png')} />
-                    <Text style={accountStyle.marketBalanceName}>ETH</Text>
-                    <Text style={accountStyle.marketBalanceNameFull}>(Ethereum)</Text>
-                  </View>
-                  <Text style={accountStyle.marketBalanceValue}>{Math.floor(this.state.marketBalances.totemic.balance / 1E4) / 1E5}</Text>
-                </View>
-                <View style={accountStyle.marketBalanceButtonArea}>
-                  <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
-                    this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-                      url: MarketService.getBalancUrl(config.markets.totemic.name, { action: 'deposit' }),
-                      name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1),
-                      realoadPreivewScreen: this.reloadBalance,
-                    });
-                  }}>
-                    <Text style={accountStyle.marketBalanceButtonText}>DEPOSIT</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
-                    this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-                      url: MarketService.getBalancUrl(config.markets.totemic.name, { action: 'withdraw' }),
-                      name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1),
-                      realoadPreivewScreen: this.reloadBalance,
-                    });
-                  }}>
-                    <Text style={accountStyle.marketBalanceButtonText}>WITHDRAWAL</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={accountStyle.marketBalanceHistory}>
-                  <Text style={accountStyle.marketBalanceHistoryLabel}>Balance History </Text>
-                  <FlatList data={this.state.marketBalances.totemic.balanceHistories}
-                    scrollEnabled={false}
-                    extraData={this.state}
-                    renderItem={({ item }) => {
-                      return (
-                        <View style={accountStyle.marketBalanceHistoryItem}>
-                          <Text style={accountStyle.marketBalanceHistoryItemAction}>{item.action}</Text>
-                          <Text style={accountStyle.marketBalanceHistoryItemAmount}>{item.data.currency.toUpperCase() + ' ' + (Math.floor(item.data.amount / 1E4) / 1E5)}</Text>
-                          <Text style={accountStyle.marketBalanceHistoryItemCreatedAt}>{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</Text>
-                          <Text style={accountStyle.marketBalanceHistoryItemStatus}>{item.status.toUpperCase()}</Text>
-                        </View>
-                      )
-                    }}
-                  />
-                </View>
-              </View>}
-
-            {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
+            <View style={accountStyle.contentSubTab}>
               <Text style={accountStyle.settingLabel}>SETTINGS</Text>
               <Text style={accountStyle.accountNumberLabel}>{'My Bitmark Account Number'.toUpperCase()}</Text>
 
@@ -214,7 +78,7 @@ export class AccountDetailComponent extends React.Component {
               <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}>
                 <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device  »'.toUpperCase()} </Text>
               </TouchableOpacity>
-            </View >}
+            </View >
           </TouchableOpacity>
         </ScrollView>
       </View >

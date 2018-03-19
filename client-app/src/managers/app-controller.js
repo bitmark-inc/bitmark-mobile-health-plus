@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import { CommonModel, AccountModel, BitmarkModel, FaceTouchId } from './../models';
-import { AccountService, BitmarkService, EventEmiterService, MarketService, TransactionService } from './../services'
+import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
 
@@ -100,48 +100,12 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
   return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
 };
 
-const doPairAccount = async (token, market) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to pair the bitmark account with market.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await processing(MarketService.doPairAccount(touchFaceIdSession, token, market));
-};
-
-const doWithdrawBitmark = async (bitmark) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to remove the bitmark from market.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await processing(MarketService.doWithdrawBitmarks(touchFaceIdSession, [bitmark.bitmark_id]));
-};
-
-const doDepositBitmark = async (bitmark, market) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to remove the bitmark from market.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await processing(MarketService.doDepositBitmarks(touchFaceIdSession, [bitmark.bitmark_id], market));
-};
-
 const check24Words = async (pharse24Words) => {
   return await processing(AccountModel.doCheck24Words(pharse24Words));
 };
 
-const doTryAccessToMarket = async (market) => {
-  return await processing(AccountService.doTryAccessToMarket(market));
-};
-
-const doTryAccessToAllMarkets = async () => {
-  return await processing(DataController.doTryAccessToAllMarkets());
-};
-
 const reloadBitmarks = async () => {
   await processing(DataController.reloadBitmarks());
-};
-
-const doGetBalance = async () => {
-  await processing(DataController.doGetBalance());
 };
 
 const doGetTransactionData = async () => {
@@ -222,16 +186,10 @@ let AppController = {
   doLogin,
   doLogout,
   doCreateSignatureData,
-  doPairAccount,
-  doWithdrawBitmark,
-  doDepositBitmark,
   check24Words,
-  doTryAccessToMarket,
-  doTryAccessToAllMarkets,
   reloadBitmarks,
   doCheckFileToIssue,
   doIssueFile,
-  doGetBalance,
   doGetProvenance,
   doGetTransactionData,
   doGetTransferOfferDetail,

@@ -7,9 +7,8 @@ let NETWORKS = {
   livenet: 'livenet',
 }
 let config = {
-  network: NETWORKS.livenet,
-  disabel_markets: true,
-  // network: NETWORKS.devnet,
+  // network: NETWORKS.livenet,
+  network: NETWORKS.devnet,
 
   NETWORKS,
   bitmark_network: NETWORKS.testnet,
@@ -18,22 +17,11 @@ let config = {
   preive_asset_url: 'https://preview.assets.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
   trade_server_url: 'https://trade.devel.bitmark.com',
-  market_urls: {
-    totemic: '',
-  },
-  markets: {
-    totemic: {
-      name: 'totemic',
-      sourceIcon: require('./../../assets/imgs/totemic-market.png'),
-    }
-  }
 };
 
 // local
-config.market_urls.totemic = 'http://192.168.0.202:8088';
 
 if (config.network === NETWORKS.testnet) {
-  config.market_urls.totemic = 'https://totemic.test.bitmark.com';
   config.trade_server_url = 'https://trade.test.bitmark.com';
 } else if (config.network === NETWORKS.livenet) {
   config.api_server_url = 'https://api.bitmark.com';
@@ -42,7 +30,6 @@ if (config.network === NETWORKS.testnet) {
   config.bitmark_network = NETWORKS.livenet;
   //TODO
   config.trade_server_url = '';
-  config.market_urls.totemic = '';
 }
 
 let ios = {

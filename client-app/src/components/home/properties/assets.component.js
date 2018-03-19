@@ -19,7 +19,6 @@ let defaultStyle = Platform.select({
 
 const SubTabs = {
   local: 'Yours',
-  market: 'On Market',
   global: 'Global',
 }
 export class AssetsComponent extends React.Component {
@@ -30,7 +29,6 @@ export class AssetsComponent extends React.Component {
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
     this.refreshPropertiesScreen = this.refreshPropertiesScreen.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
-    this.handerChangeMarketBitmarks = this.handerChangeMarketBitmarks.bind(this);
 
     this.state = {
       subtab: SubTabs.local,
@@ -39,26 +37,19 @@ export class AssetsComponent extends React.Component {
       assets: [],
       data: {
         localAssets: DataController.getUserBitmarks().localAssets || [],
-        marketAssets: DataController.getUserBitmarks().marketAssets || [],
       }
     };
   }
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BITMARKS, this.handerChangeMarketBitmarks);
     this.switchSubtab(this.state.subtab);
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BITMARKS, this.handerChangeMarketBitmarks);
   }
 
   handerChangeLocalBitmarks() {
-    this.switchSubtab(this.state.subtab);
-  }
-
-  handerChangeMarketBitmarks() {
     this.switchSubtab(this.state.subtab);
   }
 
@@ -79,15 +70,12 @@ export class AssetsComponent extends React.Component {
   }
 
   switchSubtab(subtab) {
-    let marketAssets = DataController.getUserBitmarks().marketAssets || [];
     let localAssets = DataController.getUserBitmarks().localAssets || [];
     let assets = [];
     if (subtab === SubTabs.local) {
       assets = this.convertToFlatListData(localAssets);
-    } else if (subtab === SubTabs.market) {
-      assets = this.convertToFlatListData(marketAssets);
     }
-    this.setState({ subtab, assets, data: { localAssets, marketAssets } });
+    this.setState({ subtab, assets, data: { localAssets } });
   }
 
   addProperty() {
@@ -159,32 +147,21 @@ export class AssetsComponent extends React.Component {
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
               </Text>}
-              {(!config.disabel_markets && this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
-                {(config.disabel_markets ? 'Coming soon...' : 'YOu have not paired any markets.').toUpperCase()}
-              </Text>}
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
                 Here you will issue property titles (bitmarks), view and manage your properties, and have general account access and control.
                 </Text>}
               {(this.state.subtab === SubTabs.local) && <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
                 <Text style={assetsStyle.addFirstPropertyButtonText}>{'create first property'.toUpperCase()}</Text>
               </TouchableOpacity>}
-              {(this.state.subtab === SubTabs.market && !config.disabel_markets) && <Text style={assetsStyle.messageNoAssetContent}>
-                You can pair your market account in the “Market” section with Bitmark app to easily access every markets in the Bitmark system.
-                </Text>}
             </View>}
-            {(this.state.assets && this.state.assets.length > 0 && (this.state.subtab === SubTabs.local || this.state.subtab === SubTabs.market)) && <FlatList
+            {(this.state.assets && this.state.assets.length > 0 && this.state.subtab === SubTabs.local) && <FlatList
               ref={(ref) => this.listViewElement = ref}
               extraData={this.state}
               data={this.state.assets || []}
               renderItem={({ item }) => {
                 return (<TouchableOpacity style={[assetsStyle.assetRowArea,]} onPress={() => {
-                  if (item.asset.market) {
-                    this.props.screenProps.homeNavigation.navigate('MarketAssetDetail', { asset: item.asset });
-                  } else {
-                    this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
-                  }
+                  this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
                 }} >
-                  {!!item.asset.market && <Image style={assetsStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + item.asset.asset_id }} />}
                   {item.asset.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
                     <Text style={[assetsStyle.assetBitmarksNumber, { color: '#0060F2' }]}>{item.asset.bitmarks.length}</Text>
                     <Image style={assetsStyle.assetBitmarksDetail} source={require('./../../../../assets/imgs/next-icon-blue.png')} />

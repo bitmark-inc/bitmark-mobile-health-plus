@@ -9,7 +9,6 @@ import {
 
 import { convertWidth } from './../../../../utils';
 
-import { config } from './../../../../configs';
 import propertyDetailStyle from './local-property-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { AppController } from '../../../../managers/app-controller';
@@ -109,18 +108,6 @@ export class LocalPropertyDetailComponent extends React.Component {
                   />
                 </View>
               </View>
-              {!config.disabel_markets && <View style={propertyDetailStyle.listingButtonArea} >
-                <TouchableOpacity style={[propertyDetailStyle.listingButton, { backgroundColor: this.state.bitmark.status === 'pending' ? '#CCCCCC' : '#0060F2' }]}
-                  disabled={this.state.bitmark.status === 'pending'}
-                  onPress={() => {
-                    this.props.navigation.navigate('MarketBitmarkDeposit', {
-                      asset: this.state.asset,
-                      bitmark: this.state.bitmark
-                    });
-                  }}>
-                  <Text style={propertyDetailStyle.listingButtonText}>{'LIST THIS BITMARK TO MARKET'.toUpperCase()}</Text>
-                </TouchableOpacity>
-              </View>}
             </TouchableOpacity>
           </ScrollView>
         </View>

@@ -6,20 +6,17 @@ import {
 import { NavigationActions } from 'react-navigation';
 
 import { AccountComponent } from './account';
-import { MarketsComponent } from './markets';
 import { AssetsComponent } from './properties';
 import { TransactionsComponent } from './transactions';
 
 
 import userStyle from './user.component.style';
-import { config } from '../../configs';
 import { AppController, DataController } from '../../managers';
 import { EventEmiterService } from '../../services';
 
 const MainTabs = {
   properties: 'Properties',
   transaction: 'Transactions',
-  markets: 'Markets',
   account: 'Account',
 };
 
@@ -36,7 +33,7 @@ export class UserComponent extends React.Component {
     let mainTab = MainTabs.properties;
     if (this.props.navigation.state && this.props.navigation.state.params && this.props.navigation.state.params.displayedTab) {
       mainTab = this.props.navigation.state.params.displayedTab.mainTab;
-      if (mainTab !== MainTabs.properties && mainTab !== MainTabs.transaction && mainTab !== MainTabs.account && mainTab !== MainTabs.markets) {
+      if (mainTab !== MainTabs.properties && mainTab !== MainTabs.transaction && mainTab !== MainTabs.account) {
         mainTab = MainTabs.properties;
       }
       subTab = this.props.navigation.state.params.displayedTab.subTab;
@@ -172,9 +169,6 @@ export class UserComponent extends React.Component {
         {this.state.displayedTab.mainTab === MainTabs.properties && <AssetsComponent screenProps={{
           homeNavigation: this.props.navigation,
         }} />}
-        {this.state.displayedTab.mainTab === MainTabs.markets && <MarketsComponent screenProps={{
-          homeNavigation: this.props.navigation,
-        }} />}
         {this.state.displayedTab.mainTab === MainTabs.transaction && <TransactionsComponent screenProps={{
           homeNavigation: this.props.navigation,
           subTab: this.state.displayedTab.subTab,
@@ -203,12 +197,6 @@ export class UserComponent extends React.Component {
               : require('./../../../assets/imgs/transaction-icon-disable.png')} />
             {this.state.displayedTab.mainTab === MainTabs.transaction && <Text style={userStyle.bottomTabButtonText}>{MainTabs.transaction}</Text>}
           </TouchableOpacity>
-          {!config.disabel_markets && <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.markets)}>
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.markets
-              ? require('./../../../assets/imgs/markets-icon-enable.png')
-              : require('./../../../assets/imgs/markets-icon-disable.png')} />
-            {this.state.displayedTab.mainTab === MainTabs.markets && <Text style={userStyle.bottomTabButtonText}>{MainTabs.markets}</Text>}
-          </TouchableOpacity>}
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.account)}>
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.account
               ? require('./../../../assets/imgs/account-icon-enable.png')

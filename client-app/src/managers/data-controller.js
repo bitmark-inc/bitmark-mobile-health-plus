@@ -12,9 +12,6 @@ import {
 let userInformation = {};
 let userData = {
   localAssets: null,
-  marketAssets: null,
-  localBalannce: null,
-  marketBalances: null,
   activeIncompingTransferOffers: null,
   transactions: null,
 };
@@ -60,31 +57,10 @@ const runGetUserBitmarksInBackground = (checkDoneProcess) => {
       userData.localAssets = data.localAssets;
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
     }
-    if (userData.marketAssets === null || JSON.stringify(data.marketAssets) !== JSON.stringify(userData.marketAssets)) {
-      userData.marketAssets = data.marketAssets;
-      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BITMARKS);
-    }
     checkDoneProcess();
   }).catch(error => {
     checkDoneProcess();
     console.log('runOnBackground  doGetBitmarks error :', error);
-  });
-};
-
-const runGetUserBalanceInBackground = (checkDoneProcess) => {
-  AccountService.doGetBalance(userInformation).then(data => {
-    if (userData.localBalannce === null || JSON.stringify(data.localBalannce) !== JSON.stringify(userData.localBalannce)) {
-      userData.localBalannce = data.localBalannce;
-      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE);
-    }
-    if (userData.marketBalances === null || JSON.stringify(data.marketBalances) !== JSON.stringify(userData.marketBalances)) {
-      userData.marketBalances = data.marketBalances;
-      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE);
-    }
-    checkDoneProcess();
-  }).catch(error => {
-    checkDoneProcess();
-    console.log('runOnBackground  doGetBalance error :', error);
   });
 };
 
@@ -125,7 +101,6 @@ const runOnBackground = () => {
         let countProcess = 0;
         let processList = [
           runGetUserBitmarksInBackground,
-          runGetUserBalanceInBackground,
           runGetTransactionsInBackground,
           runGetActiveIncomingTransferOfferInBackground,
         ]
@@ -178,16 +153,6 @@ const reloadBitmarks = async () => {
     userData.localAssets = data.localAssets;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
   }
-  if (userData.marketAssets === null || JSON.stringify(data.marketAssets) !== JSON.stringify(userData.marketAssets)) {
-    userData.marketAssets = data.marketAssets;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BITMARKS);
-  }
-};
-
-const doTryAccessToAllMarkets = async () => {
-  await AccountService.doTryAccessToAllMarkets();
-  userInformation = await UserService.doGetCurrentUser();
-  return userInformation;
 };
 
 const doGetTransactionData = async () => {
@@ -209,18 +174,6 @@ const doOpenApp = async () => {
   return userInformation;
 };
 
-const doGetBalance = async () => {
-  let data = await AccountService.doGetBalance(userInformation);
-  if (userData.localBalannce === null || JSON.stringify(data.localBalannce) !== JSON.stringify(userData.localBalannce)) {
-    userData.localBalannce = data.localBalannce;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE);
-  }
-  if (userData.marketBalances === null || JSON.stringify(data.marketBalances) !== JSON.stringify(userData.marketBalances)) {
-    userData.marketBalances = data.marketBalances;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE);
-  }
-};
-
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers || [],
@@ -230,19 +183,11 @@ const getTransactionData = () => {
 const getUserBitmarks = () => {
   return merge({}, {
     localAssets: userData.localAssets || [],
-    marketAssets: userData.marketAssets || [],
   });
 };
 
 const getUserInformation = () => {
   return userInformation;
-};
-
-const getUserBalance = () => {
-  return merge({}, {
-    localBalannce: userData.localBalannce || {},
-    marketBalances: userData.marketBalances || {},
-  });
 };
 
 const getApplicationVersion = () => {
@@ -276,12 +221,9 @@ const DataController = {
   doStartBackgroundProcess,
   doDeactiveApplication,
   reloadBitmarks,
-  doGetBalance,
-  doTryAccessToAllMarkets,
   doGetTransactionData,
 
   getTransactionData,
-  getUserBalance,
   getUserBitmarks,
   getUserInformation,
   getApplicationVersion,

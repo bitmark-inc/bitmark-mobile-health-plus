@@ -35,7 +35,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   subTabButton: {
-    width: config.disabel_markets ? '50%' : '33.3%',
+    width: '50%',
     height: '100%',
     flexDirection: 'row',
     alignItems: 'center',
