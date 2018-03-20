@@ -202,10 +202,10 @@ export class TransactionsComponent extends React.Component {
                       </View>
                       <View style={transactionsStyle.completedTransferContent}>
                         <View style={transactionsStyle.completedTransferContentRow}>
-                          <Text style={transactionsStyle.completedTransferContentRowLabel}>PROPERTY</Text>
+                          <Text style={[transactionsStyle.completedTransferContentRowLabel, { marginTop: 1, }]}>PROPERTY</Text>
                           <Text style={[transactionsStyle.completedTransferContentRowPropertyName]}>{item.assetName}</Text>
                         </View>
-                        <View style={transactionsStyle.completedTransferContentRow}>
+                        <View style={[transactionsStyle.completedTransferContentRow, { marginTop: 1, }]}>
                           <Text style={transactionsStyle.completedTransferContentRowLabel}>FROM</Text>
                           <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.from === this.state.currentUser.bitmarkAccountNumber ? 'YOU' : item.from}</Text>
                         </View>
