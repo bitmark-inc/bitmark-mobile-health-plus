@@ -51,8 +51,13 @@ let doRegisterNotificationInfo = async (accountNumber, token) => {
   return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token);
 };
 
-let doDeregisterNotificationInfo = async (accountNumber, token, signatureData) => {
-  return await NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token);
+let doTryDeregisterNotificationInfo = (accountNumber, token, signatureData) => {
+  return new Promise((resolve) => {
+    NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token).then(resolve).catch(error => {
+      console.log('doTryDeregisterNotificationInfo error :', error);
+      resolve();
+    });
+  });
 };
 
 let removeAllDeliveredNotifications = () => {
@@ -67,7 +72,7 @@ let NotificationService = {
   doRequestNotificationPermissions,
   doCheckNotificaitonPermission,
   doRegisterNotificationInfo,
-  doDeregisterNotificationInfo,
+  doTryDeregisterNotificationInfo,
 };
 
 export { NotificationService };
