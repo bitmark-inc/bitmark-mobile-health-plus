@@ -176,7 +176,7 @@ const doLogin = async (touchFaceIdSession) => {
 const doLogout = async () => {
   if (userInformation.notificationUUID) {
     let signatureData = await CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions')
-    await NotificationService.doDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
+    await NotificationService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
   }
   await AccountModel.doLogout();
   await UserModel.doRemoveUserInfo();
