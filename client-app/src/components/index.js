@@ -108,7 +108,7 @@ class MainComponent extends Component {
 
   handerProcessErrorEvent(processError) {
     Alert.alert((processError && processError.title) ? processError.title : "We’re sorry!",
-      (processError && processError.message) ? processError.message : 'Something went wrong.\nPlease try again.',
+      (processError && processError.message) ? processError.message : 'Something went wrong.\nPlease try again later.',
       [{
         text: 'OK',
         onPress: () => {

@@ -39,7 +39,7 @@ export class IssueFileComponent extends React.Component {
     }
     let metadataList = [];
     let { asset, fingerprint, fileName, fileFormat, filePath } = this.props.navigation.state.params;
-    let existingAsset = asset && asset.name;
+    let existingAsset = !!(asset && asset.name);
     if (existingAsset) {
       let key = 0;
       for (let label in asset.metadata) {
@@ -194,11 +194,9 @@ export class IssueFileComponent extends React.Component {
                 {!this.state.existingAsset && <TextInput
                   style={[localAddPropertyStyle.assetNameInput, {
                     color: this.state.existingAsset ? '#C2C2C2' : 'black',
-                    borderBottomColor: this.stateNameError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
+                    borderBottomColor: this.state.assetNameError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
                   }]} placeholder="64-CHARACTER MAX"
-                  autoCorrect={true}
                   onChangeText={this.doInputAssetName}
-                  value={this.state.assetName}
                   numberOfLines={1}
                   editable={!this.state.existingAsset}
                   returnKeyType="done"
@@ -280,9 +278,8 @@ export class IssueFileComponent extends React.Component {
 
                 <Text style={localAddPropertyStyle.quantityLabel}>{'number of bitmarks TO ISSUE'.toUpperCase()}</Text>
                 <TextInput
-                  autoCorrect={true}
                   style={[localAddPropertyStyle.quantityInput, {
-                    borderBottomColor: this.stateNameError ? '#FF003C' : '#0060F2'
+                    borderBottomColor: this.state.quantityError ? '#FF003C' : '#0060F2'
                   }]} placeholder="1 ~ 100"
                   onChangeText={this.doInputQuantity}
                   keyboardType={'numeric'}
