@@ -10,6 +10,7 @@ import {
 } from './properties';
 
 import { TransactionDetailComponent } from './transactions';
+import { StudyDetailComponent, StudySettingComponent } from './donation';
 
 
 let HomeComponent = StackNavigator({
@@ -22,7 +23,8 @@ let HomeComponent = StackNavigator({
   BitmarkPrivacy: { screen: BitmarkPrivacyComponent, },
   BitmarkTerms: { screen: BitmarkTermsComponent, },
   TransactionDetail: { screen: TransactionDetailComponent, },
-
+  StudyDetail: { screen: StudyDetailComponent, },
+  StudySetting: { screen: StudySettingComponent, },
 }, {
     headerMode: 'none',
     navigationOptions: {

@@ -1,0 +1,87 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import {
+  View, Text, TouchableOpacity, ScrollView,
+  Alert,
+  Platform,
+} from 'react-native';
+
+import DefaultStudies from './default';
+import JoinedStudies from './joined';
+
+console.log('DefaultStudies :', DefaultStudies);
+console.log('JoinedStudies :', JoinedStudies);
+
+import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+let defaultStyle = Platform.select({
+  ios: iosDefaultStyle,
+  android: androidDefaultStyle
+});
+import studyDetailsStyles from './study-detail.component.style';
+
+export class StudyDetailComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.doJoinStudy = this.doJoinStudy.bind(this);
+    this.doOutOptStudy = this.doOutOptStudy.bind(this);
+    let study;
+    if (this.props.navigation && this.props.navigation.state && this.props.navigation.state.params && this.props.navigation.state.params.study) {
+      study = this.props.navigation.state.params.study;
+    }
+    this.state = {
+      study: study,
+    };
+    console.log('this.props :', props);
+  }
+  render() {
+    let StudyDetailComponent = (this.state.study && this.state.study.studyId && this.state.study.joinedDate)
+      ? JoinedStudies[this.state.study.study.studyId] : DefaultStudies[this.state.study.studyId];
+    return (
+      <View style={studyDetailsStyles.body}>
+        <View style={[defaultStyle.header]}>
+          <TouchableOpacity style={defaultStyle.headerLeft}>
+          </TouchableOpacity>
+          <Text style={defaultStyle.headerTitle}>Study Details</Text>
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+            this.props.navigation.goBack();
+          }}>
+            <Text style={defaultStyle.headerRightText}>Done</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={studyDetailsStyles.studyContent}>
+          {!StudyDetailComponent && <Text>This study is not support!</Text>}
+          {StudyDetailComponent && <StudyDetailComponent study={this.state.study} navigation={this.props.navigation} doJoinStudy={this.doJoinStudy} doOutOptStudy={this.doOutOptStudy} />}
+        </ScrollView>
+      </View>
+    );
+  }
+  // ======================================================================================================================================================
+  // ======================================================================================================================================================
+  doJoinStudy() {
+    console.log('doJoinStudy =====', this.props);
+    this.props.navigation.navigate('StudySetting', { study: this.state.study });
+  }
+  doOutOptStudy() {
+    Alert.alert('Leave Study', "Are you sure you want to completely withdraw from the study? You will no longer be able to donate data to this study. This action cannot be undone.", [{
+      text: 'Cancel'
+    }, {
+      text: 'Leave', onPress: () => {
+
+      }
+    }])
+  }
+  // ======================================================================================================================================================
+  // ======================================================================================================================================================
+}
+
+StudyDetailComponent.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+    goBack: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        study: PropTypes.object,
+      })
+    })
+  })
+}

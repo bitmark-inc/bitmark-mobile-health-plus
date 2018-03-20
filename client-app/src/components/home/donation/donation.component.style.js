@@ -1,4 +1,4 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import {
   ios,
   android // TODO
@@ -7,14 +7,12 @@ let constant = Platform.select({
   ios: ios.constant,
   android: android.constant
 });
-const deviceSize = Dimensions.get('window');
 
 export default StyleSheet.create({
   body: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter),
-    width: '100%',
     backgroundColor: '#F5F5F5',
   },
   content: {

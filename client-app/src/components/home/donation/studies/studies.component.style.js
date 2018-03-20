@@ -58,7 +58,9 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-
+  studyCard: {
+    marginBottom: 5,
+  },
   noCardTitle: {
     marginTop: 39,
     marginLeft: 19,

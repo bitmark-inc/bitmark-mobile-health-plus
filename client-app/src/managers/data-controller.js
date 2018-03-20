@@ -260,6 +260,10 @@ const getLocalBitmarkInformation = (bitmarkId, assetId) => {
   return { bitmark, asset };
 };
 
+const getDonationInformation = () => {
+  return merge({}, userData.donationInformation || {});
+};
+
 const DataController = {
   reloadData: runOnBackground,
   doOpenApp,
@@ -276,6 +280,7 @@ const DataController = {
   getApplicationVersion,
   getApplicationBuildNumber,
   getLocalBitmarkInformation,
+  getDonationInformation,
 };
 
 export { DataController };

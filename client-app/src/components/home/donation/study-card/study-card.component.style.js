@@ -9,7 +9,7 @@ export default StyleSheet.create({
   cardBackground: {
     width: 375,
     height: 170,
-    resizeMode: 'contain',
+    // resizeMode: 'contain',
   },
   title: {
     position: 'absolute',

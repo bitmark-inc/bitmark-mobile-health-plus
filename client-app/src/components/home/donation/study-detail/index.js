@@ -1,0 +1,1 @@
+export * from './study-detail.component';

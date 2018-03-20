@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, Image,
+  Text, View, ImageBackground,
 } from 'react-native';
 
 import cardStyles from './study-card.component.style';
@@ -23,7 +23,7 @@ export class StudyCardComponent extends React.Component {
   render() {
     return (
       <View style={[cardStyles.body, this.props.style]}>
-        <Image style={cardStyles.cardBackground} source={require('./../../../../../assets/imgs//card-berkeley.png')}>
+        <ImageBackground style={cardStyles.cardBackground} source={require('./../../../../../assets/imgs//card-berkeley.png')}>
           <Text style={cardStyles.title}>
             {this.props.title}
           </Text>
@@ -42,7 +42,7 @@ export class StudyCardComponent extends React.Component {
           <Text style={cardStyles.durationValue}>
             {this.state.duration}
           </Text>
-        </Image>
+        </ImageBackground>
       </View>
     );
   }

@@ -8,6 +8,7 @@ import Mailer from 'react-native-mail';
 
 import { StudyCardComponent } from './../study-card/study-card.component';
 import studiesStyles from './studies.component.style';
+import { DataController } from '../../../../managers/data-controller';
 
 const StudyTypes = {
   joined: 'JOINED',
@@ -19,7 +20,12 @@ export class StudiesComponent extends React.Component {
     super(props);
     this.contactBitmark = this.contactBitmark.bind(this);
 
-    let studies = [];
+    let studies = DataController.getDonationInformation().otherStudies;
+    console.log('DataController.getDonationInformation() :', DataController.getDonationInformation());
+    console.log('studies :', studies);
+    studies.forEach(study => {
+      study.key = study.studyId
+    });
     // TODO
 
     this.state = {
@@ -112,19 +118,20 @@ export class StudiesComponent extends React.Component {
             </Text>
           </View>}
 
-          {this.state.studies.le0ngth > 0 && <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+          {this.state.studies.length > 0 && <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             <View style={studiesStyles.content}>
               <FlatList
                 extraData={this.state}
                 data={this.state.studies}
                 renderItem={({ item }) => {
-                  return (<TouchableOpacity onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item.study })}>
+                  console.log('item :', item);
+                  return (<TouchableOpacity style={studiesStyles.studyCard} onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item })}>
                     <StudyCardComponent
-                      title={item.study.title}
-                      joined={!!item.study.joinedDate}
-                      description={item.study.description}
-                      interval={item.study.interval}
-                      duration={item.study.duration || item.study.durationText} />
+                      title={item.title}
+                      joined={!!item.joinedDate}
+                      description={item.description}
+                      interval={item.interval}
+                      duration={item.duration || item.durationText} />
                   </TouchableOpacity>)
                 }}
               />

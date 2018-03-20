@@ -3,7 +3,7 @@ import {
 } from 'react-native';
 import { merge } from 'lodash';
 
-import appleHealthKit from './../apple-health-kit';
+import { AppleHealthKitModel } from './../apple-health-kit-model';
 import studyCommonUtil from './common';
 
 const WomenHealthStudy = NativeModules.WomenHealthStudy;
@@ -201,10 +201,10 @@ let getHealthKitData = (studyInformation, startDateString, endDateString) => {
       startDate: startDateString,
       endDate: endDateString,
     }
-    appleHealthKit.initHealthKit(studyInformation.dataTypes).then(() => {
+    AppleHealthKitModel.initHealthKit(studyInformation.dataTypes).then(() => {
       let promiseList = [];
       studyInformation.dataTypes.forEach((type) => {
-        promiseList.push(appleHealthKit['get' + type](options));
+        promiseList.push(AppleHealthKitModel['get' + type](options));
       });
       Promise.all(promiseList).then(results => {
         let mapResult = {};
