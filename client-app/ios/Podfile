@@ -23,6 +23,7 @@ target 'Bitmark beta' do
     use_frameworks!
     
     pods
+    pod 'HockeySDK'
     
 end
 
