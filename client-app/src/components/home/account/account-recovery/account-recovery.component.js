@@ -6,7 +6,7 @@ import {
   Platform,
 } from 'react-native';
 
-import { UserService } from "./../../../../services";
+import { UserModel } from "./../../../../models";
 import { AppController } from './../../../../managers';
 
 import accountRecoveryStyle from './account-recovery.component.style';
@@ -203,7 +203,7 @@ class TryRecoveryPhraseComponent extends React.Component {
         biggerList.push({ key: index });
       }
     }
-    UserService.doGetCurrentUser().then(user => {
+    UserModel.doGetCurrentUser().then(user => {
       let result = [];
       for (let index in curretnUser.pharse24Words) {
         result.push({ key: index, word: curretnUser.pharse24Words[index] });

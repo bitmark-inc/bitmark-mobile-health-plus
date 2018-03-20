@@ -83,11 +83,11 @@ const doLogin = async (pharse24Words) => {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(AccountService.doLogin(touchFaceIdSession));
+  return await processing(DataController.doLogin(touchFaceIdSession));
 };
 
 const doLogout = async () => {
-  return await processing(AccountService.doLogout());
+  return await processing(DataController.doLogout());
 };
 
 const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
@@ -173,8 +173,8 @@ const reloadData = async () => {
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
-  return DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
-  // return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
+  // return DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
+  return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
 };
 // ================================================================================================
 // ================================================================================================

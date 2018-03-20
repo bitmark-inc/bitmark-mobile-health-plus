@@ -132,9 +132,12 @@ const doTryCreateSignatureData = async (touchFaceIdMessage) => {
   return { timestamp, signature: signatures[0] };
 };
 
-const doCreateSignatureData = async () => {
+const doCreateSignatureData = async (touchFaceId) => {
+  if (!touchFaceId) {
+    touchFaceId = currentFaceTouceSessionId;
+  }
   let timestamp = moment().toDate().getTime() + '';
-  let signatures = await doRichSignMessage([timestamp], currentFaceTouceSessionId);
+  let signatures = await doRichSignMessage([timestamp], touchFaceId);
   return { timestamp, signature: signatures[0] };
 };
 

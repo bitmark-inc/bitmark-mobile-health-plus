@@ -2,18 +2,20 @@ import DeviceInfo from 'react-native-device-info';
 import { merge } from 'lodash';
 
 import {
-  UserService,
   EventEmiterService,
-  AccountService,
   NotificationService,
   TransactionService,
+  BitmarkService,
 } from "../services";
+import { CommonModel, AccountModel, UserModel } from '../models';
+import { DonationService } from '../services/donation-service';
 
 let userInformation = {};
 let userData = {
   localAssets: null,
   activeIncompingTransferOffers: null,
   transactions: null,
+  donationInformation: null,
 };
 // ================================================================================================================================================
 // ================================================================================================================================================
@@ -53,25 +55,42 @@ const runGetTransactionsInBackground = (checkDoneProcess) => {
   });
 };
 
-const runGetUserBitmarksInBackground = (checkDoneProcess) => {
-  AccountService.doGetBitmarks(userInformation).then(data => {
-    if (userData.localAssets === null || JSON.stringify(data.localAssets) !== JSON.stringify(userData.localAssets)) {
-      userData.localAssets = data.localAssets;
+const runGetLocalBitmarksInBackground = (checkDoneProcess) => {
+  BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber).then(localAssets => {
+    if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
+      userData.localAssets = localAssets;
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
     }
     checkDoneProcess();
-    console.log('runOnBackground  runGetUserBitmarksInBackground success :');
+    console.log('runOnBackground  runGetLocalBitmarksInBackground success :');
   }).catch(error => {
     checkDoneProcess();
-    console.log('runOnBackground  runGetUserBitmarksInBackground error :', error);
+    console.log('runOnBackground  runGetLocalBitmarksInBackground error :', error);
   });
 };
 
+const runGetDonationInformationInBackground = (checkDoneProcess) => {
+  DonationService.doGetUserInformation(userInformation.bitmarkAccountNumber).then(donationInformation => {
+    console.log('donationInformation :', donationInformation);
+    if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+      userData.donationInformation = donationInformation;
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+    }
+    checkDoneProcess();
+    console.log('runOnBackground  runGetDonationInformationInBackground success :');
+  }).catch(error => {
+    checkDoneProcess();
+    console.log('runOnBackground  runGetDonationInformationInBackground error :', error);
+  });
+};
 const configNotification = () => {
   const onRegisterred = (registerredNotificaitonInfo) => {
     let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
     if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-      AccountService.doRegisterNotificationInfo(notificationUUID).catch(error => {
+      NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
+        userInformation.notificationUUID = notificationUUID;
+        return UserModel.doUpdateUserInfo(userInformation);
+      }).catch(error => {
         console.log('DataController doRegisterNotificationInfo error:', error);
       });
     }
@@ -85,7 +104,7 @@ const configNotification = () => {
       runGetActiveIncomingTransferOfferInBackground();
       runGetTransactionsInBackground();
     } else if (notificationData.event === 'transfer_rejected' || notificationData.event === 'transfer_failed') {
-      runGetUserBitmarksInBackground();
+      runGetLocalBitmarksInBackground();
     }
     NotificationService.setApplicationIconBadgeNumber(0);
   };
@@ -95,7 +114,7 @@ const configNotification = () => {
 
 const runOnBackground = () => {
   return new Promise((resolve) => {
-    UserService.doTryGetCurrentUser().then(userInfo => {
+    UserModel.doTryGetCurrentUser().then(userInfo => {
       if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
         userInformation = userInfo;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
@@ -103,9 +122,10 @@ const runOnBackground = () => {
       if (userInformation && userInformation.bitmarkAccountNumber) {
         let countProcess = 0;
         let processList = [
-          runGetUserBitmarksInBackground,
+          runGetLocalBitmarksInBackground,
           runGetTransactionsInBackground,
           runGetActiveIncomingTransferOfferInBackground,
+          runGetDonationInformationInBackground,
         ]
         let checkDoneProcess = () => {
           countProcess++;
@@ -147,13 +167,35 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return userInformation;
 };
 
+const doLogin = async (touchFaceIdSession) => {
+  userInformation = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
+  await UserModel.doUpdateUserInfo(userInformation);
+  return userInformation;
+};
+
+const doLogout = async () => {
+  if (userInformation.notificationUUID) {
+    let signatureData = await CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions')
+    await NotificationService.doDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
+  }
+  await AccountModel.doLogout();
+  await UserModel.doRemoveUserInfo();
+  userInformation = {};
+  userData = {
+    localAssets: null,
+    activeIncompingTransferOffers: null,
+    transactions: null,
+  };
+};
+
+
 const doDeactiveApplication = async () => {
   stopInterval();
 };
 const reloadBitmarks = async () => {
-  let data = await AccountService.doGetBitmarks(userInformation);
-  if (userData.localAssets === null || JSON.stringify(data.localAssets) !== JSON.stringify(userData.localAssets)) {
-    userData.localAssets = data.localAssets;
+  let localAssets = await BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber);
+  if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
+    userData.localAssets = localAssets;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
   }
 };
@@ -173,7 +215,7 @@ const doGetTransactionData = async () => {
 };
 
 const doOpenApp = async () => {
-  userInformation = await UserService.doTryGetCurrentUser();
+  userInformation = await UserModel.doTryGetCurrentUser();
   return userInformation;
 };
 
@@ -221,6 +263,8 @@ const getLocalBitmarkInformation = (bitmarkId, assetId) => {
 const DataController = {
   reloadData: runOnBackground,
   doOpenApp,
+  doLogin,
+  doLogout,
   doStartBackgroundProcess,
   doDeactiveApplication,
   reloadBitmarks,

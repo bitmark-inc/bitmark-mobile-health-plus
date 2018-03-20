@@ -1,4 +1,4 @@
-import { CommonModel } from './../models';
+import { CommonModel } from './common-model';
 import { merge } from 'lodash';
 import { config } from '../configs';
 
@@ -14,7 +14,7 @@ const doGetCurrentUser = async () => {
 const doTryGetCurrentUser = () => {
   return new Promise((resolve) => {
     doGetCurrentUser().then(resolve).catch(error => {
-      console.log('UserService doTryGetCurrentUser error:', error);
+      console.log('UserModel doTryGetCurrentUser error:', error);
       resolve({});
     });
   });
@@ -31,11 +31,11 @@ const doRemoveUserInfo = async () => {
   return await CommonModel.doSetLocalData(CommonModel.app_local_data_key, {});
 };
 
-let UserService = {
+let UserModel = {
   doTryGetCurrentUser,
   doGetCurrentUser,
   doUpdateUserInfo,
   doRemoveUserInfo,
 };
 
-export { UserService };
+export { UserModel };

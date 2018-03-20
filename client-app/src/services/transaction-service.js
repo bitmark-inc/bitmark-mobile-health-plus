@@ -1,7 +1,5 @@
 import moment from 'moment';
-import { TransactionModel, BitmarkSDK, BitmarkModel } from '../models';
-import { UserService } from './user-service';
-
+import { TransactionModel, BitmarkSDK, BitmarkModel, UserModel } from '../models';
 
 const getAllTransactions = async (accountNumber) => {
   let allTransactions = await TransactionModel.getAllTransactions(accountNumber);
@@ -56,20 +54,20 @@ const doGetActiveOutgoinTransferOffers = async (accountNumber) => {
 };
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
-  let userInfo = await UserService.doGetCurrentUser();
+  let userInfo = await UserModel.doGetCurrentUser();
   let firstSignatureData = await BitmarkSDK.sign1stForTransfer(touchFaceIdSession, bitmarkId, receiver);
   return await TransactionModel.doSubmitTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, firstSignatureData.txid, firstSignatureData.signature, receiver);
 };
 
 const doAcceptTransferBitmark = async (touchFaceIdSession, bitmarkId) => {
-  let userInfo = await UserService.doGetCurrentUser();
+  let userInfo = await UserModel.doGetCurrentUser();
   let incomingTransferOffer = await TransactionModel.doGetTransferOfferDetail(userInfo.bitmarkAccountNumber, bitmarkId);
   let counterSigature = await BitmarkSDK.sign2ndForTransfer(touchFaceIdSession, incomingTransferOffer.half_signed_transfer.link, incomingTransferOffer.half_signed_transfer.signature);
   return await TransactionModel.doAccepTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, counterSigature);
 };
 
 const doGetTransferOfferDetail = async (bitmarkId) => {
-  let userInfo = await UserService.doGetCurrentUser();
+  let userInfo = await UserModel.doGetCurrentUser();
   let incomingTransferOffer = await TransactionModel.doGetTransferOfferDetail(userInfo.bitmarkAccountNumber, bitmarkId);
   let transactionData = await BitmarkModel.doGetTransactionInformation(incomingTransferOffer.half_signed_transfer.link);
   let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
@@ -82,7 +80,7 @@ const doGetTransferOfferDetail = async (bitmarkId) => {
 };
 
 const doRejectTransferBitmark = async (bitmarkId) => {
-  let userInfo = await UserService.doGetCurrentUser();
+  let userInfo = await UserModel.doGetCurrentUser();
   //TODO need signature
   // let signatureData = await CommonModel.doCreateSignatureData();
   // return await TransactionModel.doRejectTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, signatureData);
@@ -90,7 +88,7 @@ const doRejectTransferBitmark = async (bitmarkId) => {
 };
 
 const doCancelTransferBitmark = async (bitmarkId) => {
-  let userInfo = await UserService.doGetCurrentUser();
+  let userInfo = await UserModel.doGetCurrentUser();
   return await TransactionModel.doCancelTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId);
 };
 

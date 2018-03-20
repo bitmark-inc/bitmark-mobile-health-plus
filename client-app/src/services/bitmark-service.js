@@ -8,7 +8,6 @@ import { TransactionService } from '.';
 let doGetBitmarks = async (bitmarkAccountNumber) => {
   let data = await BitmarkModel.doGetAllBitmarks(bitmarkAccountNumber);
   let outgoingTransferOffers = await TransactionService.doGetActiveOutgoinTransferOffers(bitmarkAccountNumber);
-
   let localAssets = [];
   if (data && data.bitmarks && data.assets) {
     for (let asset of data.assets) {
