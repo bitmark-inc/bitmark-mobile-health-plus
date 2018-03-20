@@ -7,7 +7,7 @@ let NETWORKS = {
   livenet: 'livenet',
 }
 let config = {
-  network: NETWORKS.livenet,
+  network: NETWORKS.testnet,
   disabel_markets: true,
   // network: NETWORKS.devnet,
 

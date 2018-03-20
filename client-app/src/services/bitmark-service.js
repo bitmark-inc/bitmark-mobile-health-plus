@@ -14,22 +14,25 @@ let doGetBitmarks = async (bitmarkAccountNumber) => {
     for (let asset of data.assets) {
       asset.asset_id = asset.id;
       for (let bitmark of data.bitmarks) {
-        let isTransferring = outgoingTransferOffers.findIndex(item => item.bitmark_id === bitmark.id);
-        bitmark.status = isTransferring >= 0 ? 'transferring' : bitmark.status;
-        bitmark.created_at = moment(bitmark.created_at).format('YYYY MMM DD HH:mm:ss');
-        if (!bitmark.bitmark_id) {
-          bitmark.bitmark_id = bitmark.id;
-        }
-        if (bitmark.asset_id === asset.id) {
-          if (!asset.bitmarks) {
-            asset.bitmarks = [];
-            asset.totalPending = 0;
+        if (!bitmark.checked && bitmark.asset_id === asset.id) {
+          bitmark.checked = true;
+          let isTransferring = outgoingTransferOffers.findIndex(item => item.bitmark_id === bitmark.id);
+          bitmark.status = isTransferring >= 0 ? 'transferring' : bitmark.status;
+          bitmark.created_at = moment(bitmark.created_at).format('YYYY MMM DD HH:mm:ss');
+          if (!bitmark.bitmark_id) {
+            bitmark.bitmark_id = bitmark.id;
           }
-          asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
-          asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
-          asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-          asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
-          asset.bitmarks.push(bitmark);
+          if (bitmark.asset_id === asset.id) {
+            if (!asset.bitmarks) {
+              asset.bitmarks = [];
+              asset.totalPending = 0;
+            }
+            asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
+            asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
+            asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
+            asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
+            asset.bitmarks.push(bitmark);
+          }
         }
       }
       asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
