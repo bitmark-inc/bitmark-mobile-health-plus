@@ -38,8 +38,8 @@ platform :ios do
     )
     hockey(
       api_token: "ea44d63ef04b42d8898c686a5744346c",
-      notify: "Anh Nguyen"
-      )
+      tags: ["vn_team"]
+    )
   end
   lane :enterprise do
     version_number = latest_hockey_build_number(
