@@ -78,7 +78,7 @@ export default StyleSheet.create({
   },
 
   titleNoRequiredTransferOffer: {
-    marginTop: 18,
+    marginTop: 46,
     marginLeft: convertWidth(19),
     width: convertWidth(337),
     fontFamily: 'Avenir Black',
@@ -89,7 +89,7 @@ export default StyleSheet.create({
   },
 
   messageNoRequiredTransferOffer: {
-    marginTop: 30,
+    marginTop: 46,
     marginLeft: convertWidth(19),
     width: convertWidth(337),
     fontFamily: 'Avenir Light',
