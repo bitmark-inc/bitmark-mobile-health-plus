@@ -52,6 +52,8 @@
 		580AD8AB2046893B000EEB1F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		584009D020243ABA00550ADB /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 584009A920243AA700550ADB /* libRCTCamera.a */; };
 		58400A98202C013C00550ADB /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
+		58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
+		58557E6C2062042100402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
 		588FE23D205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */; };
 		588FE23E205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */; };
 		588FE23F205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E8205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m */; };
@@ -541,6 +543,7 @@
 		580AD8B32046893B000EEB1F /* Bitmark copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Bitmark copy-Info.plist"; path = "/Users/anhnguyen/Documents/go/src/github.com/bitmark-inc/mobile-app/client-app/ios/Bitmark copy-Info.plist"; sourceTree = "<absolute>"; };
 		5840099F20243AA700550ADB /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
+		58557E6A2062041C00402734 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTAppleHealthKit+Methods_Body.m"; sourceTree = "<group>"; };
 		588FE1E6205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Results.h"; sourceTree = "<group>"; };
 		588FE1E7205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Environment.h"; sourceTree = "<group>"; };
@@ -684,6 +687,7 @@
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
+				58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
@@ -712,6 +716,7 @@
 				580AD89D2046893B000EEB1F /* libRCTImage.a in Frameworks */,
 				580AD89E2046893B000EEB1F /* libRCTLinking.a in Frameworks */,
 				580AD89F2046893B000EEB1F /* libRCTNetwork.a in Frameworks */,
+				58557E6C2062042100402734 /* HealthKit.framework in Frameworks */,
 				580AD8A02046893B000EEB1F /* libRCTSettings.a in Frameworks */,
 				580AD8A12046893B000EEB1F /* libRCTText.a in Frameworks */,
 				580AD8A22046893B000EEB1F /* libRCTVibration.a in Frameworks */,
@@ -852,6 +857,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58557E6A2062041C00402734 /* HealthKit.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				64DCCF0E838787F5DD5E77AE /* Pods_Bitmark.framework */,
 				7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */,
@@ -1305,6 +1311,9 @@
 						LastSwiftMigration = 0920;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.HealthKit = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
 								enabled = 1;
 							};
@@ -1317,6 +1326,9 @@
 						DevelopmentTeam = A52M7AQ8B2;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.HealthKit = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
 								enabled = 1;
 							};
