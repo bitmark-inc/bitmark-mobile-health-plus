@@ -173,8 +173,8 @@ const doReloadData = async () => {
 };
 
 const doActiveDonation = async () => {
-  // let donationInformation = DataController.getDonationInformation();
-  // await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
+  let donationInformation = DataController.getDonationInformation();
+  await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to active donation');
   if (!touchFaceIdSession) {
     return null;
