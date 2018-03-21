@@ -1,4 +1,6 @@
 import { Platform } from 'react-native';
+import moment from 'moment';
+
 import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
@@ -6,22 +8,43 @@ import { ios } from '../configs';
 
 // ================================================================================================
 // ================================================================================================
+
+let commonProcess = (promise, successCallabck, errorCallback) => {
+  let startAt = moment().toDate().getTime();
+  let check2Seconds = (done) => {
+    let endAt = moment().toDate().getTime();
+    let space = startAt + 2000 - endAt;
+    if (space > 0) {
+      setTimeout(done, space);
+    } else {
+      done();
+    }
+  };
+
+  promise.then((data) => {
+    check2Seconds(() => successCallabck(data));
+  }).catch(error => {
+    check2Seconds(() => errorCallback(error));
+  });
+};
+
 let processing = (promise) => {
   EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
   return new Promise((resolve, reject) => {
-    promise.then((data) => {
+    commonProcess(promise, (data) => {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       resolve(data);
-    }).catch(error => {
+    }, (error) => {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       reject(error);
-    });
-  })
+    })
+  });
 };
+
 let submitting = (promise, procesingData, successData, errorData) => {
-  EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, procesingData);
+  EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, procesingData || { indicator: true });
   return new Promise((resolve, reject) => {
-    promise.then((data) => {
+    commonProcess(promise, (data) => {
       if (successData) {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, successData);
         setTimeout(() => {
@@ -32,7 +55,7 @@ let submitting = (promise, procesingData, successData, errorData) => {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
         resolve(data);
       }
-    }).catch(error => {
+    }, (error) => {
       if (errorData) {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, errorData);
         setTimeout(() => {
@@ -44,7 +67,7 @@ let submitting = (promise, procesingData, successData, errorData) => {
         reject(error);
       }
     });
-  })
+  });
 };
 
 // ================================================================================================

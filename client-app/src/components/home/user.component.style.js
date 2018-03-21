@@ -78,5 +78,31 @@ export default StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     width: '100%',
-  }
+  },
+
+  donationNumber: {
+    backgroundColor: '#FF003C',
+    position: 'absolute',
+    borderRadius: 7,
+    borderColor: '#FF003C',
+    borderWidth: 1,
+    top: 5,
+    right: 16,
+    width: 14,
+    height: 14,
+    flexDirection: 'column',
+    alignItems: "center",
+    alignContent: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+  },
+  donationNumberText: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 8,
+    lineHeight: 9,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    width: '100%',
+  },
 });

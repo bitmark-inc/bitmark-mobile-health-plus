@@ -7,6 +7,7 @@ import {
 import { ActiveDonationComponent } from './active-donation';
 
 import { StudiesComponent } from './studies/studies.component';
+import { TasksComponent } from './tasks/task.component';
 import { } from './tasks/task.component';
 
 import donationStyle from './donation.component.style';
@@ -59,6 +60,7 @@ export class DonationComponent extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={donationStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.tasks)}>
+            {this.state.donationInformation.totalTodoTask && <View style={donationStyle.taskIndicator}></View>}
             <Text style={[donationStyle.subTabButtonText, { color: this.state.subTab === SubTabs.tasks ? '#0060F2' : '#C1C1C1' }]}>{SubTabs.tasks.toUpperCase()}</Text>
           </TouchableOpacity>
         </View>
@@ -67,9 +69,9 @@ export class DonationComponent extends React.Component {
           homeNavigation: this.props.screenProps.homeNavigation,
           type: this.state.subTab2,
         }} />}
-        {/* {this.state.subTab === SubTabs.tasks && <TransactionsComponent screenProps={{
+        {this.state.subTab === SubTabs.tasks && <TasksComponent screenProps={{
           homeNavigation: this.props.screenProps.homeNavigation,
-        }} />} */}
+        }} />}
       </View>
     </View>);
   }

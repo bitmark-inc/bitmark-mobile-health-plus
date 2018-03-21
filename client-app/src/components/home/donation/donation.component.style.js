@@ -49,4 +49,15 @@ export default StyleSheet.create({
     textAlign: 'center',
     color: '#0060F2',
   },
+  taskIndicator: {
+    position: 'absolute',
+    top: 5,
+    left: 124,
+    backgroundColor: '#FF003C',
+    borderColor: '#FF003C',
+    borderWidth: 1,
+    borderRadius: 5,
+    width: 10,
+    height: 10,
+  }
 });

@@ -30,6 +30,7 @@ export class UserComponent extends React.Component {
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerChangeActiveIncomingTransferOffer = this.handerChangeActiveIncomingTransferOffer.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
+    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
 
     let subTab;
     let subTab2;
@@ -50,6 +51,7 @@ export class UserComponent extends React.Component {
         subTab2,
       },
       transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length,
+      donationInformation: DataController.getDonationInformation(),
     };
   }
 
@@ -57,16 +59,23 @@ export class UserComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
     EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
     EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_DATA, this.reloadData);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
     EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
     EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_DATA, this.reloadData);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
   }
 
   handerChangeActiveIncomingTransferOffer() {
     this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length, });
+  }
+
+  handerDonationInformationChange() {
+    this.setState({ donationInformation: DataController.getDonationInformation() })
   }
 
   reloadData() {
@@ -210,8 +219,8 @@ export class UserComponent extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.donation)}>
-            {this.state.donationNumber > 0 && <View style={[userStyle.donationNumber, { top: this.state.displayedTab.mainTab === MainTabs.donation ? 2 : 5 }]}>
-              <Text style={userStyle.donationNumberText}>{this.state.donationNumber}</Text>
+            {this.state.donationInformation.totalTodoTask > 0 && <View style={[userStyle.donationNumber, { top: this.state.displayedTab.mainTab === MainTabs.donation ? 2 : 5 }]}>
+              <Text style={userStyle.donationNumberText}>{this.state.donationInformation.totalTodoTask}</Text>
             </View>}
             <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.donation
               ? require('./../../../assets/imgs/donation-icon-enable.png')

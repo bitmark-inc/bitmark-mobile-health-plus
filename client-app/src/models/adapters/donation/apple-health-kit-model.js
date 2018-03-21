@@ -128,9 +128,9 @@ AppleHealthKitModel.getDeterminedHKPermission = (readDataType) => {
     }
     let permissions = {};
     if (readDataType && readDataType.length > 0) {
-      for (let index in readDataType) {
-        if (!supportedDataTypes[readDataType[index]]) {
-          return reject(new Error('Read data type "' + readDataType[index] + '" is not support!'));
+      for (let type of readDataType) {
+        if (!supportedDataTypes[type]) {
+          return reject(new Error('Read data type "' + type + '" is not support!'));
         }
       }
       permissions.read = readDataType;

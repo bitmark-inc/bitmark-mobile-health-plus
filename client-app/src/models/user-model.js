@@ -3,7 +3,7 @@ import { merge } from 'lodash';
 import { config } from '../configs';
 
 const doGetCurrentUser = async () => {
-  let userInfo = await CommonModel.doGetLocalData(CommonModel.app_local_data_key);
+  let userInfo = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_INFORMATION);
   if (userInfo.network !== config.network) {
     await doRemoveUserInfo();
     return {};
@@ -24,11 +24,11 @@ const doUpdateUserInfo = async (userInfo) => {
   let currentUser = await doGetCurrentUser();
   currentUser = merge({}, currentUser, userInfo);
   currentUser.network = config.network;
-  return await CommonModel.doSetLocalData(CommonModel.app_local_data_key, currentUser);
+  return await CommonModel.doSetLocalData(CommonModel.KEYS.USER_INFORMATION, currentUser);
 };
 
 const doRemoveUserInfo = async () => {
-  return await CommonModel.doSetLocalData(CommonModel.app_local_data_key, {});
+  return await CommonModel.doSetLocalData(CommonModel.KEYS.USER_INFORMATION, {});
 };
 
 let UserModel = {
