@@ -191,8 +191,8 @@ export default StyleSheet.create({
     color: '#CCCCCC',
   },
   bitmarkViewButton: {
-    height: 25,
-    width: convertWidth(102),
+    height: 36,
+    width: convertWidth(120),
   },
   bitmarkViewButtonText: {
     fontFamily: 'Andale Mono',
