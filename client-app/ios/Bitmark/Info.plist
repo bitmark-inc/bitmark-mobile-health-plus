@@ -58,6 +58,8 @@
 	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your health data</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AndaleMono.ttf</string>
