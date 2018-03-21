@@ -216,6 +216,14 @@ const doGetTransactionData = async () => {
 
 const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
+  let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
+  if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
+    userData.localAssets = localAssets || [];
+  }
+  let donationInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
+  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+    userData.donationInformation = donationInformation || {};
+  }
   return userInformation;
 };
 

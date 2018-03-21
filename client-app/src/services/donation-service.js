@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { merge } from 'lodash';
 import { DonationModel, CommonModel, AppleHealthKitModel } from '../models';
 
 const isEmptyHealthData = (healthData) => {
@@ -80,6 +79,10 @@ const doCheckDataSource = async (donationInformation, oldDonationInformation) =>
 };
 
 const doLoadDonationTask = async (donationInformation) => {
+  if (!donationInformation.createdAt) {
+    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
+    return donationInformation;
+  }
   let oldDonationInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION);
   donationInformation = await doCheckDataSource(donationInformation, oldDonationInformation);
 
@@ -132,7 +135,6 @@ const doLoadDonationTask = async (donationInformation) => {
       }
     }
   }
-
   donationInformation.todoTasks = todoTasks;
   donationInformation.totalTodoTask = totalTodoTask;
 
@@ -150,6 +152,8 @@ const doLoadDonationTask = async (donationInformation) => {
     }
   }
   donationInformation.completedTasks = completedTasks;
+
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
   return donationInformation;
 }
 

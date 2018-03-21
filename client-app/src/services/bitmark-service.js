@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { BitmarkModel } from "../models";
+import { BitmarkModel, CommonModel } from "../models";
 import { sortList } from './../utils';
 import { TransactionService } from '.';
 
@@ -39,6 +39,7 @@ let doGetBitmarks = async (bitmarkAccountNumber) => {
     }
   }
   localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
+  CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, localAssets);
   return localAssets;
 };
 
