@@ -209,7 +209,8 @@ const reloadData = async () => {
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
-  return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
+  return await DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
+  // return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
 };
 // ================================================================================================
 // ================================================================================================
