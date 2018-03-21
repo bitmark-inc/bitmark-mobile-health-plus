@@ -40,9 +40,6 @@ export class IssueFileComponent extends React.Component {
       }
     }
     let metadataList = [];
-    for (let key = 0; key < 10; key++) {
-      metadataList.push({ key, label: key + '_', value: key + '_' });
-    }
     let { asset, fingerprint, fileName, fileFormat, filePath } = this.props.navigation.state.params;
     let existingAsset = !!(asset && asset.name);
     if (existingAsset) {
