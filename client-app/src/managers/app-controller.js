@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
-import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel } from './../models';
-import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
+import { CommonModel, AccountModel, BitmarkModel, FaceTouchId } from './../models';
+import { AccountService, BitmarkService, EventEmiterService, MarketService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
 
@@ -83,11 +83,11 @@ const doLogin = async (pharse24Words) => {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doLogin(touchFaceIdSession));
+  return await processing(AccountService.doLogin(touchFaceIdSession));
 };
 
 const doLogout = async () => {
-  return await processing(DataController.doLogout());
+  return await processing(AccountService.doLogout());
 };
 
 const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
@@ -100,12 +100,48 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
   return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
 };
 
+const doPairAccount = async (token, market) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to pair the bitmark account with market.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  return await processing(MarketService.doPairAccount(touchFaceIdSession, token, market));
+};
+
+const doWithdrawBitmark = async (bitmark) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to remove the bitmark from market.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  return await processing(MarketService.doWithdrawBitmarks(touchFaceIdSession, [bitmark.bitmark_id]));
+};
+
+const doDepositBitmark = async (bitmark, market) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to remove the bitmark from market.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  return await processing(MarketService.doDepositBitmarks(touchFaceIdSession, [bitmark.bitmark_id], market));
+};
+
 const check24Words = async (pharse24Words) => {
   return await processing(AccountModel.doCheck24Words(pharse24Words));
 };
 
+const doTryAccessToMarket = async (market) => {
+  return await processing(AccountService.doTryAccessToMarket(market));
+};
+
+const doTryAccessToAllMarkets = async () => {
+  return await processing(DataController.doTryAccessToAllMarkets());
+};
+
 const reloadBitmarks = async () => {
   await processing(DataController.reloadBitmarks());
+};
+
+const doGetBalance = async () => {
+  await processing(DataController.doGetBalance());
 };
 
 const doGetTransactionData = async () => {
@@ -168,41 +204,13 @@ const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, e
   return await submitting(TransactionService.doRejectTransferBitmark(bitmarkId), processingInfo, successInfo, errorInfo);
 };
 
-const doReloadData = async () => {
-  return await processing(DataController.doReloadData());
-};
-
-const doActiveDonation = async () => {
-  // let donationInformation = DataController.getDonationInformation();
-  // await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to active donation');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doActiveDonation(touchFaceIdSession));
-};
-
-const doJoinStudy = async (studyId) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to join study');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doJoinStudy(touchFaceIdSession, studyId));
-};
-const doLeaveStudy = async (studyId) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to opt out study');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doLeaveStudy(touchFaceIdSession, studyId));
+const reloadData = async () => {
+  return await processing(DataController.reloadData());
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
-  return DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
-  // return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
+  // return await DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
+  return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
 };
 // ================================================================================================
 // ================================================================================================
@@ -215,10 +223,16 @@ let AppController = {
   doLogin,
   doLogout,
   doCreateSignatureData,
+  doPairAccount,
+  doWithdrawBitmark,
+  doDepositBitmark,
   check24Words,
+  doTryAccessToMarket,
+  doTryAccessToAllMarkets,
   reloadBitmarks,
   doCheckFileToIssue,
   doIssueFile,
+  doGetBalance,
   doGetProvenance,
   doGetTransactionData,
   doGetTransferOfferDetail,
@@ -226,11 +240,7 @@ let AppController = {
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doCancelTransferBitmark,
-  doActiveDonation,
-  doJoinStudy,
-  doLeaveStudy,
-  doReloadData,
-
+  reloadData,
 
   doStartBackgroundProcess,
 }
