@@ -5,7 +5,6 @@ import {
   Platform,
   Keyboard,
 } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { convertWidth } from './../../../../../utils';
 import { BitmarkService } from './../../../../../services';
@@ -28,6 +27,9 @@ export class IssueFileComponent extends React.Component {
     this.onEndChangeMetadataKey = this.onEndChangeMetadataKey.bind(this);
     this.addNewMetadataField = this.addNewMetadataField.bind(this);
 
+    this.onKeyboardDidShow = this.onKeyboardDidShow.bind(this);
+    this.onKeyboardDidHide = this.onKeyboardDidHide.bind(this);
+
     this.doInputQuantity = this.doInputQuantity.bind(this);
 
     if (!this.props.navigation.state || !this.props.navigation.state.params) {
@@ -38,6 +40,9 @@ export class IssueFileComponent extends React.Component {
       }
     }
     let metadataList = [];
+    for (let key = 0; key < 10; key++) {
+      metadataList.push({ key, label: key + '_', value: key + '_' });
+    }
     let { asset, fingerprint, fileName, fileFormat, filePath } = this.props.navigation.state.params;
     let existingAsset = !!(asset && asset.name);
     if (existingAsset) {
@@ -68,8 +73,33 @@ export class IssueFileComponent extends React.Component {
       metadataError: '',
       issueError: '',
     }
+    this.scrollYPosition = 0;
   }
 
+  // ==========================================================================================
+  componentDidMount() {
+    this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow)
+    this.keyboardDidHide = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide)
+  }
+  componentWillUnmount() {
+    this.keyboardDidShow.remove();
+    this.keyboardDidHide.remove();
+  }
+  // ==========================================================================================
+  onKeyboardDidShow(keyboardEvent) {
+    if (this.forcsedInput) {
+      this.forcsedInput.measureInWindow((x, y, width, height) => {
+        console.log('keyboardEvent forcsedInput :', x, y, width, height);
+        if ((y + height) > keyboardEvent.endCoordinates.screenY) {
+          this.scrollRef.scrollTo({ x: 0, y: this.scrollYPosition + (y - keyboardEvent.endCoordinates.screenY) + height });
+        }
+      });
+    }
+  }
+  onKeyboardDidHide() {
+    console.log('this.scrollYPosition :', this.scrollYPosition);
+    this.forcsedInput = null;
+  }
   onIssueFile() {
     AppController.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), {
       indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
@@ -171,7 +201,10 @@ export class IssueFileComponent extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={(event) => {
+        event.stopPropagation();
+        Keyboard.dismiss();
+      }}>
         <View style={localAddPropertyStyle.body}>
           <View style={defaultStyle.header}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
@@ -180,9 +213,11 @@ export class IssueFileComponent extends React.Component {
             <Text style={defaultStyle.headerTitle}>{'Create Properties'.toUpperCase()}</Text>
             <TouchableOpacity style={defaultStyle.headerRight} />
           </View>
-          <ScrollView style={localAddPropertyStyle.scroll}>
+          <ScrollView style={localAddPropertyStyle.scroll} ref={(ref) => this.scrollRef = ref} onScroll={(event) => {
+            this.scrollYPosition = event.nativeEvent.contentOffset.y;
+          }}>
             <TouchableOpacity activeOpacity={1} style={localAddPropertyStyle.body}>
-              <KeyboardAwareScrollView style={localAddPropertyStyle.infoArea} behavior="padding">
+              <View style={localAddPropertyStyle.infoArea}>
                 <Text style={localAddPropertyStyle.fingerprintLabel}>{'Asset Fingerprint'.toUpperCase()}</Text>
                 <Text style={localAddPropertyStyle.fingerprintValue} numberOfLines={1} >{this.state.fingerprint}</Text>
                 <View style={localAddPropertyStyle.fingerprintInfoArea}>
@@ -192,6 +227,7 @@ export class IssueFileComponent extends React.Component {
                 </View>
                 <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
                 {!this.state.existingAsset && <TextInput
+                  ref={(ref) => this.assetNameInputRef = ref}
                   style={[localAddPropertyStyle.assetNameInput, {
                     color: this.state.existingAsset ? '#C2C2C2' : 'black',
                     borderBottomColor: this.state.assetNameError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
@@ -201,6 +237,7 @@ export class IssueFileComponent extends React.Component {
                   editable={!this.state.existingAsset}
                   returnKeyType="done"
                   returnKeyLabel="Done"
+                  onFocus={() => this.forcsedInput = this.assetNameInputRef}
                 />}
                 {!!this.state.assetNameError && <Text style={localAddPropertyStyle.assetNameInputError}>{this.state.assetNameError}</Text>}
 
@@ -250,6 +287,7 @@ export class IssueFileComponent extends React.Component {
                               returnKeyType="done"
                               blurOnSubmit={true}
                               editable={!this.state.existingAsset}
+                              onFocus={() => this.forcsedInput = this['valueInput_' + item.key]}
                             />
                             <View style={[localAddPropertyStyle.metadataFieldValueBar, {
                               borderBottomColor: item.valueError ? '#FF003C' : (this.state.existingAsset ? '#C2C2C2' : '#0060F2')
@@ -278,6 +316,7 @@ export class IssueFileComponent extends React.Component {
 
                 <Text style={localAddPropertyStyle.quantityLabel}>{'number of bitmarks TO ISSUE'.toUpperCase()}</Text>
                 <TextInput
+                  ref={(ref) => this.quantityInputRef = ref}
                   style={[localAddPropertyStyle.quantityInput, {
                     borderBottomColor: this.state.quantityError ? '#FF003C' : '#0060F2'
                   }]} placeholder="1 ~ 100"
@@ -285,19 +324,20 @@ export class IssueFileComponent extends React.Component {
                   keyboardType={'numeric'}
                   returnKeyType="done"
                   returnKeyLabel="Done"
+                  onFocus={() => this.forcsedInput = this.quantityInputRef}
                 />
                 {!!this.state.quantityError && <Text style={localAddPropertyStyle.quantityInputError}>{this.state.quantityError}</Text>}
                 <Text style={localAddPropertyStyle.ownershipClaimLabel}>{'Ownership claim'.toUpperCase()}</Text>
                 <Text style={localAddPropertyStyle.ownershipClaimMessage}>{'“I hereby claim that I am the legal owner of this asset and want these property to be irrevocably issued and recorded in the Bitmark blockchain.”'}</Text>
                 {!!this.state.issueError && <Text style={localAddPropertyStyle.issueError}>{this.state.issueError}</Text>}
-              </KeyboardAwareScrollView>
-              <TouchableOpacity
-                style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
-                onPress={this.onIssueFile}
-                disabled={!this.state.canIssue}
-              >
-                <Text style={[localAddPropertyStyle.issueButtonText, { color: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}>ISSUE</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
+                  onPress={this.onIssueFile}
+                  disabled={!this.state.canIssue}
+                >
+                  <Text style={[localAddPropertyStyle.issueButtonText, { color: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}>ISSUE</Text>
+                </TouchableOpacity>
+              </View>
             </TouchableOpacity>
           </ScrollView>
         </View>
