@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation'
 import {
   View, Image, Text, TouchableOpacity,
   Platform,
 } from 'react-native';
-import { NavigationActions } from 'react-navigation';
-
 
 import { StudyConnectDataComponent } from './study-connect-data.component';
 import { StudyThankYouComponent } from './study-thank-you.component';
@@ -18,12 +17,14 @@ let defaultStyle = Platform.select({
 import styles from './study-settings.component.style';
 
 import { StudiesModel, AppleHealthKitModel } from '../../../../models';
+import { EventEmiterService } from '../../../../services';
+import { AppController } from '../../../../managers';
 
 // loading ==> connect-data  ==>loading=>thank-you
 const SettingStatus = {
   loading: 'Loading',
   connect_data: 'Connect Data',
-  thank_you: '',
+  thank_you: 'Thank you',
 };
 export class StudySettingComponent extends React.Component {
   constructor(props) {
@@ -39,8 +40,8 @@ export class StudySettingComponent extends React.Component {
       study = this.props.navigation.state.params.study;
     }
     this.state = {
-      status: SettingStatus.loading,
-      // status: SettingStatus.connect_data,
+      // status: SettingStatus.loading,
+      status: SettingStatus.connect_data,
       study: study,
     };
     if (this.state.study && StudiesModel[this.state.study.studyId] && this.state.status === SettingStatus.loading) {
@@ -72,28 +73,29 @@ export class StudySettingComponent extends React.Component {
   }
   doJoinStudy() {
     AppleHealthKitModel.initHealthKit(this.state.study.dataTypes).then(() => {
-      //   appService.doJoinStudy(this.state.study.studyId).then(() => {
-      //     this.setState({
-      //       status: SettingStatus.thank_you,
-      //     });
-      //   }).catch(error => {
-      //     console.log('doJoinStudy error: ', error);
-      //     this.setState({
-      //       status: SettingStatus.connect_data,
-      //     });
-      //   });
-      // }).catch(error => {
-      //   console.log('grant Health Kit permission error: ', error);
-      //   this.setState({
-      //     status: SettingStatus.connect_data,
-      //   });
+      return AppController.doJoinStudy(this.state.study.studyId);
+    }).then(() => {
+      this.setState({
+        status: SettingStatus.thank_you,
+      });
+    }).catch(error => {
+      console.log('initHealthKit error:', error);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
+        onClose: () => {
+          this.props.navigation.goBack();
+        }
+      });
     });
   }
   doFinish() {
     const resetUserPage = NavigationActions.reset({
       index: 0,
       actions: [
-        NavigationActions.navigate({ routeName: 'User' })
+        NavigationActions.navigate({
+          routeName: 'User', params: {
+            displayedTab: { mainTab: 'Donation', subTab: 'STUDIES', subTab2: 'JOINED' }
+          }
+        })
       ]
     });
     this.props.navigation.dispatch(resetUserPage);
@@ -107,7 +109,7 @@ export class StudySettingComponent extends React.Component {
       );
     }
     return (<View style={styles.body} >
-      <View style={[defaultStyle.header]}>
+      {this.state.status !== SettingStatus.thank_you && <View style={[defaultStyle.header]}>
         <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
           {this.state.status !== SettingStatus.thank_you &&
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />}
@@ -119,7 +121,7 @@ export class StudySettingComponent extends React.Component {
           {this.state.status !== SettingStatus.thank_you &&
             <Text style={[defaultStyle.headerRightText, { fontWeight: '300', fontSize: 14, }]}>Cancel</Text>}
         </TouchableOpacity>
-      </View>
+      </View>}
       {this.state.status === SettingStatus.connect_data && <StudyConnectDataComponent study={this.state.study} doJoinStudy={this.doJoinStudy} />}
       {this.state.status === SettingStatus.thank_you && <StudyThankYouComponent study={this.state.study} doFinish={this.doFinish} />}
     </View>);

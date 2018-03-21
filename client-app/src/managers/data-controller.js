@@ -219,6 +219,29 @@ const doOpenApp = async () => {
   return userInformation;
 };
 
+const doActiveDonation = async (touchFaceIdSession) => {
+  let donationInformation = await DonationService.doRegisterUserInformation(touchFaceIdSession, userInformation.bitmarkAccountNumber);
+  console.log('donationInformation :', donationInformation);
+  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+    userData.donationInformation = donationInformation;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
+const doJoinStudy = async (touchFaceIdSession, studyId) => {
+  let donationInformation = await DonationService.doJoinStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);
+  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+    userData.donationInformation = donationInformation;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
+const doLeaveStudy = async (touchFaceIdSession, studyId) => {
+  let donationInformation = await DonationService.doLeaveStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);
+  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+    userData.donationInformation = donationInformation;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
+
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers || [],
@@ -265,7 +288,7 @@ const getDonationInformation = () => {
 };
 
 const DataController = {
-  reloadData: runOnBackground,
+  doReloadData: runOnBackground,
   doOpenApp,
   doLogin,
   doLogout,
@@ -273,6 +296,9 @@ const DataController = {
   doDeactiveApplication,
   reloadBitmarks,
   doGetTransactionData,
+  doActiveDonation,
+  doJoinStudy,
+  doLeaveStudy,
 
   getTransactionData,
   getUserBitmarks,

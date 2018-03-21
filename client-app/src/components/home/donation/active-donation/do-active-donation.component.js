@@ -23,7 +23,8 @@ let defaultStyle = Platform.select({
 });
 import activeDonationStyle from './do-active-donation.component.style';
 
-import { DataController } from '../../../../managers';
+import { DataController, AppController } from '../../../../managers';
+import { EventEmiterService } from '../../../../services';
 
 let currentSize = Dimensions.get('window');
 
@@ -37,7 +38,14 @@ export class DoActiveDonationComponent extends React.Component {
   }
 
   doActiveDonation() {
-
+    AppController.doActiveDonation().catch(error => {
+      console.log('doActiveDonation error :', error);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
+        onClose: () => {
+          this.props.navigation.goBack();
+        }
+      });
+    })
   }
 
   render() {
@@ -110,5 +118,8 @@ DoActiveDonationComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+  }),
+  screenProps: PropTypes.shape({
+    reloadDonationScreen: PropTypes.func.isRequired,
   }),
 }

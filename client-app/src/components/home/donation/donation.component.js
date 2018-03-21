@@ -11,6 +11,7 @@ import { } from './tasks/task.component';
 
 import donationStyle from './donation.component.style';
 import { DataController } from '../../../managers';
+import { EventEmiterService } from '../../../services';
 
 const SubTabs = {
   studies: 'STUDIES',
@@ -20,21 +21,34 @@ const SubTabs = {
 export class DonationComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
 
     this.state = {
       donationInformation: DataController.getDonationInformation(),
-      subTab: SubTabs.studies,
+      subTab: (this.props.screenProps.subTab === SubTabs.studies || this.props.screenProps.subTab === SubTabs.tasks) ? this.props.screenProps.subTab : SubTabs.studies,
+      subTab2: this.props.screenProps.subTab2,
     };
   }
-
+  // ==========================================================================================
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+  }
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+  }
+  // ==========================================================================================
+  handerDonationInformationChange() {
+    this.switchSubtab();
+  }
   switchSubtab(subTab) {
-    this.setState({ subTab });
+    subTab = subTab || this.state.subTab;
+    this.setState({ subTab, donationInformation: DataController.getDonationInformation() });
   }
 
   render() {
-    if (!this.state.donationInformation.createAt) {
+    if (!this.state.donationInformation.createdAt) {
       return (<View style={donationStyle.body}>
-        <View style={donationStyle.inActiveContent}><ActiveDonationComponent /></View>
+        <View style={donationStyle.inActiveContent}><ActiveDonationComponent screenProps={{ reloadDonationScreen: this.switchSubtab }} /></View >
       </View>);
     }
     return (<View style={donationStyle.body}>
@@ -51,6 +65,7 @@ export class DonationComponent extends React.Component {
 
         {this.state.subTab === SubTabs.studies && <StudiesComponent screenProps={{
           homeNavigation: this.props.screenProps.homeNavigation,
+          type: this.state.subTab2,
         }} />}
         {/* {this.state.subTab === SubTabs.tasks && <TransactionsComponent screenProps={{
           homeNavigation: this.props.screenProps.homeNavigation,
@@ -62,6 +77,8 @@ export class DonationComponent extends React.Component {
 
 DonationComponent.propTypes = {
   screenProps: PropTypes.shape({
+    subTab: PropTypes.string,
+    subTab2: PropTypes.string,
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,
       goBack: PropTypes.func,

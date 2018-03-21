@@ -18,6 +18,8 @@ let defaultStyle = Platform.select({
   android: androidDefaultStyle
 });
 import studyDetailsStyles from './study-detail.component.style';
+import { AppController } from '../../../../managers';
+import { EventEmiterService } from '../../../../services';
 
 export class StudyDetailComponent extends React.Component {
   constructor(props) {
@@ -34,8 +36,8 @@ export class StudyDetailComponent extends React.Component {
     console.log('this.props :', props);
   }
   render() {
-    let StudyDetailComponent = (this.state.study && this.state.study.studyId && this.state.study.joinedDate)
-      ? JoinedStudies[this.state.study.study.studyId] : DefaultStudies[this.state.study.studyId];
+    let DetailComponent = (this.state.study && this.state.study.studyId && this.state.study.joinedDate)
+      ? JoinedStudies[this.state.study.studyId] : DefaultStudies[this.state.study.studyId];
     return (
       <View style={studyDetailsStyles.body}>
         <View style={[defaultStyle.header]}>
@@ -49,8 +51,8 @@ export class StudyDetailComponent extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView style={studyDetailsStyles.studyContent}>
-          {!StudyDetailComponent && <Text>This study is not support!</Text>}
-          {StudyDetailComponent && <StudyDetailComponent study={this.state.study} navigation={this.props.navigation} doJoinStudy={this.doJoinStudy} doOutOptStudy={this.doOutOptStudy} />}
+          {!DetailComponent && <Text>This study is not support!</Text>}
+          {DetailComponent && <DetailComponent study={this.state.study} navigation={this.props.navigation} doJoinStudy={this.doJoinStudy} doOutOptStudy={this.doOutOptStudy} />}
         </ScrollView>
       </View>
     );
@@ -66,7 +68,16 @@ export class StudyDetailComponent extends React.Component {
       text: 'Cancel'
     }, {
       text: 'Leave', onPress: () => {
-
+        AppController.doLeaveStudy(this.state.study.studyId).then(() => {
+          this.props.navigation.goBack();
+        }).catch(error => {
+          console.log('doLeaveStudy error:', error);
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
+            onClose: () => {
+              this.props.navigation.goBack();
+            }
+          });
+        })
       }
     }])
   }

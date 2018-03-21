@@ -141,7 +141,6 @@ export class StudiesComponent extends React.Component {
                 extraData={this.state}
                 data={this.state.studies}
                 renderItem={({ item }) => {
-                  console.log('item :', item);
                   return (<TouchableOpacity style={studiesStyles.studyCard} onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item })}>
                     <StudyCardComponent
                       title={item.title}

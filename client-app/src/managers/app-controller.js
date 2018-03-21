@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { CommonModel, AccountModel, BitmarkModel, FaceTouchId } from './../models';
+import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
@@ -168,8 +168,36 @@ const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, e
   return await submitting(TransactionService.doRejectTransferBitmark(bitmarkId), processingInfo, successInfo, errorInfo);
 };
 
-const reloadData = async () => {
-  return await processing(DataController.reloadData());
+const doReloadData = async () => {
+  return await processing(DataController.doReloadData());
+};
+
+const doActiveDonation = async () => {
+  // let donationInformation = DataController.getDonationInformation();
+  // await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to active donation');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doActiveDonation(touchFaceIdSession));
+};
+
+const doJoinStudy = async (studyId) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to join study');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doJoinStudy(touchFaceIdSession, studyId));
+};
+const doLeaveStudy = async (studyId) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to opt out study');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doLeaveStudy(touchFaceIdSession, studyId));
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
@@ -198,7 +226,11 @@ let AppController = {
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doCancelTransferBitmark,
-  reloadData,
+  doActiveDonation,
+  doJoinStudy,
+  doLeaveStudy,
+  doReloadData,
+
 
   doStartBackgroundProcess,
 }

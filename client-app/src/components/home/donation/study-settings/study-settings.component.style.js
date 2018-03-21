@@ -91,6 +91,8 @@ export default StyleSheet.create({
   bottomButtonArea: {
     width: '100%',
     flexDirection: 'column',
+    position: 'absolute',
+    bottom: 72 + constant.blankFooter,
   },
   bottomButton: {
     backgroundColor: '#0060F2',
