@@ -9,6 +9,7 @@ import Mailer from 'react-native-mail';
 import { StudyCardComponent } from './../study-card/study-card.component';
 import studiesStyles from './studies.component.style';
 import { DataController } from '../../../../managers/data-controller';
+import { EventEmiterService } from '../../../../services';
 
 const StudyTypes = {
   joined: 'JOINED',
@@ -19,22 +20,34 @@ export class StudiesComponent extends React.Component {
   constructor(props) {
     super(props);
     this.contactBitmark = this.contactBitmark.bind(this);
+    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
 
-    let studies = DataController.getDonationInformation().otherStudies;
-    console.log('DataController.getDonationInformation() :', DataController.getDonationInformation());
-    console.log('studies :', studies);
+    let type = (this.props.type && (this.props.type === StudyTypes.other || this.props.type === StudyTypes.joined)) ? this.props.type : StudyTypes.other;
+    let studies = type === StudyTypes.other ? DataController.getDonationInformation().otherStudies : DataController.getDonationInformation().joinedStudies;
     studies.forEach(study => {
       study.key = study.studyId
     });
-    // TODO
-
     this.state = {
       studies,
-      type: StudyTypes.other,
+      type,
     };
   }
   // ==========================================================================================
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+  }
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+  }
+  componentWillReceiveProps(nextProps) {
+    let type = (nextProps.type && (nextProps.type === StudyTypes.other || nextProps.type === StudyTypes.joined)) ? nextProps.type : this.state.type;
+    this.switchType(type);
+  }
   // ==========================================================================================
+  handerDonationInformationChange() {
+    this.switchType(this.state.type);
+  }
+
   contactBitmark() {
     Mailer.mail({ recipients: ['support@bitmark.com'], }, (error) => {
       if (error) {
@@ -43,12 +56,16 @@ export class StudiesComponent extends React.Component {
     });
   }
   switchType(type) {
-    this.setState({ type });
+    let studies = type === StudyTypes.other ? DataController.getDonationInformation().otherStudies : DataController.getDonationInformation().joinedStudies;
+    studies.forEach(study => {
+      study.key = study.studyId
+    });
+    this.setState({ type, studies });
   }
 
   render() {
     return (
-      <View style={[studiesStyles.body]}>
+      <View style={studiesStyles.body}>
         <View style={studiesStyles.subTabArea}>
           {this.state.type === StudyTypes.other && <TouchableOpacity style={[studiesStyles.subTabButton, {
             shadowOffset: { width: 2 },
@@ -144,6 +161,7 @@ export class StudiesComponent extends React.Component {
 }
 
 StudiesComponent.propTypes = {
+  type: PropTypes.string,
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
   }),

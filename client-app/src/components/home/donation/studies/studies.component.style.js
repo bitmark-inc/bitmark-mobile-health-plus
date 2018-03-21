@@ -5,6 +5,7 @@ export default StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
 
   subTabArea: {
@@ -55,6 +56,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   content: {
+    marginTop: 9,
     flex: 1,
     flexDirection: 'column',
   },

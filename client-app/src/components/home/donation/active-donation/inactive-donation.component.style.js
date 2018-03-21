@@ -1,35 +1,13 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
+import { StyleSheet, } from 'react-native';
 import { convertWidth } from '../../../../utils';
-import {
-  ios,
-  android // TODO
-} from './../../../../configs';
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
-const deviceSize = Dimensions.get('window');
 
 export default StyleSheet.create({
-  body: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter),
-    width: '100%',
-    backgroundColor: '#F5F5F5',
-  },
-  content: {
-    width: '100%',
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'white',
-  },
   disableContent: {
     paddingLeft: convertWidth(50),
     paddingRight: convertWidth(50),
-    flex: 1,
+    width: convertWidth(375),
+    height: '100%',
     flexDirection: 'column',
-    width: '100%',
     backgroundColor: 'white',
   },
   enableTitle: {

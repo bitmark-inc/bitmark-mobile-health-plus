@@ -4,7 +4,7 @@ import {
   View, TouchableOpacity, Text,
 } from 'react-native';
 
-// import { ActiveDonationComponent } from './active-donation';
+import { ActiveDonationComponent } from './active-donation';
 
 import { StudiesComponent } from './studies/studies.component';
 import { } from './tasks/task.component';
@@ -22,7 +22,7 @@ export class DonationComponent extends React.Component {
     super(props);
 
     this.state = {
-      user: DataController.getUserInformation(),
+      donationInformation: DataController.getDonationInformation(),
       subTab: SubTabs.studies,
     };
   }
@@ -32,11 +32,11 @@ export class DonationComponent extends React.Component {
   }
 
   render() {
-    // if (!this.state.user.activeDonationAt) {
-    //   return (<View style={donationStyle.body}>
-    //     <View style={donationStyle.content}><ActiveDonationComponent /></View>
-    //   </View>);
-    // }
+    if (!this.state.donationInformation.createAt) {
+      return (<View style={donationStyle.body}>
+        <View style={donationStyle.inActiveContent}><ActiveDonationComponent /></View>
+      </View>);
+    }
     return (<View style={donationStyle.body}>
       <View style={donationStyle.activedContent}>
         <View style={donationStyle.subTabArea}>
@@ -49,14 +49,12 @@ export class DonationComponent extends React.Component {
           </TouchableOpacity>
         </View>
 
-        <View style={donationStyle.content}>
-          {this.state.subTab === SubTabs.studies && <StudiesComponent screenProps={{
-            homeNavigation: this.props.screenProps.homeNavigation,
-          }} />}
-          {/* {this.state.subTab === SubTabs.tasks && <TransactionsComponent screenProps={{
+        {this.state.subTab === SubTabs.studies && <StudiesComponent screenProps={{
+          homeNavigation: this.props.screenProps.homeNavigation,
+        }} />}
+        {/* {this.state.subTab === SubTabs.tasks && <TransactionsComponent screenProps={{
           homeNavigation: this.props.screenProps.homeNavigation,
         }} />} */}
-        </View>
       </View>
     </View>);
   }

@@ -7,8 +7,8 @@ import {
 import { NavigationActions } from 'react-navigation';
 
 
-import { StudySettingConnectDataComponent } from './study-connect-data.component';
-import { StudySettingThankYouComponent } from './study-thank-you.component';
+import { StudyConnectDataComponent } from './study-connect-data.component';
+import { StudyThankYouComponent } from './study-thank-you.component';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 let defaultStyle = Platform.select({
@@ -120,8 +120,8 @@ export class StudySettingComponent extends React.Component {
             <Text style={[defaultStyle.headerRightText, { fontWeight: '300', fontSize: 14, }]}>Cancel</Text>}
         </TouchableOpacity>
       </View>
-      {this.state.status === SettingStatus.connect_data && <StudySettingConnectDataComponent study={this.state.study} doJoinStudy={this.doJoinStudy} />}
-      {this.state.status === SettingStatus.thank_you && <StudySettingThankYouComponent study={this.state.study} doFinish={this.doFinish} />}
+      {this.state.status === SettingStatus.connect_data && <StudyConnectDataComponent study={this.state.study} doJoinStudy={this.doJoinStudy} />}
+      {this.state.status === SettingStatus.thank_you && <StudyThankYouComponent study={this.state.study} doFinish={this.doFinish} />}
     </View>);
   }
 }

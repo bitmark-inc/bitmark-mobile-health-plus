@@ -1,9 +1,11 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 import {
   ios,
   android // TODO
 } from './../../../configs';
-let constant = Platform.select({
+import { convertWidth } from '../../../utils';
+const currentSize = Dimensions.get('window');
+const constant = Platform.select({
   ios: ios.constant,
   android: android.constant
 });
@@ -15,14 +17,16 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5F5F5',
   },
-  content: {
-    flex: 1,
+  inActiveContent: {
+    height: currentSize.height - constant.bottomTabsHeight,
+    width: convertWidth(375),
     flexDirection: 'column',
     backgroundColor: 'white',
   },
 
   activedContent: {
     paddingTop: constant.headerSize.paddingTop,
+    height: currentSize.height - constant.bottomTabsHeight,
   },
 
   subTabArea: {
