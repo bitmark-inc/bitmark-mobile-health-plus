@@ -283,16 +283,21 @@ let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
   let filePath = assetFolder + '/' + filename;
   await FileUtil.mkdir(assetFolder);
   await FileUtil.create(filePath, data);
+  let assetFilePath = assetFolder + '.zip';
+
   if (!extFiles) {
-    return FileUtil.zip(assetFolder);
+    await FileUtil.zip(assetFolder, assetFilePath);
+    return assetFilePath;
   }
+
 
   for (let extFilePath of extFiles) {
     let extFilename = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length);
     let destinationExtFilePath = assetFolder + '/' + extFilename;
     await FileUtil.moveFile(extFilePath, destinationExtFilePath);
   }
-  return FileUtil.zip(assetFolder);
+  await FileUtil.zip(assetFolder, assetFilePath);
+  return assetFilePath;
 };
 
 let doPrepareSurveyFile = async (touchFaceIdSession, bitmarkAccountNumber, study, taskType, result) => {
@@ -323,7 +328,7 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
       (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4))) {
     let prepareResult = await doPrepareSurveyFile(touchFaceIdSession, bitmarkAccountNumber, study, taskType, result);
     //TODO use other issue function
-    let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.metadata, 1);
+    let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, 1);
 
     return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkIds[0]);
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
@@ -343,7 +348,7 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     );
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, tempData.date, tempData.data, tempData.randomId);
     //TODO use other issue function
-    let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, tempData.assetName, tempData.metadata, 1);
+    let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, 1);
 
     return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), null, bitmarkIds[0]);
   }
@@ -376,8 +381,9 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
       randomId,
     };
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
-    let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.metadata, 1);
-    return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), null, issueResult[0]);
+    let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.assetMetadata, 1);
+    let donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), null, issueResult[0]);
+    return donationInformation;
   }
 };
 

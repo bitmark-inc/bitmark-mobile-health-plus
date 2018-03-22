@@ -9,7 +9,7 @@ const doGet100Bitmarks = (accountNumber, lastOffset) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = config.api_server_url +
-      `/v1/bitmarks?owner=${accountNumber}&asset=true&pending=true&to=earlier` + (lastOffset ? `&at=${lastOffset}` : '');
+      `/v1/bitmarks?owner=${accountNumber}&asset=true&pending=true&to=later&sent=true` + (lastOffset ? `&at=${lastOffset}` : '');
     fetch(bitmarkUrl, {
       method: 'GET',
       headers: {
@@ -28,9 +28,8 @@ const doGet100Bitmarks = (accountNumber, lastOffset) => {
   });
 };
 
-const doGetAllBitmarks = async (accountNumber) => {
+const doGetAllBitmarks = async (accountNumber, lastOffset) => {
   let totalData;
-  let lastOffset;
   let canContinue = true;
   while (canContinue) {
     let data = await doGet100Bitmarks(accountNumber, lastOffset);

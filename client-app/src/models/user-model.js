@@ -28,6 +28,10 @@ const doUpdateUserInfo = async (userInfo) => {
 };
 
 const doRemoveUserInfo = async () => {
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, {});
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, []);
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, []);
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, []);
   return await CommonModel.doSetLocalData(CommonModel.KEYS.USER_INFORMATION, {});
 };
 

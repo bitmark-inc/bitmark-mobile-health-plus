@@ -39,7 +39,9 @@ export class BitmarkHealthDataComponent extends React.Component {
         <Text style={bitmarkHealthStyles.bitmarkDescription}>Signing your issuance with Touch/ Face ID or Passcode securely creates new bitmarks for your health data.</Text>
       </View>
       <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
-        AppController.doBitmarkHealthData(this.state.list).catch(error => {
+        AppController.doBitmarkHealthData(this.state.list).then(() => {
+          this.props.navigation.goBack();
+        }).catch(error => {
           console.log('doBitmarkHelthData error:', error);
           EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
         })

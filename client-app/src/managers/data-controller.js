@@ -6,6 +6,7 @@ import {
   NotificationService,
   TransactionService,
   BitmarkService,
+  AccountService,
 } from "../services";
 import { CommonModel, AccountModel, UserModel } from '../models';
 import { DonationService } from '../services/donation-service';
@@ -67,14 +68,14 @@ const runGetTransactionsInBackground = () => {
 
 const runGetLocalBitmarksInBackground = () => {
   return new Promise((resolve) => {
-    BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber).then(localAssets => {
+    BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber, userData.localAssets).then(localAssets => {
       localAssets = recheckLocalAssets(localAssets);
       if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
         userData.localAssets = localAssets;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
       }
       resolve();
-      console.log('runOnBackground  runGetLocalBitmarksInBackground success :');
+      console.log('runOnBackground  runGetLocalBitmarksInBackground success :', localAssets);
     }).catch(error => {
       resolve();
       console.log('runOnBackground  runGetLocalBitmarksInBackground error :', error);
@@ -85,13 +86,12 @@ const runGetLocalBitmarksInBackground = () => {
 const runGetDonationInformationInBackground = () => {
   return new Promise((resolve) => {
     DonationService.doGetUserInformation(userInformation.bitmarkAccountNumber).then(donationInformation => {
-      console.log('donationInformation :', donationInformation);
       if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
         userData.donationInformation = donationInformation;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
       }
       resolve();
-      console.log('runOnBackground  runGetDonationInformationInBackground success :');
+      console.log('runOnBackground  runGetDonationInformationInBackground success :', donationInformation);
     }).catch(error => {
       resolve();
       console.log('runOnBackground  runGetDonationInformationInBackground error :', error);
@@ -168,8 +168,7 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 };
 
 const doLogin = async (touchFaceIdSession) => {
-  userInformation = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
-  await UserModel.doUpdateUserInfo(userInformation);
+  userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
   return userInformation;
 };
 
@@ -193,7 +192,7 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 const reloadBitmarks = async () => {
-  let localAssets = await BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber);
+  let localAssets = await BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber, userData.localAssets);
   localAssets = recheckLocalAssets(localAssets);
   if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
     userData.localAssets = localAssets;

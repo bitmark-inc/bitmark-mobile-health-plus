@@ -138,7 +138,7 @@ const doLeaveStudy = (bitmark_account, study_id, timestamp, signature, ) => {
 const doCompleteTask = (bitmark_account, timestamp, signature, task_type, completed_at, study_id, txid) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let bitmarkUrl = config.donation_server_url + `/s/api/leave-study`;
+    let bitmarkUrl = config.donation_server_url + `/s/api/complete-task`;
     fetch(bitmarkUrl, {
       method: 'POST',
       headers: {
@@ -159,7 +159,7 @@ const doCompleteTask = (bitmark_account, timestamp, signature, task_type, comple
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doLeaveStudy error :' + JSON.stringify(data)));
+        return reject(new Error('doCompleteTask error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);

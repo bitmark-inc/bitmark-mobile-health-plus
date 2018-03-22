@@ -1,5 +1,6 @@
 import RNFS from 'react-native-fs';
-import ZipArchive from 'react-native-zip-archive';
+import { zip, unzip } from 'react-native-zip-archive';
+console.log('ZipArchive :', zip, unzip);
 
 const FileUtil = {
   CacheDirectory: RNFS.CachesDirectoryPath + '/Bitmark',
@@ -31,10 +32,11 @@ const FileUtil = {
   },
 
   zip: async (inputPath, outputPath) => {
-    return ZipArchive.zip(inputPath, outputPath);
+    console.log('zip :', inputPath, outputPath);
+    return zip(inputPath, outputPath);
   },
   unzip: async (inputPath, outputPath) => {
-    return ZipArchive.unzip(inputPath, outputPath);
+    return unzip(inputPath, outputPath);
   },
 
 };
