@@ -1,7 +1,12 @@
 import { StackNavigator, } from 'react-navigation';
 import { UserComponent } from './user.component';
 import { ApplicationDetailComponent } from './application-detail';
-import { BitmarkPrivacyComponent, BitmarkTermsComponent } from './../../commons/components';
+import {
+  BitmarkPrivacyComponent,
+  BitmarkTermsComponent,
+  BitmarkDetailComponent,
+
+} from './../../commons/components';
 import {
   LocalPropertyDetailComponent,
   LocalAssetDetailComponent,
@@ -10,11 +15,18 @@ import {
 } from './properties';
 
 import { TransactionDetailComponent } from './transactions';
-import { StudyDetailComponent, StudySettingComponent, DoActiveDonationComponent } from './donation';
+import {
+  StudyDetailComponent,
+  StudySettingComponent,
+  DoActiveDonationComponent,
+  BitmarkHealthDataComponent,
+  StudyDonationComponent,
+} from './donation';
 
 
 let HomeComponent = StackNavigator({
   User: { screen: UserComponent, },
+  BitmarkDetail: { screen: BitmarkDetailComponent, },
   LocalAssetDetail: { screen: LocalAssetDetailComponent, },
   LocalPropertyDetail: { screen: LocalPropertyDetailComponent, },
   LocalPropertyTransfer: { screen: LocalPropertyTransferComponent, },
@@ -26,6 +38,8 @@ let HomeComponent = StackNavigator({
   StudyDetail: { screen: StudyDetailComponent, },
   StudySetting: { screen: StudySettingComponent, },
   DoActiveDonation: { screen: DoActiveDonationComponent, },
+  BitmarkHealthData: { screen: BitmarkHealthDataComponent, },
+  StudyDonation: { screen: StudyDonationComponent, },
 }, {
     headerMode: 'none',
     navigationOptions: {

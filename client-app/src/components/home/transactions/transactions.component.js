@@ -8,9 +8,8 @@ import {
 import { DataController, AppController } from './../../../managers';
 
 import transactionsStyle from './transactions.component.style';
-import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 import { EventEmiterService } from '../../../services';
-
+import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
   android: androidDefaultStyle

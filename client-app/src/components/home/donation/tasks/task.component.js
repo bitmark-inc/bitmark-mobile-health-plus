@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, FlatList, TouchableOpacity, ScrollView, ActivityIndicator,
+  Text, View, FlatList, TouchableOpacity, ScrollView,
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 
 import taskStyles from './task.component.style';
-import { DataController } from '../../../../managers';
+import { DataController, AppController } from '../../../../managers';
 import { EventEmiterService } from '../../../../services';
+import { DonationService } from '../../../../services/donation-service';
 
 const TaskTypes = {
   todo: 'To Do',
@@ -52,6 +54,66 @@ export class TasksComponent extends React.Component {
       totalTodoTask: donationInformation.totalTodoTask,
       completedTasks: donationInformation.completedTasks,
     });
+  }
+
+  onClickCompletedTask(item) {
+    let donationInformation = DataController.getDonationInformation();
+    if (item.taskType === DonationService.DATA_SOURCE_INTACTIVE_TASK_TYPE) {
+      const resetHomePage = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: {
+              displayedTab: { mainTab: 'Account' }
+            }
+          }),
+        ]
+      });
+      this.props.screenProps.homeNavigation.dispatch(resetHomePage);
+    } else if (item.txid && item.taskType === donationInformation.commonTaskIds.bitmark_health_data) {
+      let bitmarkInformation = DataController.getLocalBitmarkInformation(item.txid);
+      if (bitmarkInformation && bitmarkInformation.bitmark && bitmarkInformation.asset) {
+        this.props.screenProps.homeNavigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
+      }
+    } else if (item.txid) {
+      let bitmarkInformation = DataController.getLocalBitmarkInformation(item.txid);
+      if (bitmarkInformation && bitmarkInformation.bitmark && bitmarkInformation.asset) {
+        if (bitmarkInformation.bitmark.status === 'confirmed') {
+          this.props.screenProps.homeNavigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
+        } else {
+          this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: bitmarkInformation.asset });
+        }
+      } else {
+        this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.txid });
+      }
+    }
+  }
+
+  onClickTodoTask(item) {
+    let donationInformation = DataController.getDonationInformation();
+    if (item.taskType === DonationService.DATA_SOURCE_INTACTIVE_TASK_TYPE) {
+      const resetHomePage = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: {
+              displayedTab: { mainTab: 'Account' }
+            }
+          }),
+        ]
+      });
+      this.props.screenProps.homeNavigation.dispatch(resetHomePage);
+    } else if (item.taskType === donationInformation.commonTaskIds.bitmark_health_data) {
+      this.props.screenProps.homeNavigation.navigate('BitmarkHealthData');
+    } else if (item.study && item.study.taskIds && item.taskType === item.study.taskIds.donations) {
+      this.props.screenProps.homeNavigation.navigate('StudyDonation', { study: item.study });
+    } else if (item.study && item.study.taskIds && item.taskType) {
+      //TODO
+      AppController.doStudyTask(item.study, item.taskType).catch(error => {
+        console.log('doStudyTask error:', error);
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      });
+    }
   }
 
   render() {
@@ -116,9 +178,9 @@ export class TasksComponent extends React.Component {
                     (item.task === 'data-source-inactive' ? '#FF003C' : '#0060F2') : '#BDBDBD'
                 }]} onPress={() => {
                   if (item.completedDate) {
-                    this.props.onClickCompletedTask(item);
+                    this.onClickCompletedTask(item);
                   } else {
-                    this.props.onClickTodoTask(item);
+                    this.onClickTodoTask(item);
                   }
                 }}>
                   <View style={taskStyles.taskRowLeft}></View>
@@ -133,7 +195,6 @@ export class TasksComponent extends React.Component {
               )
             }}
           />
-
           {this.state.type === TaskTypes.todo && this.state.todoTasks.length === 0 &&
             <View style={taskStyles.notTaskArea}>
               <Text style={taskStyles.noTaskMessage}>{'ThERE are no new tasks.'.toUpperCase()}</Text>
@@ -148,11 +209,12 @@ export class TasksComponent extends React.Component {
 
 TasksComponent.propTypes = {
   type: PropTypes.string,
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func,
-  }),
   subTab: PropTypes.string,
-  userInformation: PropTypes.object,
-  onClickCompletedTask: PropTypes.func,
-  onClickTodoTask: PropTypes.func,
+  screenProps: PropTypes.shape({
+    homeNavigation: PropTypes.shape({
+      navigate: PropTypes.func,
+      goBack: PropTypes.func,
+      dispatch: PropTypes.func,
+    }),
+  }),
 };

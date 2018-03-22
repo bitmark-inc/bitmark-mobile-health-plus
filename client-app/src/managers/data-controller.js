@@ -248,6 +248,33 @@ const doLeaveStudy = async (touchFaceIdSession, studyId) => {
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
 };
+const doCompletedStudyTask = async (touchFaceIdSession, study, taskType, result) => {
+  let donationInformation = await DonationService.doCompletedStudyTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, study, taskType, result);
+  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+    userData.donationInformation = donationInformation;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
+
+const doDonateHealthData = async (touchFaceIdSession, study, list) => {
+  let donationInformation = await DonationService.doDonateHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, study, list);
+  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+    userData.donationInformation = donationInformation;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
+
+const doBitmarkHealthData = async (touchFaceIdSession, list) => {
+  let donationInformation = await DonationService.doBitmarkHealthData(touchFaceIdSession,
+    userInformation.bitmarkAccountNumber,
+    donationInformation.allDataTypes,
+    list,
+    donationInformation.commonTaskIds.bitmark_health_data);
+  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+    userData.donationInformation = donationInformation;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
 
 const getTransactionData = () => {
   return merge({}, {
@@ -306,6 +333,9 @@ const DataController = {
   doActiveDonation,
   doJoinStudy,
   doLeaveStudy,
+  doCompletedStudyTask,
+  doDonateHealthData,
+  doBitmarkHealthData,
 
   getTransactionData,
   getUserBitmarks,

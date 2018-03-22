@@ -1,9 +1,5 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
-import {
-  ios,
-  // android  //TODO
-} from './../../../configs'
-const currentSize = Dimensions.get('window');
+import { StyleSheet } from 'react-native';
+
 
 export default StyleSheet.create({
   body: {
@@ -12,12 +8,9 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   main: {
+    flex: 1,
     borderTopColor: '#C0CCDF',
     borderTopWidth: 0.5,
-    height: Platform.select({
-      ios: currentSize.height - ios.constant.headerSize.height,
-      android: '100%', //TODO
-    }),
     backgroundColor: 'white',
   },
 });

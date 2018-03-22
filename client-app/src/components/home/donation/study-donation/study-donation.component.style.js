@@ -4,24 +4,23 @@ import { convertWidth } from '../../../../utils';
 export default StyleSheet.create({
   body: {
     flex: 1,
-    flexDirection: 'column',
-    alignContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'white',
   },
-  content: {
+  main: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: 'white',
+    flexDirection: 'column',
+    alignItems: 'center',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
   },
-  bitmarkTitle: {
+  donationTitle: {
     fontFamily: 'Avenir Black',
-    fontSize: 17,
+    fontSize: 20,
     textAlign: 'center',
     color: '#0060F2',
     fontWeight: '900',
+    width: convertWidth(300),
     marginTop: 53,
   },
   passcodeRemindImages: {
@@ -42,10 +41,10 @@ export default StyleSheet.create({
     height: 69,
     resizeMode: 'contain',
   },
-
-  bitmarkDescription: {
-    fontFamily: 'Avenir Black',
+  donationDescription: {
+    fontFamily: 'Avenir Light',
     fontSize: 17,
+    lineHeight: 20,
     fontWeight: '300',
     width: convertWidth(275),
     marginTop: 80,

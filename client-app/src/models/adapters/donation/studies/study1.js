@@ -171,11 +171,11 @@ let checkIntakeAnswer = (answer) => {
 };
 
 let doConsentSurvey = (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     WomenHealthStudy.showConsentSurvey(data, ok => {
       let result = checkConsentAnswer(ok);
       if (!result) {
-        reject(new Error('Cancel'));
+        resolve(null);
       } else {
         resolve(result);
       }
@@ -184,12 +184,12 @@ let doConsentSurvey = (data) => {
 };
 
 let doIntakeSurvey = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     WomenHealthStudy.showIntakeSurvey((ok, results) => {
       if (ok && results) {
         resolve(checkIntakeAnswer(results));
       } else {
-        reject(new Error('Cancel'));
+        resolve(null);
       }
     });
   });

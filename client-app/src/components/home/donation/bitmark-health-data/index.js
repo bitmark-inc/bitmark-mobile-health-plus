@@ -1,0 +1,1 @@
+export * from './bitmark-health-data.component';

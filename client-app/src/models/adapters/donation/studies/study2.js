@@ -191,11 +191,11 @@ const checkIntakeAnswer = (answer) => {
 };
 
 const doConsentSurvey = (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     InternationalDiabeteRenussionStudy.showConsentSurvey(data, ok => {
       let result = checkConsentAnswer(ok);
       if (!result) {
-        reject(new Error('Cancel'));
+        resolve(null);
       } else {
         resolve(result);
       }
@@ -203,12 +203,12 @@ const doConsentSurvey = (data) => {
   });
 };
 const doIntakeSurvey = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     InternationalDiabeteRenussionStudy.showIntakeSurvey((ok, results) => {
       if (ok && results) {
         resolve(checkIntakeAnswer(results));
       } else {
-        reject(new Error('Cancel'));
+        resolve(null);
       }
     });
   });
@@ -268,53 +268,53 @@ const checkActiveTask4Answer = (answer) => {
   };
 };
 const showActiveTask1 = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     InternationalDiabeteRenussionTask.showActiveTask1((ok, results) => {
       if (ok && results) {
         resolve(checkActiveTask1Answer(results));
       } else {
-        reject(new Error('Cancel'));
+        resolve(null);
       }
     });
   });
 };
 const showActiveTask2 = (oldData) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     InternationalDiabeteRenussionTask.showActiveTask2(oldData, (ok, results) => {
       if (ok && results) {
         resolve(checkActiveTask2Answer(oldData, results));
       } else {
-        reject(new Error('Cancel'));
+        resolve(null);
       }
     });
   });
 };
 const showActiveTask3 = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     InternationalDiabeteRenussionTask.showActiveTask3((ok) => {
       if (ok) {
-        resolve(ok);
+        resolve();
       } else {
-        reject(new Error('Cancel'));
+        resolve(null);
       }
     });
   });
 };
 const showActiveTask4 = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     InternationalDiabeteRenussionTask.showActiveTask4((ok, results) => {
       console.log('showActiveTask4 :', ok, results);
       if (ok && results) {
         resolve(checkActiveTask4Answer(results));
       } else {
-        reject(new Error('Cancel'));
+        resolve(null);
       }
     });
   });
 };
 
 let getHealthKitData = (studyInformation, startDateString, endDateString) => {
-  return new Promise(((resolve, reject) => {
+  return new Promise(((resolve) => {
     let options = {
       startDate: startDateString,
       endDate: endDateString,

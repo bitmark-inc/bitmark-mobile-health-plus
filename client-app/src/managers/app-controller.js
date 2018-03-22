@@ -1,10 +1,11 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 
-import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel } from './../models';
+import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel, DonationModel } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
+import { DonationService } from '../services/donation-service';
 
 // ================================================================================================
 // ================================================================================================
@@ -158,7 +159,7 @@ const doGetProvenance = async (bitmark) => {
 };
 
 const doTransferBitmark = async (bitmark, receiver) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -167,7 +168,7 @@ const doTransferBitmark = async (bitmark, receiver) => {
 };
 
 const doAcceptTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -198,7 +199,7 @@ const doReloadData = async () => {
 const doActiveDonation = async () => {
   let donationInformation = DataController.getDonationInformation();
   await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to active donation');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to active donation.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -207,7 +208,7 @@ const doActiveDonation = async () => {
 };
 
 const doJoinStudy = async (studyId) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to join study');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to join study.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -215,12 +216,42 @@ const doJoinStudy = async (studyId) => {
   return await processing(DataController.doJoinStudy(touchFaceIdSession, studyId));
 };
 const doLeaveStudy = async (studyId) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to opt out study');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to opt out study.');
   if (!touchFaceIdSession) {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
   return await processing(DataController.doLeaveStudy(touchFaceIdSession, studyId));
+};
+const doStudyTask = async (study, taskType) => {
+  let result = await DonationService.doStudyTask(study, taskType);
+  if (!result) {
+    return null;
+  }
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to complete task.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
+};
+const doDonateHealthData = async (study, list) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to donate your health data.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doDonateHealthData(touchFaceIdSession, study, list));
+};
+
+
+const doBitmarkHealthData = async (list) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to issue your weekly health data.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doBitmarkHealthData(touchFaceIdSession, list));
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
@@ -252,6 +283,8 @@ let AppController = {
   doActiveDonation,
   doJoinStudy,
   doLeaveStudy,
+  doStudyTask,
+  doBitmarkHealthData,
   doReloadData,
 
 
