@@ -49,7 +49,7 @@ export class DonationComponent extends React.Component {
   render() {
     if (!this.state.donationInformation.createdAt) {
       return (<View style={donationStyle.body}>
-        <View style={donationStyle.inActiveContent}><ActiveDonationComponent screenProps={{ reloadDonationScreen: this.switchSubtab }} /></View >
+        <View style={donationStyle.inActiveContent}><ActiveDonationComponent screenProps={{ callDirective: true }} /></View >
       </View>);
     }
     return (<View style={donationStyle.body}>

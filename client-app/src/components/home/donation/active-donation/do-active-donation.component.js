@@ -38,14 +38,18 @@ export class DoActiveDonationComponent extends React.Component {
   }
 
   doActiveDonation() {
-    AppController.doActiveDonation().catch(error => {
+    AppController.doActiveDonation().then(() => {
+      if (!this.props.screenProps.callDirective) {
+        this.props.navigation.goBack();
+      }
+    }).catch(error => {
       console.log('doActiveDonation error :', error);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
         onClose: () => {
           this.props.navigation.goBack();
         }
       });
-    })
+    });
   }
 
   render() {
@@ -120,6 +124,6 @@ DoActiveDonationComponent.propTypes = {
     goBack: PropTypes.func,
   }),
   screenProps: PropTypes.shape({
-    reloadDonationScreen: PropTypes.func.isRequired,
+    callDirective: PropTypes.bool,
   }),
 }

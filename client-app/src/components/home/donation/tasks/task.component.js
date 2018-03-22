@@ -133,27 +133,11 @@ export class TasksComponent extends React.Component {
               )
             }}
           />
-          {this.state.loadingDataSourceStatus &&
-            <View style={taskStyles.dataSourceLoading}>
-              {this.state.type === TaskTypes.todo && this.state.todoTasks.length === 0 &&
-                <View style={taskStyles.notTaskArea}>
-                  <Text style={taskStyles.noTaskMessage}>{'checking your tasks...'.toUpperCase()}</Text>
-                  <Text style={taskStyles.notTaskDescription}>You will be asked to do some tasks in this screen. Included in these tasks are bitmarking your health data, donating data, or required tasks and activities for studies you’ve completed.</Text>
-                </View>
-              }
-              <ActivityIndicator size="large" style={taskStyles.dataSourceLoadingIndicator} />
-            </View>
-          }
-          {this.state.type === TaskTypes.todo && !this.state.loadingDataSourceStatus && this.state.todoTasks.length === 0 &&
+
+          {this.state.type === TaskTypes.todo && this.state.todoTasks.length === 0 &&
             <View style={taskStyles.notTaskArea}>
               <Text style={taskStyles.noTaskMessage}>{'ThERE are no new tasks.'.toUpperCase()}</Text>
               <Text style={taskStyles.notTaskDescription}>It looks like you have nothing due today. This page will show what you need to do once you join a study or turn on data sources to bitmark.</Text>
-            </View>
-          }
-
-          {this.state.type === TaskTypes.completed && !this.state.loadingDataSourceStatus && this.state.completedTasks.length === 0 &&
-            <View style={taskStyles.notTaskArea}>
-              <Text style={taskStyles.noTaskMessage}>{'ThERE are no completed tasks.'.toUpperCase()}</Text>
             </View>
           }
         </ScrollView>

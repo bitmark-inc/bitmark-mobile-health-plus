@@ -81,18 +81,6 @@ export default StyleSheet.create({
     fontWeight: '300',
   },
 
-  dataSourceLoading: {
-    minHeight: 69,
-    width: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  dataSourceLoadingIndicator: {
-    marginTop: 20,
-  },
-
   notTaskArea: {
     marginTop: 69,
     width: '100%'

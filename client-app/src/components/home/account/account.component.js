@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView, Image,
+  View, Text, TouchableOpacity, ScrollView, Image, FlatList,
   Clipboard,
   Platform,
 } from 'react-native';
@@ -20,23 +20,29 @@ let defaultStyle = Platform.select({
 export class AccountDetailComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
 
     this.state = {
       accountNumberCopyText: 'COPY',
       notificationUUIDCopyText: 'COPY',
       userInfo: DataController.getUserInformation(),
+      donationInformation: DataController.getDonationInformation(),
     };
   }
 
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
   }
 
   componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
   }
-
+  handerDonationInformationChange() {
+    this.setState({ donationInformation: DataController.getDonationInformation() });
+  }
   handerChangeUserInfo() {
     this.setState({ userInfo: DataController.getUserInformation() });
   }
@@ -78,6 +84,32 @@ export class AccountDetailComponent extends React.Component {
                 {/* <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}> */}
                 <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device  »'.toUpperCase()} </Text>
               </TouchableOpacity>
+
+              <Text style={accountStyle.accountDataSourceLabel}>Data Sources</Text>
+              <View style={accountStyle.dataSourcesArea}>
+                <Text style={accountStyle.dataSourcesMessage}>
+                  Claim ownership over your health data. Connect Bitmark to Apple’s Health app: <Text style={{ color: '#0060F2' }}>{"Health App > Sources > Bitmark."}</Text>  Any data sources that you allow Bitmark to access will be bitmarked automatically. (If you did not grant access or if you did and no data was detected, the status will be inactive.)
+                </Text>
+                {(!this.state.donationInformation || !this.state.donationInformation.createdAt) &&
+                  <TouchableOpacity style={accountStyle.activeBitmarkHealthDataButton} onPress={() => {
+                    this.props.screenProps.homeNavigation.navigate('DoActiveDonation');
+                  }}>
+                    <Text style={accountStyle.activeBitmarkHealthDataButtonText}>ACCESS MY HEALTH DATA  » </Text>
+                  </TouchableOpacity>
+                }
+                {this.state.donationInformation && this.state.donationInformation.createdAt &&
+                  <FlatList data={this.state.donationInformation.dataSourceStatuses}
+                    extraData={this.state.donationInformation.dataSourceStatuses}
+                    style={accountStyle.dataSourcesList}
+                    renderItem={({ item }) => {
+                      return (<View style={accountStyle.dataSourceRow}>
+                        <Text style={accountStyle.dataSourcesName}>{item.title}</Text>
+                        <Text style={accountStyle['dataSource' + item.status]}>{item.status.toUpperCase()}</Text>
+                      </View>)
+                    }}
+                  />
+                }
+              </View>
             </View >
           </TouchableOpacity>
         </ScrollView>

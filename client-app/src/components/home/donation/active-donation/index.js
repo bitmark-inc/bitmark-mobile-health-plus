@@ -16,4 +16,4 @@ let ActiveDonationComponent = StackNavigator({
   }
 );
 
-export { ActiveDonationComponent };
+export { ActiveDonationComponent, DoActiveDonationComponent };

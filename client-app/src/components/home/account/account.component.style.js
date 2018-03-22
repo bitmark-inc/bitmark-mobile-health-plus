@@ -142,4 +142,70 @@ export default StyleSheet.create({
     fontSize: 14,
     color: '#0060F2',
   },
+
+  accountDataSourceLabel: {
+    marginTop: 17,
+    fontFamily: 'Avenir black',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  dataSourcesArea: {
+    marginTop: 17,
+    width: '100%',
+    flexDirection: 'column',
+    marginBottom: 20,
+  },
+  dataSourcesMessage: {
+    fontFamily: 'Avenir black',
+    fontSize: 14,
+    fontWeight: '300'
+  },
+
+  activeBitmarkHealthDataButton: {
+    marginTop: 30,
+    paddingTop: 4,
+    paddingBottom: 4,
+  },
+  activeBitmarkHealthDataButtonText: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 14,
+    color: '#0060F2',
+  },
+
+  dataSourcesList: {
+    width: '100%',
+    marginTop: 15,
+  },
+  dataSourceRow: {
+    width: '100%',
+    marginTop: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 21,
+  },
+  dataSourcesName: {
+    fontFamily: 'Andale Mono',
+    fontSize: 12,
+    width: convertWidth(220),
+    lineHeight: 14,
+  },
+  dataSourceActive: {
+    color: '#0060F2',
+    fontFamily: 'Andale Mono',
+    fontSize: 12,
+    lineHeight: 14,
+    width: convertWidth(100),
+    textAlign: 'left',
+  },
+  dataSourceInactive: {
+    color: '#FF003C',
+    fontFamily: 'Andale Mono',
+    fontSize: 12,
+    lineHeight: 14,
+    textAlign: 'left',
+    width: convertWidth(100),
+  },
+
 });

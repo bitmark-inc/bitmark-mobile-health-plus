@@ -10,7 +10,7 @@ import {
 } from './properties';
 
 import { TransactionDetailComponent } from './transactions';
-import { StudyDetailComponent, StudySettingComponent } from './donation';
+import { StudyDetailComponent, StudySettingComponent, DoActiveDonationComponent } from './donation';
 
 
 let HomeComponent = StackNavigator({
@@ -25,6 +25,7 @@ let HomeComponent = StackNavigator({
   TransactionDetail: { screen: TransactionDetailComponent, },
   StudyDetail: { screen: StudyDetailComponent, },
   StudySetting: { screen: StudySettingComponent, },
+  DoActiveDonation: { screen: DoActiveDonationComponent, },
 }, {
     headerMode: 'none',
     navigationOptions: {
