@@ -175,7 +175,7 @@ export class TasksComponent extends React.Component {
               return (
                 <TouchableOpacity style={[taskStyles.taskRow, {
                   borderLeftColor: this.state.type === TaskTypes.todo ?
-                    (item.task === 'data-source-inactive' ? '#FF003C' : '#0060F2') : '#BDBDBD'
+                    (item.taskType === 'data-source-inactive' ? '#FF003C' : '#0060F2') : '#BDBDBD'
                 }]} onPress={() => {
                   if (item.completedDate) {
                     this.onClickCompletedTask(item);
@@ -186,7 +186,7 @@ export class TasksComponent extends React.Component {
                   <View style={taskStyles.taskRowLeft}></View>
                   <Text style={[taskStyles.taskTitle, {
                     color: this.state.type === TaskTypes.todo ?
-                      (item.task === 'data-source-inactive' ? '#FF003C' : 'black') : '#828282'
+                      (item.taskType === 'data-source-inactive' ? '#FF003C' : 'black') : '#828282'
                   }]} >
                     {item.title + (item.number > 1 ? (' (' + item.number + ')') : '')}
                   </Text>
