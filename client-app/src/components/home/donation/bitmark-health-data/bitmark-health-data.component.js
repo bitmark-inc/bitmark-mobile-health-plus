@@ -17,6 +17,8 @@ let defaultStyle = Platform.select({
 export class BitmarkHealthDataComponent extends React.Component {
   constructor(props) {
     super(props);
+    let list = this.props.navigation.state.params.list;
+    this.state = { list };
   }
   render() {
     return (<View style={bitmarkHealthStyles.body}>
@@ -37,7 +39,7 @@ export class BitmarkHealthDataComponent extends React.Component {
         <Text style={bitmarkHealthStyles.bitmarkDescription}>Signing your issuance with Touch/ Face ID or Passcode securely creates new bitmarks for your health data.</Text>
       </View>
       <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
-        AppController.doBitmarkHealthData().catch(error => {
+        AppController.doBitmarkHealthData(this.state.list).catch(error => {
           console.log('doBitmarkHelthData error:', error);
           EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
         })
@@ -55,7 +57,7 @@ BitmarkHealthDataComponent.propTypes = {
     goBack: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
-        justCreatedBitmarkAccount: PropTypes.bool,
+        list: PropTypes.array.isRequired,
       })
     })
   })

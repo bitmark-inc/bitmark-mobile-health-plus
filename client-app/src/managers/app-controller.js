@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 
-import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel, DonationModel } from './../models';
+import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
@@ -284,6 +284,7 @@ let AppController = {
   doJoinStudy,
   doLeaveStudy,
   doStudyTask,
+  doDonateHealthData,
   doBitmarkHealthData,
   doReloadData,
 

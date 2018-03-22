@@ -23,9 +23,10 @@ export class TasksComponent extends React.Component {
     let donationInformation = DataController.getDonationInformation();
     let type = (this.props.type && (this.props.type === TaskTypes.todo || this.props.type === TaskTypes.completed)) ? this.props.type : TaskTypes.todo;
     this.state = {
+      donationInformation,
       todoTasks: donationInformation.todoTasks || [],
-      totalTodoTask: donationInformation.totalTodoTask,
-      completedTasks: donationInformation.completedTasks,
+      totalTodoTask: donationInformation.totalTodoTask || 0,
+      completedTasks: donationInformation.completedTasks || [],
       type,
     }
   }
@@ -40,6 +41,7 @@ export class TasksComponent extends React.Component {
   handerDonationInformationChange() {
     let donationInformation = DataController.getDonationInformation();
     this.setState({
+      donationInformation,
       todoTasks: donationInformation.todoTasks || [],
       totalTodoTask: donationInformation.totalTodoTask,
       completedTasks: donationInformation.completedTasks,
@@ -47,17 +49,10 @@ export class TasksComponent extends React.Component {
   }
 
   switchType(type) {
-    let donationInformation = DataController.getDonationInformation();
-    this.setState({
-      type,
-      todoTasks: donationInformation.todoTasks || [],
-      totalTodoTask: donationInformation.totalTodoTask,
-      completedTasks: donationInformation.completedTasks,
-    });
+    this.setState({ type });
   }
 
   onClickCompletedTask(item) {
-    let donationInformation = DataController.getDonationInformation();
     if (item.taskType === DonationService.DATA_SOURCE_INTACTIVE_TASK_TYPE) {
       const resetHomePage = NavigationActions.reset({
         index: 0,
@@ -70,7 +65,7 @@ export class TasksComponent extends React.Component {
         ]
       });
       this.props.screenProps.homeNavigation.dispatch(resetHomePage);
-    } else if (item.txid && item.taskType === donationInformation.commonTaskIds.bitmark_health_data) {
+    } else if (item.txid && item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data) {
       let bitmarkInformation = DataController.getLocalBitmarkInformation(item.txid);
       if (bitmarkInformation && bitmarkInformation.bitmark && bitmarkInformation.asset) {
         this.props.screenProps.homeNavigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
@@ -90,7 +85,6 @@ export class TasksComponent extends React.Component {
   }
 
   onClickTodoTask(item) {
-    let donationInformation = DataController.getDonationInformation();
     if (item.taskType === DonationService.DATA_SOURCE_INTACTIVE_TASK_TYPE) {
       const resetHomePage = NavigationActions.reset({
         index: 0,
@@ -103,10 +97,10 @@ export class TasksComponent extends React.Component {
         ]
       });
       this.props.screenProps.homeNavigation.dispatch(resetHomePage);
-    } else if (item.taskType === donationInformation.commonTaskIds.bitmark_health_data) {
-      this.props.screenProps.homeNavigation.navigate('BitmarkHealthData');
+    } else if (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data) {
+      this.props.screenProps.homeNavigation.navigate('BitmarkHealthData', { list: item.list });
     } else if (item.study && item.study.taskIds && item.taskType === item.study.taskIds.donations) {
-      this.props.screenProps.homeNavigation.navigate('StudyDonation', { study: item.study });
+      this.props.screenProps.homeNavigation.navigate('StudyDonation', { study: item.study, list: item.list });
     } else if (item.study && item.study.taskIds && item.taskType) {
       //TODO
       AppController.doStudyTask(item.study, item.taskType).catch(error => {

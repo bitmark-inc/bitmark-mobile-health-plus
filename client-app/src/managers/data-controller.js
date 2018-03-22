@@ -278,9 +278,9 @@ const doDonateHealthData = async (touchFaceIdSession, study, list) => {
 const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let donationInformation = await DonationService.doBitmarkHealthData(touchFaceIdSession,
     userInformation.bitmarkAccountNumber,
-    donationInformation.allDataTypes,
+    userData.donationInformation.allDataTypes,
     list,
-    donationInformation.commonTaskIds.bitmark_health_data);
+    userData.donationInformation.commonTaskIds.bitmark_health_data);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
