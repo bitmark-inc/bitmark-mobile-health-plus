@@ -6,6 +6,7 @@ import {
   ios,
   android //TODO
 } from './../../../configs';
+import { convertWidth } from '../../../utils';
 const constant = Platform.select({ ios: ios.constant, android: android.constant });
 
 export default StyleSheet.create({
@@ -23,25 +24,19 @@ export default StyleSheet.create({
     marginTop: 5,
   },
   textArea: {
-    marginBottom: 30,
+    marginBottom: 28,
   },
   indicatorTitle: {
-    fontFamily: 'Arial',
     fontSize: 15.42,
-    fontWeight: '700',
+    fontWeight: '800',
     textAlign: 'center',
-    width: 232,
-    lineHeight: 20,
-    color: '#4A4A4A',
+    width: convertWidth(234),
   },
   indicatorMessage: {
-    fontFamily: 'Arial',
     fontSize: 15.42,
     fontWeight: '400',
     textAlign: 'center',
-    width: 232,
-    lineHeight: 20,
-    color: '#4A4A4A',
+    width: convertWidth(250),
     marginTop: 10,
   },
 });
