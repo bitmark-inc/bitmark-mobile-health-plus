@@ -89,6 +89,20 @@ const doCheckDataSource = async (donationInformation, oldDonationInformation) =>
   return donationInformation;
 };
 
+
+const getStudy = (donationInformation, studyId) => {
+  for (let index in donationInformation.joinedStudies) {
+    if (donationInformation.joinedStudies[index].studyId === studyId) {
+      return donationInformation.joinedStudies[index];
+    }
+  }
+  for (let index in donationInformation.otherStudies) {
+    if (donationInformation.otherStudies[index].studyId === studyId) {
+      return donationInformation.otherStudies[index];
+    }
+  }
+  return null;
+};
 const doLoadDonationTask = async (donationInformation) => {
   if (!donationInformation.createdAt) {
     await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
@@ -150,17 +164,45 @@ const doLoadDonationTask = async (donationInformation) => {
   donationInformation.todoTasks = todoTasks;
   donationInformation.totalTodoTask = totalTodoTask;
 
-  let completedTasks = donationInformation.completedTasks || [];
+
+  let completedTasks = [];
+  donationInformation.completedTasks = donationInformation.completedTasks || [];
+
+  donationInformation.completedTasks.forEach(item => {
+    if (item.studyId) {
+      let study = getStudy(item.studyId);
+      if (study) {
+        completedTasks.push({
+          key: completedTasks.length + 1,
+          title: study.studyTasks[item.taskType].title,
+          description: study.studyTasks[item.taskType].description,
+          completedDate: moment(item.completedAt),
+          taskType: item.taskType,
+          study: study,
+          txid: item.txid,
+        });
+      }
+    }
+    if (item.taskType === donationInformation.commonTaskIds.bitmark_health_data) {
+      completedTasks.push({
+        key: completedTasks.length + 1,
+        title: donationInformation.commonTasks[item.taskType].title,
+        description: donationInformation.commonTasks[item.taskType].description,
+        completedDate: moment(item.completedAt),
+        task: item.taskType,
+        txid: item.txid,
+      });
+    }
+  });
   if (donationInformation.dataSourceInactiveCompletedTasks && donationInformation.dataSourceInactiveCompletedTasks.length > 0) {
     for (let completedEnableDataSource of donationInformation.dataSourceInactiveCompletedTasks) {
-      todoTasks.push({
+      completedTasks.push({
         key: completedTasks.length + 1,
         title: completedEnableDataSource.title,
         description: completedEnableDataSource.description,
         completedDate: moment(completedEnableDataSource.completedDate),
         taskType: DATA_SOURCE_INTACTIVE_TASK_TYPE,
       });
-      key++;
     }
   }
   donationInformation.completedTasks = completedTasks;
@@ -205,12 +247,12 @@ const doLeaveStudy = async (touchFaceIdSession, bitmarkAccountNumber, studyId) =
   return await doLoadDonationTask(donationInformation);
 };
 
-const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType, completedAt, studyId, txid, transferData) => {
+const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType, completedAt, studyId, txid) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   if (!signatureData) {
     return null;
   }
-  let donationInformation = await DonationModel.doCompleteTask(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, taskType, completedAt, studyId, txid, transferData);
+  let donationInformation = await DonationModel.doCompleteTask(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, taskType, completedAt, studyId, txid);
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -281,8 +323,9 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
       (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4))) {
     let prepareResult = await doPrepareSurveyFile(touchFaceIdSession, bitmarkAccountNumber, study, taskType, result);
     //TODO use other issue function
-    let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.metadata, 1);
-    return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, issueResult.bitmarkId, issueResult.transferData);
+    let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.metadata, 1);
+
+    return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkIds[0]);
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
     return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
   }
@@ -299,9 +342,10 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
       randomString({ length: 8, numeric: true, letters: false, })
     );
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, tempData.date, tempData.data, tempData.randomId);
-    let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, tempData.assetName, tempData.metadata, 1);
     //TODO use other issue function
-    return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), null, issueResult[0]);
+    let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, tempData.assetName, tempData.metadata, 1);
+
+    return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), null, bitmarkIds[0]);
   }
 };
 

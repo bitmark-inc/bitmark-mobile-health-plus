@@ -9,6 +9,8 @@ const KEYS = {
 
   USER_DATA_LOCAL_BITMARKS: 'user-data:local-bitmarks',
   USER_DATA_DONATION_INFORMATION: 'user-data:doantion-information',
+  USER_DATA_TRANSACTIONS: 'user-data:transactions',
+  USER_DATA_TRANSFER_OFFERS: 'user-data:transfer-offers',
 };
 
 // ================================================================================================

@@ -135,7 +135,7 @@ const doLeaveStudy = (bitmark_account, study_id, timestamp, signature, ) => {
   });
 };
 
-const doCompleteTask = (bitmark_account, timestamp, signature, task_type, completed_at, study_id, txid, transfer_data) => {
+const doCompleteTask = (bitmark_account, timestamp, signature, task_type, completed_at, study_id, txid) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = config.donation_server_url + `/s/api/leave-study`;
@@ -153,7 +153,6 @@ const doCompleteTask = (bitmark_account, timestamp, signature, task_type, comple
         completed_at,
         study_id,
         txid,
-        transfer_data,
       }),
     }).then((response) => {
       statusCode = response.status;

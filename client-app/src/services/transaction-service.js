@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { TransactionModel, BitmarkSDK, BitmarkModel, UserModel } from '../models';
+import { TransactionModel, BitmarkSDK, BitmarkModel, UserModel, CommonModel } from '../models';
 
 const getAllTransactions = async (accountNumber) => {
   let allTransactions = await TransactionModel.getAllTransactions(accountNumber);
@@ -27,6 +27,7 @@ const getAllTransactions = async (accountNumber) => {
       });
     }
   }
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, completedTransfers);
   return completedTransfers;
 };
 
@@ -45,6 +46,7 @@ const doGetActiveIncomingTransferOffers = async (accountNumber) => {
       activeIncomingTransferOffers.push(incomingTransferOffer);
     }
   }
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, activeIncomingTransferOffers);
   return activeIncomingTransferOffers;
 };
 
