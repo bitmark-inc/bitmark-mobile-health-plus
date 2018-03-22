@@ -1,12 +1,5 @@
-import { StyleSheet, Platform } from 'react-native'
-import {
-  ios,
-  android // TODO
-} from './../../../../configs';
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
+import { StyleSheet } from 'react-native'
+
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -16,7 +9,6 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   swipePage: {
-    flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
   },
@@ -32,7 +24,6 @@ export default StyleSheet.create({
   },
   swipePagination: {
     position: 'absolute',
-    bottom: 115 + constant.blankFooter,
   },
 
   content: {
@@ -190,7 +181,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   bottomButton: {
-    height: 45,
+    minHeight: 45,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

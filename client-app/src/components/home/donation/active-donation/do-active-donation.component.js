@@ -59,13 +59,13 @@ export class DoActiveDonationComponent extends React.Component {
         showsButtons={false}
         loop={false}
         scrollEnabled={false}
-        paginationStyle={activeDonationStyle.swipePagination}
+        paginationStyle={[activeDonationStyle.swipePagination, { bottom: 115 + constant.blankFooter }]}
         width={convertWidth(375)}
         height={currentSize.height - constant.headerSize.paddingTop - constant.bottomTabsHeight}
         dot={
           <View style={activeDonationStyle.swipeDotButton} />
         }>
-        <View style={activeDonationStyle.swipePage}>
+        <View style={[activeDonationStyle.swipePage, { height: currentSize.height - (this.props.screenProps.callDirective ? (constant.bottomTabsHeight + constant.blankFooter) : 0) }]}>
           <View style={activeDonationStyle.content}>
             <Text style={activeDonationStyle.title}>{'your bitmark account number'.toUpperCase()}</Text>
             <Text style={activeDonationStyle.description}>
@@ -75,14 +75,19 @@ export class DoActiveDonationComponent extends React.Component {
               <Text style={activeDonationStyle.bitmarkAccountText}>{this.state.user.bitmarkAccountNumber}</Text>
             </View>
             <View style={activeDonationStyle.bottomButtonArea}>
-              <TouchableOpacity style={activeDonationStyle.bottomButton} onPress={() => { this.swiper.scrollBy(1) }}>
+              <TouchableOpacity style={[activeDonationStyle.bottomButton, {
+                height: this.props.screenProps.callDirective ? 45 : (45 + constant.blankFooter),
+                paddingBottom: this.props.screenProps.callDirective ? 0 : constant.blankFooter,
+              }]} onPress={() => { this.swiper.scrollBy(1) }}>
                 <Text style={activeDonationStyle.bottomButtonText}>CONTINUE</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
 
-        <View style={activeDonationStyle.swipePage}>
+        <View style={[activeDonationStyle.swipePage, {
+          height: currentSize.height - (this.props.screenProps.callDirective ? (constant.bottomTabsHeight + constant.blankFooter) : 0)
+        }]}>
           <View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.swiper.scrollBy(-1)}>
               <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
@@ -101,20 +106,23 @@ export class DoActiveDonationComponent extends React.Component {
               <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../assets/imgs/bitmark-logo.png')} />
             </View>
 
-            <View style={activeDonationStyle.bottomButtonArea}>
+            <View style={[activeDonationStyle.bottomButtonArea]}>
               <TouchableOpacity style={[activeDonationStyle.bottomButton, {
                 backgroundColor: 'white', borderColor: '#0060F2', borderWidth: 1,
               }]} onPress={() => this.props.navigation.goBack()}>
                 <Text style={[activeDonationStyle.bottomButtonText, { color: '#0060F2' }]}>I WILL DO IT LATER.</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={activeDonationStyle.bottomButton} onPress={this.doActiveDonation}>
+              <TouchableOpacity style={[activeDonationStyle.bottomButton, {
+                height: this.props.screenProps.callDirective ? 45 : (45 + constant.blankFooter),
+                paddingBottom: this.props.screenProps.callDirective ? 0 : constant.blankFooter,
+              }]} onPress={this.doActiveDonation}>
                 <Text style={activeDonationStyle.bottomButtonText}>GOT IT. LET’S BITMARK!</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Swiper>
-    </View>);
+    </View >);
   }
 }
 
