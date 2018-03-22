@@ -31,7 +31,8 @@ export class BitmarkIndicatorComponent extends React.Component {
           {!!this.state.indicator && <ActivityIndicator size="large" style={dialogStyles.indicatorImage} />}
           <View style={dialogStyles.textArea}>
             {!!this.state.title && <Text style={[dialogStyles.indicatorTitle, {
-              marginTop: this.state.indicator ? 0 : 30,
+              marginTop: this.state.indicator ? 0 : 23,
+              fontSize: this.state.message ? 18 : 15.42,
             }]}>{this.state.title}</Text>}
             {!!this.state.message && <Text style={dialogStyles.indicatorMessage}>{this.state.message}</Text>}
           </View>

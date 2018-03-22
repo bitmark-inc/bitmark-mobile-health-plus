@@ -76,8 +76,8 @@ export default StyleSheet.create({
   topButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 14,
-    lineHeight: 16,
+    fontSize: 16,
+    lineHeight: 19,
     color: '#0060F2',
     textAlign: 'right',
   },

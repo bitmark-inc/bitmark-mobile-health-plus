@@ -21,7 +21,7 @@ export default StyleSheet.create({
     height: '100%'
   },
   headerLeftIcon: {
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     width: 10,
     height: 19,
     resizeMode: 'contain'
@@ -51,7 +51,7 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     color: '#0060F2',
-    marginRight: 10,
+    marginRight: 19,
     textAlign: 'right',
   },
 });

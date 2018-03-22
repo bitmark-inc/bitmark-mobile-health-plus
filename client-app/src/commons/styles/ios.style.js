@@ -51,7 +51,7 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     color: '#0060F2',
-    marginRight: 10,
+    marginRight: 19,
     textAlign: 'right',
   },
 });

@@ -10,7 +10,7 @@ export class LoadingComponent extends React.Component {
     return (
       <View style={loadingStyles.body}>
         <View style={loadingStyles.loading}>
-          <Image style={loadingStyles.loadingLogo} source={require('./../../../../assets/imgs/loading-logo-gray.png')} />
+          <Image style={loadingStyles.loadingLogo} source={require('./../../../../assets/imgs/loading-logo.png')} />
         </View>
       </View>
     );
