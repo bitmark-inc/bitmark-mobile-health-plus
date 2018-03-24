@@ -23,15 +23,16 @@ let config = {
 if (config.network === NETWORKS.testnet) {
   config.trade_server_url = 'https://trade.test.bitmark.com';
   //TODO
+  // config.market_urls.totemic = 'https://totemic.test.bitmark.com';
   // config.donation_server_url = 'http://donation.test.bitmark.com';
 } else if (config.network === NETWORKS.livenet) {
   config.api_server_url = 'https://api.bitmark.com';
   config.preive_asset_url = 'https://preview.assets.bitmark.com';
   config.registry_server_url = 'https://registry.bitmark.com';
   config.bitmark_network = NETWORKS.livenet;
-  //TODO
-  config.trade_server_url = '';
-  config.donation_server_url = '';
+
+  config.trade_server_url = 'https://trade.bitmark.com';
+  // config.market_urls.totemic = 'https://totemic.bitmark.com';
 }
 
 let ios = {
