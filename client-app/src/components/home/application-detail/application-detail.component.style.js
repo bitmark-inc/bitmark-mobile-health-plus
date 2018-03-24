@@ -58,8 +58,7 @@ export default StyleSheet.create({
     position: 'absolute',
     width: '100%',
     bottom: 0,
-    paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19),
+    left: convertWidth(19),
   },
 
   donorInfo: {
