@@ -41,8 +41,8 @@ if (config.network === NETWORKS.testnet) {
   config.registry_server_url = 'https://registry.bitmark.com';
   config.bitmark_network = NETWORKS.livenet;
   //TODO
-  config.trade_server_url = '';
-  config.market_urls.totemic = '';
+  config.trade_server_url = 'https://trade.bitmark.com';
+  config.market_urls.totemic = 'https://totemic.bitmark.com';
 }
 
 let ios = {
