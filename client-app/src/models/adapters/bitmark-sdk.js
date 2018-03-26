@@ -37,7 +37,7 @@ const BitmarkSDK = {
         if (ok) {
           resolve(result);
         } else {
-          reject(newError(result, 'Can not reuest session!'));
+          reject(newError(result, 'Can not request session!'));
         }
       });
     });
