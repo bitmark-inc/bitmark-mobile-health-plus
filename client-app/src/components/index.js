@@ -166,7 +166,7 @@ class MainComponent extends Component {
           } else {
             if (!this.requiringTouchId) {
               this.requiringTouchId = true;
-              Alert.alert('Touch/Face ID or a passcode is required to authorize your transactions.', '', [{
+              Alert.alert('Please enable your Touch ID & Passcode to continue using Bitmark. Settings > Touch ID & Passcode', '', [{
                 text: 'ENABLE', onPress: () => {
                   Linking.openURL('app-settings:');
                   this.requiringTouchId = false;
