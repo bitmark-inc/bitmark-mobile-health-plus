@@ -77,7 +77,7 @@ export default StyleSheet.create({
     fontSize: 15.42,
     textAlign: 'center',
     fontWeight: '800',
-    width: 248,
+    width: convertWidth(248),
     marginTop: 26,
   },
   sendFeedbackPopupDescription: {
@@ -86,7 +86,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontWeight: '300',
     color: '#4A4A4A',
-    width: 223,
+    width: convertWidth(223),
     marginTop: 10,
     marginBottom: 25,
   },
@@ -110,7 +110,7 @@ export default StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 132,
+    width: convertWidth(132),
   },
   sendFeedbackPopupButtonText: {
     fontFamily: 'Arial',
