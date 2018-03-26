@@ -134,9 +134,9 @@ public extension Account {
             throw("Fail to get bitmark id")
         }
         
-        if let sessionData = sessionData {
-            try updateSessionData(bitmarkId: bitmarkId, sessionData: sessionData, sender: self.accountNumber.string, recipient: recipient)
-        }
+//        if let sessionData = sessionData {
+//            try updateSessionData(bitmarkId: bitmarkId, sessionData: sessionData, sender: self.accountNumber.string, recipient: recipient)
+//        }
         
         // Transfer records
         var transfer = TransferOffer(txId: bitmarkId, receiver: try AccountNumber(address: recipient))
