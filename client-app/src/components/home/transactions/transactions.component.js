@@ -183,7 +183,7 @@ export class TransactionsComponent extends React.Component {
             </View>}
 
             {this.state.subTab === SubTabs.completed && this.state.transactions.length === 0 && <View style={transactionsStyle.contentSubTab}>
-              <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY!</Text>
+              <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY.</Text>
               <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where your history of completed transaction will be stored.</Text>
             </View>}
             {this.state.subTab === SubTabs.completed && this.state.transactions.length > 0 && <View style={transactionsStyle.contentSubTab}>
