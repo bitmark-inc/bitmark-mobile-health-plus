@@ -128,10 +128,12 @@ export class SignInComponent extends React.Component {
   onKeyboardDidShow(ke) {
     this.setState({ keyBoardHeight: ke.endCoordinates.height });
     setTimeout(() => {
-      if ((this.state.selectedIndex > 6 && this.state.selectedIndex < 12) || this.state.selectedIndex > 18) {
-        this.scrollRef.scrollToEnd({ animated: true });
-      } else {
-        this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+      if (this.scrollRef) {
+        if ((this.state.selectedIndex > 6 && this.state.selectedIndex < 12) || this.state.selectedIndex > 18) {
+          this.scrollRef.scrollToEnd({ animated: true });
+        } else {
+          this.scrollRef.scrollTo({ x: 0, y: 0, animated: true });
+        }
       }
     }, 1000);
   }

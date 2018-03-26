@@ -87,7 +87,7 @@ export class IssueFileComponent extends React.Component {
     if (this.forcsedInput) {
       this.forcsedInput.measureInWindow((x, y, width, height) => {
         console.log('keyboardEvent forcsedInput :', x, y, width, height);
-        if ((y + height) > keyboardEvent.endCoordinates.screenY) {
+        if (this.scrollRef && ((y + height) > keyboardEvent.endCoordinates.screenY)) {
           this.scrollRef.scrollTo({ x: 0, y: this.scrollYPosition + (y - keyboardEvent.endCoordinates.screenY) + height });
         }
       });
