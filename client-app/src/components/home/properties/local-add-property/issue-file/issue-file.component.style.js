@@ -85,7 +85,7 @@ export default StyleSheet.create({
     width: convertWidth(330),
     borderBottomWidth: 1,
     borderBottomColor: '#C2C2C2',
-    height: 25,
+    minHeight: 25,
     flexDirection: 'row',
     alignItems: 'center',
   },
