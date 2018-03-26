@@ -106,7 +106,7 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_back_icon_study_setting.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>{(isSignOut ? 'Recovery Phrase' : 'Test Phrase').toUpperCase()}</Text>
+          <Text style={defaultStyle.headerTitle}>{'Recovery Phrase'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
         <View style={accountRecoveryStyle.recoveryPhraseContent}>
