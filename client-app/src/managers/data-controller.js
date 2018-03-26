@@ -25,7 +25,7 @@ const recheckLocalAssets = (localAssets) => {
   if (userData && userData.donationInformation && userData.donationInformation.completedTasks) {
     for (let asset of localAssets) {
       for (let bitmark of asset.bitmarks) {
-        let isDonating = userData.donationInformation.completedTasks.findIndex(item => item.txid === bitmark.id);
+        let isDonating = userData.donationInformation.completedTasks.findIndex(item => item.bitmarkId === bitmark.id);
         bitmark.status = isDonating >= 0 ? 'donating' : bitmark.status;
       }
     }
@@ -217,11 +217,13 @@ const doGetTransactionData = async () => {
 const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
   let transactions = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS);
+  transactions = transactions.length > 0 ? transactions : null;
   if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
     userData.transactions = transactions;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
   }
   let activeIncompingTransferOffers = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS);
+  activeIncompingTransferOffers = activeIncompingTransferOffers.length > 0 ? activeIncompingTransferOffers : null;
   if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
     userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
@@ -231,6 +233,7 @@ const doOpenApp = async () => {
     userData.donationInformation = donationInformation || {};
   }
   let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
+  localAssets = localAssets.length > 0 ? localAssets : null;
   if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
     userData.localAssets = localAssets || [];
   }

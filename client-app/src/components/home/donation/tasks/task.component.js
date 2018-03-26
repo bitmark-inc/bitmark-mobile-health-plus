@@ -65,13 +65,13 @@ export class TasksComponent extends React.Component {
         ]
       });
       this.props.screenProps.homeNavigation.dispatch(resetHomePage);
-    } else if (item.txid && item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data) {
-      let bitmarkInformation = DataController.getLocalBitmarkInformation(item.txid);
+    } else if (item.bitmarkId && item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data) {
+      let bitmarkInformation = DataController.getLocalBitmarkInformation(item.bitmarkId);
       if (bitmarkInformation && bitmarkInformation.bitmark && bitmarkInformation.asset) {
         this.props.screenProps.homeNavigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
       }
-    } else if (item.txid) {
-      let bitmarkInformation = DataController.getLocalBitmarkInformation(item.txid);
+    } else if (item.bitmarkId) {
+      let bitmarkInformation = DataController.getLocalBitmarkInformation(item.bitmarkId);
       if (bitmarkInformation && bitmarkInformation.bitmark && bitmarkInformation.asset) {
         if (bitmarkInformation.bitmark.status === 'confirmed') {
           this.props.screenProps.homeNavigation.navigate('LocalPropertyDetail', { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark });
@@ -79,7 +79,7 @@ export class TasksComponent extends React.Component {
           this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: bitmarkInformation.asset });
         }
       } else {
-        this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.txid });
+        this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.bitmarkId });
       }
     }
   }

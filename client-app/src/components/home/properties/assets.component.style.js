@@ -2,7 +2,6 @@ import { StyleSheet, Platform, Dimensions } from 'react-native';
 import {
   ios,
   android,
-  config
 } from './../../../configs';
 import { convertWidth } from '../../../utils/index';
 
