@@ -241,7 +241,7 @@ const doOpenApp = async () => {
 };
 
 const doActiveDonation = async (touchFaceIdSession) => {
-  let donationInformation = await DonationService.doRegisterUserInformation(touchFaceIdSession, userInformation.bitmarkAccountNumber);
+  let donationInformation = await DonationService.doRegisterUserInformation(touchFaceIdSession, userInformation.bitmarkAccountNumber, userInformation.notificationUUID);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);

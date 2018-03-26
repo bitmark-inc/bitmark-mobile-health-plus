@@ -213,12 +213,12 @@ const doLoadDonationTask = async (donationInformation) => {
   return donationInformation;
 }
 
-const doRegisterUserInformation = async (touchFaceIdSession, bitmarkAccountNumber, ) => {
+const doRegisterUserInformation = async (touchFaceIdSession, bitmarkAccountNumber, notificationUID) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   if (!signatureData) {
     return null;
   }
-  let donationInformation = await DonationModel.doRegisterUserInformation(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  let donationInformation = await DonationModel.doRegisterUserInformation(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, notificationUID);
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -249,12 +249,12 @@ const doLeaveStudy = async (touchFaceIdSession, bitmarkAccountNumber, studyId) =
   return await doLoadDonationTask(donationInformation);
 };
 
-const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType, completedAt, studyId, bitmarkId, txid, firstSignature) => {
+const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType, completedAt, studyId, bitmarkId, firstSignature, sessionData) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   if (!signatureData) {
     return null;
   }
-  let donationInformation = await DonationModel.doCompleteTask(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, taskType, completedAt, studyId, bitmarkId, txid, firstSignature);
+  let donationInformation = await DonationModel.doCompleteTask(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, taskType, completedAt, studyId, bitmarkId, firstSignature, sessionData);
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -329,13 +329,19 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     (study.studyId === 'study2' &&
       (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4))) {
     let prepareResult = await doPrepareSurveyFile(touchFaceIdSession, bitmarkAccountNumber, study, taskType, result);
-    //TODO use other issue function
+
+    let issueResult = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount);
+    console.log('issueResult :', issueResult);
+
+
+    // //TODO use other issue function
     // let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, 1);
-    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkIds[0], bitmarkIds[0], firstSignature);
+    // // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkIds[0], firstSignature, sessionData);
+    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkIds[0]);
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
     return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
   }
-  throw new Error('Can not detect task and study');
+  // throw new Error('Can not detect task and study');
 };
 
 const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, study, list) => {
@@ -349,8 +355,13 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     );
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, tempData.date, tempData.data, tempData.randomId);
     //TODO use other issue function
+    let issueResult = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount);
+    console.log('issueResult :', issueResult);
+    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), study.studyId, bitmarkIds[0], firstSignature, sessionData);
+    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), study.studyId, bitmarkIds[0]);
+
     // let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, 1);
-    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), study.studyId, bitmarkIds[0], bitmarkIds[0], firstSignature);
+    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), study.studyId, bitmarkIds[0]);
   }
 };
 
@@ -382,7 +393,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
     };
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
     let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.assetMetadata, 1);
-    let donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), null, issueResult[0], issueResult[0]);
+    let donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), null, issueResult[0]);
     return donationInformation;
   }
 };

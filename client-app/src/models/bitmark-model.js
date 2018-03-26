@@ -117,6 +117,13 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadata, qu
   return result;
 };
 
+const doIssueThenTransferFile = async (touchFaceIdSession, filePath, assetName, metadata, receiver) => {
+  console.log('doCompletedStudyTask :', filePath, assetName, metadata, receiver);
+  let result = await BitmarkSDK.issueThenTransferFile(touchFaceIdSession, filePath, assetName, metadata, receiver);
+  return result;
+};
+
+
 const doGetTransactionInformation = (txid) => {
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -169,6 +176,7 @@ let BitmarkModel = {
   doGetProvenance,
   doPrepareAssetInfo,
   doIssueFile,
+  doIssueThenTransferFile,
   doCheckMetadata,
   doGetBitmarkInformation,
   doGetTransactionInformation,

@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { config } from './../configs';
 
-const doRegisterUserInformation = (bitmark_account, timestamp, signature) => {
+const doRegisterUserInformation = (bitmark_account, timestamp, signature, notification_uid) => {
   let timezone = moment().toDate().getTimezoneOffset();
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -17,6 +17,7 @@ const doRegisterUserInformation = (bitmark_account, timestamp, signature) => {
         timestamp,
         signature,
         timezone,
+        notification_uid,
       }),
     }).then((response) => {
       statusCode = response.status;
@@ -135,7 +136,7 @@ const doLeaveStudy = (bitmark_account, study_id, timestamp, signature, ) => {
   });
 };
 
-const doCompleteTask = (bitmark_account, timestamp, signature, task_type, completed_at, study_id, bitmark_id, txid, first_signature) => {
+const doCompleteTask = (bitmark_account, timestamp, signature, task_type, completed_at, study_id, bitmark_id, first_signature, session_data) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = config.donation_server_url + `/s/api/complete-task`;
@@ -153,8 +154,8 @@ const doCompleteTask = (bitmark_account, timestamp, signature, task_type, comple
         completed_at,
         study_id,
         bitmark_id,
-        txid,
         first_signature,
+        session_data,
       }),
     }).then((response) => {
       statusCode = response.status;

@@ -3,7 +3,7 @@ const {
   PushNotificationIOS,
   Platform,
 } = ReactNative;
-import { NotificationModel, CommonModel } from './../models';
+import { NotificationModel, CommonModel, DonationModel } from './../models';
 
 let configure = (onRegister, onNotification) => {
   return NotificationModel.configure(onRegister, onNotification);
@@ -48,6 +48,7 @@ let setApplicationIconBadgeNumber = (number) => {
 
 let doRegisterNotificationInfo = async (accountNumber, token) => {
   let signatureData = CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions');
+  await DonationModel.doRegisterUserInformation(accountNumber, signatureData.timestamp, signatureData.signature, token);
   return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token);
 };
 

@@ -137,9 +137,9 @@ const BitmarkSDK = {
         property_name,
         metadata,
         receiver,
-      }, (ok, result) => {
+      }, (ok, result, transferOfferData) => {
         if (ok && result) {
-          resolve(result);
+          resolve({ sessionData: result, transferOfferData });
         } else {
           reject(newError(result, 'Can not issue then transfer file!'));
         }
