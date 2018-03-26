@@ -6,6 +6,7 @@ import {
   ios,
   android //TODO
 } from './../../../configs';
+import { convertWidth } from '../../../utils';
 const constant = Platform.select({ ios: ios.constant, android: android.constant });
 export default StyleSheet.create({
   dialogBody: {
@@ -30,7 +31,7 @@ export default StyleSheet.create({
     height: '100%',
   },
   dialogContent: {
-    width: 270,
+    width: convertWidth(270),
     minHeight: 100,
     borderRadius: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',

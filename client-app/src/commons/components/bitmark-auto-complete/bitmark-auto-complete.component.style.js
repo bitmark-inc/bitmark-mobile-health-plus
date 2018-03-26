@@ -1,6 +1,7 @@
 import {
   StyleSheet,
 } from 'react-native';
+import { convertWidth } from '../../../utils';
 
 
 export default StyleSheet.create({
@@ -77,7 +78,7 @@ export default StyleSheet.create({
     fontWeight: '600',
   },
   selectionList: {
-    width: 200,
+    width: convertWidth(200),
     height: 30,
     marginLeft: 20,
     marginRight: 20,
