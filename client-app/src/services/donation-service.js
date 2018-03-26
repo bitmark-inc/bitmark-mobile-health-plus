@@ -5,7 +5,8 @@ import {
   AppleHealthKitModel,
   StudiesModel,
   Study2Model,
-  BitmarkModel
+  BitmarkModel,
+  BitmarkSDK
 } from '../models';
 import { FileUtil } from '../utils';
 import randomString from 'random-string';
@@ -131,17 +132,19 @@ const doLoadDonationTask = async (donationInformation) => {
     donationInformation.joinedStudies.forEach(study => {
       if (study.tasks) {
         for (let taskType in study.tasks) {
-          todoTasks.push({
-            key,
-            study,
-            title: study.studyTasks[taskType].title,
-            description: study.studyTasks[taskType].description,
-            taskType,
-            number: study.tasks[taskType].number,
-            list: study.tasks[taskType].list,
-          });
-          key++;
-          totalTodoTask += study.tasks[taskType].number;
+          if (study.tasks[taskType].number) {
+            todoTasks.push({
+              key,
+              study,
+              title: study.studyTasks[taskType].title,
+              description: study.studyTasks[taskType].description,
+              taskType,
+              number: study.tasks[taskType].number,
+              list: study.tasks[taskType].list,
+            });
+            key++;
+            totalTodoTask += study.tasks[taskType].number;
+          }
         }
       }
     });
@@ -170,7 +173,7 @@ const doLoadDonationTask = async (donationInformation) => {
 
   donationInformation.completedTasks.forEach(item => {
     if (item.studyId) {
-      let study = getStudy(item.studyId);
+      let study = getStudy(donationInformation, item.studyId);
       if (study) {
         completedTasks.push({
           key: completedTasks.length + 1,
@@ -260,6 +263,7 @@ const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType
 
 const doGetUserInformation = async (bitmarkAccountNumber) => {
   let donationInformation = await DonationModel.doGetUserInformation(bitmarkAccountNumber);
+  console.log('doGetUserInformation :', donationInformation);
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -331,17 +335,18 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     let prepareResult = await doPrepareSurveyFile(touchFaceIdSession, bitmarkAccountNumber, study, taskType, result);
 
     let issueResult = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount);
-    console.log('issueResult :', issueResult);
+    let sessionData = { data: issueResult.sessionData, };
+    let timestamp = moment().toDate().getTime();
+    let message = 'updateSession|' + JSON.stringify(sessionData.data) + '|' + bitmarkAccountNumber + '|' + timestamp;
+    let signatures = await BitmarkSDK.rickySignMessage([message], touchFaceIdSession);
+    sessionData.signature = signatures[0];
+    sessionData.timestamp = timestamp;
 
-
-    // //TODO use other issue function
-    // let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, 1);
-    // // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkIds[0], firstSignature, sessionData);
-    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkIds[0]);
+    return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, issueResult.transferOfferData.link, issueResult.transferOfferData.signature, sessionData);
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
-    return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
+    return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
   }
-  // throw new Error('Can not detect task and study');
+  throw new Error('Can not detect task and study');
 };
 
 const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, study, list) => {
@@ -349,19 +354,21 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     let healthRawData = await doGetHealthKitData(study.dataTypes, dateRange.startDate, dateRange.endDate);
     let tempData = StudiesModel[study.studyId].generateHealthKitAsset(study, bitmarkAccountNumber,
       removeEmptyValueData(healthRawData),
-      study.studyTasks.donations,
+      study.taskIds.donations,
       dateRange.endDate,
       randomString({ length: 8, numeric: true, letters: false, })
     );
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, tempData.date, tempData.data, tempData.randomId);
-    //TODO use other issue function
     let issueResult = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount);
-    console.log('issueResult :', issueResult);
-    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), study.studyId, bitmarkIds[0], firstSignature, sessionData);
-    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), study.studyId, bitmarkIds[0]);
-
-    // let bitmarkIds = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, 1);
-    // return await doCompleteTask(bitmarkAccountNumber, bitmarkAccountNumber, study.studyTasks.donations, moment().toDate(), study.studyId, bitmarkIds[0]);
+    let sessionData = {
+      data: issueResult.sessionData
+    };
+    let timestamp = moment().toDate().getTime();
+    let message = 'updateSession|' + JSON.stringify(sessionData.data) + '|' + bitmarkAccountNumber + '|' + timestamp;
+    let signatures = await BitmarkSDK.rickySignMessage([message], touchFaceIdSession);
+    sessionData.signature = signatures[0];
+    console.log('issueResult :', issueResult, sessionData);
+    return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment().toDate(), study.studyId, issueResult.transferOfferData.link, issueResult.transferOfferData.signature, sessionData);
   }
 };
 

@@ -102,7 +102,7 @@ const configNotification = () => {
   const onRegisterred = (registerredNotificaitonInfo) => {
     let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
     if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-      NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
+      NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, (userData.donationInformation && userData.donationInformation.createdAt)).then(() => {
         userInformation.notificationUUID = notificationUUID;
         return UserModel.doUpdateUserInfo(userInformation);
       }).catch(error => {
@@ -237,6 +237,8 @@ const doOpenApp = async () => {
   if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
     userData.localAssets = localAssets || [];
   }
+  console.log('userInformation :', userInformation);
+  console.log('userData :', userData);
   return userInformation;
 };
 

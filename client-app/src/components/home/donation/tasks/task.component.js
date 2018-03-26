@@ -100,6 +100,7 @@ export class TasksComponent extends React.Component {
     } else if (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data) {
       this.props.screenProps.homeNavigation.navigate('BitmarkHealthData', { list: item.list });
     } else if (item.study && item.study.taskIds && item.taskType === item.study.taskIds.donations) {
+      console.log('StudyDonation :', item);
       this.props.screenProps.homeNavigation.navigate('StudyDonation', { study: item.study, list: item.list });
     } else if (item.study && item.study.taskIds && item.taskType) {
       //TODO

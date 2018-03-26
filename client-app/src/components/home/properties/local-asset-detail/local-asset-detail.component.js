@@ -149,7 +149,15 @@ export class LocalAssetDetailComponent extends React.Component {
                         return (<View style={assetDetailStyle.bitmarksRow} >
                           <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>PENDING...</Text>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>PENDING…</Text>
+                          </TouchableOpacity>
+                        </View>);
+                      }
+                      if (item.bitmark.status === 'donating') {
+                        return (<View style={assetDetailStyle.bitmarksRow} >
+                          <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                          <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>DONATING…</Text>
                           </TouchableOpacity>
                         </View>);
                       }
@@ -158,7 +166,7 @@ export class LocalAssetDetailComponent extends React.Component {
                           <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
 
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>TRANSFERRING...</Text>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>TRANSFERRING…</Text>
                           </TouchableOpacity>
 
                           <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.id)}>

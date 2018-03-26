@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { convertWidth } from './../../../../utils';
 
 export default StyleSheet.create({
   body: {
@@ -7,7 +8,7 @@ export default StyleSheet.create({
     overflow: 'hidden',
   },
   cardBackground: {
-    width: 375,
+    width: convertWidth(375),
     height: 170,
     // resizeMode: 'contain',
   },

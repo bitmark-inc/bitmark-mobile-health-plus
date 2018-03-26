@@ -17,13 +17,12 @@ let config = {
   preive_asset_url: 'https://preview.assets.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
   trade_server_url: 'https://trade.devel.bitmark.com',
-  donation_server_url: 'http://localhost:9001',
+  donation_server_url: 'http://192.168.0.202:9001',
 };
 
 if (config.network === NETWORKS.testnet) {
   config.trade_server_url = 'https://trade.test.bitmark.com';
   //TODO
-  // config.market_urls.totemic = 'https://totemic.test.bitmark.com';
   // config.donation_server_url = 'http://donation.test.bitmark.com';
 } else if (config.network === NETWORKS.livenet) {
   config.api_server_url = 'https://api.bitmark.com';
@@ -32,7 +31,6 @@ if (config.network === NETWORKS.testnet) {
   config.bitmark_network = NETWORKS.livenet;
 
   config.trade_server_url = 'https://trade.bitmark.com';
-  // config.market_urls.totemic = 'https://totemic.bitmark.com';
 }
 
 let ios = {
