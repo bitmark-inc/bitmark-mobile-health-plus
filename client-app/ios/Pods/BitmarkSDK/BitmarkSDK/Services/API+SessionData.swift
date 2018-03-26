@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SessionData {
+public struct SessionData {
     let encryptedDataKey: Data
     let dataKeyAlgorithm: String
 }
@@ -20,21 +20,21 @@ extension SessionData: Codable {
         case dataKeyAlgorithm = "data_key_alg"
     }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: SessionDataKeys.self)
         self.init(encryptedDataKey: try container.decode(String.self, forKey: SessionDataKeys.encryptedDataKey).hexDecodedData,
                   dataKeyAlgorithm: "chacha20poly1305")
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: SessionDataKeys.self)
         try container.encode(self.encryptedDataKey.hexEncodedString, forKey: .encryptedDataKey)
         try container.encode(self.dataKeyAlgorithm, forKey: .dataKeyAlgorithm)
     }
 }
 
-extension SessionData {
-    func serialize() -> [String: String] {
+public extension SessionData {
+    public func serialize() -> [String: String] {
         return ["enc_data_key": encryptedDataKey.hexEncodedString,
                 "data_key_alg": dataKeyAlgorithm]
     }

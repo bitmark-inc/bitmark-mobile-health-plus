@@ -187,12 +187,12 @@ class BitmarkSDK: NSObject {
       let metadata = input["metadata"] as! [String: String]
       let receiver = input["receiver"] as! String
       let result = try account.issueThenTransfer(assetFile: URL(fileURLWithPath: fileURL), accessibility: .privateAsset, propertyName: propertyName, propertyMetadata: metadata, toAccount: receiver)
-      if let issue = result?.0 {
-        callback([true, issue.txId!])
-      }
-      else {
+      guard let sessionData = result.0 else {
         callback([false])
+        return
       }
+      
+      callback([true, sessionData.serialize(), try result.1.serialize()])
     }
     catch let e {
       print(e)

@@ -10,6 +10,7 @@ PODS:
     - HockeySDK/DefaultLib (= 5.1.2)
   - HockeySDK/DefaultLib (5.1.2)
   - KeychainAccess (3.1.0)
+  - ResearchKit (1.5.2)
   - SipHash (1.2.0)
   - TweetNacl (1.0.1)
 
@@ -17,6 +18,7 @@ DEPENDENCIES:
   - BitmarkSDK (from `https://github.com/bitmark-inc/bitmark-sdk-swift.git`)
   - HockeySDK
   - KeychainAccess
+  - ResearchKit
 
 EXTERNAL SOURCES:
   BitmarkSDK:
@@ -24,7 +26,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   BitmarkSDK:
-    :commit: 3fd14631cc12913fb211477146db40d6e8ce8696
+    :commit: f22cd0743e0f223a8ad9dc70f022218329aaad94
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
 
 SPEC CHECKSUMS:
@@ -33,9 +35,10 @@ SPEC CHECKSUMS:
   CryptoSwift: 033efc3523865d19cc6ab6612fa17a62613b5dfa
   HockeySDK: 38b7e2726af1ea86ae97ce4b5de33ab0817e3500
   KeychainAccess: 94c5540b32eabf7bc32bfb976a268e8ea05fd6da
+  ResearchKit: a5770681dd61afddd3d1f24d232b9abf00cba454
   SipHash: c6e9e43e9c531b5bc6602545130c26194a6d31ce
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
-PODFILE CHECKSUM: 8474ed0f23113b2c15b898481003607f75a6a438
+PODFILE CHECKSUM: 1d507f04e37bde17118948cc9d369197006f2233
 
 COCOAPODS: 1.4.0
