@@ -254,6 +254,9 @@ const doBitmarkHealthData = async (list) => {
 const doDownlaodStudyConsent = async (study) => {
   return await processing(DonationService.doDownlaodStudyConsent(study));
 };
+const doReloadDonationInformation = async () => {
+  return await processing(DataController.doReloadDonationInformation());
+};
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
@@ -288,6 +291,8 @@ let AppController = {
   doDonateHealthData,
   doBitmarkHealthData,
   doDownlaodStudyConsent,
+  doReloadDonationInformation,
+
   doReloadData,
 
 

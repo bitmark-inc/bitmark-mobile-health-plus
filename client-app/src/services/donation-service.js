@@ -132,20 +132,20 @@ const doLoadDonationTask = async (donationInformation) => {
     donationInformation.joinedStudies.forEach(study => {
       if (study.tasks) {
         for (let taskType in study.tasks) {
-          if (study.tasks[taskType].number) {
-            todoTasks.push({
-              key,
-              study,
-              title: study.studyTasks[taskType].title,
-              description: study.studyTasks[taskType].description,
-              taskType,
-              number: study.tasks[taskType].number,
-              list: study.tasks[taskType].list,
-            });
-            key++;
-            totalTodoTask += study.tasks[taskType].number;
-          }
+          // if (study.tasks[taskType].number) {
+          todoTasks.push({
+            key,
+            study,
+            title: study.studyTasks[taskType].title,
+            description: study.studyTasks[taskType].description,
+            taskType,
+            number: study.tasks[taskType].number,
+            list: study.tasks[taskType].list,
+          });
+          key++;
+          totalTodoTask += study.tasks[taskType].number;
         }
+        // }
       }
     });
   }
@@ -263,7 +263,6 @@ const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType
 
 const doGetUserInformation = async (bitmarkAccountNumber) => {
   let donationInformation = await DonationModel.doGetUserInformation(bitmarkAccountNumber);
-  console.log('doGetUserInformation :', donationInformation);
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -424,6 +423,7 @@ const DonationService = {
   doCompletedStudyTask,
   doBitmarkHealthData,
   doDownlaodStudyConsent,
+  getStudy,
 };
 
 export { DonationService };

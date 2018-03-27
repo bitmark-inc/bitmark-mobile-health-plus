@@ -21,6 +21,20 @@ let userData = {
 // ================================================================================================================================================
 // ================================================================================================================================================
 
+const doCheckRunning = (checkRunning) => {
+  return new Promise((resolve) => {
+    let checkAndReturn = () => {
+      let isRunning = checkRunning();
+      if (!isRunning) {
+        resolve();
+      } else {
+        setTimeout(checkAndReturn, 200);
+      }
+    }
+    checkAndReturn();
+  })
+};
+
 const recheckLocalAssets = (localAssets) => {
   if (userData && userData.donationInformation && userData.donationInformation.completedTasks) {
     for (let asset of localAssets) {
@@ -33,41 +47,59 @@ const recheckLocalAssets = (localAssets) => {
   return localAssets;
 };
 
+let isRunningGetActiveIncomingTransferOfferInBackground = false;
 const runGetActiveIncomingTransferOfferInBackground = () => {
   return new Promise((resolve) => {
+    if (isRunningGetActiveIncomingTransferOfferInBackground) {
+      return doCheckRunning(() => isRunningGetActiveIncomingTransferOfferInBackground).then(resolve);
+    }
+    isRunningGetActiveIncomingTransferOfferInBackground = true;
     TransactionService.doGetActiveIncomingTransferOffers(userInformation.bitmarkAccountNumber).then(activeIncompingTransferOffers => {
       if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
         userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
       }
       resolve();
+      isRunningGetActiveIncomingTransferOfferInBackground = false;
       console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground success :');
     }).catch(error => {
       resolve();
+      isRunningGetActiveIncomingTransferOfferInBackground = false;
       console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground error :', error);
     });
   });
-
 };
 
+let isRunningGetTransactionsInBackground = false;
 const runGetTransactionsInBackground = () => {
   return new Promise((resolve) => {
+    if (isRunningGetTransactionsInBackground) {
+      return doCheckRunning(() => isRunningGetTransactionsInBackground).then(resolve);
+    }
+    isRunningGetTransactionsInBackground = true;
     TransactionService.getAllTransactions(userInformation.bitmarkAccountNumber).then(transactions => {
       if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
         userData.transactions = transactions;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
       }
       resolve();
+      isRunningGetTransactionsInBackground = false;
       console.log('runOnBackground  runGetTransactionsInBackground success :');
     }).catch(error => {
       resolve();
+      isRunningGetTransactionsInBackground = false;
       console.log('runOnBackground  runGetTransactionsInBackground error :', error);
     });
   });
 };
 
+let isRunningGetLocalBitmarksInBackground = false;
 const runGetLocalBitmarksInBackground = () => {
   return new Promise((resolve) => {
+    if (isRunningGetLocalBitmarksInBackground) {
+      return doCheckRunning(() => isRunningGetLocalBitmarksInBackground).then(resolve);
+    }
+    isRunningGetLocalBitmarksInBackground = true;
     BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber, userData.localAssets).then(localAssets => {
       localAssets = recheckLocalAssets(localAssets);
       if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
@@ -75,25 +107,37 @@ const runGetLocalBitmarksInBackground = () => {
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
       }
       resolve();
+      isRunningGetLocalBitmarksInBackground = false;
       console.log('runOnBackground  runGetLocalBitmarksInBackground success :', localAssets);
     }).catch(error => {
       resolve();
+      isRunningGetLocalBitmarksInBackground = false;
       console.log('runOnBackground  runGetLocalBitmarksInBackground error :', error);
     });
   });
 };
 
+let isRunningGetDonationInformationInBackground = false
 const runGetDonationInformationInBackground = () => {
   return new Promise((resolve) => {
+    if (isRunningGetDonationInformationInBackground) {
+      return doCheckRunning(() => isRunningGetDonationInformationInBackground).then(resolve);
+    }
+    console.log('run 1');
+    isRunningGetDonationInformationInBackground = true;
     DonationService.doGetUserInformation(userInformation.bitmarkAccountNumber).then(donationInformation => {
+      console.log('run 2');
       if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
         userData.donationInformation = donationInformation;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
       }
       resolve();
+      isRunningGetDonationInformationInBackground = false;
       console.log('runOnBackground  runGetDonationInformationInBackground success :', donationInformation);
     }).catch(error => {
+      console.log('run 3');
       resolve();
+      isRunningGetDonationInformationInBackground = false;
       console.log('runOnBackground  runGetDonationInformationInBackground error :', error);
     });
   });
@@ -191,14 +235,6 @@ const doLogout = async () => {
 const doDeactiveApplication = async () => {
   stopInterval();
 };
-const reloadBitmarks = async () => {
-  let localAssets = await BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber, userData.localAssets);
-  localAssets = recheckLocalAssets(localAssets);
-  if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
-    userData.localAssets = localAssets;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
-  }
-};
 
 const doGetTransactionData = async () => {
   let activeIncompingTransferOffers = await TransactionService.doGetActiveIncomingTransferOffers(userInformation.bitmarkAccountNumber);
@@ -211,7 +247,7 @@ const doGetTransactionData = async () => {
     userData.transactions = transactions;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
   }
-  await reloadBitmarks();
+  await runGetLocalBitmarksInBackground();
 };
 
 const doOpenApp = async () => {
@@ -343,7 +379,7 @@ const DataController = {
   doLogout,
   doStartBackgroundProcess,
   doDeactiveApplication,
-  reloadBitmarks,
+  reloadBitmarks: runGetLocalBitmarksInBackground,
   doGetTransactionData,
   doActiveDonation,
   doJoinStudy,
@@ -351,6 +387,7 @@ const DataController = {
   doCompletedStudyTask,
   doDonateHealthData,
   doBitmarkHealthData,
+  doReloadDonationInformation: runGetDonationInformationInBackground,
 
   getTransactionData,
   getUserBitmarks,

@@ -14,6 +14,7 @@ import { DonationComponent } from './donation';
 import userStyle from './user.component.style';
 import { AppController, DataController } from '../../managers';
 import { EventEmiterService } from '../../services';
+import { DonationService } from '../../services/donation-service';
 
 const MainTabs = {
   properties: 'Properties',
@@ -161,6 +162,93 @@ export class UserComponent extends React.Component {
         this.props.navigation.dispatch(resetHomePage);
       }).catch(error => {
         console.log('handerReceivedNotification transfer_rejected error :', error);
+      });
+    } else if (data.event === 'DONATE_DATA' && data.studyData && data.studyData.studyId && data.studyData.taskType) {
+      AppController.doReloadDonationInformation().then(() => {
+
+        let donationInformation = DataController.getDonationInformation();
+        let studyTask = (donationInformation.todoTasks || []).find(task => (task.study && task.study.studyId === data.studyData.studyId && task.taskType === data.studyData.taskType));
+        if (studyTask && studyTask.taskType === studyTask.study.taskIds.donations) {
+          const resetHomePage = NavigationActions.reset({
+            index: 1,
+            actions: [
+              NavigationActions.navigate({
+                routeName: 'User', params: {
+                  displayedTab: { mainTab: MainTabs.donation, subTab: 'TASKS', subTab2: 'To Do' }
+                }
+              }),
+              NavigationActions.navigate({
+                routeName: 'StudyDonation', params: {
+                  study: studyTask.study,
+                  list: studyTask.list,
+                }
+              }),
+            ]
+          });
+          this.props.navigation.dispatch(resetHomePage);
+        } else if (studyTask) {
+          const resetHomePage = NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: 'User', params: {
+                  displayedTab: { mainTab: MainTabs.donation, subTab: 'TASKS', subTab2: 'To Do' }
+                }
+              }),
+            ]
+          });
+          this.props.navigation.dispatch(resetHomePage);
+        }
+      }).catch(error => {
+        console.log('handerReceivedNotification BITMARK_DATA error :', error);
+      });
+    } else if (data.event === 'STUDY_DETAIL') {
+      AppController.doReloadDonationInformation().then(() => {
+        let donationInformation = DataController.getDonationInformation();
+        let study = DonationService.getStudy(donationInformation, data.studyId);
+        if (study) {
+          const resetHomePage = NavigationActions.reset({
+            index: 1,
+            actions: [
+              NavigationActions.navigate({
+                routeName: 'User', params: {
+                  displayedTab: { mainTab: MainTabs.donation, subTab: 'STUDIES', subTab2: 'BROWSER' }
+                }
+              }),
+              NavigationActions.navigate({
+                routeName: 'StudyDetail', params: { study }
+              }),
+            ]
+          });
+          this.props.navigation.dispatch(resetHomePage);
+        }
+      }).catch(error => {
+        console.log('handerReceivedNotification STUDY_DETAIL error :', error);
+      });
+    } else if (data.event === 'BITMARK_DATA') {
+      AppController.doReloadDonationInformation().then(() => {
+        let donationInformation = DataController.getDonationInformation();
+        let bitmarkHealthDataTask = (donationInformation.todoTasks || []).find(task => task.taskType === donationInformation.commonTaskIds.bitmark_health_data);
+        if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
+          const resetHomePage = NavigationActions.reset({
+            index: 1,
+            actions: [
+              NavigationActions.navigate({
+                routeName: 'User', params: {
+                  displayedTab: { mainTab: MainTabs.donation, subTab: 'TASKS', subTab2: 'To Do' }
+                }
+              }),
+              NavigationActions.navigate({
+                routeName: 'BitmarkHealthData', params: {
+                  list: bitmarkHealthDataTask.list,
+                }
+              }),
+            ]
+          });
+          this.props.navigation.dispatch(resetHomePage);
+        }
+      }).catch(error => {
+        console.log('handerReceivedNotification BITMARK_DATA error :', error);
       });
     }
   }
