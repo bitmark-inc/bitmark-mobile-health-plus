@@ -3,7 +3,6 @@ import {
   ios,
   android // TODO
 } from './../../../../configs';
-import { convertWidth } from '../../../../utils';
 let constant = Platform.select({
   ios: ios.constant,
   android: android.constant

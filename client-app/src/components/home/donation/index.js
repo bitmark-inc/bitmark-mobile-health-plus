@@ -4,4 +4,5 @@ export * from './study-detail';
 export * from './study-settings';
 export * from './bitmark-health-data';
 export * from './study-donation';
+export * from './study-consent';
 export { DoActiveDonationComponent };

@@ -243,8 +243,6 @@ const doDonateHealthData = async (study, list) => {
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
   return await processing(DataController.doDonateHealthData(touchFaceIdSession, study, list));
 };
-
-
 const doBitmarkHealthData = async (list) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to issue your weekly health data.');
   if (!touchFaceIdSession) {
@@ -252,6 +250,9 @@ const doBitmarkHealthData = async (list) => {
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
   return await processing(DataController.doBitmarkHealthData(touchFaceIdSession, list));
+};
+const doDownlaodStudyConsent = async (study) => {
+  return await processing(DonationService.doDownlaodStudyConsent(study));
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
@@ -286,6 +287,7 @@ let AppController = {
   doStudyTask,
   doDonateHealthData,
   doBitmarkHealthData,
+  doDownlaodStudyConsent,
   doReloadData,
 
 

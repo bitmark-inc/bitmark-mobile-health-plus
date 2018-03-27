@@ -405,6 +405,13 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
   }
 };
 
+const doDownlaodStudyConsent = async (study) => {
+  let folderPath = FileUtil.DocumentDirectory + '/' + study.studyId;
+  let filePath = folderPath + '/consent.pdf';
+  await FileUtil.mkdir(folderPath);
+  return await FileUtil.downloadFile(study.consentLinkDownload, filePath);
+};
+
 const DonationService = {
   DATA_SOURCE_INTACTIVE_TASK_TYPE,
   doGetUserInformation,
@@ -416,6 +423,7 @@ const DonationService = {
   doDonateHealthData,
   doCompletedStudyTask,
   doBitmarkHealthData,
+  doDownlaodStudyConsent,
 };
 
 export { DonationService };

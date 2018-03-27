@@ -45,7 +45,7 @@ export class Study1JoinedComponent extends React.Component {
 
           <View style={[styles.infoArea, { marginTop: 10, }]}>
             <TouchableOpacity style={[styles.infoButton]} onPress={() => {
-              this.props.navigation.navigate('StudyConsent', { studyId: this.state.study.studyId, })
+              this.props.navigation.navigate('StudyConsent', { study: this.state.study, })
             }}>
               <Text style={styles.infoButtonText}>View Study Consent Form</Text>
             </TouchableOpacity>

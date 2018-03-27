@@ -21,6 +21,7 @@ import {
   DoActiveDonationComponent,
   BitmarkHealthDataComponent,
   StudyDonationComponent,
+  StudyConsentComponent,
 } from './donation';
 
 
@@ -40,6 +41,8 @@ let HomeComponent = StackNavigator({
   DoActiveDonation: { screen: DoActiveDonationComponent, },
   BitmarkHealthData: { screen: BitmarkHealthDataComponent, },
   StudyDonation: { screen: StudyDonationComponent, },
+  StudyConsent: { screen: StudyConsentComponent, },
+
 }, {
     headerMode: 'none',
     navigationOptions: {

@@ -40,8 +40,8 @@ export class StudySettingComponent extends React.Component {
       study = this.props.navigation.state.params.study;
     }
     this.state = {
-      // status: SettingStatus.loading,
-      status: SettingStatus.connect_data,
+      status: SettingStatus.loading,
+      // status: SettingStatus.connect_data,
       study: study,
     };
     if (this.state.study && StudiesModel[this.state.study.studyId] && this.state.status === SettingStatus.loading) {
