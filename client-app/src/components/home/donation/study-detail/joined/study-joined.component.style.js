@@ -102,12 +102,11 @@ export default StyleSheet.create({
   },
 
   leaveButton: {
-    marginBottom: 0,
     width: '100%',
-    height: 42,
+    minHeight: 42,
+    paddingTop: 11,
+    paddingBottom: Math.max(11, constant.blankFooter),
     backgroundColor: '#FF003C',
-    paddingTop: 9,
-    paddingBottom: 9,
   },
   leaveButtonText: {
     fontSize: 16,

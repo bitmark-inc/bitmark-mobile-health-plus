@@ -1,5 +1,12 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { convertWidth } from '../../../../utils';
+
+import {
+  ios,
+  android //TODO
+} from './../../../../configs';
+let constant = Platform.select({ ios: ios.constant, android: android.constant });
+
 
 export default StyleSheet.create({
   body: {
@@ -53,7 +60,9 @@ export default StyleSheet.create({
   bitmarkButton: {
     position: 'absolute',
     bottom: 0,
-    height: 45,
+    minHeight: 45,
+    paddingTop: 11,
+    paddingBottom: Math.max(11, constant.blankFooter),
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

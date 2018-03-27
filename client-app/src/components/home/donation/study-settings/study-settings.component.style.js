@@ -3,6 +3,7 @@ import {
   ios,
   android // TODO
 } from './../../../../configs';
+import { convertWidth } from '../../../../utils';
 let constant = Platform.select({
   ios: ios.constant,
   android: android.constant
@@ -92,12 +93,14 @@ export default StyleSheet.create({
     width: '100%',
     flexDirection: 'column',
     position: 'absolute',
-    bottom: 72 + constant.blankFooter,
+    bottom: 0,
   },
   bottomButton: {
     backgroundColor: '#0060F2',
     width: '100%',
-    height: 42,
+    minHeight: 42,
+    paddingTop: 11,
+    paddingBottom: Math.max(11, constant.blankFooter),
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',

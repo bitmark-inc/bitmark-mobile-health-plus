@@ -76,8 +76,7 @@ export class DoActiveDonationComponent extends React.Component {
             </View>
             <View style={activeDonationStyle.bottomButtonArea}>
               <TouchableOpacity style={[activeDonationStyle.bottomButton, {
-                height: this.props.screenProps.callDirective ? 45 : (45 + constant.blankFooter),
-                paddingBottom: this.props.screenProps.callDirective ? 0 : constant.blankFooter,
+                paddingBottom: this.props.screenProps.callDirective ? 11 : constant.blankFooter,
               }]} onPress={() => { this.swiper.scrollBy(1) }}>
                 <Text style={activeDonationStyle.bottomButtonText}>CONTINUE</Text>
               </TouchableOpacity>
@@ -113,8 +112,7 @@ export class DoActiveDonationComponent extends React.Component {
                 <Text style={[activeDonationStyle.bottomButtonText, { color: '#0060F2' }]}>I WILL DO IT LATER.</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[activeDonationStyle.bottomButton, {
-                height: this.props.screenProps.callDirective ? 45 : (45 + constant.blankFooter),
-                paddingBottom: this.props.screenProps.callDirective ? 0 : constant.blankFooter,
+                paddingBottom: this.props.screenProps.callDirective ? 11 : constant.blankFooter,
               }]} onPress={this.doActiveDonation}>
                 <Text style={activeDonationStyle.bottomButtonText}>GOT IT. LET’S BITMARK!</Text>
               </TouchableOpacity>

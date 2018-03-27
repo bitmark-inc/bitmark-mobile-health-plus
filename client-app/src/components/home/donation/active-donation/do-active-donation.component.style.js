@@ -182,6 +182,7 @@ export default StyleSheet.create({
   },
   bottomButton: {
     minHeight: 45,
+    paddingTop: 11,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

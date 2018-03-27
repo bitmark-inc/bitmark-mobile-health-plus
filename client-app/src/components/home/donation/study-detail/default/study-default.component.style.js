@@ -109,8 +109,9 @@ export default StyleSheet.create({
     backgroundColor: '#0060F2',
     marginTop: 20,
     width: '100%',
-    height: 45,
-    paddingBottom: constant.blankFooter,
+    minHeight: 45,
+    paddingTop: 11,
+    paddingBottom: Math.max(11, constant.blankFooter),
   },
   bottomButtonText: {
     fontFamily: 'Avenir black',
