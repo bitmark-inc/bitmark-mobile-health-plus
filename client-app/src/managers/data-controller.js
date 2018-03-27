@@ -39,7 +39,7 @@ const recheckLocalAssets = (localAssets) => {
   if (userData && userData.donationInformation && userData.donationInformation.completedTasks) {
     for (let asset of localAssets) {
       for (let bitmark of asset.bitmarks) {
-        let isDonating = userData.donationInformation.completedTasks.findIndex(item => item.bitmarkId === bitmark.id);
+        let isDonating = userData.donationInformation.completedTasks.findIndex(item => (item.taskType !== userData.donationInformation.commonTaskIds.bitmark_health_data && item.bitmarkId === bitmark.id));
         bitmark.status = isDonating >= 0 ? 'donating' : bitmark.status;
       }
     }

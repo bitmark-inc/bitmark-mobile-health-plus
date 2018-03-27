@@ -193,7 +193,7 @@ const doLoadDonationTask = async (donationInformation) => {
         title: donationInformation.commonTasks[item.taskType].title,
         description: donationInformation.commonTasks[item.taskType].description,
         completedDate: moment(item.completedAt),
-        task: item.taskType,
+        taskType: item.taskType,
         txid: item.txid,
         bitmarkId: item.bitmarkId,
       });
