@@ -70,10 +70,10 @@ export class LocalPropertyDetailComponent extends React.Component {
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
             <TouchableOpacity style={propertyDetailStyle.topButton}
-              disabled={this.state.bitmark.status === 'pending'}
+              disabled={this.state.bitmark.status !== 'confirmed'}
               onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
               <Text style={[propertyDetailStyle.topButtonText, {
-                color: this.state.bitmark.status === 'pending' ? '#C2C2C2' : '#0060F2'
+                color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#C2C2C2'
               }]}>TRANSFER</Text>
             </TouchableOpacity>
           </View>}
