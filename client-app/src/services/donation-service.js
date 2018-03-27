@@ -132,20 +132,20 @@ const doLoadDonationTask = async (donationInformation) => {
     donationInformation.joinedStudies.forEach(study => {
       if (study.tasks) {
         for (let taskType in study.tasks) {
-          // if (study.tasks[taskType].number) {
-          todoTasks.push({
-            key,
-            study,
-            title: study.studyTasks[taskType].title,
-            description: study.studyTasks[taskType].description,
-            taskType,
-            number: study.tasks[taskType].number,
-            list: study.tasks[taskType].list,
-          });
-          key++;
-          totalTodoTask += study.tasks[taskType].number;
+          if (study.tasks[taskType].number) {
+            todoTasks.push({
+              key,
+              study,
+              title: study.studyTasks[taskType].title,
+              description: study.studyTasks[taskType].description,
+              taskType,
+              number: study.tasks[taskType].number,
+              list: study.tasks[taskType].list,
+            });
+            key++;
+            totalTodoTask += study.tasks[taskType].number;
+          }
         }
-        // }
       }
     });
   }
