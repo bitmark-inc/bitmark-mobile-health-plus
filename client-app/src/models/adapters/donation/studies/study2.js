@@ -293,7 +293,7 @@ const showActiveTask3 = () => {
   return new Promise((resolve) => {
     InternationalDiabeteRenussionTask.showActiveTask3((ok) => {
       if (ok) {
-        resolve();
+        resolve({});
       } else {
         resolve(null);
       }
@@ -314,7 +314,7 @@ const showActiveTask4 = () => {
 };
 
 let getHealthKitData = (studyInformation, startDateString, endDateString) => {
-  return new Promise(((resolve) => {
+  return new Promise(((resolve, reject) => {
     let options = {
       startDate: startDateString,
       endDate: endDateString,

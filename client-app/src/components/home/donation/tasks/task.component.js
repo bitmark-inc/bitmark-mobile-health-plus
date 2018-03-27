@@ -103,7 +103,6 @@ export class TasksComponent extends React.Component {
       console.log('StudyDonation :', item);
       this.props.screenProps.homeNavigation.navigate('StudyDonation', { study: item.study, list: item.list });
     } else if (item.study && item.study.taskIds && item.taskType) {
-      //TODO
       AppController.doStudyTask(item.study, item.taskType).catch(error => {
         console.log('doStudyTask error:', error);
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
