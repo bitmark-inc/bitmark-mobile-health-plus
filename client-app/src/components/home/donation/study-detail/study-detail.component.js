@@ -9,8 +9,7 @@ import {
 import DefaultStudies from './default';
 import JoinedStudies from './joined';
 
-console.log('DefaultStudies :', DefaultStudies);
-console.log('JoinedStudies :', JoinedStudies);
+import { FullComponent } from './../../../../commons/components';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 let defaultStyle = Platform.select({
@@ -39,8 +38,8 @@ export class StudyDetailComponent extends React.Component {
     let DetailComponent = (this.state.study && this.state.study.studyId && this.state.study.joinedDate)
       ? JoinedStudies[this.state.study.studyId] : DefaultStudies[this.state.study.studyId];
     return (
-      <View style={studyDetailsStyles.body}>
-        <View style={[defaultStyle.header]}>
+      <FullComponent
+        header={<View style={[defaultStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft}>
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>Study Details</Text>
@@ -49,12 +48,14 @@ export class StudyDetailComponent extends React.Component {
           }}>
             <Text style={defaultStyle.headerRightText}>Done</Text>
           </TouchableOpacity>
-        </View>
-        <ScrollView style={studyDetailsStyles.studyContent}>
+        </View>}
+        content={(<View style={studyDetailsStyles.body}>
           {!DetailComponent && <Text>This study is not support!</Text>}
-          {DetailComponent && <DetailComponent study={this.state.study} navigation={this.props.navigation} doJoinStudy={this.doJoinStudy} doOutOptStudy={this.doOutOptStudy} />}
-        </ScrollView>
-      </View>
+          {!!DetailComponent && <ScrollView style={studyDetailsStyles.studyContent}>
+            {<DetailComponent study={this.state.study} navigation={this.props.navigation} doJoinStudy={this.doJoinStudy} doOutOptStudy={this.doOutOptStudy} />}
+          </ScrollView>}
+        </View>)}
+      />
     );
   }
   // ======================================================================================================================================================

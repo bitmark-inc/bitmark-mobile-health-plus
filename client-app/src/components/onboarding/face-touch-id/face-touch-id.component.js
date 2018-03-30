@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { CommonModel } from './../../../models';
 
-import { AppScaleComponent } from './../../../commons/components';
 import faceTouchIdStyle from './face-touch-id.component.style';
 
 export class FaceTouchIdComponent extends React.Component {
@@ -61,32 +60,30 @@ export class FaceTouchIdComponent extends React.Component {
 
   render() {
     return (
-      <AppScaleComponent ref={(r) => { this.appScaler = r; }}>
-        <View style={[faceTouchIdStyle.body]}>
-          <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>
-            TOUCH/FACE ID & PASSCODE
+      <View style={[faceTouchIdStyle.body]}>
+        <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>
+          TOUCH/FACE ID & PASSCODE
           </Text>
-          <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>
-            Touch/Face ID or a passcode is required to authorize your transactions.
+        <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>
+          Touch/Face ID or a passcode is required to authorize your transactions.
           </Text>
-          <View style={faceTouchIdStyle.passcodeRemindImages}>
-            <Image style={[faceTouchIdStyle.touchIdImage]} source={require('../../../../assets/imgs/touch-id.png')} />
-            <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />
-          </View>
-          <View style={faceTouchIdStyle.enableButtonArea}>
-            <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
-              onPress={() => {
-                if (!this.state.supported) {
-                  Linking.openURL('app-settings:');
-                } else {
-                  this.doContinue();
-                }
-              }}>
-              <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={faceTouchIdStyle.passcodeRemindImages}>
+          <Image style={[faceTouchIdStyle.touchIdImage]} source={require('../../../../assets/imgs/touch-id.png')} />
+          <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />
         </View>
-      </AppScaleComponent>
+        <View style={faceTouchIdStyle.enableButtonArea}>
+          <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
+            onPress={() => {
+              if (!this.state.supported) {
+                Linking.openURL('app-settings:');
+              } else {
+                this.doContinue();
+              }
+            }}>
+            <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
 }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Text, View, TouchableOpacity, WebView, Platform,
 } from 'react-native';
+import { FullComponent } from './../bitmark-app-component';
 
 import { iosDefaultStyle, androidDefaultStyle } from './../../styles/index';
 import termsStyles from './bitmark-privacy.component.style';
@@ -16,25 +17,24 @@ export class BitmarkPrivacyComponent extends React.Component {
     super(props);
   }
   render() {
-    return (
-      <View style={termsStyles.body}>
-        <View style={defaultStyles.header}>
-          <TouchableOpacity style={defaultStyles.headerLeft}>
-          </TouchableOpacity>
-          <Text style={defaultStyles.headerTitle}>{'Privacy Policy'.toUpperCase()}</Text>
-          <TouchableOpacity style={defaultStyles.headerRight} onPress={() => {
-            if (this.props.screenProps && this.props.screenProps.setShowPagination) {
-              this.props.screenProps.setShowPagination(true);
-            }
-            this.props.navigation.goBack()
-          }}>
-            <Text style={defaultStyles.headerRightText}>Done</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={termsStyles.main}>
-          <WebView source={{ uri: 'https://bitmark.com/privacy' }} />
-        </View>
-      </View >
+    return (<FullComponent
+      header={(<View style={defaultStyles.header}>
+        <TouchableOpacity style={defaultStyles.headerLeft}>
+        </TouchableOpacity>
+        <Text style={defaultStyles.headerTitle}>{'Terms of Service'.toUpperCase()}</Text>
+        <TouchableOpacity style={defaultStyles.headerRight} onPress={() => {
+          if (this.props.screenProps && this.props.screenProps.setShowPagination) {
+            this.props.screenProps.setShowPagination(true);
+          }
+          this.props.navigation.goBack()
+        }}>
+          <Text style={defaultStyles.headerRightText}>Done</Text>
+        </TouchableOpacity>
+      </View>)}
+      content={(<View style={termsStyles.main}>
+        <WebView source={{ uri: 'https://bitmark.com/privacy' }} />
+      </View>)}
+    />
     );
   }
 }

@@ -2,8 +2,8 @@ import { StyleSheet, Platform } from 'react-native';
 import {
   ios,
   android, // TODO
-} from './../../configs';
-import { convertWidth } from '../../utils';
+} from './../../../configs';
+import { convertWidth } from '../../../utils';
 
 let constant = Platform.select({
   ios: ios.constant,

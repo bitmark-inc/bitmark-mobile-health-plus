@@ -1,16 +1,7 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
-import {
-  ios,
-  android // TODO
-} from './../../../../configs';
+import { StyleSheet, } from 'react-native';
+
 import { convertWidth } from './../../../../utils';
 
-let currentSize = Dimensions.get('window');
-
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
 
 export default StyleSheet.create({
   body: {
@@ -20,11 +11,11 @@ export default StyleSheet.create({
   },
 
   recoveryPhraseContent: {
+    flex: 1,
     flexDirection: 'column',
     paddingLeft: convertWidth(33),
     paddingRight: convertWidth(33),
     backgroundColor: 'white',
-    height: currentSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter,
   },
   recoveryPhraseWarningIcon: {
     width: 137,

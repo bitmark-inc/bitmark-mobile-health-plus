@@ -251,11 +251,20 @@ const doBitmarkHealthData = async (list) => {
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
   return await processing(DataController.doBitmarkHealthData(touchFaceIdSession, list));
 };
-const doDownlaodStudyConsent = async (study) => {
-  return await processing(DonationService.doDownlaodStudyConsent(study));
+const doDownloadStudyConsent = async (study) => {
+  return await processing(DonationService.doDownloadStudyConsent(study));
 };
 const doReloadDonationInformation = async () => {
   return await processing(DataController.doReloadDonationInformation());
+};
+
+const doDownloadBitmark = async (bitmark, processingData) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to download property.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await submitting(DataController.doDownloadBitmark(touchFaceIdSession, bitmark), processingData);
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
@@ -290,8 +299,9 @@ let AppController = {
   doStudyTask,
   doDonateHealthData,
   doBitmarkHealthData,
-  doDownlaodStudyConsent,
+  doDownloadStudyConsent,
   doReloadDonationInformation,
+  doDownloadBitmark,
 
   doReloadData,
 

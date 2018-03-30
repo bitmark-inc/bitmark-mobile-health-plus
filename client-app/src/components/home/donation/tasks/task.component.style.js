@@ -48,6 +48,7 @@ export default StyleSheet.create({
   },
 
   contentArea: {
+    flex: 1,
     width: '100%',
     flexDirection: 'column',
     alignContent: 'center',

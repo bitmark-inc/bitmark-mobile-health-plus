@@ -19,6 +19,7 @@ import styles from './study-settings.component.style';
 import { StudiesModel, AppleHealthKitModel } from '../../../../models';
 import { EventEmiterService } from '../../../../services';
 import { AppController } from '../../../../managers';
+import { FullComponent } from '../../../../commons/components';
 
 // loading ==> connect-data  ==>loading=>thank-you
 const SettingStatus = {
@@ -40,8 +41,8 @@ export class StudySettingComponent extends React.Component {
       study = this.props.navigation.state.params.study;
     }
     this.state = {
-      status: SettingStatus.loading,
-      // status: SettingStatus.connect_data,
+      // status: SettingStatus.loading,
+      status: SettingStatus.connect_data,
       study: study,
     };
     if (this.state.study && StudiesModel[this.state.study.studyId] && this.state.status === SettingStatus.loading) {
@@ -49,7 +50,6 @@ export class StudySettingComponent extends React.Component {
     }
   }
   doIntakeSurvey() {
-    console.log('this.state.study.consentLink :', this.state.study.consentLink);
     fetch(this.state.study.consentLink)
       .then(response => response.text())
       .then(consentText => {
@@ -108,23 +108,28 @@ export class StudySettingComponent extends React.Component {
         </View>
       );
     }
-    return (<View style={styles.body} >
-      {this.state.status !== SettingStatus.thank_you && <View style={[defaultStyle.header]}>
-        <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
-          {this.state.status !== SettingStatus.thank_you &&
-            <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />}
-        </TouchableOpacity>
-        <Text style={[defaultStyle.headerTitle, { color: '#0C3E79' }]}>{this.state.status}</Text>
-        <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
-          this.props.navigation.goBack();
-        }}>
-          {this.state.status !== SettingStatus.thank_you &&
-            <Text style={[defaultStyle.headerRightText, { fontWeight: '300', fontSize: 14, }]}>Cancel</Text>}
-        </TouchableOpacity>
-      </View>}
-      {this.state.status === SettingStatus.connect_data && <StudyConnectDataComponent study={this.state.study} doJoinStudy={this.doJoinStudy} />}
-      {this.state.status === SettingStatus.thank_you && <StudyThankYouComponent study={this.state.study} doFinish={this.doFinish} />}
-    </View>);
+    return (
+      <FullComponent
+        backgroundColor={this.state.status === SettingStatus.thank_you ? 'white' : '#F5F5F5'}
+        header={(<View style={[defaultStyle.header, { backgroundColor: this.state.status === SettingStatus.thank_you ? 'white' : '#F5F5F5' }]}>
+          {this.state.status !== SettingStatus.thank_you && <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+            {this.state.status !== SettingStatus.thank_you &&
+              <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />}
+          </TouchableOpacity>}
+          {this.state.status !== SettingStatus.thank_you && <Text style={[defaultStyle.headerTitle, { color: '#0C3E79' }]}>{this.state.status}</Text>}
+          {this.state.status !== SettingStatus.thank_you && <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+            this.props.navigation.goBack();
+          }}>
+            {this.state.status !== SettingStatus.thank_you &&
+              <Text style={[defaultStyle.headerRightText, { fontWeight: '300', fontSize: 14, }]}>Cancel</Text>}
+          </TouchableOpacity>}
+        </View>)}
+        content={(<View style={styles.body} >
+          {this.state.status === SettingStatus.connect_data && <StudyConnectDataComponent study={this.state.study} doJoinStudy={this.doJoinStudy} />}
+          {this.state.status === SettingStatus.thank_you && <StudyThankYouComponent study={this.state.study} doFinish={this.doFinish} />}
+        </View>)}
+      />
+    );
   }
 }
 

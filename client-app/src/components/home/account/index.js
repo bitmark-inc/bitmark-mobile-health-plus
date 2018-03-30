@@ -4,7 +4,6 @@ import { AccountDetailComponent } from './account.component';
 import { AccountRecoveryComponent } from './account-recovery';
 
 let AccountComponent = StackNavigator({
-  // let AccountDetailFullComponent = StackNavigator({
   AccountDetail: { screen: AccountDetailComponent, },
   AccountRecovery: { screen: AccountRecoveryComponent, },
 }, {

@@ -8,8 +8,9 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK } from '../models';
 import { DonationService } from '../services/donation-service';
+import { FileUtil } from '../utils';
 
 let userInformation = {};
 let userData = {
@@ -327,6 +328,12 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   }
 };
 
+const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
+  let downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmark.id);
+  //TODO
+  return downloadedFilePath;
+};
+
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers || [],
@@ -388,6 +395,7 @@ const DataController = {
   doDonateHealthData,
   doBitmarkHealthData,
   doReloadDonationInformation: runGetDonationInformationInBackground,
+  doDownloadBitmark,
 
   getTransactionData,
   getUserBitmarks,

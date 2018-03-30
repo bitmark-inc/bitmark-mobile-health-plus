@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { convertWidth } from '../../../utils';
+import { ios } from '../../../configs';
 
 export default StyleSheet.create({
   body: {
@@ -7,6 +8,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: 'white',
+    // borderWidth: 2, borderColor: 'red',
   },
 
   // new account
@@ -17,8 +19,6 @@ export default StyleSheet.create({
   },
   swipePage: {
     flex: 1,
-    width: '100%',
-    height: '100%',
     flexDirection: 'column',
     backgroundColor: 'white',
   },
@@ -34,10 +34,10 @@ export default StyleSheet.create({
   },
   swipePagination: {
     position: 'absolute',
-    bottom: 35,
+    bottom: 15 + ios.constant.blankFooter,
   },
   introductionTitle: {
-    marginTop: 48,
+    marginTop: 28,
     left: convertWidth(50),
     fontFamily: 'Avenir black',
     color: '#0060F2',
@@ -47,14 +47,14 @@ export default StyleSheet.create({
   introductionDescription: {
     marginTop: 50,
     left: convertWidth(50),
-    width: 265,
+    width: convertWidth(265),
     fontFamily: 'Avenir light',
     fontWeight: '300',
     fontSize: 17,
   },
   introductionLinkButton: {
     position: 'absolute',
-    top: 349,
+    top: 279,
     left: convertWidth(50),
   },
   introductionLink: {
@@ -65,7 +65,7 @@ export default StyleSheet.create({
   },
   introductionImageArea: {
     position: 'absolute',
-    top: 393,
+    top: 323,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
@@ -102,7 +102,7 @@ export default StyleSheet.create({
 
   skipButtonArea: {
     position: 'absolute',
-    bottom: 77,
+    bottom: 35 + ios.constant.blankFooter,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',

@@ -1,14 +1,8 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
-import {
-  ios,
-  android // TODO
-} from './../../../configs';
+import { StyleSheet } from 'react-native';
+
 import { convertWidth } from '../../../utils';
-const currentSize = Dimensions.get('window');
-const constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
+import { ios } from '../../../configs';
+
 
 export default StyleSheet.create({
   body: {
@@ -18,20 +12,21 @@ export default StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   inActiveContent: {
-    height: currentSize.height - constant.bottomTabsHeight,
+    flex: 1,
     width: convertWidth(375),
     flexDirection: 'column',
     backgroundColor: 'white',
   },
 
   activedContent: {
-    paddingTop: constant.headerSize.paddingTop,
-    height: currentSize.height - constant.bottomTabsHeight,
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'white',
   },
 
   subTabArea: {
     width: '100%',
-    height: 44,
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
     flexDirection: 'row',
     justifyContent: 'center',
   },

@@ -1,16 +1,13 @@
 import { StyleSheet } from 'react-native'
-import { ios } from './../../configs';
 import { convertWidth } from './../../utils';
 
 export default StyleSheet.create({
   header: {
-    width: ios.constant.headerSize.width,
-    height: ios.constant.headerSize.height,
+    flex: 1,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: ios.constant.headerSize.paddingTop,
     backgroundColor: '#F5F5F5',
   },
   headerLeft: {

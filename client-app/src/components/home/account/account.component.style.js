@@ -1,24 +1,25 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
+import { StyleSheet, } from 'react-native';
 import {
   ios,
-  android // TODO
 } from './../../../configs';
 import { convertWidth } from './../../../utils'
 
-const deviceSize = Dimensions.get('window');
-
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
-
 export default StyleSheet.create({
   body: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter),
     width: '100%',
     backgroundColor: 'white',
+  },
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    width: '100%',
   },
   bitmarkAccountHelpIcon: {
     width: 20,

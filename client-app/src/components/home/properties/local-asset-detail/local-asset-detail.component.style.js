@@ -1,14 +1,5 @@
-import { StyleSheet, Platform } from 'react-native';
-
+import { StyleSheet, } from 'react-native';
 import { convertWidth } from './../../../../utils';
-import {
-  ios,
-  android // TODO
-} from './../../../../configs';
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
 
 export default StyleSheet.create({
   body: {
@@ -29,7 +20,7 @@ export default StyleSheet.create({
   },
   topButtonsArea: {
     position: 'absolute',
-    top: constant.headerSize.height,
+    top: 0,
     right: 0,
     zIndex: 10,
     width: convertWidth(198),
@@ -50,7 +41,6 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 16,
     lineHeight: 19,
-    color: '#A4B5CD',
     textAlign: 'right',
   },
   copyAssetIddButton: {

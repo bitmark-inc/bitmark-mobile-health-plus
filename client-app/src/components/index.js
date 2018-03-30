@@ -139,8 +139,10 @@ class MainComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
-      console.log('active component');
-      this.doOpenApp();
+      NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
+      NetInfo.isConnected.fetch().then().done(() => {
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
+      });
     }
     this.appState = nextAppState;
   }
@@ -196,11 +198,6 @@ class MainComponent extends Component {
           flex: 1,
         }}><DisplayedComponent screenProps={{
           rootNavigation: this.props.navigation,
-          refreshScaling: () => {
-            if (this.appScaler) {
-              this.appScaler.refreshScaling();
-            }
-          }
         }}>
           </DisplayedComponent>
         </View>

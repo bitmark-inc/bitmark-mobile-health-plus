@@ -4,6 +4,7 @@ import {
   View, Image, Text, TouchableOpacity,
   Platform,
 } from 'react-native';
+import { FullComponent } from './../../../../commons/components';
 
 import bitmarkHealthStyles from './bitmark-health-data.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
@@ -21,34 +22,37 @@ export class BitmarkHealthDataComponent extends React.Component {
     this.state = { list };
   }
   render() {
-    return (<View style={bitmarkHealthStyles.body}>
-      <View style={defaultStyle.header}>
-        <TouchableOpacity style={defaultStyle.headerLeft} />
-        <Text style={defaultStyle.headerTitle} />
-        <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()} >
-          <Text style={defaultStyle.headerRightText}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={bitmarkHealthStyles.content}>
-        <Text style={bitmarkHealthStyles.bitmarkTitle}>SIGN YOUR BITMARK ISSUANCE </Text>
-        <View style={bitmarkHealthStyles.passcodeRemindImages}>
-          <Image style={[bitmarkHealthStyles.touchIdImage]} source={require('./../../../../../assets/imgs/touch-id.png')} />
-          <Image style={[bitmarkHealthStyles.faceIdImage]} source={require('./../../../../../assets/imgs/face-id.png')} />
-        </View>
-        <Text style={bitmarkHealthStyles.bitmarkDescription}>Signing your issuance with Touch/ Face ID or Passcode securely creates new bitmarks for your health data.</Text>
-      </View>
-      <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
-        AppController.doBitmarkHealthData(this.state.list).then(() => {
-          this.props.navigation.goBack();
-        }).catch(error => {
-          console.log('doBitmarkHelthData error:', error);
-          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-        })
-      }}>
-        <Text style={bitmarkHealthStyles.bitmarkButtonText}>SIGN</Text>
-      </TouchableOpacity>
-    </View>);
+    return (
+      <FullComponent
+        header={(<View style={defaultStyle.header}>
+          <TouchableOpacity style={defaultStyle.headerLeft} />
+          <Text style={defaultStyle.headerTitle} />
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()} >
+            <Text style={defaultStyle.headerRightText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>)}
+        content={(<View style={bitmarkHealthStyles.body}>
+          <View style={bitmarkHealthStyles.content}>
+            <Text style={bitmarkHealthStyles.bitmarkTitle}>SIGN YOUR BITMARK ISSUANCE </Text>
+            <View style={bitmarkHealthStyles.passcodeRemindImages}>
+              <Image style={[bitmarkHealthStyles.touchIdImage]} source={require('./../../../../../assets/imgs/touch-id.png')} />
+              <Image style={[bitmarkHealthStyles.faceIdImage]} source={require('./../../../../../assets/imgs/face-id.png')} />
+            </View>
+            <Text style={bitmarkHealthStyles.bitmarkDescription}>Signing your issuance with Touch/ Face ID or Passcode securely creates new bitmarks for your health data.</Text>
+          </View>
+          <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
+            AppController.doBitmarkHealthData(this.state.list).then(() => {
+              this.props.navigation.goBack();
+            }).catch(error => {
+              console.log('doBitmarkHelthData error:', error);
+              EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+            })
+          }}>
+            <Text style={bitmarkHealthStyles.bitmarkButtonText}>SIGN</Text>
+          </TouchableOpacity>
+        </View>)}
+      />
+    );
   }
 }
 

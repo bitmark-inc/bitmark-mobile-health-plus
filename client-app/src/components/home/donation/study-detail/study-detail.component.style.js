@@ -11,6 +11,6 @@ export default StyleSheet.create({
   studyContent: {
     flex: 1,
     backgroundColor: '#EDF0F4',
-    marginTop: 5,
+    paddingTop: 5,
   },
 });

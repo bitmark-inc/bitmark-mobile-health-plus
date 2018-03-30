@@ -6,7 +6,7 @@ import {
   Share,
   Platform
 } from 'react-native';
-
+import { FullComponent } from './../../../../commons/components';
 
 import { iosDefaultStyle, androidDefaultStyle } from './../../../../commons/styles';
 let defaultStyle = Platform.select({
@@ -30,31 +30,33 @@ export class StudyConsentComponent extends React.Component {
       Share.share({ title: this.state.study.title, message: this.state.study.title + '\n' + this.state.study.description, url: filePath });
     };
     const downloadConsent = () => {
-      AppController.doDownlaodStudyConsent(this.state.study).then(filePath => {
+      AppController.doDownloadStudyConsent(this.state.study).then(filePath => {
         shareConsent(filePath);
       }).catch(error => {
-        console.log('doDownlaodStudyConsent error:', error);
+        console.log('doDownloadStudyConsent error:', error);
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
       });
     };
     return (
-      <View style={styles.body}>
-        <View style={[defaultStyle.header]}>
+      <FullComponent
+        header={(<View style={[defaultStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>Study Consent</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
             <Text style={defaultStyle.headerRightText}>Done</Text>
           </TouchableOpacity>
-        </View>
-        <View style={styles.main}>
-          <WebView source={{ uri: this.state.study.consentLink }} />
-        </View>
-        <View style={styles.bottomButtonArea}>
-          <TouchableOpacity style={[styles.bottomButton, { backgroundColor: 'white' }]} onPress={() => downloadConsent()}>
-            <Text style={[styles.infoButtonText]}>Share</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </View>)}
+        content={(<View style={styles.body}>
+          <View style={styles.main}>
+            <WebView source={{ uri: this.state.study.consentLink }} />
+          </View>
+          <View style={styles.bottomButtonArea}>
+            <TouchableOpacity style={[styles.bottomButton, { backgroundColor: 'white' }]} onPress={() => downloadConsent()}>
+              <Text style={[styles.infoButtonText]}>Share</Text>
+            </TouchableOpacity>
+          </View>
+        </View>)}
+      />
     );
   }
 }

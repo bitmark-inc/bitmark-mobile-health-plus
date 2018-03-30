@@ -1,5 +1,4 @@
 export * from './bitmark-loading';
-export * from './bitmark-app-scale';
 export * from './bitmark-privacy';
 export * from './bitmark-terms';
 export * from './bitmark-website';
@@ -9,3 +8,4 @@ export * from './bitmark-error';
 export * from './bitmark-auto-complete';
 export * from './bitmark-internet-off';
 export * from './bitmark-detail';
+export * from './bitmark-app-component';

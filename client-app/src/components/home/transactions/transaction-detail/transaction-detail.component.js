@@ -7,6 +7,8 @@ import {
   Alert,
 } from 'react-native';
 
+import { FullComponent } from '../../../../commons/components';
+
 import transactionDetailStyle from './transaction-detail.component.style';
 
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
@@ -80,66 +82,69 @@ export class TransactionDetailComponent extends React.Component {
 
   render() {
     return (
-      <View style={transactionDetailStyle.body}>
-        <View style={defaultStyle.header}>
+      <FullComponent
+        header={(<View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>TRANSFER REQUEST</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
-        </View>
-        <ScrollView style={[transactionDetailStyle.contentScroll]} scroll>
-          <TouchableOpacity activeOpacity={1} style={transactionDetailStyle.content}>
-            <Text style={transactionDetailStyle.assetName}>{this.state.transferOffer.asset.name}</Text>
-            <Text style={transactionDetailStyle.transferOfferContent}>
-              <Text style={transactionDetailStyle.transferOfferSenderFix}>[</Text>
-              <Text style={transactionDetailStyle.transferOfferSenderName} numberOfLines={1}>{this.state.transferOffer.sender.substring(0, 12)}...</Text>
-              <Text style={transactionDetailStyle.transferOfferSenderFix}>] </Text>
-              has requested to transfer the property
-              <Text style={transactionDetailStyle.transferOfferAssetName}> {this.state.transferOffer.asset.name} </Text>
-              to you. Please sign the request to receive the property transfer.
-            </Text>
-            <View style={transactionDetailStyle.extenalArea}>
-              <View style={transactionDetailStyle.extenalAreaRow}>
-                <Text style={transactionDetailStyle.extenalAreaRowLabel}>BITMARK ID:</Text>
-                <Text style={transactionDetailStyle.extenalAreaRowValue} numberOfLines={1}>{this.state.transferOffer.bitmark.id}</Text>
-              </View>
-              <View style={transactionDetailStyle.extenalAreaRow}>
-                <Text style={transactionDetailStyle.extenalAreaRowLabel}>ISSUER:</Text>
-                <View style={transactionDetailStyle.extenalAreaRowValueIssuerView}>
-                  <Text style={transactionDetailStyle.extenalAreaRowValueIssuer_}>[</Text>
-                  <Text style={transactionDetailStyle.extenalAreaRowValueIssuer} numberOfLines={1}>{this.state.transferOffer.asset.registrant}</Text>
-                  <Text style={transactionDetailStyle.extenalAreaRowValueIssuer_}>]</Text>
+        </View>)}
+        content={(<View style={transactionDetailStyle.body}>
+          <ScrollView style={[transactionDetailStyle.contentScroll]} scroll>
+            <TouchableOpacity activeOpacity={1} style={transactionDetailStyle.content}>
+              <Text style={transactionDetailStyle.assetName}>{this.state.transferOffer.asset.name}</Text>
+              <Text style={transactionDetailStyle.transferOfferContent}>
+                <Text style={transactionDetailStyle.transferOfferSenderFix}>[</Text>
+                <Text style={transactionDetailStyle.transferOfferSenderName} numberOfLines={1}>{this.state.transferOffer.sender.substring(0, 12)}...</Text>
+                <Text style={transactionDetailStyle.transferOfferSenderFix}>] </Text>
+                has requested to transfer the property
+                <Text style={transactionDetailStyle.transferOfferAssetName}> {this.state.transferOffer.asset.name} </Text>
+                to you. Please sign the request to receive the property transfer.
+              </Text>
+              <View style={transactionDetailStyle.extenalArea}>
+                <View style={transactionDetailStyle.extenalAreaRow}>
+                  <Text style={transactionDetailStyle.extenalAreaRowLabel}>BITMARK ID:</Text>
+                  <Text style={transactionDetailStyle.extenalAreaRowValue} numberOfLines={1}>{this.state.transferOffer.bitmark.id}</Text>
+                </View>
+                <View style={transactionDetailStyle.extenalAreaRow}>
+                  <Text style={transactionDetailStyle.extenalAreaRowLabel}>ISSUER:</Text>
+                  <View style={transactionDetailStyle.extenalAreaRowValueIssuerView}>
+                    <Text style={transactionDetailStyle.extenalAreaRowValueIssuer_}>[</Text>
+                    <Text style={transactionDetailStyle.extenalAreaRowValueIssuer} numberOfLines={1}>{this.state.transferOffer.asset.registrant}</Text>
+                    <Text style={transactionDetailStyle.extenalAreaRowValueIssuer_}>]</Text>
+                  </View>
+                </View>
+                <View style={transactionDetailStyle.extenalAreaRow}>
+                  <Text style={transactionDetailStyle.extenalAreaRowLabel}>TIMESTAMP:</Text>
+                  <Text style={transactionDetailStyle.extenalAreaRowValue}>BLOCK #{this.state.transferOffer.tx.block_number}{'\n'}{moment(this.state.transferOffer.block.created_at).format('DD MMM YYYY HH:mm:ss')}</Text>
+                </View>
+                <View style={transactionDetailStyle.metadataArea}>
+                  <FlatList data={this.state.metadataList}
+                    extraData={this.state}
+                    renderItem={({ item }) => {
+                      return (
+                        <View style={transactionDetailStyle.extenalAreaRow}>
+                          <Text style={transactionDetailStyle.extenalAreaRowLabel}>{item.key}:</Text>
+                          <Text style={transactionDetailStyle.metadataRowValue}>{item.description}</Text>
+                        </View>
+                      )
+                    }} />
                 </View>
               </View>
-              <View style={transactionDetailStyle.extenalAreaRow}>
-                <Text style={transactionDetailStyle.extenalAreaRowLabel}>TIMESTAMP:</Text>
-                <Text style={transactionDetailStyle.extenalAreaRowValue}>BLOCK #{this.state.transferOffer.tx.block_number}{'\n'}{moment(this.state.transferOffer.block.created_at).format('DD MMM YYYY HH:mm:ss')}</Text>
+              <View style={transactionDetailStyle.buttonsArea}>
+                <TouchableOpacity style={transactionDetailStyle.rejectButton} onPress={this.doReject}>
+                  <Text style={transactionDetailStyle.rejectButtonText}>REJECT</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={transactionDetailStyle.acceptButton} onPress={this.doAccept}>
+                  <Text style={transactionDetailStyle.acceptButtonText}>ACCEPT</Text>
+                </TouchableOpacity>
               </View>
-              <View style={transactionDetailStyle.metadataArea}>
-                <FlatList data={this.state.metadataList}
-                  extraData={this.state}
-                  renderItem={({ item }) => {
-                    return (
-                      <View style={transactionDetailStyle.extenalAreaRow}>
-                        <Text style={transactionDetailStyle.extenalAreaRowLabel}>{item.key}:</Text>
-                        <Text style={transactionDetailStyle.metadataRowValue}>{item.description}</Text>
-                      </View>
-                    )
-                  }} />
-              </View>
-            </View>
-            <View style={transactionDetailStyle.buttonsArea}>
-              <TouchableOpacity style={transactionDetailStyle.rejectButton} onPress={this.doReject}>
-                <Text style={transactionDetailStyle.rejectButtonText}>REJECT</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={transactionDetailStyle.acceptButton} onPress={this.doAccept}>
-                <Text style={transactionDetailStyle.acceptButtonText}>ACCEPT</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View >
+            </TouchableOpacity>
+          </ScrollView>
+        </View >)}
+      />
+
     );
   }
 }

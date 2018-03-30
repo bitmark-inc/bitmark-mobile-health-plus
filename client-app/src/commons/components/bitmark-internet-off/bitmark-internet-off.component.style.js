@@ -1,26 +1,22 @@
 import {
-  StyleSheet, Platform, Dimensions,
+  StyleSheet,
 } from 'react-native';
-
-const currentSize = Dimensions.get('window');
-
-import {
-  ios,
-  android //TODO
-} from './../../../configs';
-let constant = Platform.select({ ios: ios.constant, android: android.constant });
+import { ios } from '../../../configs';
 
 export default StyleSheet.create({
   body: {
-    zIndex: constant.zIndex.internetOff,
+    flexDirection: 'column',
+    width: '100%',
+    flex: 1,
+    zIndex: ios.constant.zIndex.internetOff,
+  },
+  content: {
     alignItems: 'center',
     alignContent: 'center',
     flexDirection: 'column',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    position: 'absolute',
     width: '100%',
-    height: currentSize.height - constant.headerSize.paddingTop,
-    top: constant.headerSize.paddingTop,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    flex: 1,
   },
   title: {
     width: '100%',

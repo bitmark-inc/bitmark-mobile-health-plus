@@ -1,24 +1,27 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   ios,
-  android,
 } from './../../../configs';
 import { convertWidth } from '../../../utils/index';
 
-const deviceSize = Dimensions.get('window');
-
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
-
 export default StyleSheet.create({
   body: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter),
     width: '100%',
     backgroundColor: 'white',
+    // borderWidth: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    width: '100%',
+    // borderWidth: 1,
   },
   addPropertyIcon: {
     width: 18,
@@ -189,8 +192,8 @@ export default StyleSheet.create({
   },
 
   globalArea: {
+    flex: 1,
     flexDirection: 'row',
-    height: deviceSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter - constant.subTabSizeHeight,
     backgroundColor: 'white',
   },
 });

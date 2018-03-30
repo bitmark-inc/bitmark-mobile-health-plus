@@ -8,6 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import Mailer from 'react-native-mail';
+import { FullComponent } from '../../../commons/components';
 
 import applicationDetailStyle from './application-detail.component.style';
 
@@ -65,48 +66,50 @@ export class ApplicationDetailComponent extends React.Component {
       });
     };
     return (
-      <View style={applicationDetailStyle.body}>
-        <View style={defaultStyles.header}>
+      <FullComponent
+        header={(<View style={defaultStyles.header}>
           <TouchableOpacity style={defaultStyles.headerLeft} >
           </TouchableOpacity>
           <Text style={defaultStyles.headerTitle}>DETAILS</Text>
           <TouchableOpacity style={defaultStyles.headerRight} onPress={() => this.props.navigation.goBack()} >
             <Text style={defaultStyles.headerRightText}>Done</Text>
           </TouchableOpacity>
-        </View>
+        </View>)}
+        content={(<View style={applicationDetailStyle.body}>
+          <View style={applicationDetailStyle.bodyContent}>
+            <View style={applicationDetailStyle.topArea}>
+              <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { this.props.navigation.navigate('BitmarkTerms') }}>
+                <Text style={applicationDetailStyle.itemSettingText}>{'Terms of Service'.toUpperCase()}</Text>
+              </TouchableOpacity>
+              <View style={applicationDetailStyle.lineSetting}></View>
+              <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { this.props.navigation.navigate('BitmarkPrivacy') }}>
+                <Text style={applicationDetailStyle.itemSettingText}>{'Privacy Policy'.toUpperCase()}</Text>
+              </TouchableOpacity>
+              <View style={applicationDetailStyle.lineSetting}></View>
+            </View>
 
-        <View style={applicationDetailStyle.bodyContent}>
-          <View style={applicationDetailStyle.topArea}>
-            <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { this.props.navigation.navigate('BitmarkTerms') }}>
-              <Text style={applicationDetailStyle.itemSettingText}>{'Terms of Service'.toUpperCase()}</Text>
-            </TouchableOpacity>
-            <View style={applicationDetailStyle.lineSetting}></View>
-            <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { this.props.navigation.navigate('BitmarkPrivacy') }}>
-              <Text style={applicationDetailStyle.itemSettingText}>{'Privacy Policy'.toUpperCase()}</Text>
-            </TouchableOpacity>
-            <View style={applicationDetailStyle.lineSetting}></View>
-          </View>
+            <View style={applicationDetailStyle.donorInfo}>
+              <Text style={applicationDetailStyle.version}>Version: {DataController.getApplicationVersion()} ({DataController.getApplicationBuildNumber() + (config.network !== 'livenet' ? '-' + config.network : '')})</Text>
+            </View>
 
-          <View style={applicationDetailStyle.donorInfo}>
-            <Text style={applicationDetailStyle.version}>Version: {DataController.getApplicationVersion()} ({DataController.getApplicationBuildNumber() + (config.network !== 'livenet' ? '-' + config.network : '')})</Text>
+            <View style={applicationDetailStyle.bottomArea}>
+              <View style={applicationDetailStyle.lineSetting}></View>
+              <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => rateApp()}>
+                <Text style={applicationDetailStyle.itemSettingText}>{'App Store Rating & Review'.toUpperCase()}</Text>
+              </TouchableOpacity>
+              <View style={applicationDetailStyle.lineSetting}></View>
+              <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { shareApp() }}>
+                <Text style={applicationDetailStyle.itemSettingText}>{'Share This App'.toUpperCase()}</Text>
+              </TouchableOpacity>
+              <View style={applicationDetailStyle.lineSetting}></View>
+              <TouchableOpacity style={[applicationDetailStyle.rowSetting, { marginBottom: constant.blankFooter, }]} onPress={() => { requestSendFeedback() }}>
+                <Text style={applicationDetailStyle.itemSettingText}>{'Send Feedback'.toUpperCase()}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+        </View>)}
+      />
 
-          <View style={applicationDetailStyle.bottomArea}>
-            <View style={applicationDetailStyle.lineSetting}></View>
-            <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => rateApp()}>
-              <Text style={applicationDetailStyle.itemSettingText}>{'App Store Rating & Review'.toUpperCase()}</Text>
-            </TouchableOpacity>
-            <View style={applicationDetailStyle.lineSetting}></View>
-            <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { shareApp() }}>
-              <Text style={applicationDetailStyle.itemSettingText}>{'Share This App'.toUpperCase()}</Text>
-            </TouchableOpacity>
-            <View style={applicationDetailStyle.lineSetting}></View>
-            <TouchableOpacity style={[applicationDetailStyle.rowSetting, { marginBottom: constant.blankFooter, }]} onPress={() => { requestSendFeedback() }}>
-              <Text style={applicationDetailStyle.itemSettingText}>{'Send Feedback'.toUpperCase()}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
     );
   }
 }

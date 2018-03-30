@@ -5,7 +5,12 @@ import {
   Clipboard,
   Platform,
   FlatList,
+  Alert,
+  Share,
 } from 'react-native';
+
+import { FullComponent } from './../../../../commons/components';
+
 import assetDetailStyle from './local-asset-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { AppController, DataController } from '../../../../managers';
@@ -22,6 +27,7 @@ export class LocalAssetDetailComponent extends React.Component {
     super(props);
     this.cancelTransferring = this.cancelTransferring.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
+    this.downloadAsset = this.downloadAsset.bind(this);
     let asset;
     asset = this.props.navigation.state.params.asset;
     let bitmarks = [];
@@ -81,11 +87,27 @@ export class LocalAssetDetailComponent extends React.Component {
     });
   }
 
+  downloadAsset() {
+    let confirmedBitmark = this.state.bitmarks.find((item => item.bitmark.status === 'confirmed'));
+    if (confirmedBitmark) {
+      AppController.doDownloadBitmark(confirmedBitmark.bitmark, {
+        indicator: true, title: 'Preparing to export...', message: `Downloading “${this.state.asset.name}”...`
+      }).then(filePath => {
+        Share.share({ title: this.state.asset.name, message: '', url: filePath });
+      }).catch(error => {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+        console.log('doDownload asset error :', error);
+      });
+    } else {
+      Alert.alert("Downloading is not rejected! You don't own any confirmed property!");
+    }
+  }
+
   render() {
     return (
       <TouchableWithoutFeedback style={assetDetailStyle.body} onPress={() => this.setState({ displayTopButton: false })}>
-        <View style={assetDetailStyle.body}>
-          <View style={defaultStyle.header}>
+        <FullComponent
+          header={(<View style={defaultStyle.header}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
@@ -95,105 +117,107 @@ export class LocalAssetDetailComponent extends React.Component {
                 ? require('../../../../../assets/imgs/three-dot-active.png')
                 : require('../../../../../assets/imgs/three-dot-deactive.png')} />
             </TouchableOpacity>
-          </View>
-          {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
-            <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={true}>
-              <Text style={assetDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
-              Clipboard.setString(this.state.asset.asset_id);
-              this.setState({ copied: true });
-              setTimeout(() => { this.setState({ copied: false }) }, 1000);
-            }}>
-              <Text style={assetDetailStyle.copyAssetIddButtonText}>ASSET ID</Text>
-              {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
-            </TouchableOpacity>
-          </View>}
-          <ScrollView style={assetDetailStyle.content}>
-            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              <View style={assetDetailStyle.bottomImageBar}></View>
+          </View>)}
+          content={(<View style={assetDetailStyle.body}>
+            {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
+              <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={this.state.asset.totalPending === this.state.bitmarks.length} onPress={this.downloadAsset}>
+                <Text style={[assetDetailStyle.downloadAssetButtonText, { color: this.state.asset.totalPending !== this.state.bitmarks.length ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
+                Clipboard.setString(this.state.asset.asset_id);
+                this.setState({ copied: true });
+                setTimeout(() => { this.setState({ copied: false }) }, 1000);
+              }}>
+                <Text style={assetDetailStyle.copyAssetIddButtonText}>ASSET ID</Text>
+                {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+              </TouchableOpacity>
+            </View>}
+            <ScrollView style={assetDetailStyle.content}>
+              <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+                <View style={assetDetailStyle.bottomImageBar}></View>
 
-              <Text style={[assetDetailStyle.assetName, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} >{this.state.asset.name}</Text>
-              <View style={assetDetailStyle.assetCreatorRow}>
-                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>ISSUED BY [</Text>
-                <Text style={[assetDetailStyle.assetCreateAt, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{this.state.asset.registrant}</Text>
-                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>]</Text>
-              </View>
-
-              {this.state.metadata && this.state.metadata.length > 0 && <View style={assetDetailStyle.metadataArea}>
-                <FlatList
-                  scrollEnabled={false}
-                  extraData={this.state}
-                  data={this.state.metadata || []}
-                  renderItem={({ item }) => {
-                    return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
-                      <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{item.label}:</Text>
-                      <Text style={[assetDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
-                    </View>);
-                  }}
-                />
-              </View>}
-              <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
-              <View style={assetDetailStyle.bitmarksArea}>
-                <View style={assetDetailStyle.bitmarksHeader}>
-                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>NO.</Text>
-                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>ACTION</Text>
+                <Text style={[assetDetailStyle.assetName, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} >{this.state.asset.name}</Text>
+                <View style={assetDetailStyle.assetCreatorRow}>
+                  <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>ISSUED BY [</Text>
+                  <Text style={[assetDetailStyle.assetCreateAt, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{this.state.asset.registrant}</Text>
+                  <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>]</Text>
                 </View>
-                <View style={assetDetailStyle.bitmarkListArea}>
+
+                {this.state.metadata && this.state.metadata.length > 0 && <View style={assetDetailStyle.metadataArea}>
                   <FlatList
                     scrollEnabled={false}
                     extraData={this.state}
-                    data={this.state.bitmarks || []}
+                    data={this.state.metadata || []}
                     renderItem={({ item }) => {
-                      if (item.bitmark.status === 'pending') {
-                        return (<View style={assetDetailStyle.bitmarksRow} >
-                          <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                          <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>PENDING…</Text>
-                          </TouchableOpacity>
-                        </View>);
-                      }
-                      if (item.bitmark.status === 'donating') {
-                        return (<View style={assetDetailStyle.bitmarksRow} >
-                          <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                          <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>DONATING…</Text>
-                          </TouchableOpacity>
-                        </View>);
-                      }
-                      if (item.bitmark.status === 'transferring') {
-                        return (<View style={assetDetailStyle.bitmarksRow} >
-                          <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-
-                          <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>TRANSFERRING…</Text>
-                          </TouchableOpacity>
-
-                          <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.id)}>
-                            <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>CANCEL</Text>
-                          </TouchableOpacity>
-                        </View>);
-                      }
-                      return (<View style={assetDetailStyle.bitmarksRow} >
-                        <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                        <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
-                          this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
-                        }}>
-                          <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
-                          this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset });
-                        }}>
-                          <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>TRANSFER</Text>
-                        </TouchableOpacity>
+                      return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
+                        <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{item.label}:</Text>
+                        <Text style={[assetDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
                       </View>);
                     }}
                   />
+                </View>}
+                <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
+                <View style={assetDetailStyle.bitmarksArea}>
+                  <View style={assetDetailStyle.bitmarksHeader}>
+                    <Text style={assetDetailStyle.bitmarksHeaderLabel}>NO.</Text>
+                    <Text style={assetDetailStyle.bitmarksHeaderLabel}>ACTION</Text>
+                  </View>
+                  <View style={assetDetailStyle.bitmarkListArea}>
+                    <FlatList
+                      scrollEnabled={false}
+                      extraData={this.state}
+                      data={this.state.bitmarks || []}
+                      renderItem={({ item }) => {
+                        if (item.bitmark.status === 'pending') {
+                          return (<View style={assetDetailStyle.bitmarksRow} >
+                            <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                            <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
+                              <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>PENDING…</Text>
+                            </TouchableOpacity>
+                          </View>);
+                        }
+                        if (item.bitmark.status === 'donating') {
+                          return (<View style={assetDetailStyle.bitmarksRow} >
+                            <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                            <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
+                              <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>DONATING…</Text>
+                            </TouchableOpacity>
+                          </View>);
+                        }
+                        if (item.bitmark.status === 'transferring') {
+                          return (<View style={assetDetailStyle.bitmarksRow} >
+                            <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+
+                            <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
+                              <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>TRANSFERRING…</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.id)}>
+                              <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>CANCEL</Text>
+                            </TouchableOpacity>
+                          </View>);
+                        }
+                        return (<View style={assetDetailStyle.bitmarksRow} >
+                          <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                          <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
+                            this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
+                          }}>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
+                            this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset });
+                          }}>
+                            <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>TRANSFER</Text>
+                          </TouchableOpacity>
+                        </View>);
+                      }}
+                    />
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>)}
+        />
       </ TouchableWithoutFeedback>
     );
   }

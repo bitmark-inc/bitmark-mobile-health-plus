@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, TouchableOpacity, Image, Text,
+  View
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -11,17 +11,12 @@ import { TransactionsComponent } from './transactions';
 import { DonationComponent } from './donation';
 
 
-import userStyle from './user.component.style';
+import { BottomTabsComponent } from './bottom-tabs/bottom-tabs.component';
 import { AppController, DataController } from '../../managers';
 import { EventEmiterService } from '../../services';
 import { DonationService } from '../../services/donation-service';
 
-const MainTabs = {
-  properties: 'Properties',
-  transaction: 'Transactions',
-  donation: 'Donation',
-  account: 'Account',
-};
+const MainTabs = BottomTabsComponent.MainTabs;
 
 export class UserComponent extends React.Component {
   constructor(props) {
@@ -29,9 +24,7 @@ export class UserComponent extends React.Component {
     this.logout = this.logout.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
-    this.handerChangeActiveIncomingTransferOffer = this.handerChangeActiveIncomingTransferOffer.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
-    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
 
     let subTab;
     let subTab2;
@@ -43,7 +36,6 @@ export class UserComponent extends React.Component {
       }
       subTab = this.props.navigation.state.params.displayedTab.subTab;
       subTab2 = this.props.navigation.state.params.displayedTab.subTab2;
-      console.log('mainTab , subTab :', mainTab, subTab);
     }
     this.state = {
       displayedTab: {
@@ -57,26 +49,13 @@ export class UserComponent extends React.Component {
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
     EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
     EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_DATA, this.reloadData);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
     EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
     EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_DATA, this.reloadData);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-  }
-
-  handerChangeActiveIncomingTransferOffer() {
-    this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length, });
-  }
-
-  handerDonationInformationChange() {
-    this.setState({ donationInformation: DataController.getDonationInformation() })
   }
 
   reloadData() {
@@ -266,65 +245,34 @@ export class UserComponent extends React.Component {
   }
 
   render() {
-    return (
-      <View style={userStyle.body}>
-        {this.state.displayedTab.mainTab === MainTabs.properties && <AssetsComponent screenProps={{
+    if (this.state.displayedTab.mainTab === MainTabs.transaction) {
+      return <TransactionsComponent screenProps={{
+        homeNavigation: this.props.navigation,
+        subTab: this.state.displayedTab.subTab,
+        switchMainTab: this.switchMainTab
+      }} />;
+    }
+    if (this.state.displayedTab.mainTab === MainTabs.donation) {
+      return <DonationComponent screenProps={{
+        homeNavigation: this.props.navigation,
+        subTab: this.state.displayedTab.subTab,
+        subTab2: this.state.displayedTab.subTab2,
+        switchMainTab: this.switchMainTab
+      }} />
+    }
+    if (this.state.displayedTab.mainTab === MainTabs.account) {
+      return <View style={{ width: '100%', flex: 1, }}>
+        <AccountComponent screenProps={{
           homeNavigation: this.props.navigation,
-        }} />}
-        {this.state.displayedTab.mainTab === MainTabs.transaction && <TransactionsComponent screenProps={{
-          homeNavigation: this.props.navigation,
-          subTab: this.state.displayedTab.subTab,
-        }} />}
-        {this.state.displayedTab.mainTab === MainTabs.donation && <DonationComponent screenProps={{
-          homeNavigation: this.props.navigation,
-          subTab: this.state.displayedTab.subTab,
-          subTab2: this.state.displayedTab.subTab2,
-        }} />}
-        {this.state.displayedTab.mainTab === MainTabs.account && <View style={{ width: '100%', flex: 1, }}>
-          <AccountComponent screenProps={{
-            homeNavigation: this.props.navigation,
-            logout: this.logout
-          }} />
-        </View>
-        }
-
-        <View style={userStyle.bottomTabArea}>
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.properties)}>
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.properties
-              ? require('./../../../assets/imgs/properties-icon-enable.png')
-              : require('./../../../assets/imgs/properties-icon-disable.png')} />
-            {this.state.displayedTab.mainTab === MainTabs.properties && <Text style={userStyle.bottomTabButtonText}>{MainTabs.properties}</Text>}
-          </TouchableOpacity>
-
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.transaction)}>
-            {this.state.transactionNumber > 0 && <View style={[userStyle.transactionNumber, { top: this.state.displayedTab.mainTab === MainTabs.transaction ? 2 : 5 }]}>
-              <Text style={userStyle.transactionNumberText}>{this.state.transactionNumber}</Text>
-            </View>}
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.transaction
-              ? require('./../../../assets/imgs/transaction-icon-enable.png')
-              : require('./../../../assets/imgs/transaction-icon-disable.png')} />
-            {this.state.displayedTab.mainTab === MainTabs.transaction && <Text style={userStyle.bottomTabButtonText}>{MainTabs.transaction}</Text>}
-          </TouchableOpacity>
-
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.donation)}>
-            {this.state.donationInformation.totalTodoTask > 0 && <View style={[userStyle.donationNumber, { top: this.state.displayedTab.mainTab === MainTabs.donation ? 2 : 5 }]}>
-              <Text style={userStyle.donationNumberText}>{this.state.donationInformation.totalTodoTask}</Text>
-            </View>}
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.donation
-              ? require('./../../../assets/imgs/donation-icon-enable.png')
-              : require('./../../../assets/imgs/donation-icon-disable.png')} />
-            {this.state.displayedTab.mainTab === MainTabs.donation && <Text style={userStyle.bottomTabButtonText}>{MainTabs.donation}</Text>}
-          </TouchableOpacity>
-
-          <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.account)}>
-            <Image style={userStyle.bottomTabButtonIcon} source={this.state.displayedTab.mainTab === MainTabs.account
-              ? require('./../../../assets/imgs/account-icon-enable.png')
-              : require('./../../../assets/imgs/account-icon-disable.png')} />
-            {this.state.displayedTab.mainTab === MainTabs.account && <Text style={userStyle.bottomTabButtonText}>{MainTabs.account}</Text>}
-          </TouchableOpacity>
-        </View>
+          logout: this.logout,
+          switchMainTab: this.switchMainTab
+        }} />
       </View>
-    );
+    }
+    return <AssetsComponent screenProps={{
+      homeNavigation: this.props.navigation,
+      switchMainTab: this.switchMainTab
+    }} />
   }
 }
 

@@ -4,6 +4,7 @@ import {
   Text, View, TouchableOpacity, WebView, Platform,
 } from 'react-native';
 
+import { FullComponent } from './../bitmark-app-component';
 import { iosDefaultStyle, androidDefaultStyle } from './../../styles/index';
 import termsStyles from './bitmark-terms.component.style';
 let defaultStyles = Platform.select({
@@ -20,8 +21,8 @@ export class BitmarkTermsComponent extends React.Component {
   }
   render() {
     return (
-      <View style={termsStyles.body}>
-        <View style={defaultStyles.header}>
+      <FullComponent
+        header={(<View style={defaultStyles.header}>
           <TouchableOpacity style={defaultStyles.headerLeft}>
           </TouchableOpacity>
           <Text style={defaultStyles.headerTitle}>{'Terms of Service'.toUpperCase()}</Text>
@@ -33,11 +34,11 @@ export class BitmarkTermsComponent extends React.Component {
           }}>
             <Text style={defaultStyles.headerRightText}>Done</Text>
           </TouchableOpacity>
-        </View>
-        <View style={termsStyles.main}>
+        </View>)}
+        content={(<View style={termsStyles.main}>
           <WebView source={{ uri: 'https://bitmark.com/term' }} />
-        </View>
-      </View >
+        </View>)}
+      />
     );
   }
 }

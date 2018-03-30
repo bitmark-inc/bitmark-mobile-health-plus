@@ -200,7 +200,7 @@ const BitmarkSDK = {
         if (ok) {
           resolve();
         } else {
-          reject(newError(result, 'metadata invalid!'));
+          reject(newError(result, 'Metadata invalid!'));
         }
       });
     });
@@ -211,11 +211,21 @@ const BitmarkSDK = {
         if (ok) {
           resolve();
         } else {
-          reject(newError(result, 'account invalid!'));
+          reject(newError(result, 'Account invalid!'));
         }
       });
     });
   },
-
+  downloadBitmark: (sessionId, bitmarkId) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.downloadBitmark(sessionId, bitmarkId, (ok, result) => {
+        if (ok) {
+          resolve(result);
+        } else {
+          reject(newError(result, 'Can not download bitmark!'));
+        }
+      });
+    });
+  },
 };
 export { BitmarkSDK };

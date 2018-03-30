@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 
-
+import { FullComponent } from './../../../../../commons/components';
 import localAddPropertyStyle from './choose-file.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../../commons/styles';
 import { AppController } from '../../../../../managers';
@@ -49,7 +49,7 @@ export class ChooseFileComponent extends React.Component {
         this.props.navigation.navigate('IssueFile', {
           filePath, fileName, fileFormat, asset,
           fingerprint: asset.fingerprint
-        })
+        });
       }).catch(error => {
         console.log('choose file error:', error);
         this.setState({
@@ -60,26 +60,27 @@ export class ChooseFileComponent extends React.Component {
   }
   render() {
     return (
-      <View style={localAddPropertyStyle.body}>
-        <View style={defaultStyle.header}>
+      <FullComponent
+        header={(<View style={[defaultStyle.header,]}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.screenProps.addPropertyNavigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>{'Create Properties'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
-        </View>
-
-        <TouchableOpacity activeOpacity={1} style={localAddPropertyStyle.body}>
-          <View style={localAddPropertyStyle.addFileArea}>
-            <Text style={localAddPropertyStyle.addFileLabel}>UPLOAD ASSET</Text>
-            {!!this.state.fileError && <Text style={localAddPropertyStyle.fileInputError}>{this.state.fileError}</Text>}
-            <TouchableOpacity style={localAddPropertyStyle.addFileButton} onPress={this.onChooseFile}>
-              <Image style={localAddPropertyStyle.addFileIcon} source={require('../../../../../../assets/imgs/plus-icon.png')} />
-              <Text style={localAddPropertyStyle.addFileButtonText}>ADD A FILE</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </View>
+        </View>)}
+        content={(<View style={localAddPropertyStyle.body}>
+          <TouchableOpacity activeOpacity={1} style={localAddPropertyStyle.body}>
+            <View style={localAddPropertyStyle.addFileArea}>
+              <Text style={localAddPropertyStyle.addFileLabel}>UPLOAD ASSET</Text>
+              {!!this.state.fileError && <Text style={localAddPropertyStyle.fileInputError}>{this.state.fileError}</Text>}
+              <TouchableOpacity style={localAddPropertyStyle.addFileButton} onPress={this.onChooseFile}>
+                <Image style={localAddPropertyStyle.addFileIcon} source={require('../../../../../../assets/imgs/plus-icon.png')} />
+                <Text style={localAddPropertyStyle.addFileButtonText}>ADD A FILE</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </View>)}
+      />
     );
   }
 }

@@ -13,7 +13,7 @@ export default StyleSheet.create({
     color: '#0060F2',
     fontSize: 20,
     fontWeight: '900',
-    marginTop: 123,
+    marginTop: 103,
   },
 
   passcodeRemindImages: {

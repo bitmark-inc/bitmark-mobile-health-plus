@@ -17,7 +17,7 @@ export class InactiveDonationComponent extends React.Component {
       <Text style={inactiveStyles.enableMessage}>
         Your activity and personal health data is of value to public health researchers. Use Bitmark to donate your bitmarked data to help advance their studies.
       </Text>
-      <TouchableOpacity style={inactiveStyles.enableButton} onPress={() => this.props.navigation.navigate('DoActiveDonation')}>
+      <TouchableOpacity style={inactiveStyles.enableButton} onPress={() => this.props.screenProps.homeNavigation.navigate('DoActiveDonation')}>
         <Text style={inactiveStyles.enableButtonText}>GET STARTED!</Text>
       </TouchableOpacity>
     </View>);
@@ -28,5 +28,10 @@ InactiveDonationComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+  }),
+  screenProps: PropTypes.shape({
+    homeNavigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }),
   }),
 }

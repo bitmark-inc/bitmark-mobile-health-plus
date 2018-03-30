@@ -1,14 +1,7 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { convertWidth } from './../../../../../utils';
-import {
-  ios,
-  android // TODO
-} from './../../../../../configs';
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
+import { ios, } from './../../../../../configs';
 
 export default StyleSheet.create({
   scroll: {
@@ -17,6 +10,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   body: {
+    flex: 1,
     flexDirection: 'column',
     height: '100%',
     width: '100%',
@@ -299,7 +293,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 40,
-    marginBottom: constant.blankFooter,
+    marginBottom: ios.constant.blankFooter,
   },
   issueButtonText: {
     fontFamily: 'Avenir Black',

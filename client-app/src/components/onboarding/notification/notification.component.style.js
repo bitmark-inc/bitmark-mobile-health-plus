@@ -14,7 +14,7 @@ export default StyleSheet.create({
     color: '#0060F2',
     fontSize: 20,
     fontWeight: '900',
-    marginTop: 73,
+    marginTop: 103,
   },
 
   notificationImage: {

@@ -404,7 +404,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
   }
 };
 
-const doDownlaodStudyConsent = async (study) => {
+const doDownloadStudyConsent = async (study) => {
   let folderPath = FileUtil.DocumentDirectory + '/' + study.studyId;
   let filePath = folderPath + '/consent.pdf';
   await FileUtil.mkdir(folderPath);
@@ -422,7 +422,7 @@ const DonationService = {
   doDonateHealthData,
   doCompletedStudyTask,
   doBitmarkHealthData,
-  doDownlaodStudyConsent,
+  doDownloadStudyConsent,
   getStudy,
 };
 

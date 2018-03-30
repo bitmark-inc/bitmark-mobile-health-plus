@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, FlatList, TouchableOpacity, ScrollView,
+  Text, View, FlatList, TouchableOpacity,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -160,11 +160,9 @@ export class TasksComponent extends React.Component {
             </View>
           </TouchableOpacity>}
         </View>
-
-        <ScrollView style={taskStyles.contentArea}>
+        <View style={taskStyles.contentArea}>
           <FlatList data={this.state.type === TaskTypes.todo ? this.state.todoTasks : this.state.completedTasks}
             extraData={this.state}
-            scrollEnabled={false}
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity style={[taskStyles.taskRow, {
@@ -195,7 +193,7 @@ export class TasksComponent extends React.Component {
               <Text style={taskStyles.notTaskDescription}>It looks like you have nothing due today. This page will show what you need to do once you join a study or turn on data sources to bitmark.</Text>
             </View>
           }
-        </ScrollView>
+        </View>
       </View>
     );
   }

@@ -5,7 +5,7 @@ import {
   Platform,
 } from 'react-native';
 
-
+import { FullComponent } from './../../../../../commons/components';
 import localAddPropertyStyle from './edit-label.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../../commons/styles';
 
@@ -46,41 +46,43 @@ export class EditLabelComponent extends React.Component {
   }
   render() {
     return (
-      <View style={localAddPropertyStyle.body}>
-        <View style={defaultStyle.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
-            <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
-          <Text style={[defaultStyle.headerTitle, { color: this.state.label ? 'black' : '#C1C1C1' }]}>{this.state.label || 'LABEL'}</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
-            this.props.navigation.state.params.onEndChangeMetadataKey(this.props.navigation.state.params.key, this.state.label);
-            this.props.navigation.goBack();
-          }}>
-            <Text style={defaultStyle.headerRightText}>Done</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView style={localAddPropertyStyle.bodyContent}>
-          <TextInput style={localAddPropertyStyle.inputLabel} placeholder='SELECT OR CREATE A NEW LABEL'
-            multiline={false}
-            value={this.state.label}
-            onChangeText={this.onChangeText}
-            onSubmitEditing={this.onEndChangeMetadataValue}
-            returnKeyLabel="done"
-            returnKeyType="done"
-          />
-          <View style={localAddPropertyStyle.inputLabelBar} />
-          <View style={localAddPropertyStyle.suggesionsList}>
-            <FlatList
-              data={this.state.suggesions}
-              renderItem={({ item }) => {
-                return (<TouchableOpacity style={localAddPropertyStyle.suggesionsButton} onPress={() => this.onChangeText(item.text)}>
-                  <Text style={localAddPropertyStyle.suggesionsButtonText}>{item.text}</Text>
-                </TouchableOpacity>);
-              }}
+      <FullComponent header={(<View style={defaultStyle.header}>
+        <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
+        </TouchableOpacity>
+        <Text style={[defaultStyle.headerTitle, { color: this.state.label ? 'black' : '#C1C1C1' }]}>{this.state.label || 'LABEL'}</Text>
+        <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+          this.props.navigation.state.params.onEndChangeMetadataKey(this.props.navigation.state.params.key, this.state.label);
+          this.props.navigation.goBack();
+        }}>
+          <Text style={defaultStyle.headerRightText}>Done</Text>
+        </TouchableOpacity>
+      </View>)}
+        content={(<View style={localAddPropertyStyle.body}>
+          <ScrollView style={localAddPropertyStyle.bodyContent}>
+            <TextInput style={localAddPropertyStyle.inputLabel} placeholder='SELECT OR CREATE A NEW LABEL'
+              multiline={false}
+              value={this.state.label}
+              onChangeText={this.onChangeText}
+              onSubmitEditing={this.onEndChangeMetadataValue}
+              returnKeyLabel="done"
+              returnKeyType="done"
             />
-          </View>
-        </ScrollView>
-      </View>
+            <View style={localAddPropertyStyle.inputLabelBar} />
+            <View style={localAddPropertyStyle.suggesionsList}>
+              <FlatList
+                data={this.state.suggesions}
+                renderItem={({ item }) => {
+                  return (<TouchableOpacity style={localAddPropertyStyle.suggesionsButton} onPress={() => this.onChangeText(item.text)}>
+                    <Text style={localAddPropertyStyle.suggesionsButtonText}>{item.text}</Text>
+                  </TouchableOpacity>);
+                }}
+              />
+            </View>
+          </ScrollView>
+        </View>)}
+      />
+
     );
   }
 }

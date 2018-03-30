@@ -5,13 +5,16 @@ import {
   Platform,
   Clipboard,
   TouchableWithoutFeedback,
+  Share,
 } from 'react-native';
 
+import { FullComponent } from './../../../../commons/components';
 import { convertWidth } from './../../../../utils';
 
 import propertyDetailStyle from './local-property-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { AppController } from '../../../../managers/app-controller';
+import { EventEmiterService } from '../../../../services';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -21,6 +24,7 @@ let defaultStyle = Platform.select({
 export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.downloadAsset = this.downloadAsset.bind(this);
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
     console.log('bitmark: ', bitmark);
@@ -39,11 +43,22 @@ export class LocalPropertyDetailComponent extends React.Component {
     }).catch(error => console.log('getProvenance error', error));
   }
 
+  downloadAsset() {
+    AppController.doDownloadBitmark(this.state.bitmark, {
+      indicator: true, title: 'Preparing to export...', message: `Downloading “${this.state.asset.name}”...`
+    }).then(filePath => {
+      Share.share({ title: this.state.asset.name, message: '', url: filePath });
+    }).catch(error => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      console.log('doDownload asset error :', error);
+    });
+  }
+
   render() {
     return (
       <TouchableWithoutFeedback style={propertyDetailStyle.body} onPress={() => this.setState({ displayTopButton: false })}>
-        <View style={propertyDetailStyle.body}>
-          <View style={defaultStyle.header}>
+        <FullComponent
+          header={(<View style={defaultStyle.header}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
@@ -56,61 +71,63 @@ export class LocalPropertyDetailComponent extends React.Component {
                 ? require('../../../../../assets/imgs/three-dot-active.png')
                 : require('../../../../../assets/imgs/three-dot-deactive.png')} />
             </TouchableOpacity>
-          </View>
-          {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-            <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={true}>
-              <Text style={propertyDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
-              Clipboard.setString(this.state.bitmark.bitmark_id);
-              this.setState({ copied: true });
-              setTimeout(() => { this.setState({ copied: false }) }, 1000);
-            }}>
-              <Text style={propertyDetailStyle.topButtonText}>BITMARK ID</Text>
-              {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
-            </TouchableOpacity>
-            <TouchableOpacity style={propertyDetailStyle.topButton}
-              disabled={this.state.bitmark.status !== 'confirmed'}
-              onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
-              <Text style={[propertyDetailStyle.topButtonText, {
-                color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#C2C2C2'
-              }]}>TRANSFER</Text>
-            </TouchableOpacity>
-          </View>}
-          <ScrollView style={propertyDetailStyle.content}>
-            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              <View style={propertyDetailStyle.bottomImageBar}></View>
-              <Text style={propertyDetailStyle.assetName}>{this.state.asset.name}</Text>
-              <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
-                ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + this.state.bitmark.created_at.toUpperCase())} BY {this.state.asset.registrant}
-              </Text>
-              <Text style={propertyDetailStyle.provenanceLabel}>PROVENANCE</Text>
-              <View style={propertyDetailStyle.provenancesArea}>
-                <View style={propertyDetailStyle.provenancesHeader}>
-                  <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
-                  <Text style={propertyDetailStyle.provenancesHeaderLabelOwner}>OWNER</Text>
+          </View>)}
+          content={(<View style={propertyDetailStyle.body}>
+            {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
+              <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.status !== 'confirmed'} onPress={this.downloadAsset}>
+                <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
+                Clipboard.setString(this.state.bitmark.bitmark_id);
+                this.setState({ copied: true });
+                setTimeout(() => { this.setState({ copied: false }) }, 1000);
+              }}>
+                <Text style={propertyDetailStyle.topButtonText}>BITMARK ID</Text>
+                {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
+              </TouchableOpacity>
+              <TouchableOpacity style={propertyDetailStyle.topButton}
+                disabled={this.state.bitmark.status !== 'confirmed'}
+                onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
+                <Text style={[propertyDetailStyle.topButtonText, {
+                  color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#C2C2C2'
+                }]}>TRANSFER</Text>
+              </TouchableOpacity>
+            </View>}
+            <ScrollView style={propertyDetailStyle.content}>
+              <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+                <View style={propertyDetailStyle.bottomImageBar}></View>
+                <Text style={propertyDetailStyle.assetName}>{this.state.asset.name}</Text>
+                <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
+                  ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + this.state.bitmark.created_at.toUpperCase())} BY {this.state.asset.registrant}
+                </Text>
+                <Text style={propertyDetailStyle.provenanceLabel}>PROVENANCE</Text>
+                <View style={propertyDetailStyle.provenancesArea}>
+                  <View style={propertyDetailStyle.provenancesHeader}>
+                    <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
+                    <Text style={propertyDetailStyle.provenancesHeaderLabelOwner}>OWNER</Text>
+                  </View>
+                  <View style={propertyDetailStyle.provenanceListArea}>
+                    <FlatList
+                      scrollEnabled={false}
+                      extraData={this.state}
+                      data={this.state.bitmark.provenance || []}
+                      renderItem={({ item }) => {
+                        return (<View style={propertyDetailStyle.provenancesRow}>
+                          <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
+                          <View style={propertyDetailStyle.provenancesRowOwnerRow}>
+                            <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>[</Text>
+                            <Text style={[propertyDetailStyle.provenancesRowOwner]} numberOfLines={1}>{item.owner}</Text>
+                            <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>]</Text>
+                          </View>
+                        </View>);
+                      }}
+                    />
+                  </View>
                 </View>
-                <View style={propertyDetailStyle.provenanceListArea}>
-                  <FlatList
-                    scrollEnabled={false}
-                    extraData={this.state}
-                    data={this.state.bitmark.provenance || []}
-                    renderItem={({ item }) => {
-                      return (<View style={propertyDetailStyle.provenancesRow}>
-                        <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
-                        <View style={propertyDetailStyle.provenancesRowOwnerRow}>
-                          <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>[</Text>
-                          <Text style={[propertyDetailStyle.provenancesRowOwner]} numberOfLines={1}>{item.owner}</Text>
-                          <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>]</Text>
-                        </View>
-                      </View>);
-                    }}
-                  />
-                </View>
-              </View>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>)}
+        />
       </TouchableWithoutFeedback>
     );
   }

@@ -9,6 +9,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   swipePage: {
+    flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
   },
@@ -183,6 +184,7 @@ export default StyleSheet.create({
   bottomButton: {
     minHeight: 45,
     paddingTop: 11,
+    paddingBottom: 11,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

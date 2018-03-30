@@ -6,6 +6,7 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
+import { FullComponent } from './../../../../commons/components';
 
 import { convertWidth } from './../../../../utils';
 import {
@@ -65,60 +66,62 @@ export class DoActiveDonationComponent extends React.Component {
         dot={
           <View style={activeDonationStyle.swipeDotButton} />
         }>
-        <View style={[activeDonationStyle.swipePage, { height: currentSize.height - (this.props.screenProps.callDirective ? (constant.bottomTabsHeight + constant.blankFooter) : 0) }]}>
-          <View style={activeDonationStyle.content}>
-            <Text style={activeDonationStyle.title}>{'your bitmark account number'.toUpperCase()}</Text>
-            <Text style={activeDonationStyle.description}>
-              To protect your privacy, you are identified in the Bitmark system by an anonymous public account number. You can safely share this public account number with others without compromising your account security. You can always view this in your account settings.
+        <FullComponent
+          content={(<View style={[activeDonationStyle.swipePage, { height: currentSize.height - (this.props.screenProps.callDirective ? (constant.bottomTabsHeight + constant.blankFooter) : 0) }]}>
+            <View style={activeDonationStyle.content}>
+              <Text style={activeDonationStyle.title}>{'your bitmark account number'.toUpperCase()}</Text>
+              <Text style={activeDonationStyle.description}>
+                To protect your privacy, you are identified in the Bitmark system by an anonymous public account number. You can safely share this public account number with others without compromising your account security. You can always view this in your account settings.
             </Text>
-            <View style={activeDonationStyle.bitmarkAccountArea}>
-              <Text style={activeDonationStyle.bitmarkAccountText}>{this.state.user.bitmarkAccountNumber}</Text>
+              <View style={activeDonationStyle.bitmarkAccountArea}>
+                <Text style={activeDonationStyle.bitmarkAccountText}>{this.state.user.bitmarkAccountNumber}</Text>
+              </View>
+              <View style={activeDonationStyle.bottomButtonArea}>
+                <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={() => { this.swiper.scrollBy(1) }}>
+                  <Text style={activeDonationStyle.bottomButtonText}>CONTINUE</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={activeDonationStyle.bottomButtonArea}>
-              <TouchableOpacity style={[activeDonationStyle.bottomButton, {
-                paddingBottom: this.props.screenProps.callDirective ? 11 : constant.blankFooter,
-              }]} onPress={() => { this.swiper.scrollBy(1) }}>
-                <Text style={activeDonationStyle.bottomButtonText}>CONTINUE</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+          </View>)}
+        />
 
-        <View style={[activeDonationStyle.swipePage, {
-          height: currentSize.height - (this.props.screenProps.callDirective ? (constant.bottomTabsHeight + constant.blankFooter) : 0)
-        }]}>
-          <View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
+        <FullComponent
+          header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.swiper.scrollBy(-1)}>
               <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
             <Text style={defaultStyle.headerTitle} />
             <TouchableOpacity style={defaultStyle.headerRight} />
-          </View>
+          </View>)}
 
-          <View style={activeDonationStyle.content}>
-            <Text style={[activeDonationStyle.title, { marginTop: 31 }]}>{'bitmark your health data'.toUpperCase()}</Text>
-            <Text style={activeDonationStyle.description}>Please allow Bitmark to access your Health app data. We recommend selecting “Turn All Categories On” so that you can claim full ownership of all your health data. We cannot read or record your data. This process will be encrypted and only available on your device and your Bitmark account.</Text>
+          content={(<View style={[activeDonationStyle.swipePage, {
+            height: currentSize.height - (this.props.screenProps.callDirective ? (constant.bottomTabsHeight + constant.blankFooter) : 0)
+          }]}>
 
-            <View style={activeDonationStyle.accessIconArea}>
-              <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../assets/imgs/icon_health.png')} />
-              <Image style={activeDonationStyle.accessIconPlus} source={require('./../../../../../assets/imgs/+.png')} />
-              <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../assets/imgs/bitmark-logo.png')} />
+            <View style={activeDonationStyle.content}>
+              <Text style={[activeDonationStyle.title, { marginTop: 31 }]}>{'bitmark your health data'.toUpperCase()}</Text>
+              <Text style={activeDonationStyle.description}>Please allow Bitmark to access your Health app data. We recommend selecting “Turn All Categories On” so that you can claim full ownership of all your health data. We cannot read or record your data. This process will be encrypted and only available on your device and your Bitmark account.</Text>
+
+              <View style={activeDonationStyle.accessIconArea}>
+                <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../assets/imgs/icon_health.png')} />
+                <Image style={activeDonationStyle.accessIconPlus} source={require('./../../../../../assets/imgs/+.png')} />
+                <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../assets/imgs/bitmark-logo.png')} />
+              </View>
+
+              <View style={[activeDonationStyle.bottomButtonArea]}>
+                <TouchableOpacity style={[activeDonationStyle.bottomButton, {
+                  backgroundColor: 'white', borderColor: '#0060F2', borderWidth: 1,
+                }]} onPress={() => this.props.navigation.goBack()}>
+                  <Text style={[activeDonationStyle.bottomButtonText, { color: '#0060F2' }]}>I WILL DO IT LATER.</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.doActiveDonation}>
+                  <Text style={activeDonationStyle.bottomButtonText}>GOT IT. LET’S BITMARK!</Text>
+                </TouchableOpacity>
+              </View>
             </View>
+          </View>)}
+        />
 
-            <View style={[activeDonationStyle.bottomButtonArea]}>
-              <TouchableOpacity style={[activeDonationStyle.bottomButton, {
-                backgroundColor: 'white', borderColor: '#0060F2', borderWidth: 1,
-              }]} onPress={() => this.props.navigation.goBack()}>
-                <Text style={[activeDonationStyle.bottomButtonText, { color: '#0060F2' }]}>I WILL DO IT LATER.</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[activeDonationStyle.bottomButton, {
-                paddingBottom: this.props.screenProps.callDirective ? 11 : constant.blankFooter,
-              }]} onPress={this.doActiveDonation}>
-                <Text style={activeDonationStyle.bottomButtonText}>GOT IT. LET’S BITMARK!</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
       </Swiper>
     </View >);
   }
