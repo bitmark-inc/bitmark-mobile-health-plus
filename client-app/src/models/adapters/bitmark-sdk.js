@@ -216,6 +216,17 @@ const BitmarkSDK = {
       });
     });
   },
+  downloadBitmark: (sessionId, bitmarkId) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.downloadBitmark(sessionId, bitmarkId, (ok, result) => {
+        if (ok) {
+          resolve(result);
+        } else {
+          reject(newError(result, 'Can not download bitmark!'));
+        }
+      });
+    });
+  },
 
 };
 export { BitmarkSDK };

@@ -8,6 +8,7 @@ import {
   NotificationService,
   TransactionService,
 } from "../services";
+import { BitmarkSDK } from '../models';
 
 let userInformation = {};
 let userData = {
@@ -221,6 +222,12 @@ const doGetBalance = async () => {
   }
 };
 
+const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
+  let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmark.id);
+  filePath = filePath.replace('file://', '');
+  return filePath;
+};
+
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers || [],
@@ -279,6 +286,7 @@ const DataController = {
   doGetBalance,
   doTryAccessToAllMarkets,
   doGetTransactionData,
+  doDownloadBitmark,
 
   getTransactionData,
   getUserBalance,

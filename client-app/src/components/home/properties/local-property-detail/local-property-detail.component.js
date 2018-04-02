@@ -5,6 +5,7 @@ import {
   Platform,
   Clipboard,
   TouchableWithoutFeedback,
+  Share,
 } from 'react-native';
 
 import { convertWidth } from './../../../../utils';
@@ -13,6 +14,7 @@ import { config } from './../../../../configs';
 import propertyDetailStyle from './local-property-detail.component.style';
 import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
 import { AppController } from '../../../../managers/app-controller';
+import { EventEmiterService } from '../../../../services';
 
 let defaultStyle = Platform.select({
   ios: iosDefaultStyle,
@@ -22,6 +24,7 @@ let defaultStyle = Platform.select({
 export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.downloadAsset = this.downloadAsset.bind(this);
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
     console.log('bitmark: ', bitmark);
@@ -38,6 +41,17 @@ export class LocalPropertyDetailComponent extends React.Component {
       });
       this.setState({ bitmark });
     }).catch(error => console.log('getProvenance error', error));
+  }
+
+  downloadAsset() {
+    AppController.doDownloadBitmark(this.state.bitmark, {
+      indicator: true, title: 'Preparing to export...', message: `Downloading “${this.state.asset.name}”...`
+    }).then(filePath => {
+      Share.share({ title: this.state.asset.name, message: '', url: filePath });
+    }).catch(error => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      console.log('doDownload asset error :', error);
+    });
   }
 
   render() {
@@ -59,8 +73,8 @@ export class LocalPropertyDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>
           {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-            <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={true}>
-              <Text style={propertyDetailStyle.downloadAssetButtonText}>DOWNLOAD ASSET</Text>
+            <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.status !== 'confirmed'} onPress={this.downloadAsset}>
+              <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
             </TouchableOpacity>
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
               Clipboard.setString(this.state.bitmark.bitmark_id);
