@@ -329,9 +329,30 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
 };
 
 const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
-  let downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmark.id);
-  //TODO
-  return downloadedFilePath;
+  let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmark.id);
+  filePath = filePath.replace('file://', '');
+
+  // let lastDotIndex = filePath.lastIndexOf('.');
+  // let extName = filePath.substring(lastDotIndex + 1, filePath.length);
+  // if (extName === 'zip') {
+
+  //   // let folderPath = FileUtil.DocumentDirectory + '/test';
+  //   // await FileUtil.mkdir(folderPath);
+  //   // let tempfile = folderPath + '/test.txt';
+  //   // await FileUtil.create(tempfile, "Test zip and unzip file!", 'utf8');
+
+  //   // let zipFile = await FileUtil.zip(folderPath, FileUtil.DocumentDirectory + '/test.zip');
+  //   // await FileUtil.remove(tempfile);
+  //   // console.log('zipFile :', zipFile);
+
+  //   // let unZipfile = await FileUtil.unzip(zipFile, folderPath);
+  //   // console.log('unZipfile :', unZipfile);
+
+  //   let folderUnZip = await FileUtil.unzip(filePath, FileUtil.DocumentDirectory + '/' + bitmark.id);
+  //   console.log('folderUnZip :', folderUnZip)
+  //   return folderUnZip;
+  // }
+  return filePath;
 };
 
 const getTransactionData = () => {

@@ -161,7 +161,7 @@ export class TasksComponent extends React.Component {
           </TouchableOpacity>}
         </View>
         <View style={taskStyles.contentArea}>
-          <FlatList data={this.state.type === TaskTypes.todo ? this.state.todoTasks : this.state.completedTasks}
+          {this.state.todoTasks.length > 0 && <FlatList data={this.state.type === TaskTypes.todo ? this.state.todoTasks : this.state.completedTasks}
             extraData={this.state}
             renderItem={({ item }) => {
               return (
@@ -186,7 +186,7 @@ export class TasksComponent extends React.Component {
                 </TouchableOpacity>
               )
             }}
-          />
+          />}
           {this.state.type === TaskTypes.todo && this.state.todoTasks.length === 0 &&
             <View style={taskStyles.notTaskArea}>
               <Text style={taskStyles.noTaskMessage}>{'ThERE are no new tasks.'.toUpperCase()}</Text>

@@ -1,10 +1,9 @@
 import RNFS from 'react-native-fs';
 import { zip, unzip } from 'react-native-zip-archive';
-console.log('ZipArchive :', zip, unzip);
 
 const FileUtil = {
-  CacheDirectory: RNFS.CachesDirectoryPath + '/Bitmark',
-  DocumentDirectory: RNFS.DocumentDirectoryPath + '/Bitmark/DataDonation',
+  CacheDirectory: RNFS.CachesDirectoryPath,
+  DocumentDirectory: RNFS.DocumentDirectoryPath,
   mkdir: async (folderPath) => {
     return RNFS.mkdir(folderPath, {
       NSURLIsExcludedFromBackupKey: true,
