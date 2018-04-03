@@ -1,6 +1,7 @@
 import { StyleSheet, } from 'react-native';
 
 import { convertWidth } from './../../../../utils';
+import { ios } from '../../../../configs';
 
 
 export default StyleSheet.create({
@@ -8,6 +9,15 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#EDF0F4',
+  },
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    width: '100%',
   },
 
   recoveryPhraseContent: {

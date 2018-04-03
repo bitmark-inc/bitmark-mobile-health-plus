@@ -9,6 +9,7 @@ import taskStyles from './task.component.style';
 import { DataController, AppController } from '../../../../managers';
 import { EventEmiterService } from '../../../../services';
 import { DonationService } from '../../../../services/donation-service';
+import { config } from '../../../../configs';
 
 const TaskTypes = {
   todo: 'To Do',
@@ -79,7 +80,7 @@ export class TasksComponent extends React.Component {
           this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: bitmarkInformation.asset });
         }
       } else {
-        this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.bitmarkId });
+        this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'Bitmark', sourceUrl: config.registry_server_url + `/bitmark/${item.bitmarkId}` });
       }
     }
   }
@@ -98,7 +99,7 @@ export class TasksComponent extends React.Component {
       });
       this.props.screenProps.homeNavigation.dispatch(resetHomePage);
     } else if (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data) {
-      this.props.screenProps.homeNavigation.navigate('BitmarkHealthData', { list: item.list });
+      this.props.screenProps.homeNavigation.navigate('HealthDataBitmark', { list: item.list });
     } else if (item.study && item.study.taskIds && item.taskType === item.study.taskIds.donations) {
       console.log('StudyDonation :', item);
       this.props.screenProps.homeNavigation.navigate('StudyDonation', { study: item.study, list: item.list });

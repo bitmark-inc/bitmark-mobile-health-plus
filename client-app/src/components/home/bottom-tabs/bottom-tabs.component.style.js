@@ -38,6 +38,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: "center",
     justifyContent: 'center',
+    paddingTop: 9,
   },
   bottomTabButtonIcon: {
     width: 75,
@@ -49,9 +50,25 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 10,
     lineHeight: 12,
-    marginTop: 1,
     height: 14,
-    color: '#0060F2'
+    color: '#0060F2',
+  },
+
+  haveNewBitmark: {
+    backgroundColor: '#FF003C',
+    position: 'absolute',
+    borderRadius: 5,
+    borderColor: '#FF003C',
+    borderWidth: 1,
+    top: 4,
+    left: 49,
+    width: 10,
+    height: 10,
+    flexDirection: 'column',
+    alignItems: "center",
+    alignContent: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
   },
 
   transactionNumber: {
@@ -60,8 +77,8 @@ export default StyleSheet.create({
     borderRadius: 7,
     borderColor: '#FF003C',
     borderWidth: 1,
-    top: 5,
-    right: 16,
+    top: 4,
+    left: 49,
     width: 14,
     height: 14,
     flexDirection: 'column',

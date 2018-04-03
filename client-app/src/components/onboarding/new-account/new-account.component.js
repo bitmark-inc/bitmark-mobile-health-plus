@@ -6,27 +6,19 @@ import {
   View, Text, TouchableOpacity, Image,
   StatusBar,
   AppState,
-  Platform,
 } from 'react-native'
 import Video from 'react-native-video';
 
 import {
-  BitmarkWebsiteComponent,
-  BitmarkPrivacyComponent,
-  BitmarkTermsComponent,
+  BitmarkWebViewComponent,
   FullComponent
 } from './../../../commons/components';
-import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
+import defaultStyle from './../../../commons/styles';
 
 import newAccountStyle from './new-account.component.style';
 
 import { AppController } from '../../../managers';
 
-
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
 
 class PropertyPrivateYourDataComponent extends React.Component {
   constructor(props) {
@@ -50,14 +42,14 @@ class PropertyPrivateYourDataComponent extends React.Component {
               <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark</Text>
               <View style={[newAccountStyle.termPrivacySecondLine]}>
                 <TouchableOpacity onPress={() => {
-                  this.props.navigation.navigate('BitmarkTerms');
+                  this.props.navigation.navigate('BitmarkWebView', { title: 'Privacy Policy', sourceUrl: 'https://bitmark.com/privacy' });
                   this.props.screenProps.setShowPagination(false);
                 }}>
                   <Text style={[newAccountStyle.bitmarkTermsPrivacyButtonText]}>Terms of Service</Text>
                 </TouchableOpacity>
                 <Text style={newAccountStyle.bitmarkTermsPrivacyText}> and </Text>
                 <TouchableOpacity onPress={() => {
-                  this.props.navigation.navigate('BitmarkPrivacy');
+                  this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl: 'https://bitmark.com/term' });
                   this.props.screenProps.setShowPagination(false);
                 }}>
                   <Text style={[newAccountStyle.bitmarkTermsPrivacyButtonText]}>Privacy Policy</Text>
@@ -98,8 +90,7 @@ PropertyPrivateYourDataComponent.propTypes = {
 
 let FullPropertyPrivateYourDataComponent = StackNavigator({
   DonateYourData: { screen: PropertyPrivateYourDataComponent, },
-  BitmarkTerms: { screen: BitmarkTermsComponent, },
-  BitmarkPrivacy: { screen: BitmarkPrivacyComponent, },
+  BitmarkWebView: { screen: BitmarkWebViewComponent, },
 }, {
     headerMode: 'none',
     mode: 'modal',
@@ -137,7 +128,7 @@ class BuildDigitalAssetComponent extends React.Component {
             <Text style={[newAccountStyle.introductionDescription,]}>You can bitmark any type of data to build your digital estate: photos, music, videos, location data, documents, etc. If it’s digital, it can be bitmarked.</Text>
             <TouchableOpacity onPress={() => {
               this.props.screenProps.setShowPagination(false);
-              this.props.navigation.navigate('BitmarkWebsite')
+              this.props.navigation.navigate('BitmarkWebView', { title: 'Bitmark', sourceUrl: 'https://bitmark.com' })
             }}
               style={newAccountStyle.introductionLinkButton}
             >
@@ -176,7 +167,7 @@ BuildDigitalAssetComponent.propTypes = {
 
 let FullBuildDigitalAssetComponent = StackNavigator({
   BuildDigitalAsset: { screen: BuildDigitalAssetComponent, },
-  BitmarkWebsite: { screen: BitmarkWebsiteComponent, },
+  BitmarkWebView: { screen: BitmarkWebViewComponent, },
 }, {
     headerMode: 'none',
     mode: 'modal',
@@ -302,7 +293,8 @@ export class NewAccountComponent extends React.Component {
                     showPagination: show,
                     scrollEnabled: show,
                   })
-                }
+                },
+                isFullScreen: true
               }}
             />
             <FullPropertyPrivateYourDataComponent screenProps={{
@@ -314,6 +306,7 @@ export class NewAccountComponent extends React.Component {
                   scrollEnabled: show,
                 })
               },
+              isFullScreen: true
             }} />
           </Swiper>
 

@@ -10,7 +10,6 @@ import {
 } from "../services";
 import { CommonModel, AccountModel, UserModel, BitmarkSDK } from '../models';
 import { DonationService } from '../services/donation-service';
-import { FileUtil } from '../utils';
 
 let userInformation = {};
 let userData = {
@@ -124,10 +123,8 @@ const runGetDonationInformationInBackground = () => {
     if (isRunningGetDonationInformationInBackground) {
       return doCheckRunning(() => isRunningGetDonationInformationInBackground).then(resolve);
     }
-    console.log('run 1');
     isRunningGetDonationInformationInBackground = true;
     DonationService.doGetUserInformation(userInformation.bitmarkAccountNumber).then(donationInformation => {
-      console.log('run 2');
       if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
         userData.donationInformation = donationInformation;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
@@ -136,7 +133,6 @@ const runGetDonationInformationInBackground = () => {
       isRunningGetDonationInformationInBackground = false;
       console.log('runOnBackground  runGetDonationInformationInBackground success :', donationInformation);
     }).catch(error => {
-      console.log('run 3');
       resolve();
       isRunningGetDonationInformationInBackground = false;
       console.log('runOnBackground  runGetDonationInformationInBackground error :', error);
@@ -147,7 +143,7 @@ const configNotification = () => {
   const onRegisterred = (registerredNotificaitonInfo) => {
     let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
     if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-      NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, (userData.donationInformation && userData.donationInformation.createdAt)).then(() => {
+      NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, (userData.donationInformation && !userData.donationInformation.createdAt)).then(() => {
         userInformation.notificationUUID = notificationUUID;
         return UserModel.doUpdateUserInfo(userInformation);
       }).catch(error => {
@@ -279,8 +275,15 @@ const doOpenApp = async () => {
   return userInformation;
 };
 
-const doActiveDonation = async (touchFaceIdSession) => {
-  let donationInformation = await DonationService.doRegisterUserInformation(touchFaceIdSession, userInformation.bitmarkAccountNumber, userInformation.notificationUUID);
+const doActiveBitmarkHealthData = async (touchFaceIdSession, activeBitmarkHealthDataAt) => {
+  let donationInformation = await DonationService.doRegisterUserInformation(touchFaceIdSession, userInformation.bitmarkAccountNumber, userInformation.notificationUUID, activeBitmarkHealthDataAt);
+  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+    userData.donationInformation = donationInformation;
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
+const doInactiveBitmarkHealthData = async (touchFaceIdSession) => {
+  let donationInformation = await DonationService.doInactiveBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
@@ -355,6 +358,16 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
   return filePath;
 };
 
+const doUpdateViewStatus = async (asset) => {
+  let localAsset = userData.localAssets.find(la => la.id === asset.id);
+  if (localAsset && !localAsset.isViewed) {
+    localAsset.isViewed = true;
+    localAsset.bitmarks.forEach(bitmark => bitmark.isViewed = true);
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, userData.localAssets);
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+  }
+};
+
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers || [],
@@ -409,7 +422,8 @@ const DataController = {
   doDeactiveApplication,
   reloadBitmarks: runGetLocalBitmarksInBackground,
   doGetTransactionData,
-  doActiveDonation,
+  doActiveBitmarkHealthData,
+  doInactiveBitmarkHealthData,
   doJoinStudy,
   doLeaveStudy,
   doCompletedStudyTask,
@@ -417,6 +431,7 @@ const DataController = {
   doBitmarkHealthData,
   doReloadDonationInformation: runGetDonationInformationInBackground,
   doDownloadBitmark,
+  doUpdateViewStatus,
 
   getTransactionData,
   getUserBitmarks,

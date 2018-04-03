@@ -100,7 +100,7 @@ export default StyleSheet.create({
   assetCreateAt: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
-    lineHeight: 16,
+    lineHeight: 15,
     marginLeft: convertWidth(20),
     height: 29,
     width: convertWidth(337),

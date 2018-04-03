@@ -20,6 +20,7 @@ let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
   if (data && data.bitmarks && data.assets) {
     for (let bitmark of data.bitmarks) {
       bitmark.bitmark_id = bitmark.id;
+      bitmark.isViewed = false;
       if (bitmark.owner === bitmarkAccountNumber) {
         let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
         if (oldAsset) {
@@ -29,9 +30,11 @@ let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
           } else {
             oldAsset.bitmarks.push(bitmark);
           }
+          oldAsset.isViewed = false;
         } else {
           let newAsset = data.assets.find(asset => asset.id === bitmark.asset_id);
           newAsset.bitmarks = [bitmark];
+          newAsset.isViewed = false;
           localAssets.push(newAsset);
         }
       } else {

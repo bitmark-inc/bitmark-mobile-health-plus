@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, ScrollView,
   Alert,
-  Platform,
 } from 'react-native';
 
 import DefaultStudies from './default';
@@ -11,11 +10,7 @@ import JoinedStudies from './joined';
 
 import { FullComponent } from './../../../../commons/components';
 
-import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
+import defaultStyle from './../../../../commons/styles';
 import studyDetailsStyles from './study-detail.component.style';
 import { AppController } from '../../../../managers';
 import { EventEmiterService } from '../../../../services';

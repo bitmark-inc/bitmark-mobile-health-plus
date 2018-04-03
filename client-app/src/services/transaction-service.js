@@ -4,6 +4,7 @@ import { TransactionModel, BitmarkSDK, BitmarkModel, UserModel, CommonModel } fr
 const getAllTransactions = async (accountNumber) => {
   let allTransactions = await TransactionModel.getAllTransactions(accountNumber);
   let completedTransfers = [];
+  let mapIssuanceBlock = {};
   for (let transaction of allTransactions) {
     if (transaction.owner === accountNumber) {
       if (transaction.id && transaction.previous_id) {
@@ -12,8 +13,25 @@ const getAllTransactions = async (accountNumber) => {
           assetName: previousTransactionData.asset.name,
           from: previousTransactionData.tx.owner,
           to: accountNumber,
-          timestamp: transaction.block ? moment(transaction.block.created_at).format('YYYY MMM DD HH:mm:ss') : '',
+          timestamp: transaction.block ? moment(transaction.block.created_at) : '',
           status: transaction.status,
+          txid: transaction.id,
+          previousId: transaction.previous_id,
+        });
+      } else if (transaction.id && !transaction.previous_id && (!mapIssuanceBlock[transaction.asset_id] || !mapIssuanceBlock[transaction.asset_id][transaction.block_number])) {
+        if (!mapIssuanceBlock[transaction.asset_id]) {
+          mapIssuanceBlock[transaction.asset_id] = {};
+        }
+        mapIssuanceBlock[transaction.asset_id][transaction.block_number] = true;
+        let transactionData = await TransactionModel.getTransactionDetail(transaction.id);
+        completedTransfers.push({
+          assetId: transaction.asset_id,
+          blockNumber: transaction.block_number,
+          assetName: transactionData.asset.name,
+          from: transactionData.tx.owner,
+          timestamp: transaction.block ? moment(transaction.block.created_at) : '',
+          status: transaction.status,
+          txid: transaction.id,
         });
       }
     } else if (transaction.id) {
@@ -22,7 +40,7 @@ const getAllTransactions = async (accountNumber) => {
         assetName: nextTransactionData.asset.name,
         from: accountNumber,
         to: transaction.owner,
-        timestamp: nextTransactionData.block ? moment(nextTransactionData.block.created_at).format('YYYY MMM DD HH:mm:ss') : '',
+        timestamp: nextTransactionData.block ? moment(nextTransactionData.block.created_at) : '',
         status: nextTransactionData.tx.status,
       });
     }
@@ -42,7 +60,7 @@ const doGetActiveIncomingTransferOffers = async (accountNumber) => {
       incomingTransferOffer.block = transactionData.block;
       incomingTransferOffer.asset = bitmarkInformation.asset;
       incomingTransferOffer.bitmark = bitmarkInformation.bitmark;
-      incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at).format('YYYY MMM DD');
+      incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at);
       activeIncomingTransferOffers.push(incomingTransferOffer);
     }
   }
@@ -77,7 +95,7 @@ const doGetTransferOfferDetail = async (bitmarkId) => {
   incomingTransferOffer.block = transactionData.block;
   incomingTransferOffer.asset = bitmarkInformation.asset;
   incomingTransferOffer.bitmark = bitmarkInformation.bitmark;
-  incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at).format('YYYY MMM DD');
+  incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at);
   return incomingTransferOffer;
 };
 

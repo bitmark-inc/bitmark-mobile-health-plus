@@ -195,16 +195,27 @@ const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, e
 const doReloadData = async () => {
   return await processing(DataController.doReloadData());
 };
-
-const doActiveDonation = async () => {
+const doRequirePermission = async () => {
   let donationInformation = DataController.getDonationInformation();
   await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to active donation.');
+};
+
+const doActiveBitmarkHealthData = async (activeBitmarkHealthDataAt) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to active bitmark health data.');
   if (!touchFaceIdSession) {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doActiveDonation(touchFaceIdSession));
+  return await processing(DataController.doActiveBitmarkHealthData(touchFaceIdSession, activeBitmarkHealthDataAt));
+};
+
+const doInactiveBitmarkHealthData = async () => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to inactive itmark health data.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doInactiveBitmarkHealthData(touchFaceIdSession));
 };
 
 const doJoinStudy = async (studyId) => {
@@ -293,7 +304,9 @@ let AppController = {
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doCancelTransferBitmark,
-  doActiveDonation,
+  doRequirePermission,
+  doActiveBitmarkHealthData,
+  doInactiveBitmarkHealthData,
   doJoinStudy,
   doLeaveStudy,
   doStudyTask,

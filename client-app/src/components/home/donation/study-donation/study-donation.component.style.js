@@ -9,7 +9,15 @@ let constant = Platform.select({ ios: ios.constant, android: android.constant })
 export default StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#F5F5F5',
+  },
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    width: '100%',
   },
   main: {
     flex: 1,
@@ -27,7 +35,7 @@ export default StyleSheet.create({
     marginTop: 53,
   },
   passcodeRemindImages: {
-    marginTop: 73,
+    marginTop: 150,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
@@ -49,27 +57,29 @@ export default StyleSheet.create({
     fontSize: 17,
     lineHeight: 20,
     fontWeight: '300',
-    width: convertWidth(275),
+    width: convertWidth(337),
     marginTop: 80,
   },
   bitmarkButton: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 10 + constant.blankFooter,
     minHeight: 45,
     paddingTop: 11,
-    paddingBottom: Math.max(11, constant.blankFooter),
-    width: '100%',
+    paddingBottom: 11,
+    width: convertWidth(337),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0060F2',
+    borderTopColor: '#0060F2',
+    borderTopWidth: 2,
+    backgroundColor: '#F5F5F5',
   },
   bitmarkButtonText: {
     fontFamily: 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',
-    color: 'white'
+    color: '#0060F2'
   }
 });

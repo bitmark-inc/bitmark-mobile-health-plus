@@ -4,15 +4,11 @@ import {
   Text, View, TouchableOpacity,
   WebView,
   Share,
-  Platform
 } from 'react-native';
 import { FullComponent } from './../../../../commons/components';
 
-import { iosDefaultStyle, androidDefaultStyle } from './../../../../commons/styles';
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
+import defaultStyle from './../../../../commons/styles';
+
 import styles from './study-consent.component.style';
 
 import { AppController } from '../../../../managers';

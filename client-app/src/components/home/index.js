@@ -1,47 +1,47 @@
 import { StackNavigator, } from 'react-navigation';
-import { UserComponent } from './user.component';
-import { ApplicationDetailComponent } from './application-detail';
-import {
-  BitmarkPrivacyComponent,
-  BitmarkTermsComponent,
-  BitmarkDetailComponent,
 
-} from './../../commons/components';
+import { UserComponent } from './user.component';
+import { BitmarkWebViewComponent } from './../../commons/components';
 import {
   LocalPropertyDetailComponent,
   LocalAssetDetailComponent,
-  LocalAddPropertyComponent,
   LocalPropertyTransferComponent,
+  LocalIssueFileComponent,
+  LocalIssueFileEditLabelComponent
 } from './properties';
 
 import { TransactionDetailComponent } from './transactions';
 import {
   StudyDetailComponent,
   StudySettingComponent,
-  DoActiveDonationComponent,
-  BitmarkHealthDataComponent,
   StudyDonationComponent,
   StudyConsentComponent,
+  HealthDataSettingsComponent,
+  HealthDataMetadataComponent,
+  HealthDataDataSourceComponent,
+  HealthDataBitmarkComponent,
 } from './donation';
 
 
 let HomeComponent = StackNavigator({
   User: { screen: UserComponent, },
-  BitmarkDetail: { screen: BitmarkDetailComponent, },
+  BitmarkWebView: { screen: BitmarkWebViewComponent, },
   LocalAssetDetail: { screen: LocalAssetDetailComponent, },
   LocalPropertyDetail: { screen: LocalPropertyDetailComponent, },
   LocalPropertyTransfer: { screen: LocalPropertyTransferComponent, },
-  LocalAddProperty: { screen: LocalAddPropertyComponent, },
-  ApplicationDetail: { screen: ApplicationDetailComponent, },
-  BitmarkPrivacy: { screen: BitmarkPrivacyComponent, },
-  BitmarkTerms: { screen: BitmarkTermsComponent, },
+  LocalIssueFile: { screen: LocalIssueFileComponent, },
+  LocalIssueFileEditLabel: { screen: LocalIssueFileEditLabelComponent, },
+
   TransactionDetail: { screen: TransactionDetailComponent, },
+
   StudyDetail: { screen: StudyDetailComponent, },
   StudySetting: { screen: StudySettingComponent, },
-  DoActiveDonation: { screen: DoActiveDonationComponent, },
-  BitmarkHealthData: { screen: BitmarkHealthDataComponent, },
+  HealthDataBitmark: { screen: HealthDataBitmarkComponent, },
   StudyDonation: { screen: StudyDonationComponent, },
   StudyConsent: { screen: StudyConsentComponent, },
+  HealthDataSettings: { screen: HealthDataSettingsComponent, },
+  HealthDataMetadata: { screen: HealthDataMetadataComponent, },
+  HealthDataDataSource: { screen: HealthDataDataSourceComponent, },
 
 }, {
     headerMode: 'none',

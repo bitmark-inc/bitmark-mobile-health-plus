@@ -44,6 +44,9 @@ const doGetHealthKitData = async (listTypes, startDate, endDate) => {
 };
 
 const doCheckDataSource = async (donationInformation, oldDonationInformation) => {
+  if (!donationInformation.activeBitmarkHealthDataAt) {
+    return donationInformation;
+  }
   await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
   let startDate = moment().toDate();
   startDate.setDate(startDate.getDate() - 7);
@@ -115,55 +118,48 @@ const doLoadDonationTask = async (donationInformation) => {
   let todoTasks = [];
   let totalTodoTask = 0;
   let bitmarkHealthDataTask = donationInformation.bitmarkHealthDataTask;
-  let key = 0;
   if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
     todoTasks.push({
-      key,
       title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
       description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
       taskType: donationInformation.commonTaskIds.bitmark_health_data,
       number: bitmarkHealthDataTask.list.length,
       list: bitmarkHealthDataTask.list,
     });
-    key++;
     totalTodoTask += bitmarkHealthDataTask.list.length;
   }
   if (donationInformation.joinedStudies && donationInformation.joinedStudies.length > 0) {
     donationInformation.joinedStudies.forEach(study => {
       if (study.tasks) {
         for (let taskType in study.tasks) {
-          if (study.tasks[taskType].number) {
-            todoTasks.push({
-              key,
-              study,
-              title: study.studyTasks[taskType].title,
-              description: study.studyTasks[taskType].description,
-              taskType,
-              number: study.tasks[taskType].number,
-              list: study.tasks[taskType].list,
-            });
-            key++;
-            totalTodoTask += study.tasks[taskType].number;
-          }
+          // if (study.tasks[taskType].number) {
+          todoTasks.push({
+            study,
+            title: study.studyTasks[taskType].title,
+            description: study.studyTasks[taskType].description,
+            taskType,
+            number: study.tasks[taskType].number,
+            list: study.tasks[taskType].list,
+          });
+          totalTodoTask += study.tasks[taskType].number;
+          // }
         }
       }
     });
   }
-  if (donationInformation.dataSourceStatuses && donationInformation.dataSourceStatuses.length > 0) {
-    for (let dataSourceStatus of donationInformation.dataSourceStatuses) {
-      if (dataSourceStatus.status === 'Inactive' && dataSourceStatus.numberStudyRequired) {
-        todoTasks.push({
-          key,
-          title: dataSourceStatus.title + ' data source inactive',
-          description: 'Required by ' + dataSourceStatus.numberStudyRequired + (dataSourceStatus.numberStudyRequired > 1 ? ' studies' : ' study'),
-          taskType: DATA_SOURCE_INTACTIVE_TASK_TYPE,
-          number: 1,
-        });
-        key++;
-        totalTodoTask++;
-      }
-    }
-  }
+  // if (donationInformation.dataSourceStatuses && donationInformation.dataSourceStatuses.length > 0) {
+  //   for (let dataSourceStatus of donationInformation.dataSourceStatuses) {
+  //     if (dataSourceStatus.status === 'Inactive' && dataSourceStatus.numberStudyRequired) {
+  //       todoTasks.push({
+  //         title: dataSourceStatus.title + ' data source inactive',
+  //         description: 'Required by ' + dataSourceStatus.numberStudyRequired + (dataSourceStatus.numberStudyRequired > 1 ? ' studies' : ' study'),
+  //         taskType: DATA_SOURCE_INTACTIVE_TASK_TYPE,
+  //         number: 1,
+  //       });
+  //       totalTodoTask++;
+  //     }
+  //   }
+  // }
   donationInformation.todoTasks = todoTasks;
   donationInformation.totalTodoTask = totalTodoTask;
 
@@ -176,52 +172,66 @@ const doLoadDonationTask = async (donationInformation) => {
       let study = getStudy(donationInformation, item.studyId);
       if (study) {
         completedTasks.push({
-          key: completedTasks.length + 1,
           title: study.studyTasks[item.taskType].title,
           description: study.studyTasks[item.taskType].description,
           completedDate: moment(item.completedAt),
           taskType: item.taskType,
           study: study,
-          txid: item.txid,
           bitmarkId: item.bitmarkId,
         });
       }
     }
     if (item.taskType === donationInformation.commonTaskIds.bitmark_health_data) {
       completedTasks.push({
-        key: completedTasks.length + 1,
         title: donationInformation.commonTasks[item.taskType].title,
         description: donationInformation.commonTasks[item.taskType].description,
         completedDate: moment(item.completedAt),
         taskType: item.taskType,
-        txid: item.txid,
         bitmarkId: item.bitmarkId,
       });
     }
   });
-  if (donationInformation.dataSourceInactiveCompletedTasks && donationInformation.dataSourceInactiveCompletedTasks.length > 0) {
-    for (let completedEnableDataSource of donationInformation.dataSourceInactiveCompletedTasks) {
-      completedTasks.push({
-        key: completedTasks.length + 1,
-        title: completedEnableDataSource.title,
-        description: completedEnableDataSource.description,
-        completedDate: moment(completedEnableDataSource.completedDate),
-        taskType: DATA_SOURCE_INTACTIVE_TASK_TYPE,
-      });
-    }
-  }
+  // if (donationInformation.dataSourceInactiveCompletedTasks && donationInformation.dataSourceInactiveCompletedTasks.length > 0) {
+  //   for (let completedEnableDataSource of donationInformation.dataSourceInactiveCompletedTasks) {
+  //     completedTasks.push({
+  //       title: completedEnableDataSource.title,
+  //       description: completedEnableDataSource.description,
+  //       completedDate: moment(completedEnableDataSource.completedDate),
+  //       taskType: DATA_SOURCE_INTACTIVE_TASK_TYPE,
+  //     });
+  //   }
+  // }
   donationInformation.completedTasks = completedTasks;
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
   return donationInformation;
 }
 
-const doRegisterUserInformation = async (touchFaceIdSession, bitmarkAccountNumber, notificationUID) => {
+const doRegisterUserInformation = async (touchFaceIdSession, bitmarkAccountNumber, notificationUID, activeBitmarkHealthDataAt) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   if (!signatureData) {
     return null;
   }
-  let donationInformation = await DonationModel.doRegisterUserInformation(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, notificationUID);
+  let donationInformation = await DonationModel.doRegisterUserInformation(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, notificationUID, activeBitmarkHealthDataAt);
+  return await doLoadDonationTask(donationInformation);
+};
+
+const doActiveBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, activeBitmarkHealthDataAt) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession, );
+  if (!signatureData) {
+    return null;
+  }
+  let donationInformation = await DonationModel.doActiveBitmarkHealthData(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, activeBitmarkHealthDataAt);
+  return await doLoadDonationTask(donationInformation);
+};
+
+const doInactiveBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, ) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  if (!signatureData) {
+    return null;
+  }
+  let donationInformation = await DonationModel.doInactiveBitmarkHealthData(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  console.log('doInactiveBitmarkHealthData :', donationInformation);
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -416,6 +426,8 @@ const DonationService = {
   doGetUserInformation,
   doRegisterUserInformation,
   doDeregisterUserInformation,
+  doActiveBitmarkHealthData,
+  doInactiveBitmarkHealthData,
   doJoinStudy,
   doLeaveStudy,
   doStudyTask,

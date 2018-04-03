@@ -31,7 +31,6 @@ export class FullComponent extends React.Component {
     this.doScroll = this.doScroll.bind(this);
 
     let headerHeight = !this.props.header ? 0 : (this.props.headerHeight || (ios.constant.headerSize.height - ios.constant.headerSize.paddingTop));
-    console.log('headerHeight :', headerHeight);
     let footerHeight = !this.props.footer ? 0 : (this.props.footerHeight || ios.constant.bottomTabsHeight + ios.constant.blankFooter);
     let keyboardExtenalHeight = this.props.keyboardExtenal ? (this.props.headerHeight || ios.constant.autoCompleteHeight) : 0;
     let statusBarHeight = 0;
@@ -177,11 +176,14 @@ export class FullComponent extends React.Component {
       top: 0,
       width: currentSize.width,
       height: currentSize.height,
+      backgroundColor: "#F5F5F5",
       // borderWidth: 4, borderColor: 'red',
       zIndex: 0,
     };
-    mainStyle = merge({}, mainStyle, this.props.mainStyle, { backgroundColor: this.props.backgroundColor ? this.props.backgroundColor : '#F5F5F5', });
-
+    mainStyle = merge({}, mainStyle, this.props.mainStyle);
+    if (this.props.backgroundColor) {
+      mainStyle = merge(mainStyle, { backgroundColor: this.props.backgroundColor });
+    }
     return (
       <View style={mainStyle}>
         <View style={[styles.body, {

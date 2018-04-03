@@ -3,17 +3,12 @@ import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation'
 import {
   View, Image, Text, TouchableOpacity,
-  Platform,
 } from 'react-native';
 
 import { StudyConnectDataComponent } from './study-connect-data.component';
 import { StudyThankYouComponent } from './study-thank-you.component';
 
-import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
+import defaultStyle from './../../../../commons/styles';
 import styles from './study-settings.component.style';
 
 import { StudiesModel, AppleHealthKitModel } from '../../../../models';
@@ -93,7 +88,7 @@ export class StudySettingComponent extends React.Component {
       actions: [
         NavigationActions.navigate({
           routeName: 'User', params: {
-            displayedTab: { mainTab: 'Donation', subTab: 'STUDIES', subTab2: 'JOINED' }
+            displayedTab: { mainTab: 'Donation', subTab: 'BROWSER' }
           }
         })
       ]

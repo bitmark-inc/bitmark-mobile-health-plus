@@ -11,7 +11,7 @@ export default StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   headerLeft: {
-    width: convertWidth(70),
+    width: convertWidth(50),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -26,18 +26,18 @@ export default StyleSheet.create({
   headerCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    maxWidth: convertWidth(375) - convertWidth(140),
-    height: '100%'
+    maxWidth: convertWidth(375) - convertWidth(100),
+    height: '100%',
   },
   headerTitle: {
     textAlign: 'center',
     fontSize: 18,
     fontWeight: '900',
     fontFamily: 'Avenir Black',
-    maxWidth: convertWidth(235),
+    maxWidth: convertWidth(375) - convertWidth(100),
   },
   headerRight: {
-    width: convertWidth(70),
+    width: convertWidth(50),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',

@@ -2,19 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Image, Text, TouchableOpacity,
-  Platform,
 } from 'react-native';
+
 import { FullComponent } from './../../../../commons/components';
 
 import donationStyles from './study-donation.component.style';
-import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import defaultStyle from './../../../../commons/styles';
 import { AppController } from '../../../../managers';
 import { EventEmiterService } from '../../../../services';
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
-
+import { convertWidth } from '../../../../utils';
 export class StudyDonationComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -25,34 +21,37 @@ export class StudyDonationComponent extends React.Component {
   render() {
     return (
       <FullComponent
-        header={(<View style={[defaultStyle.header,]}>
-          <TouchableOpacity style={defaultStyle.headerLeft}>
-          </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}></Text>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
-            <Text style={defaultStyle.headerRightText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>)}
-        content={(<View style={[donationStyles.body]}>
-          <View style={donationStyles.main}>
-            <Text style={donationStyles.donationTitle}>AUTHORIZE YOUR DONATION</Text>
-            <View style={donationStyles.passcodeRemindImages}>
-              <Image style={[donationStyles.touchIdImage]} source={require('./../../../../../assets/imgs/touch-id.png')} />
-              <Image style={[donationStyles.faceIdImage]} source={require('./../../../../../assets/imgs/face-id.png')} />
+        content={(
+          <View style={[donationStyles.body]}>
+            <View style={[donationStyles.header]}>
+              <TouchableOpacity style={[defaultStyle.headerLeft, { maxWidth: convertWidth(50) }]} onPress={() => this.props.navigation.goBack()}>
+                <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
+              </TouchableOpacity>
+              <View style={[defaultStyle.headerCenter, { maxWidth: convertWidth(275) }]}>
+                <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(275) }]}>AUTHORIZE YOUR DONATION</Text>
+              </View>
+              <TouchableOpacity style={[defaultStyle.headerRight, { maxWidth: convertWidth(50) }]} >
+              </TouchableOpacity>
             </View>
-            <Text style={donationStyles.donationDescription}>By signing you are consenting to give the researcher rights to use this donation in their study. Your consent will be recorded in the Bitmark blockchain.</Text>
-            <TouchableOpacity style={donationStyles.bitmarkButton} onPress={() => {
-              AppController.doDonateHealthData(this.state.study, this.state.list).then(() => {
-                this.props.navigation.goBack();
-              }).catch(error => {
-                console.log('doDonateHealthData error:', error);
-                EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-              });
-            }}>
-              <Text style={donationStyles.bitmarkButtonText}>DONATE</Text>
-            </TouchableOpacity>
+            <View style={donationStyles.main}>
+              <View style={donationStyles.passcodeRemindImages}>
+                <Image style={[donationStyles.touchIdImage]} source={require('./../../../../../assets/imgs/touch-id.png')} />
+                <Image style={[donationStyles.faceIdImage]} source={require('./../../../../../assets/imgs/face-id.png')} />
+              </View>
+              <Text style={donationStyles.donationDescription}>By signing you are consenting to give the researcher rights to use this donation in their study. Your consent will be recorded in the Bitmark blockchain.</Text>
+              <TouchableOpacity style={donationStyles.bitmarkButton} onPress={() => {
+                AppController.doDonateHealthData(this.state.study, this.state.list).then(() => {
+                  this.props.navigation.goBack();
+                }).catch(error => {
+                  console.log('doDonateHealthData error:', error);
+                  EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+                });
+              }}>
+                <Text style={donationStyles.bitmarkButtonText}>DONATE</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>)}
+        )}
       />
     );
   }

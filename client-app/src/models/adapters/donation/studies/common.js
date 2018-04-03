@@ -31,7 +31,7 @@ let generateHealthKitAsset = (studyInformation, bitmarkAccount, donateData, dona
       '_' + moment(donateDate).format('YYYY_MMM_DD_HH_mm_ss') + '_' + randomId,
     assetMetadata: {
       Creator: bitmarkAccount,
-      Created: moment(donateDate).format('YYYY MMM DD HH:mm:ss'),
+      'Created (date)': moment(donateDate).format('YYYY MMM DD HH:mm:ss'),
     },
     assetType: donateDataType,
     date: donateDate,
@@ -48,10 +48,15 @@ let generateHealthKitAsset = (studyInformation, bitmarkAccount, donateData, dona
   };
 };
 
-
-
+let getMetadataOfBitmarkHealthData = (bitmarkAccount, ) => {
+  return {
+    Creator: '[' + bitmarkAccount.substring(0, 4) + '...' + bitmarkAccount.substring(bitmarkAccount.length - 4, bitmarkAccount.length) + ']',
+    'Created (date)': 'YYYY MMM DD HH:mm:ss',
+  };
+};
 
 export default {
-  generateSurveyAsset: generateSurveyAsset,
-  generateHealthKitAsset: generateHealthKitAsset,
+  generateSurveyAsset,
+  generateHealthKitAsset,
+  getMetadataOfBitmarkHealthData,
 };

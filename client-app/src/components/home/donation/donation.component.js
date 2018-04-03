@@ -1,35 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, TouchableOpacity, Text,
+  View, TouchableOpacity, Text, ScrollView, FlatList,
+  Alert,
 } from 'react-native';
+import Mailer from 'react-native-mail';
 
-import { InactiveDonationComponent } from './active-donation';
-import { FullComponent } from '../../../commons/components';
-
-import { StudiesComponent } from './studies/studies.component';
-import { TasksComponent } from './tasks/task.component';
-import { } from './tasks/task.component';
+// import { InactiveDonationComponent } from './active-donation';
+import { StudyCardComponent } from './study-card/study-card.component';
 
 import donationStyle from './donation.component.style';
 import { DataController } from '../../../managers';
 import { EventEmiterService } from '../../../services';
-import { BottomTabsComponent } from '../bottom-tabs/bottom-tabs.component';
+import defaultStyle from './../../../commons/styles';
 
 const SubTabs = {
-  studies: 'STUDIES',
-  tasks: 'TASKS',
+  joined: 'JOINED',
+  other: 'BROWSER',
 };
 
 export class DonationComponent extends React.Component {
   constructor(props) {
     super(props);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
+    this.contactBitmark = this.contactBitmark.bind(this);
 
+    let subTab = (this.props.screenProps.subTab && (this.props.screenProps.subTab === SubTabs.other || this.props.screenProps.subTab === SubTabs.joined)) ? this.props.screenProps.subTab : SubTabs.other;
+    let studies = subTab === SubTabs.other ? DataController.getDonationInformation().otherStudies : DataController.getDonationInformation().joinedStudies;
+    studies.forEach(study => {
+      study.key = study.studyId
+    });
     this.state = {
       donationInformation: DataController.getDonationInformation(),
-      subTab: (this.props.screenProps.subTab === SubTabs.studies || this.props.screenProps.subTab === SubTabs.tasks) ? this.props.screenProps.subTab : SubTabs.studies,
-      subTab2: this.props.screenProps.subTab2,
+      subTab,
+      studies,
     };
   }
   // ==========================================================================================
@@ -45,48 +49,118 @@ export class DonationComponent extends React.Component {
   }
   switchSubtab(subTab) {
     subTab = subTab || this.state.subTab;
-    this.setState({ subTab, donationInformation: DataController.getDonationInformation() });
+    let studies = subTab === SubTabs.other ? DataController.getDonationInformation().otherStudies : DataController.getDonationInformation().joinedStudies;
+    studies.forEach(study => {
+      study.key = study.studyId
+    });
+    this.setState({ subTab, studies, donationInformation: DataController.getDonationInformation() });
+  }
+  contactBitmark() {
+    Mailer.mail({ recipients: ['support@bitmark.com'], }, (error) => {
+      if (error) {
+        Alert.alert('Error', 'Could not send mail. Please send a mail to support@bitmark.com');
+      }
+    });
   }
 
   render() {
-    if (!this.state.donationInformation.createdAt) {
-      return (
-        <FullComponent
-          backgroundColor="white"
-          content={(
-            <InactiveDonationComponent screenProps={{ homeNavigation: this.props.screenProps.homeNavigation }} />
-          )}
-          footer={(<BottomTabsComponent mainTab={BottomTabsComponent.MainTabs.donation} switchMainTab={this.props.screenProps.switchMainTab} />)}
-        />
-      );
-    }
     return (
-      <FullComponent
-        backgroundColor="white"
-        content={(<View style={donationStyle.body}>
-          <View style={donationStyle.activedContent}>
-            <View style={donationStyle.subTabArea}>
-              <TouchableOpacity style={donationStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.studies)}>
-                <Text style={[donationStyle.subTabButtonText, { color: this.state.subTab === SubTabs.studies ? '#0060F2' : '#C1C1C1' }]}>{SubTabs.studies.toUpperCase()}</Text>
-              </TouchableOpacity>
+      <View style={donationStyle.body}>
+        <View style={donationStyle.header}>
+          <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
+          <Text style={defaultStyle.headerTitle}>STUDIES</Text>
+          <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
+        </View>
 
-              <TouchableOpacity style={donationStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.tasks)}>
-                {!!this.state.donationInformation.totalTodoTask && <View style={donationStyle.taskIndicator}></View>}
-                <Text style={[donationStyle.subTabButtonText, { color: this.state.subTab === SubTabs.tasks ? '#0060F2' : '#C1C1C1' }]}>{SubTabs.tasks.toUpperCase()}</Text>
-              </TouchableOpacity>
+        <View style={donationStyle.subTabArea}>
+          {this.state.subTab === SubTabs.other && <TouchableOpacity style={[donationStyle.subTabButton, {
+            shadowOffset: { width: 2 },
+            shadowOpacity: 0.15,
+          }]}>
+            <View style={donationStyle.subTabButtonArea}>
+              <View style={[donationStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
+              <View style={donationStyle.subTabButtonTextArea}>
+                <Text style={donationStyle.subTabButtonText}>{SubTabs.other.toUpperCase()}</Text>
+              </View>
             </View>
+          </TouchableOpacity>}
+          {this.state.subTab !== SubTabs.other && <TouchableOpacity style={[donationStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.other)}>
+            <View style={donationStyle.subTabButtonArea}>
+              <View style={[donationStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
+              <View style={donationStyle.subTabButtonTextArea}>
+                <Text style={[donationStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.other.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
 
-            {this.state.subTab === SubTabs.studies && <StudiesComponent screenProps={{
-              homeNavigation: this.props.screenProps.homeNavigation,
-              type: this.state.subTab2,
-            }} />}
-            {this.state.subTab === SubTabs.tasks && <TasksComponent screenProps={{
-              homeNavigation: this.props.screenProps.homeNavigation,
-            }} />}
-          </View>
-        </View>)}
-        footer={(<BottomTabsComponent mainTab={BottomTabsComponent.MainTabs.donation} switchMainTab={this.props.screenProps.switchMainTab} />)}
-      />
+          {this.state.subTab === SubTabs.joined && <TouchableOpacity style={[donationStyle.subTabButton, {
+            shadowOffset: { width: -2 },
+            shadowOpacity: 0.15,
+          }]}>
+            <View style={donationStyle.subTabButtonArea}>
+              <View style={[donationStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
+              <View style={donationStyle.subTabButtonTextArea}>
+                <Text style={donationStyle.subTabButtonText}>{SubTabs.joined.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+          {this.state.subTab !== SubTabs.joined && <TouchableOpacity style={[donationStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.joined)}>
+            <View style={donationStyle.subTabButtonArea}>
+              <View style={[donationStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
+              <View style={donationStyle.subTabButtonTextArea}>
+                <Text style={[donationStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.joined.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+        </View>
+
+        <ScrollView style={donationStyle.contentScroll}>
+          {this.state.studies.length === 0 && this.state.subTab === SubTabs.other && <View style={donationStyle.content}>
+            <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>
+            <View style={donationStyle.noCardMessageArea}>
+              <View style={donationStyle.contactMessageFirstLine}>
+                <TouchableOpacity onPress={this.contactBitmark}>
+                  <Text style={donationStyle.contactButtonText}>Contact Bitmark</Text>
+                </TouchableOpacity>
+                <Text style={donationStyle.noCardMessage}> if you would like to publish</Text>
+              </View>
+              <Text style={donationStyle.noCardMessage}>a study.</Text>
+            </View>
+          </View>}
+
+          {this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
+            <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>
+            <Text style={donationStyle.noCardMessageArea}>
+              <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
+            </Text>
+          </View>}
+
+          {this.state.studies.length > 0 && <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            <View style={donationStyle.content}>
+              <FlatList
+                extraData={this.state}
+                data={this.state.studies}
+                renderItem={({ item }) => {
+                  return (<TouchableOpacity style={donationStyle.studyCard} onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item })}>
+                    <StudyCardComponent
+                      title={item.title}
+                      joined={!!item.joinedDate}
+                      description={item.description}
+                      interval={item.interval}
+                      duration={item.duration || item.durationText} />
+                  </TouchableOpacity>)
+                }}
+              />
+            </View>
+          </TouchableOpacity>}
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -94,8 +168,6 @@ export class DonationComponent extends React.Component {
 DonationComponent.propTypes = {
   screenProps: PropTypes.shape({
     subTab: PropTypes.string,
-    switchMainTab: PropTypes.func.isRequired,
-    subTab2: PropTypes.string,
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,
       goBack: PropTypes.func,

@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
-import { convertWidth } from '../../../utils';
 import { ios } from '../../../configs';
+import { convertWidth } from '../../../utils';
 
 
 export default StyleSheet.create({
@@ -11,22 +11,20 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5F5F5',
   },
-  inActiveContent: {
-    flex: 1,
-    width: convertWidth(375),
-    flexDirection: 'column',
-    backgroundColor: 'white',
-  },
 
-  activedContent: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'white',
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    width: '100%',
   },
-
   subTabArea: {
     width: '100%',
-    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    height: 39,
+    backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -36,23 +34,81 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset: { height: 0 },
+    shadowRadius: 3,
+    zIndex: 1,
+  },
+  subTabButtonArea: {
+    width: '100%',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  subTabButtonTextArea: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 35,
   },
   subTabButtonText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 18,
+    fontSize: 14,
+    lineHeight: 16,
     textAlign: 'center',
+  },
+  activeSubTabBar: {
+    height: 4,
+    backgroundColor: '#0060F2'
+  },
+
+  contentScroll: {
+    width: '100%',
+    flexDirection: 'column',
+    alignContent: 'center',
+    backgroundColor: 'white',
+  },
+  content: {
+    marginTop: 9,
+    flex: 1,
+    flexDirection: 'column',
+  },
+  studyCard: {
+    marginBottom: 5,
+  },
+  noCardTitle: {
+    marginTop: 39,
+    marginLeft: 19,
+    fontFamily: 'Avenir Black',
+    fontSize: 17,
+    fontWeight: '900',
     color: '#0060F2',
   },
-  taskIndicator: {
-    position: 'absolute',
-    top: 5,
-    left: 124,
-    backgroundColor: '#FF003C',
-    borderColor: '#FF003C',
-    borderWidth: 1,
-    borderRadius: 5,
-    width: 10,
-    height: 10,
-  }
+  noCardMessageArea: {
+    flexDirection: 'column',
+    width: convertWidth(337),
+    height: 72,
+    marginLeft: 19,
+    marginTop: 21,
+  },
+  contactMessageFirstLine: {
+    flexDirection: 'row',
+  },
+  contactButtonText: {
+    fontFamily: 'Avenir Light',
+    fontSize: 16,
+    textAlign: 'left',
+    color: '#0060F2',
+  },
+  noCardMessage: {
+    fontFamily: 'Avenir Light',
+    fontSize: 17,
+    textAlign: 'left',
+    fontWeight: '300',
+    color: '#828282',
+  },
+
+
+
+
 });

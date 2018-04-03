@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Text, View, TouchableOpacity,
   Alert,
@@ -14,14 +15,21 @@ export class BitmarkInternetOffComponent extends React.Component {
   render() {
     return (
       <FullComponent
-        mainStyle={internetOffStyles.body}
-        zIndex={ios.constant.zIndex.internetOff}
+        mainStyle={{ zIndex: ios.constant.zIndex.internetOff, backgroundColor: 'rgba(0,0,0,0.7)', }}
         content={(<TouchableOpacity style={internetOffStyles.content}
           activeOpacity={1}
           onPress={() => {
-            Alert.alert('No Internet Connection', 'Please connect to Internet to use Bitmark');
-          }}
-        >
+            Alert.alert('Network Error', 'Failed to connect to Bitmark. Please check your device’s network connection.', [{
+              text: 'Cancel',
+            }, {
+              text: 'Retry',
+              onPress: () => {
+                if (this.props.tryConnectInternet) {
+                  this.props.tryConnectInternet();
+                }
+              }
+            }]);
+          }}>
           <View style={[internetOffStyles.title]}>
             <Text style={[internetOffStyles.titleText,]}>NO INTERNET CONNECTION!</Text>
           </View>
@@ -29,4 +37,8 @@ export class BitmarkInternetOffComponent extends React.Component {
       />
     );
   }
+}
+
+BitmarkInternetOffComponent.propTypes = {
+  tryConnectInternet: PropTypes.func,
 }

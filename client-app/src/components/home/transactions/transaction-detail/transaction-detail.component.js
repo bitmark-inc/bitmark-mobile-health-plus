@@ -3,7 +3,6 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, ScrollView, Image, FlatList,
-  Platform,
   Alert,
 } from 'react-native';
 
@@ -11,13 +10,8 @@ import { FullComponent } from '../../../../commons/components';
 
 import transactionDetailStyle from './transaction-detail.component.style';
 
-import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import defaultStyle from './../../../../commons/styles';
 import { AppController } from '../../../../managers';
-
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
 
 export class TransactionDetailComponent extends React.Component {
   constructor(props) {

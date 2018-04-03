@@ -36,6 +36,7 @@ class MainComponent extends Component {
     this.handerSumittinggEvent = this.handerSumittinggEvent.bind(this);
     this.handleNetworkChange = this.handleNetworkChange.bind(this);
     this.handerProcessErrorEvent = this.handerProcessErrorEvent.bind(this);
+    this.doTryConnectInternet = this.doTryConnectInternet.bind(this);
 
     this.doOpenApp = this.doOpenApp.bind(this);
 
@@ -139,10 +140,7 @@ class MainComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
-      NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
-      NetInfo.isConnected.fetch().then().done(() => {
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
-      });
+      this.doTryConnectInternet();
     }
     this.appState = nextAppState;
   }
@@ -152,6 +150,14 @@ class MainComponent extends Component {
     if (networkStatus) {
       this.doOpenApp();
     }
+  }
+
+  doTryConnectInternet() {
+    console.log('doTryConnectInternet ====');
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
+    NetInfo.isConnected.fetch().then().done(() => {
+      NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
+    });
   }
 
   doOpenApp() {
@@ -188,7 +194,7 @@ class MainComponent extends Component {
     }
     return (
       <View style={{ flex: 1 }}>
-        {!this.state.networkStatus && <BitmarkInternetOffComponent />}
+        {!this.state.networkStatus && <BitmarkInternetOffComponent tryConnectInternet={this.doTryConnectInternet} />}
         {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
 
         {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}

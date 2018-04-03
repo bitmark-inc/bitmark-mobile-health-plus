@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, Image, TextInput, ScrollView,
-  Platform,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -10,14 +9,10 @@ import { FullComponent } from './../../../../commons/components';
 import { convertWidth } from './../../../../utils';
 
 import propertyTransferStyle from './local-property-transfer.component.style';
-import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import defaultStyle from './../../../../commons/styles';
 import { AppController } from '../../../../managers/app-controller';
 import { AccountService, EventEmiterService } from '../../../../services';
 
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
 
 export class LocalPropertyTransferComponent extends React.Component {
   constructor(props) {

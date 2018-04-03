@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import {
   View, Text, TouchableOpacity, Image, FlatList, ScrollView,
-  Platform,
   Clipboard,
   TouchableWithoutFeedback,
   Share,
@@ -12,14 +12,9 @@ import { FullComponent } from './../../../../commons/components';
 import { convertWidth } from './../../../../utils';
 
 import propertyDetailStyle from './local-property-detail.component.style';
-import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
+import defaultStyle from './../../../../commons/styles';
 import { AppController } from '../../../../managers/app-controller';
 import { EventEmiterService } from '../../../../services';
-
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
 
 export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
@@ -63,7 +58,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
             <View style={defaultStyle.headerCenter}>
-              <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name}</Text>
+              <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name} </Text>
               <Text style={[defaultStyle.headerTitle]}>({this.state.asset.bitmarks.indexOf(this.state.bitmark) + 1}/{this.state.asset.bitmarks.length})</Text>
             </View>
             <TouchableOpacity style={[defaultStyle.headerRight, { padding: 4 }]} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
@@ -97,8 +92,8 @@ export class LocalPropertyDetailComponent extends React.Component {
               <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
                 <View style={propertyDetailStyle.bottomImageBar}></View>
                 <Text style={propertyDetailStyle.assetName}>{this.state.asset.name}</Text>
-                <Text style={propertyDetailStyle.assetCreateAt} numberOfLines={1}>
-                  ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + this.state.bitmark.created_at.toUpperCase())} BY {this.state.asset.registrant}
+                <Text style={propertyDetailStyle.assetCreateAt}>
+                  ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())} BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
                 </Text>
                 <Text style={propertyDetailStyle.provenanceLabel}>PROVENANCE</Text>
                 <View style={propertyDetailStyle.provenancesArea}>
@@ -115,9 +110,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                         return (<View style={propertyDetailStyle.provenancesRow}>
                           <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
                           <View style={propertyDetailStyle.provenancesRowOwnerRow}>
-                            <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>[</Text>
-                            <Text style={[propertyDetailStyle.provenancesRowOwner]} numberOfLines={1}>{item.owner}</Text>
-                            <Text style={[propertyDetailStyle.provenancesRowOwnerBound]}>]</Text>
+                            <Text style={[propertyDetailStyle.provenancesRowOwner]} numberOfLines={1}>{'[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}</Text>
                           </View>
                         </View>);
                       }}

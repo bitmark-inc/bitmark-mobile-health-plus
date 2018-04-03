@@ -107,6 +107,7 @@ export default StyleSheet.create({
     paddingTop: 18,
     borderBottomColor: '#EFEFEF',
     borderBottomWidth: 1,
+    minHeight: 107,
   },
   transferOfferTitle: {
     flexDirection: 'row',
@@ -153,6 +154,21 @@ export default StyleSheet.create({
     fontSize: 13,
     fontWeight: '900',
     width: convertWidth(150),
+  },
+  donationTask: {
+    marginTop: 12,
+    flexDirection: 'column',
+  },
+  donationTaskTitle: {
+    fontFamily: 'Avenir heavy',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  donationTaskDescription: {
+    marginTop: 3,
+    fontFamily: 'Avenir light',
+    fontSize: 14,
+    fontWeight: '300',
   },
 
   completedTransfer: {

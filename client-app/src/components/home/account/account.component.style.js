@@ -162,51 +162,59 @@ export default StyleSheet.create({
     fontWeight: '300'
   },
 
-  activeBitmarkHealthDataButton: {
-    marginTop: 30,
-    paddingTop: 4,
-    paddingBottom: 4,
-  },
-  activeBitmarkHealthDataButtonText: {
+  authorizedLabel: {
+    marginTop: 27,
     fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 16,
+  },
+  noAuthorizedMessage: {
+    fontFamily: 'Avenir Light',
+    fontWeight: '300',
+    fontSize: 15,
+    marginTop: 16,
+  },
+  authorizedItem: {
+    marginTop: 13,
+    flexDirection: 'column',
+  },
+  authorizedItemTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#A4B5CD',
+  },
+  authorizedItemTitleText: {
+    fontFamily: 'Avenir Light',
+    fontWeight: '300',
+    fontSize: 14,
+  },
+  authorizedItemRemoveButton: {
+    padding: 4,
+  },
+  authorizedItemRemoveButtonText: {
+    fontFamily: 'Avenir Light',
     fontWeight: '900',
     fontSize: 14,
     color: '#0060F2',
   },
-
-  dataSourcesList: {
-    width: '100%',
-    marginTop: 15,
-  },
-  dataSourceRow: {
-    width: '100%',
-    marginTop: 3,
+  authorizedItemDescription: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: 21,
+    marginTop: 17,
   },
-  dataSourcesName: {
-    fontFamily: 'Andale Mono',
-    fontSize: 12,
-    width: convertWidth(220),
-    lineHeight: 14,
+  authorizedItemDescriptionIcon: {
+    width: 58,
+    height: 58,
+    resizeMode: 'contain',
   },
-  dataSourceActive: {
-    color: '#0060F2',
-    fontFamily: 'Andale Mono',
-    fontSize: 12,
-    lineHeight: 14,
-    width: convertWidth(100),
-    textAlign: 'left',
-  },
-  dataSourceInactive: {
-    color: '#FF003C',
-    fontFamily: 'Andale Mono',
-    fontSize: 12,
-    lineHeight: 14,
-    textAlign: 'left',
-    width: convertWidth(100),
+  authorizedItemDescriptionText: {
+    marginLeft: convertWidth(22),
+    width: convertWidth(257),
+    fontFamily: 'Avenir Light',
+    fontWeight: '300',
+    fontSize: 15,
   },
 
 });
