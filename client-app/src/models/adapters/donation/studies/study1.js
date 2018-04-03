@@ -9,77 +9,40 @@ import studyCommonUtil from './common';
 const WomenHealthStudy = NativeModules.WomenHealthStudy;
 
 const surveysQuestion = {
-  qa1: 'What is your biological sex?',
-  qa2: 'Are you currently pregnant?',
-  qa3: 'Are you age 18 or older?',
-  qa4: 'Are you willing to download an app to track your reproductive health?',
-  qa5: 'Are you willing to share your reproductive and behavioral health data through HealthKit?',
-  qa6: 'Are you currently a student from UC Berkeley?',
-
-  qa7: 'Do you agree with consent?',
-
-  qa8: 'Please specify your race. Select all that apply',
-  qa9: 'Please specify your ethnicity.',
-  qa10: 'What is your current age?',
-  qa11: 'What is your marital status?',
-  qa12: 'What is the highest degree or level of school you have completed?',
-  qa13: 'What is your total household income?',
-  qa14: 'On average, how many hours do you sleep per night?',
-  qa15: 'On average, how many hours do you exercise per day?',
-  qa16: 'What is your height?',
-  qa17: 'What is your current weight?',
+  qa1: 'Please specify your race. Select all that apply',
+  qa2: 'Please specify your ethnicity.',
+  qa3: 'What is your current age?',
+  qa4: 'What is your marital status?',
+  qa5: 'What is the highest degree or level of school you have completed?',
+  qa6: 'What is your total household income?',
+  qa7: 'On average, how many hours do you sleep per night?',
+  qa8: 'On average, how many hours do you exercise per day?',
+  qa9: 'What is your height?',
+  qa10: 'What is your current weight?',
 
 };
 
 const surveysAnswers = {
   qa1: {
-    true: 'Male',
-    false: 'Female',
-  },
-  qa2: {
-    true: 'Yes',
-    false: 'No',
-  },
-  qa3: {
-    true: 'Yes',
-    false: 'No',
-  },
-  qa4: {
-    true: 'Yes',
-    false: 'No',
-  },
-  qa5: {
-    true: 'Yes',
-    false: 'No',
-  },
-  qa6: {
-    true: 'Yes',
-    false: 'No',
-  },
-  qa7: {
-    true: 'Yes',
-    false: 'No',
-  },
-  qa8: {
     'opt-1': 'American Indian or Alaska Native',
     'opt-2': 'Asian',
     'opt-3': 'Black or African American',
     'opt-4': 'Native Hawaiian or Other Pacific Islander',
     'opt-5': 'White',
   },
-  qa9: {
+  qa2: {
     'opt-1': 'Hispanic or Latino',
     'opt-2': 'Not Hispanic or Latino',
   },
-  qa10: null,
-  qa11: {
+  qa3: null,
+  qa4: {
     'opt-1': 'Married',
     'opt-2': 'Widowed',
     'opt-3': 'Divorced',
     'opt-4': 'Separated',
     'opt-5': 'Never married',
   },
-  qa12: {
+  qa5: {
     'opt-1': "No schooling completed",
     'opt-2': "Nursery school to 8th grade",
     'opt-3': "9th, 10th or 11th grade",
@@ -93,7 +56,7 @@ const surveysAnswers = {
     'opt-11': "Professional degree (for example: MD, DDS, DVM, LLB, JD)",
     'opt-12': "Doctorate degree (for example: PhD, EdD)",
   },
-  qa13: {
+  qa6: {
     'opt-1': "Less than $10,000",
     'opt-2': "$10,000 to $19,999",
     'opt-3': "$20,000 to $29,999",
@@ -107,63 +70,54 @@ const surveysAnswers = {
     'opt-11': "$100,000 to $149,999",
     'opt-12': "$150,000 or more",
   },
-  qa14: null,
-  qa15: null,
-  qa16: null,
-  qa17: null,
+  qa7: null,
+  qa8: null,
+  qa9: null,
+  qa10: null,
 };
 
-let checkConsentAnswer = (answer) => {
-  if (answer) {
-    return [{
-      question: surveysQuestion['qa7'],
-      answer: surveysAnswers['qa7'][answer],
-    }];
-  }
-  return false;
-};
 
 let checkIntakeAnswer = (answer) => {
   if (answer &&
     answer['step-1'] &&
-    answer['step-2'] && surveysAnswers['qa9'][answer['step-2'][0]] &&
-    answer['step-4'] && surveysAnswers['qa11'][answer['step-4'][0]] &&
-    answer['step-5'] && surveysAnswers['qa12'][answer['step-5'][0]] &&
-    answer['step-6'] && surveysAnswers['qa13'][answer['step-6'][0]] &&
+    answer['step-2'] && surveysAnswers['qa2'][answer['step-2'][0]] &&
+    answer['step-4'] && surveysAnswers['qa4'][answer['step-4'][0]] &&
+    answer['step-5'] && surveysAnswers['qa5'][answer['step-5'][0]] &&
+    answer['step-6'] && surveysAnswers['qa6'][answer['step-6'][0]] &&
     answer['step-3'] && answer['step-7'] && answer['step-8'] && answer['step-9'] && answer['step-10']) {
     let answerQUA8 = [];
     answer['step-1'].forEach(item => {
-      answerQUA8.push(surveysAnswers['qa8'][item]);
+      answerQUA8.push(surveysAnswers['qa1'][item]);
     });
     return [{
-      question: surveysQuestion['qa8'],
+      question: surveysQuestion['qa1'],
       answer: answerQUA8,
     }, {
-      question: surveysQuestion['qa9'],
-      answer: surveysAnswers['qa9'][answer['step-2'][0]],
+      question: surveysQuestion['qa2'],
+      answer: surveysAnswers['qa2'][answer['step-2'][0]],
     }, {
-      question: surveysQuestion['qa10'],
+      question: surveysQuestion['qa3'],
       answer: answer['step-3'],
     }, {
-      question: surveysQuestion['qa11'],
-      answer: surveysAnswers['qa11'][answer['step-4'][0]],
+      question: surveysQuestion['qa4'],
+      answer: surveysAnswers['qa4'][answer['step-4'][0]],
     }, {
-      question: surveysQuestion['qa12'],
-      answer: surveysAnswers['qa12'][answer['step-5'][0]],
+      question: surveysQuestion['qa5'],
+      answer: surveysAnswers['qa5'][answer['step-5'][0]],
     }, {
-      question: surveysQuestion['qa13'],
-      answer: surveysAnswers['qa13'][answer['step-6'][0]],
+      question: surveysQuestion['qa6'],
+      answer: surveysAnswers['qa6'][answer['step-6'][0]],
     }, {
-      question: surveysQuestion['qa14'],
+      question: surveysQuestion['qa7'],
       answer: answer['step-7'],
     }, {
-      question: surveysQuestion['qa15'],
+      question: surveysQuestion['qa8'],
       answer: answer['step-8'],
     }, {
-      question: surveysQuestion['qa16'],
+      question: surveysQuestion['qa9'],
       answer: answer['step-9'],
     }, {
-      question: surveysQuestion['qa17'],
+      question: surveysQuestion['qa10'],
       answer: answer['step-10'],
     }];
   }
@@ -172,14 +126,7 @@ let checkIntakeAnswer = (answer) => {
 
 let doConsentSurvey = (data) => {
   return new Promise((resolve) => {
-    WomenHealthStudy.showConsentSurvey(data, ok => {
-      let result = checkConsentAnswer(ok);
-      if (!result) {
-        resolve(null);
-      } else {
-        resolve(result);
-      }
-    });
+    WomenHealthStudy.showConsentSurvey(data, resolve);
   });
 };
 

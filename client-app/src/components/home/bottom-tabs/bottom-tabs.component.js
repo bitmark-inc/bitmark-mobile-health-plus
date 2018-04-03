@@ -28,10 +28,11 @@ export class BottomTabsComponent extends React.Component {
 
     let localAssets = DataController.getUserBitmarks().localAssets || [];
     let haveNewBitmark = localAssets.findIndex(asset => !asset.isViewed) >= 0;
+    let transactionNumber = DataController.getTransactionData().activeIncompingTransferOffers.length + DataController.getDonationInformation().totalTodoTask;
     this.state = {
       mainTab: this.props.mainTab,
       haveNewBitmark,
-      transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length + DataController.getDonationInformation().totalTodoTask,
+      transactionNumber,
     };
   }
 
@@ -48,7 +49,7 @@ export class BottomTabsComponent extends React.Component {
   }
 
   handerChangeActiveIncomingTransferOffer() {
-    this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length, });
+    this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length + DataController.getDonationInformation().totalTodoTask, });
   }
 
   handerDonationInformationChange() {

@@ -49,7 +49,6 @@ export class StudySettingComponent extends React.Component {
       .then(response => response.text())
       .then(consentText => {
         StudiesModel[this.state.study.studyId].doConsentSurvey({ 'consent_html': consentText }).then(consentResult => {
-          console.log('consentResult:', consentResult);
           if (consentResult) {
             this.setState({
               status: SettingStatus.connect_data,

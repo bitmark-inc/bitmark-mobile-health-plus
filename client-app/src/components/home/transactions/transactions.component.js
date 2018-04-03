@@ -23,11 +23,6 @@ const ActionTypes = {
   donation: '',
 };
 
-const CompletedTypes = {
-  transfer: 'Property Transfer Request',
-  donation: '',
-};
-
 export class TransactionsComponent extends React.Component {
   static SubTabs = SubTabs;
   constructor(props) {
