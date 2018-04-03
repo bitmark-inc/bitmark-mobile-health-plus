@@ -278,31 +278,11 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                                                              answer:timeOfDayAnswerFormat];
   
   ORKQuestionStep *step12QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-12"
-                                                                              title:@"Please tell us at what time you usually fall asleep?"
-                                                                             answer:timeOfDayAnswerFormat];
-  
-  ORKQuestionStep *step13QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-13"
                                                                               title:@"Please tell us at what time you usually have breakfast or first beverage with caloric content?"
                                                                              answer:timeOfDayAnswerFormat];
   
-  ORKQuestionStep *step14QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-14"
-                                                                              title:@"Please tell us at what time you usually have your second main meal of the day?"
-                                                                             answer:timeOfDayAnswerFormat];
-  
-  ORKQuestionStep *step15QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-15"
+  ORKQuestionStep *step13QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-13"
                                                                               title:@"Please tell us at what time you usually have your third main meal of the day?"
-                                                                             answer:timeOfDayAnswerFormat];
-  
-  ORKQuestionStep *step16QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-16"
-                                                                              title:@"Please tell us at what time you usually have your first walk or exercise of the day?"
-                                                                             answer:timeOfDayAnswerFormat];
-  
-  ORKQuestionStep *step17QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-17"
-                                                                              title:@"Please tell us at what time you usually have your second walk or exercise of the day?"
-                                                                             answer:timeOfDayAnswerFormat];
-  
-  ORKQuestionStep *step18QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-18"
-                                                                              title:@"Please tell us at what time you usually have your third walk or exercise of the day?"
                                                                              answer:timeOfDayAnswerFormat];
   
   // Create task
@@ -319,12 +299,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                                                                                                step10QuestionStep,
                                                                                                                step11QuestionStep,
                                                                                                                step12QuestionStep,
-                                                                                                               step13QuestionStep,
-                                                                                                               step14QuestionStep,
-                                                                                                               step15QuestionStep,
-                                                                                                               step16QuestionStep,
-                                                                                                               step17QuestionStep,
-                                                                                                               step18QuestionStep]];
+                                                                                                               step13QuestionStep]];
 
   IntakeStep8SkipRule *skipStep8NavigationRule = [IntakeStep8SkipRule new];
   task.shouldReportProgress = YES;
@@ -427,11 +402,6 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
       else if ([stepResult.identifier isEqualToString:@"step-11"] ||
                [stepResult.identifier isEqualToString:@"step-12"] ||
                [stepResult.identifier isEqualToString:@"step-13"] ||
-               [stepResult.identifier isEqualToString:@"step-14"] ||
-               [stepResult.identifier isEqualToString:@"step-15"] ||
-               [stepResult.identifier isEqualToString:@"step-16"] ||
-               [stepResult.identifier isEqualToString:@"step-17"] ||
-               [stepResult.identifier isEqualToString:@"step-18"] ||
                [stepResult.identifier isEqualToString:@"step-10"]) {
         ORKTimeOfDayQuestionResult *r = (ORKTimeOfDayQuestionResult *)stepResult.results.firstObject;
         return [NSString stringWithFormat:@"%ld:%ld", r.dateComponentsAnswer.hour, r.dateComponentsAnswer.minute];
@@ -478,7 +448,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   
   ORKConsentSection *s2 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeStudySurvey];
   s2.title = @"Activities";
-  s2.summary = @"During this study, we will ask you to respond to surveys and to perform some tasks. For example, we will ask you to take a photo of your foods or answer questions regarding your daily food habits, physical activity or wellness.\n\nThe app is designed to send you occasional reminders to complete these study tasks.";
+  s2.summary = @"During this study, we will ask you questions regarding your food and physical activity habits.  Occasionally, we will ask you to take a picture of those habits.\n\nThe app is designed to send you occasional reminders to complete these study tasks.";
   s2.customLearnMoreButtonTitle = @"Learn more";
   
   ORKConsentSection *s3 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
@@ -490,20 +460,20 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   
   ORKConsentSection *s4 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeDataUse];
   s4.title = @"Privacy and Data Use";
-  s4.summary = @"The data you share weekly will remain anonymous and will be used for research only. It may be shared with other researchers.";
+  s4.summary = @"The data you share will remain confidential and protected with encryption methods. The app will not collect identifiable information. Only de-identified data will be used and shared for scientific research.";
   s4.htmlContent = @"<p><strong>How our privacy works</strong></p><p>To protect your privacy, we have taken several steps. First, we do not collect any data that can identify you. Neither your name, nor your email or phone number is passed to the researchers. Second, all data that is collected is encrypted. The encryption technology is of the highest level of security, it protects the exchange of data between you and the researchers. The communication flows between you and the researchers, but the researchers are never able to know any detail about where or who you are. Third, no third parties can have access to your information, not even the company that provides this technology, <strong>Bitmark</strong>.</p><p>In addition, whenever app data is transferred to a research study computer, it will be encrypted so that others cannot interpret the data or associate it back to you. All the data is encrypted, from your phone to our database. Only you can give the key to decrypt the information. &nbsp;&nbsp;</p><p>These steps ensure that the data cannot be accessed without your consent and cannot be linked to your identity. The researchers analyzing the coded study data will not be able to connect it to any individual user. All <strong>data communication utilizes encryption channels at all times</strong>.</p><p><strong>Data use</strong></p><p>The researchers will analyze data from everyone who completes the consent form, but they will be unable to connect it back to any individual user.</p><p>The analysis and conclusions of this research may be published in a scientific or medical research journal for scientific purposes. No report or publication will be made in a way that would allow data to be associated with individual users.</p><p>After the research is completed, other researchers might be able to request access to the study data (already in de-identified form), so that it can be analyzed in a new way to benefit medical research. These researchers must agree to use the data for research in accordance with applicable regulations. &nbsp;These data requests will be reviewed by a group of study investigators. As with original researchers, these researchers will not be able to connect the data back to study participants. Also, study data will never be sold to any third party.</p>";
   s4.customLearnMoreButtonTitle = @"Learn more";
   
   ORKConsentSection *s5 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
   s5.title = @"Some Issues To Consider";
-  s5.summary = @"On average, your participation in this study will take a few minutes each week.";
+  s5.summary = @"At most, your participation in this study will take 90 minutes. It will take you a few minutes each week.";
   s5.htmlContent = @"<p>This is the time you will spend when entering information and responding to surveys. Occasionally, tasks may take a little longer (e.g., a survey or longer questionnaire to assess your opinions about the study and the app).</p><p>Some questions may make you uncomfortable. If so, you are free to leave questions blank. You can decline to answer survey questions or participate in the apps tasks.</p><p>Your participation in this study does not require you to change anything in your mobile service. The app can use either wifi only, or also cell phone data. In both cases, the amount of data transferred is very small. You may configure the app to only use wifi connection to limit the impact on your data plan.</p><p>If you choose to participate, every week your phone will send data to us. Every six months the app will ask you for permission to continue collecting data. Your data will be analyzed to study patterns on your physical activity and glucose metabolism variables. &nbsp;</p><p>Whenever the app realizes that there has been a major change in your blood glucose (positive or negative) the app will prompt you to answer a few more questions. At that moment, you will also have the option of contacting the research study members to perform a more detailed research of your case. Since we do not have your contact information, it is not possible for us to start this communication.</p>";
   s5.customImage = [UIImage imageNamed:@"consent_issue_to_consider"];
   s5.customLearnMoreButtonTitle = @"Learn more";
   
   ORKConsentSection *s6 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeStudyTasks];
   s6.title = @"Study Survey and Tasks";
-  s6.summary = @"This study will require you to answer survey questions about several health and lifestyle factors.";
+  s6.summary = @"This study will require you to answer survey questions about several health and lifestyle factors, take some photos of the places where you eat or do exercise and, possibly, to make an interview by phone or internet.";
   s6.htmlContent = @"<p>IDRR will collect data on your health behaviors through short survey questions, such as:</p><p>What was your breakfast today?</p><p>How many hours did you sleep?</p><p>From zero to ten, how do you feel today?</p><p>Also, occasionally, there will also be longer surveys to evaluate aspects of your life such as your sleeping, social interactions, etc.</p><p>For dietary information, IDRR will prompt you to take pictures of the food, beverage, water, medication, and supplement(s) you take. When taking pictures is not appropriated or difficult, you can just text or link to a previous picture you have taken. &nbsp;&nbsp;</p><p>The actions in this study are designed to improve the quality of the data you provide to the study. IDRR will ask you about some specific aspects of yourself such as: your blood glucose, weight, height, waist circumference (occasionally). The app also has fields to enter your blood pressure. In order to sense your levels of activity, it is important to carry your smartphone on your person (e.g., in your pocket, or clipped to your waist).</p>";
   s6.customLearnMoreButtonTitle = @"Learn more";
   
@@ -515,7 +485,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   
   ORKConsentSection *s8 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
   s8.title = @"Potential Benefits";
-  s8.summary = @"It might be that the information collected by this study may help you better understand and monitor your health.";
+  s8.summary = @"There are not direct benefits from participating in this study. However, by keeping track of your lifestyles you might discover some insights to improve your own health.";
   s8.htmlContent = @"<p>One of the biggest challenges for people aiming to prevent, control or remit diabetes is the difficulty of developing and tracking consistent and useful patterns on diet, activity, sleep, medication/supplements, and other health behaviors. Participating in this study may help by streamlining these daily tracking tasks.</p><p>Moreover this research study will create an important database of daily behaviors and glucose control. The study will help researchers better understand the relationships between glucose metabolism, diet, physical activity, and sleep in real-world settings. It will also help explore how the smartphone and encryption mechanisms can enable new kinds of clinical research.</p>";
   s8.customImage = [UIImage imageNamed:@"consent_potential_benefits"];
   s8.customLearnMoreButtonTitle = @"Learn more";
@@ -527,6 +497,13 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   s9.customImage = [UIImage imageNamed:@"consent_risks"];
   s9.customLearnMoreButtonTitle = @"Learn more";
   
+  ORKConsentSection *s10 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
+  s10.title = @"Summary";
+  s10.summary = @"1. Your participation in this study is voluntary.\n\n2. Try to wear your phone at all times, to track your physical activity.\n\n3. Remember to use a compatible app to track your dietary intake.";
+  s10.contentURL = [NSURL URLWithString:@"http://www.diabetesremission.org/401/login.php?redirect=/diet-apps.html"];
+  s10.customImage = [UIImage imageNamed:@"consent_issue_to_consider"];
+  s10.customLearnMoreButtonTitle = @"Learn more";
+  
   // Create additional section objects for later sections
   consentDocument.sections = @[s1,
                                s2,
@@ -536,7 +513,8 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                s6,
                                s7,
                                s8,
-                               s9];
+                               s9,
+                               s10];
   
   consentDocument.htmlReviewContent = htmlContent;
   //  ORKConsentSignature *signature = [ORKConsentSignature signatureForPersonWithTitle:@"Ms" dateFormatString:nil identifier:@"consent-signature"];
