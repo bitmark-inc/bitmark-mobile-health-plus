@@ -81,6 +81,7 @@ export default StyleSheet.create({
     lineHeight: 21,
     marginLeft: convertWidth(20),
     marginTop: 34,
+    width: convertWidth(337),
   },
   assetCreatorRow: {
     flexDirection: 'row',

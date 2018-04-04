@@ -99,6 +99,7 @@ export class TransactionsComponent extends React.Component {
       let type = '';
       let to = item.to;
       let status = item.status;
+      let researcherName;
       if (!item.to) {
         let exitCompleted = completed.find(citem => (citem.previousId === item.txid && citem.type === 'DONATION'));
         if (exitCompleted) {
@@ -110,6 +111,7 @@ export class TransactionsComponent extends React.Component {
           type = 'DONATION';
           status = 'pending';
           to = donationCompletedTask.study.researcherAccount;
+          researcherName = donationCompletedTask.study.researcherName;
         }
       } else {
         title = 'TRANSFER';
@@ -124,6 +126,7 @@ export class TransactionsComponent extends React.Component {
         if (donationCompletedTask && donationCompletedTask.study) {
           type = 'DONATION';
           to = donationCompletedTask.study.researcherAccount;
+          researcherName = donationCompletedTask.study.researcherName;
         }
       }
       completed.push({
@@ -131,6 +134,7 @@ export class TransactionsComponent extends React.Component {
         type,
         to,
         status,
+        researcherName,
         assetId: item.assetId,
         blockNumber: item.blockNumber,
         key: completed.length,
@@ -331,8 +335,8 @@ export class TransactionsComponent extends React.Component {
                         </View>
                         {!!item.to && <View style={transactionsStyle.completedTransferContentRow}>
                           <Text style={transactionsStyle.completedTransferContentRowLabel}>TO</Text>
-                          <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.to === this.state.currentUser.bitmarkAccountNumber ? 'YOU' :
-                            ('[' + item.to.substring(0, 4) + '...' + item.to.substring(item.to.length - 4, item.to.length) + ']')}</Text>
+                          <Text style={transactionsStyle.completedTransferContentRowValue} numberOfLines={1}>{item.researcherName ? item.researcherName : (item.to === this.state.currentUser.bitmarkAccountNumber ? 'YOU' :
+                            ('[' + item.to.substring(0, 4) + '...' + item.to.substring(item.to.length - 4, item.to.length) + ']'))}</Text>
                         </View>}
                       </View>
                     </TouchableOpacity>

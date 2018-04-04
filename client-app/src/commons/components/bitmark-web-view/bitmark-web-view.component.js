@@ -121,7 +121,7 @@ class WebViewComponent extends React.Component {
 
 WebViewComponent.propTypes = {
   screenProps: PropTypes.shape({
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     sourceUrl: PropTypes.string,
     isFullScreen: PropTypes.bool,
     setShowPagination: PropTypes.func,
@@ -133,8 +133,8 @@ WebViewComponent.propTypes = {
     goBack: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
-        sourceUrl: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        sourceUrl: PropTypes.string,
+        title: PropTypes.string,
         isFullScreen: PropTypes.bool,
         heightButtomController: PropTypes.number,
         hideBottomController: PropTypes.bool,
