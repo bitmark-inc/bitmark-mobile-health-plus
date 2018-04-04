@@ -178,8 +178,8 @@ BitmarkWebViewComponent.propTypes = {
     goBack: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
-        sourceUrl: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        sourceUrl: PropTypes.string,
+        title: PropTypes.string,
         isFullScreen: PropTypes.bool,
       })
     })
