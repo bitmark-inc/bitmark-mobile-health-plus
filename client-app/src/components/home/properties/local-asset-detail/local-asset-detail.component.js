@@ -99,7 +99,7 @@ export class LocalAssetDetailComponent extends React.Component {
         console.log('doDownload asset error :', error);
       });
     } else {
-      Alert.alert("Downloading is not rejected! You don't own any confirmed property!");
+      Alert.alert("Your bitmark isn't ready to download. Please try again later.");
     }
   }
 
