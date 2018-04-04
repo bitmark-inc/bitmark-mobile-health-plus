@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { convertWidth } from '../../../utils';
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -19,14 +20,14 @@ export default StyleSheet.create({
 
   notificationImage: {
     marginTop: 63,
-    width: 275,
-    height: 215,
+    width: convertWidth(275),
+    height: 215 * convertWidth(275) / 275,
     resizeMode: 'contain',
   },
 
   notificationDescription: {
     marginTop: 37,
-    width: 275,
+    width: convertWidth(275),
     fontFamily: 'Avenir light',
     fontWeight: '300',
     fontSize: 17,
@@ -39,7 +40,7 @@ export default StyleSheet.create({
   },
   enableButton: {
     minHeight: 42,
-    width: 275,
+    width: convertWidth(275),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

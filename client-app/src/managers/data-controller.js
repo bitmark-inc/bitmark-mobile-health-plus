@@ -142,8 +142,10 @@ const runGetDonationInformationInBackground = () => {
 const configNotification = () => {
   const onRegisterred = (registerredNotificaitonInfo) => {
     let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
-    if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-      NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, (userData.donationInformation && !userData.donationInformation.createdAt)).then(() => {
+    if (notificationUUID &&
+      ((userInformation.notificationUUID !== notificationUUID) ||
+        (userData.donationInformation && userData.donationInformation.notificationUID !== notificationUUID))) {
+      NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
         userInformation.notificationUUID = notificationUUID;
         return UserModel.doUpdateUserInfo(userInformation);
       }).catch(error => {

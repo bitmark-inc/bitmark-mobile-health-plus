@@ -47,10 +47,9 @@ let setApplicationIconBadgeNumber = (number) => {
 };
 
 let doRegisterNotificationInfo = async (accountNumber, token, joinedDonation) => {
-  let signatureData = CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions');
-  if (joinedDonation) {
-    await DonationModel.doRegisterUserInformation(accountNumber, signatureData.timestamp, signatureData.signature, token);
-  }
+  console.log('doRegisterNotificationInfo : ', accountNumber, token, joinedDonation)
+  let signatureData = await CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions');
+  await DonationModel.doRegisterUserInformation(accountNumber, signatureData.timestamp, signatureData.signature, token);
   return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token);
 };
 

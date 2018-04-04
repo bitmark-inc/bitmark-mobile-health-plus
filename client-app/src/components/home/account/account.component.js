@@ -87,12 +87,7 @@ export class AccountDetailComponent extends React.Component {
                 <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device  »'.toUpperCase()} </Text>
               </TouchableOpacity>
 
-              <Text style={accountStyle.accountDataSourceLabel}>Data Sources</Text>
               <View style={accountStyle.dataSourcesArea}>
-                <Text style={accountStyle.dataSourcesMessage}>
-                  Claim ownership over your health data. Connect Bitmark to Apple’s Health app: <Text style={{ color: '#0060F2' }}>{"Health App > Sources > Bitmark."}</Text>  Any data sources that you allow Bitmark to access will be bitmarked automatically. (If you did not grant access or if you did and no data was detected, the status will be inactive.)
-                </Text>
-
                 <Text style={accountStyle.authorizedLabel}>AUTHORIZED</Text>
                 {!this.state.donationInformation || !this.state.donationInformation.activeBitmarkHealthDataAt &&
                   <Text style={accountStyle.noAuthorizedMessage}>If you authorize 3rd-party apps to access your Bitmark account, they will appear here. </Text>
