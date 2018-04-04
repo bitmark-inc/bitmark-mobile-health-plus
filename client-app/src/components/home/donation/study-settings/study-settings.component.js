@@ -15,6 +15,7 @@ import { StudiesModel, AppleHealthKitModel } from '../../../../models';
 import { EventEmiterService } from '../../../../services';
 import { AppController } from '../../../../managers';
 import { FullComponent } from '../../../../commons/components';
+import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
 
 // loading ==> connect-data  ==>loading=>thank-you
 const SettingStatus = {
@@ -87,7 +88,7 @@ export class StudySettingComponent extends React.Component {
       actions: [
         NavigationActions.navigate({
           routeName: 'User', params: {
-            displayedTab: { mainTab: 'Donation', subTab: 'BROWSER' }
+            displayedTab: { mainTab: BottomTabsComponent.MainTabs.transaction, subTab: 'ACTION REQUIRED' }
           }
         })
       ]
