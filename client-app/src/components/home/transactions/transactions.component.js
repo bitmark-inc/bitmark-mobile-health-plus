@@ -105,7 +105,7 @@ export class TransactionsComponent extends React.Component {
         if (exitCompleted) {
           return;
         }
-        let donationCompletedTask = donationInformation.completedTasks.find(task => task.bitmarkId === item.txid);
+        let donationCompletedTask = (donationInformation.completedTasks || []).find(task => task.bitmarkId === item.txid);
         if (donationCompletedTask && donationCompletedTask.study) {
           title = 'TRANSFER';
           type = 'DONATION';
@@ -122,7 +122,7 @@ export class TransactionsComponent extends React.Component {
           exitCompleted.txid = item.txid;
           return;
         }
-        let donationCompletedTask = donationInformation.completedTasks.find(task => task.bitmarkId === item.previousId);
+        let donationCompletedTask = (donationInformation.completedTasks || []).find(task => task.bitmarkId === item.previousId);
         if (donationCompletedTask && donationCompletedTask.study) {
           type = 'DONATION';
           to = donationCompletedTask.study.researcherAccount;
