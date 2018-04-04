@@ -1,5 +1,6 @@
 import { StyleSheet, } from 'react-native';
 import { ios } from '../../../configs';
+import { convertWidth } from '../../../utils';
 
 export default StyleSheet.create({
   body: {
@@ -18,8 +19,26 @@ export default StyleSheet.create({
   },
   main: {
     flex: 1,
-    borderTopColor: '#C0CCDF',
-    borderTopWidth: 0.5,
     backgroundColor: 'white',
+  },
+  bottomController: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: convertWidth(60),
+    paddingRight: convertWidth(60),
+    backgroundColor: '#F5F5F5',
+  },
+  webViewControllButton: {
+    paddingTop: 2,
+    paddingBottom: 2,
+    paddingLeft: 4,
+    paddingRight: 4,
+  },
+  webViewControllIcon: {
+    width: 20,
+    height: 19,
+    resizeMode: 'contain',
   },
 });

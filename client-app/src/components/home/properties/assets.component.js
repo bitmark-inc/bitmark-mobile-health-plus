@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image,
-  WebView,
 } from 'react-native';
 
 import { config } from './../../../configs';
@@ -11,6 +10,7 @@ import { AppController, DataController } from '../../../managers';
 import { EventEmiterService } from '../../../services';
 
 import defaultStyle from './../../../commons/styles';
+import { BitmarkWebViewComponent } from '../../../commons/components/bitmark-web-view/bitmark-web-view.component';
 
 const SubTabs = {
   local: 'Yours',
@@ -185,7 +185,8 @@ export class AssetsComponent extends React.Component {
           </TouchableOpacity>
         </ScrollView>}
         {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
-          <WebView source={{ uri: config.registry_server_url }} />
+          <BitmarkWebViewComponent screenProps={{ sourceUrl: config.registry_server_url }} />
+          {/* <WebView source={{ uri: config.registry_server_url }} /> */}
         </View>}
       </View>
     );

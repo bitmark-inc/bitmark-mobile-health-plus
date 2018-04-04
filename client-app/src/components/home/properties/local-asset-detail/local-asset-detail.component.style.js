@@ -123,6 +123,7 @@ export default StyleSheet.create({
     fontWeight: '900',
     color: '#0060F2',
     width: convertWidth(117),
+    marginTop: 1,
   },
   metadataItemValue: {
     fontFamily: 'Avenir Black',
@@ -151,6 +152,7 @@ export default StyleSheet.create({
     marginLeft: convertWidth(20),
     height: 18,
     backgroundColor: '#F5F5F5',
+    marginTop: 18,
   },
   bitmarksHeaderLabel: {
     fontFamily: 'Andale Mono',

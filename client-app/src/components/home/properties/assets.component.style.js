@@ -195,5 +195,6 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'white',
+    borderBottomWidth: 1,
   },
 });

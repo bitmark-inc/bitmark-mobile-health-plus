@@ -15,14 +15,15 @@ import propertyDetailStyle from './local-property-detail.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { AppController } from '../../../../managers/app-controller';
 import { EventEmiterService } from '../../../../services';
+import { config } from '../../../../configs';
 
 export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
     super(props);
     this.downloadAsset = this.downloadAsset.bind(this);
+    this.clickOnProvenance = this.clickOnProvenance.bind(this);
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
-    console.log('bitmark: ', bitmark);
     this.state = {
       asset,
       bitmark,
@@ -47,6 +48,11 @@ export class LocalPropertyDetailComponent extends React.Component {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
       console.log('doDownload asset error :', error);
     });
+  }
+
+  clickOnProvenance(item) {
+    let sourceUrl = config.registry_server_url + `/account/${item.owner}`;
+    this.props.navigation.navigate('BitmarkWebView', { title: 'Registry', sourceUrl, isFullScreen: true });
   }
 
   render() {
@@ -107,12 +113,12 @@ export class LocalPropertyDetailComponent extends React.Component {
                       extraData={this.state}
                       data={this.state.bitmark.provenance || []}
                       renderItem={({ item }) => {
-                        return (<View style={propertyDetailStyle.provenancesRow}>
+                        return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
                           <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
                           <View style={propertyDetailStyle.provenancesRowOwnerRow}>
                             <Text style={[propertyDetailStyle.provenancesRowOwner]} numberOfLines={1}>{'[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}</Text>
                           </View>
-                        </View>);
+                        </TouchableOpacity>);
                       }}
                     />
                   </View>
