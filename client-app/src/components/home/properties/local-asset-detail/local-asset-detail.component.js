@@ -124,7 +124,7 @@ export class LocalAssetDetailComponent extends React.Component {
                 <Text style={[assetDetailStyle.downloadAssetButtonText, { color: this.state.asset.totalPending !== this.state.bitmarks.length ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
               </TouchableOpacity>
               <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
-                Clipboard.setString(this.state.asset.asset_id);
+                Clipboard.setString(this.state.asset.id);
                 this.setState({ copied: true });
                 setTimeout(() => { this.setState({ copied: false }) }, 1000);
               }}>
