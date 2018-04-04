@@ -112,7 +112,7 @@ class MainComponent extends Component {
       [{
         text: 'OK',
         onPress: () => {
-          if (processError.onClose) {
+          if (processError && processError.onClose) {
             processError.onClose();
           }
         }
