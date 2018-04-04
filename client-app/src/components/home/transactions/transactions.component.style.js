@@ -107,7 +107,7 @@ export default StyleSheet.create({
     paddingTop: 18,
     borderBottomColor: '#EFEFEF',
     borderBottomWidth: 1,
-    minHeight: 107,
+    minHeight: 80,
   },
   transferOfferTitle: {
     flexDirection: 'row',

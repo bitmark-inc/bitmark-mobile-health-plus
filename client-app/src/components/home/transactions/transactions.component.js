@@ -318,7 +318,7 @@ export class TransactionsComponent extends React.Component {
                       <View style={transactionsStyle.completedTransferContent}>
                         <View style={transactionsStyle.completedTransferContentRow}>
                           <Text style={[transactionsStyle.completedTransferContentRowLabel, { marginTop: 1, }]}>PROPERTY</Text>
-                          <Text style={[transactionsStyle.completedTransferContentRowPropertyName]}>{item.assetName}</Text>
+                          <Text style={[transactionsStyle.completedTransferContentRowPropertyName]} numberOfLines={1} >{item.assetName}</Text>
                         </View>
                         {!!item.type && <View style={transactionsStyle.completedTransferContentRow}>
                           <Text style={transactionsStyle.completedTransferContentRowLabel}>TYPE</Text>

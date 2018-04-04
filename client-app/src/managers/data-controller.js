@@ -297,6 +297,7 @@ const doJoinStudy = async (touchFaceIdSession, studyId) => {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
+  return donationInformation;
 };
 const doLeaveStudy = async (touchFaceIdSession, studyId) => {
   let donationInformation = await DonationService.doLeaveStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);

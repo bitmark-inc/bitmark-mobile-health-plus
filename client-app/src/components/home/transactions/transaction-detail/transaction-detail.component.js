@@ -5,6 +5,7 @@ import {
   View, Text, TouchableOpacity, ScrollView, Image, FlatList,
   Alert,
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 
 import { FullComponent } from '../../../../commons/components';
 
@@ -12,6 +13,7 @@ import transactionDetailStyle from './transaction-detail.component.style';
 
 import defaultStyle from './../../../../commons/styles';
 import { AppController } from '../../../../managers';
+import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
 
 export class TransactionDetailComponent extends React.Component {
   constructor(props) {
@@ -67,7 +69,17 @@ export class TransactionDetailComponent extends React.Component {
           if (this.props.navigation.state.params.refreshTransactionScreen) {
             this.props.navigation.state.params.refreshTransactionScreen();
           }
-          this.props.navigation.goBack();
+          const resetHomePage = NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: 'User', params: {
+                  displayedTab: { mainTab: BottomTabsComponent.prototype }
+                }
+              }),
+            ]
+          });
+          this.props.navigation.dispatch(resetHomePage);
         }
       }).catch(error => {
         console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
@@ -147,6 +159,7 @@ TransactionDetailComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+    dispatch: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
         transferOffer: PropTypes.object,

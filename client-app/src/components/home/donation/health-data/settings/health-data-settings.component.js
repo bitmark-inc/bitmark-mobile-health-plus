@@ -24,11 +24,11 @@ export class HealthDataSettingsComponent extends React.Component {
     return (
       <FullComponent
         header={(<View style={defaultStyle.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft} />
-          <Text style={defaultStyle.headerTitle} >HEALTH DATA</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
-            <Text style={defaultStyle.headerRightText}>Done</Text>
+          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+            <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
+          <Text style={defaultStyle.headerTitle} >HEALTH DATA</Text>
+          <TouchableOpacity style={defaultStyle.headerRight} />
         </View>)}
 
         content={(<View style={myStyle.body}>

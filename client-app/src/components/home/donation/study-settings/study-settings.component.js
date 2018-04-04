@@ -36,8 +36,8 @@ export class StudySettingComponent extends React.Component {
       study = this.props.navigation.state.params.study;
     }
     this.state = {
-      // status: SettingStatus.loading,
-      status: SettingStatus.connect_data,
+      status: SettingStatus.loading,
+      // status: SettingStatus.connect_data,
       study: study,
     };
     if (this.state.study && StudiesModel[this.state.study.studyId] && this.state.status === SettingStatus.loading) {
@@ -68,10 +68,10 @@ export class StudySettingComponent extends React.Component {
   doJoinStudy() {
     AppleHealthKitModel.initHealthKit(this.state.study.dataTypes).then(() => {
       return AppController.doJoinStudy(this.state.study.studyId);
-    }).then(() => {
-      this.setState({
-        status: SettingStatus.thank_you,
-      });
+    }).then((result) => {
+      if (result != null) {
+        this.setState({ status: SettingStatus.thank_you, });
+      }
     }).catch(error => {
       console.log('initHealthKit error:', error);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {

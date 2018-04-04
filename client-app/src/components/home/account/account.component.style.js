@@ -92,18 +92,23 @@ export default StyleSheet.create({
   accountNumberArea: {
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#0060F2',
+    borderBottomColor: '#E5E5E5',
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     width: convertWidth(337),
-    height: 30,
+    paddingBottom: 10,
+    minHeight: 30,
   },
   accountNumberValue: {
     fontFamily: 'Andale Mono',
     fontWeight: '900',
-    fontSize: 13,
-    width: convertWidth(280),
+    fontSize: 16,
+    lineHeight: 19,
+    width: 245,
     marginLeft: convertWidth(7),
+    color: '#0060F2',
+
   },
   accountNumberCopyButton: {
     marginRight: 7,
@@ -117,9 +122,9 @@ export default StyleSheet.create({
   accountMessage: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
-    fontSize: 14,
+    fontSize: 15,
     marginTop: 20,
-    width: convertWidth(309),
+    width: convertWidth(337),
   },
   accountWriteDownButton: {
     marginTop: 21,
@@ -182,13 +187,12 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 12,
+    paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#A4B5CD',
   },
   authorizedItemTitleText: {
     fontFamily: 'Avenir Light',
-    fontWeight: '300',
     fontSize: 14,
   },
   authorizedItemRemoveButton: {

@@ -201,7 +201,7 @@ const doRequirePermission = async () => {
 };
 
 const doActiveBitmarkHealthData = async (activeBitmarkHealthDataAt) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to active bitmark health data.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to start bitmarking health data.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -210,7 +210,7 @@ const doActiveBitmarkHealthData = async (activeBitmarkHealthDataAt) => {
 };
 
 const doInactiveBitmarkHealthData = async () => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to inactive itmark health data.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to remove bitmark health data.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -255,7 +255,7 @@ const doDonateHealthData = async (study, list) => {
   return await processing(DataController.doDonateHealthData(touchFaceIdSession, study, list));
 };
 const doBitmarkHealthData = async (list) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to issue your weekly health data.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to bitmark your weekly health data.');
   if (!touchFaceIdSession) {
     return null;
   }

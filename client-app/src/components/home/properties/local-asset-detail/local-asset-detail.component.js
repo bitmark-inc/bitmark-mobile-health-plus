@@ -128,7 +128,7 @@ export class LocalAssetDetailComponent extends React.Component {
                 this.setState({ copied: true });
                 setTimeout(() => { this.setState({ copied: false }) }, 1000);
               }}>
-                <Text style={assetDetailStyle.copyAssetIddButtonText}>ASSET ID</Text>
+                <Text style={assetDetailStyle.copyAssetIddButtonText}>COPY ASSET ID</Text>
                 {this.state.copied && <Text style={assetDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
               </TouchableOpacity>
             </View>}

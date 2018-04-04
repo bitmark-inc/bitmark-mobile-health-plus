@@ -38,7 +38,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: "center",
     justifyContent: 'center',
-    paddingTop: 9,
+    paddingTop: 5,
   },
   bottomTabButtonIcon: {
     width: 75,
@@ -91,7 +91,6 @@ export default StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 8,
-    lineHeight: 9,
     color: '#FFFFFF',
     textAlign: 'center',
     width: '100%',

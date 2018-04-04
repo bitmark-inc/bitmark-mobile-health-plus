@@ -62,19 +62,34 @@ class WebViewComponent extends React.Component {
     if (this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) {
       sourceUrl = this.props.navigation.state.params.sourceUrl;
     }
+
+    let heightButtomController;
+    if (this.props.screenProps) {
+      heightButtomController = this.props.screenProps.heightButtomController;
+    }
+    if (this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) {
+      heightButtomController = this.props.navigation.state.params.heightButtomController;
+    }
+
+    let hideBottomController;
+    if (this.props.screenProps) {
+      hideBottomController = this.props.screenProps.hideBottomController;
+    }
+    if (this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) {
+      hideBottomController = this.props.navigation.state.params.hideBottomController;
+    }
     return (<View style={termsStyles.body}>
       {!!title && <View style={termsStyles.header}>
-        <TouchableOpacity style={defaultStyles.headerLeft}>
-        </TouchableOpacity>
-        <Text style={defaultStyles.headerTitle}>{title.toUpperCase()}</Text>
-        <TouchableOpacity style={defaultStyles.headerRight} onPress={() => {
+        <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => {
           if (this.props.screenProps && this.props.screenProps.setShowPagination) {
             this.props.screenProps.setShowPagination(true);
           }
           this.props.navigation.goBack()
         }}>
-          <Text style={defaultStyles.headerRightText}>Done</Text>
+          <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
         </TouchableOpacity>
+        <Text style={defaultStyles.headerTitle}>{title.toUpperCase()}</Text>
+        <TouchableOpacity style={defaultStyles.headerRight} />
       </View>}
       <View style={termsStyles.main}>
         <WebView
@@ -83,8 +98,8 @@ class WebViewComponent extends React.Component {
           onNavigationStateChange={this.onNavigationStateChange}
         />
       </View>
-      <View style={[termsStyles.bottomController, {
-        height: 57 + (isFullScreen ? ios.constant.blankFooter : 0),
+      {!hideBottomController && <View style={[termsStyles.bottomController, {
+        height: (heightButtomController || 57) + (isFullScreen ? ios.constant.blankFooter : 0),
         paddingBottom: (isFullScreen ? ios.constant.blankFooter : 0),
       }]}>
         <TouchableOpacity style={termsStyles.webViewControllButton} onPress={() => { console.log('source :', this.webViewRef.getWebViewHandle()); this.webViewRef.goBack(); }}>
@@ -96,10 +111,10 @@ class WebViewComponent extends React.Component {
         <TouchableOpacity style={termsStyles.webViewControllButton} onPress={() => { this.webViewRef.reload(); }}>
           <Image style={[termsStyles.webViewControllIcon]} source={require('./../../../../assets/imgs/webview-reload.png')} />
         </TouchableOpacity>
-        <TouchableOpacity style={termsStyles.webViewControllButton} onPress={this.doShare}>
+        {/* <TouchableOpacity style={termsStyles.webViewControllButton} onPress={this.doShare}>
           <Image style={[termsStyles.webViewControllIcon, { width: 17, height: 24 }]} source={require('./../../../../assets/imgs/webview-share.png')} />
-        </TouchableOpacity>
-      </View>
+        </TouchableOpacity> */}
+      </View>}
     </View>);
   }
 }
@@ -110,6 +125,8 @@ WebViewComponent.propTypes = {
     sourceUrl: PropTypes.string,
     isFullScreen: PropTypes.bool,
     setShowPagination: PropTypes.func,
+    heightButtomController: PropTypes.number,
+    hideBottomController: PropTypes.bool,
   }),
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
@@ -119,6 +136,8 @@ WebViewComponent.propTypes = {
         sourceUrl: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         isFullScreen: PropTypes.bool,
+        heightButtomController: PropTypes.number,
+        hideBottomController: PropTypes.bool,
       })
     })
   }),

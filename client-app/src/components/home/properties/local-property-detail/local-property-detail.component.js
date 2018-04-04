@@ -83,7 +83,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                 this.setState({ copied: true });
                 setTimeout(() => { this.setState({ copied: false }) }, 1000);
               }}>
-                <Text style={propertyDetailStyle.topButtonText}>BITMARK ID</Text>
+                <Text style={propertyDetailStyle.topButtonText}>COPY BITMARK ID</Text>
                 {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
               </TouchableOpacity>
               <TouchableOpacity style={propertyDetailStyle.topButton}

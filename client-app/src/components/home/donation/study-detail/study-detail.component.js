@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView,
+  View, Text, TouchableOpacity, ScrollView, Image,
   Alert,
 } from 'react-native';
 
@@ -35,14 +35,11 @@ export class StudyDetailComponent extends React.Component {
     return (
       <FullComponent
         header={<View style={[defaultStyle.header]}>
-          <TouchableOpacity style={defaultStyle.headerLeft}>
+          <TouchableOpacity style={[defaultStyle.headerLeft]} onPress={() => this.props.navigation.goBack()}>
+            <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>Study Details</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
-            this.props.navigation.goBack();
-          }}>
-            <Text style={defaultStyle.headerRightText}>Done</Text>
-          </TouchableOpacity>
+          <TouchableOpacity style={defaultStyle.headerRight} />
         </View>}
         content={(<View style={studyDetailsStyles.body}>
           {!DetailComponent && <Text>This study is not support!</Text>}

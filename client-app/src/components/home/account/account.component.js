@@ -68,7 +68,7 @@ export class AccountDetailComponent extends React.Component {
               <Text style={accountStyle.accountNumberLabel}>{'My Bitmark Account Number'.toUpperCase()}</Text>
 
               <View style={accountStyle.accountNumberArea}>
-                <Text style={accountStyle.accountNumberValue} numberOfLines={1}>{this.state.userInfo.bitmarkAccountNumber}</Text>
+                <Text style={accountStyle.accountNumberValue}>{this.state.userInfo.bitmarkAccountNumber}</Text>
                 <TouchableOpacity style={accountStyle.accountNumberCopyButton} onPress={() => {
                   Clipboard.setString(this.state.userInfo.bitmarkAccountNumber);
                   this.setState({ accountNumberCopyText: 'COPIED' });
@@ -82,8 +82,8 @@ export class AccountDetailComponent extends React.Component {
               <TouchableOpacity style={accountStyle.accountWriteDownButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: false }) }}>
                 <Text style={accountStyle.accountWriteDownButtonText}>{'WRITE DOWN RECOVERY PHRASE »'.toUpperCase()} </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.props.screenProps.logout}>
-                {/* <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}> */}
+              {/* <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.props.screenProps.logout}> */}
+              <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}>
                 <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device  »'.toUpperCase()} </Text>
               </TouchableOpacity>
 

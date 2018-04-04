@@ -28,7 +28,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft: convertWidth(60),
     paddingRight: convertWidth(60),
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F8F8F8',
   },
   webViewControllButton: {
     paddingTop: 2,

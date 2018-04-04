@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, TouchableOpacity,
+  Text, View, TouchableOpacity, Image,
   Share,
   Alert,
   Linking,
@@ -63,20 +63,29 @@ export class ApplicationDetailComponent extends React.Component {
     return (
       <View style={applicationDetailStyle.body}>
         <View style={applicationDetailStyle.header}>
-          <TouchableOpacity style={defaultStyles.headerLeft} >
+          <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => this.props.navigation.goBack()} >
+            <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyles.headerTitle}>DETAILS</Text>
-          <TouchableOpacity style={defaultStyles.headerRight} onPress={() => this.props.navigation.goBack()} >
-            <Text style={defaultStyles.headerRightText}>Done</Text>
-          </TouchableOpacity>
+          <TouchableOpacity style={defaultStyles.headerRight} />
         </View>
         <View style={applicationDetailStyle.bodyContent}>
           <View style={applicationDetailStyle.topArea}>
-            <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl: 'https://bitmark.com/term' }) }}>
+            <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => {
+              this.props.navigation.navigate('BitmarkWebView', {
+                title: 'Terms of Service', sourceUrl: 'https://bitmark.com/term',
+                hideBottomController: true,
+              })
+            }}>
               <Text style={applicationDetailStyle.itemSettingText}>{'Terms of Service'.toUpperCase()}</Text>
             </TouchableOpacity>
             <View style={applicationDetailStyle.lineSetting}></View>
-            <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => { this.props.navigation.navigate('BitmarkWebView', { title: 'Privacy Policy', sourceUrl: 'https://bitmark.com/privacy' }) }}>
+            <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => {
+              this.props.navigation.navigate('BitmarkWebView', {
+                title: 'Privacy Policy', sourceUrl: 'https://bitmark.com/privacy',
+                hideBottomController: true,
+              })
+            }}>
               <Text style={applicationDetailStyle.itemSettingText}>{'Privacy Policy'.toUpperCase()}</Text>
             </TouchableOpacity>
             <View style={applicationDetailStyle.lineSetting}></View>

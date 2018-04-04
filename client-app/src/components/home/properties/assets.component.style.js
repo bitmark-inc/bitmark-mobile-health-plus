@@ -158,7 +158,7 @@ export default StyleSheet.create({
     lineHeight: 16,
   },
   assetCreator: {
-    fontFamily: 'Avenir Light',
+    fontFamily: 'Andale Mono',
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 16,
@@ -195,6 +195,6 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'white',
-    borderBottomWidth: 1,
+    paddingBottom: 2,
   },
 });

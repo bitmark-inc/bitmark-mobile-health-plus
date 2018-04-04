@@ -185,7 +185,7 @@ export class AssetsComponent extends React.Component {
           </TouchableOpacity>
         </ScrollView>}
         {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
-          <BitmarkWebViewComponent screenProps={{ sourceUrl: config.registry_server_url }} />
+          <BitmarkWebViewComponent screenProps={{ sourceUrl: config.registry_server_url, heightButtomController: 38 }} />
           {/* <WebView source={{ uri: config.registry_server_url }} /> */}
         </View>}
       </View>

@@ -152,7 +152,8 @@ export default StyleSheet.create({
     width: convertWidth(340),
     marginLeft: convertWidth(20),
     height: 36,
-    marginTop: 9,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   provenancesRowTimestamp: {
     fontFamily: 'Andale Mono',
