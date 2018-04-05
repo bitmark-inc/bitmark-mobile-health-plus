@@ -159,6 +159,9 @@ export class AssetsComponent extends React.Component {
               extraData={this.state}
               data={this.state.assets || []}
               renderItem={({ item }) => {
+                if (item.asset.bitmarks.length === 1 && item.asset.bitmarks[0].status === 'donating') {
+                  return;
+                }
                 return (<TouchableOpacity style={[assetsStyle.assetRowArea, { backgroundColor: item.asset.isViewed ? 'white' : '#F2FAFF' }]} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
                 }} >

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, Image,
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 
 import { FullComponent } from './../../../../../commons/components';
 
@@ -19,6 +20,19 @@ export class HealthDataSettingsComponent extends React.Component {
       user: DataController.getUserInformation(),
     }
   }
+  done() {
+    const resetHomePage = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({
+          routeName: 'User', params: {
+            displayedTab: { mainTab: 'Properties' }
+          }
+        }),
+      ]
+    });
+    this.props.navigation.dispatch(resetHomePage);
+  }
 
   render() {
     return (
@@ -28,7 +42,9 @@ export class HealthDataSettingsComponent extends React.Component {
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle} >HEALTH DATA</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={this.done.bind(this)} >
+            <Text style={defaultStyle.headerRightText}>Done</Text>
+          </TouchableOpacity>
         </View>)}
 
         content={(<View style={myStyle.body}>
@@ -70,5 +86,6 @@ HealthDataSettingsComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+    dispatch: PropTypes.func,
   }),
 }

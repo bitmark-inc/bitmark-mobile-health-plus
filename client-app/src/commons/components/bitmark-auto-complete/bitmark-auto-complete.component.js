@@ -17,6 +17,8 @@ export class BitmarkAutoCompleteComponent extends React.Component {
     this.selectText = this.selectText.bind(this);
     this.doFilter = this.doFilter.bind(this);
     this.filter = this.filter.bind(this);
+    this.onDone = this.onDone.bind(this);
+    this.setStatus = this.setStatus.bind(this);
 
     this.state = {
       dataSource: this.props.dataSource || [],
@@ -46,6 +48,12 @@ export class BitmarkAutoCompleteComponent extends React.Component {
     });
     if (this.props.onSelectWord) {
       this.props.onSelectWord(text);
+    }
+  }
+
+  onDone() {
+    if (this.props.onDone) {
+      this.props.onDone();
     }
   }
 
@@ -80,7 +88,7 @@ export class BitmarkAutoCompleteComponent extends React.Component {
             }}
           />
         </View>}
-        <TouchableOpacity style={styles.doneButton} onPress={this.hideKeyboardInput} disabled={this.state.status !== BitmarkAutoCompleteComponent.statuses.done}>
+        <TouchableOpacity style={styles.doneButton} onPress={this.onDone} disabled={this.state.status !== BitmarkAutoCompleteComponent.statuses.done}>
           <Text style={[styles.doneButtonText, { color: this.state.status === BitmarkAutoCompleteComponent.statuses.done ? '#0060F2' : 'gray' }]}>Done</Text>
         </TouchableOpacity>
       </View>
@@ -93,4 +101,5 @@ BitmarkAutoCompleteComponent.propTypes = {
   goToPrevInputField: PropTypes.func,
   onSelectWord: PropTypes.func,
   dataSource: PropTypes.array,
+  onDone: PropTypes.func,
 };

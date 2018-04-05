@@ -51,7 +51,9 @@ export class SignInComponent extends React.Component {
     this.onSubmitWord = this.onSubmitWord.bind(this);
     this.selectIndex = this.selectIndex.bind(this);
     this.checkStatusInputing = this.checkStatusInputing.bind(this);
+    this.doCheck24Word = this.doCheck24Word.bind(this);
     this.submit24Words = this.submit24Words.bind(this);
+    this.doSignIn = this.doSignIn.bind(this);
 
     let smallerList = [];
     let biggerList = [];
@@ -146,26 +148,44 @@ export class SignInComponent extends React.Component {
     this.state.biggerList.forEach(item => {
       countNumberInputtedWord = countNumberInputtedWord + (item.word ? 1 : 0)
     });
-    if (countNumberInputtedWord === 24) {
-      let inputtedWords = [];
-      this.state.smallerList.forEach(item => inputtedWords.push(item.word));
-      this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-      AppController.doCheck24Words(inputtedWords).then(() => {
-        this.setState({ preCheckResult: PreCheckResults.success });
-      }).catch((error) => {
-        console.log('check24Words error: ', error);
-        this.setState({ preCheckResult: PreCheckResults.error });
-      });
-    } else {
-      this.setState({ preCheckResult: null });
-    }
     this.setState({
+      preCheckResult: null,
       remainWordNumber: 24 - countNumberInputtedWord,
     });
     let status = countNumberInputtedWord === 24 ? BitmarkAutoCompleteComponent.statuses.done : BitmarkAutoCompleteComponent.statuses.inputing;
     if (this.autoCompleteElement) {
       this.autoCompleteElement.setStatus(status);
     }
+  }
+
+  async doCheck24Word() {
+    return new Promise((resolve) => {
+      Keyboard.dismiss();
+      if (this.state.remainWordNumber === 0) {
+        let inputtedWords = [];
+        this.state.smallerList.forEach(item => inputtedWords.push(item.word));
+        this.state.biggerList.forEach(item => inputtedWords.push(item.word));
+        AppController.doCheck24Words(inputtedWords).then(() => {
+          this.setState({ preCheckResult: PreCheckResults.success });
+          resolve(true);
+        }).catch((error) => {
+          resolve(false);
+          console.log('check24Words error: ', error);
+          this.setState({ preCheckResult: PreCheckResults.error });
+        });
+      } else {
+        this.setState({ preCheckResult: null });
+        resolve(true);
+      }
+    });
+  }
+
+  doSignIn() {
+    this.doCheck24Word().then((result) => {
+      if (result) {
+        this.props.navigation.navigate('FaceTouchId', { doContinue: this.submit24Words })
+      }
+    });
   }
 
   async submit24Words() {
@@ -285,7 +305,7 @@ export class SignInComponent extends React.Component {
               </View>
               <TouchableOpacity style={[signStyle.submitButton, {
                 backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'
-              }]} onPress={() => this.props.navigation.navigate('FaceTouchId', { doContinue: this.submit24Words })} disabled={this.state.remainWordNumber > 0}>
+              }]} onPress={this.doSignIn} disabled={this.state.remainWordNumber > 0}>
                 <Text style={[signStyle.submitButtonText]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
               </TouchableOpacity>
             </TouchableOpacity>
@@ -296,107 +316,11 @@ export class SignInComponent extends React.Component {
               onSelectWord={this.onSubmitWord}
               goToNextInputField={() => this.selectIndex((this.state.selectedIndex + 1) % 24)}
               goToPrevInputField={() => this.selectIndex((this.state.selectedIndex + 23) % 24)}
+              onDone={this.doCheck24Word}
             />
           )}
         />
       </TouchableWithoutFeedback>
-
-      // <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-      //   <View style={{ flex: 1, width: '100%', }}>
-      //     <StatusBar hidden={false} />
-      //     <View style={[defaultStyles.header, { backgroundColor: '#F5F5F5' }]}>
-      //       <TouchableOpacity style={[defaultStyles.headerLeft, { width: convertWidth(50) }]} onPress={() => { this.props.navigation.goBack() }}>
-      //         <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
-      //       </TouchableOpacity>
-      //       <Text style={[defaultStyles.headerTitle, { maxWidth: convertWidth(285) }]}>RECOVERY PHRASE SIGN-IN</Text>
-      //       <TouchableOpacity style={[defaultStyles.headerRight, { width: convertWidth(50) }]}>
-      //       </TouchableOpacity>
-      //     </View>
-      //     <KeyboardAvoidingView behavior='padding' style={{ backgroundColor: 'white', flex: 1, width: '100%', borderWidth: 2, borderColor: 'blue' }}>
-      //       <ScrollView>
-      //         <TouchableOpacity activeOpacity={1} style={signStyle.mainContent}>
-      //           <Text style={[signStyle.writeRecoveryPhraseContentMessage,]}> Please type all 24 words of your recovery phrase in the exact sequence below:</Text>
-      //           <View style={[signStyle.writeRecoveryPhraseArea]}>
-      //             <View style={signStyle.writeRecoveryPhraseContentHalfList}>
-      //               <FlatList data={this.state.smallerList}
-      //                 scrollEnabled={false}
-      //                 extraData={this.state}
-      //                 renderItem={({ item }) => {
-      //                   return (<View style={signStyle.recoveryPhraseSet}>
-      //                     <Text style={signStyle.recoveryPhraseIndex}>{item.key + 1}.</Text>
-      //                     <TextInput
-      //                       style={[signStyle.recoveryPhraseWord, {
-      //                         backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-      //                         borderColor: '#0060F2',
-      //                         borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
-      //                       }]}
-      //                       ref={(r) => { this.inputtedRefs[item.key] = r; }}
-      //                       onChangeText={(text) => this.onChangeText(item.key, text)}
-      //                       onFocus={() => this.onFocus(item.key)}
-      //                       value={item.word}
-      //                       autoCorrect={false}
-      //                       autoCapitalize="none"
-      //                       onSubmitEditing={() => this.onSubmitWord(item.word)}
-      //                     />
-      //                   </View>)
-      //                 }}
-      //               />
-      //             </View>
-
-      //             <View style={[signStyle.writeRecoveryPhraseContentHalfList, { marginLeft: 33, }]}>
-      //               <FlatList data={this.state.biggerList}
-      //                 scrollEnabled={false}
-      //                 extraData={this.state}
-      //                 renderItem={({ item }) => {
-      //                   return (<View style={signStyle.recoveryPhraseSet}>
-      //                     <Text style={signStyle.recoveryPhraseIndex}>{item.key + 1}.</Text>
-      //                     <TextInput
-      //                       style={[signStyle.recoveryPhraseWord, {
-      //                         backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-      //                         borderColor: '#0060F2',
-      //                         borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
-      //                       }]}
-      //                       ref={(r) => { this.inputtedRefs[item.key] = r; }}
-      //                       onChangeText={(text) => this.onChangeText(item.key, text)}
-      //                       onFocus={() => this.onFocus(item.key)}
-      //                       value={item.word}
-      //                       autoCorrect={false}
-      //                       autoCapitalize="none"
-      //                       onSubmitEditing={() => this.onSubmitWord(item.word)}
-      //                     />
-      //                   </View>)
-      //                 }}
-      //               />
-      //             </View>
-      //           </View>
-      //           <View style={signStyle.recoveryPhraseTestResult}>
-      //             <Text style={[signStyle.recoveryPhraseTestTitle, { color: this.state.preCheckResult === PreCheckResults.success ? '#0060F2' : '#FF003C' }]}>
-      //               Wrong Recovery Phrase
-      //               {this.state.preCheckResult === PreCheckResults.success ? 'Success!' : (this.state.preCheckResult === PreCheckResults.error ? 'Wrong Recovery Phrase!' : '')}
-      //             </Text>
-      //             <Text style={[signStyle.recoveryPhraseTestMessage, { color: this.state.preCheckResult === PreCheckResults.success ? '#0060F2' : '#FF003C' }]}>
-      //               Wrong Recovery Phrase
-      //               {this.state.preCheckResult === PreCheckResults.success ? 'Keep your written copy private in a secure and safe location.' : (this.state.preCheckResult === PreCheckResults.error ? 'Please try again!' : '')}
-      //             </Text>
-      //           </View>
-      //           <TouchableOpacity style={[signStyle.submitButton, {
-      //             backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'
-      //           }]} onPress={() => this.props.navigation.navigate('FaceTouchId', { doContinue: this.submit24Words })} disabled={this.state.remainWordNumber > 0}>
-      //             <Text style={[signStyle.submitButtonText]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
-      //           </TouchableOpacity>
-      //         </TouchableOpacity>
-      //       </ScrollView>
-      //     </KeyboardAvoidingView>
-
-      //     <BitmarkAutoCompleteComponent ref={(ref) => this.autoCompleteElement = ref}
-      //       dataSource={this.state.dataSource}
-      //       onSelectWord={this.onSubmitWord}
-      //       goToNextInputField={() => this.selectIndex((this.state.selectedIndex + 1) % 24)}
-      //       goToPrevInputField={() => this.selectIndex((this.state.selectedIndex + 23) % 24)}
-      //     >
-      //     </BitmarkAutoCompleteComponent>
-      //   </View>
-      // </TouchableWithoutFeedback>
     );
   }
 }

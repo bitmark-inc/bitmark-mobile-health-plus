@@ -72,7 +72,6 @@ export class IssuanceOptionsComponent extends React.Component {
     if (!this.state.donationInformation.activeBitmarkHealthDataAt) {
       this.props.navigation.navigate('HealthDataActive')
     } else {
-      //TODO
       this.props.screenProps.homeNavigation.navigate('HealthDataSettings');
     }
   }

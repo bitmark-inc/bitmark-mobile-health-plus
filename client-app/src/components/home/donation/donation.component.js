@@ -16,7 +16,7 @@ import defaultStyle from './../../../commons/styles';
 
 const SubTabs = {
   joined: 'JOINED',
-  other: 'BROWSER',
+  other: 'BROWSE',
 };
 
 export class DonationComponent extends React.Component {
@@ -121,26 +121,6 @@ export class DonationComponent extends React.Component {
         </View>
 
         <ScrollView style={donationStyle.contentScroll}>
-          {this.state.studies.length === 0 && this.state.subTab === SubTabs.other && <View style={donationStyle.content}>
-            <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>
-            <View style={donationStyle.noCardMessageArea}>
-              <View style={donationStyle.contactMessageFirstLine}>
-                <TouchableOpacity onPress={this.contactBitmark}>
-                  <Text style={donationStyle.contactButtonText}>Contact Bitmark</Text>
-                </TouchableOpacity>
-                <Text style={donationStyle.noCardMessage}> if you would like to publish</Text>
-              </View>
-              <Text style={donationStyle.noCardMessage}>a study.</Text>
-            </View>
-          </View>}
-
-          {this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
-            <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>
-            <Text style={donationStyle.noCardMessageArea}>
-              <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
-            </Text>
-          </View>}
-
           {this.state.studies.length > 0 && <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             <View style={donationStyle.content}>
               <FlatList
@@ -159,6 +139,25 @@ export class DonationComponent extends React.Component {
               />
             </View>
           </TouchableOpacity>}
+          {this.state.subTab === SubTabs.other && <View style={donationStyle.content}>
+            <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>
+            <View style={donationStyle.noCardMessageArea}>
+              <View style={donationStyle.contactMessageFirstLine}>
+                <TouchableOpacity onPress={this.contactBitmark}>
+                  <Text style={donationStyle.contactButtonText}>Contact Bitmark</Text>
+                </TouchableOpacity>
+                <Text style={donationStyle.noCardMessage}> if you would like to publish</Text>
+              </View>
+              <Text style={donationStyle.noCardMessage}>a study.</Text>
+            </View>
+          </View>}
+
+          {this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
+            <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>
+            <Text style={donationStyle.noCardMessageArea}>
+              <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
+            </Text>
+          </View>}
         </ScrollView>
       </View>
     );

@@ -310,7 +310,7 @@ export class TransactionsComponent extends React.Component {
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (
-                    <TouchableOpacity style={transactionsStyle.completedTransfer} onPress={() => this.clickToCompleted(item)}>
+                    <TouchableOpacity style={transactionsStyle.completedTransfer} onPress={() => this.clickToCompleted(item)} disabled={item.status === 'pending'}>
                       <View style={transactionsStyle.completedTransferHeader}>
                         <Text style={[transactionsStyle.completedTransferHeaderTitle, {
                           color: item.status === 'pending' ? '#999999' : '#0060F2'
