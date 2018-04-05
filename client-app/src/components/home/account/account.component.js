@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, ScrollView, Image,
   Clipboard,
+  Alert,
 } from 'react-native';
 
 import { EventEmiterService } from "./../../../services";
@@ -43,10 +44,21 @@ export class AccountDetailComponent extends React.Component {
   }
 
   inactiveBitmarkHealthData() {
-    AppController.doInactiveBitmarkHealthData().catch(error => {
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-      console.log('doInactiveBitmarkHealthData error :', error);
-    });
+    Alert.alert('Are you sure you want to remove bitmark health data?', '', [{
+      text: 'No',
+    }, {
+      text: 'YES',
+      onPress: () => {
+        AppController.doInactiveBitmarkHealthData().then((result) => {
+          if (result) {
+            this.props.navigation.goBack();
+          }
+        }).catch(error => {
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+          console.log('doInactiveBitmarkHealthData error :', error);
+        });
+      }
+    }]);
   }
 
   render() {

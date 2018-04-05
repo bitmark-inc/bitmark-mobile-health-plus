@@ -293,6 +293,7 @@ const doInactiveBitmarkHealthData = async (touchFaceIdSession) => {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
+  return donationInformation;
 };
 const doJoinStudy = async (touchFaceIdSession, studyId) => {
   let donationInformation = await DonationService.doJoinStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);

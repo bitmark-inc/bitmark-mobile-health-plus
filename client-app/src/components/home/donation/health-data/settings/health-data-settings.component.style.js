@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { convertWidth } from '../../../../../utils';
+import { ios } from '../../../../../configs';
 
 export default StyleSheet.create({
   body: {
@@ -77,5 +78,26 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: '900',
     color: 'white'
-  }
+  },
+
+  removeButton: {
+    position: 'absolute',
+    width: convertWidth(337),
+    height: 42,
+    borderTopWidth: 2,
+    borderTopColor: '#0060F2',
+    backgroundColor: '#F5F5F5',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    bottom: 10 + ios.constant.blankFooter,
+  },
+  removeButtonText: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 17,
+    lineHeight: 19,
+    color: '#0060F2',
+  },
 });

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, Image,
+  Alert,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -10,7 +11,8 @@ import { FullComponent } from './../../../../../commons/components';
 import defaultStyle from './../../../../../commons/styles';
 import myStyle from './health-data-settings.component.style';
 
-import { DataController } from '../../../../../managers';
+import { DataController, AppController } from '../../../../../managers';
+import { EventEmiterService } from '../../../../../services';
 
 
 export class HealthDataSettingsComponent extends React.Component {
@@ -32,6 +34,24 @@ export class HealthDataSettingsComponent extends React.Component {
       ]
     });
     this.props.navigation.dispatch(resetHomePage);
+  }
+
+  inactiveBitmarkHealthData() {
+    Alert.alert('Are you sure you want to remove bitmark health data?', '', [{
+      text: 'No',
+    }, {
+      text: 'YES',
+      onPress: () => {
+        AppController.doInactiveBitmarkHealthData().then((result) => {
+          if (result) {
+            this.props.navigation.goBack();
+          }
+        }).catch(error => {
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+          console.log('doInactiveBitmarkHealthData error :', error);
+        });
+      }
+    }]);
   }
 
   render() {
@@ -75,6 +95,9 @@ export class HealthDataSettingsComponent extends React.Component {
               </Text>
           </View>
 
+          <TouchableOpacity style={myStyle.removeButton} onPress={this.inactiveBitmarkHealthData.bind(this)}>
+            <Text style={myStyle.removeButtonText}>REMOVE</Text>
+          </TouchableOpacity>
         </View >
         )}
       />
