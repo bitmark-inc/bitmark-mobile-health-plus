@@ -13,8 +13,14 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
 
   let allTransactions = await TransactionModel.getAllTransactions(accountNumber, lastOffset);
   let completedTransfers = merge([], oldTransactions || []);
+
   let mapIssuanceBlock = {};
   for (let transaction of allTransactions) {
+    let existingOldTransaction = completedTransfers.find(item => item.txid === transaction.id);
+    if (existingOldTransaction) {
+      existingOldTransaction.status = transaction.status;
+      return;
+    }
     if (transaction.owner === accountNumber) {
       if (transaction.id && transaction.previous_id) {
         let previousTransactionData = await TransactionModel.getTransactionDetail(transaction.previous_id);
@@ -29,13 +35,10 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
           offset: transaction.offset,
         });
       } else if (transaction.id && !transaction.previous_id) {
-        console.log(' issuance ====== ', mapIssuanceBlock[transaction.asset_id], transaction.block_number);
         if (mapIssuanceBlock[transaction.asset_id] && mapIssuanceBlock[transaction.asset_id][transaction.block_number]) {
-          console.log('run1');
           mapIssuanceBlock[transaction.asset_id][transaction.block_number].offset =
             Math.max(mapIssuanceBlock[transaction.asset_id][transaction.block_number].offset, transaction.offset);
         } else {
-          console.log('run2');
           if (!mapIssuanceBlock[transaction.asset_id]) {
             mapIssuanceBlock[transaction.asset_id] = {};
           }
@@ -63,6 +66,8 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
         timestamp: nextTransactionData.block ? moment(nextTransactionData.block.created_at) : '',
         status: nextTransactionData.tx.status,
         offset: transaction.offset,
+        txid: transaction.id,
+        previousId: transaction.previous_id,
       });
     }
   }

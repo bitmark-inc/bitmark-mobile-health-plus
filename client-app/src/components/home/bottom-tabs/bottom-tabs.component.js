@@ -28,7 +28,7 @@ export class BottomTabsComponent extends React.Component {
 
     let localAssets = DataController.getUserBitmarks().localAssets || [];
     let haveNewBitmark = localAssets.findIndex(asset => !asset.isViewed) >= 0;
-    let transactionNumber = DataController.getTransactionData().activeIncompingTransferOffers.length + DataController.getDonationInformation().totalTodoTask;
+    let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers.length || 0) + (DataController.getDonationInformation().totalTodoTask || 0);
     this.state = {
       mainTab: this.props.mainTab,
       haveNewBitmark,
@@ -49,11 +49,11 @@ export class BottomTabsComponent extends React.Component {
   }
 
   handerChangeActiveIncomingTransferOffer() {
-    this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length + DataController.getDonationInformation().totalTodoTask, });
+    this.setState({ transactionNumber: (DataController.getTransactionData().activeIncompingTransferOffers.length || 0) + (DataController.getDonationInformation().totalTodoTask || 0), });
   }
 
   handerDonationInformationChange() {
-    this.setState({ transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length + DataController.getDonationInformation().totalTodoTask, });
+    this.setState({ transactionNumber: (DataController.getTransactionData().activeIncompingTransferOffers.length || 0) + (DataController.getDonationInformation().totalTodoTask || 0), });
   }
   handerChangeLocalBitmarks() {
     let localAssets = DataController.getUserBitmarks().localAssets || [];

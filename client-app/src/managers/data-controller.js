@@ -276,7 +276,8 @@ const doOpenApp = async () => {
       userData.donationInformation = donationInformation || {};
     }
     let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
-    localAssets = localAssets.length > 0 ? localAssets : null;
+    localAssets = localAssets.length > 0 ? localAssets : [];
+    localAssets = recheckLocalAssets(localAssets);
     if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
       userData.localAssets = localAssets || [];
     }
