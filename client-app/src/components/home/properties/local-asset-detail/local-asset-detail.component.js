@@ -4,7 +4,6 @@ import {
   View, Text, TouchableOpacity, Image, ScrollView, TouchableWithoutFeedback,
   Clipboard,
   FlatList,
-  Alert,
   Share,
 } from 'react-native';
 
@@ -26,7 +25,11 @@ export class LocalAssetDetailComponent extends React.Component {
     asset = this.props.navigation.state.params.asset;
     let bitmarks = [];
     let bitmarkViewed = {};
+    let bitmarkCanDownload;
     asset.bitmarks.forEach((bitmark, index) => {
+      if (!bitmarkCanDownload && bitmark.status === 'confirmed') {
+        bitmarkCanDownload = bitmark;
+      }
       bitmarks.push({ key: index, bitmark });
       bitmarkViewed[bitmark.id] = bitmark.isViewed;
     });
@@ -43,6 +46,7 @@ export class LocalAssetDetailComponent extends React.Component {
       displayTopButton: false,
       copied: false,
       bitmarkViewed,
+      bitmarkCanDownload,
     };
   }
 
@@ -59,10 +63,14 @@ export class LocalAssetDetailComponent extends React.Component {
     let data = DataController.getLocalBitmarkInformation(null, this.state.asset.id);
     if (data.asset) {
       let bitmarks = [];
+      let bitmarkCanDownload;
       data.asset.bitmarks.forEach((bitmark, index) => {
+        if (!bitmarkCanDownload && bitmark.status === 'confirmed') {
+          bitmarkCanDownload = bitmark;
+        }
         bitmarks.push({ key: index, bitmark });
       });
-      this.setState({ asset: data.asset, bitmarks });
+      this.setState({ asset: data.asset, bitmarks, bitmarkCanDownload });
     } else {
       this.props.navigation.goBack();
     }
@@ -86,21 +94,16 @@ export class LocalAssetDetailComponent extends React.Component {
   }
 
   downloadAsset() {
-    let confirmedBitmark = this.state.bitmarks.find((item => item.bitmark.status === 'confirmed'));
-    if (confirmedBitmark) {
-      AppController.doDownloadBitmark(confirmedBitmark.bitmark, {
-        indicator: true, title: 'Preparing to export...', message: `Downloading “${this.state.asset.name}”...`
-      }).then(filePath => {
-        if (filePath !== null) {
-          Share.share({ title: this.state.asset.name, message: '', url: filePath });
-        }
-      }).catch(error => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-        console.log('doDownload asset error :', error);
-      });
-    } else {
-      Alert.alert("Your bitmark isn't ready to download. Please try again later.");
-    }
+    AppController.doDownloadBitmark(this.state.bitmarkCanDownload, {
+      indicator: true, title: 'Preparing to export...', message: `Downloading “${this.state.asset.name}”...`
+    }).then(filePath => {
+      if (filePath !== null) {
+        Share.share({ title: this.state.asset.name, message: '', url: filePath });
+      }
+    }).catch(error => {
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      console.log('doDownload asset error :', error);
+    });
   }
 
   render() {
@@ -120,8 +123,8 @@ export class LocalAssetDetailComponent extends React.Component {
           </View>)}
           content={(<View style={assetDetailStyle.body}>
             {this.state.displayTopButton && <View style={assetDetailStyle.topButtonsArea}>
-              <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={this.state.asset.totalPending === this.state.bitmarks.length} onPress={this.downloadAsset}>
-                <Text style={[assetDetailStyle.downloadAssetButtonText, { color: this.state.asset.totalPending !== this.state.bitmarks.length ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
+              <TouchableOpacity style={assetDetailStyle.downloadAssetButton} disabled={!this.state.bitmarkCanDownload} onPress={this.downloadAsset}>
+                <Text style={[assetDetailStyle.downloadAssetButtonText, { color: this.state.bitmarkCanDownload ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
               </TouchableOpacity>
               <TouchableOpacity style={assetDetailStyle.copyAssetIddButton} onPress={() => {
                 Clipboard.setString(this.state.asset.id);
