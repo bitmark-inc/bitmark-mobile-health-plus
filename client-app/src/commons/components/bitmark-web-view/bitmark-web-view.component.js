@@ -93,6 +93,7 @@ class WebViewComponent extends React.Component {
       </View>}
       <View style={termsStyles.main}>
         <WebView
+          dataDetectorTypes="none"
           source={{ uri: sourceUrl }}
           ref={(ref) => this.webViewRef = ref}
           onNavigationStateChange={this.onNavigationStateChange}

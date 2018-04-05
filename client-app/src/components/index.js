@@ -82,7 +82,6 @@ class MainComponent extends Component {
       justCreatedBitmarkAccount = !!this.props.navigation.state.params.justCreatedBitmarkAccount;
       this.setState({ justCreatedBitmarkAccount });
     }
-    this.doOpenApp();
 
     EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
@@ -162,7 +161,6 @@ class MainComponent extends Component {
 
   doOpenApp() {
     DataController.doOpenApp().then(user => {
-      console.log('user: ', user);
       this.setState({ user });
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {

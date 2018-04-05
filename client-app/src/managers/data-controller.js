@@ -77,7 +77,7 @@ const runGetTransactionsInBackground = () => {
       return doCheckRunning(() => isRunningGetTransactionsInBackground).then(resolve);
     }
     isRunningGetTransactionsInBackground = true;
-    TransactionService.getAllTransactions(userInformation.bitmarkAccountNumber).then(transactions => {
+    TransactionService.getAllTransactions(userInformation.bitmarkAccountNumber, userData.transactions).then(transactions => {
       if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
         userData.transactions = transactions;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
@@ -154,9 +154,10 @@ const configNotification = () => {
     }
   };
   const onReceivedNotification = async (notificationData) => {
-    console.log('onReceivedNotification notificationData:', notificationData);
     if (!notificationData.foreground) {
-      EventEmiterService.emit(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
+      setTimeout(() => {
+        EventEmiterService.emit(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
+      }, 1000);
     } else if (notificationData.event === 'transfer_request' || notificationData.event === 'transfer_completed' ||
       notificationData.event === 'transfer_accepted') {
       runGetActiveIncomingTransferOfferInBackground();
@@ -202,7 +203,6 @@ const stopInterval = () => {
 // ================================================================================================================================================
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   await runOnBackground();
-  configNotification();
   startInterval();
   if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
     await NotificationService.doCheckNotificaitonPermission();
@@ -237,7 +237,7 @@ const doDeactiveApplication = async () => {
 
 const doGetTransactionData = async () => {
   let activeIncompingTransferOffers = await TransactionService.doGetActiveIncomingTransferOffers(userInformation.bitmarkAccountNumber);
-  let transactions = await TransactionService.getAllTransactions(userInformation.bitmarkAccountNumber);
+  let transactions = await TransactionService.getAllTransactions(userInformation.bitmarkAccountNumber, userData.transactions);
   if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
     userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
@@ -251,26 +251,29 @@ const doGetTransactionData = async () => {
 
 const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
-  let transactions = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS);
-  transactions = transactions.length > 0 ? transactions : null;
-  if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
-    userData.transactions = transactions;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
-  }
-  let activeIncompingTransferOffers = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS);
-  activeIncompingTransferOffers = activeIncompingTransferOffers.length > 0 ? activeIncompingTransferOffers : null;
-  if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
-    userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
-  }
-  let donationInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION);
-  if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
-    userData.donationInformation = donationInformation || {};
-  }
-  let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
-  localAssets = localAssets.length > 0 ? localAssets : null;
-  if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
-    userData.localAssets = localAssets || [];
+  if (userInformation && userInformation.bitmarkAccountNumber) {
+    configNotification();
+    let transactions = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS);
+    transactions = transactions.length > 0 ? transactions : null;
+    if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
+      userData.transactions = transactions;
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
+    }
+    let activeIncompingTransferOffers = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS);
+    activeIncompingTransferOffers = activeIncompingTransferOffers.length > 0 ? activeIncompingTransferOffers : null;
+    if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
+      userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+    }
+    let donationInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION);
+    if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
+      userData.donationInformation = donationInformation || {};
+    }
+    let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
+    localAssets = localAssets.length > 0 ? localAssets : null;
+    if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
+      userData.localAssets = localAssets || [];
+    }
   }
   console.log('userInformation :', userInformation);
   console.log('userData :', userData);
