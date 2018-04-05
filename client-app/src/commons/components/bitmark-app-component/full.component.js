@@ -100,7 +100,6 @@ export class FullComponent extends React.Component {
   }
 
   async doScroll(keyboardHeight, keyboardY, conntentHeight, statusBarHeightChange) {
-    console.log('state :', this.state, ios.constant.headerSize.paddingTop, keyboardHeight, keyboardY, conntentHeight, statusBarHeightChange);
     statusBarHeightChange = statusBarHeightChange || 0;
     let oldScrollYPosition = this.oldScrollYPosition || 0;
 

@@ -26,18 +26,16 @@ export class HealthDataActiveComponent extends React.Component {
 
   doActiveBitmarkHealthData() {
     AppController.doRequirePermission().then(() => {
-      return AppController.doActiveBitmarkHealthData(moment().toDate());
-    }).then(result => {
-      if (result !== null) {
-        this.swiper.scrollBy(1);
-      }
-    }).catch(error => {
-      console.log('doActiveBitmarkHealthData error :', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
-        onClose: () => {
-          this.props.navigation.goBack();
+      AppController.doActiveBitmarkHealthData(moment().toDate()).then(result => {
+        if (result !== null) {
+          this.swiper.scrollBy(1);
         }
+      }).catch(error => {
+        console.log('doActiveBitmarkHealthData error :', error);
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
       });
+    }).catch(error => {
+      console.log('doRequirePermission error :', error);
     });
   }
 
@@ -83,8 +81,6 @@ export class HealthDataActiveComponent extends React.Component {
           <View style={activeDonationStyle.content}>
             <Text style={[activeDonationStyle.healthDataTitle]}>{'CONGRATULATIONS!\nYou’ve all set up!'.toUpperCase()}</Text>
             <Text style={activeDonationStyle.healthDataDescription}>We will send you issuance request every Monday 11pm, please sign the issuance to bitmark your health data.</Text>
-
-
 
             <View style={[activeDonationStyle.bottomButtonArea]}>
               <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.goToHealthDataSetting}>
