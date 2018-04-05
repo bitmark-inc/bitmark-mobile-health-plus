@@ -17,15 +17,20 @@ export class HealthDataActiveComponent extends React.Component {
   constructor(props) {
     super(props);
     this.doActiveBitmarkHealthData = this.doActiveBitmarkHealthData.bind(this);
-    this.doRequirePermission = this.doRequirePermission.bind(this);
+    this.goToHealthDataSetting = this.goToHealthDataSetting.bind(this);
     this.state = {
       user: DataController.getUserInformation(),
-    }
+    };
+    console.log('run here');
   }
 
-  doRequirePermission() {
+  doActiveBitmarkHealthData() {
     AppController.doRequirePermission().then(() => {
-      this.swiper.scrollBy(1);
+      return AppController.doActiveBitmarkHealthData(moment().toDate());
+    }).then(result => {
+      if (result !== null) {
+        this.swiper.scrollBy(1);
+      }
     }).catch(error => {
       console.log('doActiveBitmarkHealthData error :', error);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
@@ -36,16 +41,9 @@ export class HealthDataActiveComponent extends React.Component {
     });
   }
 
-  doActiveBitmarkHealthData() {
-    AppController.doActiveBitmarkHealthData(moment().toDate()).then((result) => {
-      if (result !== null) {
-        this.props.screenProps.homeNavigation.navigate('HealthDataSettings');
-        this.props.navigation.goBack();
-      }
-    }).catch(error => {
-      console.log('doActiveBitmarkHealthData error :', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-    });
+  goToHealthDataSetting() {
+    this.props.screenProps.homeNavigation.navigate('HealthDataSettings');
+    this.props.navigation.goBack();
   }
 
   render() {
@@ -69,7 +67,7 @@ export class HealthDataActiveComponent extends React.Component {
               <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../../assets/imgs/bitmark-logo.png')} />
             </View>
             <View style={activeDonationStyle.bottomButtonArea}>
-              <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.doRequirePermission}>
+              <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.doActiveBitmarkHealthData}>
                 <Text style={activeDonationStyle.bottomButtonText}>GET STARTED!</Text>
               </TouchableOpacity>
             </View>
@@ -89,7 +87,7 @@ export class HealthDataActiveComponent extends React.Component {
 
 
             <View style={[activeDonationStyle.bottomButtonArea]}>
-              <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.doActiveBitmarkHealthData}>
+              <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.goToHealthDataSetting}>
                 <Text style={activeDonationStyle.bottomButtonText}>CHECK NOW!</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[activeDonationStyle.bottomButton, {
