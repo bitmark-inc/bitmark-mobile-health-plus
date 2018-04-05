@@ -44,6 +44,12 @@ const recheckLocalAssets = (localAssets) => {
       }
     }
   }
+  localAssets = localAssets.filter(asset => {
+    if (asset.bitmarks && asset.bitmarks.length === 1 && asset.bitmarks[0].status === 'donating') {
+      return false;
+    }
+    return true;
+  });
   return localAssets;
 };
 

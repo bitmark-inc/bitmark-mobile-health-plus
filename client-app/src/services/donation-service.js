@@ -373,7 +373,8 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
       data: issueResult.sessionData
     };
     let timestamp = moment().toDate().getTime();
-    let message = 'updateSession|' + JSON.stringify(sessionData.data) + '|' + bitmarkAccountNumber + '|' + timestamp;
+    let jsonDataString = `{"enc_data_key":"${sessionData.data.enc_data_key}","data_key_alg":"${sessionData.data.data_key_alg}"}`
+    let message = 'updateSession|' + jsonDataString + '|' + bitmarkAccountNumber + '|' + timestamp;
     let signatures = await BitmarkSDK.rickySignMessage([message], touchFaceIdSession);
     sessionData.signature = signatures[0];
     console.log('issueResult :', issueResult, sessionData);
