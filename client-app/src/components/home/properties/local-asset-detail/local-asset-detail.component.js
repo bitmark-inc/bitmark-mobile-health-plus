@@ -5,6 +5,7 @@ import {
   Clipboard,
   FlatList,
   Share,
+  Alert,
 } from 'react-native';
 
 import { FullComponent } from './../../../../commons/components';
@@ -77,20 +78,27 @@ export class LocalAssetDetailComponent extends React.Component {
   }
 
   cancelTransferring(bitmarkId) {
-    AppController.doCancelTransferBitmark(bitmarkId).then((result) => {
-      if (result) {
-        EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_DATA);
-      }
-    }).catch(error => {
-      console.log('cancel transferring bitmark error :', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
-        onClose: async () => {
-          AppController.reloadBitmarks().catch(error => {
-            console.log('AppController.reloadBitmarks error', error);
+    Alert.alert('Are you sure you want to cancel this property transfer?', '', [{
+      text: 'NO',
+    }, {
+      text: 'YES',
+      onPress: () => {
+        AppController.doCancelTransferBitmark(bitmarkId).then((result) => {
+          if (result) {
+            EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_DATA);
+          }
+        }).catch(error => {
+          console.log('cancel transferring bitmark error :', error);
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
+            onClose: async () => {
+              AppController.reloadBitmarks().catch(error => {
+                console.log('AppController.reloadBitmarks error', error);
+              });
+            }
           });
-        }
-      });
-    });
+        });
+      }
+    }]);
   }
 
   downloadAsset() {
