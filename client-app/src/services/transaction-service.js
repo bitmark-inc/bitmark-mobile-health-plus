@@ -1,9 +1,18 @@
 import moment from 'moment';
+import { merge } from 'lodash';
 import { TransactionModel, BitmarkSDK, BitmarkModel, UserModel, CommonModel } from '../models';
+import { sortList } from '../utils';
 
-const getAllTransactions = async (accountNumber) => {
-  let allTransactions = await TransactionModel.getAllTransactions(accountNumber);
-  let completedTransfers = [];
+const getAllTransactions = async (accountNumber, oldTransactions) => {
+  let lastOffset = null;
+  if (oldTransactions) {
+    oldTransactions.forEach(oldTx => {
+      lastOffset = lastOffset ? Math.max(lastOffset, oldTx.offset) : oldTx.offset;
+    });
+  }
+
+  let allTransactions = await TransactionModel.getAllTransactions(accountNumber, lastOffset);
+  let completedTransfers = merge([], oldTransactions || []);
   let mapIssuanceBlock = {};
   for (let transaction of allTransactions) {
     if (transaction.owner === accountNumber) {
@@ -17,22 +26,33 @@ const getAllTransactions = async (accountNumber) => {
           status: transaction.status,
           txid: transaction.id,
           previousId: transaction.previous_id,
+          offset: transaction.offset,
         });
-      } else if (transaction.id && !transaction.previous_id && (!mapIssuanceBlock[transaction.asset_id] || !mapIssuanceBlock[transaction.asset_id][transaction.block_number])) {
-        if (!mapIssuanceBlock[transaction.asset_id]) {
-          mapIssuanceBlock[transaction.asset_id] = {};
+      } else if (transaction.id && !transaction.previous_id) {
+        console.log(' issuance ====== ', mapIssuanceBlock[transaction.asset_id], transaction.block_number);
+        if (mapIssuanceBlock[transaction.asset_id] && mapIssuanceBlock[transaction.asset_id][transaction.block_number]) {
+          console.log('run1');
+          mapIssuanceBlock[transaction.asset_id][transaction.block_number].offset =
+            Math.max(mapIssuanceBlock[transaction.asset_id][transaction.block_number].offset, transaction.offset);
+        } else {
+          console.log('run2');
+          if (!mapIssuanceBlock[transaction.asset_id]) {
+            mapIssuanceBlock[transaction.asset_id] = {};
+          }
+          let transactionData = await TransactionModel.getTransactionDetail(transaction.id);
+          let record = {
+            assetId: transaction.asset_id,
+            blockNumber: transaction.block_number,
+            assetName: transactionData.asset.name,
+            from: transactionData.tx.owner,
+            timestamp: transaction.block ? moment(transaction.block.created_at) : '',
+            status: transaction.status,
+            txid: transaction.id,
+            offset: transaction.offset,
+          };
+          mapIssuanceBlock[transaction.asset_id][transaction.block_number] = record;
+          completedTransfers.push(record);
         }
-        mapIssuanceBlock[transaction.asset_id][transaction.block_number] = true;
-        let transactionData = await TransactionModel.getTransactionDetail(transaction.id);
-        completedTransfers.push({
-          assetId: transaction.asset_id,
-          blockNumber: transaction.block_number,
-          assetName: transactionData.asset.name,
-          from: transactionData.tx.owner,
-          timestamp: transaction.block ? moment(transaction.block.created_at) : '',
-          status: transaction.status,
-          txid: transaction.id,
-        });
       }
     } else if (transaction.id) {
       let nextTransactionData = await TransactionModel.getTransactionDetail(transaction.id);
@@ -42,9 +62,11 @@ const getAllTransactions = async (accountNumber) => {
         to: transaction.owner,
         timestamp: nextTransactionData.block ? moment(nextTransactionData.block.created_at) : '',
         status: nextTransactionData.tx.status,
+        offset: transaction.offset,
       });
     }
   }
+  completedTransfers = sortList(completedTransfers, (a, b) => b.offset - a.offset);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, completedTransfers);
   return completedTransfers;
 };

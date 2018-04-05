@@ -177,7 +177,7 @@ const doCancelTransferOffer = (accountNumber, bitmarkId) => {
 const get100Transactions = (accountNumber, offsetNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.api_server_url + `/v1/txs?owner=${accountNumber}&pending=true&to=earlier&sent=true&block=true`;
+    let tempURL = config.api_server_url + `/v1/txs?owner=${accountNumber}&pending=true&to=later&sent=true&block=true`;
     tempURL += offsetNumber ? `&at=${offsetNumber}` : '';
     fetch(tempURL, {
       method: 'GET',
@@ -197,9 +197,8 @@ const get100Transactions = (accountNumber, offsetNumber) => {
   });
 };
 
-const getAllTransactions = async (accountNumber) => {
+const getAllTransactions = async (accountNumber, lastOffset) => {
   let totalTxs;
-  let lastOffset;
   let canContinue = true;
   while (canContinue) {
     let data = await get100Transactions(accountNumber, lastOffset);
@@ -216,7 +215,7 @@ const getAllTransactions = async (accountNumber) => {
       break;
     }
     data.txs.forEach(tx => {
-      if (!lastOffset || lastOffset > tx.offset) {
+      if (!lastOffset || lastOffset < tx.offset) {
         lastOffset = tx.offset;
       }
     });

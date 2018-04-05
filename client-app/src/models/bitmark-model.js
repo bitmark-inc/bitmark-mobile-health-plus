@@ -60,7 +60,7 @@ const doGetAllBitmarks = async (accountNumber, lastOffset) => {
 const doGetProvenance = (bitmark) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    fetch(config.api_server_url + `/v1/bitmarks/${bitmark.id}?provenance=true`, {
+    fetch(config.api_server_url + `/v1/bitmarks/${bitmark.id}?provenance=true&pending=true`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

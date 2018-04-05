@@ -80,7 +80,7 @@ export class LocalIssueFileComponent extends React.Component {
             actions: [
               NavigationActions.navigate({
                 routeName: 'User', params: {
-                  displayedTab: { mainTab: 'Account' }
+                  displayedTab: { mainTab: 'Properties' }
                 }
               }),
             ]
