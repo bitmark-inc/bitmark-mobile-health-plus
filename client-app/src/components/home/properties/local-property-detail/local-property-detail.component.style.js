@@ -117,7 +117,7 @@ export default StyleSheet.create({
     lineHeight: 16,
     fontWeight: '900',
     marginLeft: convertWidth(20),
-    marginTop: 25,
+    marginTop: 34,
     height: 25,
   },
   provenancesArea: {
