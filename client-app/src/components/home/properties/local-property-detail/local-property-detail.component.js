@@ -97,11 +97,11 @@ export class LocalPropertyDetailComponent extends React.Component {
             <ScrollView style={propertyDetailStyle.content}>
               <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
                 <View style={propertyDetailStyle.bottomImageBar}></View>
-                <Text style={propertyDetailStyle.assetName}>{this.state.asset.name}</Text>
-                <Text style={propertyDetailStyle.assetCreateAt}>
-                  ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())} BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
+                <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
+                <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>
+                  ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}{'\n'}iBY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
                 </Text>
-                <Text style={propertyDetailStyle.provenanceLabel}>PROVENANCE</Text>
+                <Text style={[propertyDetailStyle.provenanceLabel, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>PROVENANCE</Text>
                 <View style={propertyDetailStyle.provenancesArea}>
                   <View style={propertyDetailStyle.provenancesHeader}>
                     <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
@@ -114,9 +114,9 @@ export class LocalPropertyDetailComponent extends React.Component {
                       data={this.state.bitmark.provenance || []}
                       renderItem={({ item }) => {
                         return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
-                          <Text style={propertyDetailStyle.provenancesRowTimestamp} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
+                          <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
                           <View style={propertyDetailStyle.provenancesRowOwnerRow}>
-                            <Text style={[propertyDetailStyle.provenancesRowOwner]} numberOfLines={1}>{'[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}</Text>
+                            <Text style={[propertyDetailStyle.provenancesRowOwner, { color: this.state.bitmark.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{'[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}</Text>
                           </View>
                         </TouchableOpacity>);
                       }}

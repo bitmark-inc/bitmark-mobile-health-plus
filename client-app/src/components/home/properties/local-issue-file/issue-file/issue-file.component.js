@@ -4,6 +4,8 @@ import {
   View, Text, TouchableOpacity, Image, TextInput, FlatList, TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
+
 
 import { FullComponent } from './../../../../../commons/components';
 import { convertWidth } from './../../../../../utils';
@@ -73,7 +75,17 @@ export class LocalIssueFileComponent extends React.Component {
         indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
       }).then((data) => {
         if (data !== null) {
-          this.props.navigation.goBack();
+          const resetHomePage = NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: 'User', params: {
+                  displayedTab: { mainTab: 'Account' }
+                }
+              }),
+            ]
+          });
+          this.props.navigation.dispatch(resetHomePage);
         }
       }).catch(error => {
         this.setState({ issueError: 'There was a problem issuing bitmarks. Please try again.' });
@@ -317,6 +329,7 @@ LocalIssueFileComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
+    dispatch: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
         asset: PropTypes.object,

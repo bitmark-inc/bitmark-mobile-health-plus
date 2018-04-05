@@ -17,6 +17,7 @@ export class HealthDataActiveComponent extends React.Component {
   constructor(props) {
     super(props);
     this.doActiveBitmarkHealthData = this.doActiveBitmarkHealthData.bind(this);
+    this.doRequirePermission = this.doRequirePermission.bind(this);
     this.state = {
       user: DataController.getUserInformation(),
     }
@@ -68,7 +69,7 @@ export class HealthDataActiveComponent extends React.Component {
               <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../../assets/imgs/bitmark-logo.png')} />
             </View>
             <View style={activeDonationStyle.bottomButtonArea}>
-              <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={() => { this.swiper.scrollBy(1) }}>
+              <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.doRequirePermission}>
                 <Text style={activeDonationStyle.bottomButtonText}>GET STARTED!</Text>
               </TouchableOpacity>
             </View>

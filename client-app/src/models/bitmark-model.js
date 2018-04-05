@@ -49,7 +49,7 @@ const doGetAllBitmarks = async (accountNumber, lastOffset) => {
       break;
     }
     data.bitmarks.forEach(bitmark => {
-      if (!lastOffset || lastOffset > bitmark.offset) {
+      if (!lastOffset || lastOffset < bitmark.offset) {
         lastOffset = bitmark.offset;
       }
     });
