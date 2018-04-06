@@ -37,8 +37,7 @@ platform :ios do
       include_bitcode: false
     )
     hockey(
-      api_token: "ea44d63ef04b42d8898c686a5744346c",
-      tags: "vn_team"
+      api_token: "ea44d63ef04b42d8898c686a5744346c"
     )
   end
   lane :enterprise do

@@ -140,7 +140,7 @@ export class DonationComponent extends React.Component {
             </View>
           </TouchableOpacity>}
           {this.state.subTab === SubTabs.other && <View style={donationStyle.content}>
-            <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>
+            {this.state.studies.length === 0 && <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>}
             <View style={donationStyle.noCardMessageArea}>
               <View style={donationStyle.contactMessageFirstLine}>
                 <TouchableOpacity onPress={this.contactBitmark}>
@@ -153,7 +153,7 @@ export class DonationComponent extends React.Component {
           </View>}
 
           {this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
-            <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>
+            <Text style={donationStyle.noCardTitle}>HAVEN’T JOINED ANY STUDIES?</Text>
             <Text style={donationStyle.noCardMessageArea}>
               <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
             </Text>
