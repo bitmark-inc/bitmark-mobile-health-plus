@@ -40,8 +40,10 @@ export class StudyDonationComponent extends React.Component {
               </View>
               <Text style={donationStyles.donationDescription}>Signing your issuance with Touch/ Face ID or Passcode securely creates new bitmarks for your health data.</Text>
               <TouchableOpacity style={donationStyles.bitmarkButton} onPress={() => {
-                AppController.doDonateHealthData(this.state.study, this.state.list).then(() => {
-                  this.props.navigation.goBack();
+                AppController.doDonateHealthData(this.state.study, this.state.list).then((result) => {
+                  if (result) {
+                    this.props.navigation.goBack();
+                  }
                 }).catch(error => {
                   console.log('doDonateHealthData error:', error);
                   EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);

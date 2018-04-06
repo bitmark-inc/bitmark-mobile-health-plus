@@ -293,6 +293,7 @@ const doActiveBitmarkHealthData = async (touchFaceIdSession, activeBitmarkHealth
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
+  return donationInformation;
 };
 const doInactiveBitmarkHealthData = async (touchFaceIdSession) => {
   let donationInformation = await DonationService.doInactiveBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber);
@@ -316,6 +317,7 @@ const doLeaveStudy = async (touchFaceIdSession, studyId) => {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
+  return donationInformation;
 };
 const doCompletedStudyTask = async (touchFaceIdSession, study, taskType, result) => {
   let donationInformation = await DonationService.doCompletedStudyTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, study, taskType, result);
@@ -323,6 +325,7 @@ const doCompletedStudyTask = async (touchFaceIdSession, study, taskType, result)
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
+  return donationInformation;
 };
 
 const doDonateHealthData = async (touchFaceIdSession, study, list) => {
@@ -331,6 +334,7 @@ const doDonateHealthData = async (touchFaceIdSession, study, list) => {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
+  return donationInformation;
 };
 
 const doBitmarkHealthData = async (touchFaceIdSession, list) => {
@@ -343,6 +347,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
+  return donationInformation;
 };
 
 const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
