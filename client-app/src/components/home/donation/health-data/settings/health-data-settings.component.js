@@ -82,7 +82,7 @@ export class HealthDataSettingsComponent extends React.Component {
             <Image style={myStyle.healthDataFieldNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />
           </TouchableOpacity>
           <View style={myStyle.healthDataFieldDescriptionArea}>
-            <Text style={myStyle.healthDataFieldDescriptionText}>All the bitmarks of health data metadata has been pre-defined. The metadata will be recorded in Bitmark blockchain.</Text>
+            <Text style={myStyle.healthDataFieldDescriptionText}>These metadata will be permanently recorded in the Bitmark blockchain and cannot be modified after the issuance is confirmed. All subsequently issued bitmarks for this asset will share this recorded metadata.</Text>
           </View>
 
           <TouchableOpacity style={myStyle.healthDataField} onPress={() => this.props.navigation.navigate('HealthDataDataSource')}>
