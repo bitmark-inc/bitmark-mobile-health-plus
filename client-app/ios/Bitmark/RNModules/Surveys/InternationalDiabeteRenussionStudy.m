@@ -485,7 +485,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   
   ORKConsentSection *s8 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
   s8.title = @"Potential Benefits";
-  s8.summary = @"There are not direct benefits from participating in this study. However, by keeping track of your lifestyles you might discover some insights to improve your own health.";
+  s8.summary = @"There are no direct benefits from participating in this study. However, by keeping track of your lifestyles you might discover some insights to improve your own health.";
   s8.htmlContent = @"<p>One of the biggest challenges for people aiming to prevent, control or remit diabetes is the difficulty of developing and tracking consistent and useful patterns on diet, activity, sleep, medication/supplements, and other health behaviors. Participating in this study may help by streamlining these daily tracking tasks.</p><p>Moreover this research study will create an important database of daily behaviors and glucose control. The study will help researchers better understand the relationships between glucose metabolism, diet, physical activity, and sleep in real-world settings. It will also help explore how the smartphone and encryption mechanisms can enable new kinds of clinical research.</p>";
   s8.customImage = [UIImage imageNamed:@"consent_potential_benefits"];
   s8.customLearnMoreButtonTitle = @"Learn more";
