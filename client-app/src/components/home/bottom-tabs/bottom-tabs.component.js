@@ -6,7 +6,7 @@ import {
 import { NavigationActions } from 'react-navigation';
 
 import userStyle from './bottom-tabs.component.style';
-import { EventEmiterService } from '../../../services';
+import { EventEmiterService, NotificationService } from '../../../services';
 import { DataController } from '../../../managers';
 
 const MainTabs = {
@@ -28,12 +28,14 @@ export class BottomTabsComponent extends React.Component {
 
     let localAssets = DataController.getUserBitmarks().localAssets || [];
     let haveNewBitmark = localAssets.findIndex(asset => !asset.isViewed) >= 0;
-    let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers.length || 0) + (DataController.getDonationInformation().totalTodoTask || 0);
+    let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
     this.state = {
       mainTab: this.props.mainTab,
       haveNewBitmark,
       transactionNumber,
     };
+    NotificationService.setApplicationIconBadgeNumber(transactionNumber);
   }
 
   componentDidMount() {
@@ -49,11 +51,17 @@ export class BottomTabsComponent extends React.Component {
   }
 
   handerChangeActiveIncomingTransferOffer() {
-    this.setState({ transactionNumber: (DataController.getTransactionData().activeIncompingTransferOffers.length || 0) + (DataController.getDonationInformation().totalTodoTask || 0), });
+    let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
+    this.setState({ transactionNumber });
+    NotificationService.setApplicationIconBadgeNumber(transactionNumber);
   }
 
   handerDonationInformationChange() {
-    this.setState({ transactionNumber: (DataController.getTransactionData().activeIncompingTransferOffers.length || 0) + (DataController.getDonationInformation().totalTodoTask || 0), });
+    let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
+    this.setState({ transactionNumber });
+    NotificationService.setApplicationIconBadgeNumber(transactionNumber);
   }
   handerChangeLocalBitmarks() {
     let localAssets = DataController.getUserBitmarks().localAssets || [];

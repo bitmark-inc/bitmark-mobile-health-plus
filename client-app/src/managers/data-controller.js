@@ -18,6 +18,7 @@ let userData = {
   transactions: null,
   donationInformation: null,
 };
+let doneFirstTimeLoadData = false;
 // ================================================================================================================================================
 // ================================================================================================================================================
 
@@ -61,6 +62,7 @@ const runGetActiveIncomingTransferOfferInBackground = () => {
     }
     isRunningGetActiveIncomingTransferOfferInBackground = true;
     TransactionService.doGetActiveIncomingTransferOffers(userInformation.bitmarkAccountNumber).then(activeIncompingTransferOffers => {
+      activeIncompingTransferOffers = activeIncompingTransferOffers || [];
       if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
         userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
@@ -84,6 +86,7 @@ const runGetTransactionsInBackground = () => {
     }
     isRunningGetTransactionsInBackground = true;
     TransactionService.getAllTransactions(userInformation.bitmarkAccountNumber, userData.transactions).then(transactions => {
+      transactions = transactions || [];
       if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
         userData.transactions = transactions;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
@@ -107,6 +110,7 @@ const runGetLocalBitmarksInBackground = () => {
     }
     isRunningGetLocalBitmarksInBackground = true;
     BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber, userData.localAssets).then(localAssets => {
+      localAssets = localAssets || [];
       localAssets = recheckLocalAssets(localAssets);
       if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
         userData.localAssets = localAssets;
@@ -131,6 +135,7 @@ const runGetDonationInformationInBackground = () => {
     }
     isRunningGetDonationInformationInBackground = true;
     DonationService.doGetUserInformation(userInformation.bitmarkAccountNumber).then(donationInformation => {
+      donationInformation = donationInformation || {};
       if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
         userData.donationInformation = donationInformation;
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
@@ -188,6 +193,8 @@ const runOnBackground = async () => {
     await runGetDonationInformationInBackground();
     await runGetLocalBitmarksInBackground();
   }
+  doneFirstTimeLoadData = true;
+  EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
 };
 
 const doReloadTransactionData = async () => {
@@ -282,6 +289,8 @@ const doOpenApp = async () => {
       userData.localAssets = localAssets || [];
     }
   }
+  doneFirstTimeLoadData = userData.transactions && userData.activeIncompingTransferOffers && userData.donationInformation && userData.localAssets;
+  EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
   console.log('userInformation :', userInformation);
   console.log('userData :', userData);
   return userInformation;
@@ -389,14 +398,12 @@ const doUpdateViewStatus = async (asset) => {
 
 const getTransactionData = () => {
   return merge({}, {
-    activeIncompingTransferOffers: userData.activeIncompingTransferOffers || [],
-    transactions: userData.transactions || [],
+    activeIncompingTransferOffers: userData.activeIncompingTransferOffers,
+    transactions: userData.transactions,
   });
 }
 const getUserBitmarks = () => {
-  return merge({}, {
-    localAssets: userData.localAssets || [],
-  });
+  return merge({}, { localAssets: userData.localAssets });
 };
 
 const getUserInformation = () => {
@@ -460,6 +467,7 @@ const DataController = {
   getApplicationBuildNumber,
   getLocalBitmarkInformation,
   getDonationInformation,
+  isDoneFirstimeLoadData: () => doneFirstTimeLoadData,
 };
 
 export { DataController };

@@ -45,8 +45,6 @@ export class UserComponent extends React.Component {
         mainTab,
         subTab,
       },
-      transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length,
-      donationInformation: DataController.getDonationInformation(),
     };
     this.needReloadData = needReloadData;
   }

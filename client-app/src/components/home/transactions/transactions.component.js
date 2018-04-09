@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView, FlatList, Image,
+  View, Text, TouchableOpacity, ScrollView, FlatList, Image, ActivityIndicator,
 } from 'react-native';
 import moment from 'moment';
 
@@ -32,6 +32,7 @@ export class TransactionsComponent extends React.Component {
     this.handerChangeCompletedTransaction = this.handerChangeCompletedTransaction.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
+    this.handerLoadFistData = this.handerLoadFistData.bind(this);
     this.clickToActionRequired = this.clickToActionRequired.bind(this);
     this.generateData = this.generateData.bind(this);
     this.clickToCompleted = this.clickToCompleted.bind(this);
@@ -45,6 +46,7 @@ export class TransactionsComponent extends React.Component {
       actionRequired,
       completed,
       donationInformation,
+      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
     };
   }
 
@@ -58,6 +60,7 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.on(EventEmiterService.events.APP_LOAD_FIRST_DATA, this.handerLoadFistData);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -70,107 +73,139 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOAD_FIRST_DATA, this.handerLoadFistData);
   }
 
   generateData() {
-    let actionRequired = [];
+    let actionRequired;
     let transactionData = DataController.getTransactionData();
-    transactionData.activeIncompingTransferOffers.forEach((item) => {
-      actionRequired.push({
-        key: actionRequired.length,
-        transferOffer: item,
-        type: ActionTypes.transfer,
-        typeTitle: 'Property Transfer Request',
-        timestamp: moment(item.created_at),
+    if (transactionData.activeIncompingTransferOffers) {
+      actionRequired = actionRequired || [];
+      transactionData.activeIncompingTransferOffers.forEach((item) => {
+        actionRequired.push({
+          key: actionRequired.length,
+          transferOffer: item,
+          type: ActionTypes.transfer,
+          typeTitle: 'Property Transfer Request',
+          timestamp: moment(item.created_at),
+        });
       });
-    });
+    }
 
     let donationInformation = DataController.getDonationInformation();
-    (donationInformation.todoTasks || []).forEach(item => {
-      item.key = actionRequired.length;
-      item.type = ActionTypes.donation;
-      item.typeTitle = item.study ? 'Property DONATION Request' : 'Property ISSUANCE Request';
-      item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null),
-        actionRequired.push(item);
-    });
-    actionRequired = sortList(actionRequired, (a, b) => {
+    if (donationInformation.todoTasks) {
+      actionRequired = actionRequired || [];
+      (donationInformation.todoTasks || []).forEach(item => {
+        item.key = actionRequired.length;
+        item.type = ActionTypes.donation;
+        item.typeTitle = item.study ? 'Property DONATION Request' : 'Property ISSUANCE Request';
+        item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null),
+          actionRequired.push(item);
+      });
+    }
+
+    actionRequired = actionRequired ? sortList(actionRequired, (a, b) => {
       if (!a || !a.timestamp) return 1;
       if (!b || !b.timestamp) return 1;
       return moment(a.timestamp).toDate().getTime() - moment(b.timestamp).toDate().getTime();
-    });
+    }) : actionRequired;
 
-    let completed = []
-    transactionData.transactions.forEach((item) => {
-      let title = 'ISSUANCE';
-      let type = '';
-      let to = item.to;
-      let status = item.status;
-      let researcherName;
-      if (!item.to) {
-        let exitCompleted = completed.find(citem => (citem.previousId === item.txid && citem.type === 'DONATION'));
-        if (exitCompleted) {
-          return;
-        }
-        let donationCompletedTask = (donationInformation.completedTasks || []).find(task => task.bitmarkId === item.txid);
-        if (donationCompletedTask && donationCompletedTask.study) {
+    let completed;
+    if (transactionData.transactions) {
+      completed = [];
+      transactionData.transactions.forEach((item) => {
+        let title = 'ISSUANCE';
+        let type = '';
+        let to = item.to;
+        let status = item.status;
+        let researcherName;
+        if (!item.to) {
+          let exitCompleted = completed.find(citem => (citem.previousId === item.txid && citem.type === 'DONATION'));
+          if (exitCompleted) {
+            return;
+          }
+          let donationCompletedTask = (donationInformation.completedTasks || []).find(task => task.bitmarkId === item.txid);
+          if (donationCompletedTask && donationCompletedTask.study) {
+            title = 'TRANSFER';
+            type = 'DONATION';
+            status = 'pending';
+            to = donationCompletedTask.study.researcherAccount;
+            researcherName = donationCompletedTask.study.researcherName;
+          }
+        } else {
           title = 'TRANSFER';
-          type = 'DONATION';
-          status = 'pending';
-          to = donationCompletedTask.study.researcherAccount;
-          researcherName = donationCompletedTask.study.researcherName;
+          type = 'P2P TRANSFER';
+          let exitCompleted = completed.find(citem => (citem.txid === item.previousId && citem.type === 'DONATION'));
+          if (exitCompleted) {
+            exitCompleted.previousId = exitCompleted.txid;
+            exitCompleted.txid = item.txid;
+            return;
+          }
+          let donationCompletedTask = (donationInformation.completedTasks || []).find(task => task.bitmarkId === item.previousId);
+          if (donationCompletedTask && donationCompletedTask.study) {
+            type = 'DONATION';
+            to = donationCompletedTask.study.researcherAccount;
+            researcherName = donationCompletedTask.study.researcherName;
+          }
         }
-      } else {
-        title = 'TRANSFER';
-        type = 'P2P TRANSFER';
-        let exitCompleted = completed.find(citem => (citem.txid === item.previousId && citem.type === 'DONATION'));
-        if (exitCompleted) {
-          exitCompleted.previousId = exitCompleted.txid;
-          exitCompleted.txid = item.txid;
-          return;
-        }
-        let donationCompletedTask = (donationInformation.completedTasks || []).find(task => task.bitmarkId === item.previousId);
-        if (donationCompletedTask && donationCompletedTask.study) {
-          type = 'DONATION';
-          to = donationCompletedTask.study.researcherAccount;
-          researcherName = donationCompletedTask.study.researcherName;
-        }
-      }
-      completed.push({
-        title,
-        type,
-        to,
-        status,
-        researcherName,
-        assetId: item.assetId,
-        blockNumber: item.blockNumber,
-        key: completed.length,
-        timestamp: item.timestamp,
-        txid: item.txid,
-        previousId: item.previousId,
-        assetName: item.assetName,
-        from: item.from,
+        completed.push({
+          title,
+          type,
+          to,
+          status,
+          researcherName,
+          assetId: item.assetId,
+          blockNumber: item.blockNumber,
+          key: completed.length,
+          timestamp: item.timestamp,
+          txid: item.txid,
+          previousId: item.previousId,
+          assetName: item.assetName,
+          from: item.from,
+        });
       });
-    });
+    }
 
     return { actionRequired, completed, donationInformation };
   }
   handerDonationInformationChange() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    this.setState({ actionRequired, completed, donationInformation });
+    console.log('actionRequired, completed, donationInformation handerDonationInformationChange:', actionRequired, completed, donationInformation);
+    this.setState({
+      actionRequired, completed, donationInformation,
+      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+    });
   }
   handerChangePendingTransactions() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    this.setState({ actionRequired, completed, donationInformation })
+    console.log('actionRequired, completed, donationInformation handerChangePendingTransactions:', actionRequired, completed, donationInformation);
+    this.setState({
+      actionRequired, completed, donationInformation,
+      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+    });
   }
   handerChangeCompletedTransaction() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    this.setState({ actionRequired, completed, donationInformation });
+    console.log('actionRequired, completed, donationInformation handerChangeCompletedTransaction:', actionRequired, completed, donationInformation);
+    this.setState({
+      actionRequired, completed, donationInformation,
+      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+    });
+  }
+  handerLoadFistData() {
+    this.setState({
+      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+    });
   }
 
   reloadData() {
     AppController.doReloadTransactionData().then(() => {
       let { actionRequired, completed, donationInformation } = this.generateData();
-      this.setState({ actionRequired, completed, donationInformation });
+      console.log('actionRequired, completed, donationInformation :', actionRequired, completed, donationInformation);
+      this.setState({
+        actionRequired, completed, donationInformation,
+        doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+      });
     }).catch((error) => {
       console.log('doReloadTransactionData error :', error);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
@@ -271,12 +306,12 @@ export class TransactionsComponent extends React.Component {
 
         <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.subTab === SubTabs.required && this.state.actionRequired.length === 0 && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length === 0 && this.state.doneLoadDataFirstTime && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO ACTIONS REQUIRED.</Text>
               <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where you will receive any requests that require your signature.</Text>
             </View>}
 
-            {this.state.subTab === SubTabs.required && this.state.actionRequired.length > 0 && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length > 0 && <View style={transactionsStyle.contentSubTab}>
               <FlatList data={this.state.actionRequired}
                 extraData={this.state}
                 renderItem={({ item }) => {
@@ -298,11 +333,11 @@ export class TransactionsComponent extends React.Component {
                 }} />
             </View>}
 
-            {this.state.subTab === SubTabs.completed && this.state.completed.length === 0 && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.completed && this.state.completed && this.state.completed.length === 0 && this.state.doneLoadDataFirstTime && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY.</Text>
               <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where your history of completed transaction will be stored.</Text>
             </View>}
-            {this.state.subTab === SubTabs.completed && this.state.completed.length > 0 && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.completed && this.state.completed && this.state.completed.length > 0 && <View style={transactionsStyle.contentSubTab}>
               <FlatList data={this.state.completed}
                 extraData={this.state}
                 renderItem={({ item }) => {
@@ -340,6 +375,9 @@ export class TransactionsComponent extends React.Component {
                   )
                 }} />
             </View >}
+            {!this.state.doneLoadDataFirstTime && <View style={transactionsStyle.contentSubTab}>
+              <ActivityIndicator size="large" style={{ marginTop: 46, }} />
+            </View>}
           </TouchableOpacity>
         </ScrollView>
       </View >

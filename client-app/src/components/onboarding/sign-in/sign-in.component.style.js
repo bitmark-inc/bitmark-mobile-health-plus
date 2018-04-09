@@ -13,16 +13,17 @@ export default StyleSheet.create({
   mainContent: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
     backgroundColor: 'white',
     paddingBottom: Math.max(10, ios.constant.blankFooter),
+    paddingLeft: convertWidth(20),
+    paddingRight: convertWidth(20),
   },
   //sign-in
   writeRecoveryPhraseContentMessage: {
     fontFamily: 'Avenir Light',
     fontSize: 17,
     fontWeight: '300',
-    width: convertWidth(340),
+    width: convertWidth(336),
     marginTop: 18,
   },
   writeRecoveryPhraseArea: {
@@ -105,7 +106,7 @@ export default StyleSheet.create({
   submitButton: {
     marginTop: 10,
     minHeight: 42,
-    width: convertWidth(309),
+    width: convertWidth(335),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

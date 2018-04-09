@@ -241,7 +241,7 @@ export class SignInComponent extends React.Component {
         contentInScroll={true}
         content={(<TouchableWithoutFeedback onPress={Keyboard.dismiss} >
           <TouchableOpacity activeOpacity={1} style={signStyle.mainContent}>
-            <Text style={[signStyle.writeRecoveryPhraseContentMessage,]}> Please type all 24 words of your recovery phrase in the exact sequence below:</Text>
+            <Text style={[signStyle.writeRecoveryPhraseContentMessage,]}>Please type all 24 words of your recovery phrase in the exact sequence below:</Text>
             <View style={[signStyle.writeRecoveryPhraseArea]}>
               <View style={signStyle.writeRecoveryPhraseContentHalfList}>
                 <FlatList data={this.state.smallerList}

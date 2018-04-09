@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, TouchableOpacity, Text, ScrollView, FlatList,
+  View, TouchableOpacity, Text, ScrollView, FlatList, ActivityIndicator,
   Alert,
 } from 'react-native';
 import Mailer from 'react-native-mail';
@@ -28,10 +28,12 @@ export class DonationComponent extends React.Component {
 
     let subTab = (this.props.screenProps.subTab && (this.props.screenProps.subTab === SubTabs.other || this.props.screenProps.subTab === SubTabs.joined)) ? this.props.screenProps.subTab : SubTabs.other;
     let donationInformation = DataController.getDonationInformation();
-    let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies) || [];
-    studies.forEach(study => {
-      study.key = study.studyId
-    });
+    let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies);
+    if (studies) {
+      studies.forEach(study => {
+        study.key = study.studyId
+      });
+    }
     this.state = {
       donationInformation,
       subTab,
@@ -66,10 +68,12 @@ export class DonationComponent extends React.Component {
   switchSubtab(subTab) {
     subTab = subTab || this.state.subTab;
     let donationInformation = DataController.getDonationInformation();
-    let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies) || [];
-    studies.forEach(study => {
-      study.key = study.studyId
-    });
+    let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies);
+    if (studies) {
+      studies.forEach(study => {
+        study.key = study.studyId
+      });
+    }
     this.setState({ subTab, studies, donationInformation });
   }
   contactBitmark() {
@@ -138,7 +142,10 @@ export class DonationComponent extends React.Component {
         </View>
 
         <ScrollView style={donationStyle.contentScroll}>
-          {this.state.studies.length > 0 && <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+          {!this.state.studies && <View style={donationStyle.content}>
+            <ActivityIndicator size="large" style={{ marginTop: 46, }} />
+          </View>}
+          {this.state.studies && this.state.studies.length > 0 && <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             <View style={donationStyle.content}>
               <FlatList
                 extraData={this.state}
@@ -157,7 +164,7 @@ export class DonationComponent extends React.Component {
             </View>
           </TouchableOpacity>}
           {this.state.subTab === SubTabs.other && <View style={donationStyle.content}>
-            {this.state.studies.length === 0 && <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>}
+            {this.state.studies && this.state.studies.length === 0 && <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>}
             <View style={donationStyle.noCardMessageArea}>
               <View style={donationStyle.contactMessageFirstLine}>
                 <TouchableOpacity onPress={this.contactBitmark}>
@@ -169,7 +176,7 @@ export class DonationComponent extends React.Component {
             </View>
           </View>}
 
-          {this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
+          {this.state.studies && this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
             <Text style={donationStyle.noCardTitle}>HAVEN’T JOINED ANY STUDIES?</Text>
             <Text style={donationStyle.noCardMessageArea}>
               <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>

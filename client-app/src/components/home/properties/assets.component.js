@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView, FlatList, Image,
+  View, Text, TouchableOpacity, ScrollView, FlatList, Image, ActivityIndicator,
 } from 'react-native';
 
 import { config } from './../../../configs';
@@ -26,9 +26,9 @@ export class AssetsComponent extends React.Component {
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
 
     let subtab = SubTabs.local;
-    let localAssets = DataController.getUserBitmarks().localAssets || [];
-    let assets = [];
-    if (subtab === SubTabs.local) {
+    let localAssets = DataController.getUserBitmarks().localAssets;
+    let assets = null;
+    if (subtab === SubTabs.local && localAssets) {
       assets = this.convertToFlatListData(localAssets);
     }
     this.state = {
@@ -36,9 +36,6 @@ export class AssetsComponent extends React.Component {
       accountNumber: '',
       copyText: 'COPY',
       assets,
-      data: {
-        localAssets,
-      }
     };
   }
   componentDidMount() {
@@ -76,12 +73,12 @@ export class AssetsComponent extends React.Component {
   }
 
   switchSubtab(subtab) {
-    let localAssets = DataController.getUserBitmarks().localAssets || [];
-    let assets = [];
-    if (subtab === SubTabs.local) {
+    let localAssets = DataController.getUserBitmarks().localAssets;
+    let assets = null;
+    if (subtab === SubTabs.local && localAssets) {
       assets = this.convertToFlatListData(localAssets);
     }
-    this.setState({ subtab, assets, data: { localAssets } });
+    this.setState({ subtab, assets });
   }
 
   addProperty() {
@@ -106,7 +103,7 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({this.state.data.localAssets.length})</Text>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -117,7 +114,7 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.local.toUpperCase()} ({this.state.data.localAssets.length})</Text>
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -145,9 +142,13 @@ export class AssetsComponent extends React.Component {
             </View>
           </TouchableOpacity>}
         </View>
+
         {this.state.subtab !== SubTabs.global && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
-            {(!this.state.assets || this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
+            {!this.state.assets && <View style={assetsStyle.messageNoAssetArea}>
+              <ActivityIndicator size="large" style={{ marginTop: 46, }} />
+            </View>}
+            {(this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
               </Text>}
