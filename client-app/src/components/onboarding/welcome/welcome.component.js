@@ -26,7 +26,7 @@ export class WelcomeComponent extends React.Component {
             <TouchableOpacity style={[welcomeComponentStyle.welcomeButton, { backgroundColor: 'white' }]} onPress={() => {
               this.props.navigation.navigate('SignIn');
             }}>
-              <Text style={[welcomeComponentStyle.welcomeButtonText, { color: '#0060F2' }]}>{'RECOVER YOUR ACCOUNT'.toUpperCase()}</Text>
+              <Text style={[welcomeComponentStyle.welcomeButtonText, { color: '#0060F2' }]}>{'ACCESS EXISTING ACCOUNT'.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
         </View>

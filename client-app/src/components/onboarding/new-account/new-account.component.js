@@ -252,7 +252,7 @@ export class NewAccountComponent extends React.Component {
                 <View style={newAccountStyle.swipePage}>
                   <Text style={[newAccountStyle.introductionTitle]}>OWN YOUR DATA</Text>
                   <Text style={[newAccountStyle.introductionDescription,]}>
-                    Your personal data is a valuable digital asset. Bitmark makes it simple to take advantage of this value by giving you tools to claim ownership of your data.
+                    Your personal data are valuable digital assets. Bitmark gives you the tools to claim ownership of your data.
                   </Text>
                   <View style={newAccountStyle.introductionImageArea}>
                     <Video
@@ -272,9 +272,9 @@ export class NewAccountComponent extends React.Component {
               header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
               content={(
                 <View style={newAccountStyle.swipePage}>
-                  <Text style={[newAccountStyle.introductionTitle]}>{'authenticate property'.toUpperCase()}</Text>
+                  <Text style={[newAccountStyle.introductionTitle]}>{'REGISTER CRYPTOPROPERTY'.toUpperCase()}</Text>
                   <Text style={[newAccountStyle.introductionDescription,]}>
-                    Your data is authenticated by ‘bitmarking’ and recording to the Bitmark blockchain. The blockchain holds secure and verifiable records of ownership of digital assets.
+                    Create your cryptoproperty by `bitmarking` your files in the Bitmark blockchain. The Bitmark blockchain records the property rights to all the world’s cryptoproperties.
                   </Text>
                   <View style={newAccountStyle.introductionImageArea}>
                     <Video

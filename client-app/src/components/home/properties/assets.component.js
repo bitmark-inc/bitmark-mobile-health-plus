@@ -150,10 +150,10 @@ export class AssetsComponent extends React.Component {
             </View>}
             {(this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
-                {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
+                {'NO CRYPTOPROPERTIES IN YOUR ACCOUNT.'.toUpperCase()}
               </Text>}
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
-                Here you will issue property titles (bitmarks), view and manage your properties, and have general account access and control.
+                This is where you can view and manage your existing cryptoproperties and create new ones.
                 </Text>}
               {(this.state.subtab === SubTabs.local) && <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
                 <Text style={assetsStyle.addFirstPropertyButtonText}>{'create first property'.toUpperCase()}</Text>
