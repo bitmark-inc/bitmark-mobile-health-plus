@@ -42,14 +42,18 @@ export class StudyDonationComponent extends React.Component {
                 By signing you are consenting to give the researcher rights to use this donation in their study. Your consent will be recorded in the Bitmark blockchain.
               </Text>
               <TouchableOpacity style={donationStyles.bitmarkButton} onPress={() => {
-                AppController.doDonateHealthData(this.state.study, this.state.list).then((result) => {
-                  if (result) {
-                    this.props.navigation.goBack();
-                  }
-                }).catch(error => {
-                  console.log('doDonateHealthData error:', error);
-                  EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-                });
+                AppController.doDonateHealthData(this.state.study, this.state.list, {
+                  indicator: true, title: 'Transferring your encrypted data to the researcher...', message: ''
+                }, {
+                    indicator: false, title: 'Donation Successful!', message: 'Thank you for donating your data to help current and future generations!'
+                  }).then((result) => {
+                    if (result) {
+                      this.props.navigation.goBack();
+                    }
+                  }).catch(error => {
+                    console.log('doDonateHealthData error:', error);
+                    EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+                  });
               }}>
                 <Text style={donationStyles.bitmarkButtonText}>DONATE</Text>
               </TouchableOpacity>

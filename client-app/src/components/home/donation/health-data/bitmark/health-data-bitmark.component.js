@@ -41,25 +41,30 @@ export class HealthDataBitmarkComponent extends React.Component {
             </Text>
           </View>
           <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
-            AppController.doBitmarkHealthData(this.state.list).then((result) => {
-              if (result !== null) {
-                const resetHomePage = NavigationActions.reset({
-                  index: 0,
-                  actions: [
-                    NavigationActions.navigate({
-                      routeName: 'User', params: {
-                        displayedTab: { mainTab: BottomTabsComponent.transaction, subTab: 'COMPLETED' },
-                        needReloadData: true,
-                      }
-                    }),
-                  ]
-                });
-                this.props.navigation.dispatch(resetHomePage);
-              }
-            }).catch(error => {
-              console.log('doBitmarkHelthData error:', error);
-              EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-            })
+            AppController.doBitmarkHealthData(this.state.list, {
+              indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
+            }, {
+                indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
+
+              }).then((result) => {
+                if (result !== null) {
+                  const resetHomePage = NavigationActions.reset({
+                    index: 0,
+                    actions: [
+                      NavigationActions.navigate({
+                        routeName: 'User', params: {
+                          displayedTab: { mainTab: BottomTabsComponent.transaction, subTab: 'COMPLETED' },
+                          needReloadData: true,
+                        }
+                      }),
+                    ]
+                  });
+                  this.props.navigation.dispatch(resetHomePage);
+                }
+              }).catch(error => {
+                console.log('doBitmarkHelthData error:', error);
+                EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+              })
           }}>
             <Text style={bitmarkHealthStyles.bitmarkButtonText}>ISSUE</Text>
           </TouchableOpacity>
