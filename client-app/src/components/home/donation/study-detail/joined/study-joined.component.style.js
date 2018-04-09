@@ -105,7 +105,8 @@ export default StyleSheet.create({
     width: '100%',
     minHeight: 42,
     paddingTop: 11,
-    paddingBottom: Math.max(11, constant.blankFooter),
+    paddingBottom: 11,
+    marginBottom: 10 + constant.blankFooter,
     backgroundColor: '#FF003C',
   },
   leaveButtonText: {
@@ -289,7 +290,7 @@ export default StyleSheet.create({
     marginTop: 20,
     width: '100%',
     height: 45,
-    paddingBottom: constant.blankFooter,
+    marginBottom: constant.blankFooter,
   },
   bottomButtonText: {
     fontFamily: 'Avenir black',

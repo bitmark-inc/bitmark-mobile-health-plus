@@ -23,18 +23,22 @@ export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
     this.logout = this.logout.bind(this);
-    this.reloadData = this.reloadData.bind(this);
+    this.reloadUserData = this.reloadUserData.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
 
     let subTab;
     let mainTab = MainTabs.properties;
-    if (this.props.navigation.state && this.props.navigation.state.params && this.props.navigation.state.params.displayedTab) {
-      mainTab = this.props.navigation.state.params.displayedTab.mainTab;
-      if (mainTab !== MainTabs.properties && mainTab !== MainTabs.transaction && mainTab !== MainTabs.account && mainTab !== MainTabs.donation) {
-        mainTab = MainTabs.properties;
+    let needReloadData;
+    if (this.props.navigation.state && this.props.navigation.state.params) {
+      needReloadData = this.props.navigation.state.params.needReloadData;
+      if (this.props.navigation.state.params.displayedTab) {
+        mainTab = this.props.navigation.state.params.displayedTab.mainTab;
+        if (mainTab !== MainTabs.properties && mainTab !== MainTabs.transaction && mainTab !== MainTabs.account && mainTab !== MainTabs.donation) {
+          mainTab = MainTabs.properties;
+        }
+        subTab = this.props.navigation.state.params.displayedTab.subTab;
       }
-      subTab = this.props.navigation.state.params.displayedTab.subTab;
     }
     this.state = {
       displayedTab: {
@@ -44,20 +48,21 @@ export class UserComponent extends React.Component {
       transactionNumber: DataController.getTransactionData().activeIncompingTransferOffers.length,
       donationInformation: DataController.getDonationInformation(),
     };
+    this.needReloadData = needReloadData;
   }
 
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
-    EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_DATA, this.reloadData);
+    EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData);
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
-    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_DATA, this.reloadData);
+    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData);
   }
 
-  reloadData() {
-    AppController.doReloadData();
+  reloadUserData() {
+    AppController.doReloadUserData();
   }
 
   switchMainTab(mainTab) {
@@ -68,25 +73,20 @@ export class UserComponent extends React.Component {
   handerReceivedNotification(data) {
     console.log('UserComponent handerReceivedNotification data :', data);
     if (data.event === 'transfer_request' && data.bitmark_id) {
-      AppController.doGetTransactionData().then(() => {
+      AppController.doReloadTransactionData().then(() => {
         return AppController.doGetTransferOfferDetail(data.bitmark_id);
       }).then(transferOfferDetail => {
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
-            NavigationActions.navigate({ routeName: 'User' }),
+            NavigationActions.navigate({
+              routeName: 'User', params: {
+                displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+              }
+            }),
             NavigationActions.navigate({
               routeName: 'TransactionDetail',
-              params: {
-                transferOffer: transferOfferDetail,
-                refreshTransactionScreen: () => {
-                  AppController.doGetTransactionData().then(() => {
-                  }).catch((error) => {
-                    console.log('AppController.doGetTransactionData error :', error);
-                  });
-                  this.switchMainTab(MainTabs.transaction);
-                }
-              }
+              params: { transferOffer: transferOfferDetail, }
             }),
           ]
         });
@@ -95,12 +95,14 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
     } else if (data.event === 'transfer_rejected') {
-      AppController.reloadBitmarks().then(() => {
+      AppController.doReloadBitmarks().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
-            NavigationActions.navigate({ routeName: 'User' }),
+            NavigationActions.navigate({
+              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
+            }),
             NavigationActions.navigate({
               routeName: 'LocalPropertyDetail',
               params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
@@ -117,19 +119,22 @@ export class UserComponent extends React.Component {
         actions: [
           NavigationActions.navigate({
             routeName: 'User', params: {
-              displayedTab: { mainTab: MainTabs.transaction, subTab: 'COMPLETED' }
+              displayedTab: { mainTab: MainTabs.transaction, subTab: 'COMPLETED' },
+              needReloadData: true,
             }
           }),
         ]
       });
       this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'transfer_failed') {
-      AppController.reloadBitmarks().then(() => {
+      AppController.doReloadBitmarks().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
-            NavigationActions.navigate({ routeName: 'User' }),
+            NavigationActions.navigate({
+              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
+            }),
             NavigationActions.navigate({
               routeName: 'LocalPropertyDetail',
               params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
@@ -151,7 +156,8 @@ export class UserComponent extends React.Component {
             actions: [
               NavigationActions.navigate({
                 routeName: 'User', params: {
-                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' }
+                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                  needReloadData: true,
                 }
               }),
               NavigationActions.navigate({
@@ -169,7 +175,8 @@ export class UserComponent extends React.Component {
             actions: [
               NavigationActions.navigate({
                 routeName: 'User', params: {
-                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' }
+                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                  needReloadData: true,
                 }
               }),
             ]
@@ -188,9 +195,7 @@ export class UserComponent extends React.Component {
             index: 1,
             actions: [
               NavigationActions.navigate({
-                routeName: 'User', params: {
-                  displayedTab: { mainTab: MainTabs.donation, subTab: 'BROWSER' }
-                }
+                routeName: 'User', params: { displayedTab: { mainTab: MainTabs.donation, subTab: 'BROWSER' } }
               }),
               NavigationActions.navigate({
                 routeName: 'StudyDetail', params: { study }
@@ -212,13 +217,12 @@ export class UserComponent extends React.Component {
             actions: [
               NavigationActions.navigate({
                 routeName: 'User', params: {
-                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' }
+                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                  needReloadData: true,
                 }
               }),
               NavigationActions.navigate({
-                routeName: 'HealthDataBitmark', params: {
-                  list: bitmarkHealthDataTask.list,
-                }
+                routeName: 'HealthDataBitmark', params: { list: bitmarkHealthDataTask.list, }
               }),
             ]
           });
@@ -248,18 +252,26 @@ export class UserComponent extends React.Component {
         content={(<View style={{ flex: 1 }}>
           {this.state.displayedTab.mainTab === MainTabs.properties && <PropertiesComponent screenProps={{
             homeNavigation: this.props.navigation,
+            needReloadData: this.needReloadData,
+            donReloadData: () => this.needReloadData = false,
           }} />}
           {this.state.displayedTab.mainTab === MainTabs.transaction && <TransactionsComponent screenProps={{
             homeNavigation: this.props.navigation,
             subTab: this.state.displayedTab.subTab,
+            needReloadData: this.needReloadData,
+            donReloadData: () => this.needReloadData = false,
           }} />}
           {this.state.displayedTab.mainTab === MainTabs.donation && <DonationComponent screenProps={{
             homeNavigation: this.props.navigation,
             subTab: this.state.displayedTab.subTab,
+            needReloadData: this.needReloadData,
+            donReloadData: () => this.needReloadData = false,
           }} />}
           {this.state.displayedTab.mainTab === MainTabs.account && <AccountComponent screenProps={{
             homeNavigation: this.props.navigation,
-            logout: this.logout
+            logout: this.logout,
+            needReloadData: this.needReloadData,
+            donReloadData: () => this.needReloadData = false,
           }} />}
         </View>)}
         footer={(<BottomTabsComponent mainTab={this.state.displayedTab.mainTab} switchMainTab={this.switchMainTab} homeNavigation={this.props.navigation} />)}
@@ -279,6 +291,7 @@ UserComponent.propTypes = {
           mainTab: PropTypes.string,
           subTab: PropTypes.string,
         }),
+        needReloadData: PropTypes.bool,
       }),
     }),
   }),

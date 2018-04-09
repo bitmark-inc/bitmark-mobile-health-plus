@@ -30,7 +30,7 @@ export class TransactionsComponent extends React.Component {
     this.switchSubtab = this.switchSubtab.bind(this);
     this.handerChangePendingTransactions = this.handerChangePendingTransactions.bind(this);
     this.handerChangeCompletedTransaction = this.handerChangeCompletedTransaction.bind(this);
-    this.refreshTransactionScreen = this.refreshTransactionScreen.bind(this);
+    this.reloadData = this.reloadData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.clickToActionRequired = this.clickToActionRequired.bind(this);
     this.generateData = this.generateData.bind(this);
@@ -58,6 +58,12 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    if (this.props.screenProps.needReloadData) {
+      this.reloadData();
+      if (this.props.screenProps.doneReloadData) {
+        this.props.screenProps.doneReloadData()
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -150,7 +156,7 @@ export class TransactionsComponent extends React.Component {
   }
   handerDonationInformationChange() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    this.setState({ actionRequired, completed, donationInformation })
+    this.setState({ actionRequired, completed, donationInformation });
   }
   handerChangePendingTransactions() {
     let { actionRequired, completed, donationInformation } = this.generateData();
@@ -158,24 +164,16 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangeCompletedTransaction() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    this.setState({ actionRequired, completed, donationInformation })
+    this.setState({ actionRequired, completed, donationInformation });
   }
 
-  refreshTransactionScreen() {
-    AppController.doGetTransactionData().then(() => {
-      let transactionData = DataController.getTransactionData();
-      transactionData.activeIncompingTransferOffers.forEach((item, index) => {
-        item.key = index;
-      });
-      transactionData.transactions.forEach((item, index) => {
-        item.key = index;
-      });
-      this.setState({
-        activeIncompingTransferOffers: transactionData.activeIncompingTransferOffers,
-        transactions: transactionData.transactions,
-      });
+  reloadData() {
+    AppController.doReloadTransactionData().then(() => {
+      let { actionRequired, completed, donationInformation } = this.generateData();
+      this.setState({ actionRequired, completed, donationInformation });
     }).catch((error) => {
-      console.log('getUserBitmark error :', error);
+      console.log('doReloadTransactionData error :', error);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
     });
   }
 
@@ -187,7 +185,6 @@ export class TransactionsComponent extends React.Component {
     if (item.type === ActionTypes.transfer && item.transferOffer) {
       this.props.screenProps.homeNavigation.navigate('TransactionDetail', {
         transferOffer: item.transferOffer,
-        refreshTransactionScreen: this.refreshTransactionScreen,
       });
     } else if (item.type === ActionTypes.donation) {
       if (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data) {
@@ -364,5 +361,7 @@ TransactionsComponent.propTypes = {
       goBack: PropTypes.func,
       dispatch: PropTypes.func,
     }),
+    needReloadData: PropTypes.bool,
+    doneReloadData: PropTypes.func,
   }),
 }

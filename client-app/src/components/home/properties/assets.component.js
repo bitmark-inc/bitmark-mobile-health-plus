@@ -22,7 +22,7 @@ export class AssetsComponent extends React.Component {
     this.switchSubtab = this.switchSubtab.bind(this);
     this.addProperty = this.addProperty.bind(this);
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
-    this.refreshPropertiesScreen = this.refreshPropertiesScreen.bind(this);
+    this.reloadData = this.reloadData.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
 
     let subtab = SubTabs.local;
@@ -43,6 +43,12 @@ export class AssetsComponent extends React.Component {
   }
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    if (this.props.screenProps.needReloadData) {
+      this.reloadData();
+      if (this.props.screenProps.doneReloadData) {
+        this.props.screenProps.doneReloadData()
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -53,8 +59,8 @@ export class AssetsComponent extends React.Component {
     this.switchSubtab(this.state.subtab);
   }
 
-  refreshPropertiesScreen() {
-    AppController.reloadBitmarks().then(() => {
+  reloadData() {
+    AppController.doReloadBitmarks().then(() => {
       this.switchSubtab(this.state.subtab);
     }).catch((error) => {
       console.log('getUserBitmark error :', error);
@@ -79,9 +85,7 @@ export class AssetsComponent extends React.Component {
   }
 
   addProperty() {
-    this.props.navigation.navigate('LocalIssuance', {
-      refreshPropertiesScreen: this.refreshPropertiesScreen,
-    });
+    this.props.navigation.navigate('LocalIssuance');
   }
 
   render() {
@@ -204,6 +208,8 @@ AssetsComponent.propTypes = {
       navigate: PropTypes.func,
       goBack: PropTypes.func,
     }),
+    needReloadData: PropTypes.bool,
+    doneReloadData: PropTypes.func,
   }),
 
 }

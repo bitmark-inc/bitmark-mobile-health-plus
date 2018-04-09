@@ -124,16 +124,19 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
   return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
 };
 
-const check24Words = async (pharse24Words) => {
-  return await processing(AccountModel.doCheck24Words(pharse24Words));
+const doReloadUserData = async () => {
+  return await processing(DataController.doReloadUserData());
+};
+const doReloadBitmarks = async () => {
+  await processing(DataController.doReloadBitmarks());
 };
 
-const reloadBitmarks = async () => {
-  await processing(DataController.reloadBitmarks());
+const doReloadTransactionData = async () => {
+  await processing(DataController.doReloadTransactionData());
 };
 
-const doGetTransactionData = async () => {
-  await processing(DataController.doGetTransactionData());
+const doReloadDonationInformation = async () => {
+  await processing(DataController.doReloadDonationInformation());
 };
 
 const doGetTransferOfferDetail = async (bitmarkId) => {
@@ -192,9 +195,7 @@ const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, e
   return await submitting(TransactionService.doRejectTransferBitmark(bitmarkId), processingInfo, successInfo, errorInfo);
 };
 
-const doReloadData = async () => {
-  return await processing(DataController.doReloadData());
-};
+
 const doRequirePermission = async () => {
   let donationInformation = DataController.getDonationInformation();
   await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
@@ -265,9 +266,6 @@ const doBitmarkHealthData = async (list) => {
 const doDownloadStudyConsent = async (study) => {
   return await processing(DonationService.doDownloadStudyConsent(study));
 };
-const doReloadDonationInformation = async () => {
-  return await processing(DataController.doReloadDonationInformation());
-};
 
 const doDownloadBitmark = async (bitmark, processingData) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to download property.');
@@ -293,12 +291,9 @@ let AppController = {
   doLogin,
   doLogout,
   doCreateSignatureData,
-  check24Words,
-  reloadBitmarks,
   doCheckFileToIssue,
   doIssueFile,
   doGetProvenance,
-  doGetTransactionData,
   doGetTransferOfferDetail,
   doTransferBitmark,
   doAcceptTransferBitmark,
@@ -316,7 +311,10 @@ let AppController = {
   doReloadDonationInformation,
   doDownloadBitmark,
 
-  doReloadData,
+  doReloadUserData,
+  doReloadBitmarks,
+  doReloadTransactionData,
+
 
 
   doStartBackgroundProcess,

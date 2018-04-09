@@ -164,8 +164,7 @@ const configNotification = () => {
       setTimeout(() => {
         EventEmiterService.emit(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
       }, 1000);
-    } else if (notificationData.event === 'transfer_request' || notificationData.event === 'transfer_completed' ||
-      notificationData.event === 'transfer_accepted') {
+    } else if (notificationData.event === 'transfer_request' || notificationData.event === 'transfer_completed' || notificationData.event === 'transfer_accepted') {
       runGetActiveIncomingTransferOfferInBackground();
       runGetTransactionsInBackground();
     } else if (notificationData.event === 'transfer_rejected' || notificationData.event === 'transfer_failed') {
@@ -189,6 +188,21 @@ const runOnBackground = async () => {
     await runGetDonationInformationInBackground();
     await runGetLocalBitmarksInBackground();
   }
+};
+
+const doReloadTransactionData = async () => {
+  await runGetTransactionsInBackground();
+  await runGetActiveIncomingTransferOfferInBackground();
+  await runGetLocalBitmarksInBackground();
+};
+
+const doReloadDonationInformation = async () => {
+  await runGetDonationInformationInBackground();
+  await runGetLocalBitmarksInBackground();
+};
+
+const doReloadBitmarks = async () => {
+  await runGetLocalBitmarksInBackground();
 };
 // ================================================================================================================================================
 // ================================================================================================================================================
@@ -239,20 +253,6 @@ const doLogout = async () => {
 
 const doDeactiveApplication = async () => {
   stopInterval();
-};
-
-const doGetTransactionData = async () => {
-  let activeIncompingTransferOffers = await TransactionService.doGetActiveIncomingTransferOffers(userInformation.bitmarkAccountNumber);
-  let transactions = await TransactionService.getAllTransactions(userInformation.bitmarkAccountNumber, userData.transactions);
-  if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
-    userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
-  }
-  if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
-    userData.transactions = transactions;
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
-  }
-  await runGetLocalBitmarksInBackground();
 };
 
 const doOpenApp = async () => {
@@ -433,14 +433,16 @@ const getDonationInformation = () => {
 };
 
 const DataController = {
-  doReloadData: runOnBackground,
   doOpenApp,
   doLogin,
   doLogout,
   doStartBackgroundProcess,
+  doReloadUserData: runOnBackground,
+  doReloadBitmarks,
+  doReloadTransactionData,
+  doReloadDonationInformation,
+
   doDeactiveApplication,
-  reloadBitmarks: runGetLocalBitmarksInBackground,
-  doGetTransactionData,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
   doJoinStudy,
@@ -448,7 +450,6 @@ const DataController = {
   doCompletedStudyTask,
   doDonateHealthData,
   doBitmarkHealthData,
-  doReloadDonationInformation: runGetDonationInformationInBackground,
   doDownloadBitmark,
   doUpdateViewStatus,
 

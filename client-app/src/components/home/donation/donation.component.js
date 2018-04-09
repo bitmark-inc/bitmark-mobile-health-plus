@@ -10,7 +10,7 @@ import Mailer from 'react-native-mail';
 import { StudyCardComponent } from './study-card/study-card.component';
 
 import donationStyle from './donation.component.style';
-import { DataController } from '../../../managers';
+import { DataController, AppController } from '../../../managers';
 import { EventEmiterService } from '../../../services';
 import defaultStyle from './../../../commons/styles';
 
@@ -24,6 +24,7 @@ export class DonationComponent extends React.Component {
     super(props);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.contactBitmark = this.contactBitmark.bind(this);
+    this.reloadData = this.reloadData.bind(this);
 
     let subTab = (this.props.screenProps.subTab && (this.props.screenProps.subTab === SubTabs.other || this.props.screenProps.subTab === SubTabs.joined)) ? this.props.screenProps.subTab : SubTabs.other;
     let donationInformation = DataController.getDonationInformation();
@@ -40,11 +41,25 @@ export class DonationComponent extends React.Component {
   // ==========================================================================================
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    if (this.props.screenProps.needReloadData) {
+      this.reloadData();
+      if (this.props.screenProps.doneReloadData) {
+        this.props.screenProps.doneReloadData()
+      }
+    }
   }
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
   }
   // ==========================================================================================
+
+  reloadData() {
+    AppController.doReloadDonationInformation().then(() => {
+      this.switchSubtab(this.state.subtab);
+    }).catch((error) => {
+      console.log('getUserBitmark error :', error);
+    });
+  }
   handerDonationInformationChange() {
     this.switchSubtab();
   }
@@ -173,6 +188,8 @@ DonationComponent.propTypes = {
       navigate: PropTypes.func,
       goBack: PropTypes.func,
     }),
+    needReloadData: PropTypes.bool,
+    doneReloadData: PropTypes.func,
   }),
 
 }

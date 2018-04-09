@@ -54,32 +54,6 @@ export default StyleSheet.create({
     fontWeight: '300'
   },
 
-  bottomButtonArea: {
-    position: 'absolute',
-    bottom: 10,
-    width: '100%',
-    paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19),
-  },
-  bottomButton: {
-    width: convertWidth(337),
-    minHeight: 45,
-    paddingTop: 11,
-    paddingBottom: 11,
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#0060F2',
-  },
-  bottomButtonText: {
-    fontFamily: 'Avenir black',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '900',
-    color: 'white'
-  },
-
   removeButton: {
     position: 'absolute',
     width: convertWidth(337),

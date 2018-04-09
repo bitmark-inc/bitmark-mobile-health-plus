@@ -46,7 +46,8 @@ export class HealthDataBitmarkComponent extends React.Component {
                   actions: [
                     NavigationActions.navigate({
                       routeName: 'User', params: {
-                        displayedTab: { mainTab: BottomTabsComponent.transaction, subTab: 'COMPLETED' }
+                        displayedTab: { mainTab: BottomTabsComponent.transaction, subTab: 'COMPLETED' },
+                        needReloadData: true,
                       }
                     }),
                   ]

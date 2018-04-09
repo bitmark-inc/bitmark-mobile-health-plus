@@ -28,7 +28,6 @@ export class LocalIssuanceComponent extends React.Component {
   render() {
     return (
       <LocalIssuanceTemp screenProps={{
-        refreshPropertiesScreen: this.props.navigation.state.params.refreshPropertiesScreen,
         homeNavigation: this.props.screenProps.homeNavigation,
         issuanceNavigation: this.props.navigation,
       }} />
@@ -37,13 +36,7 @@ export class LocalIssuanceComponent extends React.Component {
 }
 
 LocalIssuanceComponent.propTypes = {
-  navigation: PropTypes.shape({
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        refreshPropertiesScreen: PropTypes.func,
-      }),
-    }),
-  }),
+  navigation: PropTypes.any,
   screenProps: PropTypes.shape({
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,

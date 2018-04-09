@@ -85,14 +85,14 @@ export class LocalAssetDetailComponent extends React.Component {
       onPress: () => {
         AppController.doCancelTransferBitmark(bitmarkId).then((result) => {
           if (result) {
-            EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_DATA);
+            EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_USER_DATA);
           }
         }).catch(error => {
           console.log('cancel transferring bitmark error :', error);
           EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
             onClose: async () => {
-              AppController.reloadBitmarks().catch(error => {
-                console.log('AppController.reloadBitmarks error', error);
+              AppController.doReloadBitmarks().catch(error => {
+                console.log('AppController.doReloadBitmarks error', error);
               });
             }
           });

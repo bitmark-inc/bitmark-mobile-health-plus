@@ -7,7 +7,7 @@ let EventEmiterService = {
     APP_SUBMITTING: 'app-submitting',
     APP_PROCESS_ERROR: 'app-process-error',
     APP_RECEIVED_NOTIFICATION: 'app-received-notification',
-    NEED_RELOAD_DATA: 'need-reload-data',
+    NEED_RELOAD_USER_DATA: 'need-reload-user-data',
     CHANGE_USER_INFO: 'change-user-info',
     CHANGE_USER_DATA_LOCAL_BITMARKS: 'change-user-data:local-bitmarks',
     CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER: 'change-user-data:active-incoming-transfer-offer',

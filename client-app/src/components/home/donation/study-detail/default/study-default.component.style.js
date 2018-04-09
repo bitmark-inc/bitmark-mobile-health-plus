@@ -111,7 +111,8 @@ export default StyleSheet.create({
     width: '100%',
     minHeight: 45,
     paddingTop: 11,
-    paddingBottom: Math.max(11, constant.blankFooter),
+    paddingBottom: 11,
+    marginBottom: 10 + constant.blankFooter,
   },
   bottomButtonText: {
     fontFamily: 'Avenir black',

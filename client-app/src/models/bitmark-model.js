@@ -124,12 +124,12 @@ const doIssueThenTransferFile = async (touchFaceIdSession, filePath, assetName, 
 };
 
 
-const doGetTransactionInformation = (txid) => {
+const get100Transactions = (accountNumber, offsetNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let bitmarkUrl = config.api_server_url +
-      `/v1/txs/${txid}?pending=true&block=true`;
-    fetch(bitmarkUrl, {
+    let tempURL = config.api_server_url + `/v1/txs?owner=${accountNumber}&pending=true&to=later&sent=true&block=true`;
+    tempURL += offsetNumber ? `&at=${offsetNumber}` : '';
+    fetch(tempURL, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -140,12 +140,61 @@ const doGetTransactionInformation = (txid) => {
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doGetTransactionInformation error :' + JSON.stringify(data)));
+        return reject(new Error('get100Transactions error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
   });
 };
+
+const getAllTransactions = async (accountNumber, lastOffset) => {
+  let totalTxs;
+  let canContinue = true;
+  while (canContinue) {
+    let data = await get100Transactions(accountNumber, lastOffset);
+    data.txs.forEach(tx => {
+      tx.block = data.blocks.find(block => block.number === tx.block_number);
+    });
+    if (!totalTxs) {
+      totalTxs = data.txs;
+    } else {
+      totalTxs = totalTxs.concat(data.txs);
+    }
+    if (data.txs.length < 100) {
+      canContinue = false;
+      break;
+    }
+    data.txs.forEach(tx => {
+      if (!lastOffset || lastOffset < tx.offset) {
+        lastOffset = tx.offset;
+      }
+    });
+  }
+  return totalTxs;
+};
+
+const getTransactionDetail = (txid) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = config.api_server_url + `/v1/txs/${txid}?pending=true&asset=true&block=true`;
+    fetch(tempURL, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('getTransactionDetail error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 
 const doGetBitmarkInformation = (bitmarkId) => {
   return new Promise((resolve, reject) => {
@@ -179,7 +228,8 @@ let BitmarkModel = {
   doIssueThenTransferFile,
   doCheckMetadata,
   doGetBitmarkInformation,
-  doGetTransactionInformation,
+  getTransactionDetail,
+  getAllTransactions,
 };
 
 export { BitmarkModel };

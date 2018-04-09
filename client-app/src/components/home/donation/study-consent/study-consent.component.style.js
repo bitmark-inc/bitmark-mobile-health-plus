@@ -32,7 +32,7 @@ export default StyleSheet.create({
   bottomButton: {
     minHeight: 45,
     paddingTop: 11,
-    paddingBottom: Math.max(11, constant.blankFooter),
+    paddingBottom: Math.max(20, 10 + constant.blankFooter),
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

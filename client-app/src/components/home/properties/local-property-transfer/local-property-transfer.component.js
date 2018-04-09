@@ -42,10 +42,15 @@ export class LocalPropertyTransferComponent extends React.Component {
         if (result) {
           const resetMainPage = NavigationActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'User' })]
+            actions: [NavigationActions.navigate({
+              routeName: 'User', params: {
+                displayedTab: { mainTab: 'Properties' },
+                needReloadData: true,
+              }
+            })]
           });
           this.props.navigation.dispatch(resetMainPage);
-          EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_DATA);
+          EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_USER_DATA);
         }
       }).catch(error => {
         EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
@@ -118,7 +123,6 @@ LocalPropertyTransferComponent.propTypes = {
       params: PropTypes.shape({
         bitmark: PropTypes.object,
         asset: PropTypes.object,
-        refreshPropertiesScreen: PropTypes.func,
       }),
     }),
   }),
