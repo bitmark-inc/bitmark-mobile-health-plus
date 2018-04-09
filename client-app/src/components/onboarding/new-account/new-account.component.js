@@ -145,6 +145,7 @@ class BuildDigitalAssetComponent extends React.Component {
                 source={require('./../../../../assets/videos/Digital-Estate.mp4')}
                 resizeMode="contain"
                 style={newAccountStyle.introductionImage}
+                muted={true}
               />
             </View>
           </View>
@@ -261,6 +262,7 @@ export class NewAccountComponent extends React.Component {
                       source={require('./../../../../assets/videos/Own-Your-Data.mp4')}
                       resizeMode="contain"
                       style={newAccountStyle.introductionImage}
+                      muted={true}
                     />
                   </View>
                 </View>
@@ -283,6 +285,7 @@ export class NewAccountComponent extends React.Component {
                       source={require('./../../../../assets/videos/Verify-Ownership-2.mp4')}
                       resizeMode="contain"
                       style={newAccountStyle.introductionImage}
+                      muted={true}
                     />
                   </View>
                 </View>
