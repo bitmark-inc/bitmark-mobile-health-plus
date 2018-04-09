@@ -26,12 +26,13 @@ export class DonationComponent extends React.Component {
     this.contactBitmark = this.contactBitmark.bind(this);
 
     let subTab = (this.props.screenProps.subTab && (this.props.screenProps.subTab === SubTabs.other || this.props.screenProps.subTab === SubTabs.joined)) ? this.props.screenProps.subTab : SubTabs.other;
-    let studies = subTab === SubTabs.other ? DataController.getDonationInformation().otherStudies : DataController.getDonationInformation().joinedStudies;
+    let donationInformation = DataController.getDonationInformation();
+    let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies) || [];
     studies.forEach(study => {
       study.key = study.studyId
     });
     this.state = {
-      donationInformation: DataController.getDonationInformation(),
+      donationInformation,
       subTab,
       studies,
     };
@@ -49,11 +50,12 @@ export class DonationComponent extends React.Component {
   }
   switchSubtab(subTab) {
     subTab = subTab || this.state.subTab;
-    let studies = subTab === SubTabs.other ? DataController.getDonationInformation().otherStudies : DataController.getDonationInformation().joinedStudies;
+    let donationInformation = DataController.getDonationInformation();
+    let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies) || [];
     studies.forEach(study => {
       study.key = study.studyId
     });
-    this.setState({ subTab, studies, donationInformation: DataController.getDonationInformation() });
+    this.setState({ subTab, studies, donationInformation });
   }
   contactBitmark() {
     Mailer.mail({ recipients: ['support@bitmark.com'], }, (error) => {

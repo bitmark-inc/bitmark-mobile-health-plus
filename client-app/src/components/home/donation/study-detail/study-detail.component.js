@@ -61,8 +61,10 @@ export class StudyDetailComponent extends React.Component {
       text: 'Cancel'
     }, {
       text: 'Leave', onPress: () => {
-        AppController.doLeaveStudy(this.state.study.studyId).then(() => {
-          this.props.navigation.goBack();
+        AppController.doLeaveStudy(this.state.study.studyId).then((result) => {
+          if (result !== null) {
+            this.props.navigation.goBack();
+          }
         }).catch(error => {
           console.log('doLeaveStudy error:', error);
           EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {

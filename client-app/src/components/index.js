@@ -107,16 +107,20 @@ class MainComponent extends Component {
   }
 
   handerProcessErrorEvent(processError) {
-    Alert.alert((processError && processError.title) ? processError.title : "We’re sorry!",
-      (processError && processError.message) ? processError.message : 'Something went wrong.\nPlease try again later.',
-      [{
-        text: 'OK',
-        onPress: () => {
-          if (processError && processError.onClose) {
-            processError.onClose();
-          }
+    let title = 'We’re sorry!';
+    let message = 'Something went wrong.\nPlease try again later.';
+    if (processError && (processError.title || processError.message)) {
+      title = processError.title;
+      message = processError.message;
+    }
+    Alert.alert(title, message, [{
+      text: 'OK',
+      onPress: () => {
+        if (processError && processError.onClose) {
+          processError.onClose();
         }
-      }]);
+      }
+    }]);
   }
 
   handerSumittinggEvent(submitting) {

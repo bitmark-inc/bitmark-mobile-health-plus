@@ -134,15 +134,16 @@ public extension Account {
             throw("Fail to get bitmark id")
         }
         
-//        if let sessionData = sessionData {
-//            try updateSessionData(bitmarkId: bitmarkId, sessionData: sessionData, sender: self.accountNumber.string, recipient: recipient)
-//        }
+        var newSessionData = sessionData
+        if let sessionData = sessionData {
+            newSessionData = try updatedSessionData(bitmarkId: bitmarkId, sessionData: sessionData, sender: self.accountNumber.string, recipient: recipient)
+        }
         
         // Transfer records
         var transfer = TransferOffer(txId: bitmarkId, receiver: try AccountNumber(address: recipient))
         try transfer.sign(withSender: self)
         
-        return (sessionData, transfer)
+        return (newSessionData, transfer)
     }
     
     public func downloadAsset(bitmarkId: String) throws -> (String?, Data?) {
@@ -217,6 +218,18 @@ public extension Account {
         let network = self.authKey.network
         let api = API(network: network)
         
+        let updatedSession = try self.updatedSessionData(bitmarkId: bitmarkId, sessionData: sessionData, sender: sender, recipient: recipient)
+        
+        let result = try api.updateSession(account: self, bitmarkId: bitmarkId, recipient: recipient, sessionData: updatedSession)
+        if result == false {
+            throw("Fail to update session data")
+        }
+    }
+    
+    private func updatedSessionData(bitmarkId: String, sessionData: SessionData, sender: String, recipient: String) throws -> SessionData {
+        let network = self.authKey.network
+        let api = API(network: network)
+        
         var senderEncryptionPublicKey = self.encryptionKey.publicKey.hexEncodedString
         
         if let senderEncryptionPublicKeyFromAPI = try api.getEncryptionPublicKey(accountNumber: sender) {
@@ -234,10 +247,7 @@ public extension Account {
         let sessionData = try SessionData.createSessionData(account: self,
                                                             sessionKey: assetEnryption.key, forRecipient: recipientEncrPubkey.hexDecodedData)
         
-        let result = try api.updateSession(account: self, bitmarkId: bitmarkId, recipient: recipient, sessionData: sessionData)
-        if result == false {
-            throw("Fail to update session data")
-        }
+        return sessionData
     }
 }
 
