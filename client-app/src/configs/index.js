@@ -53,3 +53,7 @@ export { config, ios, android };
 // ├────────────┼──────────────────────────────────────────────────────────────────┤
 // │ Staging    │ H0VznPOIIkUc31GdXzWi5vSAifvk5247aad0-6cc3-4dd7-b247-c76a433163da │
 // └────────────┴──────────────────────────────────────────────────────────────────┘
+
+
+// code-push release-react Bitmark ios -m --description "update code" --targetBinaryVersion "1.1.1"
+// 

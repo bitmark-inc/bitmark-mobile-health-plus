@@ -36,7 +36,9 @@ export class HealthDataBitmarkComponent extends React.Component {
               <Image style={[bitmarkHealthStyles.touchIdImage]} source={require('./../../../../../../assets/imgs/touch-id.png')} />
               <Image style={[bitmarkHealthStyles.faceIdImage]} source={require('./../../../../../../assets/imgs/face-id.png')} />
             </View>
-            <Text style={bitmarkHealthStyles.bitmarkDescription}>By signing you are consenting to give the researcher rights to use this donation in their study. Your consent will be recorded in the Bitmark blockchain.</Text>
+            <Text style={bitmarkHealthStyles.bitmarkDescription}>
+              Signing your issuance with Touch/ Face ID or Passcode securely creates new bitmarks for your health data.
+            </Text>
           </View>
           <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
             AppController.doBitmarkHealthData(this.state.list).then((result) => {
