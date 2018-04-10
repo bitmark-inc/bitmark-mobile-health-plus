@@ -80,7 +80,7 @@ export class HealthDataActiveComponent extends React.Component {
           </View>
           <View style={activeDonationStyle.content}>
             <Text style={[activeDonationStyle.healthDataTitle]}>{'CONGRATULATIONS!\nYou’ve all set up!'.toUpperCase()}</Text>
-            <Text style={activeDonationStyle.healthDataDescription}>We will send you issuance request every Monday 11pm, please sign the issuance to bitmark your health data.</Text>
+            <Text style={activeDonationStyle.healthDataDescription}>We will send you issuance request every Saturday 11:00 AM, please sign the issuance to bitmark your health data.{'\n\n'}You also can check the configure for the  Health data properties creation.</Text>
 
             <View style={[activeDonationStyle.bottomButtonArea]}>
               <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.goToHealthDataSetting}>
