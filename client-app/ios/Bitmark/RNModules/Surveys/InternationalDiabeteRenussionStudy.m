@@ -274,7 +274,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                                                              answer:timeOfDayAnswerFormat];
   
   ORKQuestionStep *step11QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-11"
-                                                                              title:@"Please tell us at what time you usually go to bed?"
+                                                                              title:@"Please tell us at what time you usually go to sleep?"
                                                                              answer:timeOfDayAnswerFormat];
   
   ORKQuestionStep *step12QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-12"
@@ -282,7 +282,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                                                              answer:timeOfDayAnswerFormat];
   
   ORKQuestionStep *step13QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-13"
-                                                                              title:@"Please tell us at what time you usually have your third main meal of the day?"
+                                                                              title:@"Please tell us at what time you usually have your last meal of the day?"
                                                                              answer:timeOfDayAnswerFormat];
   
   // Create task
@@ -448,7 +448,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   
   ORKConsentSection *s2 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeStudySurvey];
   s2.title = @"Activities";
-  s2.summary = @"During this study, we will ask you questions regarding your food and physical activity habits.  Occasionally, we will ask you to take a picture of those habits.\n\nThe app is designed to send you occasional reminders to complete these study tasks.";
+  s2.summary = @"During this study, we will ask you questions regarding your food and physical activity habits. Occasionally, we will ask you to take a picture of those habits.\n\nThe app is designed to send you occasional reminders to complete these study tasks.";
   s2.customLearnMoreButtonTitle = @"Learn more";
   
   ORKConsentSection *s3 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
@@ -500,7 +500,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   ORKConsentSection *s10 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
   s10.title = @"Summary";
   s10.summary = @"1. Your participation in this study is voluntary.\n\n2. Try to wear your phone at all times, to track your physical activity.\n\n3. Remember to use a compatible app to track your dietary intake.";
-  s10.contentURL = [NSURL URLWithString:@"http://www.diabetesremission.org/401/login.php?redirect=/diet-apps.html"];
+  s10.contentURL = [NSURL URLWithString:@"http://www.diabetesremission.org/screening.html"];
   s10.customImage = [UIImage imageNamed:@"consent_issue_to_consider"];
   s10.customLearnMoreButtonTitle = @"Learn more";
   
