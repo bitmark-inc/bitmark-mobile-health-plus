@@ -216,7 +216,7 @@ const doReloadBitmarks = async () => {
 let dataInterval = null;
 const startInterval = () => {
   stopInterval();
-  dataInterval = setInterval(runOnBackground, 10 * 1000);
+  dataInterval = setInterval(runOnBackground, 30 * 1000);
 };
 
 const stopInterval = () => {
