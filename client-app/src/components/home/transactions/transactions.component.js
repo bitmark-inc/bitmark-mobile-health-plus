@@ -170,7 +170,8 @@ export class TransactionsComponent extends React.Component {
       if (!a || !a.timestamp) return -1;
       if (!b || !b.timestamp) return -1;
       return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
-    }) : actionRequired;
+    }) : completed;
+
     return { actionRequired, completed, donationInformation };
   }
   handerDonationInformationChange() {
