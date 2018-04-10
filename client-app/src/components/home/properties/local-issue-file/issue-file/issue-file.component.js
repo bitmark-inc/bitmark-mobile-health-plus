@@ -70,9 +70,9 @@ export class LocalIssueFileComponent extends React.Component {
   // ==========================================================================================
   onIssueFile() {
     AppController.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), {
-      indicator: true, title: 'Submitting your request to the Bitmark network for confirmation...', message: ''
+      indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
     }, {
-        indicator: false, title: 'Issuance Successful!', message: "You've successfully created your crytptoproperty. Let's verify that it is showing up in your account."
+        indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
       }).then((data) => {
         if (data !== null) {
           const resetHomePage = NavigationActions.reset({
@@ -187,7 +187,7 @@ export class LocalIssueFileComponent extends React.Component {
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
-            <Text style={defaultStyle.headerTitle}>{'Create Cryptoproperty'.toUpperCase()}</Text>
+            <Text style={defaultStyle.headerTitle}>PHOTOS</Text>
             <TouchableOpacity style={defaultStyle.headerRight} />
           </View>)}
           contentInScroll={true}
@@ -309,7 +309,7 @@ export class LocalIssueFileComponent extends React.Component {
               />
               {!!this.state.quantityError && <Text style={localAddPropertyStyle.quantityInputError}>{this.state.quantityError}</Text>}
               <Text style={localAddPropertyStyle.ownershipClaimLabel}>{'Ownership claim'.toUpperCase()}</Text>
-              <Text style={localAddPropertyStyle.ownershipClaimMessage}>{'"I hereby claim that I am the legal owner of this cryptoproperty and want these properties to be irrevocably issued and recorded in the Bitmark blockchain."'}</Text>
+              <Text style={localAddPropertyStyle.ownershipClaimMessage}>{'“I hereby claim that I am the legal owner of this asset and want this property to be irrevocably issued and recorded in the Bitmark blockchain.”'}</Text>
               {!!this.state.issueError && <Text style={localAddPropertyStyle.issueError}>{this.state.issueError}</Text>}
               <TouchableOpacity
                 style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}

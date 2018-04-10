@@ -30,7 +30,7 @@ export class NotificationComponent extends React.Component {
         <Text style={[notificationStyle.notificationTitle]}>NOTIFICATIONS</Text>
         <Image style={[notificationStyle.notificationImage]} source={require('../../../../assets/imgs/notification.png')} />
         <Text style={[notificationStyle.notificationDescription,]}>
-          Enable to receive important notifications for actions requiring your authorization.
+          Enable push notifications to stay updated on property transfer requests and app updates.
         </Text>
         <View style={notificationStyle.enableButtonArea}>
           <TouchableOpacity style={[notificationStyle.enableButton]} onPress={requestNotification}>
