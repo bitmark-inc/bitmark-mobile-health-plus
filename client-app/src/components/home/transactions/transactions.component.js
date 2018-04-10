@@ -107,7 +107,7 @@ export class TransactionsComponent extends React.Component {
     actionRequired = actionRequired ? sortList(actionRequired, (a, b) => {
       if (!a || !a.timestamp) return 1;
       if (!b || !b.timestamp) return 1;
-      return moment(a.timestamp).toDate().getTime() - moment(b.timestamp).toDate().getTime();
+      return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
     }) : actionRequired;
 
     let completed;
@@ -166,6 +166,11 @@ export class TransactionsComponent extends React.Component {
       });
     }
 
+    completed = completed ? sortList(completed, (a, b) => {
+      if (!a || !a.timestamp) return -1;
+      if (!b || !b.timestamp) return -1;
+      return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
+    }) : actionRequired;
     return { actionRequired, completed, donationInformation };
   }
   handerDonationInformationChange() {

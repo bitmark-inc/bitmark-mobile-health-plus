@@ -74,7 +74,7 @@ export class HealthDataSettingsComponent extends React.Component {
             <Text style={myStyle.healthDataFieldFrequency}>WEEKLY</Text>
           </View>
           <View style={myStyle.healthDataFieldDescriptionArea}>
-            <Text style={myStyle.healthDataFieldDescriptionText}>We will send you issuance request every Monday 11:00AM, please sign the issuance.</Text>
+            <Text style={myStyle.healthDataFieldDescriptionText}>We will send you issuance request every Saturday 11:00AM, please sign the issuance.</Text>
           </View>
 
           <TouchableOpacity style={myStyle.healthDataField} onPress={() => this.props.navigation.navigate('HealthDataMetadata')}>
