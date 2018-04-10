@@ -500,7 +500,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   ORKConsentSection *s10 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
   s10.title = @"Summary";
   s10.summary = @"1. Your participation in this study is voluntary.\n\n2. Try to wear your phone at all times, to track your physical activity.\n\n3. Remember to use a compatible app to track your dietary intake.";
-  s10.contentURL = [NSURL URLWithString:@"http://www.diabetesremission.org/screening.html"];
+  s10.contentURL = [NSURL URLWithString:@"https://www.rdiabetes.com/registry"];
   s10.customImage = [UIImage imageNamed:@"consent_issue_to_consider"];
   s10.customLearnMoreButtonTitle = @"Learn more";
   
