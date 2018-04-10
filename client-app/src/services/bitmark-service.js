@@ -38,7 +38,7 @@ let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
           localAssets.push(newAsset);
         }
       } else {
-        let oldAssetIndex = (localAssets).find(asset => asset.id === bitmark.asset_id);
+        let oldAssetIndex = (localAssets).findIndex(asset => asset.id === bitmark.asset_id);
         if (oldAssetIndex >= 0) {
           let oldAsset = localAssets[oldAssetIndex];
           let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => bitmark.id === ob.id);
