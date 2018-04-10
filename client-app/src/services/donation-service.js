@@ -360,6 +360,7 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
 };
 
 const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, study, list) => {
+  let donationInformation;
   for (let dateRange of list) {
     let healthRawData = await doGetHealthKitData(study.dataTypes, dateRange.startDate, dateRange.endDate);
     let tempData = StudiesModel[study.studyId].generateHealthKitAsset(study, bitmarkAccountNumber,
@@ -379,8 +380,9 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     let signatures = await BitmarkSDK.rickySignMessage([message], touchFaceIdSession);
     sessionData.signature = signatures[0];
     sessionData.timestamp = timestamp;
-    return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment().toDate(), study.studyId, issueResult.transferOfferData.link, issueResult.transferOfferData.signature, sessionData);
+    donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment().toDate(), study.studyId, issueResult.transferOfferData.link, issueResult.transferOfferData.signature, sessionData);
   }
+  return donationInformation;
 };
 
 const removeEmptyValueData = (healthData) => {
@@ -393,6 +395,7 @@ const removeEmptyValueData = (healthData) => {
   return realData;
 };
 const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, allDataTypes, list, taskType) => {
+  let donationInformation;
   for (let dateRange of list) {
     let healthRawData = await doGetHealthKitData(allDataTypes, dateRange.startDate, dateRange.endDate);
     let randomId = randomString({ length: 8, numeric: true, letters: false, });
@@ -411,9 +414,9 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
     };
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
     let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.assetMetadata, 1);
-    let donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), null, issueResult[0]);
-    return donationInformation;
+    donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), null, issueResult[0]);
   }
+  return donationInformation;
 };
 
 const doDownloadStudyConsent = async (study) => {
