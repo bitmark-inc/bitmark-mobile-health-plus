@@ -41,7 +41,7 @@ const recheckLocalAssets = (localAssets) => {
     for (let asset of localAssets) {
       for (let bitmark of asset.bitmarks) {
         let isDonating = userData.donationInformation.completedTasks.findIndex(item => (item.taskType !== userData.donationInformation.commonTaskIds.bitmark_health_data && item.bitmarkId === bitmark.id));
-        bitmark.displayStatus = isDonating >= 0 ? 'donating' : bitmark.status;
+        bitmark.displayStatus = isDonating >= 0 ? 'donating' : bitmark.displayStatus;
       }
     }
   }
