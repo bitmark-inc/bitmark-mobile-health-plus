@@ -15,7 +15,7 @@ import { config } from '../../../configs';
 
 const SubTabs = {
   required: 'ACTION REQUIRED',
-  completed: 'COMPLETED',
+  completed: 'HISTORY',
 };
 
 const ActionTypes = {
@@ -237,13 +237,13 @@ export class TransactionsComponent extends React.Component {
 
   clickToCompleted(item) {
     if (item.title === 'TRANSFER' && item.type === 'P2P TRANSFER') {
-      let sourceUrl = config.registry_server_url + `/transaction/${item.txid}`;
+      let sourceUrl = config.registry_server_url + `/transaction/${item.txid}?env=app`;
       this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
     } else if (item.title === 'TRANSFER' && item.type === 'DONATION' && item.previousId) {
-      let sourceUrl = config.registry_server_url + `/transaction/${item.txid}`;
+      let sourceUrl = config.registry_server_url + `/transaction/${item.txid}?env=app`;
       this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
     } else if (item.title === 'ISSUANCE') {
-      let sourceUrl = config.registry_server_url + `/issuance/${item.blockNumber}/${item.assetId}/${DataController.getUserInformation().bitmarkAccountNumber}`;
+      let sourceUrl = config.registry_server_url + `/issuance/${item.blockNumber}/${item.assetId}/${DataController.getUserInformation().bitmarkAccountNumber}?env=app`;
       this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
     }
   }

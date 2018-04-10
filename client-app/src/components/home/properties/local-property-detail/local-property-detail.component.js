@@ -51,7 +51,7 @@ export class LocalPropertyDetailComponent extends React.Component {
   }
 
   clickOnProvenance(item) {
-    let sourceUrl = config.registry_server_url + `/account/${item.owner}`;
+    let sourceUrl = config.registry_server_url + `/account/${item.owner}?env=app`;
     this.props.navigation.navigate('BitmarkWebView', { title: 'Registry', sourceUrl, isFullScreen: true });
   }
 

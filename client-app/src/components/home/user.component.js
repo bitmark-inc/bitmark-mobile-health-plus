@@ -117,7 +117,7 @@ export class UserComponent extends React.Component {
         actions: [
           NavigationActions.navigate({
             routeName: 'User', params: {
-              displayedTab: { mainTab: MainTabs.transaction, subTab: 'COMPLETED' },
+              displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
               needReloadData: true,
             }
           }),
