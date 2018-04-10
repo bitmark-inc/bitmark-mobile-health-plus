@@ -28,7 +28,7 @@ export class LocalAssetDetailComponent extends React.Component {
     let bitmarkViewed = {};
     let bitmarkCanDownload;
     asset.bitmarks.forEach((bitmark, index) => {
-      if (!bitmarkCanDownload && bitmark.status === 'confirmed') {
+      if (!bitmarkCanDownload && bitmark.displayStatus === 'confirmed') {
         bitmarkCanDownload = bitmark;
       }
       bitmarks.push({ key: index, bitmark });
@@ -66,7 +66,7 @@ export class LocalAssetDetailComponent extends React.Component {
       let bitmarks = [];
       let bitmarkCanDownload;
       data.asset.bitmarks.forEach((bitmark, index) => {
-        if (!bitmarkCanDownload && bitmark.status === 'confirmed') {
+        if (!bitmarkCanDownload && bitmark.displayStatus === 'confirmed') {
           bitmarkCanDownload = bitmark;
         }
         bitmarks.push({ key: index, bitmark });
@@ -84,6 +84,7 @@ export class LocalAssetDetailComponent extends React.Component {
       text: 'YES',
       onPress: () => {
         AppController.doCancelTransferBitmark(bitmarkId).then((result) => {
+          console.log('cancel result :', result);
           if (result) {
             EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_USER_DATA);
           }
@@ -179,7 +180,7 @@ export class LocalAssetDetailComponent extends React.Component {
                     extraData={this.state}
                     data={this.state.bitmarks || []}
                     renderItem={({ item }) => {
-                      if (item.bitmark.status === 'pending') {
+                      if (item.bitmark.displayStatus === 'pending') {
                         return (<View style={[assetDetailStyle.bitmarksRow, { backgroundColor: this.state.bitmarkViewed[item.bitmark.id] ? 'white' : '#F2FAFF' }]} >
                           <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
@@ -192,7 +193,7 @@ export class LocalAssetDetailComponent extends React.Component {
                           </TouchableOpacity>
                         </View>);
                       }
-                      if (item.bitmark.status === 'donating') {
+                      if (item.bitmark.displayStatus === 'donating') {
                         return (<View style={[assetDetailStyle.bitmarksRow, { backgroundColor: this.state.bitmarkViewed[item.bitmark.id] ? 'white' : '#F2FAFF' }]} >
                           <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
@@ -200,7 +201,7 @@ export class LocalAssetDetailComponent extends React.Component {
                           </TouchableOpacity>
                         </View>);
                       }
-                      if (item.bitmark.status === 'transferring') {
+                      if (item.bitmark.displayStatus === 'transferring') {
                         return (<View style={[assetDetailStyle.bitmarksRow, { backgroundColor: this.state.bitmarkViewed[item.bitmark.id] ? 'white' : '#F2FAFF' }]} >
                           <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
 

@@ -74,8 +74,8 @@ export class LocalPropertyDetailComponent extends React.Component {
         </View></TouchableWithoutFeedback>)}
         content={(<TouchableWithoutFeedback onPress={() => this.setState({ displayTopButton: false })}><View style={propertyDetailStyle.body}>
           {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-            <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.status !== 'confirmed'} onPress={this.downloadAsset}>
-              <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
+            <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.displayStatus !== 'confirmed'} onPress={this.downloadAsset}>
+              <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
             </TouchableOpacity>
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
               Clipboard.setString(this.state.bitmark.bitmark_id);
@@ -86,21 +86,21 @@ export class LocalPropertyDetailComponent extends React.Component {
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
             <TouchableOpacity style={propertyDetailStyle.topButton}
-              disabled={this.state.bitmark.status !== 'confirmed'}
+              disabled={this.state.bitmark.displayStatus !== 'confirmed'}
               onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
               <Text style={[propertyDetailStyle.topButtonText, {
-                color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#C2C2C2'
+                color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
               }]}>TRANSFER</Text>
             </TouchableOpacity>
           </View>}
           <ScrollView style={propertyDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
               <View style={propertyDetailStyle.bottomImageBar}></View>
-              <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
-              <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>
-                ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}{'\n'}BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
+              <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
+              <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>
+                ISSUED {this.state.bitmark.displayStatus === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}{'\n'}BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
               </Text>
-              <Text style={[propertyDetailStyle.provenanceLabel, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>PROVENANCE</Text>
+              <Text style={[propertyDetailStyle.provenanceLabel, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>PROVENANCE</Text>
               <View style={propertyDetailStyle.provenancesArea}>
                 <View style={propertyDetailStyle.provenancesHeader}>
                   <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
@@ -113,9 +113,9 @@ export class LocalPropertyDetailComponent extends React.Component {
                     data={this.state.bitmark.provenance || []}
                     renderItem={({ item }) => {
                       return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
-                        <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
+                        <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
                         <View style={propertyDetailStyle.provenancesRowOwnerRow}>
-                          <Text style={[propertyDetailStyle.provenancesRowOwner, { color: this.state.bitmark.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{'[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}</Text>
+                          <Text style={[propertyDetailStyle.provenancesRowOwner, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{'[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}</Text>
                         </View>
                       </TouchableOpacity>);
                     }}
