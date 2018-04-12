@@ -92,7 +92,7 @@ const doInactiveBitmarkHealthData = (bitmark_account, timestamp, signature) => {
   });
 };
 
-const doDeregisterUserInformation = (bitmark_account, timestamp, signature) => {
+const doDeregisterUserInformation = (bitmark_account, timestamp, signature, notification_uid) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = config.donation_server_url + `/s/api/deregister`;
@@ -106,6 +106,7 @@ const doDeregisterUserInformation = (bitmark_account, timestamp, signature) => {
         bitmark_account,
         timestamp,
         signature,
+        notification_uid,
       }),
     }).then((response) => {
       statusCode = response.status;

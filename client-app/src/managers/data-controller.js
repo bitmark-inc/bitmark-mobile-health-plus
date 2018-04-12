@@ -151,11 +151,14 @@ const runGetDonationInformationInBackground = () => {
   });
 };
 const configNotification = () => {
-  const onRegisterred = (registerredNotificaitonInfo) => {
+  const onRegisterred = async (registerredNotificaitonInfo) => {
     let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
+    if (!userInformation || !userInformation.bitmarkAccountNumber) {
+      userInformation = await UserModel.doGetCurrentUser();
+    }
     if (notificationUUID &&
       ((userInformation.notificationUUID !== notificationUUID) ||
-        (userData.donationInformation && userData.donationInformation.notificationUID !== notificationUUID))) {
+        (userData.donationInformation && JSON.stringify(userData.donationInformation.notificationUID).indexOf(notificationUUID) < 0))) {
       NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
         userInformation.notificationUUID = notificationUUID;
         return UserModel.doUpdateUserInfo(userInformation);

@@ -46,16 +46,20 @@ let setApplicationIconBadgeNumber = (number) => {
   return NotificationModel.setApplicationIconBadgeNumber(number);
 };
 
-let doRegisterNotificationInfo = async (accountNumber, token, joinedDonation) => {
-  console.log('doRegisterNotificationInfo : ', accountNumber, token, joinedDonation)
+let doRegisterNotificationInfo = async (accountNumber, token) => {
   let signatureData = await CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions');
+  if (!signatureData) {
+    return;
+  }
   await DonationModel.doRegisterUserInformation(accountNumber, signatureData.timestamp, signatureData.signature, token);
   return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token);
 };
 
 let doTryDeregisterNotificationInfo = (accountNumber, token, signatureData) => {
   return new Promise((resolve) => {
-    NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token).then(resolve).catch(error => {
+    NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token).then(() => {
+      return DonationModel.doDeregisterUserInformation(accountNumber, signatureData.timestamp, signatureData.signature, token);
+    }).then(resolve).catch(error => {
       console.log('doTryDeregisterNotificationInfo error :', error);
       resolve();
     });
