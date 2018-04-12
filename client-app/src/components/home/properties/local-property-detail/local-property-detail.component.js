@@ -16,6 +16,7 @@ import defaultStyle from './../../../../commons/styles';
 import { AppController } from '../../../../managers/app-controller';
 import { EventEmiterService } from '../../../../services';
 import { config } from '../../../../configs';
+import { DataController } from '../../../../managers/data-controller';
 
 export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
@@ -114,10 +115,12 @@ export class LocalPropertyDetailComponent extends React.Component {
                     renderItem={({ item }) => {
                       return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
                         <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
-                          {this.state.bitmark.displayStatus === 'pending' ? 'PENDING…' : item.created_at.toUpperCase()}
+                          {moment(item.created_at).isValid() ? item.created_at.toUpperCase() : 'PENDING…'}
                         </Text>
                         <View style={propertyDetailStyle.provenancesRowOwnerRow}>
-                          <Text style={[propertyDetailStyle.provenancesRowOwner, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{'[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}</Text>
+                          <Text style={[propertyDetailStyle.provenancesRowOwner, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
+                            {item.owner === DataController.getUserInformation().bitmarkAccountNumber ? 'YOU' : '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}
+                          </Text>
                         </View>
                       </TouchableOpacity>);
                     }}

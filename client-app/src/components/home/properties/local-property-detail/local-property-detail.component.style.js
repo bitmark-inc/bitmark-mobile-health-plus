@@ -135,9 +135,10 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 14,
-    width: convertWidth(176),
+    width: convertWidth(170),
   },
   provenancesHeaderLabelOwner: {
+    marginLeft: 10,
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 14,
@@ -159,9 +160,10 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 14,
-    width: convertWidth(176),
+    width: convertWidth(170),
   },
   provenancesRowOwnerRow: {
+    marginLeft: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -176,7 +178,7 @@ export default StyleSheet.create({
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 16,
-    width: convertWidth(140),
+    width: convertWidth(161),
   },
   listingButtonArea: {
     flexDirection: 'column',

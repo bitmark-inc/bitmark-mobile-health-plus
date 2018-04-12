@@ -141,7 +141,7 @@ export default StyleSheet.create({
   },
 
   bottomButtonArea: {
-    marginTop: 10,
+    marginTop: 50,
     marginBottom: 10,
     width: '100%',
     paddingLeft: convertWidth(19),
