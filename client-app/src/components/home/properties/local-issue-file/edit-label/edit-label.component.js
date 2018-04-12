@@ -21,6 +21,8 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
   constructor(props) {
     super(props);
     this.onChangeText = this.onChangeText.bind(this);
+    this.onChooseLabel = this.onChooseLabel.bind(this);
+
     let suggesions = [];
     let label = this.props.navigation.state.params.label || ''
     MetadataLabelSamples.forEach((text, key) => {
@@ -30,6 +32,7 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
     });
     this.state = { label: this.props.navigation.state.params.label || '', suggesions };
   }
+
   onChangeText(label) {
     let suggesions = [];
     MetadataLabelSamples.forEach((text, key) => {
@@ -38,6 +41,11 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
       }
     });
     this.setState({ label, suggesions });
+  }
+
+  onChooseLabel(text) {
+    this.props.navigation.state.params.onEndChangeMetadataKey(this.props.navigation.state.params.key, text);
+    this.props.navigation.goBack();
   }
   render() {
     return (
@@ -56,20 +64,23 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
         </View>)}
         content={(<View style={localAddPropertyStyle.body}>
           <ScrollView style={localAddPropertyStyle.bodyContent}>
-            <TextInput style={localAddPropertyStyle.inputLabel} placeholder='SELECT OR CREATE A NEW LABEL'
+            <TextInput style={localAddPropertyStyle.inputLabel}
+              placeholder='SELECT OR CREATE A NEW LABEL'
+              ref={(ref) => this.inputRef = ref}
               multiline={false}
               value={this.state.label}
               onChangeText={this.onChangeText}
               onSubmitEditing={this.onEndChangeMetadataValue}
               returnKeyLabel="done"
               returnKeyType="done"
+              selectTextOnFocus={true}
             />
             <View style={localAddPropertyStyle.inputLabelBar} />
             <View style={localAddPropertyStyle.suggesionsList}>
               <FlatList
                 data={this.state.suggesions}
                 renderItem={({ item }) => {
-                  return (<TouchableOpacity style={localAddPropertyStyle.suggesionsButton} onPress={() => this.onChangeText(item.text)}>
+                  return (<TouchableOpacity style={localAddPropertyStyle.suggesionsButton} onPress={() => this.onChooseLabel(item.text)}>
                     <Text style={localAddPropertyStyle.suggesionsButtonText}>{item.text}</Text>
                   </TouchableOpacity>);
                 }}
