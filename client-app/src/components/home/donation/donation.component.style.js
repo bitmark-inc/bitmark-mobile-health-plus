@@ -1,8 +1,9 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 import { ios } from '../../../configs';
 import { convertWidth } from '../../../utils';
-
+let currentSize = Dimensions.get('window');
+let scale = currentSize.width / 375;
 
 export default StyleSheet.create({
   body: {
@@ -74,7 +75,11 @@ export default StyleSheet.create({
     flexDirection: 'column',
   },
   studyCard: {
-    marginBottom: 5,
+    marginBottom: 10,
+    backgroundColor: 'rgba(0,0,0,0)',
+    shadowOffset: { height: 2, },
+    shadowOpacity: 0.5,
+    paddingBottom: 2,
   },
   noCardTitle: {
     marginTop: 39,
@@ -84,28 +89,29 @@ export default StyleSheet.create({
     fontWeight: '900',
     color: '#0060F2',
   },
-  noCardMessageArea: {
-    flexDirection: 'column',
-    width: convertWidth(337),
-    height: 72,
-    marginLeft: 19,
-    marginTop: 21,
-  },
-  contactMessageFirstLine: {
+  contactButton: {
     flexDirection: 'row',
+    alignItems: 'center',
+    width: 130,
+    height: 28 * scale,
+    paddingTop: 5,
   },
   contactButtonText: {
     fontFamily: 'Avenir Light',
-    fontSize: 16,
+    fontSize: 16 * scale,
     textAlign: 'left',
     color: '#0060F2',
+    marginTop: 2,
   },
   noCardMessage: {
     fontFamily: 'Avenir Light',
-    fontSize: 17,
+    fontSize: 17 * scale,
     textAlign: 'left',
     fontWeight: '300',
     color: '#828282',
+    width: convertWidth(337),
+    marginLeft: 19,
+    marginTop: 21,
   },
 
 

@@ -165,22 +165,16 @@ export class DonationComponent extends React.Component {
           </TouchableOpacity>}
           {this.state.subTab === SubTabs.other && <View style={donationStyle.content}>
             {this.state.studies && this.state.studies.length === 0 && <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>}
-            <View style={donationStyle.noCardMessageArea}>
-              <View style={donationStyle.contactMessageFirstLine}>
-                <TouchableOpacity onPress={this.contactBitmark}>
-                  <Text style={donationStyle.contactButtonText}>Contact Bitmark</Text>
-                </TouchableOpacity>
-                <Text style={donationStyle.noCardMessage}> if you would like to publish</Text>
-              </View>
-              <Text style={donationStyle.noCardMessage}>a study.</Text>
-            </View>
+            <Text style={donationStyle.noCardMessage}>
+              If you would like to publish a study please <TouchableOpacity style={donationStyle.contactButton} onPress={this.contactBitmark}>
+                <Text style={donationStyle.contactButtonText}>contact Bitmark</Text>
+              </TouchableOpacity>
+            </Text>
           </View>}
 
           {this.state.studies && this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
             <Text style={donationStyle.noCardTitle}>HAVEN’T JOINED ANY STUDIES?</Text>
-            <Text style={donationStyle.noCardMessageArea}>
-              <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
-            </Text>
+            <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
           </View>}
         </ScrollView>
       </View>

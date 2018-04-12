@@ -1,16 +1,28 @@
-import { StyleSheet } from 'react-native';
-import { convertWidth } from './../../../../utils';
+import { StyleSheet, Dimensions } from 'react-native';
+let currentSize = Dimensions.get('window');
+let scale = currentSize.width / 375;
 
 export default StyleSheet.create({
   body: {
     flexDirection: 'column',
     borderRadius: 12,
     overflow: 'hidden',
+    height: 170 * scale,
+  },
+  scale: {
+    width: 375,
+    height: 170,
+    transform: [
+      { scaleX: scale },
+      { scaleY: scale },
+      { translateX: ((currentSize.width - 375) / (2 * scale)) },
+      { translateY: (170 * scale - 170) / (2 * scale) },
+    ],
+
   },
   cardBackground: {
-    width: convertWidth(375),
+    width: 375,
     height: 170,
-    // resizeMode: 'contain',
   },
   title: {
     position: 'absolute',
