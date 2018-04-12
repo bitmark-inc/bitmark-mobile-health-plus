@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper';
 import { StackNavigator, } from 'react-navigation';
 import {
-  View, Text, TouchableOpacity, Image,
+  View, Text, TouchableOpacity, Image, ScrollView,
   StatusBar,
   AppState,
 } from 'react-native'
@@ -32,42 +32,46 @@ class PropertyPrivateYourDataComponent extends React.Component {
         header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
         content={(
           <View style={newAccountStyle.swipePage}>
-            <Text style={[newAccountStyle.introductionTitle,]}>
-              {'Property IS Privacy'.toUpperCase()}
-            </Text>
-            <Text style={[newAccountStyle.introductionDescription,]}>
-              <Text style={[newAccountStyle.introductionDescription,]}>Bitmark gives you the power of privacy over your digital property. No third parties will have access to your data, including us. You choose who has access to your property.</Text>
-            </Text>
-            <View style={newAccountStyle.introductionTermPrivacy}>
-              <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark</Text>
-              <View style={[newAccountStyle.termPrivacySecondLine]}>
-                <TouchableOpacity onPress={() => {
-                  this.props.navigation.navigate('BitmarkWebView', {
-                    title: 'Privacy Policy',
-                    sourceUrl: 'https://bitmark.com/privacy',
-                    isFullScreen: true,
-                  });
-                  this.props.screenProps.setShowPagination(false);
-                }}>
-                  <Text style={[newAccountStyle.bitmarkTermsPrivacyButtonText]}>Terms of Service</Text>
-                </TouchableOpacity>
-                <Text style={newAccountStyle.bitmarkTermsPrivacyText}> and </Text>
-                <TouchableOpacity onPress={() => {
-                  this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl: 'https://bitmark.com/term', isFullScreen: true, });
-                  this.props.screenProps.setShowPagination(false);
-                }}>
-                  <Text style={[newAccountStyle.bitmarkTermsPrivacyButtonText]}>Privacy Policy</Text>
-                </TouchableOpacity>
-                <Text style={newAccountStyle.bitmarkTermsPrivacyText}>.</Text>
+            <ScrollView>
+              <View style={newAccountStyle.introductionArea}>
+                <Text style={[newAccountStyle.introductionTitle,]}>
+                  {'Property IS Privacy'.toUpperCase()}
+                </Text>
+                <Text style={[newAccountStyle.introductionDescription,]}>
+                  <Text style={[newAccountStyle.introductionDescription,]}>Bitmark gives you the power of privacy over your digital property. No third parties will have access to your data, including us. You choose who has access to your property.</Text>
+                </Text>
+                <View style={newAccountStyle.introductionTermPrivacy}>
+                  <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark</Text>
+                  <View style={[newAccountStyle.termPrivacySecondLine]}>
+                    <TouchableOpacity onPress={() => {
+                      this.props.navigation.navigate('BitmarkWebView', {
+                        title: 'Privacy Policy',
+                        sourceUrl: 'https://bitmark.com/privacy',
+                        isFullScreen: true,
+                      });
+                      this.props.screenProps.setShowPagination(false);
+                    }}>
+                      <Text style={[newAccountStyle.bitmarkTermsPrivacyButtonText]}>Terms of Service</Text>
+                    </TouchableOpacity>
+                    <Text style={newAccountStyle.bitmarkTermsPrivacyText}> and </Text>
+                    <TouchableOpacity onPress={() => {
+                      this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl: 'https://bitmark.com/term', isFullScreen: true, });
+                      this.props.screenProps.setShowPagination(false);
+                    }}>
+                      <Text style={[newAccountStyle.bitmarkTermsPrivacyButtonText]}>Privacy Policy</Text>
+                    </TouchableOpacity>
+                    <Text style={newAccountStyle.bitmarkTermsPrivacyText}>.</Text>
+                  </View>
+                </View>
+                <View style={newAccountStyle.letDoItButtonArea}>
+                  <TouchableOpacity style={[newAccountStyle.letDoItButton]} onPress={() => {
+                    this.props.screenProps.newAccountNavigation.navigate('FaceTouchId', { doContinue: this.props.screenProps.createBitmarkAccount });
+                  }}>
+                    <Text style={[newAccountStyle.letDoItButtonText]}>LET’S DO IT!</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-            <View style={newAccountStyle.letDoItButtonArea}>
-              <TouchableOpacity style={[newAccountStyle.letDoItButton]} onPress={() => {
-                this.props.screenProps.newAccountNavigation.navigate('FaceTouchId', { doContinue: this.props.screenProps.createBitmarkAccount });
-              }}>
-                <Text style={[newAccountStyle.letDoItButtonText]}>LET’S DO IT!</Text>
-              </TouchableOpacity>
-            </View>
+            </ScrollView>
           </View>
         )}
       />
@@ -126,28 +130,32 @@ class BuildDigitalAssetComponent extends React.Component {
         header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
         content={(
           <View style={newAccountStyle.swipePage}>
-            <Text style={[newAccountStyle.introductionTitle]}>
-              {'BUILD A DIGITAL ESTATE'.toUpperCase()}
-            </Text>
-            <Text style={[newAccountStyle.introductionDescription,]}>You can bitmark any type of data to build your digital estate: photos, music, videos, location data, documents, etc. If it’s digital, it can be bitmarked.</Text>
-            <TouchableOpacity onPress={() => {
-              this.props.screenProps.setShowPagination(false);
-              this.props.navigation.navigate('BitmarkWebView', { title: 'Bitmark', sourceUrl: 'https://bitmark.com', isFullScreen: true, })
-            }}
-              style={newAccountStyle.introductionLinkButton}
-            >
-              <Text style={[newAccountStyle.introductionLink]}>LEARN MORE AT BITMARK.COM</Text>
-            </TouchableOpacity>
-            <View style={newAccountStyle.introductionImageArea}>
-              <Video
-                ref={(ref) => { this.player2 = ref }}
-                rate={this.props.screenProps.index === 2 ? 1 : 0}
-                source={require('./../../../../assets/videos/Digital-Estate.mp4')}
-                resizeMode="contain"
-                style={newAccountStyle.introductionImage}
-                muted={true}
-              />
-            </View>
+            <ScrollView>
+              <View style={newAccountStyle.introductionArea}>
+                <Text style={[newAccountStyle.introductionTitle]}>
+                  {'BUILD A DIGITAL ESTATE'.toUpperCase()}
+                </Text>
+                <Text style={[newAccountStyle.introductionDescription,]}>You can bitmark any type of data to build your digital estate: photos, music, videos, location data, documents, etc. If it’s digital, it can be bitmarked.</Text>
+                <TouchableOpacity onPress={() => {
+                  this.props.screenProps.setShowPagination(false);
+                  this.props.navigation.navigate('BitmarkWebView', { title: 'Bitmark', sourceUrl: 'https://bitmark.com', isFullScreen: true, })
+                }}
+                  style={newAccountStyle.introductionLinkButton}
+                >
+                  <Text style={[newAccountStyle.introductionLink]}>LEARN MORE AT BITMARK.COM</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={newAccountStyle.introductionImageArea}>
+                <Video
+                  ref={(ref) => { this.player2 = ref }}
+                  rate={this.props.screenProps.index === 2 ? 1 : 0}
+                  source={require('./../../../../assets/videos/Digital-Estate.mp4')}
+                  resizeMode="contain"
+                  style={newAccountStyle.introductionImage}
+                  muted={true}
+                />
+              </View>
+            </ScrollView>
           </View>
         )}
       />
@@ -251,20 +259,24 @@ export class NewAccountComponent extends React.Component {
               </View>)}
               content={(
                 <View style={newAccountStyle.swipePage}>
-                  <Text style={[newAccountStyle.introductionTitle]}>OWN YOUR DATA</Text>
-                  <Text style={[newAccountStyle.introductionDescription,]}>
-                    Your personal data is a valuable digital asset. Bitmark makes it simple to take advantage of this value by giving you tools to claim ownership of your data.
+                  <ScrollView>
+                    <View style={newAccountStyle.introductionArea}>
+                      <Text style={[newAccountStyle.introductionTitle]}>OWN YOUR DATA</Text>
+                      <Text style={[newAccountStyle.introductionDescription,]}>
+                        Your personal data is a valuable digital asset. Bitmark makes it simple to take advantage of this value by giving you tools to claim ownership of your data.
                   </Text>
-                  <View style={newAccountStyle.introductionImageArea}>
-                    <Video
-                      ref={(ref) => { this.player0 = ref }}
-                      rate={this.state.index === 0 ? 1 : 0}
-                      source={require('./../../../../assets/videos/Own-Your-Data.mp4')}
-                      resizeMode="contain"
-                      style={newAccountStyle.introductionImage}
-                      muted={true}
-                    />
-                  </View>
+                    </View>
+                    <View style={newAccountStyle.introductionImageArea}>
+                      <Video
+                        ref={(ref) => { this.player0 = ref }}
+                        rate={this.state.index === 0 ? 1 : 0}
+                        source={require('./../../../../assets/videos/Own-Your-Data.mp4')}
+                        resizeMode="contain"
+                        style={newAccountStyle.introductionImage}
+                        muted={true}
+                      />
+                    </View>
+                  </ScrollView>
                 </View>
               )}
             />
@@ -274,20 +286,24 @@ export class NewAccountComponent extends React.Component {
               header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
               content={(
                 <View style={newAccountStyle.swipePage}>
-                  <Text style={[newAccountStyle.introductionTitle]}>{'authenticate property'.toUpperCase()}</Text>
-                  <Text style={[newAccountStyle.introductionDescription,]}>
-                    Your data is authenticated by ‘bitmarking’ and recording to the Bitmark blockchain. The blockchain holds secure and verifiable records of ownership of digital assets.
+                  <ScrollView>
+                    <View style={newAccountStyle.introductionArea}>
+                      <Text style={[newAccountStyle.introductionTitle]}>{'authenticate property'.toUpperCase()}</Text>
+                      <Text style={[newAccountStyle.introductionDescription,]}>
+                        Your data is authenticated by ‘bitmarking’ and recording to the Bitmark blockchain. The blockchain holds secure and verifiable records of ownership of digital assets.
                   </Text>
-                  <View style={newAccountStyle.introductionImageArea}>
-                    <Video
-                      ref={(ref) => { this.player1 = ref }}
-                      rate={this.state.index === 1 ? 1 : 0}
-                      source={require('./../../../../assets/videos/Verify-Ownership-2.mp4')}
-                      resizeMode="contain"
-                      style={newAccountStyle.introductionImage}
-                      muted={true}
-                    />
-                  </View>
+                    </View>
+                    <View style={newAccountStyle.introductionImageArea}>
+                      <Video
+                        ref={(ref) => { this.player1 = ref }}
+                        rate={this.state.index === 1 ? 1 : 0}
+                        source={require('./../../../../assets/videos/Verify-Ownership-2.mp4')}
+                        resizeMode="contain"
+                        style={newAccountStyle.introductionImage}
+                        muted={true}
+                      />
+                    </View>
+                  </ScrollView>
                 </View>
               )}
             />

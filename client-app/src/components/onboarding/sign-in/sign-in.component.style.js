@@ -94,7 +94,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     color: '#0060F2',
     width: convertWidth(307),
-    height: 42,
+    minHeight: 42,
     marginTop: 158,
   },
   recoveringIndicator: {

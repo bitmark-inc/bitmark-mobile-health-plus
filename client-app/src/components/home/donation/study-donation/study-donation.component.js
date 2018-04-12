@@ -24,13 +24,13 @@ export class StudyDonationComponent extends React.Component {
         content={(
           <View style={[donationStyles.body]}>
             <View style={[donationStyles.header]}>
-              <TouchableOpacity style={[defaultStyle.headerLeft, { maxWidth: convertWidth(50) }]} onPress={() => this.props.navigation.goBack()}>
+              <TouchableOpacity style={[defaultStyle.headerLeft, { maxWidth: 50 }]} onPress={() => this.props.navigation.goBack()}>
                 <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
               </TouchableOpacity>
-              <View style={[defaultStyle.headerCenter, { maxWidth: convertWidth(275) }]}>
-                <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(275) }]}>AUTHORIZE YOUR DONATION</Text>
+              <View style={[defaultStyle.headerCenter, { maxWidth: convertWidth(375) - 100 }]}>
+                <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(375) - 100 }]}>AUTHORIZE YOUR DONATION</Text>
               </View>
-              <TouchableOpacity style={[defaultStyle.headerRight, { maxWidth: convertWidth(50) }]} >
+              <TouchableOpacity style={[defaultStyle.headerRight, { maxWidth: 50 }]} >
               </TouchableOpacity>
             </View>
             <View style={donationStyles.main}>

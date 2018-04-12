@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image,
+  View, Text, TouchableOpacity, Image, ScrollView,
   Alert,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
@@ -69,35 +69,39 @@ export class HealthDataSettingsComponent extends React.Component {
         </View>)}
 
         content={(<View style={myStyle.body}>
-          <View style={myStyle.healthDataField}>
-            <Text style={myStyle.healthDataFieldTitle}>FREQUENCY</Text>
-            <Text style={myStyle.healthDataFieldFrequency}>WEEKLY</Text>
-          </View>
-          <View style={myStyle.healthDataFieldDescriptionArea}>
-            <Text style={myStyle.healthDataFieldDescriptionText}>We will send you issuance request every Saturday 11:00AM, please sign the issuance.</Text>
-          </View>
+          <ScrollView>
+            <TouchableOpacity style={myStyle.contentScroll} activeOpacity={1}>
+              <View style={myStyle.healthDataField}>
+                <Text style={myStyle.healthDataFieldTitle}>FREQUENCY</Text>
+                <Text style={myStyle.healthDataFieldFrequency}>WEEKLY</Text>
+              </View>
+              <View style={myStyle.healthDataFieldDescriptionArea}>
+                <Text style={myStyle.healthDataFieldDescriptionText}>We will send you issuance request every Saturday 11:00AM, please sign the issuance.</Text>
+              </View>
 
-          <TouchableOpacity style={myStyle.healthDataField} onPress={() => this.props.navigation.navigate('HealthDataMetadata')}>
-            <Text style={myStyle.healthDataFieldTitle}>METADATA</Text>
-            <Image style={myStyle.healthDataFieldNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />
-          </TouchableOpacity>
-          <View style={myStyle.healthDataFieldDescriptionArea}>
-            <Text style={myStyle.healthDataFieldDescriptionText}>These metadata will be permanently recorded in the Bitmark blockchain and cannot be modified after the issuance is confirmed. All subsequently issued bitmarks for this asset will share this recorded metadata.</Text>
-          </View>
+              <TouchableOpacity style={myStyle.healthDataField} onPress={() => this.props.navigation.navigate('HealthDataMetadata')}>
+                <Text style={myStyle.healthDataFieldTitle}>METADATA</Text>
+                <Image style={myStyle.healthDataFieldNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />
+              </TouchableOpacity>
+              <View style={myStyle.healthDataFieldDescriptionArea}>
+                <Text style={myStyle.healthDataFieldDescriptionText}>These metadata will be permanently recorded in the Bitmark blockchain and cannot be modified after the issuance is confirmed. All subsequently issued bitmarks for this asset will share this recorded metadata.</Text>
+              </View>
 
-          <TouchableOpacity style={myStyle.healthDataField} onPress={() => this.props.navigation.navigate('HealthDataDataSource')}>
-            <Text style={myStyle.healthDataFieldTitle}>DATA SOURCES</Text>
-            <Image style={myStyle.healthDataFieldNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />
-          </TouchableOpacity>
-          <View style={myStyle.healthDataFieldDescriptionArea}>
-            <Text style={myStyle.healthDataFieldDescriptionText}>
-              Claim ownership over your health data. Connect Bitmark to Apple’s Health app: <Text style={{ color: '#0060F2' }}>{"Health App > Sources > Bitmark."}</Text>  Any data sources that you allow Bitmark to access will be bitmarked automatically. (If you did not grant access or if you did and no data was detected, the status will be inactive.)
+              <TouchableOpacity style={myStyle.healthDataField} onPress={() => this.props.navigation.navigate('HealthDataDataSource')}>
+                <Text style={myStyle.healthDataFieldTitle}>DATA SOURCES</Text>
+                <Image style={myStyle.healthDataFieldNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />
+              </TouchableOpacity>
+              <View style={myStyle.healthDataFieldDescriptionArea}>
+                <Text style={myStyle.healthDataFieldDescriptionText}>
+                  Claim ownership over your health data. Connect Bitmark to Apple’s Health app: <Text style={{ color: '#0060F2' }}>{"Health App > Sources > Bitmark."}</Text>  Any data sources that you allow Bitmark to access will be bitmarked automatically. (If you did not grant access or if you did and no data was detected, the status will be inactive.)
               </Text>
-          </View>
+              </View>
 
-          <TouchableOpacity style={myStyle.removeButton} onPress={this.inactiveBitmarkHealthData.bind(this)}>
-            <Text style={myStyle.removeButtonText}>REMOVE</Text>
-          </TouchableOpacity>
+              <TouchableOpacity style={myStyle.removeButton} onPress={this.inactiveBitmarkHealthData.bind(this)}>
+                <Text style={myStyle.removeButtonText}>REMOVE</Text>
+              </TouchableOpacity>
+            </TouchableOpacity >
+          </ScrollView>
         </View >
         )}
       />

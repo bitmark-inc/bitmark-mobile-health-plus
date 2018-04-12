@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper';
 import {
-  View, Image, Text, TouchableOpacity,
+  View, Image, Text, TouchableOpacity, ScrollView,
 } from 'react-native';
 
 import defaultStyle from './../../../../../commons/styles';
@@ -55,21 +55,23 @@ export class HealthDataActiveComponent extends React.Component {
             <Text style={defaultStyle.headerTitle} >HEALTH DATA</Text>
             <TouchableOpacity style={defaultStyle.headerRight} />
           </View>
-          <View style={activeDonationStyle.content}>
-            <Text style={activeDonationStyle.description}>
-              Please allow Bitmark to access your Health app data. We recommend selecting “Turn All Categories On” so that you can claim full ownership of all your health data. We cannot read or record your data. This process will be encrypted and only available on your device and your Bitmark account.
+          <ScrollView>
+            <View style={activeDonationStyle.content}>
+              <Text style={activeDonationStyle.description}>
+                Please allow Bitmark to access your Health app data. We recommend selecting “Turn All Categories On” so that you can claim full ownership of all your health data. We cannot read or record your data. This process will be encrypted and only available on your device and your Bitmark account.
             </Text>
-            <View style={activeDonationStyle.accessIconArea}>
-              <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../../assets/imgs/icon_health.png')} />
-              <Image style={activeDonationStyle.accessIconPlus} source={require('./../../../../../../assets/imgs/+.png')} />
-              <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../../assets/imgs/bitmark-logo.png')} />
+              <View style={activeDonationStyle.accessIconArea}>
+                <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../../assets/imgs/icon_health.png')} />
+                <Image style={activeDonationStyle.accessIconPlus} source={require('./../../../../../../assets/imgs/+.png')} />
+                <Image style={activeDonationStyle.accessIcon} source={require('./../../../../../../assets/imgs/bitmark-logo.png')} />
+              </View>
             </View>
             <View style={activeDonationStyle.bottomButtonArea}>
               <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.doActiveBitmarkHealthData}>
                 <Text style={activeDonationStyle.bottomButtonText}>GET STARTED!</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </ScrollView>
         </View>
 
         <View style={[activeDonationStyle.swipePage]}>
@@ -78,10 +80,12 @@ export class HealthDataActiveComponent extends React.Component {
             <Text style={defaultStyle.headerTitle} >HEALTH DATA</Text>
             <TouchableOpacity style={defaultStyle.headerRight} />
           </View>
-          <View style={activeDonationStyle.content}>
-            <Text style={[activeDonationStyle.healthDataTitle]}>{'CONGRATULATIONS!\nYou’ve all set up!'.toUpperCase()}</Text>
-            <Text style={activeDonationStyle.healthDataDescription}>We will send you issuance request every Saturday 11:00 AM, please sign the issuance to bitmark your health data.{'\n\n'}You also can check the configure for the  Health data properties creation.</Text>
+          <ScrollView>
+            <View style={activeDonationStyle.content}>
+              <Text style={[activeDonationStyle.healthDataTitle]}>{'CONGRATULATIONS!\nYou’ve all set up!'.toUpperCase()}</Text>
+              <Text style={activeDonationStyle.healthDataDescription}>We will send you issuance request every Saturday 11:00 AM, please sign the issuance to bitmark your health data.{'\n\n'}You also can check the configure for the  Health data properties creation.</Text>
 
+            </View>
             <View style={[activeDonationStyle.bottomButtonArea]}>
               <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.goToHealthDataSetting}>
                 <Text style={activeDonationStyle.bottomButtonText}>CHECK NOW!</Text>
@@ -92,7 +96,7 @@ export class HealthDataActiveComponent extends React.Component {
                 <Text style={[activeDonationStyle.bottomButtonText, { color: '#0060F2' }]}>SKIP</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </ScrollView>
         </View>
 
       </Swiper>

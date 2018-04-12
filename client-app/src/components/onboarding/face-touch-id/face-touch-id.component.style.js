@@ -1,10 +1,17 @@
 import { StyleSheet } from 'react-native'
+import { convertWidth } from '../../../utils';
 export default StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: 'white',
+  },
+  scrollContent: {
+    width: '100%',
+    flexDirection: 'column',
+    paddingLeft: 51,
+    paddingRight: 51,
   },
 
   // notification
@@ -14,6 +21,7 @@ export default StyleSheet.create({
     fontSize: 20,
     fontWeight: '900',
     marginTop: 103,
+    width: convertWidth(275),
   },
 
   passcodeRemindImages: {
@@ -37,7 +45,7 @@ export default StyleSheet.create({
 
   faceTouchIdDescription: {
     marginTop: 80,
-    width: 280,
+    width: convertWidth(275),
     fontFamily: 'Avenir light',
     fontWeight: '300',
     fontSize: 17,
@@ -54,7 +62,7 @@ export default StyleSheet.create({
   },
   enableButton: {
     minHeight: 42,
-    width: 309,
+    width: convertWidth(275),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

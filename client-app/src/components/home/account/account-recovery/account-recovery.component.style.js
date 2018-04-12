@@ -44,7 +44,7 @@ export default StyleSheet.create({
   },
   recoveryPhraseBottomButton: {
     width: convertWidth(309),
-    height: 42,
+    minHeight: 42,
     backgroundColor: '#0060F2',
     flexDirection: 'row',
     alignContent: 'center',
@@ -56,7 +56,8 @@ export default StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontSize: 16,
     fontWeight: '900',
-    color: 'white'
+    color: 'white',
+    textAlign: 'center',
   },
 
   writeRecoveryPhraseContentMessage: {
@@ -109,7 +110,6 @@ export default StyleSheet.create({
 
   ranDomWordsArea: {
     marginTop: 10,
-    height: 145,
   },
   recoveryPhraseChoose: {
     height: 29,
@@ -135,6 +135,7 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: '300',
     color: '#0060F2',
+    textAlign: 'center',
   },
   recoveryPhraseTestResult: {
     flexDirection: 'column',

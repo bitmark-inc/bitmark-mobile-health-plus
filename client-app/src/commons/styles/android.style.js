@@ -11,14 +11,14 @@ export default StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   headerLeft: {
-    width: convertWidth(50),
+    width: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     height: '100%'
   },
   headerLeftIcon: {
-    marginLeft: convertWidth(19),
+    marginLeft: convertWidth(20),
     width: 10,
     height: 19,
     resizeMode: 'contain'
@@ -26,7 +26,8 @@ export default StyleSheet.create({
   headerCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    maxWidth: convertWidth(375) - convertWidth(100),
+    justifyContent: 'center',
+    maxWidth: convertWidth(375) - 140,
     height: '100%',
   },
   headerTitle: {
@@ -34,10 +35,10 @@ export default StyleSheet.create({
     fontSize: 18,
     fontWeight: '900',
     fontFamily: 'Avenir Black',
-    maxWidth: convertWidth(375) - convertWidth(100),
+    maxWidth: convertWidth(375) - 140,
   },
   headerRight: {
-    width: convertWidth(50),
+    width: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',

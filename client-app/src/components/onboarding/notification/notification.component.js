@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image, TouchableOpacity, ScrollView,
 } from 'react-native'
 import { NavigationActions } from 'react-navigation';
 
@@ -27,21 +27,23 @@ export class NotificationComponent extends React.Component {
     }
     return (
       <View style={[notificationStyle.body]}>
-        <Text style={[notificationStyle.notificationTitle]}>NOTIFICATIONS</Text>
-        <Image style={[notificationStyle.notificationImage]} source={require('../../../../assets/imgs/notification.png')} />
-        <Text style={[notificationStyle.notificationDescription,]}>
-          Enable push notifications to stay updated on property transfer requests and app updates.
+        <ScrollView style={[notificationStyle.scrolConten]} >
+          <Text style={[notificationStyle.notificationTitle]}>NOTIFICATIONS</Text>
+          <Image style={[notificationStyle.notificationImage]} source={require('../../../../assets/imgs/notification.png')} />
+          <Text style={[notificationStyle.notificationDescription,]}>
+            Enable push notifications to stay updated on property transfer requests and app updates.
         </Text>
-        <View style={notificationStyle.enableButtonArea}>
-          <TouchableOpacity style={[notificationStyle.enableButton]} onPress={requestNotification}>
-            <Text style={notificationStyle.enableButtonText}>ENABLE</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[notificationStyle.enableButton, { backgroundColor: 'white' }]} onPress={() => {
-            this.props.screenProps.rootNavigation.dispatch(resetMainPage);
-          }}>
-            <Text style={[notificationStyle.enableButtonText, { color: '#0060F2' }]}>LATER</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={notificationStyle.enableButtonArea}>
+            <TouchableOpacity style={[notificationStyle.enableButton]} onPress={requestNotification}>
+              <Text style={notificationStyle.enableButtonText}>ENABLE</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[notificationStyle.enableButton, { backgroundColor: 'white' }]} onPress={() => {
+              this.props.screenProps.rootNavigation.dispatch(resetMainPage);
+            }}>
+              <Text style={[notificationStyle.enableButtonText, { color: '#0060F2' }]}>LATER</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }

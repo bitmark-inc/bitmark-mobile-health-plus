@@ -10,6 +10,7 @@ export default StyleSheet.create({
   },
   studyContent: {
     flex: 1,
+    width: '100%',
     backgroundColor: '#EDF0F4',
     paddingTop: 5,
   },

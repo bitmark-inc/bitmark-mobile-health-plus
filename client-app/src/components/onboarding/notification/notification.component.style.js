@@ -5,6 +5,9 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
+  },
+  scrolConten: {
+    width: '100%',
     paddingLeft: 51,
     paddingRight: 51,
   },

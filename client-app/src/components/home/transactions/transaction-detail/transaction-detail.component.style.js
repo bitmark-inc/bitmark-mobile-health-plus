@@ -98,6 +98,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     width: convertWidth(338),
     marginTop: 20,
+    marginBottom: 20,
     backgroundColor: '#F5F5F5',
   },
   rejectButton: {
@@ -108,7 +109,7 @@ export default StyleSheet.create({
     paddingTop: 12.5,
     paddingBottom: 12.5,
     width: convertWidth(169),
-    height: 45,
+    minHeight: 45,
   },
   rejectButtonText: {
     fontFamily: 'Avenir black',
@@ -124,7 +125,7 @@ export default StyleSheet.create({
     paddingTop: 12.5,
     paddingBottom: 12.5,
     width: convertWidth(169),
-    height: 45,
+    minHeight: 45,
   },
   acceptButtonText: {
     fontFamily: 'Avenir black',

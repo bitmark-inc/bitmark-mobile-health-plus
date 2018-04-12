@@ -84,7 +84,7 @@ export default StyleSheet.create({
   sendButton: {
     marginTop: 31,
     width: convertWidth(336),
-    height: 42,
+    minHeight: 42,
     borderTopWidth: 3,
     backgroundColor: '#F5F5F5',
     flexDirection: 'column',

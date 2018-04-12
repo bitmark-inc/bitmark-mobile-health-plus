@@ -78,7 +78,7 @@ export default StyleSheet.create({
     marginBottom: 10,
     backgroundColor: 'rgba(0,0,0,0)',
     shadowOffset: { height: 2, },
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.2,
     paddingBottom: 2,
   },
   noCardTitle: {

@@ -113,7 +113,9 @@ export class LocalPropertyDetailComponent extends React.Component {
                     data={this.state.bitmark.provenance || []}
                     renderItem={({ item }) => {
                       return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
-                        <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{item.created_at.toUpperCase()}</Text>
+                        <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
+                          {this.state.bitmark.displayStatus === 'pending' ? 'PENDING…' : item.created_at.toUpperCase()}
+                        </Text>
                         <View style={propertyDetailStyle.provenancesRowOwnerRow}>
                           <Text style={[propertyDetailStyle.provenancesRowOwner, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>{'[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}</Text>
                         </View>

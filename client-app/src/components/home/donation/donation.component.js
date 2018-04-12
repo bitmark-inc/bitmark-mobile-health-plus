@@ -167,7 +167,7 @@ export class DonationComponent extends React.Component {
             {this.state.studies && this.state.studies.length === 0 && <Text style={donationStyle.noCardTitle}>YOU’VE JOINED ALL THE STUDIES!</Text>}
             <Text style={donationStyle.noCardMessage}>
               If you would like to publish a study please <TouchableOpacity style={donationStyle.contactButton} onPress={this.contactBitmark}>
-                <Text style={donationStyle.contactButtonText}>contact Bitmark</Text>
+                <Text style={donationStyle.contactButtonText}>contact Bitmark.</Text>
               </TouchableOpacity>
             </Text>
           </View>}

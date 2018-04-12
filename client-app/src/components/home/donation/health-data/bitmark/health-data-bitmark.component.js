@@ -24,11 +24,11 @@ export class HealthDataBitmarkComponent extends React.Component {
     return (
       <FullComponent
         header={(<View style={defaultStyle.header}>
-          <TouchableOpacity style={[defaultStyle.headerLeft, { width: convertWidth(40) }]} onPress={() => this.props.navigation.goBack()} >
+          <TouchableOpacity style={[defaultStyle.headerLeft, { width: 40 }]} onPress={() => this.props.navigation.goBack()} >
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
-          <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(375) - convertWidth(80) }]}>SIGN YOUR BITMARK ISSUANCE</Text>
-          <TouchableOpacity style={[defaultStyle.headerRight, { width: convertWidth(40) }]} />
+          <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(375) - 80 }]}>SIGN YOUR BITMARK ISSUANCE</Text>
+          <TouchableOpacity style={[defaultStyle.headerRight, { width: 40 }]} />
         </View>)}
         content={(<View style={bitmarkHealthStyles.body}>
           <View style={bitmarkHealthStyles.content}>

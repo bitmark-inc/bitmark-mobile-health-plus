@@ -3,6 +3,7 @@ import {
   ios,
   android // TODO
 } from './../../../../configs';
+import { convertWidth } from '../../../../utils';
 let constant = Platform.select({
   ios: ios.constant,
   android: android.constant
@@ -46,33 +47,32 @@ export default StyleSheet.create({
   dataSourceInstallButton: {
     borderColor: '#0060F2',
     borderWidth: 1,
-    width: 186,
-    height: 46,
+    width: convertWidth(186),
+    minHeight: 46,
     borderRadius: 6,
     paddingTop: 9,
-    position: 'absolute',
-    bottom: 72 + constant.blankFooter,
+    marginTop: 20,
+    marginBottom: 20,
   },
   dataSourceInstallButtonText: {
     textAlign: 'center',
     color: '#0060F2',
     lineHeight: 27,
     fontSize: 20,
-    fontFamily: 'Avenir Black'
+    fontFamily: 'Avenir Black',
   },
   dataSourceInstallNote: {
     textAlign: 'center',
     fontFamily: 'Avenir Light',
     fontSize: 14,
-    position: 'absolute',
-    bottom: 12 + constant.blankFooter,
-    width: 360,
+    marginBottom: 10 + constant.blankFooter,
+    width: convertWidth(360),
     fontWeight: '300',
   },
 
   thankYouTitle: {
     marginTop: 94,
-    width: 291,
+    width: convertWidth(291),
     height: 124,
     fontFamily: 'Avenir Black',
     fontSize: 17,
@@ -81,7 +81,7 @@ export default StyleSheet.create({
   },
   thankYouDescription: {
     marginTop: 38,
-    width: 280,
+    width: convertWidth(280),
     fontFamily: 'Avenir Light',
     fontSize: 17,
     fontWeight: '300',

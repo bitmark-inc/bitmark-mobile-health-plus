@@ -141,8 +141,8 @@ export default StyleSheet.create({
   },
 
   bottomButtonArea: {
-    position: 'absolute',
-    bottom: 10,
+    marginTop: 10,
+    marginBottom: 10,
     width: '100%',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),

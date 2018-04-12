@@ -36,13 +36,13 @@ export default StyleSheet.create({
     top: 0,
     right: 0,
     zIndex: 10,
-    width: convertWidth(198),
+    width: 198,
     height: 135,
     backgroundColor: '#F5F5F5',
   },
   downloadAssetButton: {
     width: '100%',
-    height: 45,
+    minHeight: 45,
     flexDirection: 'column',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
@@ -59,7 +59,7 @@ export default StyleSheet.create({
   },
   topButton: {
     width: '100%',
-    height: 45,
+    minHeight: 45,
     flexDirection: 'column',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
@@ -176,7 +176,7 @@ export default StyleSheet.create({
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 16,
-    width: convertWidth(118),
+    width: convertWidth(140),
   },
   listingButtonArea: {
     flexDirection: 'column',
@@ -189,7 +189,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 42,
+    minHeight: 42,
   },
   listingButtonText: {
     fontFamily: 'Avenir Light',

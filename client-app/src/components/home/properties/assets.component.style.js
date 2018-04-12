@@ -109,7 +109,7 @@ export default StyleSheet.create({
     backgroundColor: '#0060F2',
     marginTop: 30,
     width: convertWidth(337),
-    height: 42,
+    minHeight: 42,
   },
   addFirstPropertyButtonText: {
     fontFamily: 'Avenir black',

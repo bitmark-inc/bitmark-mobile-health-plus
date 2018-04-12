@@ -286,7 +286,7 @@ export default StyleSheet.create({
   issueButton: {
     marginLeft: convertWidth(19),
     width: convertWidth(330),
-    height: 42,
+    minHeight: 42,
     borderTopWidth: 2,
     backgroundColor: '#F5F5F5',
     flexDirection: 'column',

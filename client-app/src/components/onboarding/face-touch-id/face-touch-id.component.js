@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image, TouchableOpacity, ScrollView,
   Linking,
   AppState,
   // NativeModules,
@@ -61,28 +61,30 @@ export class FaceTouchIdComponent extends React.Component {
   render() {
     return (
       <View style={[faceTouchIdStyle.body]}>
-        <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>
-          TOUCH/FACE ID & PASSCODE
+        <ScrollView style={[faceTouchIdStyle.scrollContent]} >
+          <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>
+            TOUCH/FACE ID & PASSCODE
           </Text>
-        <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>
-          Touch/Face ID or a passcode is required to authorize your transactions.
+          <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>
+            Touch/Face ID or a passcode is required to authorize your transactions.
           </Text>
-        <View style={faceTouchIdStyle.passcodeRemindImages}>
-          <Image style={[faceTouchIdStyle.touchIdImage]} source={require('../../../../assets/imgs/touch-id.png')} />
-          <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />
-        </View>
-        <View style={faceTouchIdStyle.enableButtonArea}>
-          <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
-            onPress={() => {
-              if (!this.state.supported) {
-                Linking.openURL('app-settings:');
-              } else {
-                this.doContinue();
-              }
-            }}>
-            <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={faceTouchIdStyle.passcodeRemindImages}>
+            <Image style={[faceTouchIdStyle.touchIdImage]} source={require('../../../../assets/imgs/touch-id.png')} />
+            <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />
+          </View>
+          <View style={faceTouchIdStyle.enableButtonArea}>
+            <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
+              onPress={() => {
+                if (!this.state.supported) {
+                  Linking.openURL('app-settings:');
+                } else {
+                  this.doContinue();
+                }
+              }}>
+              <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }

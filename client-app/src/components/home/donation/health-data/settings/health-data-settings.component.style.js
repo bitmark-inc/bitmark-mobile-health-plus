@@ -10,6 +10,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
+  contentScroll: {
+    width: convertWidth(375)
+  },
   healthDataField: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -55,17 +58,17 @@ export default StyleSheet.create({
   },
 
   removeButton: {
-    position: 'absolute',
     width: convertWidth(337),
-    height: 42,
+    minHeight: 42,
     borderTopWidth: 2,
     borderTopColor: '#0060F2',
     backgroundColor: '#F5F5F5',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
-    bottom: 10 + ios.constant.blankFooter,
+    marginTop: 20,
+    marginLeft: convertWidth(19),
+    marginBottom: 10 + ios.constant.blankFooter,
   },
   removeButtonText: {
     fontFamily: 'Avenir Black',

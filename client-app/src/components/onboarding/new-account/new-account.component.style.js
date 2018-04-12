@@ -36,6 +36,11 @@ export default StyleSheet.create({
     position: 'absolute',
     bottom: 15 + ios.constant.blankFooter,
   },
+
+  introductionArea: {
+    flexDirection: 'column',
+    height: 290,
+  },
   introductionTitle: {
     marginTop: 28,
     left: convertWidth(50),
@@ -45,7 +50,7 @@ export default StyleSheet.create({
     fontWeight: '900',
   },
   introductionDescription: {
-    marginTop: 50,
+    marginTop: 40,
     left: convertWidth(50),
     width: convertWidth(265),
     fontFamily: 'Avenir light',
@@ -53,8 +58,7 @@ export default StyleSheet.create({
     fontSize: 17,
   },
   introductionLinkButton: {
-    position: 'absolute',
-    top: 279,
+    marginTop: 20,
     left: convertWidth(50),
   },
   introductionLink: {
@@ -64,16 +68,14 @@ export default StyleSheet.create({
     fontSize: 14,
   },
   introductionImageArea: {
-    position: 'absolute',
-    top: 323,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
   },
   introductionImage: {
     backgroundColor: 'white',
-    width: 320,
-    height: 180,
+    width: convertWidth(320),
+    height: 180 * convertWidth(320) / 320,
   },
   introductionTermPrivacy: {
     marginTop: 66,
@@ -125,15 +127,15 @@ export default StyleSheet.create({
   },
 
   letDoItButtonArea: {
-    marginTop: 85,
+    marginTop: 60,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
   },
   letDoItButton: {
     marginTop: 10,
-    width: 309,
-    height: 42,
+    width: convertWidth(275),
+    minHeight: 42,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

@@ -30,7 +30,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 45,
+    minHeight: 45,
     width: '100%',
     marginTop: 10,
     paddingLeft: convertWidth(19),
@@ -55,7 +55,6 @@ export default StyleSheet.create({
     fontWeight: '300',
     textAlign: 'center',
     color: 'black',
-    width: convertWidth(337),
     marginLeft: convertWidth(19),
   },
   message: {

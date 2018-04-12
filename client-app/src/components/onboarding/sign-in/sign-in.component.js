@@ -228,11 +228,11 @@ export class SignInComponent extends React.Component {
         header={(<TouchableWithoutFeedback onPress={Keyboard.dismiss} >
           <View style={[defaultStyles.header, { backgroundColor: '#F5F5F5' }]}>
             <StatusBar hidden={false} />
-            <TouchableOpacity style={[defaultStyles.headerLeft, { width: convertWidth(50) }]} onPress={() => { this.props.navigation.goBack() }}>
+            <TouchableOpacity style={[defaultStyles.headerLeft, { width: 50 }]} onPress={() => { this.props.navigation.goBack() }}>
               <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
-            <Text style={[defaultStyles.headerTitle, { maxWidth: convertWidth(285) }]}>RECOVERY PHRASE SIGN-IN</Text>
-            <TouchableOpacity style={[defaultStyles.headerRight, { width: convertWidth(50) }]}>
+            <Text style={[defaultStyles.headerTitle, { maxWidth: convertWidth(375) - 100 }]}>RECOVERY PHRASE SIGN-IN</Text>
+            <TouchableOpacity style={[defaultStyles.headerRight, { width: 50 }]}>
             </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
