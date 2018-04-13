@@ -40,6 +40,10 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset: { height: 0 },
+    shadowRadius: 3,
+    zIndex: 1,
   },
   subTabButtonArea: {
     width: '100%',
@@ -77,53 +81,47 @@ export default StyleSheet.create({
   },
 
   //settings
-  settingLabel: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 16,
-    marginTop: 38,
-  },
   accountNumberLabel: {
     fontFamily: 'Avenir Light',
     fontSize: 14,
-    marginTop: 14,
+    marginTop: 27,
   },
 
   accountNumberArea: {
     marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: convertWidth(337),
-    paddingBottom: 10,
     minHeight: 30,
   },
   accountNumberValue: {
     fontFamily: 'Andale Mono',
     fontWeight: '900',
-    fontSize: 16,
-    lineHeight: 19,
-    width: 245,
-    marginLeft: convertWidth(7),
+    fontSize: 11,
+    width: convertWidth(337),
     color: '#0060F2',
-
   },
-  accountNumberCopyButton: {
-    marginRight: 7,
+  accountNumberBar: {
+    marginTop: 5,
+    borderTopWidth: 1,
+    borderTopColor: '#0060F2',
+    height: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   accountNumberCopyButtonText: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 13,
+    fontFamily: 'Avenir',
+    fontWeight: '700',
+    fontStyle: 'italic',
+    fontSize: 8,
     color: '#0060F2',
   },
   accountMessage: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
     fontSize: 15,
-    marginTop: 20,
+    marginTop: 9,
     width: convertWidth(337),
   },
   accountWriteDownButton: {
@@ -167,12 +165,6 @@ export default StyleSheet.create({
     fontWeight: '300'
   },
 
-  authorizedLabel: {
-    marginTop: 27,
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 16,
-  },
   noAuthorizedMessage: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
@@ -194,6 +186,7 @@ export default StyleSheet.create({
   authorizedItemTitleText: {
     fontFamily: 'Avenir Light',
     fontSize: 14,
+    fontWeight: '900',
   },
   authorizedItemRemoveButton: {
     padding: 4,
@@ -213,8 +206,23 @@ export default StyleSheet.create({
     height: 58,
     resizeMode: 'contain',
   },
+  authorizedItemDescriptionDetail: {
+    flexDirection: 'column',
+    paddingLeft: convertWidth(22),
+    width: convertWidth(257),
+  },
+  authorizedViewButton: {
+    marginTop: 5,
+    paddingTop: 4,
+    paddingBottom: 4,
+  },
+  authorizedViewButtonText: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 14,
+    color: '#0060F2',
+  },
   authorizedItemDescriptionText: {
-    marginLeft: convertWidth(22),
     width: convertWidth(257),
     fontFamily: 'Avenir Light',
     fontWeight: '300',

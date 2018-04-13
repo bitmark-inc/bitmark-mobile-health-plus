@@ -17,11 +17,9 @@ export class HealthDataActiveComponent extends React.Component {
   constructor(props) {
     super(props);
     this.doActiveBitmarkHealthData = this.doActiveBitmarkHealthData.bind(this);
-    this.goToHealthDataSetting = this.goToHealthDataSetting.bind(this);
     this.state = {
       user: DataController.getUserInformation(),
     };
-    console.log('run here');
   }
 
   doActiveBitmarkHealthData() {
@@ -39,10 +37,6 @@ export class HealthDataActiveComponent extends React.Component {
     });
   }
 
-  goToHealthDataSetting() {
-    this.props.screenProps.homeNavigation.navigate('HealthDataSettings');
-    this.props.navigation.goBack();
-  }
 
   render() {
     return (<View style={activeDonationStyle.body}>
@@ -82,23 +76,18 @@ export class HealthDataActiveComponent extends React.Component {
           </View>
           <ScrollView>
             <View style={activeDonationStyle.content}>
-              <Text style={[activeDonationStyle.healthDataTitle]}>{'CONGRATULATIONS!\nYou’ve all set up!'.toUpperCase()}</Text>
-              <Text style={activeDonationStyle.healthDataDescription}>We will send you issuance request every Saturday 11:00 AM, please sign the issuance to bitmark your health data.{'\n\n'}You also can check the configure for the  Health data properties creation.</Text>
-
+              <Text style={[activeDonationStyle.healthDataTitle]}>{"YOU'RE ALL SET!".toUpperCase()}</Text>
+              <Text style={activeDonationStyle.healthDataDescription}>
+                We will send you a signature request every Sunday 11AM. This confirmation is required each time you register property rights on the Bitmark blockchain.
+              </Text>
             </View>
             <View style={[activeDonationStyle.bottomButtonArea]}>
-              <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={this.goToHealthDataSetting}>
-                <Text style={activeDonationStyle.bottomButtonText}>CHECK NOW!</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[activeDonationStyle.bottomButton, {
-                backgroundColor: 'white',
-              }]} onPress={() => this.props.navigation.goBack()}>
-                <Text style={[activeDonationStyle.bottomButtonText, { color: '#0060F2' }]}>SKIP</Text>
+              <TouchableOpacity style={[activeDonationStyle.bottomButton,]} onPress={() => this.props.navigation.goBack()}>
+                <Text style={activeDonationStyle.bottomButtonText}>DONE</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
-
       </Swiper>
     </View >);
   }

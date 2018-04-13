@@ -49,18 +49,19 @@ export class Study1DefaultComponent extends React.Component {
           <View style={styles.infoArea}>
             <Text style={styles.infoAreaTitle}>Data Requirements</Text>
             <View style={styles.infoAreaListItem} >
-              <Text style={styles.infoAreaItem}>•	 Basal Body Temperature</Text>
+              <Text style={styles.infoAreaItem}>•	 Basal Energy Burned</Text>
               <Text style={styles.infoAreaItem}>•	 Cervical Mucous Quality</Text>
-              <Text style={styles.infoAreaItem}>•	 Exercise Minutes</Text>
+              <Text style={styles.infoAreaItem}>•	 Exercise Time</Text>
               <Text style={styles.infoAreaItem}>•	 Flights Climbed</Text>
-              <Text style={styles.infoAreaItem}>•	 Menstruation</Text>
+              <Text style={styles.infoAreaItem}>•	 Intermenstrual Bleeding (Spotting)</Text>
+              <Text style={styles.infoAreaItem}>•	 Menstrual Flow</Text>
               <Text style={styles.infoAreaItem}>•	 Mindful Minutes</Text>
               <Text style={styles.infoAreaItem}>•	 Ovulation Test Result</Text>
               <Text style={styles.infoAreaItem}>•	 Sexual Activity</Text>
               <Text style={styles.infoAreaItem}>•	 Sleep Analysis</Text>
-              <Text style={styles.infoAreaItem}>•	 Spotting</Text>
-              <Text style={styles.infoAreaItem}>•	 Steps</Text>
-              <Text style={styles.infoAreaItem}>•	 Walking + Running Distance</Text>
+              <Text style={styles.infoAreaItem}>•	 Stand Hours</Text>
+              <Text style={styles.infoAreaItem}>•	 Step Count</Text>
+              <Text style={styles.infoAreaItem}>•	 Walking / Running Distance</Text>
             </View>
           </View>
 

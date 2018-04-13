@@ -16,7 +16,6 @@ import {
   StudySettingComponent,
   StudyDonationComponent,
   StudyConsentComponent,
-  HealthDataSettingsComponent,
   HealthDataMetadataComponent,
   HealthDataDataSourceComponent,
   HealthDataBitmarkComponent,
@@ -39,7 +38,6 @@ let HomeComponent = StackNavigator({
   HealthDataBitmark: { screen: HealthDataBitmarkComponent, },
   StudyDonation: { screen: StudyDonationComponent, },
   StudyConsent: { screen: StudyConsentComponent, },
-  HealthDataSettings: { screen: HealthDataSettingsComponent, },
   HealthDataMetadata: { screen: HealthDataMetadataComponent, },
   HealthDataDataSource: { screen: HealthDataDataSourceComponent, },
 

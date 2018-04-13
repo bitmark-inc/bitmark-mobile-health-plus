@@ -36,35 +36,46 @@ export class Study1JoinedComponent extends React.Component {
               <Text style={styles.studyResearcherName} >{this.state.study.researcherName}</Text>
             </View>
           </View>
-          <Text style={styles.cardMessage}>{"“Thank you for donating your data, and helping close the gap in women's health studies.”"}</Text>
+          <Text style={styles.cardMessage}>{"“Thank you for donating your data, and helping close the gap in women's health.”"}</Text>
           {this.state.study.researcherLink && <TouchableOpacity onPress={() => {
             Linking.openURL(this.state.study.researcherLink.indexOf('http') > 0 ? this.state.study.researcherLink : 'http://' + this.state.study.researcherLink)
           }}>
             <Text style={styles.studyResearcherLink}>Learn more about Madelena’s research and how to contact her »</Text>
           </TouchableOpacity>}
 
-          <View style={[styles.infoArea, { marginTop: 10, }]}>
+          <View style={[styles.infoArea, {
+            marginTop: 10,
+            borderWidth: 1,
+            borderColor: '#BDBDBD',
+          }]}>
             <TouchableOpacity style={[styles.infoButton]} onPress={() => {
               this.props.navigation.navigate('StudyConsent', { study: this.state.study, })
             }}>
               <Text style={styles.infoButtonText}>View Study Consent Form</Text>
             </TouchableOpacity>
+            <View style={styles.infoButtonBar} />
+            <TouchableOpacity style={[styles.infoButton]} onPress={() => {
+              this.props.navigation.navigate('HealthDataDataSource', { dataTypes: this.state.study.dataTypes, })
+            }}>
+              <Text style={styles.infoButtonText}>View Data Types</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.infoArea}>
             <Text style={styles.infoAreaTitle}>List of Bitmarked Data</Text>
             <View style={styles.infoAreaListItem} >
-              <Text style={styles.infoAreaItem}>•	 Basal Body Temperature</Text>
+              <Text style={styles.infoAreaItem}>•	 Basal Energy Burned</Text>
               <Text style={styles.infoAreaItem}>•	 Cervical Mucous Quality</Text>
-              <Text style={styles.infoAreaItem}>•	 Exercise Minutes</Text>
+              <Text style={styles.infoAreaItem}>•	 Exercise Time</Text>
               <Text style={styles.infoAreaItem}>•	 Flights Climbed</Text>
-              <Text style={styles.infoAreaItem}>•	 Menstruation</Text>
+              <Text style={styles.infoAreaItem}>•	 Intermenstrual Bleeding (Spotting)</Text>
+              <Text style={styles.infoAreaItem}>•	 Menstrual Flow</Text>
               <Text style={styles.infoAreaItem}>•	 Mindful Minutes</Text>
               <Text style={styles.infoAreaItem}>•	 Ovulation Test Result</Text>
               <Text style={styles.infoAreaItem}>•	 Sexual Activity</Text>
               <Text style={styles.infoAreaItem}>•	 Sleep Analysis</Text>
-              <Text style={styles.infoAreaItem}>•	 Spotting</Text>
-              <Text style={styles.infoAreaItem}>•	 Steps</Text>
-              <Text style={styles.infoAreaItem}>•	 Walking + Running Distance</Text>
+              <Text style={styles.infoAreaItem}>•	 Stand Hours</Text>
+              <Text style={styles.infoAreaItem}>•	 Step Count</Text>
+              <Text style={styles.infoAreaItem}>•	 Walking / Running Distance</Text>
             </View>
           </View>
 

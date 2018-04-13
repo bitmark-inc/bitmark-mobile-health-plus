@@ -267,6 +267,7 @@ export class UserComponent extends React.Component {
           }} />}
           {this.state.displayedTab.mainTab === MainTabs.account && <AccountComponent screenProps={{
             homeNavigation: this.props.navigation,
+            subTab: this.state.displayedTab.subTab,
             logout: this.logout,
             needReloadData: this.needReloadData,
             donReloadData: () => this.needReloadData = false,

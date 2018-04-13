@@ -4,11 +4,13 @@ import {
   View, Text, TouchableOpacity, Image,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import { NavigationActions } from 'react-navigation';
 
 import issuanceOptionsStyle from './issuance-options.component.style';
 import defaultStyle from './../../../../../commons/styles';
 import { AppController, DataController } from '../../../../../managers';
 import { EventEmiterService } from '../../../../../services';
+import { BottomTabsComponent } from '../../../bottom-tabs/bottom-tabs.component';
 
 export class IssuanceOptionsComponent extends React.Component {
   constructor(props) {
@@ -72,7 +74,18 @@ export class IssuanceOptionsComponent extends React.Component {
     if (!this.state.donationInformation.activeBitmarkHealthDataAt) {
       this.props.navigation.navigate('HealthDataActive')
     } else {
-      this.props.screenProps.homeNavigation.navigate('HealthDataSettings');
+      const resetHomePage = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: {
+              displayedTab: { mainTab: BottomTabsComponent.MainTabs.account, subTab: 'AUTHORIZED' },
+              needReloadData: true,
+            }
+          }),
+        ]
+      });
+      this.props.screenProps.homeNavigation.dispatch(resetHomePage);
     }
   }
 
@@ -96,7 +109,9 @@ export class IssuanceOptionsComponent extends React.Component {
             {!!this.state.donationInformation.activeBitmarkHealthDataAt && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
           </TouchableOpacity>
 
-          <Text style={issuanceOptionsStyle.message}>Start bitmarking your digital asset and own it.</Text>
+          <Text style={issuanceOptionsStyle.message}>
+            Property rights are registered on Bitmark through the creation of an asset record followed by an issue record. Once an asset has been issued, transferring it simply requires taking advantage of the blockchain’s standard attributes.
+          </Text>
         </View>
       </View>
     );
@@ -107,6 +122,7 @@ IssuanceOptionsComponent.propTypes = {
   screenProps: PropTypes.shape({
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,
+      dispatch: PropTypes.func,
       goBack: PropTypes.func,
     }),
     issuanceNavigation: PropTypes.shape({

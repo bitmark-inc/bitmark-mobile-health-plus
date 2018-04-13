@@ -98,7 +98,12 @@ export default StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Avenir Black',
     color: '#0060F2',
+    fontWeight: '900',
     marginLeft: 15,
+  },
+  infoButtonBar: {
+    borderTopWidth: 1,
+    borderTopColor: '#BDBDBD',
   },
 
   leaveButton: {

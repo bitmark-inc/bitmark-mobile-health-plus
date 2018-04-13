@@ -11,19 +11,32 @@ export default StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10 + ios.constant.blankFooter
   },
+  dataSourceMessage: {
+    fontFamily: 'Avenir Light',
+    fontSize: 17,
+    lineHeight: 20,
+    width: convertWidth(337),
+    textAlign: 'left',
+    fontWeight: '300',
+    marginTop: 20,
+  },
 
+
+  dataSourceList: {
+    marginTop: 20,
+  },
   dataSourceRow: {
     flexDirection: 'row',
     width: convertWidth(375),
     alignItems: 'center',
-    paddingLeft: convertWidth(29),
-    paddingRight: convertWidth(29),
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
     marginTop: 3,
     minHeight: 21,
   },
   dataSourcesName: {
     fontFamily: 'Andale Mono',
-    fontSize: 13,
+    fontSize: 12,
     width: convertWidth(220),
     marginRight: convertWidth(19),
   },

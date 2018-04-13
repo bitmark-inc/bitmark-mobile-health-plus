@@ -43,11 +43,21 @@ export class Study2JoinedComponent extends React.Component {
             <Text style={styles.studyResearcherLink}>Learn more about Victor’s research and how to contact him »</Text>
           </TouchableOpacity>
 
-          <View style={[styles.infoArea]}>
+          <View style={[styles.infoArea, {
+            marginTop: 10,
+            borderWidth: 1,
+            borderColor: '#BDBDBD',
+          }]}>
             <TouchableOpacity style={[styles.infoButton]} onPress={() => {
               this.props.navigation.navigate('StudyConsent', { study: this.state.study, })
             }}>
               <Text style={styles.infoButtonText}>View Study Consent Form</Text>
+            </TouchableOpacity>
+            <View style={styles.infoButtonBar} />
+            <TouchableOpacity style={[styles.infoButton]} onPress={() => {
+              this.props.navigation.navigate('HealthDataDataSource', { dataTypes: this.state.study.dataTypes, })
+            }}>
+              <Text style={styles.infoButtonText}>View Data Types</Text>
             </TouchableOpacity>
           </View>
           {/* <View style={[styles.infoArea, { marginTop: 1, }]}>
