@@ -36,6 +36,7 @@ export class AssetsComponent extends React.Component {
       accountNumber: '',
       copyText: 'COPY',
       assets,
+      existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0,
     };
   }
   componentDidMount() {
@@ -78,7 +79,7 @@ export class AssetsComponent extends React.Component {
     if (subtab === SubTabs.local && localAssets) {
       assets = this.convertToFlatListData(localAssets);
     }
-    this.setState({ subtab, assets });
+    this.setState({ subtab, assets, existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0, });
   }
 
   addProperty() {
@@ -103,6 +104,12 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
+                {this.state.existNew && <View style={{
+                  backgroundColor: '#0060F2',
+                  width: 10, height: 10,
+                  position: 'absolute', left: 9,
+                  borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
+                }}></View>}
                 <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
               </View>
             </View>
@@ -167,21 +174,33 @@ export class AssetsComponent extends React.Component {
                 return (<TouchableOpacity style={[assetsStyle.assetRowArea, { backgroundColor: item.asset.isViewed ? 'white' : '#F2FAFF' }]} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
                 }} >
-                  {item.asset.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
+                  {!item.asset.isViewed && <View style={{
+                    backgroundColor: '#0060F2',
+                    width: 10, height: 10,
+                    position: 'absolute', left: 9, top: 22,
+                    borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
+                  }}></View>}
+
+                  {/* {item.asset.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
                     <Text style={[assetsStyle.assetBitmarksNumber, { color: '#0060F2' }]}>{item.asset.bitmarks.length}</Text>
                     <Image style={assetsStyle.assetBitmarksDetail} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
                     <Image style={[assetsStyle.assetBitmarksDetail, { marginRight: 7 }]} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
                   </View>}
                   {item.asset.totalPending > 0 && <View style={assetsStyle.assetBitmarkTitle}>
                     <Text style={assetsStyle.assetBitmarkPending}>PENDING... ({item.asset.totalPending + '/' + item.asset.bitmarks.length})</Text>
-                  </View>}
+                  </View>} */}
+
                   <View style={assetsStyle.assetInfoArea}>
                     <Text style={[assetsStyle.assetName, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
-                      <Text style={[assetsStyle.assetCreatorBound, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]}></Text>
                       <Text style={[assetsStyle.assetCreator, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
                         {'[' + item.asset.registrant.substring(0, 4) + '...' + item.asset.registrant.substring(item.asset.registrant.length - 4, item.asset.registrant.length) + ']'}
                       </Text>
+                    </View>
+                    <View style={assetsStyle.assetQuantityArea}>
+                      {item.asset.totalPending === 0 && <Text style={assetsStyle.assetQuantity}>QUANTITY: {item.asset.bitmarks.length}</Text>}
+                      {item.asset.totalPending > 0 && <Text style={assetsStyle.assetQuantityPending}>QUANTITY: {item.asset.totalPending + '/' + item.asset.bitmarks.length} PENDING...</Text>}
+                      {item.asset.totalPending > 0 && <Image style={assetsStyle.assetQuantityPendingIcon} source={require('./../../../../assets/imgs/pending-status.png')} />}
                     </View>
                   </View>
                 </TouchableOpacity>)

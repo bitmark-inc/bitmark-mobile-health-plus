@@ -125,10 +125,10 @@ export default StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#EDF0F4',
     borderBottomWidth: 1,
-    paddingLeft: convertWidth(19),
+    paddingLeft: convertWidth(28),
     paddingRight: convertWidth(19),
-    paddingTop: 18,
-    paddingBottom: 30,
+    paddingTop: 22,
+    paddingBottom: 22,
   },
   assetImage: {
     width: 62,
@@ -151,11 +151,29 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  assetCreatorBound: {
-    fontFamily: 'Avenir Light',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 16,
+  assetQuantityArea: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    width: convertWidth(329),
+  },
+  assetQuantity: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    color: '#0060F2'
+  },
+  assetQuantityPending: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    color: '#999999'
+  },
+  assetQuantityPendingIcon: {
+    width: 13,
+    height: 17,
+    resizeMode: 'contain',
+    marginRight: 3,
   },
   assetCreator: {
     fontFamily: 'Andale Mono',

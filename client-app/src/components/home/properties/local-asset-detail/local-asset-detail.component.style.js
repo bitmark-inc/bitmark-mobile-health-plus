@@ -150,7 +150,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: convertWidth(340),
-    marginLeft: convertWidth(19),
+    marginLeft: convertWidth(23),
     height: 18,
     backgroundColor: '#F5F5F5',
     marginTop: 18,
@@ -167,10 +167,16 @@ export default StyleSheet.create({
   bitmarksRow: {
     flexDirection: 'row',
     width: convertWidth(340),
-    marginLeft: convertWidth(19),
+    paddingLeft: convertWidth(23),
     height: 36,
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  bitmarkNotView: {
+    backgroundColor: '#0060F2',
+    width: 10, height: 10,
+    position: 'absolute', left: 9, top: 12,
+    borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
   },
   bitmarksRowNo: {
     fontFamily: 'Andale Mono',
