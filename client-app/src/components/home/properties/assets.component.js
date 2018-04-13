@@ -57,7 +57,7 @@ export class AssetsComponent extends React.Component {
   }
 
   reloadData() {
-    AppController.doReloadBitmarks().then(() => {
+    AppController.doReloadUserData().then(() => {
       this.switchSubtab(this.state.subtab);
     }).catch((error) => {
       console.log('getUserBitmark error :', error);

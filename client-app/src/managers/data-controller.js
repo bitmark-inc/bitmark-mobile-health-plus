@@ -200,20 +200,6 @@ const runOnBackground = async () => {
   EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
 };
 
-const doReloadTransactionData = async () => {
-  await runGetTransactionsInBackground();
-  await runGetActiveIncomingTransferOfferInBackground();
-  await runGetLocalBitmarksInBackground();
-};
-
-const doReloadDonationInformation = async () => {
-  await runGetDonationInformationInBackground();
-  await runGetLocalBitmarksInBackground();
-};
-
-const doReloadBitmarks = async () => {
-  await runGetLocalBitmarksInBackground();
-};
 // ================================================================================================================================================
 // ================================================================================================================================================
 let dataInterval = null;
@@ -448,9 +434,6 @@ const DataController = {
   doLogout,
   doStartBackgroundProcess,
   doReloadUserData: runOnBackground,
-  doReloadBitmarks,
-  doReloadTransactionData,
-  doReloadDonationInformation,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,

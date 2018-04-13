@@ -127,17 +127,6 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
 const doReloadUserData = async () => {
   return await processing(DataController.doReloadUserData());
 };
-const doReloadBitmarks = async () => {
-  await processing(DataController.doReloadBitmarks());
-};
-
-const doReloadTransactionData = async () => {
-  await processing(DataController.doReloadTransactionData());
-};
-
-const doReloadDonationInformation = async () => {
-  await processing(DataController.doReloadDonationInformation());
-};
 
 const doGetTransferOfferDetail = async (bitmarkId) => {
   return await processing(TransactionService.doGetTransferOfferDetail(bitmarkId));
@@ -308,14 +297,9 @@ let AppController = {
   doDonateHealthData,
   doBitmarkHealthData,
   doDownloadStudyConsent,
-  doReloadDonationInformation,
   doDownloadBitmark,
 
   doReloadUserData,
-  doReloadBitmarks,
-  doReloadTransactionData,
-
-
 
   doStartBackgroundProcess,
 }

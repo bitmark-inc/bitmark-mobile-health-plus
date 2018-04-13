@@ -205,7 +205,7 @@ export class TransactionsComponent extends React.Component {
   }
 
   reloadData() {
-    AppController.doReloadTransactionData().then(() => {
+    AppController.doReloadUserData().then(() => {
       let { actionRequired, completed, donationInformation } = this.generateData();
       console.log('actionRequired, completed, donationInformation :', actionRequired, completed, donationInformation);
       this.setState({
@@ -213,7 +213,7 @@ export class TransactionsComponent extends React.Component {
         doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
       });
     }).catch((error) => {
-      console.log('doReloadTransactionData error :', error);
+      console.log('doReloadUserData error :', error);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
     });
   }

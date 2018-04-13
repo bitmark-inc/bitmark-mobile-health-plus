@@ -56,7 +56,7 @@ export class DonationComponent extends React.Component {
   // ==========================================================================================
 
   reloadData() {
-    AppController.doReloadDonationInformation().then(() => {
+    AppController.doReloadUserData().then(() => {
       this.switchSubtab(this.state.subtab);
     }).catch((error) => {
       console.log('getUserBitmark error :', error);

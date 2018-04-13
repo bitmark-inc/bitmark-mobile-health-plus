@@ -92,8 +92,8 @@ export class LocalAssetDetailComponent extends React.Component {
           console.log('cancel transferring bitmark error :', error);
           EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
             onClose: async () => {
-              AppController.doReloadBitmarks().catch(error => {
-                console.log('AppController.doReloadBitmarks error', error);
+              AppController.doReloadUserData().catch(error => {
+                console.log('AppController.doReloadUserData error', error);
               });
             }
           });

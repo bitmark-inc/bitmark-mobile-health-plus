@@ -71,7 +71,7 @@ export class UserComponent extends React.Component {
   handerReceivedNotification(data) {
     console.log('UserComponent handerReceivedNotification data :', data);
     if (data.event === 'transfer_request' && data.bitmark_id) {
-      AppController.doReloadTransactionData().then(() => {
+      AppController.doReloadUserData().then(() => {
         return AppController.doGetTransferOfferDetail(data.bitmark_id);
       }).then(transferOfferDetail => {
         const resetHomePage = NavigationActions.reset({
@@ -93,7 +93,7 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
     } else if (data.event === 'transfer_rejected') {
-      AppController.doReloadBitmarks().then(() => {
+      AppController.doReloadUserData().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
         const resetHomePage = NavigationActions.reset({
           index: 1,
@@ -125,7 +125,7 @@ export class UserComponent extends React.Component {
       });
       this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'transfer_failed') {
-      AppController.doReloadBitmarks().then(() => {
+      AppController.doReloadUserData().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
         const resetHomePage = NavigationActions.reset({
           index: 1,
@@ -144,7 +144,7 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification transfer_rejected error :', error);
       });
     } else if (data.event === 'DONATE_DATA' && data.studyData && data.studyData.studyId && data.studyData.taskType) {
-      AppController.doReloadDonationInformation().then(() => {
+      AppController.doReloadUserData().then(() => {
 
         let donationInformation = DataController.getDonationInformation();
         let studyTask = (donationInformation.todoTasks || []).find(task => (task.study && task.study.studyId === data.studyData.studyId && task.taskType === data.studyData.taskType));
@@ -185,7 +185,7 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification BITMARK_DATA error :', error);
       });
     } else if (data.event === 'STUDY_DETAIL') {
-      AppController.doReloadDonationInformation().then(() => {
+      AppController.doReloadUserData().then(() => {
         let donationInformation = DataController.getDonationInformation();
         let study = DonationService.getStudy(donationInformation, data.studyId);
         if (study) {
@@ -206,7 +206,7 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification STUDY_DETAIL error :', error);
       });
     } else if (data.event === 'BITMARK_DATA') {
-      AppController.doReloadDonationInformation().then(() => {
+      AppController.doReloadUserData().then(() => {
         let donationInformation = DataController.getDonationInformation();
         let bitmarkHealthDataTask = (donationInformation.todoTasks || []).find(task => task.taskType === donationInformation.commonTaskIds.bitmark_health_data);
         if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
