@@ -75,6 +75,9 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
               returnKeyType="done"
               selectTextOnFocus={true}
             />
+            {!!this.state.label && <TouchableOpacity style={localAddPropertyStyle.removeLabelNumberButton} onPress={() => this.onChangeText('')} >
+              <Image style={localAddPropertyStyle.removeLabelNumberIcon} source={require('../../../../../../assets/imgs/remove-icon.png')} />
+            </TouchableOpacity>}
             <View style={localAddPropertyStyle.inputLabelBar} />
             <View style={localAddPropertyStyle.suggesionsList}>
               <FlatList

@@ -72,14 +72,14 @@ export default StyleSheet.create({
   bottomImageBar: {
     borderWidth: 2,
     width: convertWidth(126),
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
   },
   assetName: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 18,
     lineHeight: 21,
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     marginTop: 34,
     width: convertWidth(337),
   },
@@ -87,7 +87,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     width: convertWidth(336),
     height: 29,
   },
@@ -107,7 +107,7 @@ export default StyleSheet.create({
   bottomAssetNameBar: {
     borderWidth: 1,
     width: convertWidth(126),
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
   },
   metadataArea: {
     marginTop: 26,
@@ -116,7 +116,7 @@ export default StyleSheet.create({
   metadataItem: {
     width: convertWidth(340),
     flexDirection: 'row',
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
   },
   metadataItemLabel: {
     fontFamily: 'Andale Mono',
@@ -139,7 +139,7 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     fontWeight: '900',
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     marginTop: 27,
     height: 25,
   },
@@ -150,7 +150,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: convertWidth(340),
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     height: 18,
     backgroundColor: '#F5F5F5',
     marginTop: 18,
@@ -167,7 +167,7 @@ export default StyleSheet.create({
   bitmarksRow: {
     flexDirection: 'row',
     width: convertWidth(340),
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     height: 36,
     paddingTop: 10,
     paddingBottom: 10,

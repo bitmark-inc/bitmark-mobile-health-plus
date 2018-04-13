@@ -15,8 +15,8 @@ export default StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'white',
     paddingBottom: Math.max(10, ios.constant.blankFooter),
-    paddingLeft: convertWidth(20),
-    paddingRight: convertWidth(20),
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
   },
   //sign-in
   writeRecoveryPhraseContentMessage: {

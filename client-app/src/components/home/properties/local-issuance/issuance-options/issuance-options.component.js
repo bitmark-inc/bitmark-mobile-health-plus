@@ -83,7 +83,7 @@ export class IssuanceOptionsComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.screenProps.issuanceNavigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>{'BITMARK YOUR:'.toUpperCase()}</Text>
+          <Text style={defaultStyle.headerTitle}>{'Register'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
         <View style={issuanceOptionsStyle.content}>

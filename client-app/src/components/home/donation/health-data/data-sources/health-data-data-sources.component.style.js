@@ -25,7 +25,7 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 13,
     width: convertWidth(220),
-    marginRight: convertWidth(20),
+    marginRight: convertWidth(19),
   },
   dataSourceActive: {
     color: '#0060F2',

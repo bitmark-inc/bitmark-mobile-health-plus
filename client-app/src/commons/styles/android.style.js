@@ -18,7 +18,7 @@ export default StyleSheet.create({
     height: '100%'
   },
   headerLeftIcon: {
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     width: 10,
     height: 19,
     resizeMode: 'contain'

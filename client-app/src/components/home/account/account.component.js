@@ -77,7 +77,7 @@ export class AccountDetailComponent extends React.Component {
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             <View style={accountStyle.contentSubTab}>
               <Text style={accountStyle.settingLabel}>SETTINGS</Text>
-              <Text style={accountStyle.accountNumberLabel}>{'My Bitmark Account Number'.toUpperCase()}</Text>
+              <Text style={accountStyle.accountNumberLabel}>{'YOUR Bitmark Account Number'.toUpperCase()}</Text>
 
               <View style={accountStyle.accountNumberArea}>
                 <Text style={accountStyle.accountNumberValue}>{this.state.userInfo.bitmarkAccountNumber}</Text>
