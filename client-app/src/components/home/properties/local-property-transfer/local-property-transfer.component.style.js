@@ -56,8 +56,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 8,
-    paddingTop: 4,
-    paddingBottom: 4,
+    padding: 4,
   },
   removeAccountNumberIcon: {
     width: 10,

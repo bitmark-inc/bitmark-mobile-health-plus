@@ -90,7 +90,7 @@ export class LocalPropertyTransferComponent extends React.Component {
                     onFocus={() => { this.setState({ bitmarkAccountError: false, transferError: '' }) }}
                   />
                   {!!this.state.bitmarkAccount && <TouchableOpacity style={propertyTransferStyle.removeAccountNumberButton} onPress={() => this.setState({ bitmarkAccount: '', bitmarkAccountError: false, transferError: '' })} >
-                    <Image style={propertyTransferStyle.removeAccountNumberIcon} source={require('./../../../../../assets/imgs/remove-icon-red.png')} />
+                    <Image style={propertyTransferStyle.removeAccountNumberIcon} source={require('./../../../../../assets/imgs/remove-icon.png')} />
                   </TouchableOpacity>}
                 </View>
                 <Text style={propertyTransferStyle.accountNumberError}>{this.state.bitmarkAccountError}</Text>
