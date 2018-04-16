@@ -37,8 +37,11 @@ export default StyleSheet.create({
     right: 0,
     zIndex: 10,
     width: 198,
-    height: 135,
     backgroundColor: '#F5F5F5',
+    shadowColor: 'black',
+    shadowOffset: { height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   downloadAssetButton: {
     width: '100%',
@@ -128,7 +131,7 @@ export default StyleSheet.create({
     backgroundColor: '#F5F5F5',
     width: convertWidth(337),
     height: 18,
-    marginLeft: convertWidth(19),
+    marginLeft: convertWidth(23),
     marginTop: 18,
   },
   provenancesHeaderLabelTimestamp: {
@@ -151,10 +154,16 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: convertWidth(340),
-    marginLeft: convertWidth(19),
+    paddingLeft: convertWidth(23),
     height: 36,
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  provenancesNotView: {
+    backgroundColor: '#0060F2',
+    width: 10, height: 10,
+    position: 'absolute', left: 9, top: 12,
+    borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
   },
   provenancesRowTimestamp: {
     fontFamily: 'Andale Mono',

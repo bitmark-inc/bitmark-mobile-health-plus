@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
-  View, Text, TouchableOpacity, Image, FlatList, ScrollView,
+  View, Text, TouchableOpacity, Image, FlatList, ScrollView, TouchableWithoutFeedback,
   Clipboard,
-  TouchableWithoutFeedback,
   Share,
+  Alert,
 } from 'react-native';
 
 import { FullComponent } from './../../../../commons/components';
@@ -23,21 +23,67 @@ export class LocalPropertyDetailComponent extends React.Component {
     super(props);
     this.downloadAsset = this.downloadAsset.bind(this);
     this.clickOnProvenance = this.clickOnProvenance.bind(this);
+    this.changeTrackingBitmark = this.changeTrackingBitmark.bind(this);
+    this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
+    this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
+
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
+
+    let trackingBitmark = DataController.getTrackingBitmarkInformation(bitmark.id);
+    if (trackingBitmark) {
+      bitmark.provenance = trackingBitmark.provenance;
+    }
+    let provenanceViewed = {};
+    bitmark.provenance.forEach((history, index) => {
+      history.key = index;
+      provenanceViewed[history.tx_id] = history.isViewed;
+    });
     this.state = {
+      provenanceViewed,
+      isTracking: !!trackingBitmark,
       asset,
       bitmark,
       copied: false,
       displayTopButton: false,
     };
-    AppController.doGetProvenance(bitmark).then(provenance => {
-      bitmark.provenance = provenance;
-      bitmark.provenance.forEach((history, index) => {
-        history.key = index;
-      });
-      this.setState({ bitmark });
-    }).catch(error => console.log('getProvenance error', error));
+  }
+
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
+    if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
+      DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
+    } else {
+      DataController.doUpdateViewStatus(null, this.state.bitmark.id);
+    }
+  }
+
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
+  }
+
+  handerChangeLocalBitmarks() {
+    let { asset, bitmark } = DataController.getLocalBitmarkInformation(this.state.bitmark.id, this.state.asset.id);
+    let trackingBitmark = DataController.getTrackingBitmarkInformation(bitmark.id);
+    if (trackingBitmark) {
+      bitmark.provenance = trackingBitmark.provenance;
+    }
+    bitmark.provenance.forEach((history, index) => {
+      history.key = index;
+    });
+    this.setState({ isTracking: !!trackingBitmark, asset, bitmark });
+  }
+
+  handerChangeTrackingBitmarks() {
+    let bitmark = DataController.getTrackingBitmarkInformation(this.state.bitmark.id);
+    this.setState({ bitmark });
+    if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
+      DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
+    } else {
+      DataController.doUpdateViewStatus(null, this.state.bitmark.id);
+    }
   }
 
   downloadAsset() {
@@ -54,6 +100,28 @@ export class LocalPropertyDetailComponent extends React.Component {
   clickOnProvenance(item) {
     let sourceUrl = config.registry_server_url + `/account/${item.owner}?env=app`;
     this.props.navigation.navigate('BitmarkWebView', { title: 'Registry', sourceUrl, isFullScreen: true });
+  }
+
+  changeTrackingBitmark() {
+    //TODO
+    if (!this.state.isTracking) {
+      Alert.alert('Track This Bitmark', 'By tracking a bitmark you can always view the latest bitmarks status in the tracked properties list, are you sure you want to do it?', [{
+        text: 'NO'
+      }, {
+        text: 'YES',
+        onPress: () => {
+          AppController.doTrackingBitmark(this.state.asset, this.state.bitmark).catch(error => {
+            EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+            console.log('doTrackingBitmark error :', error);
+          });
+        }
+      }]);
+    } else {
+      AppController.doStopTrackingBitmark(this.state.bitmark).catch(error => {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+        console.log('doTrackingBitmark error :', error);
+      });
+    }
   }
 
   render() {
@@ -93,6 +161,12 @@ export class LocalPropertyDetailComponent extends React.Component {
                 color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
               }]}>TRANSFER</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={propertyDetailStyle.topButton}
+              onPress={this.changeTrackingBitmark}>
+              <Text style={[propertyDetailStyle.topButtonText, {
+                color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
+              }]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK'}</Text>
+            </TouchableOpacity>
           </View>}
           <ScrollView style={propertyDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
@@ -114,6 +188,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                     data={this.state.bitmark.provenance || []}
                     renderItem={({ item }) => {
                       return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
+                        {this.state.isTracking && !this.state.provenanceViewed[item.tx_id] && <View style={propertyDetailStyle.provenancesNotView}></View>}
                         <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
                           {moment(item.created_at).isValid() ? item.created_at.toUpperCase() : 'PENDING…'}
                         </Text>

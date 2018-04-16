@@ -6,7 +6,7 @@ import { TransactionService } from '.';
 
 // ================================================================================================
 // ================================================================================================
-let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
+const doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
   let lastOffset = null;
   if (oldLocalAssets) {
     oldLocalAssets.forEach(asset => {
@@ -20,6 +20,8 @@ let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
   if (data && data.bitmarks && data.assets) {
     for (let bitmark of data.bitmarks) {
       bitmark.bitmark_id = bitmark.id;
+      let { provenance } = await BitmarkModel.doGetProvenance(bitmark.id);
+      bitmark.provenance = provenance;
       bitmark.isViewed = false;
       if (bitmark.owner === bitmarkAccountNumber) {
         let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
@@ -53,16 +55,20 @@ let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
     }
   }
   let outgoingTransferOffers = await TransactionService.doGetActiveOutgoinTransferOffers(bitmarkAccountNumber);
-  localAssets.forEach(asset => {
+  for (let asset of localAssets) {
     asset.totalPending = 0;
     asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
-    asset.bitmarks.forEach(bitmark => {
+    for (let bitmark of asset.bitmarks) {
+      if (!bitmark.provenance) {
+        let { provenance } = await BitmarkModel.doGetProvenance(bitmark.id);
+        bitmark.provenance = provenance;
+      }
       let isTransferring = outgoingTransferOffers.findIndex(item => item.bitmark_id === bitmark.id);
       bitmark.displayStatus = isTransferring >= 0 ? 'transferring' : bitmark.status;
       asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
       asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
-    });
-  });
+    }
+  }
   localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
   CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, localAssets);
   return localAssets;
@@ -120,6 +126,41 @@ const doGetBitmarkInformation = async (bitmarkId) => {
   return data;
 };
 
+const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) => {
+  //TODO get new tracking from server
+
+  oldTrackingBitmarks = oldTrackingBitmarks || [];
+  let trackingBitmarks = [];
+  for (let oldBitmark of oldTrackingBitmarks) {
+    let { bitmark } = await BitmarkModel.doGetProvenance(bitmark.id);
+    let lastProvenance;
+    if (bitmark.provenance && bitmark.provenance.length > 0) {
+      lastProvenance = bitmark.provenance[0];
+    }
+    if (lastProvenance && (lastProvenance.tx_id !== oldBitmark.lastProvenance.tx_id ||
+      (lastProvenance.tx_id === oldBitmark.lastProvenance.tx_id && lastProvenance.status !== oldBitmark.lastProvenance.status))) {
+      let isViewed = false;
+      bitmark.provenance.forEach(hs => {
+        if (hs.tx_id === bitmark.lastProvenance.tx_id) {
+          hs.isViewed = hs.status === bitmark.lastProvenance.status;
+          isViewed = true;
+        } else {
+          hs.isViewed = isViewed;
+        }
+      });
+      trackingBitmarks.push(merge({}, oldBitmark, bitmark));
+    } else {
+      trackingBitmarks.push(bitmark);
+    }
+  }
+  trackingBitmarks.forEach(bitmark => {
+    bitmark.isViewed = bitmark.provenance.findIndex(hs => !hs.isViewed) < 0;
+  })
+
+  trackingBitmarks = sortList(trackingBitmarks, ((a, b) => b.offset - a.offset));
+  return trackingBitmarks;
+};
+
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
@@ -128,6 +169,7 @@ let BitmarkService = {
   doCheckMetadata,
   doIssueFile,
   doGetBitmarkInformation,
+  doGetTrackingBitmarks,
 };
 
 export { BitmarkService };

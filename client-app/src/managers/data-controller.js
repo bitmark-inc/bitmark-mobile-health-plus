@@ -17,6 +17,7 @@ let userData = {
   activeIncompingTransferOffers: null,
   transactions: null,
   donationInformation: null,
+  trackingBitmarks: null,
 };
 let doneFirstTimeLoadData = false;
 // ================================================================================================================================================
@@ -150,6 +151,32 @@ const runGetDonationInformationInBackground = () => {
     });
   });
 };
+
+let isRunningGetTrackingBitmarksInBackground = false;
+const runGetTrackingBitmarksInBackground = () => {
+  return new Promise((resolve) => {
+    if (isRunningGetTrackingBitmarksInBackground) {
+      return doCheckRunning(() => isRunningGetTrackingBitmarksInBackground).then(resolve);
+    }
+    isRunningGetTrackingBitmarksInBackground = true;
+    BitmarkService.doGetTrackingBitmarks(userInformation.bitmarkAccountNumber, userData.trackingBitmarks).then(trackingBitmarks => {
+      trackingBitmarks = trackingBitmarks || [];
+      if (userData.trackingBitmarks === null || JSON.stringify(trackingBitmarks) !== JSON.stringify(userData.trackingBitmarks)) {
+        userData.trackingBitmarks = trackingBitmarks;
+        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
+      }
+      resolve();
+      isRunningGetTrackingBitmarksInBackground = false;
+      console.log('runOnBackground  runGetTrackingBitmarksInBackground success :', trackingBitmarks);
+    }).catch(error => {
+      resolve();
+      isRunningGetTrackingBitmarksInBackground = false;
+      console.log('runOnBackground  runGetTrackingBitmarksInBackground error :', error);
+    });
+  });
+};
+
+
 const configNotification = () => {
   const onRegisterred = async (registerredNotificaitonInfo) => {
     let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
@@ -194,6 +221,7 @@ const runOnBackground = async () => {
     await runGetTransactionsInBackground();
     await runGetActiveIncomingTransferOfferInBackground();
     await runGetDonationInformationInBackground();
+    await runGetTrackingBitmarksInBackground();
     await runGetLocalBitmarksInBackground();
   }
   doneFirstTimeLoadData = true;
@@ -270,6 +298,11 @@ const doOpenApp = async () => {
     let donationInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION);
     if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
       userData.donationInformation = donationInformation || {};
+    }
+    let trackingBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS);
+    trackingBitmarks = trackingBitmarks.length > 0 ? trackingBitmarks : [];
+    if (userData.trackingBitmarks === null || JSON.stringify(trackingBitmarks) !== JSON.stringify(userData.trackingBitmarks)) {
+      userData.trackingBitmarks = trackingBitmarks || [];
     }
     let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
     localAssets = localAssets.length > 0 ? localAssets : [];
@@ -375,12 +408,69 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
   return filePath;
 };
 
-const doUpdateViewStatus = async (asset) => {
-  let localAsset = userData.localAssets.find(la => la.id === asset.id);
-  if (localAsset && !localAsset.isViewed) {
-    localAsset.isViewed = true;
-    localAsset.bitmarks.forEach(bitmark => bitmark.isViewed = true);
-    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, userData.localAssets);
+const doUpdateViewStatus = async (assetId, bitmarkId) => {
+  if (assetId && bitmarkId) {
+    let localAsset = (userData.localAssets || []).find(la => la.id === assetId);
+    if (localAsset && !localAsset.isViewed) {
+      let assetViewed = true;
+      localAsset.bitmarks.forEach(bitmark => {
+        if (bitmarkId === bitmark.id) {
+          bitmark.isViewed = true;
+        }
+        if (!bitmark.isViewed && assetViewed) {
+          assetViewed = false;
+        }
+      });
+      localAsset.isViewed = assetViewed;
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, userData.localAssets);
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+    }
+  }
+  if (bitmarkId) {
+    let bitmark = (userData.trackingBitmarks || []).find(b => b.id === bitmarkId);
+    if (bitmark) {
+      let hasChanging = false;
+      if (!bitmark.isViewed) {
+        hasChanging = true;
+      }
+      bitmark.isViewed = true;
+      bitmark.provenance.forEach(hs => {
+        if (!hasChanging && !hs.isViewed) {
+          hasChanging = true;
+        }
+        hs.isViewed = true;
+      });
+      bitmark.lastProvenance = bitmark.provenance[0];
+      if (hasChanging) {
+        await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
+        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+      }
+    }
+  }
+};
+
+const doTrackingBitmark = async (touchFaceIdSession, asset, bitmark) => {
+
+  // TODO call API
+  let trackingBitmark = merge({}, bitmark)
+  trackingBitmark.asset = asset;
+  if (trackingBitmark.provenance && trackingBitmark.provenance.length > 0) {
+    trackingBitmark.provenance.forEach(hs => hs.isViewed = true);
+    trackingBitmark.lastProvenance = trackingBitmark.provenance[0];
+  }
+  if (!userData.trackingBitmarks) {
+    userData.trackingBitmarks = [];
+  }
+  userData.trackingBitmarks.push(trackingBitmark);
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
+  EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+};
+const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
+  // TODO call API
+  let trackingBitmarkIndex = (userData.trackingBitmarks || []).findIndex(tb => tb.id = bitmark.id);
+  if (trackingBitmarkIndex >= 0) {
+    userData.trackingBitmarks.splice(trackingBitmarkIndex, 1);
+    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
   }
 };
@@ -393,6 +483,10 @@ const getTransactionData = () => {
 }
 const getUserBitmarks = () => {
   return merge({}, { localAssets: userData.localAssets });
+};
+
+const getTrackingBitmarks = () => {
+  return merge({}, { trackingBitmarks: userData.trackingBitmarks });
 };
 
 const getUserInformation = () => {
@@ -428,6 +522,10 @@ const getDonationInformation = () => {
   return merge({}, userData.donationInformation || {});
 };
 
+const getTrackingBitmarkInformation = (bitmarkId) => {
+  return (userData.trackingBitmarks || []).find(bitmark => bitmark.id === bitmarkId);
+};
+
 const DataController = {
   doOpenApp,
   doLogin,
@@ -445,14 +543,19 @@ const DataController = {
   doBitmarkHealthData,
   doDownloadBitmark,
   doUpdateViewStatus,
+  doTrackingBitmark,
+  doStopTrackingBitmark,
+
 
   getTransactionData,
   getUserBitmarks,
+  getTrackingBitmarks,
   getUserInformation,
   getApplicationVersion,
   getApplicationBuildNumber,
   getLocalBitmarkInformation,
   getDonationInformation,
+  getTrackingBitmarkInformation,
   isDoneFirstimeLoadData: () => doneFirstTimeLoadData,
 };
 

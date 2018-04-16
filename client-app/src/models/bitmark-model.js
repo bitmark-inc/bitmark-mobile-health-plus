@@ -57,10 +57,10 @@ const doGetAllBitmarks = async (accountNumber, lastOffset) => {
   return totalData;
 };
 
-const doGetProvenance = (bitmark) => {
+const doGetProvenance = (bitmarkId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    fetch(config.api_server_url + `/v1/bitmarks/${bitmark.id}?provenance=true&pending=true`, {
+    fetch(config.api_server_url + `/v1/bitmarks/${bitmarkId}?provenance=true&pending=true`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -73,9 +73,11 @@ const doGetProvenance = (bitmark) => {
       if (statusCode >= 400) {
         return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
       }
-      let provenance = (data.bitmark && data.bitmark.provenance) ? data.bitmark.provenance : [];
+      let bitmark = data.bitmark;
+      let provenance = (bitmark && bitmark.provenance) ? bitmark.provenance : [];
       provenance.forEach(item => item.created_at = moment(item.created_at).format('YYYY MMM DD HH:mm:ss'));
-      resolve(provenance);
+      bitmark.provenance = provenance;
+      resolve({ bitmark, provenance });
     }).catch(reject);
   });
 };
