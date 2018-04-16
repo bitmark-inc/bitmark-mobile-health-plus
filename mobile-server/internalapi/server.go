@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
 
-	"github.com/bitmark-inc/mobile-app/server/external/gorush"
-	"github.com/bitmark-inc/mobile-app/server/logmodule"
-	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
+	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 )
 
 type InternalAPIServer struct {

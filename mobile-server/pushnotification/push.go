@@ -1,8 +1,8 @@
 package pushnotification
 
 import (
-	"github.com/bitmark-inc/mobile-app/server/external/gorush"
-	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 )
 
 type PushInfo struct {

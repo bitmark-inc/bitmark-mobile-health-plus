@@ -3,7 +3,7 @@ package internalapi
 import (
 	"net/http"
 
-	"github.com/bitmark-inc/mobile-app/server/pushnotification"
+	"github.com/bitmark-inc/mobile-app/mobile-server/pushnotification"
 	"github.com/gin-gonic/gin"
 )
 

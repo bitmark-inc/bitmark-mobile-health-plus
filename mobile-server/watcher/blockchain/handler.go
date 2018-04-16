@@ -3,9 +3,9 @@ package blockchain
 import (
 	"encoding/json"
 
-	"github.com/bitmark-inc/mobile-app/server/external/gorush"
-	"github.com/bitmark-inc/mobile-app/server/pushnotification"
-	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
+	"github.com/bitmark-inc/mobile-app/mobile-server/pushnotification"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/nsqio/go-nsq"
 	log "github.com/sirupsen/logrus"
 )

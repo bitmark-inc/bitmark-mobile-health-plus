@@ -8,12 +8,12 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/bitmark-inc/mobile-app/server/external/gorush"
-	"github.com/bitmark-inc/mobile-app/server/internalapi"
-	"github.com/bitmark-inc/mobile-app/server/logmodule"
-	"github.com/bitmark-inc/mobile-app/server/server"
-	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
-	"github.com/bitmark-inc/mobile-app/server/watcher"
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
+	"github.com/bitmark-inc/mobile-app/mobile-server/internalapi"
+	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
+	"github.com/bitmark-inc/mobile-app/mobile-server/server"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
+	"github.com/bitmark-inc/mobile-app/mobile-server/watcher"
 
 	"github.com/hashicorp/hcl"
 	"github.com/jackc/pgx"

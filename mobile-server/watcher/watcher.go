@@ -1,10 +1,10 @@
 package watcher
 
 import (
-	"github.com/bitmark-inc/mobile-app/server/external/gorush"
-	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
-	"github.com/bitmark-inc/mobile-app/server/watcher/blockchain"
-	"github.com/bitmark-inc/mobile-app/server/watcher/twosigs"
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
+	"github.com/bitmark-inc/mobile-app/mobile-server/watcher/blockchain"
+	"github.com/bitmark-inc/mobile-app/mobile-server/watcher/twosigs"
 	nsq "github.com/nsqio/go-nsq"
 )
 
