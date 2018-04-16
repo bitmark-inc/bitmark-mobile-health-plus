@@ -75,6 +75,8 @@ func (p *PushPGStore) QueryPushTokens(account string) (map[string]map[string][]s
 		}
 	}
 
+	defer rows.Close()
+
 	clients := make(map[string]map[string][]string)
 	for rows.Next() {
 		var client string
@@ -121,6 +123,7 @@ func (p *PushPGStore) QueryPushItems(account string) ([]PushItem, error) {
 			return nil, err
 		}
 	}
+	defer rows.Close()
 
 	items := make([]PushItem, 0)
 	for rows.Next() {
@@ -161,6 +164,7 @@ func (p *PushPGStore) QueryBadgeCount(account string) (int, error) {
 			return 0, err
 		}
 	}
+	defer rows.Close()
 
 	if rows.Next() {
 		var count int
