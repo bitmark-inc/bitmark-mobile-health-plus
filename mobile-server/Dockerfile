@@ -10,18 +10,10 @@ RUN go install github.com/bitmark-inc/mobile-app/mobile-server
 
 FROM bitmark/go-env
 
-COPY --from=build-server /go/bin/account /usr/bin/account
+COPY --from=build-server /go/bin/account /usr/bin/mobile-server
 
-ADD account-client/dist /usr/share/account-client
+COPY mobile-server.conf.sample /.config/server/mobile-server.conf
 
-COPY account/bitmark-account.conf.sample /.config/bitmark-account/bitmark-account.conf
-COPY account/share/localization /usr/share/account/localization
-COPY account/share/email /usr/share/account/email
+EXPOSE 9005 9006
 
-RUN mkdir -p /tmp/account/assets
-
-ENV BITMARK_CONFIGURATION /.config/bitmark-account/bitmark-account.conf
-
-EXPOSE 8900
-
-ENTRYPOINT [ "/usr/bin/account" ]
+ENTRYPOINT [ "/usr/bin/mobile-server" "-c=/.config/server/mobile-server.conf"]
