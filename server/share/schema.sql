@@ -39,6 +39,7 @@ CREATE TABLE mobile.account (
 
 -- device_platform enumeration
 CREATE TYPE device_platform AS ENUM ('ios', 'android');
+
 CREATE TYPE push_client AS ENUM('primary', 'beta');
 
 -- TABLE device
@@ -48,6 +49,23 @@ CREATE TABLE mobile.push_uuid (
     platform device_platform NOT NULL,
     client push_client DEFAULT 'primary',
 	  PRIMARY KEY(token, platform)
+);
+
+-- push notification item status
+DROP TYPE IF EXISTS push_item_status;
+CREATE TYPE push_item_status AS ENUM ('fresh', 'read', 'completed');
+
+CREATE TABLE mobile.push_item (
+    id SERIAL PRIMARY KEY,
+    account_number TEXT REFERENCES mobile.account(account_number),
+    source TEXT NOT NULL,
+    title TEXT DEFAULT NULL,
+    message TEXT DEFAULT NULL,
+    data JSONB DEFAULT NULL,
+    pinned BOOLEAN DEFAULT FALSE,
+    status push_item_status DEFAULT 'fresh',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 -- finished

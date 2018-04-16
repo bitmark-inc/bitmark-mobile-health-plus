@@ -1,9 +1,10 @@
 package watcher
 
 import (
-	"github.com/bitmark-inc/mobile-app/server/external/notification"
-	"github.com/bitmark-inc/mobile-app/server/store/pushuuid"
+	"github.com/bitmark-inc/mobile-app/server/external/gorush"
+	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
 	"github.com/bitmark-inc/mobile-app/server/watcher/blockchain"
+	"github.com/bitmark-inc/mobile-app/server/watcher/twosigs"
 	nsq "github.com/nsqio/go-nsq"
 )
 
@@ -16,15 +17,17 @@ const (
 	nsqChannel = "mobile-server"
 )
 
-func New(host string, pushUUIDStore pushuuid.PushUUIDStore, pushAPIClient *notification.Client) *Watcher {
+func New(host string, store pushstore.PushStore, client *gorush.Client) *Watcher {
 	nc := &notifyClient{
 		queues: make([]*nsq.Consumer, 0),
 		stop:   make(chan struct{}),
 	}
 
-	blockchainHandler := blockchain.New(pushUUIDStore, pushAPIClient)
-
+	blockchainHandler := blockchain.New(store, client)
 	nc.add("blockchain", nsqChannel, blockchainHandler)
+
+	twosigsHandler := twosigs.New(store, client)
+	nc.add("transfer-offer", nsqChannel, twosigsHandler)
 
 	return &Watcher{
 		notifer:           nc,
@@ -34,4 +37,8 @@ func New(host string, pushUUIDStore pushuuid.PushUUIDStore, pushAPIClient *notif
 
 func (w *Watcher) Connect(host string) {
 	w.notifer.connect(host)
+}
+
+func (w *Watcher) Close() {
+	w.notifer.close()
 }

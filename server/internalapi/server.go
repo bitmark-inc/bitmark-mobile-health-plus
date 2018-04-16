@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
 
-	"github.com/bitmark-inc/mobile-app/server/external/notification"
+	"github.com/bitmark-inc/mobile-app/server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/server/logmodule"
-	"github.com/bitmark-inc/mobile-app/server/store/pushuuid"
+	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
 )
 
 type InternalAPIServer struct {
@@ -15,10 +15,10 @@ type InternalAPIServer struct {
 	dbConn *pgx.Conn
 
 	// Stores
-	pushUUIDStore pushuuid.PushUUIDStore
+	pushStore pushstore.PushStore
 
 	// External API
-	pushAPIClient *notification.Client
+	pushAPIClient *gorush.Client
 }
 
 func (s *InternalAPIServer) Run(addr string) error {
@@ -33,13 +33,13 @@ func (s *InternalAPIServer) Run(addr string) error {
 	return s.router.Run(addr)
 }
 
-func New(db *pgx.Conn, pushUUIDStore pushuuid.PushUUIDStore, pushClient *notification.Client) *InternalAPIServer {
+func New(db *pgx.Conn, pushStore pushstore.PushStore, pushClient *gorush.Client) *InternalAPIServer {
 	r := gin.New()
 
 	return &InternalAPIServer{
 		router:        r,
 		dbConn:        db,
-		pushUUIDStore: pushUUIDStore,
+		pushStore:     pushStore,
 		pushAPIClient: pushClient,
 	}
 }

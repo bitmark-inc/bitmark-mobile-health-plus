@@ -1,4 +1,4 @@
-package notification
+package gorush
 
 import (
 	"bytes"
@@ -29,6 +29,7 @@ type notification struct {
 	Message  string                 `json:"message"`
 	Data     map[string]interface{} `json:"data"`
 	Alert    map[string]interface{} `json:"alert"`
+	Badge    int                    `json:"badge"`
 }
 
 type Client struct {
@@ -39,30 +40,7 @@ func New(url string) *Client {
 	return &Client{url}
 }
 
-// func (c *Client) Send(event string, receivers map[string][]string, data map[string]interface{}, args ...string) {
-// 	msg := messages[event]
-// 	if len(args) > 0 {
-// 		msg = fmt.Sprintf(messages[event], args)
-// 	}
-
-// 	data["event"] = event // for app to distinguish events
-// 	notifications := make([]notification, 0)
-// 	for platform, tokens := range receivers {
-// 		notifications = append(notifications, notification{
-// 			c.ios_topic,
-// 			tokens,
-// 			platformCode[platform],
-// 			msg,
-// 			data,
-// 		})
-// 	}
-
-// 	body := new(bytes.Buffer)
-// 	json.NewEncoder(body).Encode(map[string]interface{}{"notifications": notifications})
-// 	http.DefaultClient.Post(c.url+"/api/push", "application/json", body)
-// }
-
-func (c *Client) Send(title, message string, receivers map[string]map[string][]string, data map[string]interface{}) error {
+func (c *Client) Send(title, message string, receivers map[string]map[string][]string, data map[string]interface{}, badge int) error {
 	notifications := make([]notification, 0)
 	for client, payloads := range receivers {
 		for platform, tokens := range payloads {
@@ -72,6 +50,7 @@ func (c *Client) Send(title, message string, receivers map[string]map[string][]s
 				Platform: platformCode[platform],
 				Message:  message,
 				Data:     data,
+				Badge:    badge,
 				Alert: map[string]interface{}{
 					"title": title,
 					"body":  message,

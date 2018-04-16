@@ -3,39 +3,40 @@ package blockchain
 import (
 	"encoding/json"
 
-	"github.com/bitmark-inc/mobile-app/server/external/notification"
-	"github.com/bitmark-inc/mobile-app/server/store/pushuuid"
+	"github.com/bitmark-inc/mobile-app/server/external/gorush"
+	"github.com/bitmark-inc/mobile-app/server/pushnotification"
+	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
 	"github.com/nsqio/go-nsq"
 	log "github.com/sirupsen/logrus"
 )
 
 type BlockchainEventHandler struct {
 	nsq.Handler
-	// Stores
-	pushUUIDStore pushuuid.PushUUIDStore
-	// External API
-	pushAPIClient *notification.Client
+	pushStore     pushstore.PushStore
+	pushAPIClient *gorush.Client
 }
 
-func New(pushUUIDStore pushuuid.PushUUIDStore, pushAPIClient *notification.Client) *BlockchainEventHandler {
+func New(store pushstore.PushStore, pushAPIClient *gorush.Client) *BlockchainEventHandler {
 	return &BlockchainEventHandler{
-		pushUUIDStore: pushUUIDStore,
+		pushStore:     store,
 		pushAPIClient: pushAPIClient,
 	}
 }
 
 func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
-	var data map[string]string
+	var data map[string]interface{}
 	if err := json.Unmarshal(message.Body, &data); err != nil {
 		return err
 	}
 
 	log.Debug("Handle event for data", data)
-
-	tokens, err := h.pushUUIDStore.QueryPushTokens("e1pFRPqPhY2gpgJTpCiwXDnVeouY9EjHY6STtKwdN6Z4bp4sog")
-	if err != nil {
-		return err
-	}
-
-	return h.pushAPIClient.Send(data["name"], data["body"], tokens, nil)
+	return pushnotification.Push(pushnotification.PushInfo{
+		Account: "e1pFRPqPhY2gpgJTpCiwXDnVeouY9EjHY6STtKwdN6Z4bp4sog",
+		Title:   data["name"].(string),
+		Message: data["body"].(string),
+		Data:    data,
+		Source:  "gateway",
+		Pinned:  false,
+		Silent:  true,
+	}, h.pushStore, h.pushAPIClient)
 }

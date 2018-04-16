@@ -1,4 +1,4 @@
-package notification
+package twosigs
 
 const (
 	EventTransferRequest  = "transfer_request"

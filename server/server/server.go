@@ -5,7 +5,7 @@ import (
 	"github.com/jackc/pgx"
 
 	"github.com/bitmark-inc/mobile-app/server/logmodule"
-	"github.com/bitmark-inc/mobile-app/server/store/pushuuid"
+	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
 )
 
 type Server struct {
@@ -14,7 +14,7 @@ type Server struct {
 	dbConn *pgx.Conn
 
 	// Stores
-	pushUUIDStore pushuuid.PushUUIDStore
+	pushStore pushstore.PushStore
 }
 
 func (s *Server) Run(addr string) error {
@@ -30,17 +30,23 @@ func (s *Server) Run(addr string) error {
 		pushUUIDs.DELETE("/:token", s.RemovePushToken)
 	}
 
+	notifications := api.Group("/notifications")
+	notifications.Use(authenticate())
+	{
+		notifications.GET("", s.NotificationList)
+	}
+
 	return s.router.Run(addr)
 }
 
 func New(db *pgx.Conn) *Server {
 	r := gin.New()
 
-	pushUUIDPGStore := pushuuid.NewPGStore(db)
+	store := pushstore.NewPGStore(db)
 
 	return &Server{
-		router:        r,
-		dbConn:        db,
-		pushUUIDStore: pushUUIDPGStore,
+		router:    r,
+		dbConn:    db,
+		pushStore: store,
 	}
 }

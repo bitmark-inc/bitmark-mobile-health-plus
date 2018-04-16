@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/signal"
+	"syscall"
 
-	"github.com/bitmark-inc/mobile-app/server/store/pushuuid"
-
-	"github.com/bitmark-inc/mobile-app/server/external/notification"
+	"github.com/bitmark-inc/mobile-app/server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/server/internalapi"
 	"github.com/bitmark-inc/mobile-app/server/logmodule"
 	"github.com/bitmark-inc/mobile-app/server/server"
-
+	"github.com/bitmark-inc/mobile-app/server/store/pushstore"
 	"github.com/bitmark-inc/mobile-app/server/watcher"
+
 	"github.com/hashicorp/hcl"
 	"github.com/jackc/pgx"
 	log "github.com/sirupsen/logrus"
@@ -109,15 +110,24 @@ func main() {
 		log.Panic("cannot connect to db", err)
 	}
 
-	mobileAPIServer := server.New(dbConn)
-
-	pushClient := notification.New(config.External.PushServer)
-	pushStore := pushuuid.NewPGStore(dbConn)
-
-	internalAPIServer := internalapi.New(dbConn, pushStore, pushClient)
+	pushStore := pushstore.NewPGStore(dbConn)
+	pushClient := gorush.New(config.External.PushServer)
 
 	w := watcher.New(config.External.MessageQueue, pushStore, pushClient)
 	w.Connect(config.External.MessageQueue)
+
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		log.Info("Server is preparing to stop")
+		dbConn.Close()
+		w.Close()
+		os.Exit(1)
+	}()
+
+	mobileAPIServer := server.New(dbConn)
+	internalAPIServer := internalapi.New(dbConn, pushStore, pushClient)
 
 	g.Go(func() error {
 		return mobileAPIServer.Run(fmt.Sprintf(":%d", config.Listen.MobileAPI))
