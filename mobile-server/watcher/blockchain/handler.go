@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
-	"github.com/bitmark-inc/mobile-app/mobile-server/pushnotification"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/nsqio/go-nsq"
 	log "github.com/sirupsen/logrus"
@@ -30,13 +29,14 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 	}
 
 	log.Debug("Handle event for data", data)
-	return pushnotification.Push(pushnotification.PushInfo{
-		Account: "e1pFRPqPhY2gpgJTpCiwXDnVeouY9EjHY6STtKwdN6Z4bp4sog",
-		Title:   data["name"].(string),
-		Message: data["body"].(string),
-		Data:    data,
-		Source:  "gateway",
-		Pinned:  false,
-		Silent:  true,
-	}, h.pushStore, h.pushAPIClient)
+	// return pushnotification.Push(pushnotification.PushInfo{
+	// 	Account: "e1pFRPqPhY2gpgJTpCiwXDnVeouY9EjHY6STtKwdN6Z4bp4sog",
+	// 	Title:   data["name"].(string),
+	// 	Message: data["body"].(string),
+	// 	Data:    data,
+	// 	Source:  "gateway",
+	// 	Pinned:  false,
+	// 	Silent:  true,
+	// }, h.pushStore, h.pushAPIClient)
+	return nil
 }

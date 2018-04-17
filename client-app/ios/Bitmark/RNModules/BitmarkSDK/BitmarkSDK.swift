@@ -228,6 +228,20 @@ class BitmarkSDK: NSObject {
     }
   }
   
+  @objc(transferOneSignature::::)
+  func transferOneSignature(_ sessionId: String, _ bitmarkId: String, address: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+      let success = try account.transferBitmark(bitmarkId: bitmarkId, toAccount: address)
+      
+      callback([success])
+    }
+    catch let e {
+      print(e)
+      callback([false, e.localizedDescription])
+    }
+  }
+  
   @objc(sign1stForTransfer::::)
   func sign1stForTransfer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {

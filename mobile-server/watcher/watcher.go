@@ -11,6 +11,7 @@ import (
 type Watcher struct {
 	notifer           *notifyClient
 	blockchainHandler *blockchain.BlockchainEventHandler
+	twosigsHandler    *twosigs.TwoSigsHandler
 }
 
 const (
@@ -23,15 +24,16 @@ func New(host string, store pushstore.PushStore, client *gorush.Client) *Watcher
 		stop:   make(chan struct{}),
 	}
 
-	blockchainHandler := blockchain.New(store, client)
-	nc.add("blockchain", nsqChannel, blockchainHandler)
+	// blockchainHandler := blockchain.New(store, client)
+	// nc.add("blockchain", nsqChannel, blockchainHandler)
 
 	twosigsHandler := twosigs.New(store, client)
 	nc.add("transfer-offer", nsqChannel, twosigsHandler)
 
 	return &Watcher{
 		notifer:           nc,
-		blockchainHandler: blockchainHandler,
+		blockchainHandler: nil,
+		twosigsHandler:    twosigsHandler,
 	}
 }
 
