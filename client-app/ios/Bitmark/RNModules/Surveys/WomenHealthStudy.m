@@ -229,7 +229,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   step8QuestionStep.optional = NO;
   
   ORKAnswerFormat *step9AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumMassUnit].symbol];
-  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-10" title:@"What is your current weight?" answer:step9AnswerFormat];
+  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-9" title:@"What is your current weight?" answer:step9AnswerFormat];
   step9QuestionStep.optional = NO;
   
   // Create task
