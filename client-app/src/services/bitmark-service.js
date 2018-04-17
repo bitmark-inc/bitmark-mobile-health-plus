@@ -127,38 +127,83 @@ const doGetBitmarkInformation = async (bitmarkId) => {
 };
 
 const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) => {
-  //TODO get new tracking from server
-
   oldTrackingBitmarks = oldTrackingBitmarks || [];
   let trackingBitmarks = [];
-  for (let oldBitmark of oldTrackingBitmarks) {
-    let { bitmark } = await BitmarkModel.doGetProvenance(bitmark.id);
-    let lastProvenance;
-    if (bitmark.provenance && bitmark.provenance.length > 0) {
-      lastProvenance = bitmark.provenance[0];
-    }
-    if (lastProvenance && (lastProvenance.tx_id !== oldBitmark.lastProvenance.tx_id ||
-      (lastProvenance.tx_id === oldBitmark.lastProvenance.tx_id && lastProvenance.status !== oldBitmark.lastProvenance.status))) {
-      let isViewed = false;
-      bitmark.provenance.forEach(hs => {
-        if (hs.tx_id === bitmark.lastProvenance.tx_id) {
-          hs.isViewed = hs.status === bitmark.lastProvenance.status;
-          isViewed = true;
-        } else {
-          hs.isViewed = isViewed;
-        }
-      });
-      trackingBitmarks.push(merge({}, oldBitmark, bitmark));
+  let bitmarkIds = [];
+  for (let oldTB of oldTrackingBitmarks) {
+    bitmarkIds.push(oldTB.id);
+  }
+  //TODO get new tracking from server
+
+  let bitmarks = await BitmarkModel.getListBitmarks(bitmarkIds);
+  console.log('bitmarks :', bitmarks);
+
+  for (let bitmark of bitmarks) {
+    let oldTB = oldTrackingBitmarks.find(otb => otb.id === bitmark.id);
+    console.log('oldTB :', oldTB);
+    if (oldTB) {
+      if (oldTB.head_id !== bitmark.head_id || (oldTB.head_id === bitmark.head_id && oldTB.status !== bitmark.status)) {
+        oldTB.isViewed = false;
+        trackingBitmarks.push(merge({}, oldTB, bitmark));
+      } else {
+        trackingBitmarks.push(oldTB);
+      }
     } else {
+      let bitmarkFullInfo = BitmarkModel.doGetBitmarkInformation(bitmark.id);
+      bitmark.asset = bitmarkFullInfo.asset;
+      bitmark.isViewed = false;
       trackingBitmarks.push(bitmark);
     }
   }
-  trackingBitmarks.forEach(bitmark => {
-    bitmark.isViewed = bitmark.provenance.findIndex(hs => !hs.isViewed) < 0;
-  })
 
-  trackingBitmarks = sortList(trackingBitmarks, ((a, b) => b.offset - a.offset));
+  // oldTrackingBitmarks = oldTrackingBitmarks || [];
+  // let trackingBitmarks = [];
+  // for (let oldBitmark of oldTrackingBitmarks) {
+  // let { bitmark } = await BitmarkModel.doGetProvenance(bitmark.id);
+  //   let lastProvenance;
+  //   if (bitmark.provenance && bitmark.provenance.length > 0) {
+  //     lastProvenance = bitmark.provenance[0];
+  //   }
+  //   if (lastProvenance && (lastProvenance.tx_id !== oldBitmark.lastProvenance.tx_id ||
+  //     (lastProvenance.tx_id === oldBitmark.lastProvenance.tx_id && lastProvenance.status !== oldBitmark.lastProvenance.status))) {
+  //     let isViewed = false;
+  //     bitmark.provenance.forEach(hs => {
+  //       if (hs.tx_id === bitmark.lastProvenance.tx_id) {
+  //         hs.isViewed = hs.status === bitmark.lastProvenance.status;
+  //         isViewed = true;
+  //       } else {
+  //         hs.isViewed = isViewed;
+  //       }
+  //     });
+  //     trackingBitmarks.push(merge({}, oldBitmark, bitmark));
+  //   } else {
+  //     trackingBitmarks.push(bitmark);
+  //   }
+  // }
+  // trackingBitmarks.forEach(bitmark => {
+  //   bitmark.isViewed = bitmark.provenance.findIndex(hs => !hs.isViewed) < 0;
+  // })
+
+  // trackingBitmarks = sortList(trackingBitmarks, ((a, b) => b.offset - a.offset));
   return trackingBitmarks;
+};
+
+const doGetProvenance = async (bitmarkId, headId, status) => {
+  console.log('doGetProvenance :', bitmarkId, headId, status);
+  let { provenance } = await BitmarkModel.doGetProvenance(bitmarkId);
+  if (headId && status) {
+    let isViewed = false;
+    provenance.forEach(hs => {
+      if (hs.tx_id === headId) {
+        hs.isViewed = hs.status === status;
+        isViewed = true;
+      } else {
+        hs.isViewed = isViewed;
+      }
+    });
+  }
+  console.log(provenance);
+  return provenance;
 };
 
 // ================================================================================================
@@ -170,6 +215,7 @@ let BitmarkService = {
   doIssueFile,
   doGetBitmarkInformation,
   doGetTrackingBitmarks,
+  doGetProvenance,
 };
 
 export { BitmarkService };

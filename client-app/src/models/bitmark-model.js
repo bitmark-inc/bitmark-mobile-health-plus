@@ -57,6 +57,37 @@ const doGetAllBitmarks = async (accountNumber, lastOffset) => {
   return totalData;
 };
 
+const getListBitmarks = (bitmarkIds) => {
+  let queryString;
+  return new Promise((resolve, reject) => {
+    if (bitmarkIds && bitmarkIds.length > 0) {
+      bitmarkIds.forEach(bitmarkId => {
+        queryString = queryString ? `&bitmark_ids=${bitmarkId}` : `?bitmark_ids=${bitmarkId}`;
+      });
+    }
+    if (!queryString) {
+      return resolve([]);
+    }
+    let statusCode;
+    console.log(config.api_server_url + `/v1/bitmarks` + queryString);
+    fetch(config.api_server_url + `/v1/bitmarks` + queryString, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('getListBitmarks error :' + JSON.stringify(data)));
+      }
+      resolve(data.bitmarks || []);
+    }).catch(reject);
+  });
+};
+
 const doGetProvenance = (bitmarkId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -232,6 +263,7 @@ let BitmarkModel = {
   doGetBitmarkInformation,
   getTransactionDetail,
   getAllTransactions,
+  getListBitmarks,
 };
 
 export { BitmarkModel };

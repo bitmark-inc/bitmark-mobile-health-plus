@@ -146,6 +146,7 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
+                {this.state.existNewAsset && <View style={assetsStyle.newItem}></View>}
                 <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
               </View>
             </View>
@@ -170,6 +171,7 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
+                {this.state.existNewTracking && <View style={assetsStyle.newItem}></View>}
                 <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.tracking.toUpperCase()}</Text>
               </View>
             </View>

@@ -184,6 +184,9 @@ export class LocalAssetDetailComponent extends React.Component {
                           {!this.state.bitmarkViewed[item.bitmark.id] && <View style={assetDetailStyle.bitmarkNotView}></View>}
                           <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
+                            let bitmarkViewed = this.state.bitmarkViewed;
+                            bitmarkViewed[item.bitmark.id] = true;
+                            this.setState({ bitmarkViewed });
                             this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                           }}>
                             <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
@@ -225,6 +228,9 @@ export class LocalAssetDetailComponent extends React.Component {
                         }}></View>}
                         <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
                         <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
+                          let bitmarkViewed = this.state.bitmarkViewed;
+                          bitmarkViewed[item.bitmark.id] = true;
+                          this.setState({ bitmarkViewed });
                           this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                         }}>
                           <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>

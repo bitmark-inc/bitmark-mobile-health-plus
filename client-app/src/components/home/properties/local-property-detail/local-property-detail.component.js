@@ -24,21 +24,15 @@ export class LocalPropertyDetailComponent extends React.Component {
     this.downloadAsset = this.downloadAsset.bind(this);
     this.clickOnProvenance = this.clickOnProvenance.bind(this);
     this.changeTrackingBitmark = this.changeTrackingBitmark.bind(this);
-    this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
     this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
 
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
 
     let trackingBitmark = DataController.getTrackingBitmarkInformation(bitmark.id);
-    if (trackingBitmark) {
-      bitmark.provenance = trackingBitmark.provenance;
-    }
+
     let provenanceViewed = {};
-    bitmark.provenance.forEach((history, index) => {
-      history.key = index;
-      provenanceViewed[history.tx_id] = history.isViewed;
-    });
+
     this.state = {
       provenanceViewed,
       isTracking: !!trackingBitmark,
@@ -46,44 +40,50 @@ export class LocalPropertyDetailComponent extends React.Component {
       bitmark,
       copied: false,
       displayTopButton: false,
+      provenance: [],
     };
+    AppController.doGetProvenance(this.state.bitmark).then(provenance => {
+      let provenanceViewed = {};
+      provenance.forEach((history, index) => {
+        history.key = index;
+        provenanceViewed[history.tx_id] = history.isViewed;
+      });
+      console.log('provenanceViewed :', provenanceViewed);
+      this.setState({ provenance, provenanceViewed });
+      if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
+        DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
+      } else {
+        DataController.doUpdateViewStatus(null, this.state.bitmark.id);
+      }
+    }).catch(error => {
+      console.log('error 2:', error);
+    });
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
-    if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
-      DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
-    } else {
-      DataController.doUpdateViewStatus(null, this.state.bitmark.id);
-    }
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
   }
 
-  handerChangeLocalBitmarks() {
-    let { asset, bitmark } = DataController.getLocalBitmarkInformation(this.state.bitmark.id, this.state.asset.id);
-    let trackingBitmark = DataController.getTrackingBitmarkInformation(bitmark.id);
-    if (trackingBitmark) {
-      bitmark.provenance = trackingBitmark.provenance;
-    }
-    bitmark.provenance.forEach((history, index) => {
-      history.key = index;
-    });
-    this.setState({ isTracking: !!trackingBitmark, asset, bitmark });
-  }
-
   handerChangeTrackingBitmarks() {
-    let bitmark = DataController.getTrackingBitmarkInformation(this.state.bitmark.id);
-    this.setState({ bitmark });
-    if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
-      DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
-    } else {
-      DataController.doUpdateViewStatus(null, this.state.bitmark.id);
-    }
+    AppController.doGetProvenance(this.state.bitmark).then(provenance => {
+      let trackingBitmark = DataController.getTrackingBitmarkInformation(this.state.bitmark.id);
+      console.log('trackingBitmark :', trackingBitmark);
+      provenance.forEach((history, index) => {
+        history.key = index;
+      });
+      this.setState({ provenance, isTracking: !!trackingBitmark, })
+      if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
+        DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
+      } else {
+        DataController.doUpdateViewStatus(null, this.state.bitmark.id);
+      }
+    }).catch(error => {
+      console.log('error 1 :', error);
+    });
   }
 
   downloadAsset() {
@@ -185,10 +185,10 @@ export class LocalPropertyDetailComponent extends React.Component {
                   <FlatList
                     scrollEnabled={false}
                     extraData={this.state}
-                    data={this.state.bitmark.provenance || []}
+                    data={this.state.provenance || []}
                     renderItem={({ item }) => {
                       return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
-                        {this.state.isTracking && !this.state.provenanceViewed[item.tx_id] && <View style={propertyDetailStyle.provenancesNotView}></View>}
+                        {this.state.isTracking && !this.state.provenanceViewed[item.tx_id] && !item.isViewed && <View style={propertyDetailStyle.provenancesNotView}></View>}
                         <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
                           {moment(item.created_at).isValid() ? item.created_at.toUpperCase() : 'PENDING…'}
                         </Text>

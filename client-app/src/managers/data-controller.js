@@ -66,6 +66,7 @@ const runGetActiveIncomingTransferOfferInBackground = () => {
       activeIncompingTransferOffers = activeIncompingTransferOffers || [];
       if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
         userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, userData.activeIncompingTransferOffers);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
       }
       resolve();
@@ -115,6 +116,7 @@ const runGetLocalBitmarksInBackground = () => {
       localAssets = recheckLocalAssets(localAssets);
       if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
         userData.localAssets = localAssets;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, userData.localAssets);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
       }
       resolve();
@@ -139,6 +141,7 @@ const runGetDonationInformationInBackground = () => {
       donationInformation = donationInformation || {};
       if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
         userData.donationInformation = donationInformation;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
       }
       resolve();
@@ -163,6 +166,7 @@ const runGetTrackingBitmarksInBackground = () => {
       trackingBitmarks = trackingBitmarks || [];
       if (userData.trackingBitmarks === null || JSON.stringify(trackingBitmarks) !== JSON.stringify(userData.trackingBitmarks)) {
         userData.trackingBitmarks = trackingBitmarks;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
       }
       resolve();
@@ -427,22 +431,16 @@ const doUpdateViewStatus = async (assetId, bitmarkId) => {
     }
   }
   if (bitmarkId) {
-    let bitmark = (userData.trackingBitmarks || []).find(b => b.id === bitmarkId);
-    if (bitmark) {
-      let hasChanging = false;
-      if (!bitmark.isViewed) {
-        hasChanging = true;
-      }
-      bitmark.isViewed = true;
-      bitmark.provenance.forEach(hs => {
-        if (!hasChanging && !hs.isViewed) {
-          hasChanging = true;
-        }
-        hs.isViewed = true;
-      });
-      bitmark.lastProvenance = bitmark.provenance[0];
+    let trackingBitmark = (userData.trackingBitmarks || []).find(tb => tb.id === bitmarkId);
+    if (trackingBitmark) {
+      let hasChanging = !trackingBitmark.isViewed;
+      trackingBitmark.isViewed = true;
+      trackingBitmark.lastHistory = {
+        status: trackingBitmark.status,
+        head_id: trackingBitmark.head_id,
+      };
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
       if (hasChanging) {
-        await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
       }
     }
@@ -450,20 +448,20 @@ const doUpdateViewStatus = async (assetId, bitmarkId) => {
 };
 
 const doTrackingBitmark = async (touchFaceIdSession, asset, bitmark) => {
-
   // TODO call API
-  let trackingBitmark = merge({}, bitmark)
+  let trackingBitmark = merge({}, bitmark);
   trackingBitmark.asset = asset;
-  if (trackingBitmark.provenance && trackingBitmark.provenance.length > 0) {
-    trackingBitmark.provenance.forEach(hs => hs.isViewed = true);
-    trackingBitmark.lastProvenance = trackingBitmark.provenance[0];
-  }
+  trackingBitmark.isViewed = true;
+  trackingBitmark.lastHistory = {
+    status: bitmark.status,
+    head_id: bitmark.head_id,
+  };
   if (!userData.trackingBitmarks) {
     userData.trackingBitmarks = [];
   }
   userData.trackingBitmarks.push(trackingBitmark);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
-  EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+  EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
 };
 const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
   // TODO call API
@@ -471,9 +469,18 @@ const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
   if (trackingBitmarkIndex >= 0) {
     userData.trackingBitmarks.splice(trackingBitmarkIndex, 1);
     await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
   }
 };
+
+const doGetProvenance = async (bitmarkId) => {
+  let trackingBitmark = (userData.trackingBitmarks || []).find(tb => tb.id = bitmarkId);
+  if (trackingBitmark) {
+    return await BitmarkService.doGetProvenance(bitmarkId, trackingBitmark.lastHistory.head_id, trackingBitmark.lastHistory.status);
+  } else {
+    return await BitmarkService.doGetProvenance(bitmarkId);
+  }
+}
 
 const getTransactionData = () => {
   return merge({}, {
@@ -545,6 +552,7 @@ const DataController = {
   doUpdateViewStatus,
   doTrackingBitmark,
   doStopTrackingBitmark,
+  doGetProvenance,
 
 
   getTransactionData,
