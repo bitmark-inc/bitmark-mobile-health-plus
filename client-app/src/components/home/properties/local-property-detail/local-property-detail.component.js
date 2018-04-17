@@ -95,7 +95,7 @@ export class LocalPropertyDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>}
           <ScrollView style={propertyDetailStyle.content}>
-            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
               <View style={propertyDetailStyle.bottomImageBar}></View>
               <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
               <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>
