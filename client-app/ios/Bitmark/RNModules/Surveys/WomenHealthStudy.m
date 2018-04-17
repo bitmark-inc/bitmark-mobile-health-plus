@@ -19,6 +19,7 @@
 
 @property (nonatomic, copy, nullable) RCTResponseSenderBlock signupFlowCallback;
 @property (nonatomic, copy, nullable) RCTResponseSenderBlock intakeSurveyCallback;
+@property (nonatomic, copy, nullable) RCTResponseSenderBlock exitSurvey1Callback;
 @property (nonatomic, copy, nullable) RCTResponseSenderBlock consentCallback;
 
 @end
@@ -181,16 +182,14 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
 #pragma mark Step 3 - M5.3
   ORKTextChoice *step5Option1TextChoice = [ORKTextChoice choiceWithText:@"No schooling completed" value:@"opt-1"];
   ORKTextChoice *step5Option2TextChoice = [ORKTextChoice choiceWithText:@"Nursery school to 8th grade" value:@"opt-2"];
-  ORKTextChoice *step5Option3TextChoice = [ORKTextChoice choiceWithText:@"9th, 10th or 11th grade" value:@"opt-3"];
-  ORKTextChoice *step5Option4TextChoice = [ORKTextChoice choiceWithText:@"12th grade, no diploma" value:@"opt-4"];
-  ORKTextChoice *step5Option5TextChoice = [ORKTextChoice choiceWithText:@"High school graduate - high school diploma or the equivalent (for example: GED)" value:@"opt-5"];
-  ORKTextChoice *step5Option6TextChoice = [ORKTextChoice choiceWithText:@"Some college credit, but less than 1 year" value:@"opt-6"];
-  ORKTextChoice *step5Option7TextChoice = [ORKTextChoice choiceWithText:@"1 or more years of college, no degree" value:@"opt-7"];
-  ORKTextChoice *step5Option8TextChoice = [ORKTextChoice choiceWithText:@"Associate degree (for example: AA, AS)" value:@"opt-8"];
-  ORKTextChoice *step5Option9TextChoice = [ORKTextChoice choiceWithText:@"Bachelor's degree (for example: BA, AB, BS)" value:@"opt-9"];
-  ORKTextChoice *step5Option10TextChoice = [ORKTextChoice choiceWithText:@"Master's degree (for example: MA, MS, MEng, MEd, MSW, MBA)" value:@"opt-10"];
-  ORKTextChoice *step5Option11TextChoice = [ORKTextChoice choiceWithText:@"Professional degree (for example: MD, DDS, DVM, LLB, JD)" value:@"opt-11"];
-  ORKTextChoice *step5Option12TextChoice = [ORKTextChoice choiceWithText:@"Doctorate degree (for example: PhD, EdD)" value:@"opt-12"];
+  ORKTextChoice *step5Option3TextChoice = [ORKTextChoice choiceWithText:@"Some high school, no diploma" value:@"opt-3"];
+  ORKTextChoice *step5Option4TextChoice = [ORKTextChoice choiceWithText:@"High school graduate, diploma or the equivalent (e.g., GED)" value:@"opt-4"];
+  ORKTextChoice *step5Option5TextChoice = [ORKTextChoice choiceWithText:@"Some college credit, no degree" value:@"opt-5"];
+  ORKTextChoice *step5Option6TextChoice = [ORKTextChoice choiceWithText:@"Trade/technical/vocational training" value:@"opt-6"];
+  ORKTextChoice *step5Option7TextChoice = [ORKTextChoice choiceWithText:@"Associate degree" value:@"opt-7"];
+  ORKTextChoice *step5Option8TextChoice = [ORKTextChoice choiceWithText:@"Bachelor’s degree" value:@"opt-8"];
+  ORKTextChoice *step5Option9TextChoice = [ORKTextChoice choiceWithText:@"Master’s degree" value:@"opt-9"];
+  ORKTextChoice *step5Option10TextChoice = [ORKTextChoice choiceWithText:@"Doctorate degree" value:@"opt-10"];
   
   ORKAnswerFormat *step5AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice textChoices:@[step5Option1TextChoice,
                                                                                                                                    step5Option2TextChoice,
@@ -201,9 +200,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                                                                                                                    step5Option7TextChoice,
                                                                                                                                    step5Option8TextChoice,
                                                                                                                                    step5Option9TextChoice,
-                                                                                                                                   step5Option10TextChoice,
-                                                                                                                                   step5Option11TextChoice,
-                                                                                                                                   step5Option12TextChoice]];
+                                                                                                                                   step5Option10TextChoice]];
   
   ORKQuestionStep *step5QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-5"
                                                                              title:@"What is the highest degree or level of education you have completed?"
@@ -211,58 +208,29 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   step5QuestionStep.optional = NO;
   
 #pragma mark Step 4 - M5.4
-  ORKTextChoice *step6Option1TextChoice = [ORKTextChoice choiceWithText:@"Less than $10,000" value:@"opt-1"];
-  ORKTextChoice *step6Option2TextChoice = [ORKTextChoice choiceWithText:@"$10,000 to $19,999" value:@"opt-2"];
-  ORKTextChoice *step6Option3TextChoice = [ORKTextChoice choiceWithText:@"$20,000 to $29,999" value:@"opt-3"];
-  ORKTextChoice *step6Option4TextChoice = [ORKTextChoice choiceWithText:@"$30,000 to $39,999" value:@"opt-4"];
-  ORKTextChoice *step6Option5TextChoice = [ORKTextChoice choiceWithText:@"$40,000 to $49,999" value:@"opt-5"];
-  ORKTextChoice *step6Option6TextChoice = [ORKTextChoice choiceWithText:@"$50,000 to $59,999" value:@"opt-6"];
-  ORKTextChoice *step6Option7TextChoice = [ORKTextChoice choiceWithText:@"$60,000 to $69,999" value:@"opt-7"];
-  ORKTextChoice *step6Option8TextChoice = [ORKTextChoice choiceWithText:@"$70,000 to $79,999" value:@"opt-8"];
-  ORKTextChoice *step6Option9TextChoice = [ORKTextChoice choiceWithText:@"$80,000 to $89,999" value:@"opt-9"];
-  ORKTextChoice *step6Option10TextChoice = [ORKTextChoice choiceWithText:@"$90,000 to $99,999" value:@"opt-10"];
-  ORKTextChoice *step6Option11TextChoice = [ORKTextChoice choiceWithText:@"$100,000 to $149,999" value:@"opt-11"];
-  ORKTextChoice *step6Option12TextChoice = [ORKTextChoice choiceWithText:@"$150,000 or more" value:@"opt-12"];
-  
-  ORKAnswerFormat *step6AnswerFormat = [ORKAnswerFormat valuePickerAnswerFormatWithTextChoices:@[step6Option1TextChoice,
-                                                                                                 step6Option2TextChoice,
-                                                                                                 step6Option3TextChoice,
-                                                                                                 step6Option4TextChoice,
-                                                                                                 step6Option5TextChoice,
-                                                                                                 step6Option6TextChoice,
-                                                                                                 step6Option7TextChoice,
-                                                                                                 step6Option8TextChoice,
-                                                                                                 step6Option9TextChoice,
-                                                                                                 step6Option10TextChoice,
-                                                                                                 step6Option11TextChoice,
-                                                                                                 step6Option12TextChoice]];
-  
-  ORKQuestionStep *step6QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-6"
-                                                                             title:@"What is your total household income?"
-                                                                            answer:step6AnswerFormat];
-  step6QuestionStep.optional = NO;
+
   
 #pragma mark Step 5 - M5.5
 
-  ORKNumericAnswerFormat *step7AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:@"hours"];
-  step7AnswerFormat.minimum = @0;
-  step7AnswerFormat.maximum = @24;
-  ORKQuestionStep *step7QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-7" title:@"On average, how many hours do you sleep per night?" answer:step7AnswerFormat];
-  step7QuestionStep.optional = NO;
+  ORKNumericAnswerFormat *step6AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:@"hours"];
+  step6AnswerFormat.minimum = @0;
+  step6AnswerFormat.maximum = @24;
+  ORKQuestionStep *step6QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-6" title:@"On average, how many hours do you sleep per night?" answer:step6AnswerFormat];
+  step6QuestionStep.optional = NO;
 
-  ORKNumericAnswerFormat *step8AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:@"hours"];
-  step8AnswerFormat.minimum = @0;
-  step8AnswerFormat.maximum = @24;
-  ORKQuestionStep *step8QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-8" title:@"On average, how many hours do you exercise per day?" answer:step8AnswerFormat];
+  ORKNumericAnswerFormat *step7AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:@"minutes"];
+  step7AnswerFormat.minimum = @0;
+  step7AnswerFormat.maximum = @1440;
+  ORKQuestionStep *step7QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-7" title:@"On average, how many minutes do you exercise per day?" answer:step7AnswerFormat];
+  step7QuestionStep.optional = NO;
+  
+  ORKAnswerFormat *step8AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumLengthUnit].symbol];
+  ORKQuestionStep *step8QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-8" title:@"What is your height?" answer:step8AnswerFormat];
   step8QuestionStep.optional = NO;
   
-  ORKAnswerFormat *step9AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumLengthUnit].symbol];
-  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-9" title:@"What is your height?" answer:step9AnswerFormat];
+  ORKAnswerFormat *step9AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumMassUnit].symbol];
+  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-10" title:@"What is your current weight?" answer:step9AnswerFormat];
   step9QuestionStep.optional = NO;
-  
-  ORKAnswerFormat *step10AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumMassUnit].symbol];
-  ORKQuestionStep *step10QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-10" title:@"What is your current weight?" answer:step10AnswerFormat];
-  step10QuestionStep.optional = NO;
   
   // Create task
   ORKOrderedTask *task = [[ORKOrderedTask alloc] initWithIdentifier:@"intake-survey" steps:@[introductionStep,
@@ -274,8 +242,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                                                                              step6QuestionStep,
                                                                                              step7QuestionStep,
                                                                                              step8QuestionStep,
-                                                                                             step9QuestionStep,
-                                                                                             step10QuestionStep]];
+                                                                                             step9QuestionStep]];
   
   __weak WomenHealthStudy *wSelf = self;
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -303,6 +270,11 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
     if (self.consentCallback != nil) {
       self.consentCallback(@[@NO]);
       self.consentCallback = nil;
+    }
+    
+    if (self.exitSurvey1Callback != nil) {
+      self.exitSurvey1Callback(@[@NO]);
+      self.exitSurvey1Callback = nil;
     }
     
     return;
@@ -389,6 +361,29 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
     self.consentCallback(@[[NSNumber numberWithBool:consented]]);
     self.consentCallback = nil;
   }
+  
+  else if ([taskViewController.task.identifier isEqualToString:@"exit-survey-1"]) {
+    
+    NSArray *callbackResults = [StudyHelper iterateTaskResult:taskViewController.result withDataIteratingBlock:^NSObject *(ORKStepResult *stepResult) {
+      if ([stepResult.identifier isEqualToString:@"step-1"] ||
+          [stepResult.identifier isEqualToString:@"step-2"] ||
+          [stepResult.identifier isEqualToString:@"step-4"] ||
+          [stepResult.identifier isEqualToString:@"step-5"] ||
+          [stepResult.identifier isEqualToString:@"step-6"] ||
+          [stepResult.identifier isEqualToString:@"step-7"] ||
+          [stepResult.identifier isEqualToString:@"step-8"] ||
+          [stepResult.identifier isEqualToString:@"step-9"] ||
+          [stepResult.identifier isEqualToString:@"step-10"]) {
+        ORKScaleQuestionResult *r = (ORKScaleQuestionResult *)stepResult.results.firstObject;
+        return r.scaleAnswer;
+      }
+      
+      return nil;
+    }];
+    
+    self.intakeSurveyCallback(callbackResults);
+    self.intakeSurveyCallback = nil;
+  }
 
 }
 
@@ -436,6 +431,11 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   s9.summary = @"We understand sharing some personal information can make you uncomfortable. You can simply choose to not donate your data at any time.";
   s9.customImage = [UIImage imageNamed:@"consent_issue_to_consider"];
   
+  ORKConsentSection *s10 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
+  s9.title = @"Cost";
+  s9.summary = @"You may incur small data charges from receiving push notifications. Please go to your phone’s “Setting > Cellular” to restrict push notifications and other study activities to WIFI.";
+  s9.customImage = [UIImage imageNamed:@"consent_generic_cost"];
+  
   // Create additional section objects for later sections
   consentDocument.sections = @[s1,
                                s2,
@@ -445,7 +445,8 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                s6,
                                s7,
                                s8,
-                               s9];
+                               s9,
+                               s10];
   
   consentDocument.htmlReviewContent = htmlContent;
   
@@ -455,14 +456,76 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   return consentDocument;
 }
 
-//- (void)saveConsentDocument {
-//  [[self consentDocument] makePDFWithCompletionHandler:^(NSData * _Nullable PDFData, NSError * _Nullable error) {
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    NSString *filePath = [NSString stringWithFormat:@"%@/womenhealth-consent.pdf", documentsDirectory];
-//    [PDFData writeToFile:filePath atomically:NO];
-//    NSLog(@"Saved to: %@", filePath);
-//  }];
-//}
+#pragma mark - Intake survey
+RCT_EXPORT_METHOD(showExitSurvey1:(RCTResponseSenderBlock)callback) {
+  self.exitSurvey1Callback = callback;
+  
+  ORKInstructionStep *introductionStep = [[ORKInstructionStep alloc] initWithIdentifier:@"step-0"];
+  introductionStep.title = @"Exit Survey";
+  introductionStep.detailText = @"We will use the System Usability Scale (SUS) to assess overall usability and user experience of the prototype study on the Bitmark app.\nOriginally created by John Brooke in 1986, it allows you to evaluate a wide variety of products and services, including hardware, software, mobile devices, websites and applications.\nWhen a SUS is used, participants are asked to score the following 10 items with one of five responses that range from Strongly Agree to Strongly disagree";
+  
+#pragma mark Step 2 - M5.1
+  
+#pragma mark Step 1 - M5
+  ORKScaleAnswerFormat *scaleAnswerFormat = [ORKAnswerFormat scaleAnswerFormatWithMaximumValue:5
+                                                                                  minimumValue:0
+                                                                                  defaultValue:3
+                                                                                          step:1
+                                                                                      vertical:false
+                                                                       maximumValueDescription:@"Strongly agree"
+                                                                       minimumValueDescription:@"Strongly disagree"];
+  
+  ORKQuestionStep *step1QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-1" title:@"1. I think that I would like to use this system frequently." answer:scaleAnswerFormat];
+  step1QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step2QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-2" title:@"2. I found the system unnecessarily complex." answer:scaleAnswerFormat];
+  step2QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step3QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-3" title:@"3. I thought the system was easy to use." answer:scaleAnswerFormat];
+  step3QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step4QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-4" title:@"4. I think that I would need the support of a technical person to be able to use this system." answer:scaleAnswerFormat];
+  step4QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step5QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-5" title:@"5. I found the various functions in this system were well integrated." answer:scaleAnswerFormat];
+  step5QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step6QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-6" title:@"6. I thought there was too much inconsistency in this system." answer:scaleAnswerFormat];
+  step6QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step7QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-7" title:@"7. I would imagine that most people would learn to use this system very quickly." answer:scaleAnswerFormat];
+  step7QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step8QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-8" title:@"8. I found the system very cumbersome to use." answer:scaleAnswerFormat];
+  step8QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-9" title:@"9. I felt very confident using the system." answer:scaleAnswerFormat];
+  step9QuestionStep.optional = NO;
+  
+  ORKQuestionStep *step10QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-10" title:@"10. I needed to learn a lot of things before I could get going with this system." answer:scaleAnswerFormat];
+  step10QuestionStep.optional = NO;
+  
+  
+  
+  // Create task
+  ORKOrderedTask *task = [[ORKOrderedTask alloc] initWithIdentifier:@"exit-survey-1" steps:@[introductionStep,
+                                                                                             step1QuestionStep,
+                                                                                             step2QuestionStep,
+                                                                                             step3QuestionStep,
+                                                                                             step4QuestionStep,
+                                                                                             step5QuestionStep,
+                                                                                             step6QuestionStep,
+                                                                                             step7QuestionStep,
+                                                                                             step8QuestionStep,
+                                                                                             step9QuestionStep,
+                                                                                             step10QuestionStep]];
+  
+  __weak WomenHealthStudy *wSelf = self;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    ORKTaskViewController *taskViewController = [[ORKTaskViewController alloc] initWithTask:task taskRunUUID:nil];
+    taskViewController.delegate = wSelf;
+    [StudyTheme applyThemeAndPresentTaskViewController:taskViewController];
+  });
+}
 
 @end

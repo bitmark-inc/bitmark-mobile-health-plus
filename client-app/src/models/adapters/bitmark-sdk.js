@@ -129,6 +129,17 @@ const BitmarkSDK = {
       });
     });
   },
+  transferOneSignature: (sessionId, bitmarkId, address) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.transferOneSignature(sessionId, bitmarkId, address, (ok, results) => {
+        if (ok) {
+          resolve({ result: ok });
+        } else {
+          reject(new Error(results || 'Can transfer One Signature!'));
+        }
+      });
+    });
+  },
 
   issueThenTransferFile: (sessionId, filePath, property_name, metadata, receiver) => {
     return new Promise((resolve, reject) => {

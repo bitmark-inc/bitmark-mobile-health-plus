@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 
-import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel } from './../models';
+import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel, BitmarkSDK } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
@@ -146,13 +146,18 @@ const doIssueFile = async (filepath, assetName, metadatList, quantity, processin
   return await submitting(BitmarkService.doIssueFile(touchFaceIdSession, filepath, assetName, metadatList, quantity), processingInfo, successInfo);
 };
 
+const doGetProvenance = async (bitmark) => {
+  return await processing(BitmarkModel.doGetProvenance(bitmark));
+};
+
 const doTransferBitmark = async (bitmark, receiver) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
   if (!touchFaceIdSession) {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
+  return await processing(BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmark.id, receiver));
+  // return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
 };
 
 const doAcceptTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
@@ -261,23 +266,6 @@ const doDownloadBitmark = async (bitmark, processingData) => {
   return await submitting(DataController.doDownloadBitmark(touchFaceIdSession, bitmark), processingData);
 };
 
-const doTrackingBitmark = async (asset, bitmark) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to track your bitmark.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doTrackingBitmark(touchFaceIdSession, asset, bitmark));
-};
-const doStopTrackingBitmark = async (bitmark) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to stop tracking your bitmark.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doStopTrackingBitmark(touchFaceIdSession, bitmark));
-};
-
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
   // return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
@@ -295,6 +283,7 @@ let AppController = {
   doCreateSignatureData,
   doCheckFileToIssue,
   doIssueFile,
+  doGetProvenance,
   doGetTransferOfferDetail,
   doTransferBitmark,
   doAcceptTransferBitmark,
@@ -310,8 +299,6 @@ let AppController = {
   doBitmarkHealthData,
   doDownloadStudyConsent,
   doDownloadBitmark,
-  doTrackingBitmark,
-  doStopTrackingBitmark,
 
   doReloadUserData,
 
