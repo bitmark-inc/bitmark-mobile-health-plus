@@ -6,7 +6,8 @@ import {
   StudiesModel,
   Study2Model,
   BitmarkModel,
-  BitmarkSDK
+  BitmarkSDK,
+  Study1Model
 } from '../models';
 import { FileUtil } from '../utils';
 import randomString from 'random-string';
@@ -119,13 +120,15 @@ const doLoadDonationTask = async (donationInformation) => {
   let totalTodoTask = 0;
   let bitmarkHealthDataTask = donationInformation.bitmarkHealthDataTask;
   if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
-    todoTasks.push({
-      title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
-      description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
-      taskType: donationInformation.commonTaskIds.bitmark_health_data,
-      number: bitmarkHealthDataTask.list.length,
-      list: bitmarkHealthDataTask.list,
-    });
+    for (let rangeTime of bitmarkHealthDataTask.list) {
+      todoTasks.push({
+        title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
+        description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
+        taskType: donationInformation.commonTaskIds.bitmark_health_data,
+        number: 1,
+        list: [rangeTime],
+      });
+    }
     totalTodoTask += bitmarkHealthDataTask.list.length;
   }
   if (donationInformation.joinedStudies && donationInformation.joinedStudies.length > 0) {
@@ -133,14 +136,27 @@ const doLoadDonationTask = async (donationInformation) => {
       if (study.tasks) {
         for (let taskType in study.tasks) {
           if (study.tasks[taskType].number) {
-            todoTasks.push({
-              study,
-              title: study.studyTasks[taskType].title,
-              description: study.studyTasks[taskType].description,
-              taskType,
-              number: study.tasks[taskType].number,
-              list: study.tasks[taskType].list,
-            });
+            if (study.tasks[taskType].list && study.tasks[taskType].list.length > 1) {
+              for (let item in study.tasks[taskType].list) {
+                todoTasks.push({
+                  study,
+                  title: study.studyTasks[taskType].title,
+                  description: study.studyTasks[taskType].description,
+                  taskType,
+                  number: 1,
+                  list: [item],
+                });
+              }
+            } else {
+              todoTasks.push({
+                study,
+                title: study.studyTasks[taskType].title,
+                description: study.studyTasks[taskType].description,
+                taskType,
+                number: study.tasks[taskType].number,
+                list: study.tasks[taskType].list,
+              });
+            }
             totalTodoTask += study.tasks[taskType].number;
           }
         }
@@ -277,6 +293,7 @@ const doGetUserInformation = async (bitmarkAccountNumber) => {
 };
 
 const doStudyTask = async (study, taskType) => {
+  console.log('doStudyTask :', study, taskType);
   if ((study.studyId === 'study1' || study.studyId === 'study2') && taskType === study.taskIds.intake_survey) {
     return await StudiesModel[study.studyId].doIntakeSurvey();
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task1) {
@@ -287,6 +304,9 @@ const doStudyTask = async (study, taskType) => {
     return await Study2Model.showActiveTask3();
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task4) {
     return await Study2Model.showActiveTask4();
+  } else if (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_1) {
+    console.log('run exit survey');
+    return await Study1Model.doExitSurvey1();
   }
 };
 

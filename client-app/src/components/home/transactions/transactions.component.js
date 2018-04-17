@@ -332,7 +332,7 @@ export class TransactionsComponent extends React.Component {
                       </Text>}
 
                     {!item.transferOffer && <View style={transactionsStyle.donationTask}>
-                      <Text style={transactionsStyle.donationTaskTitle} >{item.title + (item.number > 1 ? (' (' + item.number + ')') : '')}</Text>
+                      <Text style={transactionsStyle.donationTaskTitle} >{item.title}</Text>
                       <Text style={transactionsStyle.donationTaskDescription}>{item.description}</Text>
                     </View>}
                   </TouchableOpacity>)
