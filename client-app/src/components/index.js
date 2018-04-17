@@ -24,7 +24,7 @@ import { HomeComponent } from './../components/home';
 import { OnboardingComponent } from './onboarding';
 import { EventEmiterService } from './../services';
 import { AppController, DataController } from '../managers';
-import { CommonModel, Study1Model } from '../models';
+import { CommonModel } from '../models';
 
 class MainComponent extends Component {
   constructor(props) {
@@ -48,15 +48,6 @@ class MainComponent extends Component {
       networkStatus: true,
     };
     this.appState = AppState.currentState;
-
-    Alert.alert('Test exit survey', '', [{
-      text: 'OK',
-      onPress: () => {
-        Study1Model.doExitSurvey1().then(result => {
-          console.log(result);
-        }).catch(console.log);
-      }
-    }])
 
     // setTimeout(() => {
     //   console.log('send notification');

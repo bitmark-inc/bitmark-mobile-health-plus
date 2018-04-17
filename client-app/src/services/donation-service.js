@@ -145,6 +145,7 @@ const doLoadDonationTask = async (donationInformation) => {
                   taskType,
                   number: 1,
                   list: [item],
+                  important: study.tasks[taskType].important,
                 });
               }
             } else {
@@ -152,6 +153,7 @@ const doLoadDonationTask = async (donationInformation) => {
                 study,
                 title: study.studyTasks[taskType].title,
                 description: study.studyTasks[taskType].description,
+                important: study.tasks[taskType].important,
                 taskType,
                 number: study.tasks[taskType].number,
                 list: study.tasks[taskType].list,
@@ -344,7 +346,8 @@ let doPrepareSurveyFile = async (touchFaceIdSession, bitmarkAccountNumber, study
     tempResult = result.textAnswer;
     extFiles = result.mediaAnswer;
   }
-  if ((study.studyId === 'study1' && taskType === study.taskIds.intake_survey) ||
+  if ((study.studyId === 'study1' &&
+    (taskType === study.taskIds.intake_survey || taskType === study.taskIds.exit_survey_1 || taskType === study.taskIds.exit_survey_2)) ||
     (study.studyId === 'study2' &&
       (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4))) {
     donateData = StudiesModel[study.studyId].generateSurveyAsset(study, bitmarkAccountNumber, tempResult,
@@ -358,7 +361,8 @@ let doPrepareSurveyFile = async (touchFaceIdSession, bitmarkAccountNumber, study
 
 
 const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, study, taskType, result) => {
-  if ((study.studyId === 'study1' && taskType === study.taskIds.intake_survey) ||
+  if ((study.studyId === 'study1' &&
+    (taskType === study.taskIds.intake_survey || taskType === study.taskIds.exit_survey_1 || (taskType === study.taskIds.exit_survey_2 && result))) ||
     (study.studyId === 'study2' &&
       (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4))) {
     let prepareResult = await doPrepareSurveyFile(touchFaceIdSession, bitmarkAccountNumber, study, taskType, result);
@@ -373,7 +377,8 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     sessionData.timestamp = timestamp;
 
     return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, issueResult.transferOfferData.link, issueResult.transferOfferData.signature, sessionData);
-  } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
+  } else if ((study.studyId === 'study2' && taskType === study.taskIds.task3) ||
+    (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2 && !result)) {
     return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
   }
   throw new Error('Can not detect task and study');

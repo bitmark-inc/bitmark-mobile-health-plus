@@ -15,11 +15,10 @@ let IntakeSurvey = {
     qa3: 'What is your current age?',
     qa4: 'What is your marital status?',
     qa5: 'What is the highest degree or level of school you have completed?',
-    qa6: 'What is your total household income?',
-    qa7: 'On average, how many hours do you sleep per night?',
-    qa8: 'On average, how many hours do you exercise per day?',
-    qa9: 'What is your height?',
-    qa10: 'What is your current weight?',
+    qa6: 'On average, how many hours do you sleep per night?',
+    qa7: 'On average, how many hours do you exercise per day?',
+    qa8: 'What is your height?',
+    qa9: 'What is your current weight?',
   },
   answers: {
     qa1: {
@@ -55,35 +54,21 @@ let IntakeSurvey = {
       'opt-11': "Professional degree (for example: MD, DDS, DVM, LLB, JD)",
       'opt-12': "Doctorate degree (for example: PhD, EdD)",
     },
-    qa6: {
-      'opt-1': "Less than $10,000",
-      'opt-2': "$10,000 to $19,999",
-      'opt-3': "$20,000 to $29,999",
-      'opt-4': "$30,000 to $39,999",
-      'opt-5': "$40,000 to $49,999",
-      'opt-6': "$50,000 to $59,999",
-      'opt-7': "$60,000 to $69,999",
-      'opt-8': "$70,000 to $79,999",
-      'opt-9': "$80,000 to $89,999",
-      'opt-10': "$90,000 to $99,999",
-      'opt-11': "$100,000 to $149,999",
-      'opt-12': "$150,000 or more",
-    },
+    qa6: null,
     qa7: null,
     qa8: null,
     qa9: null,
-    qa10: null,
   }
 }
 
 let checkIntakeAnswers = (answer) => {
+  console.log('checkIntakeAnswers : ', answer);
   if (answer &&
     answer['step-1'] &&
     answer['step-2'] && IntakeSurvey.answers['qa2'][answer['step-2'][0]] &&
     answer['step-4'] && IntakeSurvey.answers['qa4'][answer['step-4'][0]] &&
     answer['step-5'] && IntakeSurvey.answers['qa5'][answer['step-5'][0]] &&
-    answer['step-6'] && IntakeSurvey.answers['qa6'][answer['step-6'][0]] &&
-    answer['step-3'] && answer['step-7'] && answer['step-8'] && answer['step-9'] && answer['step-10']) {
+    answer['step-3'] && answer['step-6'] && answer['step-7'] && answer['step-8'] && answer['step-9']) {
     let answerQUA8 = [];
     answer['step-1'].forEach(item => {
       answerQUA8.push(IntakeSurvey.answers['qa1'][item]);
@@ -105,7 +90,7 @@ let checkIntakeAnswers = (answer) => {
       answer: IntakeSurvey.answers['qa5'][answer['step-5'][0]],
     }, {
       question: IntakeSurvey.questions['qa6'],
-      answer: IntakeSurvey.answers['qa6'][answer['step-6'][0]],
+      answer: answer['step-6'],
     }, {
       question: IntakeSurvey.questions['qa7'],
       answer: answer['step-7'],
@@ -115,9 +100,6 @@ let checkIntakeAnswers = (answer) => {
     }, {
       question: IntakeSurvey.questions['qa9'],
       answer: answer['step-9'],
-    }, {
-      question: IntakeSurvey.questions['qa10'],
-      answer: answer['step-10'],
     }];
   }
   return false;

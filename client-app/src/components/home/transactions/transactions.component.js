@@ -99,14 +99,16 @@ export class TransactionsComponent extends React.Component {
         item.key = actionRequired.length;
         item.type = ActionTypes.donation;
         item.typeTitle = item.study ? 'Property DONATION Request' : 'Property ISSUANCE Request';
-        item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null),
-          actionRequired.push(item);
+        item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null);
+        actionRequired.push(item);
       });
     }
 
     actionRequired = actionRequired ? sortList(actionRequired, (a, b) => {
-      if (!a || !a.timestamp) return 1;
-      if (!b || !b.timestamp) return 1;
+      if (a.important) { return -1; }
+      if (b.important) { return 1; }
+      if (!a.timestamp) return 1;
+      if (!b.timestamp) return 1;
       return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
     }) : actionRequired;
 
@@ -232,6 +234,8 @@ export class TransactionsComponent extends React.Component {
         this.props.screenProps.homeNavigation.navigate('HealthDataBitmark', { list: item.list });
       } else if (item.study && item.study.taskIds && item.taskType === item.study.taskIds.donations) {
         this.props.screenProps.homeNavigation.navigate('StudyDonation', { study: item.study, list: item.list });
+      } else if (item.study && item.study.studyId === 'study1' && item.study.taskIds && item.taskType === item.study.taskIds.exit_survey_2) {
+        this.props.screenProps.homeNavigation.navigate('Study1ExitSurvey2', { study: item.study });
       } else if (item.study && item.study.taskIds && item.taskType) {
         AppController.doStudyTask(item.study, item.taskType).catch(error => {
           console.log('doStudyTask error:', error);
@@ -333,7 +337,10 @@ export class TransactionsComponent extends React.Component {
 
                     {!item.transferOffer && <View style={transactionsStyle.donationTask}>
                       <Text style={transactionsStyle.donationTaskTitle} >{item.title}</Text>
-                      <Text style={transactionsStyle.donationTaskDescription}>{item.description}</Text>
+                      <View style={transactionsStyle.donationTaskDescriptionArea}>
+                        <Text style={transactionsStyle.donationTaskDescription}>{item.description}</Text>
+                        {item.important && <Image style={transactionsStyle.donationTaskImportantIcon} source={require('../../../../assets/imgs/important-blue.png')} />}
+                      </View>
                     </View>}
                   </TouchableOpacity>)
                 }} />
