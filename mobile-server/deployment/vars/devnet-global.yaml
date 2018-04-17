@@ -1,0 +1,11 @@
+network_slug: devel
+bitmark_network: devnet
+aws_ssl_arn: arn:aws:acm:ap-northeast-1:083397868157:certificate/8358a64e-28f8-4f05-ae1d-2da26714268d
+
+mobile:
+  core_api_server: https://api.test.bitmark.com
+  message_server: q.cluster.test.bitmark.com:32150
+  ifttt_server: https://when.test.bitmark.com
+  push_server: http://n.devel.bitmark.com
+  db_host: mobile-devnet.c2yhyb2xjk0n.ap-southeast-1.rds.amazonaws.com
+  db_port: 25432
