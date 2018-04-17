@@ -143,7 +143,7 @@ export class LocalAssetDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>}
           <ScrollView style={assetDetailStyle.content}>
-            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
               <View style={assetDetailStyle.bottomImageBar}></View>
 
               <Text style={[assetDetailStyle.assetName, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} >{this.state.asset.name}</Text>
@@ -186,7 +186,7 @@ export class LocalAssetDetailComponent extends React.Component {
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                             this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                           }}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW</Text>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
                           </TouchableOpacity>
                           <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} disabled={true}>
                             <Text style={[assetDetailStyle.bitmarkTransferButtonText, { color: '#999999', }]}>PENDING…</Text>
@@ -227,7 +227,7 @@ export class LocalAssetDetailComponent extends React.Component {
                         <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                         }}>
-                          <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW</Text>
+                          <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset });
