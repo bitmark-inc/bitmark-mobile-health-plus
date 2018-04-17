@@ -179,9 +179,9 @@ public struct TransferOffer {
 
 extension TransferOffer {
     public func serialize() throws -> [String : String] {
-        return ["owner": self.receiver.string,
-                "signature": self.signature!.hexEncodedString,
-                "link": self.txId]
+        return ["link": self.txId,
+                "owner": self.receiver.string,
+                "signature": self.signature!.hexEncodedString]
     }
 }
 
