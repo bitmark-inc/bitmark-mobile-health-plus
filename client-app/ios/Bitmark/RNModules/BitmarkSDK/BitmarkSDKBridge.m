@@ -28,6 +28,7 @@ RCT_EXTERN_METHOD(issueThenTransferFile:(NSString *)sessionId:(NSDictionary *)in
 RCT_EXTERN_METHOD(downloadBitmark:(NSString *)sessionId:(NSString *)bitmarkId:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(sign:(NSString *)sessionId:(NSString *)message:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(rickySign:(NSString *)sessionId:(NSArray<NSString *>)messages:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(transferOneSignature:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)address:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(sign1stForTransfer:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)address:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(sign2ndForTransfer:(NSString *)sessionId:(NSString *)txId:(NSString *)signature:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(validateMetadata:(NSDictionary *)metadata:(RCTResponseSenderBlock)callback)
