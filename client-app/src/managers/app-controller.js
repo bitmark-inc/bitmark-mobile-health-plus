@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 
-import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel } from './../models';
+import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel, BitmarkSDK } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
@@ -156,7 +156,8 @@ const doTransferBitmark = async (bitmark, receiver) => {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
+  return await processing(BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmark.id, receiver));
+  // return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
 };
 
 const doAcceptTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
