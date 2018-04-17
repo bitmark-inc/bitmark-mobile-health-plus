@@ -187,7 +187,7 @@ export class LocalAssetDetailComponent extends React.Component {
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                             this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                           }}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW</Text>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
                           </TouchableOpacity>
                           <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} disabled={true}>
                             <Text style={[assetDetailStyle.bitmarkTransferButtonText, { color: '#999999', }]}>PENDING…</Text>
@@ -228,7 +228,7 @@ export class LocalAssetDetailComponent extends React.Component {
                         <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                         }}>
-                          <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW</Text>
+                          <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset });
