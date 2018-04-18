@@ -244,33 +244,33 @@ class BitmarkSDK: NSObject {
     }
   }
   
-//  @objc(sign1stForTransfer::::)
-//  func sign1stForTransfer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
-//    do {
-//      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-//      let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address)
-//
-//      callback([true, offer.txId, offer.signature!.hexEncodedString])
-//    }
-//    catch let e {
-//      print(e)
-//      callback([false])
-//    }
-//  }
-//
-//  @objc(sign2ndForTransfer::::)
-//  func sign2ndForTransfer(_ sessionId: String, _ txId: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
-//    do {
-//      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-//      let offer = TransferOffer(txId: txId, receiver: account.accountNumber, signature: signature.hexDecodedData)
-//      let counterSignature = try account.createSignForTransferOffer(offer: offer)
-//      callback([true, counterSignature.counterSignature!.hexEncodedString])
-//    }
-//    catch let e {
-//      print(e)
-//      callback([false])
-//    }
-//  }
+  @objc(createAndSubmitTransferOffer::::)
+  func createAndSubmitTransferOffer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+      let offerId = try account.createAndSubmitTransferOffer(bitmarkId: bitmarkId, recipient: address)
+
+      callback([true, offerId])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
+
+  @objc(signForTransferOfferAndSubmit::::::)
+  func signForTransferOfferAndSubmit(_ sessionId: String, _ txId: String, _ signature: String, _ offerId: String, _ action: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+      let offer = TransferOffer(txId: txId, receiver: account.accountNumber, signature: signature.hexDecodedData)
+      let txId = try account.signForTransferOfferAndSubmit(offerId: offerId, offer: offer, action: action)
+      callback([true, txId])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
   
   @objc(requestSession:::)
   func requestSession(_ network: String, _ reason: String, _ callback: @escaping RCTResponseSenderBlock) {

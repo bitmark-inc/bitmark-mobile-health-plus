@@ -77,13 +77,13 @@ export class LocalAssetDetailComponent extends React.Component {
     }
   }
 
-  cancelTransferring(bitmarkId) {
+  cancelTransferring(transferOfferId) {
     Alert.alert('Are you sure you want to cancel this property transfer?', '', [{
       text: 'NO',
     }, {
       text: 'YES',
       onPress: () => {
-        AppController.doCancelTransferBitmark(bitmarkId).then((result) => {
+        AppController.doCancelTransferBitmark(transferOfferId).then((result) => {
           console.log('cancel result :', result);
           if (result) {
             EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_USER_DATA);
@@ -212,7 +212,7 @@ export class LocalAssetDetailComponent extends React.Component {
                             <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>TRANSFERRING…</Text>
                           </TouchableOpacity>
 
-                          <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.id)}>
+                          <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.transferOfferId)}>
                             <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>CANCEL</Text>
                           </TouchableOpacity>
                         </View>);

@@ -70,9 +70,9 @@ export class UserComponent extends React.Component {
 
   handerReceivedNotification(data) {
     console.log('UserComponent handerReceivedNotification data :', data);
-    if (data.event === 'transfer_request' && data.bitmark_id) {
+    if (data.event === 'transfer_request' && data.offer_id) {
       AppController.doReloadUserData().then(() => {
-        return AppController.doGetTransferOfferDetail(data.bitmark_id);
+        return AppController.doGetTransferOfferDetail(data.offer_id);
       }).then(transferOfferDetail => {
         const resetHomePage = NavigationActions.reset({
           index: 1,
