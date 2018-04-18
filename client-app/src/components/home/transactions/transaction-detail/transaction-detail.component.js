@@ -40,7 +40,7 @@ export class TransactionDetailComponent extends React.Component {
     }, {
       text: 'YES',
       onPress: () => {
-        AppController.doRejectTransferBitmark(this.state.transferOffer.bitmark.id, { indicator: true, }, {
+        AppController.doRejectTransferBitmark(this.state.transferOffer, { indicator: true, }, {
           indicator: false, title: 'Transfer Rejected!', message: 'You’ve rejected the bitmark transfer request! '
         }, {
             indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.'
@@ -66,7 +66,7 @@ export class TransactionDetailComponent extends React.Component {
     }]);
   }
   doAccept() {
-    AppController.doAcceptTransferBitmark(this.state.transferOffer.bitmark.id, {
+    AppController.doAcceptTransferBitmark(this.state.transferOffer, {
       indicator: true,
     }, {
         indicator: false, title: 'Acceptance Submitted', message: 'Your signature for the transfer request has been successfully submitted to the Bitmark network.'

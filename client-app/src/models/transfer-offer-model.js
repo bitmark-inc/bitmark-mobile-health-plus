@@ -1,9 +1,9 @@
 import { config } from './../configs';
 
-const doGetTransferOfferDetail = (accountNumber, bitmarkId) => {
+const doGetTransferOfferDetail = (transferOfferId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.api_server_url + `/v2/transfer_offers/${bitmarkId}`;
+    let tempURL = config.api_server_url + `/v2/transfer_offers/${transferOfferId}`;
     fetch(tempURL, {
       method: 'GET',
       headers: {

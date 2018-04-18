@@ -59,12 +59,9 @@ const doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
     asset.totalPending = 0;
     asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
     for (let bitmark of asset.bitmarks) {
-      if (!bitmark.provenance) {
-        let { provenance } = await BitmarkModel.doGetProvenance(bitmark.id);
-        bitmark.provenance = provenance;
-      }
-      let isTransferring = outgoingTransferOffers.findIndex(item => item.bitmark_id === bitmark.id);
-      bitmark.displayStatus = isTransferring >= 0 ? 'transferring' : bitmark.status;
+      let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
+      bitmark.displayStatus = transferOffer ? 'transferring' : bitmark.status;
+      bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
       asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
       asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
     }
