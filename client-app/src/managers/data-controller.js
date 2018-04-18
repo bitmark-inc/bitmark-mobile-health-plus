@@ -156,9 +156,7 @@ const configNotification = () => {
     if (!userInformation || !userInformation.bitmarkAccountNumber) {
       userInformation = await UserModel.doGetCurrentUser();
     }
-    if (notificationUUID &&
-      ((userInformation.notificationUUID !== notificationUUID) ||
-        (userData.donationInformation && JSON.stringify(userData.donationInformation.notificationUID).indexOf(notificationUUID) < 0))) {
+    if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
       NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
         userInformation.notificationUUID = notificationUUID;
         return UserModel.doUpdateUserInfo(userInformation);
@@ -286,7 +284,7 @@ const doOpenApp = async () => {
 };
 
 const doActiveBitmarkHealthData = async (touchFaceIdSession, activeBitmarkHealthDataAt) => {
-  let donationInformation = await DonationService.doRegisterUserInformation(touchFaceIdSession, userInformation.bitmarkAccountNumber, userInformation.notificationUUID, activeBitmarkHealthDataAt);
+  let donationInformation = await DonationService.doActiveBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, activeBitmarkHealthDataAt);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
