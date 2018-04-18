@@ -28,9 +28,14 @@ internal struct API {
 
 internal extension URLRequest {
     internal mutating func signRequest(withAccount account: Account, action: String, resource: String) throws {
-        let timestamp = Common.timeStamp()
+        let timestamp = Common.timestamp()
         let parts = [action, resource, account.accountNumber.string, timestamp]
+        try signRequest(withAccount: account, parts: parts, timestamp: timestamp)
+    }
+    
+    internal mutating func signRequest(withAccount account: Account, parts: [String], timestamp: String) throws {
         let message = parts.joined(separator: "|")
+        print(message)
         
         let signature = try account.authKey.sign(message: message).hexEncodedString
         
@@ -51,16 +56,21 @@ internal extension URLSession {
         var theError: Error?
         
         
-//        print("========================================================")
-//        print("Request for url: \(request.url!.absoluteURL)")
-//
-//        if let header = request.allHTTPHeaderFields {
-//            print("Request Header: \(header)")
-//        }
-//
-//        if let body = request.httpBody {
-//            print("Request Body: \(String(data: body, encoding: .ascii)!)")
-//        }
+        print("========================================================")
+        print("Request for url: \(request.url!.absoluteURL)")
+        
+        
+        if let method = request.httpMethod {
+            print("Request method: \(method)")
+        }
+
+        if let header = request.allHTTPHeaderFields {
+            print("Request Header: \(header)")
+        }
+
+        if let body = request.httpBody {
+            print("Request Body: \(String(data: body, encoding: .ascii)!)")
+        }
         
         dataTask(with: request) { (data, response, error) -> Void in
             responseData = data
@@ -77,11 +87,11 @@ internal extension URLSession {
             throw error
         }
         
-//        if let responseD = responseData {
-//            print("Resonpose Body: \(String(data: responseD, encoding: .ascii)!)")
-//        }
-//
-//        print("========================================================")
+        if let responseD = responseData {
+            print("Resonpose Body: \(String(data: responseD, encoding: .ascii)!)")
+        }
+
+        print("========================================================")
         
         return (data: responseData, response: theResponse as! HTTPURLResponse?)
         
