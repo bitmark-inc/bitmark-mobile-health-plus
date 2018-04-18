@@ -69,13 +69,12 @@ func (p *PushPGStore) RemovePushToken(account, uuid string) (bool, error) {
 
 func (p *PushPGStore) QueryPushTokens(account string) (map[string]map[string][]string, error) {
 	rows, err := p.dbConn.Query(sqlQueryPushTokens, account)
+	defer rows.Close()
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return nil, err
 		}
 	}
-
-	defer rows.Close()
 
 	clients := make(map[string]map[string][]string)
 	for rows.Next() {
@@ -118,12 +117,12 @@ func (p *PushPGStore) UpdatePushItem(id int, status string) error {
 
 func (p *PushPGStore) QueryPushItems(account string) ([]PushItem, error) {
 	rows, err := p.dbConn.Query(sqlQueryPushItems, account)
+	defer rows.Close()
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return nil, err
 		}
 	}
-	defer rows.Close()
 
 	items := make([]PushItem, 0)
 	for rows.Next() {
@@ -159,12 +158,12 @@ func (p *PushPGStore) QueryPushItems(account string) ([]PushItem, error) {
 
 func (p *PushPGStore) QueryBadgeCount(account string) (int, error) {
 	rows, err := p.dbConn.Query(sqlQueryPushItemCount, account)
+	defer rows.Close()
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return 0, err
 		}
 	}
-	defer rows.Close()
 
 	if rows.Next() {
 		var count int

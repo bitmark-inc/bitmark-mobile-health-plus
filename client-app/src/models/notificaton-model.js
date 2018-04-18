@@ -1,20 +1,20 @@
 import PushNotification from 'react-native-push-notification';
 import { config } from '../configs';
 
-const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platform, token) => {
+const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platform, token, client) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = `${config.trade_server_url}/mobile/push_tokens`;
+    let tempURL = `${config.mobile_server_url}/api/push_uuids`;
     fetch(tempURL, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        requester: 'user/' + accountNumber,
+        requester: accountNumber,
         timestamp,
         signature,
       },
-      body: JSON.stringify({ platform, token }),
+      body: JSON.stringify({ platform, token, client }),
     }).then((response) => {
       statusCode = response.status;
       return response.json();
@@ -30,13 +30,13 @@ const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platfor
 const doDeregisterNotificationInfo = (accountNumber, timestamp, signature, token) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = `${config.trade_server_url}/mobile/push_tokens/${token}`;
+    let tempURL = `${config.mobile_server_url}/api/push_uuids/${token}`;
     fetch(tempURL, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        requester: 'user/' + accountNumber,
+        requester: accountNumber,
         timestamp,
         signature,
       },

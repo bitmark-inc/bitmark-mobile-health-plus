@@ -10,7 +10,6 @@ import (
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/internalapi"
-	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
 	"github.com/bitmark-inc/mobile-app/mobile-server/server"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher"
@@ -66,14 +65,14 @@ func (config *Configuration) Load(configFile string) error {
 }
 
 func openDb(host string, port uint16, dbname, user, passwd string) (*pgx.Conn, error) {
-	logger := logmodule.NewPgxLogger()
+	// logger := logmodule.NewPgxLogger()
 	dbconfig := pgx.ConnConfig{
 		Host:     host,
 		Port:     port,
 		Database: dbname,
 		User:     user,
 		Password: passwd,
-		Logger:   logger,
+		// Logger:   logger,
 	}
 
 	c, err := pgx.Connect(dbconfig)

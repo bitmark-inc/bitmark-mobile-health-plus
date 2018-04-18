@@ -150,9 +150,8 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadata, qu
   return result;
 };
 
-const doIssueThenTransferFile = async (touchFaceIdSession, filePath, assetName, metadata, receiver) => {
-  console.log('doCompletedStudyTask :', filePath, assetName, metadata, receiver);
-  let result = await BitmarkSDK.issueThenTransferFile(touchFaceIdSession, filePath, assetName, metadata, receiver);
+const doIssueThenTransferFile = async (touchFaceIdSession, filePath, assetName, metadata, receiver, extra) => {
+  let result = await BitmarkSDK.issueThenTransferFile(touchFaceIdSession, filePath, assetName, metadata, receiver, extra);
   return result;
 };
 

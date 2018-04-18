@@ -18,18 +18,20 @@ let config = {
   registry_server_url: 'https://registry.test.bitmark.com',
   trade_server_url: 'https://trade.devel.bitmark.com',
   donation_server_url: 'http://192.168.0.202:9001',
+  mobile_server_url: 'https://bm.devel.bitmark.com',
 };
 
 if (config.network === NETWORKS.testnet) {
   config.trade_server_url = 'https://trade.test.bitmark.com';
-  //TODO
   config.donation_server_url = 'https://data-donation.test.bitmark.com';
+  config.mobile_server_url = 'https://bm.test.bitmark.com';
 } else if (config.network === NETWORKS.livenet) {
   config.bitmark_network = NETWORKS.livenet;
   config.api_server_url = 'https://api.bitmark.com';
   config.preive_asset_url = 'https://preview.assets.bitmark.com';
   config.registry_server_url = 'https://registry.bitmark.com';
   config.trade_server_url = 'https://trade.bitmark.com';
+  config.mobile_server_url = 'https://bm.bitmark.com';
   //TODO
   // config.donation_server_url = 'https://data-donation.bitmark.com';
 }

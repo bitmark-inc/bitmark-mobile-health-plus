@@ -112,18 +112,22 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification transfer_rejected error :', error);
       });
     } else if (data.event === 'transfer_completed' || data.event === 'transfer_accepted') {
-      const resetHomePage = NavigationActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({
-            routeName: 'User', params: {
-              displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
-              needReloadData: true,
-            }
-          }),
-        ]
+      AppController.doReloadUserData().then(() => {
+        const resetHomePage = NavigationActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: {
+                displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
+                needReloadData: true,
+              }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
+      }).catch((error) => {
+        console.log('log out error :', error);
       });
-      this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'transfer_failed') {
       AppController.doReloadUserData().then(() => {
         let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
@@ -228,6 +232,23 @@ export class UserComponent extends React.Component {
         }
       }).catch(error => {
         console.log('handerReceivedNotification BITMARK_DATA error :', error);
+      });
+    } else if (data.event === 'DONATION_SUCCESS') {
+      AppController.doReloadUserData().then(() => {
+        const resetHomePage = NavigationActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: {
+                displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
+                needReloadData: true,
+              }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
+      }).catch((error) => {
+        console.log('log out error :', error);
       });
     }
   }

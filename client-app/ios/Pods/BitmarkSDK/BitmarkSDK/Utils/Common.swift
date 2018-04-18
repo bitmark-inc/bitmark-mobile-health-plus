@@ -40,7 +40,7 @@ public class Common {
         return data
     }
     
-    public static func timeStamp() -> String {
+    public static func timestamp() -> String {
         return String(Int(Date().timeIntervalSince1970 * 1000))
     }
 }

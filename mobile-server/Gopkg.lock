@@ -92,6 +92,8 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = [
+    "ed25519",
+    "ed25519/internal/edwards25519",
     "sha3",
     "ssh/terminal"
   ]
@@ -133,6 +135,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b1f68a6d30d591f2c2ca26a46c6cd86d8842321c0b55c23f9dd36ba7cc10b7a3"
+  inputs-digest = "3dac24cae63d9d177f0c81644b03f3738c1024e109187f683d3f740d30d2f636"
   solver-name = "gps-cdcl"
   solver-version = 1
