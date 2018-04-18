@@ -186,17 +186,19 @@ class BitmarkSDK: NSObject {
       let propertyName = input["property_name"] as! String
       let metadata = input["metadata"] as! [String: String]
       let receiver = input["receiver"] as! String
-      let result = try account.issueThenTransfer(assetFile: URL(fileURLWithPath: fileURL), accessibility: .privateAsset, propertyName: propertyName, propertyMetadata: metadata, toAccount: receiver)
-      guard let sessionData = result.0 else {
-        callback([false])
-        return
-      }
+      let extraInfo = input["extra_info"] as? [String: Any]
       
-      callback([true, sessionData.serialize(), try result.1.serialize()])
+      let bitmarkId = try account.createAndSubmitGiveawayIssue(assetFile: URL(fileURLWithPath: fileURL),
+                                                            accessibility: .privateAsset,
+                                                            propertyName: propertyName,
+                                                            propertyMetadata: metadata,
+                                                            toAccount: receiver,
+                                                            extraInfo: extraInfo)
+      callback([true, bitmarkId])
     }
     catch let e {
       print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -242,33 +244,33 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(sign1stForTransfer::::)
-  func sign1stForTransfer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address)
-      
-      callback([true, offer.txId, offer.signature!.hexEncodedString])
-    }
-    catch let e {
-      print(e)
-      callback([false])
-    }
-  }
-  
-  @objc(sign2ndForTransfer::::)
-  func sign2ndForTransfer(_ sessionId: String, _ txId: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let offer = TransferOffer(txId: txId, receiver: account.accountNumber, signature: signature.hexDecodedData)
-      let counterSignature = try account.createSignForTransferOffer(offer: offer)
-      callback([true, counterSignature.counterSignature!.hexEncodedString])
-    }
-    catch let e {
-      print(e)
-      callback([false])
-    }
-  }
+//  @objc(sign1stForTransfer::::)
+//  func sign1stForTransfer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
+//    do {
+//      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+//      let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address)
+//
+//      callback([true, offer.txId, offer.signature!.hexEncodedString])
+//    }
+//    catch let e {
+//      print(e)
+//      callback([false])
+//    }
+//  }
+//
+//  @objc(sign2ndForTransfer::::)
+//  func sign2ndForTransfer(_ sessionId: String, _ txId: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
+//    do {
+//      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+//      let offer = TransferOffer(txId: txId, receiver: account.accountNumber, signature: signature.hexDecodedData)
+//      let counterSignature = try account.createSignForTransferOffer(offer: offer)
+//      callback([true, counterSignature.counterSignature!.hexEncodedString])
+//    }
+//    catch let e {
+//      print(e)
+//      callback([false])
+//    }
+//  }
   
   @objc(requestSession:::)
   func requestSession(_ network: String, _ reason: String, _ callback: @escaping RCTResponseSenderBlock) {

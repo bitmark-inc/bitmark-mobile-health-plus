@@ -52,4 +52,71 @@ extension API {
         
         return txid
     }
+    
+    internal func submitTransferOffer(withSender sender: Account, offer: TransferOffer, extraInfo: [String: Any]?) throws -> String {
+        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v2/transfer_offers")
+        
+        var params: [String: Any] = ["from": sender.accountNumber.string,
+                    "record": try offer.serialize()]
+        if let extraInfo = extraInfo {
+            params["extra_info"] = extraInfo
+        }
+        
+        var urlRequest = URLRequest(url: requestURL)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
+        
+        let action = "transferOffer"
+        let resource = String(data: try JSONEncoder().encode(try offer.serialize()), encoding: .utf8)!
+        
+        try urlRequest.signRequest(withAccount: sender, action: action, resource: resource)
+        
+        let (d, res) = try urlSession.synchronousDataTask(with: urlRequest)
+        guard let response = res,
+            let data = d else {
+            throw("Cannot get http response")
+        }
+        
+        if !(200..<300 ~= response.statusCode) {
+            throw("Request status" + String(response.statusCode))
+        }
+        
+        let responseData = try JSONDecoder().decode([String: String].self, from: data)
+        guard let offerId = responseData["offer_id"] else {
+            throw("Invalid response from gateway server")
+        }
+        
+        return offerId
+    }
+    
+    internal func completeTransferOffer(withAccount account: Account, offerId: String, action: String, counterSignature: String) throws -> String {
+        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v2/transfer_offers")
+        
+        let params: [String: Any]  = ["id": offerId,
+                                      "reply":
+                                        ["action": action,
+                                         "countersignature": counterSignature]]
+        
+        var urlRequest = URLRequest(url: requestURL)
+        urlRequest.httpMethod = "PATCH"
+        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
+        try urlRequest.signRequest(withAccount: account, action: "transferOffer", resource: "patch")
+        
+        let (d, res) = try urlSession.synchronousDataTask(with: urlRequest)
+        guard let response = res,
+            let data = d else {
+                throw("Cannot get http response")
+        }
+        
+        if !(200..<300 ~= response.statusCode) {
+            throw("Request status" + String(response.statusCode))
+        }
+        
+        let responseData = try JSONDecoder().decode([[String: String]].self, from: data)
+        guard let txId = responseData[0]["tx_id"] else {
+            throw("Invalid response from gateway server")
+        }
+        
+        return txId
+    }
 }

@@ -42,7 +42,7 @@ CREATE TYPE device_platform AS ENUM ('ios', 'android');
 
 CREATE TYPE push_client AS ENUM('primary', 'beta');
 
--- TABLE device
+-- TABLE push_uuid
 CREATE TABLE mobile.push_uuid (
     account_number TEXT REFERENCES mobile.account(account_number),
     token TEXT NOT NULL,
@@ -52,9 +52,9 @@ CREATE TABLE mobile.push_uuid (
 );
 
 -- push notification item status
-DROP TYPE IF EXISTS push_item_status;
 CREATE TYPE push_item_status AS ENUM ('fresh', 'read', 'completed');
 
+-- TABLE push_item
 CREATE TABLE mobile.push_item (
     id SERIAL PRIMARY KEY,
     account_number TEXT REFERENCES mobile.account(account_number),
@@ -66,6 +66,14 @@ CREATE TABLE mobile.push_item (
     status push_item_status DEFAULT 'fresh',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- TABLE bitmark_tracking
+CREATE TABLE mobile.bitmark_tracking (
+    bitmark_id TEXT,
+    account TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+      PRIMARY KEY(bitmark_id, account)
 );
 
 -- finished

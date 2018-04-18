@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bitmark-mobile-config
+type: Opaque
+data:
+  bitmark-mobile.conf: "{{ lookup('template', 'mobile-config.hcl') | b64encode }}"
