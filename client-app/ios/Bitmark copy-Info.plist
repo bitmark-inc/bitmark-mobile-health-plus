@@ -76,5 +76,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>CodePushDeploymentKey</key>
+  <string>H0VznPOIIkUc31GdXzWi5vSAifvk5247aad0-6cc3-4dd7-b247-c76a433163da</string>
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>remote-notification</string>
+  </array>
 </dict>
 </plist>

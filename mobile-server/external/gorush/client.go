@@ -30,6 +30,7 @@ type notification struct {
 	Data     map[string]interface{} `json:"data"`
 	Alert    map[string]interface{} `json:"alert"`
 	Badge    int                    `json:"badge"`
+	Sound    string                 `json:"sound"`
 }
 
 type Client struct {
@@ -51,6 +52,7 @@ func (c *Client) Send(title, message string, receivers map[string]map[string][]s
 				Message:  message,
 				Data:     data,
 				Badge:    badge,
+				Sound:    "default",
 				Alert: map[string]interface{}{
 					"title": title,
 					"body":  message,

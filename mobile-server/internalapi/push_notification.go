@@ -20,23 +20,23 @@ func (s *InternalAPIServer) PushNotification(c *gin.Context) {
 
 	if err := c.BindJSON(&req); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		// return
+		return
 	}
 
 	receivers, err := s.pushStore.QueryPushTokens(req.Account)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-		// return
+		return
 	}
 
 	if err := s.pushStore.AddPushItem(req.Account, req.Source, req.Title, req.Message, req.Data, req.Pinned); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-		// return
+		return
 	}
 
 	if len(receivers) == 0 {
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"message": "account does not register push uuid"})
-		// return
+		return
 	}
 
 	if err := pushnotification.Push(pushnotification.PushInfo{
@@ -49,7 +49,7 @@ func (s *InternalAPIServer) PushNotification(c *gin.Context) {
 		Silent:  req.Silent,
 	}, s.pushStore, s.pushAPIClient); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": err.Error()})
-		// return
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
