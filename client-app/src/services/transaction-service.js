@@ -106,7 +106,7 @@ const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
 
 const doGetTransferOfferDetail = async (transferOfferId) => {
   let incomingTransferOffer = await TransferOfferModel.doGetTransferOfferDetail(transferOfferId);
-  let transactionData = await BitmarkModel.getTransactionDetail(incomingTransferOffer.half_signed_transfer.link);
+  let transactionData = await BitmarkModel.getTransactionDetail(incomingTransferOffer.record.link);
   let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
   incomingTransferOffer.tx = transactionData.tx;
   incomingTransferOffer.block = transactionData.block;
@@ -116,19 +116,19 @@ const doGetTransferOfferDetail = async (transferOfferId) => {
   return incomingTransferOffer;
 };
 const doAcceptTransferBitmark = async (touchFaceIdSession, transferOffer) => {
-  return await BitmarkSDK.createAndSubmitTransferOffer(touchFaceIdSession, transferOffer.half_signed_transfer.link,
-    transferOffer.half_signed_transfer.signature, transferOffer.id, 'accept');
+  return await BitmarkSDK.signForTransferOfferAndSubmit(touchFaceIdSession, transferOffer.record.link,
+    transferOffer.record.signature, transferOffer.id, 'accept');
 };
 
 const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer) => {
-  return await BitmarkSDK.createAndSubmitTransferOffer(touchFaceIdSession, transferOffer.half_signed_transfer.link,
-    transferOffer.half_signed_transfer.signature, transferOffer.id, 'reject');
+  return await BitmarkSDK.signForTransferOfferAndSubmit(touchFaceIdSession, transferOffer.record.link,
+    transferOffer.record.signature, transferOffer.id, 'reject');
 };
 
 const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
   let transferOffer = await TransferOfferModel.doGetTransferOfferDetail(transferOfferId);
-  return await BitmarkSDK.createAndSubmitTransferOffer(touchFaceIdSession, transferOffer.half_signed_transfer.link,
-    transferOffer.half_signed_transfer.signature, transferOffer.id, 'cancel');
+  return await BitmarkSDK.signForTransferOfferAndSubmit(touchFaceIdSession, transferOffer.record.link,
+    transferOffer.record.signature, transferOffer.id, 'cancel');
 };
 
 const TransactionService = {
