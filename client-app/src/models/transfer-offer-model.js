@@ -3,13 +3,12 @@ import { config } from './../configs';
 const doGetTransferOfferDetail = (accountNumber, bitmarkId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
+    let tempURL = config.api_server_url + `/transfer_offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        requester: 'user/' + accountNumber,
       }
     }).then((response) => {
       statusCode = response.status;
@@ -26,13 +25,12 @@ const doGetTransferOfferDetail = (accountNumber, bitmarkId) => {
 const doGetIncomingTransferOffers = (accountNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer-offers?receiver=${accountNumber}`;
+    let tempURL = config.api_server_url + `/transfer_offers?requester=${accountNumber}`;
     fetch(tempURL, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        requester: 'user/' + accountNumber,
       }
     }).then((response) => {
       statusCode = response.status;
@@ -41,7 +39,7 @@ const doGetIncomingTransferOffers = (accountNumber) => {
       if (statusCode >= 400) {
         return reject(new Error('doGetIncomingTransferOffers error :' + JSON.stringify(data)));
       }
-      resolve(data.offers);
+      resolve(data.offers.to);
     }).catch(reject);
   });
 };
@@ -49,13 +47,12 @@ const doGetIncomingTransferOffers = (accountNumber) => {
 const doGetOutgoingTransferOffers = (accountNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer-offers?sender=${accountNumber}`;
+    let tempURL = config.api_server_url + `/transfer_offers?requester=${accountNumber}`;
     fetch(tempURL, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        requester: 'user/' + accountNumber,
       }
     }).then((response) => {
       statusCode = response.status;
@@ -64,53 +61,25 @@ const doGetOutgoingTransferOffers = (accountNumber) => {
       if (statusCode >= 400) {
         return reject(new Error('doGetOutgoingTransferOffers error :' + JSON.stringify(data)));
       }
-      resolve(data.offers);
+      resolve(data.from);
     }).catch(reject);
   });
 };
 
-const doSubmitTransferOffer = (accountNumber, bitmarkId, link, signature, receiver) => {
+const doAccepTransferOffer = (accountNumber, bitmarkId, timestamp, signature, countersignature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
-    fetch(tempURL, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        requester: 'user/' + accountNumber,
-      },
-      body: JSON.stringify({
-        owner: receiver,
-        signature,
-        link
-      }),
-    }).then((response) => {
-      statusCode = response.status;
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('doSubmitTransferOffer error :' + JSON.stringify(data)));
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
-const doAccepTransferOffer = (accountNumber, bitmarkId, countersignature) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
+    let tempURL = config.api_server_url + `/transfer_offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'PATCH',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        requester: 'user/' + accountNumber,
+        requester: accountNumber,
       },
       body: JSON.stringify({
         countersignature,
-        status: "accepted",
+        action: "accept",
       }),
     }).then((response) => {
       statusCode = response.status;
@@ -129,7 +98,7 @@ const doRejectTransferOffer = (accountNumber, bitmarkId, signatureData) => {
   console.log('signatureData :', signatureData);
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
+    let tempURL = config.api_server_url + `/transfer_offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'PATCH',
       headers: {
@@ -154,7 +123,7 @@ const doRejectTransferOffer = (accountNumber, bitmarkId, signatureData) => {
 const doCancelTransferOffer = (accountNumber, bitmarkId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.trade_server_url + `/transfer-offers/${bitmarkId}`;
+    let tempURL = config.api_server_url + `/transfer_offers/${bitmarkId}`;
     fetch(tempURL, {
       method: 'DELETE',
       headers: {
@@ -178,7 +147,6 @@ let TransferOfferModel = {
   doGetTransferOfferDetail,
   doGetIncomingTransferOffers,
   doGetOutgoingTransferOffers,
-  doSubmitTransferOffer,
   doAccepTransferOffer,
   doRejectTransferOffer,
   doCancelTransferOffer,

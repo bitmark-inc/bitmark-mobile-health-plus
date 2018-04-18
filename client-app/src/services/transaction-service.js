@@ -80,8 +80,8 @@ const doGetActiveIncomingTransferOffers = async (accountNumber) => {
   let activeIncomingTransferOffers = [];
   let allIncomingTransferOffers = await TransferOfferModel.doGetIncomingTransferOffers(accountNumber);
   for (let incomingTransferOffer of allIncomingTransferOffers) {
-    if (incomingTransferOffer.status === 'waiting') {
-      let transactionData = await BitmarkModel.getTransactionDetail(incomingTransferOffer.link);
+    if (incomingTransferOffer.status === 'open') {
+      let transactionData = await BitmarkModel.getTransactionDetail(incomingTransferOffer.record.link);
       let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
       incomingTransferOffer.tx = transactionData.tx;
       incomingTransferOffer.block = transactionData.block;
@@ -97,13 +97,11 @@ const doGetActiveIncomingTransferOffers = async (accountNumber) => {
 
 const doGetActiveOutgoinTransferOffers = async (accountNumber) => {
   let outgoinTransferOffers = await TransferOfferModel.doGetOutgoingTransferOffers(accountNumber);
-  return outgoinTransferOffers.filter(item => item.status === 'waiting');
+  return outgoinTransferOffers.filter(item => item.status === 'open');
 };
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
-  let userInfo = await UserModel.doGetCurrentUser();
-  let firstSignatureData = await BitmarkSDK.sign1stForTransfer(touchFaceIdSession, bitmarkId, receiver);
-  return await TransferOfferModel.doSubmitTransferOffer(userInfo.bitmarkAccountNumber, bitmarkId, firstSignatureData.txid, firstSignatureData.signature, receiver);
+  return await BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmarkId, receiver);
 };
 
 const doAcceptTransferBitmark = async (touchFaceIdSession, bitmarkId) => {

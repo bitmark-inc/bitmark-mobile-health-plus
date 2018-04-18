@@ -1,9 +1,10 @@
+import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
 const {
   PushNotificationIOS,
   Platform,
 } = ReactNative;
-import { NotificationModel, CommonModel, DonationModel } from './../models';
+import { NotificationModel, CommonModel } from './../models';
 
 let configure = (onRegister, onNotification) => {
   return NotificationModel.configure(onRegister, onNotification);
@@ -51,18 +52,18 @@ let doRegisterNotificationInfo = async (accountNumber, token) => {
   if (!signatureData) {
     return;
   }
-  await DonationModel.doRegisterUserInformation(accountNumber, signatureData.timestamp, signatureData.signature, token);
-  return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token);
+  let client = DeviceInfo.getBundleId() === 'com.bitmarkios.inhouse' ? 'beta' : 'primary';
+  return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token, client);
 };
 
 let doTryDeregisterNotificationInfo = (accountNumber, token, signatureData) => {
   return new Promise((resolve) => {
-    NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token).then(() => {
-      return DonationModel.doDeregisterUserInformation(accountNumber, signatureData.timestamp, signatureData.signature, token);
-    }).then(resolve).catch(error => {
-      console.log('doTryDeregisterNotificationInfo error :', error);
-      resolve();
-    });
+    NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token)
+      .then(resolve)
+      .catch(error => {
+        console.log('doTryDeregisterNotificationInfo error :', error);
+        resolve();
+      });
   });
 };
 

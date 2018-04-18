@@ -6,7 +6,6 @@ import {
   StudiesModel,
   Study2Model,
   BitmarkModel,
-  BitmarkSDK,
   Study1Model
 } from '../models';
 import { FileUtil } from '../utils';
@@ -225,15 +224,6 @@ const doLoadDonationTask = async (donationInformation) => {
   return donationInformation;
 }
 
-const doRegisterUserInformation = async (touchFaceIdSession, bitmarkAccountNumber, notificationUID, activeBitmarkHealthDataAt) => {
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  if (!signatureData) {
-    return null;
-  }
-  let donationInformation = await DonationModel.doRegisterUserInformation(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, notificationUID, activeBitmarkHealthDataAt);
-  return await doLoadDonationTask(donationInformation);
-};
-
 const doActiveBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, activeBitmarkHealthDataAt) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession, );
   if (!signatureData) {
@@ -250,15 +240,6 @@ const doInactiveBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNum
   }
   let donationInformation = await DonationModel.doInactiveBitmarkHealthData(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   console.log('doInactiveBitmarkHealthData :', donationInformation);
-  return await doLoadDonationTask(donationInformation);
-};
-
-const doDeregisterUserInformation = async (touchFaceIdSession, bitmarkAccountNumber, ) => {
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  if (!signatureData) {
-    return null;
-  }
-  let donationInformation = await DonationModel.doDeregisterUserInformation(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -280,12 +261,12 @@ const doLeaveStudy = async (touchFaceIdSession, bitmarkAccountNumber, studyId) =
   return await doLoadDonationTask(donationInformation);
 };
 
-const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType, completedAt, studyId, bitmarkId, firstSignature, sessionData) => {
+const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType, completedAt, studyId, bitmarkId) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   if (!signatureData) {
     return null;
   }
-  let donationInformation = await DonationModel.doCompleteTask(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, taskType, completedAt, studyId, bitmarkId, firstSignature, sessionData);
+  let donationInformation = await DonationModel.doCompleteTask(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, taskType, completedAt, studyId, bitmarkId);
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -367,18 +348,14 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
       (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4))) {
     let prepareResult = await doPrepareSurveyFile(touchFaceIdSession, bitmarkAccountNumber, study, taskType, result);
 
-    let issueResult = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount);
-    let sessionData = { data: issueResult.sessionData, };
-    let timestamp = moment().toDate().getTime();
-    let jsonDataString = `{"enc_data_key":"${sessionData.data.enc_data_key}","data_key_alg":"${sessionData.data.data_key_alg}"}`
-    let message = 'updateSession|' + jsonDataString + '|' + bitmarkAccountNumber + '|' + timestamp;
-    let signatures = await BitmarkSDK.rickySignMessage([message], touchFaceIdSession);
-    sessionData.signature = signatures[0];
-    sessionData.timestamp = timestamp;
-
-    return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, issueResult.transferOfferData.link, issueResult.transferOfferData.signature, sessionData);
-  } else if ((study.studyId === 'study2' && taskType === study.taskIds.task3) ||
-    (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2 && !result)) {
+    let extra = taskType !== study.taskIds.intake_survey ? null : {
+      app: 'bitmark-data-donation',
+      message: `Your first data donation has been securely delivered to the ${study.title}. Thanks for donating!`,
+      data: { event: 'DONATION_SUCCESS' }
+    };
+    let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount, extra);
+    return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
+  } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
     return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
   }
   throw new Error('Can not detect task and study');
@@ -395,17 +372,14 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
       randomString({ length: 8, numeric: true, letters: false, })
     );
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, tempData.date, tempData.data, tempData.randomId);
-    let issueResult = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount);
-    let sessionData = {
-      data: issueResult.sessionData
+    let format = 'YYYY MMM DD HH:mm:ss';
+    let extra = {
+      app: 'bitmark-data-donation',
+      message: `Your daily data donation for ${moment(dateRange.startDate).format(format)} - ${moment(dateRange.endDate).format(format)} has been securely delivered to the ${study.title}. Thanks for donating!`,
+      data: { event: 'DONATION_SUCCESS' }
     };
-    let timestamp = moment().toDate().getTime();
-    let jsonDataString = `{"enc_data_key":"${sessionData.data.enc_data_key}","data_key_alg":"${sessionData.data.data_key_alg}"}`
-    let message = 'updateSession|' + jsonDataString + '|' + bitmarkAccountNumber + '|' + timestamp;
-    let signatures = await BitmarkSDK.rickySignMessage([message], touchFaceIdSession);
-    sessionData.signature = signatures[0];
-    sessionData.timestamp = timestamp;
-    donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment().toDate(), study.studyId, issueResult.transferOfferData.link, issueResult.transferOfferData.signature, sessionData);
+    let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount, extra);
+    donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment().toDate(), study.studyId, bitmarkId);
   }
   return donationInformation;
 };
@@ -454,8 +428,6 @@ const doDownloadStudyConsent = async (study) => {
 const DonationService = {
   DATA_SOURCE_INTACTIVE_TASK_TYPE,
   doGetUserInformation,
-  doRegisterUserInformation,
-  doDeregisterUserInformation,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
   doJoinStudy,
