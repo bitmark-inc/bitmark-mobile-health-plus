@@ -141,14 +141,14 @@ const BitmarkSDK = {
     });
   },
 
-  issueThenTransferFile: (sessionId, filePath, property_name, metadata, receiver, extra) => {
+  issueThenTransferFile: (sessionId, filePath, property_name, metadata, receiver, extra_info) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.issueThenTransferFile(sessionId, {
         url: filePath,
         property_name,
         metadata,
         receiver,
-        extra,
+        extra_info,
       }, (ok, result) => {
         if (ok && result) {
           resolve(result);
