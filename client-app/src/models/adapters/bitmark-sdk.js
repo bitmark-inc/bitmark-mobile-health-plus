@@ -159,20 +159,20 @@ const BitmarkSDK = {
     });
   },
 
-  sign1stForTransfer: (sessionId, bitmarkId, receiver) => {
+  createAndSubmitTransferOffer: (sessionId, bitmarkId, receiver) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.sign1stForTransfer(sessionId, bitmarkId, receiver, (ok, result, signature) => {
-        if (ok && result && signature) {
-          resolve({ txid: result, signature });
+      SwiftBitmarkSDK.createAndSubmitTransferOffer(sessionId, bitmarkId, receiver, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
         } else {
           reject(newError(result, 'Can not sign first signature for transfer!'));
         }
       });
     });
   },
-  sign2ndForTransfer: (sessionId, txid, signature1) => {
+  signForTransferOfferAndSubmit: (sessionId, txid, signature1, offerId, action) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.sign2ndForTransfer(sessionId, txid, signature1, (ok, result) => {
+      SwiftBitmarkSDK.signForTransferOfferAndSubmit(sessionId, txid, signature1, offerId, action, (ok, result) => {
         if (ok && result) {
           resolve(result);
         } else {
