@@ -263,8 +263,8 @@ class BitmarkSDK: NSObject {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let offer = TransferOffer(txId: txId, receiver: account.accountNumber, signature: signature.hexDecodedData)
-      let txId = try account.signForTransferOfferAndSubmit(offerId: offerId, offer: offer, action: action)
-      callback([true, txId])
+      let success = try account.signForTransferOfferAndSubmit(offerId: offerId, offer: offer, action: action)
+      callback([success])
     }
     catch let e {
       print(e)

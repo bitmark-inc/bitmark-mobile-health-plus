@@ -89,7 +89,7 @@ extension API {
         return offerId
     }
     
-    internal func completeTransferOffer(withAccount account: Account, offerId: String, action: String, counterSignature: String) throws -> String {
+    internal func completeTransferOffer(withAccount account: Account, offerId: String, action: String, counterSignature: String) throws -> Bool {
         let requestURL = endpoint.apiServerURL.appendingPathComponent("/v2/transfer_offers")
         
         let params: [String: Any]  = ["id": offerId,
@@ -104,19 +104,14 @@ extension API {
         
         let (d, res) = try urlSession.synchronousDataTask(with: urlRequest)
         guard let response = res,
-            let data = d else {
+            let _ = d else {
                 throw("Cannot get http response")
         }
         
         if !(200..<300 ~= response.statusCode) {
-            throw("Request status" + String(response.statusCode))
+            return false
         }
         
-        let responseData = try JSONDecoder().decode([[String: String]].self, from: data)
-        guard let txId = responseData[0]["tx_id"] else {
-            throw("Invalid response from gateway server")
-        }
-        
-        return txId
+        return true
     }
 }
