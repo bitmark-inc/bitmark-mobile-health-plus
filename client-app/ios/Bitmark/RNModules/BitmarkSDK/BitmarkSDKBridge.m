@@ -30,7 +30,7 @@ RCT_EXTERN_METHOD(sign:(NSString *)sessionId:(NSString *)message:(RCTResponseSen
 RCT_EXTERN_METHOD(rickySign:(NSString *)sessionId:(NSArray<NSString *>)messages:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(transferOneSignature:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)address:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(sign1stForTransfer:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)address:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(sign2ndForTransfer:(NSString *)sessionId:(NSString *)txId:(NSString *)signature:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(sign2ndForTransfer:(NSString *)sessionId:(NSString *)txId:(NSString *)signature:(NSString *)offerId:(NSString *)action:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(validateMetadata:(NSDictionary *)metadata:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(validateAccountNumber:(NSString *)address:(NSString *)network:(RCTResponseSenderBlock)callback)
 
