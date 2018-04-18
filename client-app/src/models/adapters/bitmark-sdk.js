@@ -173,8 +173,8 @@ const BitmarkSDK = {
   signForTransferOfferAndSubmit: (sessionId, txid, signature1, offerId, action) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.signForTransferOfferAndSubmit(sessionId, txid, signature1, offerId, action, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
+        if (ok) {
+          resolve({ result: ok });
         } else {
           reject(newError(result, 'Can not sign second signature for transfer!'));
         }
