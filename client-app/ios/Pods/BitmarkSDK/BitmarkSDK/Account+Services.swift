@@ -253,13 +253,13 @@ public extension Account {
         return transfer;
     }
     
-    public func createAndSubmitTransferOffer(bitmarkId: String, recipient: String) throws -> String {
+    public func createAndSubmitTransferOffer(bitmarkId: String, recipient: String, extraInfo: [String: Any]? = nil) throws -> String {
         let network = self.authKey.network
         let api = API(network: network)
         
         let offer = try createTransferOffer(bitmarkId: bitmarkId, recipient: recipient)
         
-        return try api.submitTransferOffer(withSender: self, offer: offer, extraInfo: nil)
+        return try api.submitTransferOffer(withSender: self, offer: offer, extraInfo: extraInfo)
     }
     
     public func createCounterSign(offer: TransferOffer) throws -> CountersignedTransferRecord {
@@ -268,7 +268,7 @@ public extension Account {
         return counterSign
     }
     
-    public func signForTransferOfferAndSubmit(offerId: String, offer: TransferOffer, action: String) throws -> String {
+    public func signForTransferOfferAndSubmit(offerId: String, offer: TransferOffer, action: String) throws -> Bool {
         let network = self.authKey.network
         let api = API(network: network)
         
