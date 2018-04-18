@@ -108,7 +108,7 @@ export class TransactionDetailComponent extends React.Component {
               <Text style={transactionDetailStyle.assetName}>{this.state.transferOffer.asset.name}</Text>
               <Text style={transactionDetailStyle.transferOfferContent}>
                 <Text style={transactionDetailStyle.transferOfferSenderFix}>[</Text>
-                <Text style={transactionDetailStyle.transferOfferSenderName} numberOfLines={1}>{this.state.transferOffer.sender.substring(0, 12)}...</Text>
+                <Text style={transactionDetailStyle.transferOfferSenderName} numberOfLines={1}>{this.state.transferOffer.from.substring(0, 12)}...</Text>
                 <Text style={transactionDetailStyle.transferOfferSenderFix}>] </Text>
                 has requested to transfer the property
                 <Text style={transactionDetailStyle.transferOfferAssetName}> {this.state.transferOffer.asset.name} </Text>
