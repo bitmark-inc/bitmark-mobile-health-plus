@@ -37,7 +37,6 @@ export default StyleSheet.create({
     right: 0,
     zIndex: 10,
     width: 198,
-    height: 135,
     backgroundColor: '#F5F5F5',
   },
   downloadAssetButton: {
