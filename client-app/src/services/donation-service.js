@@ -288,7 +288,7 @@ let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
 
 
   for (let extFilePath of extFiles) {
-    let extFilename = filePath.substring(extFilePath.lastIndexOf("/") + 1, extFilePath.length);
+    let extFilename = extFilePath.substring(extFilePath.lastIndexOf("/") + 1, extFilePath.length);
     let destinationExtFilePath = assetFolder + '/' + extFilename;
     await FileUtil.moveFile(extFilePath, destinationExtFilePath);
   }
