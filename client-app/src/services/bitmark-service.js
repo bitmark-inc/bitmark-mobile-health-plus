@@ -132,6 +132,10 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) 
   }
   //TODO get new tracking from server
 
+  console.log('run1 ');
+  let allTrackingBitmarksFromServer = await BitmarkModel.doGetAllTrackingBitmark(bitmarkAccountNumber);
+  console.log('allTrackingBitmarksFromServer :', allTrackingBitmarksFromServer);
+
   let bitmarks = await BitmarkModel.getListBitmarks(bitmarkIds);
   console.log('bitmarks :', bitmarks);
 
@@ -152,36 +156,6 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) 
       trackingBitmarks.push(bitmark);
     }
   }
-
-  // oldTrackingBitmarks = oldTrackingBitmarks || [];
-  // let trackingBitmarks = [];
-  // for (let oldBitmark of oldTrackingBitmarks) {
-  // let { bitmark } = await BitmarkModel.doGetProvenance(bitmark.id);
-  //   let lastProvenance;
-  //   if (bitmark.provenance && bitmark.provenance.length > 0) {
-  //     lastProvenance = bitmark.provenance[0];
-  //   }
-  //   if (lastProvenance && (lastProvenance.tx_id !== oldBitmark.lastProvenance.tx_id ||
-  //     (lastProvenance.tx_id === oldBitmark.lastProvenance.tx_id && lastProvenance.status !== oldBitmark.lastProvenance.status))) {
-  //     let isViewed = false;
-  //     bitmark.provenance.forEach(hs => {
-  //       if (hs.tx_id === bitmark.lastProvenance.tx_id) {
-  //         hs.isViewed = hs.status === bitmark.lastProvenance.status;
-  //         isViewed = true;
-  //       } else {
-  //         hs.isViewed = isViewed;
-  //       }
-  //     });
-  //     trackingBitmarks.push(merge({}, oldBitmark, bitmark));
-  //   } else {
-  //     trackingBitmarks.push(bitmark);
-  //   }
-  // }
-  // trackingBitmarks.forEach(bitmark => {
-  //   bitmark.isViewed = bitmark.provenance.findIndex(hs => !hs.isViewed) < 0;
-  // })
-
-  // trackingBitmarks = sortList(trackingBitmarks, ((a, b) => b.offset - a.offset));
   return trackingBitmarks;
 };
 

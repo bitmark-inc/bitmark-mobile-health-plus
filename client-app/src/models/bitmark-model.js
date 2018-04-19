@@ -251,6 +251,85 @@ const doGetBitmarkInformation = (bitmarkId) => {
   });
 };
 
+const doAddTrackinBitmark = async (bitmarkAccount, timestamp, signature, bitmark_id, tx_id, status) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks`;
+    fetch(bitmarkUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        timestamp,
+        signature,
+        requester: bitmarkAccount,
+      },
+      body: JSON.stringify({
+        bitmark_id, tx_id, status
+      })
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`doAddTrackinBitmark error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doStopTrackingBitmark = async (bitmarkAccount, timestamp, signature, bitmark_id) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks`;
+    fetch(bitmarkUrl, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        timestamp,
+        signature,
+        requester: bitmarkAccount,
+      },
+      body: JSON.stringify({
+        bitmark_id
+      })
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`doStopTrackingBitmark error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doGetAllTrackingBitmark = async (bitmarkAccount) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks`;
+    fetch(bitmarkUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: bitmarkAccount,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`doStopTrackingBitmark error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 let BitmarkModel = {
   doGetAssetInformation,
   doGetAllBitmarks,
@@ -263,6 +342,10 @@ let BitmarkModel = {
   getTransactionDetail,
   getAllTransactions,
   getListBitmarks,
+
+  doAddTrackinBitmark,
+  doStopTrackingBitmark,
+  doGetAllTrackingBitmark,
 };
 
 export { BitmarkModel };

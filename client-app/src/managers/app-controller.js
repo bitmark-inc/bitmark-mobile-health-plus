@@ -275,6 +275,24 @@ const doDownloadBitmark = async (bitmark, processingData) => {
   return await submitting(DataController.doDownloadBitmark(touchFaceIdSession, bitmark), processingData);
 };
 
+const doTrackingBitmark = async (asset, bitmark) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to tracking property.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doTrackingBitmark(touchFaceIdSession, asset, bitmark));
+};
+
+const doStopTrackingBitmark = async (bitmark) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to tracking property.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doStopTrackingBitmark(touchFaceIdSession, bitmark));
+};
+
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
   // return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
@@ -309,6 +327,8 @@ let AppController = {
   doBitmarkHealthData,
   doDownloadStudyConsent,
   doDownloadBitmark,
+  doTrackingBitmark,
+  doStopTrackingBitmark,
 
   doReloadUserData,
 

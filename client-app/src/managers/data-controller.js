@@ -8,7 +8,7 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { DonationService } from '../services/donation-service';
 
 let userInformation = {};
@@ -459,7 +459,10 @@ const doUpdateViewStatus = async (assetId, bitmarkId) => {
 };
 
 const doTrackingBitmark = async (touchFaceIdSession, asset, bitmark) => {
-  // TODO call API
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await BitmarkModel.doAddTrackinBitmark(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature,
+    bitmark.id, bitmark.head_id, bitmark.status);
+
   let trackingBitmark = merge({}, bitmark);
   trackingBitmark.asset = asset;
   trackingBitmark.isViewed = true;
@@ -475,7 +478,9 @@ const doTrackingBitmark = async (touchFaceIdSession, asset, bitmark) => {
   EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
 };
 const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
-  // TODO call API
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await BitmarkModel.doStopTrackingBitmark(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, bitmark.id);
+
   let trackingBitmarkIndex = (userData.trackingBitmarks || []).findIndex(tb => tb.id = bitmark.id);
   if (trackingBitmarkIndex >= 0) {
     userData.trackingBitmarks.splice(trackingBitmarkIndex, 1);
