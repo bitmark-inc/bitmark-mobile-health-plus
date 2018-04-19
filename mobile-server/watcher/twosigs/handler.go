@@ -3,6 +3,7 @@ package twosigs
 import (
 	"encoding/json"
 
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 
@@ -15,12 +16,16 @@ type TwoSigsHandler struct {
 	nsq.Handler
 	pushStore     pushstore.PushStore
 	pushAPIClient *gorush.Client
+	gatewayClient *gateway.Client
+	researchers   map[string]string
 }
 
-func New(store pushstore.PushStore, pushAPIClient *gorush.Client) *TwoSigsHandler {
+func New(store pushstore.PushStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client, reseacherAccounts map[string]string) *TwoSigsHandler {
 	return &TwoSigsHandler{
 		pushStore:     store,
 		pushAPIClient: pushAPIClient,
+		gatewayClient: gatewayClient,
+		researchers:   reseacherAccounts,
 	}
 }
 
@@ -30,12 +35,44 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 		return err
 	}
 
-	log.Debug("Handle event for data", data)
-
 	event := data["name"].(string)
 	from := data["from"].(string)
 	to := data["to"].(string)
 
+	// For data donation
+	if len(h.researchers[to]) > 0 && event == "transfer_accepted" {
+		offerID := data["id"].(string)
+		transferOffer, err := h.gatewayClient.GetOfferIdInfo(offerID)
+		if err != nil {
+			log.Error("error when getting transfer offer:", err)
+			return err
+		}
+
+		log.Debugf("got transfer offer: %+v\n", transferOffer)
+
+		app, okForApp := transferOffer.ExtraInfo["app"].(string)
+		message, okForMessage := transferOffer.ExtraInfo["message"].(string)
+		data, okForData := transferOffer.ExtraInfo["data"].(map[string]interface{})
+
+		if okForApp && app == "bitmark-data-donation" {
+			if okForMessage && okForData {
+				data["offer_id"] = offerID
+				return pushnotification.Push(pushnotification.PushInfo{
+					Account: from,
+					Title:   "",
+					Message: message,
+					Data:    data,
+					Pinned:  false,
+					Source:  "gateway",
+					Silent:  false,
+				}, h.pushStore, h.pushAPIClient)
+			}
+
+			return nil
+		}
+	}
+
+	// For p2p transfers
 	switch event {
 	case EventTransferRequest:
 		return pushnotification.Push(pushnotification.PushInfo{
@@ -78,7 +115,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Silent:  false,
 		}, h.pushStore, h.pushAPIClient)
 	default:
-		log.Info("Unhandled event", event)
+		log.Info("Unhandled event:", event)
 	}
 
 	return nil

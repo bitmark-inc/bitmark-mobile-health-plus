@@ -25,8 +25,8 @@ export class AssetsComponent extends React.Component {
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
-    this.handerLoadFistData = this.handerLoadFistData.bind(this);
     this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
+    this.handerLoadingData = this.handerLoadingData.bind(this);
 
     let subtab = SubTabs.local;
     let localAssets = DataController.getUserBitmarks().localAssets;
@@ -47,12 +47,13 @@ export class AssetsComponent extends React.Component {
       doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
       trackingBitmarks,
       existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
+      isLoadingData: DataController.isLoadingData(),
     };
   }
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
-    EventEmiterService.on(EventEmiterService.events.APP_LOAD_FIRST_DATA, this.handerLoadFistData);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -63,8 +64,8 @@ export class AssetsComponent extends React.Component {
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOAD_FIRST_DATA, this.handerLoadFistData);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
   handerChangeLocalBitmarks() {
@@ -75,6 +76,10 @@ export class AssetsComponent extends React.Component {
   }
   handerChangeTrackingBitmarks() {
     this.switchSubtab(this.state.subtab);
+  }
+
+  handerLoadingData() {
+    this.setState({ isLoadingData: DataController.isLoadingData() });
   }
 
   reloadData() {
@@ -237,7 +242,7 @@ export class AssetsComponent extends React.Component {
                     <Text style={[assetsStyle.assetName, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
                       <Text style={[assetsStyle.assetCreator, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
-                        {item.asset.registrant === DataController.getUserInformation().bitmarkAccountNumber ? ' YOU' :
+                        ISSUER: {item.asset.registrant === DataController.getUserInformation().bitmarkAccountNumber ? ' YOU' :
                           ('[' + item.asset.registrant.substring(0, 4) + '...' + item.asset.registrant.substring(item.asset.registrant.length - 4, item.asset.registrant.length) + ']')}
                       </Text>
                     </View>
@@ -250,7 +255,7 @@ export class AssetsComponent extends React.Component {
                 </TouchableOpacity>)
               }}
             />}
-            {!this.state.doneLoadDataFirstTime && <View style={assetsStyle.messageNoAssetArea}>
+            {!this.state.isLoadingData && <View style={assetsStyle.messageNoAssetArea}>
               <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>

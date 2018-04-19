@@ -107,7 +107,7 @@ export class BottomTabsComponent extends React.Component {
 
         <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.transaction)}>
           {this.state.transactionNumber > 0 && <View style={userStyle.transactionNumber}>
-            <Text style={userStyle.transactionNumberText}>{this.state.transactionNumber}</Text>
+            <Text style={userStyle.transactionNumberText}>{this.state.transactionNumber < 100 ? this.state.transactionNumber : 99}</Text>
           </View>}
           <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.transaction
             ? require('./../../../../assets/imgs/transaction-icon-enable.png')

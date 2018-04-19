@@ -3,6 +3,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/bitmark-inc/bitmark-sdk-go"
+  packages = ["."]
+  revision = "292e89dc9a0d6b4372a75815b7b5a16313ecf9e0"
+
+[[projects]]
+  branch = "master"
   name = "github.com/gin-contrib/sse"
   packages = ["."]
   revision = "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae"
@@ -92,8 +98,15 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = [
+    "chacha20poly1305",
+    "curve25519",
     "ed25519",
     "ed25519/internal/edwards25519",
+    "internal/chacha20",
+    "nacl/box",
+    "nacl/secretbox",
+    "poly1305",
+    "salsa20/salsa",
     "sha3",
     "ssh/terminal"
   ]
@@ -135,6 +148,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3dac24cae63d9d177f0c81644b03f3738c1024e109187f683d3f740d30d2f636"
+  inputs-digest = "83897a2c836c9562aeb16144147497b67a9838f67d631f9e1ff6484c01750beb"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -4,8 +4,12 @@ aws_ssl_arn: arn:aws:acm:ap-northeast-1:083397868157:certificate/8358a64e-28f8-4
 
 mobile:
   core_api_server: https://api.test.bitmark.com
-  message_server: q.cluster.test.bitmark.com:32150
+  message_server: nsqd.default.svc.cluster.local:4150
   ifttt_server: https://when.test.bitmark.com
-  push_server: http://n.devel.bitmark.com
-  db_host: mobile-devnet.c2yhyb2xjk0n.ap-southeast-1.rds.amazonaws.com
-  db_port: 25432
+  push_server: http://push-notification-primary.mobile.svc.cluster.local
+  db_host: bitmark-mobile-db.mobile.svc.cluster.local
+  db_port: 5432
+  push_notification_production: true
+data_donation:
+  researcher_account_1: eXs95fgZXwxVmMRQTsH4Qysk9joYag6D3VpM2ec2Lon27mVCeq
+  researcher_account_2: fEqJBHUDuBDLqfJt6tKieu2jhR76k6rTuo38ZWCYPciT1KuRwu

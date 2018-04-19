@@ -229,7 +229,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   step8QuestionStep.optional = NO;
   
   ORKAnswerFormat *step9AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumMassUnit].symbol];
-  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-10" title:@"What is your current weight?" answer:step9AnswerFormat];
+  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-9" title:@"What is your current weight?" answer:step9AnswerFormat];
   step9QuestionStep.optional = NO;
   
   // Create task
@@ -319,25 +319,24 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
       if ([stepResult.identifier isEqualToString:@"step-1"] ||
           [stepResult.identifier isEqualToString:@"step-2"] ||
           [stepResult.identifier isEqualToString:@"step-4"] ||
-          [stepResult.identifier isEqualToString:@"step-5"] ||
-          [stepResult.identifier isEqualToString:@"step-6"]) {
+          [stepResult.identifier isEqualToString:@"step-5"]) {
         ORKChoiceQuestionResult *r = (ORKChoiceQuestionResult *)stepResult.results.firstObject;
         return r.choiceAnswers;
       }
       
       else if ([stepResult.identifier isEqualToString:@"step-3"] ||
-               [stepResult.identifier isEqualToString:@"step-7"] ||
-               [stepResult.identifier isEqualToString:@"step-8"]) {
+               [stepResult.identifier isEqualToString:@"step-6"] ||
+               [stepResult.identifier isEqualToString:@"step-7"]) {
         ORKNumericQuestionResult *r = (ORKNumericQuestionResult *)stepResult.results.firstObject;
         return [NSString stringWithFormat:@"%@ %@", r.numericAnswer, r.unit];
       }
       
-      else if ([stepResult.identifier isEqualToString:@"step-9"]) {
+      else if ([stepResult.identifier isEqualToString:@"step-8"]) {
         ORKNumericQuestionResult *r = (ORKNumericQuestionResult *)stepResult.results.firstObject;
         return [LocaleUnit convertToSIWithUnit:[LocaleUnit mediumLengthUnit] value:r.numericAnswer.doubleValue];
       }
       
-      else if ([stepResult.identifier isEqualToString:@"step-10"]) {
+      else if ([stepResult.identifier isEqualToString:@"step-9"]) {
         ORKNumericQuestionResult *r = (ORKNumericQuestionResult *)stepResult.results.firstObject;
         return [LocaleUnit convertToSIWithUnit:[LocaleUnit mediumMassUnit] value:r.numericAnswer.doubleValue];
       }
@@ -381,8 +380,8 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
       return nil;
     }];
     
-    self.intakeSurveyCallback(callbackResults);
-    self.intakeSurveyCallback = nil;
+    self.exitSurvey1Callback(callbackResults);
+    self.exitSurvey1Callback = nil;
   }
 
 }
@@ -432,9 +431,9 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   s9.customImage = [UIImage imageNamed:@"consent_issue_to_consider"];
   
   ORKConsentSection *s10 = [[ORKConsentSection alloc] initWithType:ORKConsentSectionTypeCustom];
-  s9.title = @"Cost";
-  s9.summary = @"You may incur small data charges from receiving push notifications. Please go to your phone’s “Setting > Cellular” to restrict push notifications and other study activities to WIFI.";
-  s9.customImage = [UIImage imageNamed:@"consent_generic_cost"];
+  s10.title = @"Cost";
+  s10.summary = @"You may incur small data charges from receiving push notifications. Please go to your phone’s “Setting > Cellular” to restrict push notifications and other study activities to WIFI.";
+  s10.customImage = [UIImage imageNamed:@"consent_generic_cost"];
   
   // Create additional section objects for later sections
   consentDocument.sections = @[s1,

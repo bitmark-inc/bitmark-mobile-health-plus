@@ -25,6 +25,7 @@ export class DonationComponent extends React.Component {
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.contactBitmark = this.contactBitmark.bind(this);
     this.reloadData = this.reloadData.bind(this);
+    this.handerLoadingData = this.handerLoadingData.bind(this);
 
     let subTab = (this.props.screenProps.subTab && (this.props.screenProps.subTab === SubTabs.other || this.props.screenProps.subTab === SubTabs.joined)) ? this.props.screenProps.subTab : SubTabs.other;
     let donationInformation = DataController.getDonationInformation();
@@ -38,11 +39,13 @@ export class DonationComponent extends React.Component {
       donationInformation,
       subTab,
       studies,
+      isLoadingData: DataController.isLoadingData(),
     };
   }
   // ==========================================================================================
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -52,8 +55,13 @@ export class DonationComponent extends React.Component {
   }
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
   // ==========================================================================================
+
+  handerLoadingData() {
+    this.setState({ isLoadingData: DataController.isLoadingData() });
+  }
 
   reloadData() {
     AppController.doReloadUserData().then(() => {
@@ -142,9 +150,6 @@ export class DonationComponent extends React.Component {
         </View>
 
         <ScrollView style={donationStyle.contentScroll}>
-          {!this.state.studies && <View style={donationStyle.content}>
-            <ActivityIndicator size="large" style={{ marginTop: 46, }} />
-          </View>}
           {this.state.studies && this.state.studies.length > 0 && <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             <View style={donationStyle.content}>
               <FlatList
@@ -175,6 +180,9 @@ export class DonationComponent extends React.Component {
           {this.state.studies && this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
             <Text style={donationStyle.noCardTitle}>HAVEN’T JOINED ANY STUDIES?</Text>
             <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
+          </View>}
+          {!this.state.isLoadingData && <View style={donationStyle.content}>
+            <ActivityIndicator size="large" style={{ marginTop: 46, }} />
           </View>}
         </ScrollView>
       </View>

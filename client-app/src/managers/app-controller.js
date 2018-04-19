@@ -125,7 +125,7 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
 };
 
 const doReloadUserData = async () => {
-  return await processing(DataController.doReloadUserData());
+  return await DataController.doReloadUserData();
 };
 
 const doGetTransferOfferDetail = async (transferOfferId) => {
@@ -238,6 +238,14 @@ const doStudyTask = async (study, taskType) => {
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
   return await processing(DataController.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
 };
+const doCompletedStudyTask = async (study, taskType, result) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to complete task.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
+};
 const doDonateHealthData = async (study, list, procesingData, successData) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to donate your health data.');
   if (!touchFaceIdSession) {
@@ -296,6 +304,7 @@ let AppController = {
   doJoinStudy,
   doLeaveStudy,
   doStudyTask,
+  doCompletedStudyTask,
   doDonateHealthData,
   doBitmarkHealthData,
   doDownloadStudyConsent,

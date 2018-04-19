@@ -4,17 +4,17 @@ import (
 	"github.com/nsqio/go-nsq"
 )
 
-type notifyClient struct {
-	queues []*nsq.Consumer
-	stop   chan struct{}
+type NotifyClient struct {
+	Queues []*nsq.Consumer
+	Stop   chan struct{}
 }
 
-func (nc *notifyClient) close() {
-	close(nc.stop)
+func (nc *NotifyClient) Close() {
+	close(nc.Stop)
 }
 
-func (nc *notifyClient) connect(hostPort string) error {
-	for _, queue := range nc.queues {
+func (nc *NotifyClient) Connect(hostPort string) error {
+	for _, queue := range nc.Queues {
 		if err := queue.ConnectToNSQD(hostPort); err != nil {
 			return err
 		}
@@ -23,7 +23,7 @@ func (nc *notifyClient) connect(hostPort string) error {
 	return nil
 }
 
-func (nc *notifyClient) add(topic, channel string, handler nsq.Handler) error {
+func (nc *NotifyClient) Add(topic, channel string, handler nsq.Handler) error {
 	config := nsq.NewConfig()
 	q, err := nsq.NewConsumer(topic, channel, config)
 	if err != nil {
@@ -32,7 +32,7 @@ func (nc *notifyClient) add(topic, channel string, handler nsq.Handler) error {
 
 	q.AddHandler(handler)
 
-	nc.queues = append(nc.queues, q)
+	nc.Queues = append(nc.Queues, q)
 
 	return nil
 }

@@ -164,11 +164,21 @@ export default StyleSheet.create({
     fontSize: 14,
     fontWeight: '900',
   },
+  donationTaskDescriptionArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
   donationTaskDescription: {
     marginTop: 3,
     fontFamily: 'Avenir light',
     fontSize: 14,
     fontWeight: '300',
+  },
+  donationTaskImportantIcon: {
+    width: 18,
+    height: 18,
+    resizeMode: 'contain',
   },
 
   completedTransfer: {

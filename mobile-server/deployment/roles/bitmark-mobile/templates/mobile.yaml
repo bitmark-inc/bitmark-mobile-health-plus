@@ -6,6 +6,7 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "{{ aws_ssl_arn }}"
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
   name: bitmark-mobile-api
+  namespace: mobile
   labels:
     app: bitmark-mobile
 spec:
@@ -23,6 +24,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bitmark-mobile-internal
+  namespace: mobile
   labels:
     app: bitmark-mobile
 spec:
@@ -40,6 +42,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: bitmark-mobile
+  namespace: mobile
   labels:
     app: bitmark-mobile
 spec:
@@ -51,7 +54,7 @@ spec:
     spec:
       containers:
         - name: bitmark-mobile
-          image: 083397868157.dkr.ecr.ap-northeast-1.amazonaws.com/bitmark-mobile:latest
+          image: 083397868157.dkr.ecr.ap-northeast-1.amazonaws.com/bitmark-mobile:c9b7afd
           ports:
             - name: api
               containerPort: 9005

@@ -49,7 +49,6 @@ class MainComponent extends Component {
     };
     this.appState = AppState.currentState;
 
-
     // setTimeout(() => {
     //   console.log('send notification');
     //   PushNotification.localNotification({
