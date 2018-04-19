@@ -36,9 +36,10 @@ export class TransactionDetailComponent extends React.Component {
 
   doReject() {
     Alert.alert('Are you sure you want to reject this property transfer request?', '', [{
-      text: 'NO',
+      text: 'No',
     }, {
-      text: 'YES',
+      style: 'cancel',
+      text: 'Yes',
       onPress: () => {
         AppController.doRejectTransferBitmark(this.state.transferOffer, { indicator: true, }, {
           indicator: false, title: 'Transfer Rejected!', message: 'You’ve rejected the bitmark transfer request! '
