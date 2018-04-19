@@ -187,7 +187,7 @@ export class LocalIssueFileComponent extends React.Component {
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
-            <Text style={defaultStyle.headerTitle}>PHOTOS</Text>
+            <Text style={defaultStyle.headerTitle}>REGISTER</Text>
             <TouchableOpacity style={defaultStyle.headerRight} />
           </View>)}
           contentInScroll={true}

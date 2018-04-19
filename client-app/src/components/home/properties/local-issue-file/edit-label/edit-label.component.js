@@ -54,7 +54,7 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
-          <Text style={[defaultStyle.headerTitle, { color: this.state.label ? 'black' : '#C1C1C1' }]}>{this.state.label || 'LABEL'}</Text>
+          <Text style={[defaultStyle.headerTitle, { color: this.state.label ? 'black' : '#C1C1C1' }]}>{this.state.label || `LABEL ${this.props.navigation.state.params.key + 1}`}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
             this.props.navigation.state.params.onEndChangeMetadataKey(this.props.navigation.state.params.key, this.state.label);
             this.props.navigation.goBack();

@@ -32,7 +32,7 @@ export class TransactionsComponent extends React.Component {
     this.handerChangeCompletedTransaction = this.handerChangeCompletedTransaction.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
-    this.handerLoadFistData = this.handerLoadFistData.bind(this);
+    this.handerLoadingData = this.handerLoadingData.bind(this);
     this.clickToActionRequired = this.clickToActionRequired.bind(this);
     this.generateData = this.generateData.bind(this);
     this.clickToCompleted = this.clickToCompleted.bind(this);
@@ -46,7 +46,7 @@ export class TransactionsComponent extends React.Component {
       actionRequired,
       completed,
       donationInformation,
-      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+      isLoadingData: DataController.isLoadingData(),
     };
   }
 
@@ -60,7 +60,7 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-    EventEmiterService.on(EventEmiterService.events.APP_LOAD_FIRST_DATA, this.handerLoadFistData);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -73,7 +73,7 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOAD_FIRST_DATA, this.handerLoadFistData);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
   generateData() {
@@ -181,7 +181,7 @@ export class TransactionsComponent extends React.Component {
     console.log('actionRequired, completed, donationInformation handerDonationInformationChange:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
-      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+      isLoadingData: DataController.isLoadingData(),
     });
   }
   handerChangePendingTransactions() {
@@ -189,7 +189,7 @@ export class TransactionsComponent extends React.Component {
     console.log('actionRequired, completed, donationInformation handerChangePendingTransactions:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
-      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+      isLoadingData: DataController.isLoadingData(),
     });
   }
   handerChangeCompletedTransaction() {
@@ -197,12 +197,12 @@ export class TransactionsComponent extends React.Component {
     console.log('actionRequired, completed, donationInformation handerChangeCompletedTransaction:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
-      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+      isLoadingData: DataController.isLoadingData(),
     });
   }
-  handerLoadFistData() {
+  handerLoadingData() {
     this.setState({
-      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+      isLoadingData: DataController.isLoadingData(),
     });
   }
 
@@ -212,7 +212,7 @@ export class TransactionsComponent extends React.Component {
       console.log('actionRequired, completed, donationInformation :', actionRequired, completed, donationInformation);
       this.setState({
         actionRequired, completed, donationInformation,
-        doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
+        isLoadingData: DataController.isLoadingData(),
       });
     }).catch((error) => {
       console.log('doReloadUserData error :', error);
@@ -316,7 +316,7 @@ export class TransactionsComponent extends React.Component {
 
         <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length === 0 && this.state.doneLoadDataFirstTime && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO ACTIONS REQUIRED.</Text>
               <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where you will receive any requests that require your signature.</Text>
             </View>}
@@ -346,7 +346,7 @@ export class TransactionsComponent extends React.Component {
                 }} />
             </View>}
 
-            {this.state.subTab === SubTabs.completed && this.state.completed && this.state.completed.length === 0 && this.state.doneLoadDataFirstTime && <View style={transactionsStyle.contentSubTab}>
+            {this.state.subTab === SubTabs.completed && this.state.completed && this.state.completed.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY.</Text>
               <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where your history of completed transaction will be stored.</Text>
             </View>}
@@ -388,7 +388,7 @@ export class TransactionsComponent extends React.Component {
                   )
                 }} />
             </View >}
-            {!this.state.doneLoadDataFirstTime && <View style={transactionsStyle.contentSubTab}>
+            {!this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
               <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>

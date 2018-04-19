@@ -18,7 +18,7 @@ let userData = {
   transactions: null,
   donationInformation: null,
 };
-let doneFirstTimeLoadData = false;
+let isLoadingData = false;
 // ================================================================================================================================================
 // ================================================================================================================================================
 
@@ -189,19 +189,26 @@ const runOnBackground = async () => {
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
   }
   if (userInformation && userInformation.bitmarkAccountNumber) {
-    Promise.all([
-      runGetTransactionsInBackground(),
-      runGetActiveIncomingTransferOfferInBackground(),
-      runGetDonationInformationInBackground(),
-      runGetLocalBitmarksInBackground(),
-    ]).then(() => {
-      doneFirstTimeLoadData = true;
-      EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
-    });
-  } else {
-    doneFirstTimeLoadData = true;
-    EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
+    let runGetAllData = () => {
+      return new Promise((resolve) => {
+        Promise.all([
+          runGetTransactionsInBackground(),
+          runGetActiveIncomingTransferOfferInBackground(),
+          runGetDonationInformationInBackground(),
+          runGetLocalBitmarksInBackground(),
+        ]).then(resolve);
+      });
+    };
+    await runGetAllData();
   }
+};
+
+const doReloadUserData = async () => {
+  isLoadingData = false;
+  EventEmiterService.emit(EventEmiterService.events.APP_LOADING_DATA, isLoadingData);
+  await runOnBackground();
+  isLoadingData = true;
+  EventEmiterService.emit(EventEmiterService.events.APP_LOADING_DATA, isLoadingData);
 };
 
 // ================================================================================================================================================
@@ -222,7 +229,7 @@ const stopInterval = () => {
 // ================================================================================================================================================
 // ================================================================================================================================================
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
-  await runOnBackground();
+  await doReloadUserData();
   startInterval();
   if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
     await NotificationService.doCheckNotificaitonPermission();
@@ -282,8 +289,8 @@ const doOpenApp = async () => {
       userData.localAssets = localAssets || [];
     }
   }
-  doneFirstTimeLoadData = userData.transactions && userData.activeIncompingTransferOffers && userData.donationInformation && userData.localAssets;
-  EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
+  isLoadingData = userData.transactions && userData.activeIncompingTransferOffers && userData.donationInformation && userData.localAssets;
+  EventEmiterService.emit(EventEmiterService.events.APP_LOADING_DATA, isLoadingData);
   console.log('userInformation :', userInformation);
   console.log('userData :', userData);
   return userInformation;
@@ -437,7 +444,7 @@ const DataController = {
   doLogin,
   doLogout,
   doStartBackgroundProcess,
-  doReloadUserData: runOnBackground,
+  doReloadUserData,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,
@@ -457,7 +464,7 @@ const DataController = {
   getApplicationBuildNumber,
   getLocalBitmarkInformation,
   getDonationInformation,
-  isDoneFirstimeLoadData: () => doneFirstTimeLoadData,
+  isLoadingData: () => isLoadingData,
 };
 
 export { DataController };

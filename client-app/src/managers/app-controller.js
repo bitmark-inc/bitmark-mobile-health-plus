@@ -125,7 +125,7 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
 };
 
 const doReloadUserData = async () => {
-  return await processing(DataController.doReloadUserData());
+  return await DataController.doReloadUserData();
 };
 
 const doGetTransferOfferDetail = async (transferOfferId) => {

@@ -32,8 +32,8 @@ export default StyleSheet.create({
     paddingBottom: 4,
   },
   removeLabelNumberIcon: {
-    width: 10,
-    height: 10,
+    width: 12,
+    height: 12,
     resizeMode: 'contain',
   },
   inputLabelBar: {

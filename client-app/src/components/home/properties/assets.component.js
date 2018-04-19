@@ -24,6 +24,8 @@ export class AssetsComponent extends React.Component {
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
+    this.handerLoadingData = this.handerLoadingData.bind(this);
+
 
     let subtab = SubTabs.local;
     let localAssets = DataController.getUserBitmarks().localAssets;
@@ -37,10 +39,12 @@ export class AssetsComponent extends React.Component {
       copyText: 'COPY',
       assets,
       existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0,
+      isLoadingData: DataController.isLoadingData(),
     };
   }
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -51,10 +55,15 @@ export class AssetsComponent extends React.Component {
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
   handerChangeLocalBitmarks() {
     this.switchSubtab(this.state.subtab);
+  }
+
+  handerLoadingData() {
+    this.setState({ isLoadingData: DataController.isLoadingData() });
   }
 
   reloadData() {
@@ -152,9 +161,6 @@ export class AssetsComponent extends React.Component {
 
         {this.state.subtab !== SubTabs.global && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
-            {!this.state.assets && <View style={assetsStyle.messageNoAssetArea}>
-              <ActivityIndicator size="large" style={{ marginTop: 46, }} />
-            </View>}
             {(this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
@@ -171,7 +177,7 @@ export class AssetsComponent extends React.Component {
               extraData={this.state}
               data={this.state.assets || []}
               renderItem={({ item }) => {
-                return (<TouchableOpacity style={[assetsStyle.assetRowArea, { backgroundColor: item.asset.isViewed ? 'white' : '#F2FAFF' }]} onPress={() => {
+                return (<TouchableOpacity style={[assetsStyle.assetRowArea]} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
                 }} >
                   {!item.asset.isViewed && <View style={{
@@ -194,7 +200,7 @@ export class AssetsComponent extends React.Component {
                     <Text style={[assetsStyle.assetName, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
                       <Text style={[assetsStyle.assetCreator, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
-                        {'[' + item.asset.registrant.substring(0, 4) + '...' + item.asset.registrant.substring(item.asset.registrant.length - 4, item.asset.registrant.length) + ']'}
+                        ISSUER: {'[' + item.asset.registrant.substring(0, 4) + '...' + item.asset.registrant.substring(item.asset.registrant.length - 4, item.asset.registrant.length) + ']'}
                       </Text>
                     </View>
                     <View style={assetsStyle.assetQuantityArea}>
@@ -206,6 +212,9 @@ export class AssetsComponent extends React.Component {
                 </TouchableOpacity>)
               }}
             />}
+            {!this.state.isLoadingData && <View style={assetsStyle.messageNoAssetArea}>
+              <ActivityIndicator size="large" style={{ marginTop: 46, }} />
+            </View>}
           </TouchableOpacity>
         </ScrollView>}
         {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
