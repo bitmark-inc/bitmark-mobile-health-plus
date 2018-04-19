@@ -285,12 +285,14 @@ const doOpenApp = async () => {
     let donationInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION);
     if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
       userData.donationInformation = donationInformation || {};
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
     }
     let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
     localAssets = localAssets.length > 0 ? localAssets : [];
     localAssets = recheckLocalAssets(localAssets);
     if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
       userData.localAssets = localAssets || [];
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
     }
   }
   isLoadingData = userData.transactions && userData.activeIncompingTransferOffers && userData.donationInformation && userData.localAssets;
@@ -304,6 +306,7 @@ const doActiveBitmarkHealthData = async (touchFaceIdSession, activeBitmarkHealth
   let donationInformation = await DonationService.doActiveBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, activeBitmarkHealthDataAt);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
   return donationInformation;
@@ -312,6 +315,7 @@ const doInactiveBitmarkHealthData = async (touchFaceIdSession) => {
   let donationInformation = await DonationService.doInactiveBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
   return donationInformation;
@@ -320,6 +324,7 @@ const doJoinStudy = async (touchFaceIdSession, studyId) => {
   let donationInformation = await DonationService.doJoinStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
   return donationInformation;
@@ -328,6 +333,7 @@ const doLeaveStudy = async (touchFaceIdSession, studyId) => {
   let donationInformation = await DonationService.doLeaveStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
   return donationInformation;
@@ -336,6 +342,7 @@ const doCompletedStudyTask = async (touchFaceIdSession, study, taskType, result)
   let donationInformation = await DonationService.doCompletedStudyTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, study, taskType, result);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
   return donationInformation;
@@ -345,6 +352,7 @@ const doDonateHealthData = async (touchFaceIdSession, study, list) => {
   let donationInformation = await DonationService.doDonateHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, study, list);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
   return donationInformation;
@@ -358,6 +366,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     userData.donationInformation.commonTaskIds.bitmark_health_data);
   if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
     userData.donationInformation = donationInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
   return donationInformation;
