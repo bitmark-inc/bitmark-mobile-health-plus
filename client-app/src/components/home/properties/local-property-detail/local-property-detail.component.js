@@ -109,6 +109,7 @@ export class LocalPropertyDetailComponent extends React.Component {
         text: 'NO'
       }, {
         text: 'YES',
+        style: 'cancel',
         onPress: () => {
           AppController.doTrackingBitmark(this.state.asset, this.state.bitmark).catch(error => {
             EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);

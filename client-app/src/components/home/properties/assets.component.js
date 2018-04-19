@@ -44,7 +44,6 @@ export class AssetsComponent extends React.Component {
       copyText: 'COPY',
       assets,
       existNewAsset: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0,
-      doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(),
       trackingBitmarks,
       existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
       isLoadingData: DataController.isLoadingData(),
@@ -70,9 +69,6 @@ export class AssetsComponent extends React.Component {
 
   handerChangeLocalBitmarks() {
     this.switchSubtab(this.state.subtab);
-  }
-  handerLoadFistData() {
-    this.setState({ doneLoadDataFirstTime: DataController.isDoneFirstimeLoadData(), });
   }
   handerChangeTrackingBitmarks() {
     this.switchSubtab(this.state.subtab);
@@ -291,7 +287,7 @@ export class AssetsComponent extends React.Component {
                 </TouchableOpacity>)
               }}
             />}
-            {!this.state.doneLoadDataFirstTime && <View style={assetsStyle.messageNoAssetArea}>
+            {!this.state.isLoadingData && <View style={assetsStyle.messageNoAssetArea}>
               <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>
