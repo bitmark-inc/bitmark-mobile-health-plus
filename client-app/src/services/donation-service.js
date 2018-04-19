@@ -44,9 +44,6 @@ const doGetHealthKitData = async (listTypes, startDate, endDate) => {
 };
 
 const doCheckDataSource = async (donationInformation, oldDonationInformation) => {
-  if (!donationInformation.activeBitmarkHealthDataAt) {
-    return donationInformation;
-  }
   await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
   let startDate = moment().toDate();
   startDate.setDate(startDate.getDate() - 7);
