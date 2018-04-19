@@ -76,7 +76,7 @@ export class AssetsComponent extends React.Component {
   switchSubtab(subtab) {
     let localAssets = DataController.getUserBitmarks().localAssets;
     let assets = null;
-    if (subtab === SubTabs.local && localAssets) {
+    if (localAssets) {
       assets = this.convertToFlatListData(localAssets);
     }
     this.setState({ subtab, assets, existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0, });
