@@ -8,11 +8,15 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/internalapi"
 	"github.com/bitmark-inc/mobile-app/mobile-server/server"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher"
+	"github.com/bitmark-inc/mobile-app/mobile-server/watcher/twosigs"
+	nsq "github.com/nsqio/go-nsq"
 
 	"github.com/hashicorp/hcl"
 	"github.com/jackc/pgx"
@@ -39,11 +43,15 @@ type Configuration struct {
 		SSLMode  string `hcl:"sslmode"`
 	} `hcl:"db"`
 	External struct {
-		CoreAPIServer string `hcl:"coreAPIServer"`
-		MessageQueue  string `hcl:"messageQueue"`
-		IFTTTServer   string `hcl:"iftttServer"`
-		PushServer    string `hcl:"pushServer"`
+		CoreAPIServer  string `hcl:"coreAPIServer"`
+		MessageQueue   string `hcl:"messageQueue"`
+		MessageChannel string `hcl:"messageChannel"`
+		IFTTTServer    string `hcl:"iftttServer"`
+		PushServer     string `hcl:"pushServer"`
 	}
+	DataDonation struct {
+		ResearcherAccounts map[string]string `hcl:"researchers"`
+	} `hcl:"data-donation"`
 }
 
 func (config *Configuration) Load(configFile string) error {
@@ -89,6 +97,19 @@ func initializeLog() {
 	log.SetLevel(log.DebugLevel)
 }
 
+func initializeWatcher(c *Configuration, store pushstore.PushStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *watcher.NotifyClient {
+	nc := &watcher.NotifyClient{
+		Queues: make([]*nsq.Consumer, 0),
+		Stop:   make(chan struct{}),
+	}
+
+	twosigsHandler := twosigs.New(store, pushAPIClient, gatewayClient, c.DataDonation.ResearcherAccounts)
+	nc.Add("transfer-offer", c.External.MessageChannel, twosigsHandler)
+	nc.Connect(c.External.MessageQueue)
+
+	return nc
+}
+
 func main() {
 	var configFile string
 	var config Configuration
@@ -102,18 +123,25 @@ func main() {
 		log.Panic("can not open config file", err)
 	}
 
-	log.Debug(config)
-
 	dbConn, err := openDb(config.DB.Host, uint16(config.DB.Port), config.DB.DBName, config.DB.Username, config.DB.Password)
 	if err != nil {
 		log.Panic("cannot connect to db", err)
 	}
 
 	pushStore := pushstore.NewPGStore(dbConn)
-	pushClient := gorush.New(config.External.PushServer)
+	bitmarkStore := bitmarkstore.New(dbConn)
 
-	w := watcher.New(config.External.MessageQueue, pushStore, pushClient)
-	w.Connect(config.External.MessageQueue)
+	pushClient := gorush.New(config.External.PushServer)
+	gatewayClient := gateway.New(config.External.CoreAPIServer)
+
+	if !pushClient.Ping() {
+		log.Panic("Failed to ping to push server")
+	}
+	if !gatewayClient.Ping() {
+		log.Panic("Failed to ping to gateway server")
+	}
+
+	nc := initializeWatcher(&config, pushStore, pushClient, gatewayClient)
 
 	c := make(chan os.Signal, 2)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
@@ -121,12 +149,12 @@ func main() {
 		<-c
 		log.Info("Server is preparing to stop")
 		dbConn.Close()
-		w.Close()
+		nc.Close()
 		os.Exit(1)
 	}()
 
-	mobileAPIServer := server.New(dbConn)
-	internalAPIServer := internalapi.New(dbConn, pushStore, pushClient)
+	mobileAPIServer := server.New(pushStore, bitmarkStore)
+	internalAPIServer := internalapi.New(pushStore, pushClient)
 
 	g.Go(func() error {
 		return mobileAPIServer.Run(fmt.Sprintf(":%d", config.Listen.MobileAPI))

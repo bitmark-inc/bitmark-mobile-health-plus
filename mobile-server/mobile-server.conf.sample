@@ -21,3 +21,8 @@ db {
     SSLMode = "disable"
 }
 
+data-donation {
+    researchers = {
+        egQvuKnfRkztqY161HW17QmHDihc6SrrFt8RH393LoQVJxHZhW = "Madelena"
+    }
+}

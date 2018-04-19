@@ -2,19 +2,18 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 )
 
 type Server struct {
 	router *gin.Engine
 
-	dbConn *pgx.Conn
-
 	// Stores
-	pushStore pushstore.PushStore
+	pushStore    pushstore.PushStore
+	bitmarkStore bitmarkstore.BitmarkStore
 }
 
 func (s *Server) Run(addr string) error {
@@ -30,6 +29,14 @@ func (s *Server) Run(addr string) error {
 		pushUUIDs.DELETE("/:token", s.RemovePushToken)
 	}
 
+	trackingBitmarks := api.Group("/tracking_bitmarks")
+	trackingBitmarks.Use(authenticate())
+	{
+		trackingBitmarks.POST("", s.AddBitmarkTracking)
+		trackingBitmarks.DELETE("/:bitmarkid", s.DeleteBitmarkTracking)
+		trackingBitmarks.GET("", s.ListBitmarkTracking)
+	}
+
 	notifications := api.Group("/notifications")
 	notifications.Use(authenticate())
 	{
@@ -39,14 +46,12 @@ func (s *Server) Run(addr string) error {
 	return s.router.Run(addr)
 }
 
-func New(db *pgx.Conn) *Server {
+func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore) *Server {
 	r := gin.New()
 
-	store := pushstore.NewPGStore(db)
-
 	return &Server{
-		router:    r,
-		dbConn:    db,
-		pushStore: store,
+		router:       r,
+		pushStore:    pushStore,
+		bitmarkStore: bitmarkStore,
 	}
 }

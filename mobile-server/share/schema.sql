@@ -70,10 +70,12 @@ CREATE TABLE mobile.push_item (
 
 -- TABLE bitmark_tracking
 CREATE TABLE mobile.bitmark_tracking (
+    account_number TEXT REFERENCES mobile.account(account_number),
     bitmark_id TEXT,
-    account TEXT,
+    tx_id TEXT,
+    status TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-      PRIMARY KEY(bitmark_id, account)
+      PRIMARY KEY(bitmark_id, account_number)
 );
 
 -- finished
