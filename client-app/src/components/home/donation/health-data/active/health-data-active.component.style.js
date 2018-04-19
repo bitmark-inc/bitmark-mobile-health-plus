@@ -66,6 +66,7 @@ export default StyleSheet.create({
     fontSize: 17,
     fontWeight: '900',
     width: convertWidth(337),
+    color: '#0060F2',
     marginTop: 81,
   },
 
