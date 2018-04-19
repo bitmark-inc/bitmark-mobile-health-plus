@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { union } from 'lodash';
 import {
   DonationModel,
   CommonModel,
@@ -44,11 +45,19 @@ const doGetHealthKitData = async (listTypes, startDate, endDate) => {
 };
 
 const doCheckDataSource = async (donationInformation, oldDonationInformation) => {
-  await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
+  let listDataTypes = [];
+  if (donationInformation.activeBitmarkHealthDataAt) {
+    listDataTypes = donationInformation.allDataTypes;
+  } else {
+    for (let joinedStudy of donationInformation.joinedStudies) {
+      listDataTypes = union(listDataTypes, joinedStudy.dataTypes);
+    }
+  }
+  await AppleHealthKitModel.initHealthKit(listDataTypes);
   let startDate = moment().toDate();
   startDate.setDate(startDate.getDate() - 7);
   let endDate = moment().toDate();
-  let mapData = await doGetHealthKitData(donationInformation.allDataTypes, startDate, endDate);
+  let mapData = await doGetHealthKitData(listDataTypes, startDate, endDate);
   let dataSourceInactiveCompletedTasks = [];
   let dataSourceStatuses = [];
   for (let type in mapData) {
