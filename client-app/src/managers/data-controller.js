@@ -65,6 +65,7 @@ const runGetActiveIncomingTransferOfferInBackground = () => {
       activeIncompingTransferOffers = activeIncompingTransferOffers || [];
       if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
         userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, userData.activeIncompingTransferOffers);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
       }
       resolve();
@@ -89,6 +90,7 @@ const runGetTransactionsInBackground = () => {
       transactions = transactions || [];
       if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
         userData.transactions = transactions;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, userData.transactions);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
       }
       resolve();
@@ -114,6 +116,7 @@ const runGetLocalBitmarksInBackground = () => {
       localAssets = recheckLocalAssets(localAssets);
       if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
         userData.localAssets = localAssets;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, userData.localAssets);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
       }
       resolve();
@@ -138,6 +141,7 @@ const runGetDonationInformationInBackground = () => {
       donationInformation = donationInformation || {};
       if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
         userData.donationInformation = donationInformation;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
         EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
       }
       resolve();
