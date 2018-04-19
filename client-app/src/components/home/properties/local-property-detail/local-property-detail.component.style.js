@@ -148,7 +148,7 @@ export default StyleSheet.create({
     width: convertWidth(161),
   },
   provenanceListArea: {
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   provenancesRow: {
     flexDirection: 'row',

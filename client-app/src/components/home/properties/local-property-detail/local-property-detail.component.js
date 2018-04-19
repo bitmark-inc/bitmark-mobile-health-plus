@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
-  View, Text, TouchableOpacity, Image, FlatList, ScrollView, TouchableWithoutFeedback,
+  View, Text, TouchableOpacity, Image, FlatList, ScrollView, ActivityIndicator, TouchableWithoutFeedback,
   Clipboard,
   Share,
   Alert,
@@ -28,11 +28,8 @@ export class LocalPropertyDetailComponent extends React.Component {
 
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
-
     let trackingBitmark = DataController.getTrackingBitmarkInformation(bitmark.id);
-
     let provenanceViewed = {};
-
     this.state = {
       provenanceViewed,
       isTracking: !!trackingBitmark,
@@ -41,21 +38,23 @@ export class LocalPropertyDetailComponent extends React.Component {
       copied: false,
       displayTopButton: false,
       provenance: [],
+      loading: true,
     };
-    AppController.doGetProvenance(this.state.bitmark).then(provenance => {
+    DataController.doGetProvenance(bitmark.id).then(provenance => {
       let provenanceViewed = {};
       provenance.forEach((history, index) => {
         history.key = index;
         provenanceViewed[history.tx_id] = history.isViewed;
       });
-      console.log('provenanceViewed :', provenanceViewed);
-      this.setState({ provenance, provenanceViewed });
+      this.setState({ provenance, provenanceViewed, loading: false });
       if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
         DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
       } else {
         DataController.doUpdateViewStatus(null, this.state.bitmark.id);
       }
     }).catch(error => {
+      this.setState({ loading: false });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
       console.log('error 2:', error);
     });
   }
@@ -69,19 +68,21 @@ export class LocalPropertyDetailComponent extends React.Component {
   }
 
   handerChangeTrackingBitmarks() {
-    AppController.doGetProvenance(this.state.bitmark).then(provenance => {
+    this.setState({ loading: true });
+    DataController.doGetProvenance(this.state.bitmark.id).then(provenance => {
       let trackingBitmark = DataController.getTrackingBitmarkInformation(this.state.bitmark.id);
       console.log('trackingBitmark :', trackingBitmark);
       provenance.forEach((history, index) => {
         history.key = index;
       });
-      this.setState({ provenance, isTracking: !!trackingBitmark, })
+      this.setState({ provenance, isTracking: !!trackingBitmark, loading: false });
       if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
         DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
       } else {
         DataController.doUpdateViewStatus(null, this.state.bitmark.id);
       }
     }).catch(error => {
+      this.setState({ loading: false });
       console.log('error 1 :', error);
     });
   }
@@ -201,6 +202,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                       </TouchableOpacity>);
                     }}
                   />
+                  {this.state.loading && <ActivityIndicator style={{ marginTop: 40 }} size="large" />}
                 </View>
               </View>
             </TouchableOpacity>
