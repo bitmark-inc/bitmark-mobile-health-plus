@@ -12,6 +12,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/internalapi"
 	"github.com/bitmark-inc/mobile-app/mobile-server/server"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher"
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher/twosigs"
@@ -128,8 +129,17 @@ func main() {
 	}
 
 	pushStore := pushstore.NewPGStore(dbConn)
+	bitmarkStore := bitmarkstore.New(dbConn)
+
 	pushClient := gorush.New(config.External.PushServer)
 	gatewayClient := gateway.New(config.External.CoreAPIServer)
+
+	if !pushClient.Ping() {
+		log.Panic("Failed to ping to push server")
+	}
+	if !gatewayClient.Ping() {
+		log.Panic("Failed to ping to gateway server")
+	}
 
 	nc := initializeWatcher(&config, pushStore, pushClient, gatewayClient)
 
@@ -143,8 +153,8 @@ func main() {
 		os.Exit(1)
 	}()
 
-	mobileAPIServer := server.New(dbConn)
-	internalAPIServer := internalapi.New(dbConn, pushStore, pushClient)
+	mobileAPIServer := server.New(pushStore, bitmarkStore)
+	internalAPIServer := internalapi.New(pushStore, pushClient)
 
 	g.Go(func() error {
 		return mobileAPIServer.Run(fmt.Sprintf(":%d", config.Listen.MobileAPI))

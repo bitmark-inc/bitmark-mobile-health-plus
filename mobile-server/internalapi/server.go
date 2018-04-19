@@ -2,7 +2,6 @@ package internalapi
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
@@ -11,8 +10,6 @@ import (
 
 type InternalAPIServer struct {
 	router *gin.Engine
-
-	dbConn *pgx.Conn
 
 	// Stores
 	pushStore pushstore.PushStore
@@ -33,12 +30,11 @@ func (s *InternalAPIServer) Run(addr string) error {
 	return s.router.Run(addr)
 }
 
-func New(db *pgx.Conn, pushStore pushstore.PushStore, pushClient *gorush.Client) *InternalAPIServer {
+func New(pushStore pushstore.PushStore, pushClient *gorush.Client) *InternalAPIServer {
 	r := gin.New()
 
 	return &InternalAPIServer{
 		router:        r,
-		dbConn:        db,
 		pushStore:     pushStore,
 		pushAPIClient: pushClient,
 	}

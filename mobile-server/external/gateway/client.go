@@ -6,6 +6,7 @@ import (
 	"time"
 
 	bitmarksdk "github.com/bitmark-inc/bitmark-sdk-go"
+	log "github.com/sirupsen/logrus"
 )
 
 type Client struct {
@@ -14,7 +15,9 @@ type Client struct {
 }
 
 func New(url string) *Client {
-	return &Client{url, http.DefaultClient}
+	return &Client{
+		url:    url,
+		client: http.DefaultClient}
 }
 
 type TransferOffer struct {
@@ -43,4 +46,10 @@ func (c *Client) GetOfferIdInfo(offerID string) (*TransferOffer, error) {
 	}
 
 	return offer["offer"], nil
+}
+
+func (c *Client) Ping() bool {
+	log.Info("Ping to:", c.url)
+	_, err := c.client.Head(c.url)
+	return err == nil
 }

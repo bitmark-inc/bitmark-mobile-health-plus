@@ -76,3 +76,9 @@ func (c *Client) Send(title, message string, receivers map[string]map[string][]s
 
 	return err
 }
+
+func (c *Client) Ping() bool {
+	log.Info("Ping to:", c.url)
+	_, err := http.DefaultClient.Head(c.url)
+	return err == nil
+}
