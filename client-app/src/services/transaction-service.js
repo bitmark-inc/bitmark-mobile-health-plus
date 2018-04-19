@@ -19,7 +19,7 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
     let existingOldTransaction = completedTransfers.find(item => item.txid === transaction.id);
     if (existingOldTransaction) {
       existingOldTransaction.status = transaction.status;
-      return;
+      break;
     }
     if (transaction.owner === accountNumber) {
       if (transaction.id && transaction.previous_id) {

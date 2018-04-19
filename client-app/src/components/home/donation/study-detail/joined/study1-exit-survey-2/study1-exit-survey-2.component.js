@@ -127,7 +127,7 @@ export class Study1ExitSurvey2Component extends React.Component {
                   <Image style={styles.madelenaImage} source={require('./../../../../../../../assets/imgs/madelena.png')} />
                   <Text style={[styles.madelenaName,]}>Madelena Ng, Doctoral Candidate</Text>
                   <Text style={[styles.madelenaThankMessage,]}>“Thank you for donating your data, and helping close the gap in women's health.”</Text>
-                  <TouchableOpacity style={[styles.interestedButton, { marginTop: 97 }]}>
+                  <TouchableOpacity style={[styles.interestedButton, { marginTop: 97 }]} onPress={this.doCompletedTask}>
                     <Text style={styles.interestedButtonText}>Done</Text>
                   </TouchableOpacity>
                 </View>

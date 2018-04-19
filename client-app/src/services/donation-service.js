@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { union } from 'lodash';
 import {
   DonationModel,
   CommonModel,
@@ -44,11 +45,21 @@ const doGetHealthKitData = async (listTypes, startDate, endDate) => {
 };
 
 const doCheckDataSource = async (donationInformation, oldDonationInformation) => {
-  await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
+  let listDataTypes = [];
+  if (donationInformation.activeBitmarkHealthDataAt) {
+    listDataTypes = donationInformation.allDataTypes;
+  } else {
+    for (let joinedStudy of donationInformation.joinedStudies) {
+      listDataTypes = union(listDataTypes, joinedStudy.dataTypes);
+    }
+  }
+  if (listDataTypes && listDataTypes.length > 0) {
+    await AppleHealthKitModel.initHealthKit(listDataTypes);
+  }
   let startDate = moment().toDate();
   startDate.setDate(startDate.getDate() - 7);
   let endDate = moment().toDate();
-  let mapData = await doGetHealthKitData(donationInformation.allDataTypes, startDate, endDate);
+  let mapData = await doGetHealthKitData(listDataTypes, startDate, endDate);
   let dataSourceInactiveCompletedTasks = [];
   let dataSourceStatuses = [];
   for (let type in mapData) {
@@ -352,7 +363,8 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     };
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount, extra);
     return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
-  } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
+  } else if ((study.studyId === 'study2' && taskType === study.taskIds.task3) ||
+    (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2)) {
     return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
   }
   throw new Error('Can not detect task and study');

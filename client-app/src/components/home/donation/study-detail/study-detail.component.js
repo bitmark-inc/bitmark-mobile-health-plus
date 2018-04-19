@@ -60,7 +60,9 @@ export class StudyDetailComponent extends React.Component {
     Alert.alert('Leave Study', "Are you sure you want to completely withdraw from the study? You will no longer be able to donate data to this study. This action cannot be undone.", [{
       text: 'Cancel'
     }, {
-      text: 'Leave', onPress: () => {
+      text: 'Leave',
+      style: 'cancel',
+      onPress: () => {
         AppController.doLeaveStudy(this.state.study.studyId).then((result) => {
           if (result !== null) {
             this.props.navigation.goBack();

@@ -37,13 +37,15 @@ export class ApplicationDetailComponent extends React.Component {
       Alert.alert('Send Feedback', 'Have a comment or suggestion? We are always making improvements based on community feedback', [{
         text: 'Cancel', onPress: () => { }
       }, {
-        text: 'Send', onPress: sendFeedback,
+        text: 'Send', style: 'cancel', onPress: sendFeedback,
       }]);
     };
 
     const rateApp = () => {
       Alert.alert('App Store Review', 'Positive App Store ratings and reviews help support Bitmark. How would you rate us?', [{
-        text: '5 Stars!', onPress: () => { Linking.openURL(config.appLink) }
+        text: '5 Stars!',
+        style: 'cancel',
+        onPress: () => { Linking.openURL(config.appLink) }
       }, {
         text: '4 Stars or less', onPress: requestSendFeedback,
       }]);

@@ -42,7 +42,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',
-    color: '#0060F2'
+    color: '#0060F2',
   },
   optionButtonNextIcon: {
     width: 15,
@@ -54,7 +54,7 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     textAlign: 'center',
-    color: 'black',
+    color: '#0060F2',
     marginLeft: convertWidth(19),
   },
   message: {

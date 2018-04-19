@@ -69,10 +69,11 @@ export class AccountDetailComponent extends React.Component {
   }
 
   inactiveBitmarkHealthData() {
-    Alert.alert('Are you sure you want to remove bitmark health data?', '', [{
+    Alert.alert('Are you sure you want to revoke access to your HealthKit data?', '', [{
       text: 'No',
     }, {
-      text: 'YES',
+      text: 'Yes',
+      style: 'cancel',
       onPress: () => {
         AppController.doInactiveBitmarkHealthData().then((result) => {
           if (result) {

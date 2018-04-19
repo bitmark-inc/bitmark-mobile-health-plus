@@ -32,8 +32,7 @@ if (config.network === NETWORKS.testnet) {
   config.registry_server_url = 'https://registry.bitmark.com';
   config.trade_server_url = 'https://trade.bitmark.com';
   config.mobile_server_url = 'https://bm.bitmark.com';
-  //TODO
-  // config.donation_server_url = 'https://data-donation.bitmark.com';
+  config.donation_server_url = 'https://data-donation.bitmark.com';
 }
 
 let ios = {

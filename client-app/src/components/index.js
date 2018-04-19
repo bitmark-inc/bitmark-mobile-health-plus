@@ -114,6 +114,7 @@ class MainComponent extends Component {
     }
     Alert.alert(title, message, [{
       text: 'OK',
+      style: 'cancel',
       onPress: () => {
         if (processError && processError.onClose) {
           processError.onClose();
@@ -176,7 +177,9 @@ class MainComponent extends Component {
             if (!this.requiringTouchId) {
               this.requiringTouchId = true;
               Alert.alert('Please enable your Touch ID & Passcode to continue using Bitmark. Settings > Touch ID & Passcode', '', [{
-                text: 'ENABLE', onPress: () => {
+                text: 'ENABLE',
+                style: 'cancel',
+                onPress: () => {
                   Linking.openURL('app-settings:');
                   this.requiringTouchId = false;
                 }

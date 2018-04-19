@@ -23,6 +23,7 @@ export class BitmarkInternetOffComponent extends React.Component {
               text: 'Cancel',
             }, {
               text: 'Retry',
+              style: 'cancel',
               onPress: () => {
                 if (this.props.tryConnectInternet) {
                   this.props.tryConnectInternet();

@@ -10,7 +10,7 @@ import { DataController, AppController } from './../../../managers';
 import transactionsStyle from './transactions.component.style';
 import { EventEmiterService } from '../../../services';
 import defaultStyle from './../../../commons/styles';
-import { sortList } from '../../../utils';
+import { sortList, convertWidth } from '../../../utils';
 import { config } from '../../../configs';
 
 const SubTabs = {
@@ -128,11 +128,11 @@ export class TransactionsComponent extends React.Component {
           }
           let donationCompletedTask = (donationInformation.completedTasks || []).find(task => task.bitmarkId === item.txid);
           if (donationCompletedTask && donationCompletedTask.study) {
-            title = 'TRANSFER';
+            title = 'waiting for researcher to accept...'.toUpperCase();
             type = 'DONATION';
-            status = 'pending';
+            status = 'waiting';
             to = donationCompletedTask.study.researcherAccount;
-            researcherName = donationCompletedTask.study.researcherName;
+            researcherName = donationCompletedTask.study.researcherName.substring(0, donationCompletedTask.study.researcherName.indexOf(','));
           }
         } else {
           title = 'TRANSFER';
@@ -147,7 +147,7 @@ export class TransactionsComponent extends React.Component {
           if (donationCompletedTask && donationCompletedTask.study) {
             type = 'DONATION';
             to = donationCompletedTask.study.researcherAccount;
-            researcherName = donationCompletedTask.study.researcherName;
+            researcherName = donationCompletedTask.study.researcherName.substring(0, donationCompletedTask.study.researcherName.indexOf(','));
           }
         }
         completed.push({
@@ -173,12 +173,12 @@ export class TransactionsComponent extends React.Component {
       if (!b || !b.timestamp) return -1;
       return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
     }) : completed;
+    console.log('completed :', completed);
 
     return { actionRequired, completed, donationInformation };
   }
   handerDonationInformationChange() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    console.log('actionRequired, completed, donationInformation handerDonationInformationChange:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -186,7 +186,6 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangePendingTransactions() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    console.log('actionRequired, completed, donationInformation handerChangePendingTransactions:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -194,7 +193,6 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangeCompletedTransaction() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    console.log('actionRequired, completed, donationInformation handerChangeCompletedTransaction:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -355,14 +353,15 @@ export class TransactionsComponent extends React.Component {
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (
-                    <TouchableOpacity style={transactionsStyle.completedTransfer} onPress={() => this.clickToCompleted(item)} disabled={item.status === 'pending'}>
+                    <TouchableOpacity style={transactionsStyle.completedTransfer} onPress={() => this.clickToCompleted(item)} disabled={(item.status === 'pending' || item.status === 'waiting')}>
                       <View style={transactionsStyle.completedTransferHeader}>
                         <Text style={[transactionsStyle.completedTransferHeaderTitle, {
-                          color: item.status === 'pending' ? '#999999' : '#0060F2'
+                          color: (item.status === 'pending' || item.status === 'waiting') ? '#999999' : '#0060F2',
+                          width: item.status === 'waiting' ? 'auto' : convertWidth(102)
                         }]}>{item.title}</Text>
-                        <Text style={[transactionsStyle.completedTransferHeaderValue, {
-                          color: item.status === 'pending' ? '#999999' : '#0060F2'
-                        }]}>{item.status === 'pending' ? 'PENDING...' : moment(item.timestamp).format('YYYY MMM DD HH:mm:ss').toUpperCase()}</Text>
+                        {item.status !== 'waiting' && <Text style={[transactionsStyle.completedTransferHeaderValue, {
+                          color: (item.status === 'pending' || item.status === 'waiting') ? '#999999' : '#0060F2'
+                        }]}>{item.status === 'pending' ? 'PENDING...' : moment(item.timestamp).format('YYYY MMM DD HH:mm:ss').toUpperCase()}</Text>}
                       </View>
                       <View style={transactionsStyle.completedTransferContent}>
                         <View style={transactionsStyle.completedTransferContentRow}>
