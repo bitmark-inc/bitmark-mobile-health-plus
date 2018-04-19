@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView, Image,
+  View, Text, TouchableOpacity, ScrollView, Image, ActivityIndicator,
   Clipboard,
   Alert,
 } from 'react-native';
@@ -23,6 +23,7 @@ export class AccountDetailComponent extends React.Component {
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
     this.inactiveBitmarkHealthData = this.inactiveBitmarkHealthData.bind(this);
+    this.handerLoadingData = this.handerLoadingData.bind(this);
 
     let subTab = (this.props.screenProps.subTab &&
       (this.props.screenProps.subTab === SubTabs.settings || this.props.screenProps.subTab === SubTabs.authorized))
@@ -34,23 +35,29 @@ export class AccountDetailComponent extends React.Component {
       notificationUUIDCopyText: 'COPY',
       userInfo: DataController.getUserInformation(),
       donationInformation: DataController.getDonationInformation(),
+      isLoadingData: DataController.isLoadingData(),
     };
   }
 
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
   handerDonationInformationChange() {
     this.setState({ donationInformation: DataController.getDonationInformation() });
   }
   handerChangeUserInfo() {
     this.setState({ userInfo: DataController.getUserInformation() });
+  }
+  handerLoadingData() {
+    this.setState({ isLoadingData: DataController.isLoadingData() });
   }
 
   switchSubtab(subTab) {
@@ -189,6 +196,7 @@ export class AccountDetailComponent extends React.Component {
                     </View>
                   </View>
                 </View>}
+                {!this.state.isLoadingData && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
               </View>
             </View>}
           </TouchableOpacity>
