@@ -189,13 +189,19 @@ const runOnBackground = async () => {
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
   }
   if (userInformation && userInformation.bitmarkAccountNumber) {
-    await runGetTransactionsInBackground();
-    await runGetActiveIncomingTransferOfferInBackground();
-    await runGetDonationInformationInBackground();
-    await runGetLocalBitmarksInBackground();
+    Promise.all([
+      runGetTransactionsInBackground(),
+      runGetActiveIncomingTransferOfferInBackground(),
+      runGetDonationInformationInBackground(),
+      runGetLocalBitmarksInBackground(),
+    ]).then(() => {
+      doneFirstTimeLoadData = true;
+      EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
+    });
+  } else {
+    doneFirstTimeLoadData = true;
+    EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
   }
-  doneFirstTimeLoadData = true;
-  EventEmiterService.emit(EventEmiterService.events.APP_LOAD_FIRST_DATA, doneFirstTimeLoadData);
 };
 
 // ================================================================================================================================================
