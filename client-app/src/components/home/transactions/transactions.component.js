@@ -173,12 +173,12 @@ export class TransactionsComponent extends React.Component {
       if (!b || !b.timestamp) return -1;
       return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
     }) : completed;
+    console.log('completed :', completed);
 
     return { actionRequired, completed, donationInformation };
   }
   handerDonationInformationChange() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    console.log('actionRequired, completed, donationInformation handerDonationInformationChange:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -186,7 +186,6 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangePendingTransactions() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    console.log('actionRequired, completed, donationInformation handerChangePendingTransactions:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -194,7 +193,6 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangeCompletedTransaction() {
     let { actionRequired, completed, donationInformation } = this.generateData();
-    console.log('actionRequired, completed, donationInformation handerChangeCompletedTransaction:', actionRequired, completed, donationInformation);
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
