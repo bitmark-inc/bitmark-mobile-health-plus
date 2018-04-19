@@ -43,7 +43,6 @@ export class Study1DefaultComponent extends React.Component {
               <Text style={styles.infoAreaItem}>•	 Female</Text>
               <Text style={styles.infoAreaItem}>•	 Not pregnant</Text>
               <Text style={styles.infoAreaItem}>•	 18-55 years old</Text>
-              <Text style={styles.infoAreaItem}>•	 Berkeley student</Text>
             </View>
           </View>
           <View style={styles.infoArea}>
