@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
-  View, Text, TouchableOpacity, Image, FlatList, ScrollView,
+  View, Text, TouchableOpacity, Image, FlatList, ScrollView, ActivityIndicator,
   Clipboard,
   TouchableWithoutFeedback,
   Share,
@@ -17,6 +17,7 @@ import { AppController } from '../../../../managers/app-controller';
 import { EventEmiterService } from '../../../../services';
 import { config } from '../../../../configs';
 import { DataController } from '../../../../managers/data-controller';
+import { BitmarkModel } from '../../../../models';
 
 export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
@@ -25,19 +26,28 @@ export class LocalPropertyDetailComponent extends React.Component {
     this.clickOnProvenance = this.clickOnProvenance.bind(this);
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
+    bitmark.provenance.forEach((history, index) => {
+      history.key = index;
+    });
     this.state = {
       asset,
       bitmark,
       copied: false,
       displayTopButton: false,
+      loading: true,
     };
-    AppController.doGetProvenance(bitmark).then(provenance => {
+    BitmarkModel.doGetProvenance(bitmark).then(provenance => {
       bitmark.provenance = provenance;
       bitmark.provenance.forEach((history, index) => {
         history.key = index;
       });
-      this.setState({ bitmark });
-    }).catch(error => console.log('getProvenance error', error));
+      this.setState({ bitmark, loading: false });
+    }).catch(error => {
+      bitmark.provenance = [];
+      console.log('getProvenance error', error);
+      this.setState({ bitmark, loading: false });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+    });
   }
 
   downloadAsset() {
@@ -125,6 +135,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                       </TouchableOpacity>);
                     }}
                   />
+                  {this.state.loading && <ActivityIndicator style={{ marginTop: 40 }} size="large" />}
                 </View>
               </View>
             </TouchableOpacity>
