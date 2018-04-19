@@ -53,7 +53,9 @@ const doCheckDataSource = async (donationInformation, oldDonationInformation) =>
       listDataTypes = union(listDataTypes, joinedStudy.dataTypes);
     }
   }
-  await AppleHealthKitModel.initHealthKit(listDataTypes);
+  if (listDataTypes && listDataTypes.length > 0) {
+    await AppleHealthKitModel.initHealthKit(listDataTypes);
+  }
   let startDate = moment().toDate();
   startDate.setDate(startDate.getDate() - 7);
   let endDate = moment().toDate();
@@ -361,7 +363,8 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     };
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount, extra);
     return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
-  } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
+  } else if ((study.studyId === 'study2' && taskType === study.taskIds.task3) ||
+    (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2)) {
     return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
   }
   throw new Error('Can not detect task and study');
