@@ -147,7 +147,7 @@ const doIssueFile = async (filepath, assetName, metadatList, quantity, processin
 };
 
 const doGetProvenance = async (bitmark) => {
-  return await processing(BitmarkModel.doGetProvenance(bitmark));
+  return await processing(DataController.doGetProvenance(bitmark.id));
 };
 
 const doTransferBitmark = async (bitmark, receiver) => {
