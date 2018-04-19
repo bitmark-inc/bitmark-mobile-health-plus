@@ -220,18 +220,18 @@ const runOnBackground = async () => {
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
   }
   if (userInformation && userInformation.bitmarkAccountNumber) {
-    let runGetAllData = () => {
+    let runParallel = () => {
       return new Promise((resolve) => {
         Promise.all([
           runGetTransactionsInBackground(),
           runGetActiveIncomingTransferOfferInBackground(),
           runGetDonationInformationInBackground(),
           runGetTrackingBitmarksInBackground(),
-          runGetLocalBitmarksInBackground(),
         ]).then(resolve);
       });
     };
-    await runGetAllData();
+    await runParallel();
+    await runGetLocalBitmarksInBackground();
   }
 };
 
