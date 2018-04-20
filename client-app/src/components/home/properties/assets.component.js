@@ -161,7 +161,7 @@ export class AssetsComponent extends React.Component {
 
         {this.state.subtab !== SubTabs.global && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
-            {(!this.state.isLoadingData && this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
+            {(this.state.isLoadingData && this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
               </Text>}
