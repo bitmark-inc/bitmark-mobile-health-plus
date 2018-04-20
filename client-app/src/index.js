@@ -66,6 +66,7 @@ let codePushOptions = {
     mandatoryContinueButtonLabel: "UPDATE",
     optionalIgnoreButtonLabel: null,
   },
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
   installMode: codePush.InstallMode.IMMEDIATE
 };
 
