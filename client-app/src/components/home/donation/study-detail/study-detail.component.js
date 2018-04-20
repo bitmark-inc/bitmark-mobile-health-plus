@@ -12,7 +12,7 @@ import { FullComponent } from './../../../../commons/components';
 
 import defaultStyle from './../../../../commons/styles';
 import studyDetailsStyles from './study-detail.component.style';
-import { AppController } from '../../../../managers';
+import { AppController, DataController } from '../../../../managers';
 import { EventEmiterService } from '../../../../services';
 
 export class StudyDetailComponent extends React.Component {
@@ -65,6 +65,7 @@ export class StudyDetailComponent extends React.Component {
       onPress: () => {
         AppController.doLeaveStudy(this.state.study.studyId).then((result) => {
           if (result !== null) {
+            DataController.doReloadUserData();
             this.props.navigation.goBack();
           }
         }).catch(error => {

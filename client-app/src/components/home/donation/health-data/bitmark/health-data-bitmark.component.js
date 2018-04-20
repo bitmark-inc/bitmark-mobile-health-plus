@@ -9,7 +9,7 @@ import { FullComponent } from './../../../../../commons/components';
 
 import bitmarkHealthStyles from './health-data-bitmark.component.style';
 import defaultStyle from './../../../../../commons/styles';
-import { AppController } from '../../../../../managers';
+import { AppController, DataController } from '../../../../../managers';
 import { EventEmiterService } from '../../../../../services';
 import { convertWidth } from '../../../../../utils';
 import { BottomTabsComponent } from '../../../bottom-tabs/bottom-tabs.component';
@@ -48,6 +48,7 @@ export class HealthDataBitmarkComponent extends React.Component {
 
               }).then((result) => {
                 if (result !== null) {
+                  DataController.doReloadUserData();
                   const resetHomePage = NavigationActions.reset({
                     index: 0,
                     actions: [

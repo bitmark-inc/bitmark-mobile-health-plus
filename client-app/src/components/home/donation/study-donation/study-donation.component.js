@@ -8,7 +8,7 @@ import { FullComponent } from './../../../../commons/components';
 
 import donationStyles from './study-donation.component.style';
 import defaultStyle from './../../../../commons/styles';
-import { AppController } from '../../../../managers';
+import { AppController, DataController } from '../../../../managers';
 import { EventEmiterService } from '../../../../services';
 import { convertWidth } from '../../../../utils';
 export class StudyDonationComponent extends React.Component {
@@ -48,6 +48,7 @@ export class StudyDonationComponent extends React.Component {
                     indicator: false, title: 'Donation Successful!', message: 'Thank you for donating your data to help current and future generations!'
                   }).then((result) => {
                     if (result) {
+                      DataController.doReloadUserData();
                       this.props.navigation.goBack();
                     }
                   }).catch(error => {

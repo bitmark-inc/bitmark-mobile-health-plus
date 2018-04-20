@@ -31,7 +31,7 @@ export class HealthDataDataSourceComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>DATA SOURCES</Text>
+          <Text style={defaultStyle.headerTitle}>DATA TYPES</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>)}
 

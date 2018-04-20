@@ -13,7 +13,7 @@ import styles from './study-settings.component.style';
 
 import { StudiesModel, AppleHealthKitModel } from '../../../../models';
 import { EventEmiterService } from '../../../../services';
-import { AppController } from '../../../../managers';
+import { AppController, DataController } from '../../../../managers';
 import { FullComponent } from '../../../../commons/components';
 import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
 
@@ -71,6 +71,7 @@ export class StudySettingComponent extends React.Component {
       return AppController.doJoinStudy(this.state.study.studyId);
     }).then((result) => {
       if (result != null) {
+        DataController.doReloadUserData();
         this.setState({ status: SettingStatus.thank_you, });
       }
     }).catch(error => {
