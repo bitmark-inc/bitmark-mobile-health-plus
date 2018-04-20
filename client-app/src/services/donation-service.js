@@ -12,8 +12,6 @@ import {
 import { FileUtil } from '../utils';
 import randomString from 'random-string';
 
-const DATA_SOURCE_INTACTIVE_TASK_TYPE = 'data-source-inactive';
-
 const isEmptyHealthData = (healthData) => {
   if (!(!healthData || (healthData instanceof Array && healthData.length === 0) ||
     (!(healthData instanceof Array) && (!healthData.value || healthData.value === 'unknown' || healthData.value === 'not set')))) {
@@ -44,7 +42,7 @@ const doGetHealthKitData = async (listTypes, startDate, endDate) => {
   return mapData;
 };
 
-const doCheckDataSource = async (donationInformation, oldDonationInformation) => {
+const doCheckDataSource = async (donationInformation) => {
   let listDataTypes = [];
   if (donationInformation.activeBitmarkHealthDataAt) {
     listDataTypes = donationInformation.allDataTypes;
@@ -60,7 +58,7 @@ const doCheckDataSource = async (donationInformation, oldDonationInformation) =>
   startDate.setDate(startDate.getDate() - 7);
   let endDate = moment().toDate();
   let mapData = await doGetHealthKitData(listDataTypes, startDate, endDate);
-  let dataSourceInactiveCompletedTasks = [];
+  // let dataSourceInactiveCompletedTasks = [];
   let dataSourceStatuses = [];
   for (let type in mapData) {
     if (isEmptyHealthData(mapData[type])) {
@@ -78,16 +76,6 @@ const doCheckDataSource = async (donationInformation, oldDonationInformation) =>
         numberStudyRequired: numberStudyRequireThisType,
       });
     } else {
-      if (oldDonationInformation.dataSourceStatuses) {
-        let oldStatus = (oldDonationInformation.dataSourceStatuses || []).find(item => item.key === type);
-        if (oldStatus.status === 'Inactive' && oldStatus.numberStudyRequired) {
-          dataSourceInactiveCompletedTasks.push({
-            title: oldStatus.title + ' data source inactive',
-            description: 'Required by ' + oldStatus.numberStudyRequired + (oldStatus.numberStudyRequired > 1 ? ' studies' : ' study'),
-            completedDate: moment().toDate(),
-          });
-        }
-      }
       dataSourceStatuses.push({
         key: type,
         title: donationInformation.titleDataTypes[type],
@@ -95,9 +83,7 @@ const doCheckDataSource = async (donationInformation, oldDonationInformation) =>
       });
     }
   }
-  dataSourceInactiveCompletedTasks = (oldDonationInformation.dataSourceInactiveCompletedTasks || []).concat(dataSourceInactiveCompletedTasks);
   donationInformation.dataSourceStatuses = dataSourceStatuses;
-  donationInformation.dataSourceInactiveCompletedTasks = dataSourceInactiveCompletedTasks;
   return donationInformation;
 };
 
@@ -120,8 +106,7 @@ const doLoadDonationTask = async (donationInformation) => {
     await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
     return donationInformation;
   }
-  let oldDonationInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION);
-  donationInformation = await doCheckDataSource(donationInformation, oldDonationInformation);
+  donationInformation = await doCheckDataSource(donationInformation);
 
   let todoTasks = [];
   let totalTodoTask = 0;
@@ -172,19 +157,6 @@ const doLoadDonationTask = async (donationInformation) => {
       }
     });
   }
-  // if (donationInformation.dataSourceStatuses && donationInformation.dataSourceStatuses.length > 0) {
-  //   for (let dataSourceStatus of donationInformation.dataSourceStatuses) {
-  //     if (dataSourceStatus.status === 'Inactive' && dataSourceStatus.numberStudyRequired) {
-  //       todoTasks.push({
-  //         title: dataSourceStatus.title + ' data source inactive',
-  //         description: 'Required by ' + dataSourceStatus.numberStudyRequired + (dataSourceStatus.numberStudyRequired > 1 ? ' studies' : ' study'),
-  //         taskType: DATA_SOURCE_INTACTIVE_TASK_TYPE,
-  //         number: 1,
-  //       });
-  //       totalTodoTask++;
-  //     }
-  //   }
-  // }
   donationInformation.todoTasks = todoTasks;
   donationInformation.totalTodoTask = totalTodoTask;
 
@@ -216,16 +188,6 @@ const doLoadDonationTask = async (donationInformation) => {
       });
     }
   });
-  // if (donationInformation.dataSourceInactiveCompletedTasks && donationInformation.dataSourceInactiveCompletedTasks.length > 0) {
-  //   for (let completedEnableDataSource of donationInformation.dataSourceInactiveCompletedTasks) {
-  //     completedTasks.push({
-  //       title: completedEnableDataSource.title,
-  //       description: completedEnableDataSource.description,
-  //       completedDate: moment(completedEnableDataSource.completedDate),
-  //       taskType: DATA_SOURCE_INTACTIVE_TASK_TYPE,
-  //     });
-  //   }
-  // }
   donationInformation.completedTasks = completedTasks;
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
@@ -435,7 +397,6 @@ const doDownloadStudyConsent = async (study) => {
 };
 
 const DonationService = {
-  DATA_SOURCE_INTACTIVE_TASK_TYPE,
   doGetUserInformation,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
