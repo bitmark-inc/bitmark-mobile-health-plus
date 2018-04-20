@@ -135,7 +135,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                       </TouchableOpacity>);
                     }}
                   />
-                  {this.state.loading && <ActivityIndicator style={{ marginTop: 40 }} size="large" />}
+                  {this.state.loading && <ActivityIndicator style={{ marginTop: 42 }} size="large" />}
                 </View>
               </View>
             </TouchableOpacity>
