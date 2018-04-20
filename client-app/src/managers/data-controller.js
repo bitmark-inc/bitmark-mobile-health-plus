@@ -164,7 +164,6 @@ const runGetTrackingBitmarksInBackground = () => {
       if (userData.trackingBitmarks === null || JSON.stringify(trackingBitmarks) !== JSON.stringify(userData.trackingBitmarks)) {
         userData.trackingBitmarks = trackingBitmarks;
         CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
-        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
       }
       resolve();
       isRunningGetTrackingBitmarksInBackground = false;
@@ -239,6 +238,9 @@ const runOnBackground = async () => {
     }
     if (JSON.stringify(userData.transactions) !== JSON.stringify(oldUserData.transactions)) {
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
+    }
+    if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
     }
     if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
@@ -496,6 +498,7 @@ const doTrackingBitmark = async (touchFaceIdSession, asset, bitmark) => {
   userData.trackingBitmarks.push(trackingBitmark);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
   EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
+  return true;
 };
 const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
@@ -507,6 +510,7 @@ const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
     await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
   }
+  return true;
 };
 
 const doGetProvenance = async (bitmarkId) => {

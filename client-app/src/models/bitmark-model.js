@@ -282,7 +282,7 @@ const doAddTrackinBitmark = async (bitmarkAccount, timestamp, signature, bitmark
 const doStopTrackingBitmark = async (bitmarkAccount, timestamp, signature, bitmark_id) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks`;
+    let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks/${bitmark_id}`;
     fetch(bitmarkUrl, {
       method: 'DELETE',
       headers: {
@@ -292,9 +292,6 @@ const doStopTrackingBitmark = async (bitmarkAccount, timestamp, signature, bitma
         signature,
         requester: bitmarkAccount,
       },
-      body: JSON.stringify({
-        bitmark_id
-      })
     }).then((response) => {
       statusCode = response.status;
       return response.json();
@@ -323,7 +320,7 @@ const doGetAllTrackingBitmark = async (bitmarkAccount) => {
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error(`doStopTrackingBitmark error :` + JSON.stringify(data)));
+        return reject(new Error(`doGetAllTrackingBitmark error :` + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
