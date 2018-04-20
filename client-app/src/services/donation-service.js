@@ -129,7 +129,7 @@ const doLoadDonationTask = async (donationInformation) => {
         for (let taskType in study.tasks) {
           if (study.tasks[taskType].number) {
             if (study.tasks[taskType].list && study.tasks[taskType].list.length > 1) {
-              for (let item in study.tasks[taskType].list) {
+              for (let item of study.tasks[taskType].list) {
                 todoTasks.push({
                   study,
                   title: study.studyTasks[taskType].title,
@@ -320,8 +320,8 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
 
     let extra = {
       app: 'bitmark-data-donation',
-      message: taskType === study.taskIds.intake_survey ? `Your first data donation has been securely delivered to the ${study.title}. Thanks for donating!` : '',
-      data: taskType === study.taskIds.intake_survey ? { event: 'DONATION_SUCCESS' } : null,
+      // message: taskType === study.taskIds.intake_survey ? `Your first data donation has been securely delivered to the ${study.title}. Thanks for donating!` : '',
+      // data: taskType === study.taskIds.intake_survey ? { event: 'DONATION_SUCCESS' } : null,
     };
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount, extra);
     return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
