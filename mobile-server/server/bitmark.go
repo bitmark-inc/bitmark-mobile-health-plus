@@ -51,7 +51,7 @@ func (s *Server) DeleteBitmarkTracking(c *gin.Context) {
 }
 
 func (s *Server) ListBitmarkTracking(c *gin.Context) {
-	account := c.GetString("requester")
+	account := c.Request.Header.Get("requester")
 
 	bitmarks, err := s.bitmarkStore.GetTrackingBitmarks(account)
 	if err != nil {

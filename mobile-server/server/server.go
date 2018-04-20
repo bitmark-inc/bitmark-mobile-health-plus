@@ -30,11 +30,11 @@ func (s *Server) Run(addr string) error {
 	}
 
 	trackingBitmarks := api.Group("/tracking_bitmarks")
+	trackingBitmarks.GET("", s.ListBitmarkTracking)
 	trackingBitmarks.Use(authenticate())
 	{
 		trackingBitmarks.POST("", s.AddBitmarkTracking)
 		trackingBitmarks.DELETE("/:bitmarkid", s.DeleteBitmarkTracking)
-		trackingBitmarks.GET("", s.ListBitmarkTracking)
 	}
 
 	notifications := api.Group("/notifications")

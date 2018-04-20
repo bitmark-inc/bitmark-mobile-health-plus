@@ -106,6 +106,8 @@ export class Study1ExitSurvey2Component extends React.Component {
                   </Text>
                   <TextInput style={styles.emailInput}
                     placeholder="Email"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
                     onChangeText={(email) => this.setState({ email, emailError: '' })}
                     onFocus={() => this.setState({ emailError: '' })}
                   />
