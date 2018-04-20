@@ -98,7 +98,7 @@ export default StyleSheet.create({
   accountNumberValue: {
     fontFamily: 'Andale Mono',
     fontWeight: '900',
-    fontSize: 11,
+    fontSize: convertWidth(11),
     width: convertWidth(337),
     color: '#0060F2',
   },

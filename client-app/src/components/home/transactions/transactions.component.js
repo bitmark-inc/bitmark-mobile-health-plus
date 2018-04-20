@@ -116,6 +116,8 @@ export class TransactionsComponent extends React.Component {
     console.log('transactions :', transactionData.transactions);
     if (transactionData.transactions) {
       completed = [];
+      let mapIssuance = [];
+
       transactionData.transactions.forEach((item) => {
         let title = 'ISSUANCE';
         let type = '';
@@ -150,6 +152,15 @@ export class TransactionsComponent extends React.Component {
             to = donationCompletedTask.study.researcherAccount;
             researcherName = donationCompletedTask.study.researcherName.substring(0, donationCompletedTask.study.researcherName.indexOf(','));
           }
+        }
+        if (title === 'ISSUANCE') {
+          if (mapIssuance[item.assetId] && mapIssuance[item.assetId][item.blockNumber]) {
+            return;
+          }
+          if (!mapIssuance[item.assetId]) {
+            mapIssuance[item.assetId] = {};
+          }
+          mapIssuance[item.assetId][item.blockNumber] = true;
         }
         completed.push({
           title,
