@@ -51,8 +51,8 @@ func (c *Client) Send(title, message string, receivers map[string]map[string][]s
 				Platform: platformCode[platform],
 				Message:  message,
 				Data:     data,
-				Badge:    badge,
-				Sound:    "default",
+				// Badge:    badge,
+				Sound: "default",
 				Alert: map[string]interface{}{
 					"title": title,
 					"body":  message,

@@ -19,6 +19,11 @@ func (s *Server) AddBitmarkTracking(c *gin.Context) {
 	}
 
 	account := c.GetString("requester")
+	if err := s.pushStore.AddAccount(account); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
 	if err := s.bitmarkStore.AddTrackingBitmark(account, req.BitmarkID, req.TxID, req.Status); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
