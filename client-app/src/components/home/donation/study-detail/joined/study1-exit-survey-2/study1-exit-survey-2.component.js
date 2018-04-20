@@ -9,7 +9,7 @@ import defaultStyle from '../../../../../../commons/styles';
 import styles from './study1-exit-survey-2.component.style';
 
 import { FullComponent } from '../../../../../../commons/components';
-import { AppController } from './../../../../../../managers';
+import { AppController, DataController } from './../../../../../../managers';
 import { EventEmiterService } from '../../../../../../services';
 
 export class Study1ExitSurvey2Component extends React.Component {
@@ -36,6 +36,7 @@ export class Study1ExitSurvey2Component extends React.Component {
   doCompletedTask() {
     AppController.doCompletedStudyTask(this.state.study, this.state.study.taskIds.exit_survey_2, this.state.email ? { email: this.state.email } : null).then((result) => {
       if (result) {
+        DataController.doReloadUserData();
         this.props.navigation.goBack();
       }
     }).catch(error => {

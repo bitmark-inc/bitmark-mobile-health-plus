@@ -66,7 +66,6 @@ const runGetActiveIncomingTransferOfferInBackground = () => {
       if (userData.activeIncompingTransferOffers === null || JSON.stringify(activeIncompingTransferOffers) !== JSON.stringify(userData.activeIncompingTransferOffers)) {
         userData.activeIncompingTransferOffers = activeIncompingTransferOffers;
         CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, userData.activeIncompingTransferOffers);
-        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
       }
       resolve();
       isRunningGetActiveIncomingTransferOfferInBackground = false;
@@ -91,7 +90,6 @@ const runGetTransactionsInBackground = () => {
       if (userData.transactions === null || JSON.stringify(transactions) !== JSON.stringify(userData.transactions)) {
         userData.transactions = transactions;
         CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, userData.transactions);
-        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
       }
       resolve();
       isRunningGetTransactionsInBackground = false;
@@ -117,7 +115,6 @@ const runGetLocalBitmarksInBackground = () => {
       if (userData.localAssets === null || JSON.stringify(localAssets) !== JSON.stringify(userData.localAssets)) {
         userData.localAssets = localAssets;
         CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, userData.localAssets);
-        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
       }
       resolve();
       isRunningGetLocalBitmarksInBackground = false;
@@ -142,7 +139,6 @@ const runGetDonationInformationInBackground = () => {
       if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
         userData.donationInformation = donationInformation;
         CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, userData.donationInformation);
-        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
       }
       resolve();
       isRunningGetDonationInformationInBackground = false;
@@ -192,6 +188,7 @@ const runOnBackground = async () => {
     userInformation = userInfo;
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_INFO)
   }
+  let oldUserData = merge({}, userData);
   if (userInformation && userInformation.bitmarkAccountNumber) {
     let runParallel = () => {
       return new Promise((resolve) => {
@@ -204,6 +201,19 @@ const runOnBackground = async () => {
     };
     await runParallel();
     await runGetLocalBitmarksInBackground();
+
+    if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+    }
+    if (JSON.stringify(userData.donationInformation) !== JSON.stringify(oldUserData.donationInformation)) {
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+    }
+    if (JSON.stringify(userData.transactions) !== JSON.stringify(oldUserData.transactions)) {
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
+    }
+    if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+    }
   }
 };
 

@@ -19,56 +19,56 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
     let existingOldTransaction = completedTransfers.find(item => item.txid === transaction.id);
     if (existingOldTransaction) {
       existingOldTransaction.status = transaction.status;
-      break;
-    }
-    if (transaction.owner === accountNumber) {
-      if (transaction.id && transaction.previous_id) {
-        let previousTransactionData = await BitmarkModel.getTransactionDetail(transaction.previous_id);
-        completedTransfers.push({
-          assetName: previousTransactionData.asset.name,
-          from: previousTransactionData.tx.owner,
-          to: accountNumber,
-          timestamp: transaction.block ? moment(transaction.block.created_at) : '',
-          status: transaction.status,
-          txid: transaction.id,
-          previousId: transaction.previous_id,
-          offset: transaction.offset,
-        });
-      } else if (transaction.id && !transaction.previous_id) {
-        if (mapIssuanceBlock[transaction.asset_id] && mapIssuanceBlock[transaction.asset_id][transaction.block_number]) {
-          mapIssuanceBlock[transaction.asset_id][transaction.block_number].offset =
-            Math.max(mapIssuanceBlock[transaction.asset_id][transaction.block_number].offset, transaction.offset);
-        } else {
-          if (!mapIssuanceBlock[transaction.asset_id]) {
-            mapIssuanceBlock[transaction.asset_id] = {};
-          }
-          let transactionData = await BitmarkModel.getTransactionDetail(transaction.id);
-          let record = {
-            assetId: transaction.asset_id,
-            blockNumber: transaction.block_number,
-            assetName: transactionData.asset.name,
-            from: transactionData.tx.owner,
+    } else {
+      if (transaction.owner === accountNumber) {
+        if (transaction.id && transaction.previous_id) {
+          let previousTransactionData = await BitmarkModel.getTransactionDetail(transaction.previous_id);
+          completedTransfers.push({
+            assetName: previousTransactionData.asset.name,
+            from: previousTransactionData.tx.owner,
+            to: accountNumber,
             timestamp: transaction.block ? moment(transaction.block.created_at) : '',
             status: transaction.status,
             txid: transaction.id,
+            previousId: transaction.previous_id,
             offset: transaction.offset,
-          };
-          mapIssuanceBlock[transaction.asset_id][transaction.block_number] = record;
-          completedTransfers.push(record);
+          });
+        } else if (transaction.id && !transaction.previous_id) {
+          if (mapIssuanceBlock[transaction.asset_id] && mapIssuanceBlock[transaction.asset_id][transaction.block_number]) {
+            mapIssuanceBlock[transaction.asset_id][transaction.block_number].offset =
+              Math.max(mapIssuanceBlock[transaction.asset_id][transaction.block_number].offset, transaction.offset);
+          } else {
+            if (!mapIssuanceBlock[transaction.asset_id]) {
+              mapIssuanceBlock[transaction.asset_id] = {};
+            }
+            let transactionData = await BitmarkModel.getTransactionDetail(transaction.id);
+            let record = {
+              assetId: transaction.asset_id,
+              blockNumber: transaction.block_number,
+              assetName: transactionData.asset.name,
+              from: transactionData.tx.owner,
+              timestamp: transaction.block ? moment(transaction.block.created_at) : '',
+              status: transaction.status,
+              txid: transaction.id,
+              offset: transaction.offset,
+            };
+            mapIssuanceBlock[transaction.asset_id][transaction.block_number] = record;
+            completedTransfers.push(record);
+          }
         }
+      } else if (transaction.id) {
+        let nextTransactionData = await BitmarkModel.getTransactionDetail(transaction.id);
+        completedTransfers.push({
+          assetName: nextTransactionData.asset.name,
+          from: accountNumber,
+          to: transaction.owner,
+          timestamp: nextTransactionData.block ? moment(nextTransactionData.block.created_at) : '',
+          status: nextTransactionData.tx.status,
+          offset: transaction.offset,
+          txid: transaction.id,
+          previousId: transaction.previous_id,
+        });
       }
-    } else if (transaction.id) {
-      let nextTransactionData = await BitmarkModel.getTransactionDetail(transaction.id);
-      completedTransfers.push({
-        assetName: nextTransactionData.asset.name,
-        from: accountNumber,
-        to: transaction.owner,
-        timestamp: nextTransactionData.block ? moment(nextTransactionData.block.created_at) : '',
-        status: nextTransactionData.tx.status,
-        offset: transaction.offset,
-        txid: transaction.id,
-        previousId: transaction.previous_id,
-      });
     }
   }
   completedTransfers = sortList(completedTransfers, (a, b) => b.offset - a.offset);
