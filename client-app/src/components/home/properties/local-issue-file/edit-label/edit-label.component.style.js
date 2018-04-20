@@ -22,14 +22,14 @@ export default StyleSheet.create({
   },
   removeLabelNumberButton: {
     position: 'absolute',
-    top: 45,
+    top: 29,
     right: 0,
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 8,
-    paddingLeft: 4,
-    paddingTop: 4,
-    paddingBottom: 4,
+    paddingLeft: 18,
+    paddingTop: 18,
+    paddingBottom: 18,
   },
   removeLabelNumberIcon: {
     width: 12,
