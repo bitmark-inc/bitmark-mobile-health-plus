@@ -125,23 +125,33 @@ const doGetBitmarkInformation = async (bitmarkId) => {
 
 const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) => {
   oldTrackingBitmarks = oldTrackingBitmarks || [];
+
+  let allTrackingBitmarksFromServer = await BitmarkModel.doGetAllTrackingBitmark(bitmarkAccountNumber);
+  for (let tb of allTrackingBitmarksFromServer.bitmarks) {
+    let exist = oldTrackingBitmarks.findIndex((otb => otb.id === tb.bitmark_id)) >= 0;
+    if (!exist) {
+      let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(tb.bitmark_id);
+      let trackingBitmark = merge({}, bitmarkInformation.bitmark);
+      trackingBitmark.asset = bitmarkInformation.asset;
+      trackingBitmark.isViewed = true;
+      trackingBitmark.lastHistory = {
+        status: tb.status,
+        head_id: tb.tx_id,
+      };
+      oldTrackingBitmarks.push(trackingBitmark);
+    }
+  }
+
   let trackingBitmarks = [];
   let bitmarkIds = [];
   for (let oldTB of oldTrackingBitmarks) {
     bitmarkIds.push(oldTB.id);
   }
-  //TODO get new tracking from server
-
-  console.log('run1 ');
-  let allTrackingBitmarksFromServer = await BitmarkModel.doGetAllTrackingBitmark(bitmarkAccountNumber);
-  console.log('allTrackingBitmarksFromServer :', allTrackingBitmarksFromServer);
 
   let bitmarks = await BitmarkModel.getListBitmarks(bitmarkIds);
-  console.log('bitmarks :', bitmarks);
 
   for (let bitmark of bitmarks) {
     let oldTB = oldTrackingBitmarks.find(otb => otb.id === bitmark.id);
-    console.log('oldTB :', oldTB);
     if (oldTB) {
       if (oldTB.head_id !== bitmark.head_id || (oldTB.head_id === bitmark.head_id && oldTB.status !== bitmark.status)) {
         oldTB.isViewed = false;
