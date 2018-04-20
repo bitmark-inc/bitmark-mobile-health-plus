@@ -129,7 +129,7 @@ const doLoadDonationTask = async (donationInformation) => {
         for (let taskType in study.tasks) {
           if (study.tasks[taskType].number) {
             if (study.tasks[taskType].list && study.tasks[taskType].list.length > 1) {
-              for (let item in study.tasks[taskType].list) {
+              for (let item of study.tasks[taskType].list) {
                 todoTasks.push({
                   study,
                   title: study.studyTasks[taskType].title,
