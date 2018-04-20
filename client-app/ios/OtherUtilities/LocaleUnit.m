@@ -28,6 +28,15 @@
   }
 }
 
++ (NSUnit *)heightUnit {
+  if ([[NSLocale autoupdatingCurrentLocale] usesMetricSystem]) {
+    return [NSUnitLength centimeters];
+  }
+  else {
+    return [NSUnitLength feet];
+  }
+}
+
 + (NSUnit *)mediumMassUnit {
   if ([[NSLocale autoupdatingCurrentLocale] usesMetricSystem]) {
     return [NSUnitMass kilograms];

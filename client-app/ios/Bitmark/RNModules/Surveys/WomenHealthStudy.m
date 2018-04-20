@@ -224,7 +224,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   ORKQuestionStep *step7QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-7" title:@"On average, how many minutes do you exercise per day?" answer:step7AnswerFormat];
   step7QuestionStep.optional = NO;
   
-  ORKAnswerFormat *step8AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumLengthUnit].symbol];
+  ORKAnswerFormat *step8AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit heightUnit].symbol];
   ORKQuestionStep *step8QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-8" title:@"What is your height?" answer:step8AnswerFormat];
   step8QuestionStep.optional = NO;
   
@@ -333,7 +333,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
       
       else if ([stepResult.identifier isEqualToString:@"step-8"]) {
         ORKNumericQuestionResult *r = (ORKNumericQuestionResult *)stepResult.results.firstObject;
-        return [LocaleUnit convertToSIWithUnit:[LocaleUnit mediumLengthUnit] value:r.numericAnswer.doubleValue];
+        return [LocaleUnit convertToSIWithUnit:[LocaleUnit heightUnit] value:r.numericAnswer.doubleValue];
       }
       
       else if ([stepResult.identifier isEqualToString:@"step-9"]) {
@@ -366,6 +366,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
     NSArray *callbackResults = [StudyHelper iterateTaskResult:taskViewController.result withDataIteratingBlock:^NSObject *(ORKStepResult *stepResult) {
       if ([stepResult.identifier isEqualToString:@"step-1"] ||
           [stepResult.identifier isEqualToString:@"step-2"] ||
+          [stepResult.identifier isEqualToString:@"step-3"] ||
           [stepResult.identifier isEqualToString:@"step-4"] ||
           [stepResult.identifier isEqualToString:@"step-5"] ||
           [stepResult.identifier isEqualToString:@"step-6"] ||
