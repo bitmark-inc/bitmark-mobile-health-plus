@@ -26,7 +26,7 @@ export class LocalPropertyDetailComponent extends React.Component {
     this.clickOnProvenance = this.clickOnProvenance.bind(this);
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
-    bitmark.provenance.forEach((history, index) => {
+    (bitmark.provenance || []).forEach((history, index) => {
       history.key = index;
     });
     this.state = {
@@ -37,7 +37,7 @@ export class LocalPropertyDetailComponent extends React.Component {
       loading: true,
     };
     BitmarkModel.doGetProvenance(bitmark).then(provenance => {
-      bitmark.provenance = provenance;
+      bitmark.provenance = provenance || [];
       bitmark.provenance.forEach((history, index) => {
         history.key = index;
       });
