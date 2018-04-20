@@ -21,10 +21,11 @@ const FileUtil = {
   moveFile: async (sourcePath, destinationPath) => {
     return RNFS.moveFile(sourcePath, destinationPath);
   },
-  downloadFile: async (urlDownload, filePath) => {
+  downloadFile: async (urlDownload, filePath, headers) => {
     const options = {
       fromUrl: urlDownload,
       toFile: filePath,
+      headers,
     };
     await RNFS.downloadFile(options).promise;
     return filePath;

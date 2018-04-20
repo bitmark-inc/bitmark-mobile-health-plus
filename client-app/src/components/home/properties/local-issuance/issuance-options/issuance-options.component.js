@@ -17,6 +17,7 @@ export class IssuanceOptionsComponent extends React.Component {
     super(props);
     this.onChooseFile = this.onChooseFile.bind(this);
     this.issueHealthData = this.issueHealthData.bind(this);
+    this.issueIftttData = this.issueIftttData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.state = {
       donationInformation: DataController.getDonationInformation(),
@@ -88,6 +89,9 @@ export class IssuanceOptionsComponent extends React.Component {
       this.props.screenProps.homeNavigation.dispatch(resetHomePage);
     }
   }
+  issueIftttData() {
+    this.props.screenProps.homeNavigation.navigate('IftttActive');
+  }
 
   render() {
     return (
@@ -107,6 +111,11 @@ export class IssuanceOptionsComponent extends React.Component {
             <Text style={issuanceOptionsStyle.optionButtonText}>HEALTH DATA</Text>
             {!this.state.donationInformation.activeBitmarkHealthDataAt && <Image style={issuanceOptionsStyle.optionButtonNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
             {!!this.state.donationInformation.activeBitmarkHealthDataAt && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
+          </TouchableOpacity>
+          <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.issueIftttData}>
+            <Text style={issuanceOptionsStyle.optionButtonText}>IFTTT DATA</Text>
+            {<Image style={issuanceOptionsStyle.optionButtonNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
+            {false && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
           </TouchableOpacity>
 
           <Text style={issuanceOptionsStyle.message}>
