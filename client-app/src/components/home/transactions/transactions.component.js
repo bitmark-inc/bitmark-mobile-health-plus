@@ -113,6 +113,7 @@ export class TransactionsComponent extends React.Component {
     }) : actionRequired;
 
     let completed;
+    console.log('transactions :', transactionData.transactions);
     if (transactionData.transactions) {
       completed = [];
       transactionData.transactions.forEach((item) => {
@@ -235,7 +236,11 @@ export class TransactionsComponent extends React.Component {
       } else if (item.study && item.study.studyId === 'study1' && item.study.taskIds && item.taskType === item.study.taskIds.exit_survey_2) {
         this.props.screenProps.homeNavigation.navigate('Study1ExitSurvey2', { study: item.study });
       } else if (item.study && item.study.taskIds && item.taskType) {
-        AppController.doStudyTask(item.study, item.taskType).catch(error => {
+        AppController.doStudyTask(item.study, item.taskType).then(result => {
+          if (result) {
+            DataController.doReloadUserData();
+          }
+        }).catch(error => {
           console.log('doStudyTask error:', error);
           EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
         });

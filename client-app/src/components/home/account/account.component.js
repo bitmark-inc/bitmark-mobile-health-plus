@@ -77,6 +77,7 @@ export class AccountDetailComponent extends React.Component {
       onPress: () => {
         AppController.doInactiveBitmarkHealthData().then((result) => {
           if (result) {
+            DataController.doReloadUserData();
             this.props.navigation.goBack();
           }
         }).catch(error => {

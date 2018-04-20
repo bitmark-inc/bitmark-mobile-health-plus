@@ -191,18 +191,18 @@ export class LocalPropertyDetailComponent extends React.Component {
                     renderItem={({ item }) => {
                       return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
                         {this.state.isTracking && !this.state.provenanceViewed[item.tx_id] && !item.isViewed && <View style={propertyDetailStyle.provenancesNotView}></View>}
-                        <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
-                          {moment(item.created_at).isValid() ? item.created_at.toUpperCase() : 'PENDING…'}
+                        <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: item.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
+                          {item.status === 'pending' ? 'PENDING…' : item.created_at.toUpperCase()}
                         </Text>
                         <View style={propertyDetailStyle.provenancesRowOwnerRow}>
-                          <Text style={[propertyDetailStyle.provenancesRowOwner, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
+                          <Text style={[propertyDetailStyle.provenancesRowOwner, { color: item.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
                             {item.owner === DataController.getUserInformation().bitmarkAccountNumber ? 'YOU' : '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'}
                           </Text>
                         </View>
                       </TouchableOpacity>);
                     }}
                   />
-                  {this.state.loading && <ActivityIndicator style={{ marginTop: 40 }} size="large" />}
+                  {this.state.loading && <ActivityIndicator style={{ marginTop: 42 }} size="large" />}
                 </View>
               </View>
             </TouchableOpacity>

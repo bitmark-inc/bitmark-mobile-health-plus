@@ -27,6 +27,7 @@ export class HealthDataActiveComponent extends React.Component {
       AppController.doActiveBitmarkHealthData(moment().toDate()).then(result => {
         if (result !== null) {
           this.swiper.scrollBy(1);
+          DataController.doReloadUserData();
         }
       }).catch(error => {
         console.log('doActiveBitmarkHealthData error :', error);
