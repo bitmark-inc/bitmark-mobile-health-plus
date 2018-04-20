@@ -192,7 +192,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   step3QuestionStep.optional = NO;
   
   
-  ORKAnswerFormat *step4AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumLengthUnit].symbol];
+  ORKAnswerFormat *step4AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit heightUnit].symbol];
   ORKQuestionStep *step4QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-4" title:@"What is your height?" answer:step4AnswerFormat];
   step4QuestionStep.optional = NO;
   
@@ -389,7 +389,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
       
       else if ([stepResult.identifier isEqualToString:@"step-4"]) {
         ORKNumericQuestionResult *r = (ORKNumericQuestionResult *)stepResult.results.firstObject;
-        return [LocaleUnit convertToSIWithUnit:[LocaleUnit mediumLengthUnit] value:r.numericAnswer.doubleValue];
+        return [LocaleUnit convertToSIWithUnit:[LocaleUnit heightUnit] value:r.numericAnswer.doubleValue];
       }
       
       else if ([stepResult.identifier isEqualToString:@"step-5"]) {

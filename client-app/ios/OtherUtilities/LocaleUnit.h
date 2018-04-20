@@ -11,6 +11,7 @@
 @interface LocaleUnit : NSObject
 
 + (NSUnit *)mediumLengthUnit;
++ (NSUnit *)heightUnit;
 + (NSUnit *)smallLengthUnit;
 + (NSUnit *)mediumMassUnit;
 
