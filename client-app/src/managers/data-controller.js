@@ -8,8 +8,9 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK, IftttModel } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK, IftttModel, BitmarkModel } from '../models';
 import { DonationService } from '../services/donation-service';
+import { FileUtil } from '../utils';
 
 let userInformation = {};
 let userData = {
@@ -455,6 +456,27 @@ const doUpdateViewStatus = async (asset) => {
   }
 };
 
+const doIssueIftttData = async (touchFaceIdSession, iftttBitmarkFile) => {
+  let folderPath = FileUtil.CacheDirectory + '/Bitmark-IFTTT';
+  await FileUtil.mkdir(folderPath);
+  let filename = iftttBitmarkFile.filePath.substring(iftttBitmarkFile.filePath.lastIndexOf("/") + 1, iftttBitmarkFile.filePath.length);
+  let filePath = folderPath + '/' + filename;
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let downloadResult = await IftttModel.downloadBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.filePath, filePath);
+  if (downloadResult.statusCode > 400) {
+    throw new Error('Download file error!');
+  }
+  await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, iftttBitmarkFile.propertyName, iftttBitmarkFile.metadata, 1);
+  let iftttInformation = await IftttModel.doRemoveBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.filePath);
+
+  if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
+    userData.iftttInformation = iftttInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, userData.iftttInformation);
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
+  }
+  return iftttInformation;
+};
+
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers,
@@ -520,6 +542,8 @@ const DataController = {
   doDownloadBitmark,
   doUpdateViewStatus,
   doReloadIFTTTInformation: runGetIFTTTInformationInBackground,
+
+  doIssueIftttData,
 
   getTransactionData,
   getUserBitmarks,

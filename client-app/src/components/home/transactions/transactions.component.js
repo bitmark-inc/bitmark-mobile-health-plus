@@ -34,6 +34,8 @@ export class TransactionsComponent extends React.Component {
     this.reloadData = this.reloadData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
+    this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
+
     this.clickToActionRequired = this.clickToActionRequired.bind(this);
     this.generateData = this.generateData.bind(this);
     this.clickToCompleted = this.clickToCompleted.bind(this);
@@ -61,6 +63,7 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
     EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
@@ -73,7 +76,7 @@ export class TransactionsComponent extends React.Component {
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
     EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
@@ -207,6 +210,13 @@ export class TransactionsComponent extends React.Component {
       isLoadingData: DataController.isLoadingData(),
     });
   }
+  handerIftttInformationChange() {
+    let { actionRequired, completed, donationInformation } = this.generateData();
+    this.setState({
+      actionRequired, completed, donationInformation,
+      isLoadingData: DataController.isLoadingData(),
+    });
+  }
   handerChangePendingTransactions() {
     let { actionRequired, completed, donationInformation } = this.generateData();
     this.setState({
@@ -267,6 +277,15 @@ export class TransactionsComponent extends React.Component {
           EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
         });
       }
+    } else if (item.type === ActionTypes.ifttt) {
+      AppController.doIssueIftttData(item).then(result => {
+        if (result) {
+          DataController.doReloadUserData();
+        }
+      }).catch(error => {
+        console.log('doStudyTask error:', error);
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      });
     }
   }
 
@@ -356,7 +375,7 @@ export class TransactionsComponent extends React.Component {
                       <Text style={transactionsStyle.transferOfferTitleTime} >{moment(item.timestamp).format('YYYY MMM DD').toUpperCase()}</Text>
                       <Image style={transactionsStyle.transferOfferTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                     </View>
-                    {!!item.transferOffer && <Text style={transactionsStyle.transferOfferContent}>Sign to accept the property
+                    {item.type === ActionTypes.transfer && <Text style={transactionsStyle.transferOfferContent}>Sign to accept the property
                         <Text style={transactionsStyle.transferOfferAssetName}> {item.transferOffer.asset.name} </Text>transfer request.
                       </Text>}
 

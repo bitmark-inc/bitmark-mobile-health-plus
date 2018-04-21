@@ -27,8 +27,7 @@ const FileUtil = {
       toFile: filePath,
       headers,
     };
-    await RNFS.downloadFile(options).promise;
-    return filePath;
+    return await RNFS.downloadFile(options).promise;
   },
 
   zip: async (inputPath, outputPath) => {
