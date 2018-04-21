@@ -7,6 +7,7 @@ import { LocalPropertyTransferComponent } from './local-property-transfer';
 import { LocalIssuanceComponent } from './local-issuance';
 import { LocalIssueFileComponent, LocalIssueFileEditLabelComponent } from './local-issue-file';
 import { BitmarkWebViewComponent, } from './../../../commons/components';
+import { IftttActiveComponent } from './ifttt-active';
 
 let PropertiesComponent = StackNavigator({
   Assets: { screen: AssetsComponent, },
@@ -29,4 +30,5 @@ export {
   LocalPropertyTransferComponent,
   LocalIssueFileComponent,
   LocalIssueFileEditLabelComponent,
+  IftttActiveComponent,
 };

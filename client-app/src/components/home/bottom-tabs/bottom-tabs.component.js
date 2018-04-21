@@ -30,7 +30,8 @@ export class BottomTabsComponent extends React.Component {
     let localAssets = DataController.getUserBitmarks().localAssets || [];
     let haveNewBitmark = localAssets.findIndex(asset => !asset.isViewed) >= 0;
     let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
-      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0) +
+      (DataController.getIftttInformation().bitmarkFiles ? DataController.getIftttInformation().bitmarkFiles.length : 0);
     let { trackingBitmarks } = DataController.getTrackingBitmarks();
     this.state = {
       mainTab: this.props.mainTab,
@@ -57,14 +58,16 @@ export class BottomTabsComponent extends React.Component {
 
   handerChangeActiveIncomingTransferOffer() {
     let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
-      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0) +
+      (DataController.getIftttInformation().bitmarkFiles ? DataController.getIftttInformation().bitmarkFiles.length : 0);
     this.setState({ transactionNumber });
     NotificationService.setApplicationIconBadgeNumber(transactionNumber);
   }
 
   handerDonationInformationChange() {
     let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
-      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0) +
+      (DataController.getIftttInformation().bitmarkFiles ? DataController.getIftttInformation().bitmarkFiles.length : 0);
     this.setState({ transactionNumber });
     NotificationService.setApplicationIconBadgeNumber(transactionNumber);
   }

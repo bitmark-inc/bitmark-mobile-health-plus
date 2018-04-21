@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 
-import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel } from './../models';
+import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel } from './../models';
 import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
@@ -286,11 +286,16 @@ const doTrackingBitmark = async (asset, bitmark) => {
 
 const doStopTrackingBitmark = async (bitmark) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to tracking property.');
+  return await processing(DataController.doStopTrackingBitmark(touchFaceIdSession, bitmark));
+}
+
+const doIssueIftttData = async (iftttBitmarkFile) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to issuance.');
   if (!touchFaceIdSession) {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doStopTrackingBitmark(touchFaceIdSession, bitmark));
+  return await processing(DataController.doIssueIftttData(touchFaceIdSession, iftttBitmarkFile));
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
@@ -330,6 +335,7 @@ let AppController = {
   doTrackingBitmark,
   doStopTrackingBitmark,
 
+  doIssueIftttData,
   doReloadUserData,
 
   doStartBackgroundProcess,

@@ -17,22 +17,31 @@ export class IssuanceOptionsComponent extends React.Component {
     super(props);
     this.onChooseFile = this.onChooseFile.bind(this);
     this.issueHealthData = this.issueHealthData.bind(this);
+    this.issueIftttData = this.issueIftttData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
+    this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
     this.state = {
       donationInformation: DataController.getDonationInformation(),
+      iftttInformation: DataController.getIftttInformation(),
     }
   }
 
   // ==========================================================================================
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
   }
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
   }
   // ==========================================================================================
   handerDonationInformationChange() {
     this.setState({ donationInformation: DataController.getDonationInformation() });
+  }
+
+  handerIftttInformationChange() {
+    this.setState({ iftttInformation: DataController.getIftttInformation() });
   }
 
   onChooseFile() {
@@ -88,6 +97,24 @@ export class IssuanceOptionsComponent extends React.Component {
       this.props.screenProps.homeNavigation.dispatch(resetHomePage);
     }
   }
+  issueIftttData() {
+    if (!this.state.iftttInformation.connectIFTTT) {
+      this.props.screenProps.homeNavigation.navigate('IftttActive');
+    } else {
+      const resetHomePage = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: {
+              displayedTab: { mainTab: BottomTabsComponent.MainTabs.account, subTab: 'AUTHORIZED' },
+              needReloadData: true,
+            }
+          }),
+        ]
+      });
+      this.props.screenProps.homeNavigation.dispatch(resetHomePage);
+    }
+  }
 
   render() {
     return (
@@ -107,6 +134,11 @@ export class IssuanceOptionsComponent extends React.Component {
             <Text style={issuanceOptionsStyle.optionButtonText}>HEALTH DATA</Text>
             {!this.state.donationInformation.activeBitmarkHealthDataAt && <Image style={issuanceOptionsStyle.optionButtonNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
             {!!this.state.donationInformation.activeBitmarkHealthDataAt && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
+          </TouchableOpacity>
+          <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.issueIftttData}>
+            <Text style={issuanceOptionsStyle.optionButtonText}>IFTTT DATA</Text>
+            {!this.state.iftttInformation.connectIFTTT && <Image style={issuanceOptionsStyle.optionButtonNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
+            {!!this.state.iftttInformation.connectIFTTT && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
           </TouchableOpacity>
 
           <Text style={issuanceOptionsStyle.message}>
