@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image, WebView,
+  View, Text, TouchableOpacity, Image, WebView, ActivityIndicator,
 } from 'react-native';
 
 import styles from './ifttt-active.component.style';
@@ -9,13 +9,32 @@ import defaultStyle from './../../../../commons/styles';
 import { config } from '../../../../configs';
 import { AppController, DataController } from '../../../../managers';
 import { FullComponent } from '../../../../commons/components';
+import { EventEmiterService } from '../../../../services';
 
 export class IftttActiveComponent extends React.Component {
   constructor(props) {
     super(props);
     this.onMessage = this.onMessage.bind(this);
     this.onNavigationStateChange = this.onNavigationStateChange.bind(this);
+    this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
+
+    this.state = {
+      iftttInformation: DataController.getIftttInformation(),
+      loading: true,
+    }
     this.signed = false;
+  }
+
+  // ==========================================================================================
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
+  }
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
+  }
+  // ==========================================================================================
+  handerIftttInformationChange() {
+    this.setState({ iftttInformation: DataController.getIftttInformation() });
   }
 
   onMessage(event) {
@@ -46,16 +65,22 @@ export class IftttActiveComponent extends React.Component {
     return (
       <FullComponent
         header={(<View style={defaultStyle.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => {
+          {this.state.iftttInformation && this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={defaultStyle.headerLeft} />}
+          {!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => {
             DataController.doReloadIFTTTInformation().catch(error => {
               console.log('doReloadIFTTTInformation : ', error);
             });
             this.props.navigation.goBack();
           }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </TouchableOpacity>}
           <Text style={defaultStyle.headerTitle}>IFTTT DATA</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          {(!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT) && <TouchableOpacity style={defaultStyle.headerRight} />}
+          {this.state.iftttInformation && this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+            this.props.navigation.goBack();
+          }}>
+            <Text style={defaultStyle.headerRightText}>Done</Text>
+          </TouchableOpacity>}
         </View>)}
 
         content={(<View style={styles.main}>
@@ -64,10 +89,20 @@ export class IftttActiveComponent extends React.Component {
             source={{ uri: config.ifttt_invite_url }}
             onMessage={this.onMessage}
             onNavigationStateChange={this.onNavigationStateChange}
+            onLoadStart={() => this.setState({ loading: true })}
             onLoadEnd={() => {
+              this.setState({ loading: false })
               this.webViewRef.postMessage(DataController.getUserInformation().bitmarkAccountNumber);
             }}
           />
+          {this.state.loading && <View style={{
+            flex: 1, position: 'absolute', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            width: '100%',
+            height: '100%',
+            borderWidth: 1,
+          }}>
+            <ActivityIndicator style={{ marginTop: 20 }} size={"large"} />
+          </View>}
         </View>)}
       />
     );

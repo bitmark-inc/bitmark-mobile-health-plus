@@ -14,6 +14,7 @@ let EventEmiterService = {
     CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER: 'change-user-data:active-incoming-transfer-offer',
     CHANGE_USER_DATA_TRANSACTIONS: 'change-user-data:transactions',
     CHANGE_USER_DATA_DONATION_INFORMATION: 'change-user-data:donation-information',
+    CHANGE_USER_DATA_IFTTT_INFORMATION: 'change-user-data:ifttt-information',
   },
   on: (eventName, func) => {
     NativeAppEventEmitter.addListener(eventName, func);

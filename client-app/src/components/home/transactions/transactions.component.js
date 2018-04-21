@@ -19,8 +19,9 @@ const SubTabs = {
 };
 
 const ActionTypes = {
-  transfer: 'Property Transfer Request',
-  donation: '',
+  transfer: 'transfer',
+  donation: 'donation',
+  ifttt: 'ifttt',
 };
 
 export class TransactionsComponent extends React.Component {
@@ -100,6 +101,16 @@ export class TransactionsComponent extends React.Component {
         item.type = ActionTypes.donation;
         item.typeTitle = item.study ? 'Property DONATION Request' : 'Property ISSUANCE Request';
         item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null);
+        actionRequired.push(item);
+      });
+    }
+
+    let ifttInformation = DataController.getIftttInformation();
+    if (ifttInformation.bitmarkFiles) {
+      ifttInformation.bitmarkFiles.forEach(item => {
+        item.key = actionRequired.length;
+        item.type = ActionTypes.ifttt;
+        item.typeTitle = 'Property ISSUANCE Request';
         actionRequired.push(item);
       });
     }
@@ -349,12 +360,17 @@ export class TransactionsComponent extends React.Component {
                         <Text style={transactionsStyle.transferOfferAssetName}> {item.transferOffer.asset.name} </Text>transfer request.
                       </Text>}
 
-                    {!item.transferOffer && <View style={transactionsStyle.donationTask}>
+                    {item.type === ActionTypes.donation && <View style={transactionsStyle.donationTask}>
                       <Text style={transactionsStyle.donationTaskTitle} >{item.title}</Text>
                       <View style={transactionsStyle.donationTaskDescriptionArea}>
                         <Text style={transactionsStyle.donationTaskDescription}>{item.description}</Text>
                         {item.important && <Image style={transactionsStyle.donationTaskImportantIcon} source={require('../../../../assets/imgs/important-blue.png')} />}
                       </View>
+                    </View>}
+
+                    {item.type === ActionTypes.ifttt && <View style={transactionsStyle.iftttTask}>
+                      <Text style={transactionsStyle.iftttTitle}>{item.propertyName}</Text>
+                      <Text style={transactionsStyle.iftttDescription}>Sign your bitmark issuance for your IFTTT data.</Text>
                     </View>}
                   </TouchableOpacity>)
                 }} />

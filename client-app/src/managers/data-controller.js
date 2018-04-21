@@ -8,7 +8,7 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK, IftttModel } from '../models';
 import { DonationService } from '../services/donation-service';
 
 let userInformation = {};
@@ -17,6 +17,7 @@ let userData = {
   activeIncompingTransferOffers: null,
   transactions: null,
   donationInformation: null,
+  iftttInformation: null,
 };
 let isLoadingData = false;
 // ================================================================================================================================================
@@ -150,6 +151,32 @@ const runGetDonationInformationInBackground = () => {
     });
   });
 };
+
+let isRunningGetIFTTTInformationInBackground = false
+const runGetIFTTTInformationInBackground = () => {
+  return new Promise((resolve) => {
+    if (isRunningGetIFTTTInformationInBackground) {
+      return doCheckRunning(() => isRunningGetIFTTTInformationInBackground).then(resolve);
+    }
+    isRunningGetIFTTTInformationInBackground = true;
+    IftttModel.doGetIFtttInformation(userInformation.bitmarkAccountNumber).then(iftttInformation => {
+      iftttInformation = iftttInformation || {};
+      if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
+        userData.iftttInformation = iftttInformation;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, userData.iftttInformation);
+      }
+      resolve();
+      isRunningGetIFTTTInformationInBackground = false;
+      console.log('runOnBackground  runGetIFTTTInformationInBackground success :', iftttInformation);
+    }).catch(error => {
+      resolve();
+      isRunningGetIFTTTInformationInBackground = false;
+      console.log('runOnBackground  runGetIFTTTInformationInBackground error :', error);
+    });
+  });
+};
+
+
 const configNotification = () => {
   const onRegisterred = async (registerredNotificaitonInfo) => {
     let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
@@ -196,6 +223,7 @@ const runOnBackground = async () => {
           runGetTransactionsInBackground(),
           runGetActiveIncomingTransferOfferInBackground(),
           runGetDonationInformationInBackground(),
+          runGetIFTTTInformationInBackground(),
         ]).then(resolve);
       });
     };
@@ -207,6 +235,9 @@ const runOnBackground = async () => {
     }
     if (JSON.stringify(userData.donationInformation) !== JSON.stringify(oldUserData.donationInformation)) {
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+    }
+    if (JSON.stringify(userData.iftttInformation) !== JSON.stringify(oldUserData.iftttInformation)) {
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
     }
     if (JSON.stringify(userData.transactions) !== JSON.stringify(oldUserData.transactions)) {
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
@@ -296,6 +327,11 @@ const doOpenApp = async () => {
     if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
       userData.donationInformation = donationInformation || {};
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+    }
+    let iftttInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION);
+    if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
+      userData.iftttInformation = iftttInformation || {};
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
     }
     let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
     localAssets = localAssets.length > 0 ? localAssets : [];
@@ -462,6 +498,10 @@ const getDonationInformation = () => {
   return merge({}, userData.donationInformation || {});
 };
 
+const getIftttInformation = () => {
+  return merge({}, userData.iftttInformation || {});
+};
+
 const DataController = {
   doOpenApp,
   doLogin,
@@ -479,6 +519,7 @@ const DataController = {
   doBitmarkHealthData,
   doDownloadBitmark,
   doUpdateViewStatus,
+  doReloadIFTTTInformation: runGetIFTTTInformationInBackground,
 
   getTransactionData,
   getUserBitmarks,
@@ -487,6 +528,7 @@ const DataController = {
   getApplicationBuildNumber,
   getLocalBitmarkInformation,
   getDonationInformation,
+  getIftttInformation,
   isLoadingData: () => isLoadingData,
 };
 
