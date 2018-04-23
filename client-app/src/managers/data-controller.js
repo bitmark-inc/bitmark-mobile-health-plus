@@ -536,6 +536,16 @@ const doGetProvenance = async (bitmarkId) => {
     return await BitmarkService.doGetProvenance(bitmarkId);
   }
 }
+const doRevokeIftttToken = async (touchFaceIdSession) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let iftttInformation = await IftttModel.doRevokeIftttToken(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
+    userData.iftttInformation = iftttInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, userData.iftttInformation);
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
+  }
+  return iftttInformation;
+};
 const doIssueIftttData = async (touchFaceIdSession, iftttBitmarkFile) => {
   let folderPath = FileUtil.CacheDirectory + '/Bitmark-IFTTT';
   await FileUtil.mkdir(folderPath);
@@ -634,7 +644,7 @@ const DataController = {
   doGetProvenance,
 
   doReloadIFTTTInformation: runGetIFTTTInformationInBackground,
-
+  doRevokeIftttToken,
   doIssueIftttData,
 
   getTransactionData,

@@ -288,7 +288,14 @@ const doStopTrackingBitmark = async (bitmark) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to tracking property.');
   return await processing(DataController.doStopTrackingBitmark(touchFaceIdSession, bitmark));
 }
-
+const doRevokeIftttToken = async () => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is revoke access to your IFTTT.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doRevokeIftttToken(touchFaceIdSession));
+};
 const doIssueIftttData = async (iftttBitmarkFile) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to issuance.');
   if (!touchFaceIdSession) {
@@ -334,7 +341,7 @@ let AppController = {
   doDownloadBitmark,
   doTrackingBitmark,
   doStopTrackingBitmark,
-
+  doRevokeIftttToken,
   doIssueIftttData,
   doReloadUserData,
 

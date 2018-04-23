@@ -97,7 +97,23 @@ export class AccountDetailComponent extends React.Component {
   }
 
   revokeIFTTT() {
-
+    Alert.alert('Are you sure you want to revoke access to your IFTTT?', '', [{
+      text: 'No',
+    }, {
+      text: 'Yes',
+      style: 'cancel',
+      onPress: () => {
+        AppController.doRevokeIftttToken().then((result) => {
+          if (result) {
+            DataController.doReloadUserData();
+            this.props.navigation.goBack();
+          }
+        }).catch(error => {
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+          console.log('doInactiveBitmarkHealthData error :', error);
+        });
+      }
+    }]);
   }
 
   render() {
