@@ -539,15 +539,15 @@ const doGetProvenance = async (bitmarkId) => {
 const doIssueIftttData = async (touchFaceIdSession, iftttBitmarkFile) => {
   let folderPath = FileUtil.CacheDirectory + '/Bitmark-IFTTT';
   await FileUtil.mkdir(folderPath);
-  let filename = iftttBitmarkFile.filePath.substring(iftttBitmarkFile.filePath.lastIndexOf("/") + 1, iftttBitmarkFile.filePath.length);
+  let filename = iftttBitmarkFile.assetInfo.filePath.substring(iftttBitmarkFile.assetInfo.filePath.lastIndexOf("/") + 1, iftttBitmarkFile.assetInfo.filePath.length);
   let filePath = folderPath + '/' + filename;
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  let downloadResult = await IftttModel.downloadBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.filePath, filePath);
+  let downloadResult = await IftttModel.downloadBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.id, filePath);
   if (downloadResult.statusCode > 400) {
     throw new Error('Download file error!');
   }
-  await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, iftttBitmarkFile.propertyName, iftttBitmarkFile.metadata, 1);
-  let iftttInformation = await IftttModel.doRemoveBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.filePath);
+  await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, iftttBitmarkFile.assetInfo.propertyName, iftttBitmarkFile.assetInfo.metadata, 1);
+  let iftttInformation = await IftttModel.doRemoveBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.id);
 
   if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
     userData.iftttInformation = iftttInformation;

@@ -24,8 +24,8 @@ const doGetIFtttInformation = (accountNumber) => {
   });
 };
 
-const downloadBitmarkFile = async (accountNumber, timestampe, signature, filePathInServer, filePath) => {
-  let tempUrl = config.ifttt_server_url + `/api/user/bitmark-file?file_path=${filePathInServer}`;
+const downloadBitmarkFile = async (accountNumber, timestampe, signature, id, filePath) => {
+  let tempUrl = config.ifttt_server_url + `/api/user/bitmark-file/${id}`;
   return await FileUtil.downloadFile(tempUrl, filePath, {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
@@ -35,10 +35,10 @@ const downloadBitmarkFile = async (accountNumber, timestampe, signature, filePat
   });
 };
 
-const doRemoveBitmarkFile = (accountNumber, timestampe, signature, filePathInServer) => {
+const doRemoveBitmarkFile = (accountNumber, timestampe, signature, id) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempUrl = config.ifttt_server_url + `/api/user/bitmark-file?file_path=${filePathInServer}`;
+    let tempUrl = config.ifttt_server_url + `/api/user/bitmark-file/${id}`;
     fetch(tempUrl, {
       method: 'DELETE',
       headers: {

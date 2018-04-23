@@ -114,6 +114,7 @@ export class TransactionsComponent extends React.Component {
         item.key = actionRequired.length;
         item.type = ActionTypes.ifttt;
         item.typeTitle = 'Property ISSUANCE Request';
+        item.timestamp = item.assetInfo.timestamp;
         actionRequired.push(item);
       });
     }
@@ -388,7 +389,7 @@ export class TransactionsComponent extends React.Component {
                     </View>}
 
                     {item.type === ActionTypes.ifttt && <View style={transactionsStyle.iftttTask}>
-                      <Text style={transactionsStyle.iftttTitle}>{item.propertyName}</Text>
+                      <Text style={transactionsStyle.iftttTitle}>{item.assetInfo.propertyName}</Text>
                       <Text style={transactionsStyle.iftttDescription}>Sign your bitmark issuance for your IFTTT data.</Text>
                     </View>}
                   </TouchableOpacity>)
