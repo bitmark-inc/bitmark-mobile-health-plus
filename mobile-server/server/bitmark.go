@@ -36,14 +36,9 @@ func (s *Server) DeleteBitmarkTracking(c *gin.Context) {
 	bitmarkID := c.Param("bitmarkid")
 
 	account := c.GetString("requester")
-	found, err := s.bitmarkStore.DeleteTrackingBitmark(account, bitmarkID)
+	_, err := s.bitmarkStore.DeleteTrackingBitmark(account, bitmarkID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-		return
-	}
-
-	if !found {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "not found"})
 		return
 	}
 
