@@ -4,7 +4,14 @@ import { FaceTouchId, BitmarkSDK } from './adapters'
 import { AsyncStorage } from 'react-native';
 import { config } from './../configs';
 
-const app_local_data_key = 'bitmark-app';
+const KEYS = {
+  USER_INFORMATION: 'bitmark-app',
+
+  USER_DATA_LOCAL_BITMARKS: 'user-data:local-bitmarks',
+  USER_DATA_DONATION_INFORMATION: 'user-data:doantion-information',
+  USER_DATA_TRANSACTIONS: 'user-data:transactions',
+  USER_DATA_TRANSFER_OFFERS: 'user-data:transfer-offers',
+};
 
 // ================================================================================================
 // ================================================================================================
@@ -17,7 +24,7 @@ const doRichSignMessage = (messages, sessionId) => {
 
 // ================================================================================================
 const doSetLocalData = (localDataKey, data) => {
-  localDataKey = localDataKey || app_local_data_key;
+  localDataKey = localDataKey || KEYS.USER_INFORMATION;
   data = data || {};
   return new Promise((resolve, reject) => {
     AsyncStorage.setItem(localDataKey, JSON.stringify(data), (error) => {
@@ -29,7 +36,7 @@ const doSetLocalData = (localDataKey, data) => {
   });
 };
 const doGetLocalData = (localDataKey) => {
-  localDataKey = localDataKey || app_local_data_key;
+  localDataKey = localDataKey || KEYS.USER_INFORMATION;
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem(localDataKey, (error, data) => {
       if (error) {
@@ -132,9 +139,12 @@ const doTryCreateSignatureData = async (touchFaceIdMessage) => {
   return { timestamp, signature: signatures[0] };
 };
 
-const doCreateSignatureData = async () => {
+const doCreateSignatureData = async (touchFaceId) => {
+  if (!touchFaceId) {
+    touchFaceId = currentFaceTouceSessionId;
+  }
   let timestamp = moment().toDate().getTime() + '';
-  let signatures = await doRichSignMessage([timestamp], currentFaceTouceSessionId);
+  let signatures = await doRichSignMessage([timestamp], touchFaceId);
   return { timestamp, signature: signatures[0] };
 };
 
@@ -143,7 +153,7 @@ const doCreateSignatureData = async () => {
 // ================================================================================================
 
 let CommonModel = {
-  app_local_data_key,
+  KEYS,
   doCheckPasscodeAndFaceTouchId,
   doSetLocalData,
   doGetLocalData,

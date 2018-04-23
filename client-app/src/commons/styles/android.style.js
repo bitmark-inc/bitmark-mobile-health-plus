@@ -1,21 +1,19 @@
 import { StyleSheet } from 'react-native'
-import { android } from './../../configs';
 import { convertWidth } from './../../utils';
 
 export default StyleSheet.create({
   header: {
-    width: android.constant.headerSize.width,
-    height: android.constant.headerSize.height,
+    flex: 1,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: android.constant.headerSize.paddingTop,
     backgroundColor: '#F5F5F5',
   },
   headerLeft: {
-    width: convertWidth(70),
+    width: 70,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-start',
     height: '100%'
   },
@@ -28,21 +26,23 @@ export default StyleSheet.create({
   headerCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    maxWidth: convertWidth(375) - convertWidth(140),
-    height: '100%'
+    justifyContent: 'center',
+    maxWidth: convertWidth(375) - 140,
+    height: '100%',
   },
   headerTitle: {
     textAlign: 'center',
     fontSize: 18,
     fontWeight: '900',
     fontFamily: 'Avenir Black',
-    maxWidth: convertWidth(235),
+    maxWidth: convertWidth(375) - 140,
   },
   headerRight: {
-    width: convertWidth(70),
+    width: 70,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-end',
-    height: '100%'
+    height: '100%',
   },
   headerRightText: {
     fontFamily: 'Avenir Light',

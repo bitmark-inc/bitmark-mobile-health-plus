@@ -37,7 +37,7 @@ const BitmarkSDK = {
         if (ok) {
           resolve(result);
         } else {
-          reject(newError(result, 'Can not reuest session!'));
+          reject(newError(result, 'Can not request session!'));
         }
       });
     });
@@ -129,14 +129,26 @@ const BitmarkSDK = {
       });
     });
   },
+  transferOneSignature: (sessionId, bitmarkId, address) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.transferOneSignature(sessionId, bitmarkId, address, (ok, results) => {
+        if (ok) {
+          resolve({ result: ok });
+        } else {
+          reject(new Error(results || 'Can transfer One Signature!'));
+        }
+      });
+    });
+  },
 
-  issueThenTransferFile: (sessionId, filePath, property_name, metadata, receiver) => {
+  issueThenTransferFile: (sessionId, filePath, property_name, metadata, receiver, extra_info) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.issueThenTransferFile(sessionId, {
         url: filePath,
         property_name,
         metadata,
         receiver,
+        extra_info,
       }, (ok, result) => {
         if (ok && result) {
           resolve(result);
@@ -147,22 +159,22 @@ const BitmarkSDK = {
     });
   },
 
-  sign1stForTransfer: (sessionId, bitmarkId, receiver) => {
+  createAndSubmitTransferOffer: (sessionId, bitmarkId, receiver) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.sign1stForTransfer(sessionId, bitmarkId, receiver, (ok, result, signature) => {
-        if (ok && result && signature) {
-          resolve({ txid: result, signature });
+      SwiftBitmarkSDK.createAndSubmitTransferOffer(sessionId, bitmarkId, receiver, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
         } else {
           reject(newError(result, 'Can not sign first signature for transfer!'));
         }
       });
     });
   },
-  sign2ndForTransfer: (sessionId, txid, signature1) => {
+  signForTransferOfferAndSubmit: (sessionId, txid, signature1, offerId, action) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.sign2ndForTransfer(sessionId, txid, signature1, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
+      SwiftBitmarkSDK.signForTransferOfferAndSubmit(sessionId, txid, signature1, offerId, action, (ok, result) => {
+        if (ok) {
+          resolve({ result: ok });
         } else {
           reject(newError(result, 'Can not sign second signature for transfer!'));
         }
@@ -200,7 +212,7 @@ const BitmarkSDK = {
         if (ok) {
           resolve();
         } else {
-          reject(newError(result, 'metadata invalid!'));
+          reject(newError(result, 'Metadata invalid!'));
         }
       });
     });
@@ -211,7 +223,7 @@ const BitmarkSDK = {
         if (ok) {
           resolve();
         } else {
-          reject(newError(result, 'account invalid!'));
+          reject(newError(result, 'Account invalid!'));
         }
       });
     });
@@ -227,6 +239,5 @@ const BitmarkSDK = {
       });
     });
   },
-
 };
 export { BitmarkSDK };

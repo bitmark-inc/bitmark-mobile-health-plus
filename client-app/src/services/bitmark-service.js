@@ -1,45 +1,71 @@
 import moment from 'moment';
-import { BitmarkModel } from "../models";
+import { merge } from 'lodash';
+import { BitmarkModel, CommonModel } from "../models";
 import { sortList } from './../utils';
 import { TransactionService } from '.';
 
 // ================================================================================================
 // ================================================================================================
-let doGetBitmarks = async (bitmarkAccountNumber) => {
-  let data = await BitmarkModel.doGetAllBitmarks(bitmarkAccountNumber);
-  let outgoingTransferOffers = await TransactionService.doGetActiveOutgoinTransferOffers(bitmarkAccountNumber);
-
-  let localAssets = [];
+let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
+  let lastOffset = null;
+  if (oldLocalAssets) {
+    oldLocalAssets.forEach(asset => {
+      asset.bitmarks.forEach(bitmark => {
+        lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
+      });
+    });
+  }
+  let data = await BitmarkModel.doGetAllBitmarks(bitmarkAccountNumber, lastOffset);
+  let localAssets = merge([], oldLocalAssets || []);
   if (data && data.bitmarks && data.assets) {
-    for (let asset of data.assets) {
-      asset.asset_id = asset.id;
-      for (let bitmark of data.bitmarks) {
-        if (!bitmark.checked && bitmark.asset_id === asset.id) {
-          bitmark.checked = true;
-          let isTransferring = outgoingTransferOffers.findIndex(item => item.bitmark_id === bitmark.id);
-          bitmark.status = isTransferring >= 0 ? 'transferring' : bitmark.status;
-          bitmark.created_at = moment(bitmark.created_at).format('YYYY MMM DD HH:mm:ss');
-          if (!bitmark.bitmark_id) {
-            bitmark.bitmark_id = bitmark.id;
+    for (let bitmark of data.bitmarks) {
+      bitmark.bitmark_id = bitmark.id;
+      bitmark.isViewed = false;
+      if (bitmark.owner === bitmarkAccountNumber) {
+        let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
+        if (oldAsset) {
+          let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => ob.id === bitmark.id);
+          if (oldBitmarkIndex >= 0) {
+            oldAsset.bitmarks[oldBitmarkIndex] = bitmark;
+          } else {
+            oldAsset.bitmarks.push(bitmark);
           }
-          if (bitmark.asset_id === asset.id) {
-            if (!asset.bitmarks) {
-              asset.bitmarks = [];
-              asset.totalPending = 0;
+          oldAsset.isViewed = false;
+        } else {
+          let newAsset = data.assets.find(asset => asset.id === bitmark.asset_id);
+          newAsset.bitmarks = [bitmark];
+          newAsset.isViewed = false;
+          localAssets.push(newAsset);
+        }
+      } else {
+        let oldAssetIndex = (localAssets).findIndex(asset => asset.id === bitmark.asset_id);
+        if (oldAssetIndex >= 0) {
+          let oldAsset = localAssets[oldAssetIndex];
+          let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => bitmark.id === ob.id);
+          if (oldBitmarkIndex >= 0) {
+            oldAsset.bitmarks.splice(oldBitmarkIndex, 1);
+            if (oldAsset.bitmarks.length === 0) {
+              localAssets.splice(oldAssetIndex, 1);
             }
-            asset.metadata = (asset.metadata && (typeof asset.metadata === 'string')) ? JSON.parse(asset.metadata) : asset.metadata;
-            asset.created_at = moment(asset.created_at).format('YYYY MMM DD HH:mm:ss')
-            asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-            asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
-            asset.bitmarks.push(bitmark);
           }
         }
       }
-      asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
-      localAssets.push(asset);
     }
   }
+  let outgoingTransferOffers = await TransactionService.doGetActiveOutgoinTransferOffers(bitmarkAccountNumber);
+  localAssets.forEach(asset => {
+    asset.totalPending = 0;
+    asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
+    asset.bitmarks.forEach(bitmark => {
+      let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
+      bitmark.displayStatus = transferOffer ? 'transferring' : bitmark.status;
+      bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
+      asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
+      asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
+    });
+  });
   localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
+  CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, localAssets);
   return localAssets;
 };
 

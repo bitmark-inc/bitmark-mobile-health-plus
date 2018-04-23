@@ -1,13 +1,6 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, } from 'react-native';
 import { convertWidth } from './../../../../utils';
-import {
-  ios,
-  android // TODO
-} from './../../../../configs';
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
+
 
 export default StyleSheet.create({
   body: {
@@ -35,21 +28,20 @@ export default StyleSheet.create({
     height: 130,
     width: convertWidth(130),
     resizeMode: 'contain',
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     marginTop: 17,
   },
   topButtonsArea: {
     position: 'absolute',
-    top: constant.headerSize.height,
+    top: 0,
     right: 0,
     zIndex: 10,
-    width: convertWidth(198),
-    height: 135,
+    width: 198,
     backgroundColor: '#F5F5F5',
   },
   downloadAssetButton: {
     width: '100%',
-    height: 45,
+    minHeight: 45,
     flexDirection: 'column',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
@@ -66,7 +58,7 @@ export default StyleSheet.create({
   },
   topButton: {
     width: '100%',
-    height: 45,
+    minHeight: 45,
     flexDirection: 'column',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
@@ -94,28 +86,28 @@ export default StyleSheet.create({
   bottomImageBar: {
     borderWidth: 2,
     width: convertWidth(130),
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
   },
   assetName: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 18,
     lineHeight: 21,
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     marginTop: 34,
   },
   assetCreateAt: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
-    lineHeight: 16,
-    marginLeft: convertWidth(20),
+    lineHeight: 15,
+    marginLeft: convertWidth(19),
     height: 29,
     width: convertWidth(337),
   },
   bottomAssetNameBar: {
     borderWidth: 1,
     width: convertWidth(130),
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
   },
 
   provenanceLabel: {
@@ -123,8 +115,8 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     fontWeight: '900',
-    marginLeft: convertWidth(20),
-    marginTop: 25,
+    marginLeft: convertWidth(19),
+    marginTop: 34,
     height: 25,
   },
   provenancesArea: {
@@ -135,39 +127,42 @@ export default StyleSheet.create({
     backgroundColor: '#F5F5F5',
     width: convertWidth(337),
     height: 18,
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     marginTop: 18,
   },
   provenancesHeaderLabelTimestamp: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 14,
-    width: convertWidth(176),
+    width: convertWidth(170),
   },
   provenancesHeaderLabelOwner: {
+    marginLeft: 10,
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 14,
     width: convertWidth(161),
   },
   provenanceListArea: {
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   provenancesRow: {
     flexDirection: 'row',
     alignItems: 'center',
     width: convertWidth(340),
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     height: 36,
-    marginTop: 9,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   provenancesRowTimestamp: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 14,
-    width: convertWidth(176),
+    width: convertWidth(170),
   },
   provenancesRowOwnerRow: {
+    marginLeft: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -182,7 +177,7 @@ export default StyleSheet.create({
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 16,
-    width: convertWidth(118),
+    width: convertWidth(161),
   },
   listingButtonArea: {
     flexDirection: 'column',
@@ -195,7 +190,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 42,
+    minHeight: 42,
   },
   listingButtonText: {
     fontFamily: 'Avenir Light',

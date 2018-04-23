@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image, TouchableOpacity, ScrollView,
   Linking,
   AppState,
   // NativeModules,
 } from 'react-native'
 import { CommonModel } from './../../../models';
 
-import { AppScaleComponent } from './../../../commons/components';
 import faceTouchIdStyle from './face-touch-id.component.style';
 
 export class FaceTouchIdComponent extends React.Component {
@@ -49,6 +48,7 @@ export class FaceTouchIdComponent extends React.Component {
 
   doContinue() {
     this.props.navigation.state.params.doContinue().then((user) => {
+      console.log('doContinue success:');
       if (user) {
         this.props.navigation.navigate('Notification');
       }
@@ -60,8 +60,8 @@ export class FaceTouchIdComponent extends React.Component {
 
   render() {
     return (
-      <AppScaleComponent ref={(r) => { this.appScaler = r; }}>
-        <View style={[faceTouchIdStyle.body]}>
+      <View style={[faceTouchIdStyle.body]}>
+        <ScrollView style={[faceTouchIdStyle.scrollContent]} >
           <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>
             TOUCH/FACE ID & PASSCODE
           </Text>
@@ -84,8 +84,8 @@ export class FaceTouchIdComponent extends React.Component {
               <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </AppScaleComponent>
+        </ScrollView>
+      </View>
     );
   }
 }

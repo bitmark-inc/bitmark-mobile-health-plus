@@ -1,0 +1,137 @@
+import { StyleSheet, } from 'react-native';
+import { convertWidth } from '../../../../../../utils';
+
+export default StyleSheet.create({
+  body: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: 'white',
+  },
+
+  swipePage: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+
+  title: {
+    fontFamily: 'Avenir Black',
+    fontSize: 28,
+    fontWeight: '900',
+    textAlign: 'center',
+    marginTop: 48,
+    width: convertWidth(320),
+  },
+  message: {
+    fontFamily: 'Avenir Heavy',
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginTop: 28,
+    width: convertWidth(320),
+  },
+  description: {
+    fontFamily: 'Avenir Black',
+    fontSize: 14,
+    fontWeight: '300',
+    marginTop: 37,
+    textAlign: 'center',
+    width: convertWidth(320),
+  },
+  interestedButton: {
+    height: 46,
+    width: convertWidth(186),
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#0060F2',
+    borderRadius: 5,
+    marginTop: 37,
+  },
+  interestedButtonText: {
+    fontFamily: 'Avenir Heavy',
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+    color: '#0060F2',
+  },
+  optOutButton: {
+    height: 46,
+    width: convertWidth(186),
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#A4B5CD',
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  optOutButtonText: {
+    fontFamily: 'Avenir Heavy',
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+    color: '#A4B5CD',
+  },
+  thankYouMessage: {
+    fontFamily: 'Avenir Light',
+    fontSize: 14,
+    fontWeight: '300',
+    marginTop: 37,
+    textAlign: 'center',
+    width: convertWidth(320),
+  },
+
+  emailInput: {
+    marginTop: 81,
+    height: 46,
+    width: convertWidth(290),
+    borderWidth: 1,
+    fontFamily: 'Avenir Heavy',
+    fontSize: 20,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  emailError: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '600',
+    fontSize: 15,
+    marginLeft: convertWidth(19),
+    color: '#FF003C',
+    marginTop: 5,
+    height: 20,
+  },
+
+  congratulations: {
+    fontFamily: 'Avenir Heavy',
+    fontSize: 17,
+    fontWeight: '900',
+    color: '#0060F2',
+    marginTop: 105,
+    width: convertWidth(286),
+  },
+  madelenaImage: {
+    width: 85,
+    height: 85,
+    resizeMode: 'contain',
+    marginTop: 53,
+  },
+  madelenaName: {
+    fontFamily: 'Avenir Black',
+    fontSize: 15,
+    fontWeight: '900',
+    textAlign: 'center',
+    marginTop: 12,
+  },
+  madelenaThankMessage: {
+    fontFamily: 'Avenir Light',
+    fontSize: 15,
+    fontWeight: '300',
+    textAlign: 'center',
+    marginTop: 4,
+    width: convertWidth(285),
+  },
+
+});

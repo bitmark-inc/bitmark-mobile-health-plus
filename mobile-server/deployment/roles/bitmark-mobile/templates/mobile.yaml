@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "{{ aws_ssl_arn }}"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+  name: bitmark-mobile-api
+  namespace: mobile
+  labels:
+    app: bitmark-mobile
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    nodePort: 30099
+    targetPort: 9005
+  selector:
+    app: bitmark-mobile
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bitmark-mobile-internal
+  namespace: mobile
+  labels:
+    app: bitmark-mobile
+spec:
+  ports:
+  - name: http
+    port: 9006
+    protocol: TCP
+    nodePort: 30100
+    targetPort: 9006
+  selector:
+    app: bitmark-mobile
+  type: NodePort
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: bitmark-mobile
+  namespace: mobile
+  labels:
+    app: bitmark-mobile
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bitmark-mobile
+    spec:
+      containers:
+        - name: bitmark-mobile
+          image: 083397868157.dkr.ecr.ap-northeast-1.amazonaws.com/bitmark-mobile:c9b7afd
+          ports:
+            - name: api
+              containerPort: 9005
+            - name: internal
+              containerPort: 9006
+          command:
+            - /usr/bin/mobile-server 
+            - -conf=/.config/mobile-server/bitmark-mobile.conf
+          resources:
+            requests:
+              cpu: 0.125
+              memory: 256Mi
+          volumeMounts:
+            - name: bitmark-mobile-config
+              mountPath: /.config/mobile-server
+              readOnly: true
+      volumes:
+      - name: bitmark-mobile-config
+        secret:
+          secretName: bitmark-mobile-config
+          items:
+            - key: bitmark-mobile.conf
+              path: bitmark-mobile.conf

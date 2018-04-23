@@ -1,25 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView, FlatList, Image,
-  Platform,
-  WebView,
+  View, Text, TouchableOpacity, ScrollView, FlatList, Image, ActivityIndicator,
 } from 'react-native';
 
 import { config } from './../../../configs';
 import assetsStyle from './assets.component.style';
-import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
 import { AppController, DataController } from '../../../managers';
 import { EventEmiterService } from '../../../services';
 
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
+import defaultStyle from './../../../commons/styles';
+import { BitmarkWebViewComponent } from '../../../commons/components/bitmark-web-view/bitmark-web-view.component';
 
 const SubTabs = {
   local: 'Yours',
-  market: 'On Market',
   global: 'Global',
 }
 export class AssetsComponent extends React.Component {
@@ -28,42 +22,52 @@ export class AssetsComponent extends React.Component {
     this.switchSubtab = this.switchSubtab.bind(this);
     this.addProperty = this.addProperty.bind(this);
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
-    this.refreshPropertiesScreen = this.refreshPropertiesScreen.bind(this);
+    this.reloadData = this.reloadData.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
-    this.handerChangeMarketBitmarks = this.handerChangeMarketBitmarks.bind(this);
+    this.handerLoadingData = this.handerLoadingData.bind(this);
 
+
+    let subtab = SubTabs.local;
+    let localAssets = DataController.getUserBitmarks().localAssets;
+    let assets = null;
+    if (subtab === SubTabs.local && localAssets) {
+      assets = this.convertToFlatListData(localAssets);
+    }
     this.state = {
-      subtab: SubTabs.local,
+      subtab,
       accountNumber: '',
       copyText: 'COPY',
-      assets: [],
-      data: {
-        localAssets: DataController.getUserBitmarks().localAssets || [],
-        marketAssets: DataController.getUserBitmarks().marketAssets || [],
-      }
+      assets,
+      existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0,
+      isLoadingData: DataController.isLoadingData(),
     };
   }
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BITMARKS, this.handerChangeMarketBitmarks);
-    this.switchSubtab(this.state.subtab);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    if (this.props.screenProps.needReloadData) {
+      this.reloadData();
+      if (this.props.screenProps.doneReloadData) {
+        this.props.screenProps.doneReloadData()
+      }
+    }
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BITMARKS, this.handerChangeMarketBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
   handerChangeLocalBitmarks() {
     this.switchSubtab(this.state.subtab);
   }
 
-  handerChangeMarketBitmarks() {
-    this.switchSubtab(this.state.subtab);
+  handerLoadingData() {
+    this.setState({ isLoadingData: DataController.isLoadingData() });
   }
 
-  refreshPropertiesScreen() {
-    AppController.reloadBitmarks().then(() => {
+  reloadData() {
+    AppController.doReloadUserData().then(() => {
       this.switchSubtab(this.state.subtab);
     }).catch((error) => {
       console.log('getUserBitmark error :', error);
@@ -79,27 +83,22 @@ export class AssetsComponent extends React.Component {
   }
 
   switchSubtab(subtab) {
-    let marketAssets = DataController.getUserBitmarks().marketAssets || [];
-    let localAssets = DataController.getUserBitmarks().localAssets || [];
-    let assets = [];
-    if (subtab === SubTabs.local) {
+    let localAssets = DataController.getUserBitmarks().localAssets;
+    let assets = null;
+    if (localAssets) {
       assets = this.convertToFlatListData(localAssets);
-    } else if (subtab === SubTabs.market) {
-      assets = this.convertToFlatListData(marketAssets);
     }
-    this.setState({ subtab, assets, data: { localAssets, marketAssets } });
+    this.setState({ subtab, assets, existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0, });
   }
 
   addProperty() {
-    this.props.screenProps.homeNavigation.navigate('LocalAddProperty', {
-      refreshPropertiesScreen: this.refreshPropertiesScreen,
-    });
+    this.props.navigation.navigate('LocalIssuance');
   }
 
   render() {
     return (
       <View style={assetsStyle.body}>
-        <View style={[defaultStyle.header, { zIndex: 1 }]}>
+        <View style={[assetsStyle.header, { zIndex: 1 }]}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>{'Properties'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={this.addProperty}>
@@ -114,7 +113,13 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({this.state.data.localAssets.length})</Text>
+                {this.state.existNew && <View style={{
+                  backgroundColor: '#0060F2',
+                  width: 10, height: 10,
+                  position: 'absolute', left: 9,
+                  borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
+                }}></View>}
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -125,7 +130,7 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.local.toUpperCase()} ({this.state.data.localAssets.length})</Text>
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -153,14 +158,12 @@ export class AssetsComponent extends React.Component {
             </View>
           </TouchableOpacity>}
         </View>
-        <ScrollView style={[assetsStyle.scrollSubTabArea]}>
+
+        {this.state.subtab !== SubTabs.global && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
-            {(!this.state.assets || this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
+            {(this.state.isLoadingData && this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
                 {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
-              </Text>}
-              {(!config.disabel_markets && this.state.subtab === SubTabs.market) && <Text style={assetsStyle.messageNoAssetLabel}>
-                {(config.disabel_markets ? 'Coming soon...' : 'YOu have not paired any markets.').toUpperCase()}
               </Text>}
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
                 Here you will issue property titles (bitmarks), view and manage your properties, and have general account access and control.
@@ -168,59 +171,73 @@ export class AssetsComponent extends React.Component {
               {(this.state.subtab === SubTabs.local) && <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
                 <Text style={assetsStyle.addFirstPropertyButtonText}>{'create first property'.toUpperCase()}</Text>
               </TouchableOpacity>}
-              {(this.state.subtab === SubTabs.market && !config.disabel_markets) && <Text style={assetsStyle.messageNoAssetContent}>
-                You can pair your market account in the “Market” section with Bitmark app to easily access every markets in the Bitmark system.
-                </Text>}
             </View>}
-            {(this.state.assets && this.state.assets.length > 0 && (this.state.subtab === SubTabs.local || this.state.subtab === SubTabs.market)) && <FlatList
+            {(this.state.assets && this.state.assets.length > 0 && this.state.subtab === SubTabs.local) && <FlatList
               ref={(ref) => this.listViewElement = ref}
               extraData={this.state}
               data={this.state.assets || []}
               renderItem={({ item }) => {
-                return (<TouchableOpacity style={[assetsStyle.assetRowArea,]} onPress={() => {
-                  if (item.asset.market) {
-                    this.props.screenProps.homeNavigation.navigate('MarketAssetDetail', { asset: item.asset });
-                  } else {
-                    this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
-                  }
+                return (<TouchableOpacity style={[assetsStyle.assetRowArea]} onPress={() => {
+                  this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
                 }} >
-                  {!!item.asset.market && <Image style={assetsStyle.assetImage} source={{ uri: config.preive_asset_url + '/' + item.asset.asset_id }} />}
-                  {item.asset.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
+                  {!item.asset.isViewed && <View style={{
+                    backgroundColor: '#0060F2',
+                    width: 10, height: 10,
+                    position: 'absolute', left: 9, top: 22,
+                    borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
+                  }}></View>}
+
+                  {/* {item.asset.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
                     <Text style={[assetsStyle.assetBitmarksNumber, { color: '#0060F2' }]}>{item.asset.bitmarks.length}</Text>
                     <Image style={assetsStyle.assetBitmarksDetail} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
                     <Image style={[assetsStyle.assetBitmarksDetail, { marginRight: 7 }]} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
                   </View>}
                   {item.asset.totalPending > 0 && <View style={assetsStyle.assetBitmarkTitle}>
                     <Text style={assetsStyle.assetBitmarkPending}>PENDING... ({item.asset.totalPending + '/' + item.asset.bitmarks.length})</Text>
-                  </View>}
+                  </View>} */}
+
                   <View style={assetsStyle.assetInfoArea}>
                     <Text style={[assetsStyle.assetName, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
-                      <Text style={[assetsStyle.assetCreatorBound, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]}>[</Text>
-                      <Text style={[assetsStyle.assetCreator, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.registrant}</Text>
-                      <Text style={[assetsStyle.assetCreatorBound, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]}>]</Text>
+                      <Text style={[assetsStyle.assetCreator, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
+                        ISSUER: {'[' + item.asset.registrant.substring(0, 4) + '...' + item.asset.registrant.substring(item.asset.registrant.length - 4, item.asset.registrant.length) + ']'}
+                      </Text>
+                    </View>
+                    <View style={assetsStyle.assetQuantityArea}>
+                      {item.asset.totalPending === 0 && <Text style={assetsStyle.assetQuantity}>QUANTITY: {item.asset.bitmarks.length}</Text>}
+                      {item.asset.totalPending > 0 && <Text style={assetsStyle.assetQuantityPending}>QUANTITY: {item.asset.totalPending + '/' + item.asset.bitmarks.length} PENDING...</Text>}
+                      {item.asset.totalPending > 0 && <Image style={assetsStyle.assetQuantityPendingIcon} source={require('./../../../../assets/imgs/pending-status.png')} />}
                     </View>
                   </View>
                 </TouchableOpacity>)
               }}
             />}
-            {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
-              <WebView source={{ uri: config.registry_server_url }} />
+            {!this.state.isLoadingData && <View style={assetsStyle.messageNoAssetArea}>
+              <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>
-        </ScrollView>
+        </ScrollView>}
+        {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
+          <BitmarkWebViewComponent screenProps={{ sourceUrl: config.registry_server_url + '?env=app', heightButtomController: 38 }} />
+        </View>}
       </View>
     );
   }
 }
 
 AssetsComponent.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+  }),
   screenProps: PropTypes.shape({
     logout: PropTypes.func,
+    switchMainTab: PropTypes.func,
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,
       goBack: PropTypes.func,
     }),
+    needReloadData: PropTypes.bool,
+    doneReloadData: PropTypes.func,
   }),
 
 }

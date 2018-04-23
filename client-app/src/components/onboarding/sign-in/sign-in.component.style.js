@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { convertWidth } from './../../../utils'
+import { ios } from '../../../configs';
 
 export default StyleSheet.create({
   body: {
@@ -10,25 +11,25 @@ export default StyleSheet.create({
   },
 
   mainContent: {
+    flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingBottom: Math.max(10, ios.constant.blankFooter),
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
   },
   //sign-in
   writeRecoveryPhraseContentMessage: {
     fontFamily: 'Avenir Light',
     fontSize: 17,
     fontWeight: '300',
-    width: convertWidth(340),
+    width: convertWidth(336),
     marginTop: 18,
   },
   writeRecoveryPhraseArea: {
     marginTop: 14,
     backgroundColor: 'white',
     width: '100%',
-  },
-  writeRecoveryPhraseContentList: {
-    paddingLeft: 73,
-    paddingRight: 73,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -70,6 +71,7 @@ export default StyleSheet.create({
   recoveryPhraseTestResult: {
     flexDirection: 'column',
     alignItems: 'center',
+    minHeight: 80,
   },
   recoveryPhraseTestTitle: {
     fontFamily: 'Avenir Light',
@@ -92,7 +94,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     color: '#0060F2',
     width: convertWidth(307),
-    height: 42,
+    minHeight: 42,
     marginTop: 158,
   },
   recoveringIndicator: {
@@ -102,9 +104,9 @@ export default StyleSheet.create({
     ],
   },
   submitButton: {
-    marginTop: 20,
+    marginTop: 10,
     minHeight: 42,
-    width: convertWidth(309),
+    width: convertWidth(335),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

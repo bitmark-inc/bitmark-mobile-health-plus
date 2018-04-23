@@ -1,1 +1,0 @@
-export * from './local-add-property.component';

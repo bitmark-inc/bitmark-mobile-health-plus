@@ -1,27 +1,24 @@
 import { StyleSheet } from 'react-native'
-import { ios } from './../../configs';
 import { convertWidth } from './../../utils';
 
 export default StyleSheet.create({
   header: {
-    width: ios.constant.headerSize.width,
-    height: ios.constant.headerSize.height,
+    flex: 1,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: ios.constant.headerSize.paddingTop,
     backgroundColor: '#F5F5F5',
   },
   headerLeft: {
-    width: convertWidth(70),
+    width: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     height: '100%'
   },
   headerLeftIcon: {
-    marginLeft: convertWidth(20),
+    marginLeft: convertWidth(19),
     width: 10,
     height: 19,
     resizeMode: 'contain'
@@ -29,18 +26,19 @@ export default StyleSheet.create({
   headerCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    maxWidth: convertWidth(375) - convertWidth(140),
-    height: '100%'
+    justifyContent: 'center',
+    maxWidth: convertWidth(375) - 140,
+    height: '100%',
   },
   headerTitle: {
     textAlign: 'center',
     fontSize: 18,
     fontWeight: '900',
     fontFamily: 'Avenir Black',
-    maxWidth: convertWidth(235),
+    maxWidth: convertWidth(375) - 140,
   },
   headerRight: {
-    width: convertWidth(70),
+    width: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',

@@ -1,9 +1,10 @@
+import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
 const {
   PushNotificationIOS,
   Platform,
 } = ReactNative;
-import { NotificationModel } from './../models';
+import { NotificationModel, CommonModel } from './../models';
 
 let configure = (onRegister, onNotification) => {
   return NotificationModel.configure(onRegister, onNotification);
@@ -46,17 +47,23 @@ let setApplicationIconBadgeNumber = (number) => {
   return NotificationModel.setApplicationIconBadgeNumber(number);
 };
 
-let doRegisterNotificationInfo = async (accountNumber, token, signatureData) => {
-
-  return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token);
+let doRegisterNotificationInfo = async (accountNumber, token) => {
+  let signatureData = await CommonModel.doTryCreateSignatureData('Touch/Face ID or a passcode is required to authorize your transactions');
+  if (!signatureData) {
+    return;
+  }
+  let client = DeviceInfo.getBundleId() === 'com.bitmarkios.inhouse' ? 'beta' : 'primary';
+  return await NotificationModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token, client);
 };
 
 let doTryDeregisterNotificationInfo = (accountNumber, token, signatureData) => {
   return new Promise((resolve) => {
-    NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token).then(resolve).catch(error => {
-      console.log('doTryDeregisterNotificationInfo error :', error);
-      resolve();
-    });
+    NotificationModel.doDeregisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, token)
+      .then(resolve)
+      .catch(error => {
+        console.log('doTryDeregisterNotificationInfo error :', error);
+        resolve();
+      });
   });
 };
 

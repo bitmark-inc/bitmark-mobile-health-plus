@@ -177,6 +177,14 @@ public struct TransferOffer {
     }
 }
 
+extension TransferOffer {
+    public func serialize() throws -> [String : String] {
+        return ["link": self.txId,
+                "owner": self.receiver.string,
+                "signature": self.signature!.hexEncodedString]
+    }
+}
+
 public struct CountersignedTransferRecord {
     internal(set) public var offer: TransferOffer
     private(set) public var counterSignature: Data? = nil

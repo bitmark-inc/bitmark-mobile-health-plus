@@ -1,37 +1,27 @@
 import {
-  StyleSheet, Platform, Dimensions,
+  StyleSheet,
 } from 'react-native';
-
-const currentSize = Dimensions.get('window');
-
-import {
-  ios,
-  android //TODO
-} from './../../../configs';
-let constant = Platform.select({ ios: ios.constant, android: android.constant });
+import { ios } from '../../../configs';
 
 export default StyleSheet.create({
-  body: {
-    zIndex: constant.zIndex.internetOff,
+  content: {
     alignItems: 'center',
     alignContent: 'center',
     flexDirection: 'column',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    position: 'absolute',
     width: '100%',
-    height: currentSize.height - constant.headerSize.paddingTop,
-    top: constant.headerSize.paddingTop,
+    flex: 1,
   },
   title: {
     width: '100%',
-    height: 40,
+    height: 40 + ios.constant.headerSize.paddingTop,
     backgroundColor: '#FF003C',
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    top: 0,
+    paddingTop: ios.constant.headerSize.paddingTop,
+    top: -ios.constant.headerSize.paddingTop,
   },
   titleText: {
     fontFamily: 'Avenir black',

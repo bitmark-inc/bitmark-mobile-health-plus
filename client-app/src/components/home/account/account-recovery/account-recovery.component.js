@@ -2,23 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import {
-  View, Text, TouchableOpacity, Image, FlatList,
-  Platform,
+  View, Text, TouchableOpacity, Image, FlatList, ScrollView,
 } from 'react-native';
 
-import { UserService } from "./../../../../services";
+import { UserModel } from "./../../../../models";
 import { AppController } from './../../../../managers';
 
 import accountRecoveryStyle from './account-recovery.component.style';
-import { androidDefaultStyle, iosDefaultStyle } from './../../../../commons/styles';
-
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
-
+import defaultStyle from './../../../../commons/styles';
 let curretnUser;
-
 class RecoveryPhraseComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -37,16 +29,16 @@ class RecoveryPhraseComponent extends React.Component {
     };
     return (
       <View style={accountRecoveryStyle.body}>
-        <View style={[defaultStyle.header]}>
+        <View style={[accountRecoveryStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.screenProps.accountNavigation.goBack() }}>
-            <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_back_icon_study_setting.png')} />
+            <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>{(isSignOut ? 'Remove Access' : 'Recovery Phrase').toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => { this.props.screenProps.accountNavigation.goBack() }} disabled={isSignOut}>
             {!isSignOut && <Text style={defaultStyle.headerRightText}>Cancel</Text>}
           </TouchableOpacity>
         </View>
-        <View style={accountRecoveryStyle.recoveryPhraseContent}>
+        <ScrollView style={accountRecoveryStyle.recoveryPhraseContent}>
           <Image style={accountRecoveryStyle.recoveryPhraseWarningIcon} source={require('./../../../../../assets/imgs/backup_warning.png')} />
           {!isSignOut && <Text style={accountRecoveryStyle.recoveryDescription}>Your recovery phrase is the only way to restore your Bitmark account if your phone is lost, stolen, broken, or upgraded. {'\n\n'}We will show you a list of words to write down on a piece of paper and keep safe. {'\n\n'}Make sure you are in a private location before writing down your recovery phrase. </Text>}
 
@@ -54,8 +46,9 @@ class RecoveryPhraseComponent extends React.Component {
           <TouchableOpacity style={accountRecoveryStyle.recoveryPhraseBottomButton} onPress={() => recoveryPhrase()}>
             <Text style={accountRecoveryStyle.recoveryPhraseBottomButtonText}>WRITE DOWN RECOVERY PHRASE</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
+
     );
   }
 }
@@ -102,14 +95,14 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
     return (
       <View style={accountRecoveryStyle.body}>
-        <View style={[defaultStyle.header]}>
+        <View style={[accountRecoveryStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
-            <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_back_icon_study_setting.png')} />
+            <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>{'Recovery Phrase'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
-        <View style={accountRecoveryStyle.recoveryPhraseContent}>
+        <ScrollView style={accountRecoveryStyle.recoveryPhraseContent}>
           <Text style={accountRecoveryStyle.writeRecoveryPhraseContentMessage}>Please write down your recovery phrase in the exact sequence below:</Text>
           <View style={accountRecoveryStyle.writeRecoveryPhraseContentList}>
             <View style={accountRecoveryStyle.writeRecoveryPhraseContentHalfList}>
@@ -155,7 +148,7 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
           }}>
             <Text style={accountRecoveryStyle.recoveryPhraseBottomButtonText}>TEST RECOVERY PHRASE »</Text>
           </TouchableOpacity>}
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -203,7 +196,7 @@ class TryRecoveryPhraseComponent extends React.Component {
         biggerList.push({ key: index });
       }
     }
-    UserService.doGetCurrentUser().then(user => {
+    UserModel.doGetCurrentUser().then(user => {
       let result = [];
       for (let index in curretnUser.pharse24Words) {
         result.push({ key: index, word: curretnUser.pharse24Words[index] });
@@ -232,10 +225,7 @@ class TryRecoveryPhraseComponent extends React.Component {
       let countPreFill = 0;
       let smallerList = this.state.smallerList;
       let biggerList = this.state.biggerList;
-      let numberWorldFilled = 8;
-      if (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut) {
-        numberWorldFilled = 20;
-      }
+      let numberWorldFilled = 20;
       while (countPreFill < numberWorldFilled) {
         let randomIndex = Math.floor(Math.random() * randomWords.length);
         if (!randomWords[randomIndex].selected) {
@@ -401,14 +391,14 @@ class TryRecoveryPhraseComponent extends React.Component {
     })
     return (
       <View style={accountRecoveryStyle.body}>
-        <View style={[defaultStyle.header]}>
+        <View style={[accountRecoveryStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft} />
           <Text style={defaultStyle.headerTitle}>{'Test Phrase'.toUpperCase()}</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.screenProps.accountNavigation.goBack()} >
             <Text style={defaultStyle.headerRightText}>Cancel</Text>
           </TouchableOpacity>
         </View>
-        <View style={accountRecoveryStyle.recoveryPhraseContent}>
+        <ScrollView style={accountRecoveryStyle.recoveryPhraseContent}>
           <Text style={accountRecoveryStyle.writeRecoveryPhraseContentMessage}>Tap the words to put them in the correct order for your recovery phrase:</Text>
           <View style={accountRecoveryStyle.writeRecoveryPhraseContentList}>
             <View style={accountRecoveryStyle.writeRecoveryPhraseContentHalfList}>
@@ -460,7 +450,7 @@ class TryRecoveryPhraseComponent extends React.Component {
             <FlatList data={remainRandomeWords}
               scrollEnabled={false}
               horizontal={false}
-              numColumns={isSignOut ? 1 : 4}
+              numColumns={4}
               contentContainerStyle={{ flexDirection: 'column' }}
               extraData={this.state}
               renderItem={({ item }) => {
@@ -494,7 +484,7 @@ class TryRecoveryPhraseComponent extends React.Component {
             onPress={() => this.doAfterInputtedAllWord()}>
             <Text style={accountRecoveryStyle.recoveryPhraseBottomButtonText}>{((this.state.testResult === 'done' && isSignOut ? 'Remove access' : this.state.testResult)).toUpperCase()}</Text>
           </TouchableOpacity>}
-        </View>
+        </ScrollView>
       </View>
     );
   }

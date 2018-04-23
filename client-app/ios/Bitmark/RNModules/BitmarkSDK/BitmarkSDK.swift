@@ -186,17 +186,19 @@ class BitmarkSDK: NSObject {
       let propertyName = input["property_name"] as! String
       let metadata = input["metadata"] as! [String: String]
       let receiver = input["receiver"] as! String
-      let result = try account.issueThenTransfer(assetFile: URL(fileURLWithPath: fileURL), accessibility: .privateAsset, propertyName: propertyName, propertyMetadata: metadata, toAccount: receiver)
-      if let issue = result?.0 {
-        callback([true, issue.txId!])
-      }
-      else {
-        callback([false])
-      }
+      let extraInfo = input["extra_info"] as? [String: Any]
+      
+      let bitmarkId = try account.createAndSubmitGiveawayIssue(assetFile: URL(fileURLWithPath: fileURL),
+                                                            accessibility: .privateAsset,
+                                                            propertyName: propertyName,
+                                                            propertyMetadata: metadata,
+                                                            toAccount: receiver,
+                                                            extraInfo: extraInfo)
+      callback([true, bitmarkId])
     }
     catch let e {
       print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -228,27 +230,41 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(sign1stForTransfer::::)
-  func sign1stForTransfer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(transferOneSignature::::)
+  func transferOneSignature(_ sessionId: String, _ bitmarkId: String, address: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let offer = try account.createTransferOffer(bitmarkId: bitmarkId, recipient: address)
+      let success = try account.transferBitmark(bitmarkId: bitmarkId, toAccount: address)
       
-      callback([true, offer.txId, offer.signature!.hexEncodedString])
+      callback([success])
+    }
+    catch let e {
+      print(e)
+      callback([false, e.localizedDescription])
+    }
+  }
+  
+  @objc(createAndSubmitTransferOffer::::)
+  func createAndSubmitTransferOffer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+      let offerId = try account.createAndSubmitTransferOffer(bitmarkId: bitmarkId, recipient: address)
+
+      callback([true, offerId])
     }
     catch let e {
       print(e)
       callback([false])
     }
   }
-  
-  @objc(sign2ndForTransfer::::)
-  func sign2ndForTransfer(_ sessionId: String, _ txId: String, _ signature: String, _ callback: @escaping RCTResponseSenderBlock) {
+
+  @objc(signForTransferOfferAndSubmit::::::)
+  func signForTransferOfferAndSubmit(_ sessionId: String, _ txId: String, _ signature: String, _ offerId: String, _ action: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let offer = TransferOffer(txId: txId, receiver: account.accountNumber, signature: signature.hexDecodedData)
-      let counterSignature = try account.createSignForTransferOffer(offer: offer)
-      callback([true, counterSignature.counterSignature!.hexEncodedString])
+      let success = try account.signForTransferOfferAndSubmit(offerId: offerId, offer: offer, action: action)
+      callback([success])
     }
     catch let e {
       print(e)

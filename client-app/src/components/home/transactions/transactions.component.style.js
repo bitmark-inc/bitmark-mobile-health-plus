@@ -1,24 +1,24 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
-import {
-  ios,
-  android // TODO
-} from './../../../configs';
+import { StyleSheet, } from 'react-native';
+
 import { convertWidth } from '../../../utils';
-
-const deviceSize = Dimensions.get('window');
-
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
+import { ios } from '../../../configs';
 
 export default StyleSheet.create({
   body: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter),
     width: '100%',
     backgroundColor: 'white',
+  },
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    width: '100%',
   },
   addPropertyIcon: {
     width: 18,
@@ -107,6 +107,7 @@ export default StyleSheet.create({
     paddingTop: 18,
     borderBottomColor: '#EFEFEF',
     borderBottomWidth: 1,
+    minHeight: 80,
   },
   transferOfferTitle: {
     flexDirection: 'row',
@@ -153,6 +154,31 @@ export default StyleSheet.create({
     fontSize: 13,
     fontWeight: '900',
     width: convertWidth(150),
+  },
+  donationTask: {
+    marginTop: 12,
+    flexDirection: 'column',
+  },
+  donationTaskTitle: {
+    fontFamily: 'Avenir heavy',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  donationTaskDescriptionArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  donationTaskDescription: {
+    marginTop: 3,
+    fontFamily: 'Avenir light',
+    fontSize: 14,
+    fontWeight: '300',
+  },
+  donationTaskImportantIcon: {
+    width: 18,
+    height: 18,
+    resizeMode: 'contain',
   },
 
   completedTransfer: {

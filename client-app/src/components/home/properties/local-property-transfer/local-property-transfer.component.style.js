@@ -28,7 +28,8 @@ export default StyleSheet.create({
     fontWeight: '900',
     fontSize: 16,
     lineHeight: 19,
-    marginTop: 28,
+    marginTop: 38,
+    height: 27,
     width: convertWidth(336),
   },
   inputAccountNumberBar: {
@@ -44,9 +45,23 @@ export default StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 14,
     lineHeight: 16,
-    width: convertWidth(325),
+    width: convertWidth(315),
     marginTop: 12,
     height: 20,
+  },
+  removeAccountNumberButton: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    padding: 4,
+  },
+  removeAccountNumberIcon: {
+    width: 10,
+    height: 10,
+    resizeMode: 'contain',
   },
   accountNumberError: {
     fontFamily: 'Avenir Light',
@@ -68,7 +83,7 @@ export default StyleSheet.create({
   sendButton: {
     marginTop: 31,
     width: convertWidth(336),
-    height: 42,
+    minHeight: 42,
     borderTopWidth: 3,
     backgroundColor: '#F5F5F5',
     flexDirection: 'column',

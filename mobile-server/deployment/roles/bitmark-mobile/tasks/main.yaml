@@ -1,0 +1,27 @@
+- set_fact:
+    mobile_secret: "{{ lookup('template', 'mobile-secret.yaml') }}"
+    mobile_config: "{{ lookup('template', 'mobile-config.yaml') }}"
+- name: Switch workspace
+  shell: kubectl config use-context cluster.{{ network_slug }}.bitmark.com
+- name: Mobile namespace
+  command: kubectl apply -f -
+  args:
+    stdin: "{{ lookup('template', 'mobile-namespace.yaml') }}"
+- name: Add secret
+  shell: echo "{{ mobile_secret }}" | kubectl apply -f -
+- name: Add config for mobile server
+  command: kubectl apply -f -
+  args:
+    stdin: '{{ mobile_config }}'
+- name: Deploy DB
+  command: kubectl apply -f -
+  args:
+    stdin: "{{ lookup('template', 'mobile-db.yaml') }}"
+- name: Deploy mobile server
+  shell: kubectl apply -f -
+  args:
+    stdin: "{{ lookup('template', 'mobile.yaml') }}"
+- name: Deploy push notification server
+  shell: kubectl apply -f -
+  args:
+    stdin: "{{ lookup('template', 'gorush.yaml') }}"

@@ -12,7 +12,6 @@ const FaceTouchId = {
   authenticate: () => {
     return new Promise((resolve, reject) => {
       SwiftFaceTouchId.authenticate('Touch/Face ID or a passcode is required to authorize your transactions.', (ok) => {
-        console.log('authenticate :', ok);
         if (ok) {
           resolve();
         } else {

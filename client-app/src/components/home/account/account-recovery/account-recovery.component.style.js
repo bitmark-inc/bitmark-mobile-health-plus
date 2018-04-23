@@ -1,16 +1,8 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
-import {
-  ios,
-  android // TODO
-} from './../../../../configs';
+import { StyleSheet, } from 'react-native';
+
 import { convertWidth } from './../../../../utils';
+import { ios } from '../../../../configs';
 
-let currentSize = Dimensions.get('window');
-
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
 
 export default StyleSheet.create({
   body: {
@@ -18,13 +10,22 @@ export default StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#EDF0F4',
   },
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    width: '100%',
+  },
 
   recoveryPhraseContent: {
+    flex: 1,
     flexDirection: 'column',
     paddingLeft: convertWidth(33),
     paddingRight: convertWidth(33),
     backgroundColor: 'white',
-    height: currentSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter,
   },
   recoveryPhraseWarningIcon: {
     width: 137,
@@ -43,7 +44,7 @@ export default StyleSheet.create({
   },
   recoveryPhraseBottomButton: {
     width: convertWidth(309),
-    height: 42,
+    minHeight: 42,
     backgroundColor: '#0060F2',
     flexDirection: 'row',
     alignContent: 'center',
@@ -55,7 +56,8 @@ export default StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontSize: 16,
     fontWeight: '900',
-    color: 'white'
+    color: 'white',
+    textAlign: 'center',
   },
 
   writeRecoveryPhraseContentMessage: {
@@ -108,7 +110,6 @@ export default StyleSheet.create({
 
   ranDomWordsArea: {
     marginTop: 10,
-    height: 145,
   },
   recoveryPhraseChoose: {
     height: 29,
@@ -134,6 +135,7 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: '300',
     color: '#0060F2',
+    textAlign: 'center',
   },
   recoveryPhraseTestResult: {
     flexDirection: 'column',

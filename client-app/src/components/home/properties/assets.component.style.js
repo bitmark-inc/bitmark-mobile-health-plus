@@ -1,25 +1,27 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   ios,
-  android,
-  config
 } from './../../../configs';
 import { convertWidth } from '../../../utils/index';
 
-const deviceSize = Dimensions.get('window');
-
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
-
 export default StyleSheet.create({
   body: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    height: deviceSize.height - (constant.bottomTabsHeight + constant.blankFooter),
     width: '100%',
     backgroundColor: 'white',
+    // borderWidth: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
+    width: '100%',
+    // borderWidth: 1,
   },
   addPropertyIcon: {
     width: 18,
@@ -35,7 +37,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   subTabButton: {
-    width: config.disabel_markets ? '50%' : '33.3%',
+    width: '50%',
     height: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -107,7 +109,7 @@ export default StyleSheet.create({
     backgroundColor: '#0060F2',
     marginTop: 30,
     width: convertWidth(337),
-    height: 42,
+    minHeight: 42,
   },
   addFirstPropertyButtonText: {
     fontFamily: 'Avenir black',
@@ -123,10 +125,10 @@ export default StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#EDF0F4',
     borderBottomWidth: 1,
-    paddingLeft: convertWidth(20),
-    paddingRight: convertWidth(20),
-    paddingTop: 18,
-    paddingBottom: 30,
+    paddingLeft: convertWidth(28),
+    paddingRight: convertWidth(19),
+    paddingTop: 22,
+    paddingBottom: 22,
   },
   assetImage: {
     width: 62,
@@ -149,14 +151,32 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  assetCreatorBound: {
-    fontFamily: 'Avenir Light',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 16,
+  assetQuantityArea: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    width: convertWidth(329),
+  },
+  assetQuantity: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    color: '#0060F2'
+  },
+  assetQuantityPending: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    color: '#999999'
+  },
+  assetQuantityPendingIcon: {
+    width: 13,
+    height: 17,
+    resizeMode: 'contain',
+    marginRight: 3,
   },
   assetCreator: {
-    fontFamily: 'Avenir Light',
+    fontFamily: 'Andale Mono',
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 16,
@@ -190,8 +210,9 @@ export default StyleSheet.create({
   },
 
   globalArea: {
+    flex: 1,
     flexDirection: 'row',
-    height: deviceSize.height - constant.bottomTabsHeight - constant.headerSize.height - constant.blankFooter - constant.subTabSizeHeight,
     backgroundColor: 'white',
+    paddingBottom: 2,
   },
 });

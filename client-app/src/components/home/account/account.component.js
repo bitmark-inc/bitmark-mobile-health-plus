@@ -1,210 +1,169 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import {
-  View, Text, TouchableOpacity, ScrollView, Image,
+  View, Text, TouchableOpacity, ScrollView, Image, ActivityIndicator,
   Clipboard,
-  Platform,
-  FlatList,
+  Alert,
 } from 'react-native';
 
-import { MarketService, EventEmiterService } from "./../../../services";
+import { EventEmiterService } from "./../../../services";
 import accountStyle from './account.component.style';
 
-import { androidDefaultStyle, iosDefaultStyle } from './../../../commons/styles';
-import { config } from '../../../configs/index';
+import defaultStyle from './../../../commons/styles';
 import { DataController, AppController } from '../../../managers';
 
-let defaultStyle = Platform.select({
-  ios: iosDefaultStyle,
-  android: androidDefaultStyle
-});
-
 const SubTabs = {
-  balance: 'Balance',
-  settings: 'Settings',
+  settings: 'SETTINGS',
+  authorized: 'AUTHORIZED',
 }
+
 export class AccountDetailComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.switchSubtab = this.switchSubtab.bind(this);
-    this.handerChangeLocalBalance = this.handerChangeLocalBalance.bind(this);
-    this.handerChangeMarketBalance = this.handerChangeMarketBalance.bind(this);
+    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
-    this.reloadBalance = this.reloadBalance.bind(this);
+    this.inactiveBitmarkHealthData = this.inactiveBitmarkHealthData.bind(this);
+    this.handerLoadingData = this.handerLoadingData.bind(this);
 
-    let localBalance = DataController.getUserBalance().localBalance;
-    //TODO with local balance
-    let marketBalances = {};
-    if (!config.disabel_markets) {
-      marketBalances = DataController.getUserBalance().marketBalances;
-      for (let market in marketBalances) {
-        marketBalances[market].balanceHistories.forEach((item, index) => {
-          item.key = index;
-        });
-      }
-    }
+    let subTab = (this.props.screenProps.subTab &&
+      (this.props.screenProps.subTab === SubTabs.settings || this.props.screenProps.subTab === SubTabs.authorized))
+      ? this.props.screenProps.subTab : SubTabs.settings;
+    console.log('subtab :', subTab);
     this.state = {
-      subtab: config.disabel_markets ? SubTabs.settings : SubTabs.balance,
-      accountNumberCopyText: 'COPY',
+      subTab,
+      accountNumberCopyText: '',
       notificationUUIDCopyText: 'COPY',
-      localBalance,
-      marketBalances,
       userInfo: DataController.getUserInformation(),
+      donationInformation: DataController.getDonationInformation(),
+      isLoadingData: DataController.isLoadingData(),
     };
   }
 
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE, this.handerChangeLocalBalance);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE, this.handerChangeMarketBalance);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
   componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BALANCE, this.handerChangeLocalBalance);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_MARKET_BALANCE, this.handerChangeMarketBalance);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
-
+  handerDonationInformationChange() {
+    this.setState({ donationInformation: DataController.getDonationInformation() });
+  }
   handerChangeUserInfo() {
     this.setState({ userInfo: DataController.getUserInformation() });
   }
-  handerChangeLocalBalance() {
-    let localBalance = DataController.getUserBalance().localBalannce || {};
-    this.setState({ localBalance });
+  handerLoadingData() {
+    this.setState({ isLoadingData: DataController.isLoadingData() });
   }
 
-  handerChangeMarketBalance() {
-    if (!config.disabel_markets) {
-      let marketBalances = DataController.getUserBalance().marketBalances || [];
-      for (let market in marketBalances) {
-        marketBalances[market].balanceHistories.forEach((item, index) => {
-          item.key = index;
-        });
-      }
-      this.setState({ marketBalances });
-    }
-  }
-
-  reloadBalance() {
-    AppController.doGetBalance().then((data) => {
-      let localBalance = data.localBalance;
-      //TODO with local balance
-      let marketBalances = {};
-      if (!config.disabel_markets) {
-        marketBalances = data.marketBalances;
-        for (let market in marketBalances) {
-          marketBalances[market].balanceHistories.forEach((item, index) => {
-            item.key = index;
-          });
-        }
-      }
-      this.setState({ localBalance, marketBalances });
-    }).catch((error) => {
-      console.log('getUserBitmark error :', error);
+  switchSubtab(subTab) {
+    this.setState({
+      subTab,
+      userInfo: DataController.getUserInformation(),
+      donationInformation: DataController.getDonationInformation(),
     });
   }
 
-  switchSubtab(subtab) {
-    this.setState({ subtab });
+  inactiveBitmarkHealthData() {
+    Alert.alert('Are you sure you want to revoke access to your HealthKit data?', '', [{
+      text: 'No',
+    }, {
+      text: 'Yes',
+      style: 'cancel',
+      onPress: () => {
+        AppController.doInactiveBitmarkHealthData().then((result) => {
+          if (result) {
+            DataController.doReloadUserData();
+            this.props.navigation.goBack();
+          }
+        }).catch(error => {
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+          console.log('doInactiveBitmarkHealthData error :', error);
+        });
+      }
+    }]);
   }
 
   render() {
     return (
       <View style={accountStyle.body}>
-        <View style={defaultStyle.header}>
+        <View style={accountStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>ACCOUNT</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
-            this.props.screenProps.homeNavigation.navigate('ApplicationDetail');
+            this.props.navigation.navigate('ApplicationDetail');
           }}>
             <Image style={accountStyle.bitmarkAccountHelpIcon} source={require('./../../../../assets/imgs/icon_help.png')} />
           </TouchableOpacity>
         </View>
-        {!config.disabel_markets && <View style={accountStyle.subTabArea}>
-          <TouchableOpacity style={accountStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.balance)}>
+        <View style={accountStyle.subTabArea}>
+          {this.state.subTab === SubTabs.settings && <TouchableOpacity style={[accountStyle.subTabButton, {
+            shadowOffset: { width: 2 },
+            shadowOpacity: 0.15,
+          }]}>
             <View style={accountStyle.subTabButtonArea}>
+              <View style={[accountStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={accountStyle.subTabButtonTextArea}>
-                <Text style={accountStyle.subTabButtonText}>{SubTabs.balance}</Text>
+                <Text style={accountStyle.subTabButtonText}>{SubTabs.settings.toUpperCase()}</Text>
               </View>
-              <View style={[accountStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.balance ? '#0060F2' : 'white' }]}></View>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={accountStyle.subTabButton} onPress={() => this.switchSubtab(SubTabs.settings)}>
+          </TouchableOpacity>}
+          {this.state.subTab !== SubTabs.settings && <TouchableOpacity style={[accountStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.settings)}>
             <View style={accountStyle.subTabButtonArea}>
+              <View style={[accountStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={accountStyle.subTabButtonTextArea}>
-                <Text style={accountStyle.subTabButtonText}>{SubTabs.settings}</Text>
+                <Text style={[accountStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.settings.toUpperCase()}</Text>
               </View>
-              <View style={[accountStyle.activeSubTabBar, { backgroundColor: this.state.subtab === SubTabs.settings ? '#0060F2' : 'white' }]}></View>
             </View>
-          </TouchableOpacity>
-        </View>}
-        <ScrollView style={[accountStyle.scrollSubTabArea, { backgroundColor: this.state.subtab === SubTabs.balance ? '#E5E5E5' : 'white' }]}>
+          </TouchableOpacity>}
+
+          {this.state.subTab === SubTabs.authorized && <TouchableOpacity style={[accountStyle.subTabButton, {
+            shadowOffset: { width: -2 },
+            shadowOpacity: 0.15,
+          }]}>
+            <View style={accountStyle.subTabButtonArea}>
+              <View style={[accountStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
+              <View style={accountStyle.subTabButtonTextArea}>
+                <Text style={accountStyle.subTabButtonText}>{SubTabs.authorized.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+          {this.state.subTab !== SubTabs.authorized && <TouchableOpacity style={[accountStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.authorized)}>
+            <View style={accountStyle.subTabButtonArea}>
+              <View style={[accountStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
+              <View style={accountStyle.subTabButtonTextArea}>
+                <Text style={[accountStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.authorized.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+        </View>
+
+        <ScrollView style={[accountStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.subtab === SubTabs.balance && !config.disabel_markets && this.state.marketBalances && this.state.marketBalances.totemic &&
-              <View style={accountStyle.contentSubTab}>
-                <Image style={accountStyle.marketCardTitleIcon} source={config.markets.totemic.sourceIcon} />
-                <View style={accountStyle.marketBalance}>
-                  <View style={accountStyle.marketBalanceLabel}>
-                    <Image style={accountStyle.marketBalanceIcon} source={require('./../../../../assets/imgs/ETH-alt.png')} />
-                    <Text style={accountStyle.marketBalanceName}>ETH</Text>
-                    <Text style={accountStyle.marketBalanceNameFull}>(Ethereum)</Text>
-                  </View>
-                  <Text style={accountStyle.marketBalanceValue}>{Math.floor(this.state.marketBalances.totemic.balance / 1E4) / 1E5}</Text>
-                </View>
-                <View style={accountStyle.marketBalanceButtonArea}>
-                  <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
-                    this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-                      url: MarketService.getBalancUrl(config.markets.totemic.name, { action: 'deposit' }),
-                      name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1),
-                      realoadPreivewScreen: this.reloadBalance,
-                    });
-                  }}>
-                    <Text style={accountStyle.marketBalanceButtonText}>DEPOSIT</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={accountStyle.marketBalanceButton} onPress={() => {
-                    this.props.screenProps.homeNavigation.navigate('MarketViewer', {
-                      url: MarketService.getBalancUrl(config.markets.totemic.name, { action: 'withdraw' }),
-                      name: config.markets.totemic.name.charAt(0).toUpperCase() + config.markets.totemic.name.slice(1),
-                      realoadPreivewScreen: this.reloadBalance,
-                    });
-                  }}>
-                    <Text style={accountStyle.marketBalanceButtonText}>WITHDRAWAL</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={accountStyle.marketBalanceHistory}>
-                  <Text style={accountStyle.marketBalanceHistoryLabel}>Balance History </Text>
-                  <FlatList data={this.state.marketBalances.totemic.balanceHistories}
-                    scrollEnabled={false}
-                    extraData={this.state}
-                    renderItem={({ item }) => {
-                      return (
-                        <View style={accountStyle.marketBalanceHistoryItem}>
-                          <Text style={accountStyle.marketBalanceHistoryItemAction}>{item.action}</Text>
-                          <Text style={accountStyle.marketBalanceHistoryItemAmount}>{item.data.currency.toUpperCase() + ' ' + (Math.floor(item.data.amount / 1E4) / 1E5)}</Text>
-                          <Text style={accountStyle.marketBalanceHistoryItemCreatedAt}>{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</Text>
-                          <Text style={accountStyle.marketBalanceHistoryItemStatus}>{item.status.toUpperCase()}</Text>
-                        </View>
-                      )
-                    }}
-                  />
-                </View>
-              </View>}
+            {this.state.subTab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
+              <Text style={accountStyle.accountNumberLabel}>{'YOUR Bitmark Account Number'.toUpperCase()}</Text>
 
-            {this.state.subtab === SubTabs.settings && <View style={accountStyle.contentSubTab}>
-              <Text style={accountStyle.settingLabel}>SETTINGS</Text>
-              <Text style={accountStyle.accountNumberLabel}>{'My Bitmark Account Number'.toUpperCase()}</Text>
-
-              <View style={accountStyle.accountNumberArea}>
-                <Text style={accountStyle.accountNumberValue} numberOfLines={1}>{this.state.userInfo.bitmarkAccountNumber}</Text>
-                <TouchableOpacity style={accountStyle.accountNumberCopyButton} onPress={() => {
-                  Clipboard.setString(this.state.userInfo.bitmarkAccountNumber);
-                  this.setState({ accountNumberCopyText: 'COPIED' });
-                  setTimeout(() => { this.setState({ accountNumberCopyText: 'COPY' }) }, 1000);
-                }}>
-                  <Text style={accountStyle.accountNumberCopyButtonText}>{this.state.accountNumberCopyText}</Text>
-                </TouchableOpacity>
+              <TouchableOpacity style={accountStyle.accountNumberArea} onPress={() => {
+                Clipboard.setString(this.state.userInfo.bitmarkAccountNumber);
+                this.setState({ accountNumberCopyText: 'Copied to clipboard!' });
+                setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
+              }}>
+                <Text style={accountStyle.accountNumberValue}>{this.state.userInfo.bitmarkAccountNumber}</Text>
+              </TouchableOpacity>
+              <View style={accountStyle.accountNumberBar}>
+                <Text style={accountStyle.accountNumberCopyButtonText}>{this.state.accountNumberCopyText}</Text>
               </View>
+
               <Text style={accountStyle.accountMessage}>To protect your privacy, you are identified in the Bitmark system by an anonymous public account number. You can safely share this public account number with others without compromising your account security.</Text>
 
               <TouchableOpacity style={accountStyle.accountWriteDownButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: false }) }}>
@@ -212,9 +171,36 @@ export class AccountDetailComponent extends React.Component {
               </TouchableOpacity>
               {/* <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.props.screenProps.logout}> */}
               <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}>
-                <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device  »'.toUpperCase()} </Text>
+                <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device »'.toUpperCase()} </Text>
               </TouchableOpacity>
-            </View >}
+            </View>}
+
+            {this.state.subTab === SubTabs.authorized && <View style={accountStyle.contentSubTab}>
+              <View style={accountStyle.dataSourcesArea}>
+                <Text style={accountStyle.noAuthorizedMessage}>If you authorize 3rd-party apps to access your Bitmark account, they will appear here. </Text>
+                {this.state.donationInformation && this.state.donationInformation.activeBitmarkHealthDataAt && <View style={accountStyle.authorizedItem}>
+                  <View style={accountStyle.authorizedItemTitle}>
+                    <Text style={accountStyle.authorizedItemTitleText} >HEALTH</Text>
+                    <TouchableOpacity style={accountStyle.authorizedItemRemoveButton} onPress={this.inactiveBitmarkHealthData}>
+                      <Text style={accountStyle.authorizedItemRemoveButtonText}>REMOVE</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={accountStyle.authorizedItemDescription}>
+                    <Image style={accountStyle.authorizedItemDescriptionIcon} source={require('./../../../../assets/imgs/icon_health.png')} />
+                    <View style={accountStyle.authorizedItemDescriptionDetail}>
+                      <Text style={accountStyle.authorizedItemDescriptionText}>CAN:{'\n'}Extract data from the Health app and register property rights. Repeats weekly (Sunday 11AM).</Text>
+                      <TouchableOpacity style={accountStyle.authorizedViewButton} onPress={() => {
+                        this.props.screenProps.homeNavigation.navigate('HealthDataDataSource')
+                      }}>
+                        <Text style={accountStyle.authorizedViewButtonText}>{'VIEW DATA TYPES »'.toUpperCase()} </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>}
+                {!this.state.isLoadingData && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
+              </View>
+            </View>}
           </TouchableOpacity>
         </ScrollView>
       </View >
@@ -229,6 +215,7 @@ AccountDetailComponent.propTypes = {
   }),
   screenProps: PropTypes.shape({
     logout: PropTypes.func,
+    subTab: PropTypes.string,
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,
       goBack: PropTypes.func,

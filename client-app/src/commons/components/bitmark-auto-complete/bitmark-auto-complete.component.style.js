@@ -5,52 +5,16 @@ import { convertWidth } from '../../../utils';
 
 
 export default StyleSheet.create({
-  extArea: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
-    backgroundColor: '#D1D5Db',
+  main: {
   },
-
-  inputArea: {
-    width: '100%',
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    height: 30,
-  },
-  textInputStyle: {
-    height: 20,
-    fontSize: 18,
-    backgroundColor: 'white',
-    minWidth: '40%',
-    borderRadius: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  controlArea: {
-    marginLeft: 20,
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
   selectionArea: {
-    width: '100%',
-    marginTop: 4,
+    flex: 1,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
-    height: 30,
     paddingLeft: 8,
     paddingRight: 8,
+    backgroundColor: '#EEEFF1',
   },
   prevButton: {
     marginLeft: 10,

@@ -1,27 +1,51 @@
 import { Platform } from 'react-native';
-import { CommonModel, AccountModel, BitmarkModel, FaceTouchId } from './../models';
-import { AccountService, BitmarkService, EventEmiterService, MarketService, TransactionService } from './../services'
+import moment from 'moment';
+
+import { CommonModel, AccountModel, BitmarkModel, FaceTouchId, AppleHealthKitModel } from './../models';
+import { AccountService, BitmarkService, EventEmiterService, TransactionService } from './../services'
 import { DataController } from './data-controller';
 import { ios } from '../configs';
+import { DonationService } from '../services/donation-service';
 
 // ================================================================================================
 // ================================================================================================
+
+let commonProcess = (promise, successCallabck, errorCallback) => {
+  let startAt = moment().toDate().getTime();
+  let check2Seconds = (done) => {
+    let endAt = moment().toDate().getTime();
+    let space = startAt + 2000 - endAt;
+    if (space > 0) {
+      setTimeout(done, space);
+    } else {
+      done();
+    }
+  };
+
+  promise.then((data) => {
+    check2Seconds(() => successCallabck(data));
+  }).catch(error => {
+    check2Seconds(() => errorCallback(error));
+  });
+};
+
 let processing = (promise) => {
   EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
   return new Promise((resolve, reject) => {
-    promise.then((data) => {
+    commonProcess(promise, (data) => {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       resolve(data);
-    }).catch(error => {
+    }, (error) => {
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
       reject(error);
-    });
-  })
+    })
+  });
 };
+
 let submitting = (promise, procesingData, successData, errorData) => {
-  EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, procesingData);
+  EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, procesingData || { indicator: true });
   return new Promise((resolve, reject) => {
-    promise.then((data) => {
+    commonProcess(promise, (data) => {
       if (successData) {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, successData);
         setTimeout(() => {
@@ -32,7 +56,7 @@ let submitting = (promise, procesingData, successData, errorData) => {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, null);
         resolve(data);
       }
-    }).catch(error => {
+    }, (error) => {
       if (errorData) {
         EventEmiterService.emit(EventEmiterService.events.APP_SUBMITTING, errorData);
         setTimeout(() => {
@@ -44,7 +68,7 @@ let submitting = (promise, procesingData, successData, errorData) => {
         reject(error);
       }
     });
-  })
+  });
 };
 
 // ================================================================================================
@@ -58,7 +82,7 @@ const doCreateNewAccount = async () => {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(AccountService.doCreateAccount(touchFaceIdSession));
+  return await processing(AccountService.doGetCurrentAccount(touchFaceIdSession));
 };
 
 const doGetCurrentAccount = async (touchFaceIdMessage) => {
@@ -83,11 +107,11 @@ const doLogin = async (pharse24Words) => {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(AccountService.doLogin(touchFaceIdSession));
+  return await processing(DataController.doLogin(touchFaceIdSession));
 };
 
 const doLogout = async () => {
-  return await processing(AccountService.doLogout());
+  return await processing(DataController.doLogout());
 };
 
 const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
@@ -100,56 +124,12 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
   return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
 };
 
-const doPairAccount = async (token, market) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to pair the bitmark account with market.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await processing(MarketService.doPairAccount(touchFaceIdSession, token, market));
+const doReloadUserData = async () => {
+  return await DataController.doReloadUserData();
 };
 
-const doWithdrawBitmark = async (bitmark) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to remove the bitmark from market.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await processing(MarketService.doWithdrawBitmarks(touchFaceIdSession, [bitmark.bitmark_id]));
-};
-
-const doDepositBitmark = async (bitmark, market) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Please sign to remove the bitmark from market.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await processing(MarketService.doDepositBitmarks(touchFaceIdSession, [bitmark.bitmark_id], market));
-};
-
-const check24Words = async (pharse24Words) => {
-  return await processing(AccountModel.doCheck24Words(pharse24Words));
-};
-
-const doTryAccessToMarket = async (market) => {
-  return await processing(AccountService.doTryAccessToMarket(market));
-};
-
-const doTryAccessToAllMarkets = async () => {
-  return await processing(DataController.doTryAccessToAllMarkets());
-};
-
-const reloadBitmarks = async () => {
-  await processing(DataController.reloadBitmarks());
-};
-
-const doGetBalance = async () => {
-  await processing(DataController.doGetBalance());
-};
-
-const doGetTransactionData = async () => {
-  await processing(DataController.doGetTransactionData());
-};
-
-const doGetTransferOfferDetail = async (bitmarkId) => {
-  return await processing(TransactionService.doGetTransferOfferDetail(bitmarkId));
+const doGetTransferOfferDetail = async (transferOfferId) => {
+  return await processing(TransactionService.doGetTransferOfferDetail(transferOfferId));
 };
 
 
@@ -171,7 +151,7 @@ const doGetProvenance = async (bitmark) => {
 };
 
 const doTransferBitmark = async (bitmark, receiver) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -179,33 +159,111 @@ const doTransferBitmark = async (bitmark, receiver) => {
   return await processing(TransactionService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
 };
 
-const doAcceptTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
+const doAcceptTransferBitmark = async (transferOffer, processingInfo, successInfo, errorInfo) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await submitting(TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
+};
+
+const doCancelTransferBitmark = async (transferOfferId) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
   if (!touchFaceIdSession) {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await submitting(TransactionService.doAcceptTransferBitmark(touchFaceIdSession, bitmarkId), processingInfo, successInfo, errorInfo);
+  return await processing(TransactionService.doCancelTransferBitmark(touchFaceIdSession, transferOfferId));
 };
 
-const doCancelTransferBitmark = async (bitmarkId) => {
-  return await processing(TransactionService.doCancelTransferBitmark(bitmarkId));
+const doRejectTransferBitmark = async (transferOffer, processingInfo, successInfo, errorInfo) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await submitting(TransactionService.doRejectTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
 };
 
-const doRejectTransferBitmark = async (bitmarkId, processingInfo, successInfo, errorInfo) => {
-  // TODO need signature
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  // CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  // return await submitting(TransactionService.doRejectTransferBitmark(touchFaceIdSession, bitmarkId), processingInfo, successInfo, errorInfo);
 
-  return await submitting(TransactionService.doRejectTransferBitmark(bitmarkId), processingInfo, successInfo, errorInfo);
+const doRequirePermission = async () => {
+  let donationInformation = DataController.getDonationInformation();
+  await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
 };
 
-const reloadData = async () => {
-  return await processing(DataController.reloadData());
+const doActiveBitmarkHealthData = async (activeBitmarkHealthDataAt) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to start bitmarking health data.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doActiveBitmarkHealthData(touchFaceIdSession, activeBitmarkHealthDataAt));
+};
+
+const doInactiveBitmarkHealthData = async () => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to remove bitmark health data.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doInactiveBitmarkHealthData(touchFaceIdSession));
+};
+
+const doJoinStudy = async (studyId) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to join study.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doJoinStudy(touchFaceIdSession, studyId));
+};
+const doLeaveStudy = async (studyId) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to opt out study.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doLeaveStudy(touchFaceIdSession, studyId));
+};
+const doStudyTask = async (study, taskType) => {
+  let result = await DonationService.doStudyTask(study, taskType);
+  if (!result) {
+    return null;
+  }
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to complete task.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
+};
+const doCompletedStudyTask = async (study, taskType, result) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to complete task.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await processing(DataController.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
+};
+const doDonateHealthData = async (study, list, procesingData, successData) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to donate your health data.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession, );
+  return await submitting(DataController.doDonateHealthData(touchFaceIdSession, study, list), procesingData, successData);
+};
+const doBitmarkHealthData = async (list, procesingData, successData) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to bitmark your weekly health data.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
+  return await submitting(DataController.doBitmarkHealthData(touchFaceIdSession, list), procesingData, successData);
+};
+const doDownloadStudyConsent = async (study) => {
+  return await processing(DonationService.doDownloadStudyConsent(study));
 };
 
 const doDownloadBitmark = async (bitmark, processingData) => {
@@ -218,8 +276,8 @@ const doDownloadBitmark = async (bitmark, processingData) => {
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
-  // return await DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
-  return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
+  return DataController.doStartBackgroundProcess(justCreatedBitmarkAccount);
+  // return await processing(DataController.doStartBackgroundProcess(justCreatedBitmarkAccount));
 };
 // ================================================================================================
 // ================================================================================================
@@ -232,25 +290,27 @@ let AppController = {
   doLogin,
   doLogout,
   doCreateSignatureData,
-  doPairAccount,
-  doWithdrawBitmark,
-  doDepositBitmark,
-  check24Words,
-  doTryAccessToMarket,
-  doTryAccessToAllMarkets,
-  reloadBitmarks,
   doCheckFileToIssue,
   doIssueFile,
-  doGetBalance,
   doGetProvenance,
-  doGetTransactionData,
   doGetTransferOfferDetail,
   doTransferBitmark,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doCancelTransferBitmark,
-  reloadData,
+  doRequirePermission,
+  doActiveBitmarkHealthData,
+  doInactiveBitmarkHealthData,
+  doJoinStudy,
+  doLeaveStudy,
+  doStudyTask,
+  doCompletedStudyTask,
+  doDonateHealthData,
+  doBitmarkHealthData,
+  doDownloadStudyConsent,
   doDownloadBitmark,
+
+  doReloadUserData,
 
   doStartBackgroundProcess,
 }

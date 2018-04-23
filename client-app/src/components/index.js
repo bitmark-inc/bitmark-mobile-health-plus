@@ -36,6 +36,7 @@ class MainComponent extends Component {
     this.handerSumittinggEvent = this.handerSumittinggEvent.bind(this);
     this.handleNetworkChange = this.handleNetworkChange.bind(this);
     this.handerProcessErrorEvent = this.handerProcessErrorEvent.bind(this);
+    this.doTryConnectInternet = this.doTryConnectInternet.bind(this);
 
     this.doOpenApp = this.doOpenApp.bind(this);
 
@@ -47,7 +48,6 @@ class MainComponent extends Component {
       networkStatus: true,
     };
     this.appState = AppState.currentState;
-
 
     // setTimeout(() => {
     //   console.log('send notification');
@@ -81,7 +81,6 @@ class MainComponent extends Component {
       justCreatedBitmarkAccount = !!this.props.navigation.state.params.justCreatedBitmarkAccount;
       this.setState({ justCreatedBitmarkAccount });
     }
-    this.doOpenApp();
 
     EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
@@ -107,16 +106,21 @@ class MainComponent extends Component {
   }
 
   handerProcessErrorEvent(processError) {
-    Alert.alert((processError && processError.title) ? processError.title : "We’re sorry!",
-      (processError && processError.message) ? processError.message : 'Something went wrong.\nPlease try again later.',
-      [{
-        text: 'OK',
-        onPress: () => {
-          if (processError && processError.onClose) {
-            processError.onClose();
-          }
+    let title = 'We’re sorry!';
+    let message = 'Something went wrong.\nPlease try again later.';
+    if (processError && (processError.title || processError.message)) {
+      title = processError.title;
+      message = processError.message;
+    }
+    Alert.alert(title, message, [{
+      text: 'OK',
+      style: 'cancel',
+      onPress: () => {
+        if (processError && processError.onClose) {
+          processError.onClose();
         }
-      }]);
+      }
+    }]);
   }
 
   handerSumittinggEvent(submitting) {
@@ -139,8 +143,7 @@ class MainComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
-      console.log('active component');
-      this.doOpenApp();
+      this.doTryConnectInternet();
     }
     this.appState = nextAppState;
   }
@@ -152,9 +155,16 @@ class MainComponent extends Component {
     }
   }
 
+  doTryConnectInternet() {
+    console.log('doTryConnectInternet ====');
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
+    NetInfo.isConnected.fetch().then().done(() => {
+      NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
+    });
+  }
+
   doOpenApp() {
     DataController.doOpenApp().then(user => {
-      console.log('user: ', user);
       this.setState({ user });
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
@@ -167,7 +177,9 @@ class MainComponent extends Component {
             if (!this.requiringTouchId) {
               this.requiringTouchId = true;
               Alert.alert('Please enable your Touch ID & Passcode to continue using Bitmark. Settings > Touch ID & Passcode', '', [{
-                text: 'ENABLE', onPress: () => {
+                text: 'ENABLE',
+                style: 'cancel',
+                onPress: () => {
                   Linking.openURL('app-settings:');
                   this.requiringTouchId = false;
                 }
@@ -186,7 +198,7 @@ class MainComponent extends Component {
     }
     return (
       <View style={{ flex: 1 }}>
-        {!this.state.networkStatus && <BitmarkInternetOffComponent />}
+        {!this.state.networkStatus && <BitmarkInternetOffComponent tryConnectInternet={this.doTryConnectInternet} />}
         {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
 
         {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}
@@ -196,11 +208,6 @@ class MainComponent extends Component {
           flex: 1,
         }}><DisplayedComponent screenProps={{
           rootNavigation: this.props.navigation,
-          refreshScaling: () => {
-            if (this.appScaler) {
-              this.appScaler.refreshScaling();
-            }
-          }
         }}>
           </DisplayedComponent>
         </View>
