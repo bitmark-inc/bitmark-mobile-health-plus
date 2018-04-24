@@ -110,7 +110,8 @@ export default StyleSheet.create({
     fontWeight: '900',
     color: '#0060F2',
     marginTop: 105,
-    width: convertWidth(286),
+    textAlign: 'center',
+    width: convertWidth(285),
   },
   madelenaImage: {
     width: 85,

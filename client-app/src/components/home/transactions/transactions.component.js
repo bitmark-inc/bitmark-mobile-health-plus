@@ -385,7 +385,7 @@ export class TransactionsComponent extends React.Component {
                       </Text>}
 
                     {item.type === ActionTypes.donation && <View style={transactionsStyle.donationTask}>
-                      <Text style={transactionsStyle.donationTaskTitle} >{item.title}</Text>
+                      <Text style={transactionsStyle.donationTaskTitle} >{item.title + (item.number > 1 ? ` (${item.number})` : '')}</Text>
                       <View style={transactionsStyle.donationTaskDescriptionArea}>
                         <Text style={transactionsStyle.donationTaskDescription}>{item.description}</Text>
                         {item.important && <Image style={transactionsStyle.donationTaskImportantIcon} source={require('../../../../assets/imgs/important-blue.png')} />}
