@@ -562,7 +562,7 @@ const doIssueIftttData = async (touchFaceIdSession, iftttBitmarkFile) => {
   let filePath = folderPath + '/' + filename;
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   let downloadResult = await IftttModel.downloadBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.id, filePath);
-  if (downloadResult.statusCode > 400) {
+  if (downloadResult.statusCode >= 400) {
     throw new Error('Download file error!');
   }
   await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, iftttBitmarkFile.assetInfo.propertyName, iftttBitmarkFile.assetInfo.metadata, 1);
