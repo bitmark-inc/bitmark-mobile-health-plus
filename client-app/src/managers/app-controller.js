@@ -285,7 +285,7 @@ const doTrackingBitmark = async (asset, bitmark) => {
 };
 
 const doStopTrackingBitmark = async (bitmark) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to tracking property.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to stop tracking property.');
   if (!touchFaceIdSession) {
     return null;
   }
