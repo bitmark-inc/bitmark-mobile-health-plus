@@ -119,10 +119,18 @@ export class LocalPropertyDetailComponent extends React.Component {
         }
       }]);
     } else {
-      AppController.doStopTrackingBitmark(this.state.bitmark).catch(error => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-        console.log('doTrackingBitmark error :', error);
-      });
+      Alert.alert('Stop Tracking', 'By stop tracking a bitmark, the bitmark will be removed from the tracked list, are you sure you want to do it?', [{
+        text: 'NO'
+      }, {
+        text: 'YES',
+        style: 'cancel',
+        onPress: () => {
+          AppController.doStopTrackingBitmark(this.state.bitmark).catch(error => {
+            EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+            console.log('doTrackingBitmark error :', error);
+          });
+        }
+      }]);
     }
   }
 
