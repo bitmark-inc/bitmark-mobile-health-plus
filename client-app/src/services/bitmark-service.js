@@ -125,46 +125,40 @@ const doGetBitmarkInformation = async (bitmarkId) => {
 
 const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) => {
   oldTrackingBitmarks = oldTrackingBitmarks || [];
-
+  let oldStatuses = {};
   let allTrackingBitmarksFromServer = await BitmarkModel.doGetAllTrackingBitmark(bitmarkAccountNumber);
-  for (let tb of allTrackingBitmarksFromServer.bitmarks) {
-    let exist = oldTrackingBitmarks.findIndex((otb => otb.id === tb.bitmark_id)) >= 0;
-    if (!exist) {
-      let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(tb.bitmark_id);
-      let trackingBitmark = merge({}, bitmarkInformation.bitmark);
-      trackingBitmark.asset = bitmarkInformation.asset;
-      trackingBitmark.isViewed = true;
-      trackingBitmark.lastHistory = {
+  allTrackingBitmarksFromServer.bitmarks.forEach(tb => {
+    oldStatuses[tb.bitmark_id] = {
+      lastHistory: {
         status: tb.status,
         head_id: tb.tx_id,
-      };
-      oldTrackingBitmarks.push(trackingBitmark);
+      },
+    };
+  });
+  oldTrackingBitmarks.forEach(otb => {
+    if (oldStatuses[otb.id]) {
+      oldStatuses[otb.id].lastHistory = otb.lastHistory;
+      oldStatuses[otb.id].asset = otb.asset;
     }
-  }
-
-  let trackingBitmarks = [];
-  let bitmarkIds = [];
-  for (let oldTB of oldTrackingBitmarks) {
-    bitmarkIds.push(oldTB.id);
-  }
-
+  });
+  let bitmarkIds = Object.keys(oldStatuses);
   let bitmarks = await BitmarkModel.getListBitmarks(bitmarkIds);
-
+  let trackingBitmarks = [];
   for (let bitmark of bitmarks) {
-    let oldTB = oldTrackingBitmarks.find(otb => otb.id === bitmark.id);
-    if (oldTB) {
-      if (oldTB.head_id !== bitmark.head_id || (oldTB.head_id === bitmark.head_id && oldTB.status !== bitmark.status)) {
-        oldTB.isViewed = false;
-        trackingBitmarks.push(merge({}, oldTB, bitmark));
-      } else {
-        trackingBitmarks.push(oldTB);
-      }
-    } else {
-      let bitmarkFullInfo = BitmarkModel.doGetBitmarkInformation(bitmark.id);
-      bitmark.asset = bitmarkFullInfo.asset;
+    let oldStatus = oldStatuses[bitmark.id];
+    let bitmarkFullInfo = await BitmarkModel.doGetBitmarkInformation(bitmark.id);
+    bitmark.asset = bitmarkFullInfo.asset;
+
+    if (oldStatus.lastHistory.head_id !== bitmark.head_id ||
+      (oldStatus.lastHistory.head_id === bitmark.head_id && oldStatus.lastHistory.status !== bitmark.status)) {
       bitmark.isViewed = false;
-      trackingBitmarks.push(bitmark);
+    } else {
+      bitmark.isViewed = true;
     }
+    bitmark.lastHistory = oldStatus.lastHistory;
+
+    bitmark.displayStatus = bitmark.status;
+    trackingBitmarks.push(bitmark);
   }
   return trackingBitmarks;
 };

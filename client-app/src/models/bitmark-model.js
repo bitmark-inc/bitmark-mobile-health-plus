@@ -58,18 +58,17 @@ const doGetAllBitmarks = async (accountNumber, lastOffset) => {
 };
 
 const getListBitmarks = (bitmarkIds) => {
-  let queryString;
+  let queryString = '';
   return new Promise((resolve, reject) => {
     if (bitmarkIds && bitmarkIds.length > 0) {
       bitmarkIds.forEach(bitmarkId => {
-        queryString = queryString ? `&bitmark_ids=${bitmarkId}` : `?bitmark_ids=${bitmarkId}`;
+        queryString += queryString ? `&bitmark_ids=${bitmarkId}` : `?bitmark_ids=${bitmarkId}`;
       });
     }
     if (!queryString) {
       return resolve([]);
     }
     let statusCode;
-    console.log(config.api_server_url + `/v1/bitmarks` + queryString);
     fetch(config.api_server_url + `/v1/bitmarks` + queryString, {
       method: 'GET',
       headers: {
@@ -78,9 +77,13 @@ const getListBitmarks = (bitmarkIds) => {
       }
     }).then((response) => {
       statusCode = response.status;
-      return response.json();
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
     }).then((data) => {
       if (statusCode >= 400) {
+        console.log('getListBitmarks data :', data);
         return reject(new Error('getListBitmarks error :' + JSON.stringify(data)));
       }
       resolve(data.bitmarks || []);
@@ -294,7 +297,10 @@ const doStopTrackingBitmark = async (bitmarkAccount, timestamp, signature, bitma
       },
     }).then((response) => {
       statusCode = response.status;
-      return response.json();
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
     }).then((data) => {
       if (statusCode >= 400) {
         return reject(new Error(`doStopTrackingBitmark error :` + JSON.stringify(data)));
@@ -317,7 +323,10 @@ const doGetAllTrackingBitmark = async (bitmarkAccount) => {
       },
     }).then((response) => {
       statusCode = response.status;
-      return response.json();
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
     }).then((data) => {
       if (statusCode >= 400) {
         return reject(new Error(`doGetAllTrackingBitmark error :` + JSON.stringify(data)));

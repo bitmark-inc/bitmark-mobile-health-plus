@@ -287,10 +287,10 @@ export class AssetsComponent extends React.Component {
                   {!item.isViewed && <View style={[assetsStyle.newItem, { top: 20 }]}></View>}
                   <Text style={assetsStyle.trackingRowAssetName}>{item.asset.name}</Text>
                   <Text style={assetsStyle.trackingRowUpdated}>
-                    {item.provenance[0].status === 'pending' ? 'PENDING...' : ('UPDATED: ' + item.provenance[0].created_at.toUpperCase())}
+                    {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + item.created_at.toUpperCase())}
                   </Text>
-                  <Text style={assetsStyle.trackingRowCurrentOwner}>CURRENT OWNER: {item.provenance[0].owner === DataController.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
-                    '[' + item.provenance[0].owner.substring(0, 4) + '...' + item.provenance[0].owner.substring(item.provenance[0].owner.length - 4, item.provenance[0].owner.length) + ']'
+                  <Text style={assetsStyle.trackingRowCurrentOwner}>CURRENT OWNER: {item.owner === DataController.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
+                    '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'
                   )}</Text>
                 </TouchableOpacity>)
               }}

@@ -135,7 +135,7 @@ export class LocalPropertyDetailComponent extends React.Component {
           </TouchableOpacity>
           <View style={defaultStyle.headerCenter}>
             <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name} </Text>
-            <Text style={[defaultStyle.headerTitle]}>({this.state.asset.bitmarks.indexOf(this.state.bitmark) + 1}/{this.state.asset.bitmarks.length})</Text>
+            {this.state.asset.bitmarks && this.state.asset.bitmarkslengh > 0 && <Text style={[defaultStyle.headerTitle]}>({this.state.asset.bitmarks.indexOf(this.state.bitmark) + 1}/{this.state.asset.bitmarks.length})</Text>}
           </View>
           <TouchableOpacity style={[defaultStyle.headerRight, { padding: 4 }]} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
             <Image style={propertyDetailStyle.threeDotIcon} source={this.state.displayTopButton

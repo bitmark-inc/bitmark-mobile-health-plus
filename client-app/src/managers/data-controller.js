@@ -72,7 +72,6 @@ const runGetActiveIncomingTransferOfferInBackground = () => {
       }
       resolve();
       isRunningGetActiveIncomingTransferOfferInBackground = false;
-      console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground success :');
     }).catch(error => {
       resolve();
       isRunningGetActiveIncomingTransferOfferInBackground = false;
@@ -96,7 +95,6 @@ const runGetTransactionsInBackground = () => {
       }
       resolve();
       isRunningGetTransactionsInBackground = false;
-      console.log('runOnBackground  runGetTransactionsInBackground success :');
     }).catch(error => {
       resolve();
       isRunningGetTransactionsInBackground = false;
@@ -121,7 +119,6 @@ const runGetLocalBitmarksInBackground = () => {
       }
       resolve();
       isRunningGetLocalBitmarksInBackground = false;
-      console.log('runOnBackground  runGetLocalBitmarksInBackground success :', localAssets);
     }).catch(error => {
       resolve();
       isRunningGetLocalBitmarksInBackground = false;
@@ -145,7 +142,6 @@ const runGetDonationInformationInBackground = () => {
       }
       resolve();
       isRunningGetDonationInformationInBackground = false;
-      console.log('runOnBackground  runGetDonationInformationInBackground success :', donationInformation);
     }).catch(error => {
       resolve();
       isRunningGetDonationInformationInBackground = false;
@@ -169,7 +165,6 @@ const runGetTrackingBitmarksInBackground = () => {
       }
       resolve();
       isRunningGetTrackingBitmarksInBackground = false;
-      console.log('runOnBackground  runGetTrackingBitmarksInBackground success :', trackingBitmarks);
     }).catch(error => {
       resolve();
       isRunningGetTrackingBitmarksInBackground = false;
@@ -193,7 +188,6 @@ const runGetIFTTTInformationInBackground = () => {
       }
       resolve();
       isRunningGetIFTTTInformationInBackground = false;
-      console.log('runOnBackground  runGetIFTTTInformationInBackground success :', iftttInformation);
     }).catch(error => {
       resolve();
       isRunningGetIFTTTInformationInBackground = false;
@@ -358,12 +352,6 @@ const doOpenApp = async () => {
       userData.donationInformation = donationInformation || {};
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
     }
-    let trackingBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS);
-    trackingBitmarks = trackingBitmarks.length > 0 ? trackingBitmarks : [];
-    if (userData.trackingBitmarks === null || JSON.stringify(trackingBitmarks) !== JSON.stringify(userData.trackingBitmarks)) {
-      userData.trackingBitmarks = trackingBitmarks || [];
-      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
-    }
     let iftttInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION);
     if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
       userData.iftttInformation = iftttInformation || {};
@@ -499,37 +487,27 @@ const doTrackingBitmark = async (touchFaceIdSession, asset, bitmark) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   await BitmarkModel.doAddTrackinBitmark(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature,
     bitmark.id, bitmark.head_id, bitmark.status);
-
-  let trackingBitmark = merge({}, bitmark);
-  trackingBitmark.asset = asset;
-  trackingBitmark.isViewed = true;
-  trackingBitmark.lastHistory = {
-    status: bitmark.status,
-    head_id: bitmark.head_id,
-  };
-  if (!userData.trackingBitmarks) {
-    userData.trackingBitmarks = [];
+  let oldUserData = merge({}, userData);
+  await runGetTrackingBitmarksInBackground();
+  if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
   }
-  userData.trackingBitmarks.push(trackingBitmark);
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
-  EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
   return true;
 };
 const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   await BitmarkModel.doStopTrackingBitmark(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, bitmark.id);
 
-  let trackingBitmarkIndex = (userData.trackingBitmarks || []).findIndex(tb => tb.id = bitmark.id);
-  if (trackingBitmarkIndex >= 0) {
-    userData.trackingBitmarks.splice(trackingBitmarkIndex, 1);
-    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
+  let oldUserData = merge({}, userData);
+  await runGetTrackingBitmarksInBackground();
+  if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
   }
   return true;
 };
 
 const doGetProvenance = async (bitmarkId) => {
-  let trackingBitmark = (userData.trackingBitmarks || []).find(tb => tb.id = bitmarkId);
+  let trackingBitmark = (userData.trackingBitmarks || []).find(tb => tb.id === bitmarkId);
   if (trackingBitmark) {
     return await BitmarkService.doGetProvenance(bitmarkId, trackingBitmark.lastHistory.head_id, trackingBitmark.lastHistory.status);
   } else {

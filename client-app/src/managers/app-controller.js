@@ -286,6 +286,10 @@ const doTrackingBitmark = async (asset, bitmark) => {
 
 const doStopTrackingBitmark = async (bitmark) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to tracking property.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouceSessionId(touchFaceIdSession);
   return await processing(DataController.doStopTrackingBitmark(touchFaceIdSession, bitmark));
 }
 const doRevokeIftttToken = async () => {
@@ -296,13 +300,13 @@ const doRevokeIftttToken = async () => {
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
   return await processing(DataController.doRevokeIftttToken(touchFaceIdSession));
 };
-const doIssueIftttData = async (iftttBitmarkFile) => {
+const doIssueIftttData = async (iftttBitmarkFile, processingInfo, successInfo) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to issuance.');
   if (!touchFaceIdSession) {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(DataController.doIssueIftttData(touchFaceIdSession, iftttBitmarkFile));
+  return await submitting(DataController.doIssueIftttData(touchFaceIdSession, iftttBitmarkFile), processingInfo, successInfo);
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {

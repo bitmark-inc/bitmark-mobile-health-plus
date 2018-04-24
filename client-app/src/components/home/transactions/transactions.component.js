@@ -279,14 +279,18 @@ export class TransactionsComponent extends React.Component {
         });
       }
     } else if (item.type === ActionTypes.ifttt) {
-      AppController.doIssueIftttData(item).then(result => {
-        if (result) {
-          DataController.doReloadUserData();
-        }
-      }).catch(error => {
-        console.log('doStudyTask error:', error);
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
-      });
+      AppController.doIssueIftttData(item, {
+        indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
+      }, {
+          indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
+        }).then(result => {
+          if (result) {
+            DataController.doReloadUserData();
+          }
+        }).catch(error => {
+          console.log('doStudyTask error:', error);
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+        });
     }
   }
 
