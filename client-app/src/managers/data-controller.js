@@ -536,6 +536,15 @@ const doGetProvenance = async (bitmarkId) => {
     return await BitmarkService.doGetProvenance(bitmarkId);
   }
 }
+
+const doReloadIFTTTInformation = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetIFTTTInformationInBackground();
+  if (JSON.stringify(userData.iftttInformation) !== JSON.stringify(oldUserData.iftttInformation)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
+  }
+};
+
 const doRevokeIftttToken = async (touchFaceIdSession) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   let iftttInformation = await IftttModel.doRevokeIftttToken(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
@@ -643,7 +652,7 @@ const DataController = {
   doStopTrackingBitmark,
   doGetProvenance,
 
-  doReloadIFTTTInformation: runGetIFTTTInformationInBackground,
+  doReloadIFTTTInformation,
   doRevokeIftttToken,
   doIssueIftttData,
 

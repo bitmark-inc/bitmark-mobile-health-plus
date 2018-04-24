@@ -21,6 +21,7 @@ export class IftttActiveComponent extends React.Component {
     this.state = {
       iftttInformation: DataController.getIftttInformation(),
       loading: true,
+      processing: false,
     }
     this.signed = false;
   }
@@ -40,13 +41,16 @@ export class IftttActiveComponent extends React.Component {
   onMessage(event) {
     let message = event.nativeEvent.data;
     if (message === 'enable-ifttt') {
+      this.setState({ processing: true });
       AppController.doCreateSignatureData('Please sign to connect IFTTT data', true).then(data => {
+        this.setState({ processing: false });
         if (!data) {
           return;
         }
         this.signed = true;
         this.webViewRef.postMessage(JSON.stringify(data));
       }).catch(error => {
+        this.setState({ processing: false });
         console.log('IftttActiveComponent createSignatureData error :', error);
       });
     }
@@ -95,7 +99,7 @@ export class IftttActiveComponent extends React.Component {
               this.webViewRef.postMessage(DataController.getUserInformation().bitmarkAccountNumber);
             }}
           />
-          {this.state.loading && <View style={{
+          {this.state.loading && !this.state.processing && <View style={{
             flex: 1, position: 'absolute', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
             width: '100%',
             height: '100%',

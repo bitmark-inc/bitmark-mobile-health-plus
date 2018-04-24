@@ -28,7 +28,7 @@ if (config.network === NETWORKS.testnet) {
   config.trade_server_url = 'https://trade.test.bitmark.com';
   config.donation_server_url = 'https://data-donation.test.bitmark.com';
   config.mobile_server_url = 'https://bm.test.bitmark.com';
-  config.ifttt_server_url = 'https://channel.test.bitmark.com:8090';
+  config.ifttt_server_url = 'https://when.test.bitmark.com:9090';
   config.ifttt_invite_url = 'https://ifttt.com/features/redeem?code=10518-3f2950b543e7a5a2dc307de0c05775e4';
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmarktest';
 } else if (config.network === NETWORKS.livenet) {
