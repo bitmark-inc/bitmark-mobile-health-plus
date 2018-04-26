@@ -217,7 +217,7 @@ export class AccountDetailComponent extends React.Component {
                   <View style={accountStyle.authorizedItemDescription}>
                     <Image style={accountStyle.authorizedItemDescriptionIcon} source={require('./../../../../assets/imgs/icon_health.png')} />
                     <View style={accountStyle.authorizedItemDescriptionDetail}>
-                      <Text style={accountStyle.authorizedItemDescriptionText}>CAN:{'\n'}Extract data from the Health app and register property rights. Repeats weekly (Sunday 11AM).</Text>
+                      <Text style={accountStyle.authorizedItemDescriptionText}>Can:{'\n'}Extract data from the Health app and register property rights. Repeats weekly (Sunday 11AM).</Text>
                       <TouchableOpacity style={accountStyle.authorizedViewButton} onPress={() => {
                         this.props.screenProps.homeNavigation.navigate('HealthDataDataSource')
                       }}>
