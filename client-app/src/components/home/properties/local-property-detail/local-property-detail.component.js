@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
-  View, Text, TouchableOpacity, Image, FlatList, ScrollView, ActivityIndicator,
+  View, Text, TouchableOpacity, Image, FlatList, ScrollView, ActivityIndicator, TouchableWithoutFeedback,
   Clipboard,
-  TouchableWithoutFeedback,
   Share,
+  Alert,
 } from 'react-native';
 
 import { FullComponent } from './../../../../commons/components';
@@ -17,36 +17,73 @@ import { AppController } from '../../../../managers/app-controller';
 import { EventEmiterService } from '../../../../services';
 import { config } from '../../../../configs';
 import { DataController } from '../../../../managers/data-controller';
-import { BitmarkModel } from '../../../../models';
 
 export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
     super(props);
     this.downloadAsset = this.downloadAsset.bind(this);
     this.clickOnProvenance = this.clickOnProvenance.bind(this);
+    this.changeTrackingBitmark = this.changeTrackingBitmark.bind(this);
+    this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
+
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
-    (bitmark.provenance || []).forEach((history, index) => {
-      history.key = index;
-    });
+    let trackingBitmark = DataController.getTrackingBitmarkInformation(bitmark.id);
+    let provenanceViewed = {};
     this.state = {
+      provenanceViewed,
+      isTracking: !!trackingBitmark,
       asset,
       bitmark,
       copied: false,
       displayTopButton: false,
+      provenance: [],
       loading: true,
     };
-    BitmarkModel.doGetProvenance(bitmark).then(provenance => {
-      bitmark.provenance = provenance || [];
-      bitmark.provenance.forEach((history, index) => {
+    DataController.doGetProvenance(bitmark.id).then(provenance => {
+      let provenanceViewed = {};
+      provenance.forEach((history, index) => {
+        history.key = index;
+        provenanceViewed[history.tx_id] = history.isViewed;
+      });
+      this.setState({ provenance, provenanceViewed, loading: false });
+      if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
+        DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
+      } else {
+        DataController.doUpdateViewStatus(null, this.state.bitmark.id);
+      }
+    }).catch(error => {
+      this.setState({ loading: false });
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      console.log('error 2:', error);
+    });
+  }
+
+  componentDidMount() {
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
+  }
+
+  componentWillUnmount() {
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
+  }
+
+  handerChangeTrackingBitmarks() {
+    this.setState({ loading: true });
+    DataController.doGetProvenance(this.state.bitmark.id).then(provenance => {
+      let trackingBitmark = DataController.getTrackingBitmarkInformation(this.state.bitmark.id);
+      console.log('trackingBitmark :', trackingBitmark);
+      provenance.forEach((history, index) => {
         history.key = index;
       });
-      this.setState({ bitmark, loading: false });
+      this.setState({ provenance, isTracking: !!trackingBitmark, loading: false });
+      if (DataController.getUserInformation().bitmarkAccountNumber === this.state.bitmark.owner) {
+        DataController.doUpdateViewStatus(this.state.asset.id, this.state.bitmark.id);
+      } else {
+        DataController.doUpdateViewStatus(null, this.state.bitmark.id);
+      }
     }).catch(error => {
-      bitmark.provenance = [];
-      console.log('getProvenance error', error);
-      this.setState({ bitmark, loading: false });
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      this.setState({ loading: false });
+      console.log('error 1 :', error);
     });
   }
 
@@ -66,6 +103,37 @@ export class LocalPropertyDetailComponent extends React.Component {
     this.props.navigation.navigate('BitmarkWebView', { title: 'Registry', sourceUrl, isFullScreen: true });
   }
 
+  changeTrackingBitmark() {
+    //TODO
+    if (!this.state.isTracking) {
+      Alert.alert('Track This Bitmark', 'By tracking a bitmark you can always view the latest bitmarks status in the tracked properties list, are you sure you want to do it?', [{
+        text: 'NO'
+      }, {
+        text: 'YES',
+        style: 'cancel',
+        onPress: () => {
+          AppController.doTrackingBitmark(this.state.asset, this.state.bitmark).catch(error => {
+            EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+            console.log('doTrackingBitmark error :', error);
+          });
+        }
+      }]);
+    } else {
+      Alert.alert('Stop Tracking', 'By stop tracking a bitmark, the bitmark will be removed from the tracked list, are you sure you want to do it?', [{
+        text: 'NO'
+      }, {
+        text: 'YES',
+        style: 'cancel',
+        onPress: () => {
+          AppController.doStopTrackingBitmark(this.state.bitmark).catch(error => {
+            EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+            console.log('doTrackingBitmark error :', error);
+          });
+        }
+      }]);
+    }
+  }
+
   render() {
     return (
       <FullComponent
@@ -75,7 +143,7 @@ export class LocalPropertyDetailComponent extends React.Component {
           </TouchableOpacity>
           <View style={defaultStyle.headerCenter}>
             <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name} </Text>
-            <Text style={[defaultStyle.headerTitle]}>({this.state.asset.bitmarks.indexOf(this.state.bitmark) + 1}/{this.state.asset.bitmarks.length})</Text>
+            {this.state.asset.bitmarks && this.state.asset.bitmarkslengh > 0 && <Text style={[defaultStyle.headerTitle]}>({this.state.asset.bitmarks.indexOf(this.state.bitmark) + 1}/{this.state.asset.bitmarks.length})</Text>}
           </View>
           <TouchableOpacity style={[defaultStyle.headerRight, { padding: 4 }]} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
             <Image style={propertyDetailStyle.threeDotIcon} source={this.state.displayTopButton
@@ -96,13 +164,19 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={propertyDetailStyle.topButtonText}>COPY BITMARK ID</Text>
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
-            {/* <TouchableOpacity style={propertyDetailStyle.topButton}
+            <TouchableOpacity style={propertyDetailStyle.topButton}
               disabled={this.state.bitmark.displayStatus !== 'confirmed'}
               onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
               <Text style={[propertyDetailStyle.topButtonText, {
                 color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
               }]}>TRANSFER</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
+            <TouchableOpacity style={propertyDetailStyle.topButton} onPress={this.changeTrackingBitmark}>
+              <Text style={[propertyDetailStyle.topButtonText, {
+                color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
+              }]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK'}</Text>
+            </TouchableOpacity>
+
           </View>}
           <ScrollView style={propertyDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
@@ -121,9 +195,10 @@ export class LocalPropertyDetailComponent extends React.Component {
                   <FlatList
                     scrollEnabled={false}
                     extraData={this.state}
-                    data={this.state.bitmark.provenance || []}
+                    data={this.state.provenance || []}
                     renderItem={({ item }) => {
                       return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
+                        {this.state.isTracking && !this.state.provenanceViewed[item.tx_id] && !item.isViewed && <View style={propertyDetailStyle.provenancesNotView}></View>}
                         <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: item.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
                           {item.status === 'pending' ? 'PENDING…' : item.created_at.toUpperCase()}
                         </Text>

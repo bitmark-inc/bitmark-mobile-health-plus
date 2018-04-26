@@ -14,6 +14,7 @@ import { BitmarkWebViewComponent } from '../../../commons/components/bitmark-web
 
 const SubTabs = {
   local: 'Yours',
+  tracking: 'TRACKED',
   global: 'Global',
 }
 export class AssetsComponent extends React.Component {
@@ -24,8 +25,8 @@ export class AssetsComponent extends React.Component {
     this.convertToFlatListData = this.convertToFlatListData.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
+    this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
-
 
     let subtab = SubTabs.local;
     let localAssets = DataController.getUserBitmarks().localAssets;
@@ -33,17 +34,24 @@ export class AssetsComponent extends React.Component {
     if (subtab === SubTabs.local && localAssets) {
       assets = this.convertToFlatListData(localAssets);
     }
+    let { trackingBitmarks } = DataController.getTrackingBitmarks();
+    if (trackingBitmarks) {
+      trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
+    }
     this.state = {
       subtab,
       accountNumber: '',
       copyText: 'COPY',
       assets,
       existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0,
+      trackingBitmarks,
+      existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
       isLoadingData: DataController.isLoadingData(),
     };
   }
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
     EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
@@ -55,6 +63,7 @@ export class AssetsComponent extends React.Component {
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
     EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
@@ -64,6 +73,9 @@ export class AssetsComponent extends React.Component {
 
   handerLoadingData() {
     this.setState({ isLoadingData: DataController.isLoadingData() });
+  }
+  handerChangeTrackingBitmarks() {
+    this.switchSubtab(this.state.subtab);
   }
 
   reloadData() {
@@ -88,7 +100,17 @@ export class AssetsComponent extends React.Component {
     if (localAssets) {
       assets = this.convertToFlatListData(localAssets);
     }
-    this.setState({ subtab, assets, existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0, });
+    let { trackingBitmarks } = DataController.getTrackingBitmarks();
+    if (trackingBitmarks) {
+      trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
+    }
+    this.setState({
+      subtab,
+      assets,
+      existNewAsset: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0,
+      trackingBitmarks,
+      existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
+    });
   }
 
   addProperty() {
@@ -105,6 +127,7 @@ export class AssetsComponent extends React.Component {
             <Image style={assetsStyle.addPropertyIcon} source={require('./../../../../assets/imgs/plus-icon.png')} />
           </TouchableOpacity>
         </View>
+
         <View style={assetsStyle.subTabArea}>
           {this.state.subtab === SubTabs.local && <TouchableOpacity style={[assetsStyle.subTabButton, {
             shadowOffset: { width: 2 },
@@ -135,6 +158,31 @@ export class AssetsComponent extends React.Component {
             </View>
           </TouchableOpacity>}
 
+          {this.state.subtab === SubTabs.tracking && <TouchableOpacity style={[assetsStyle.subTabButton, {
+            shadowOffset: { width: -2 },
+            shadowOpacity: 0.15,
+          }]}>
+            <View style={assetsStyle.subTabButtonArea}>
+              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
+              <View style={assetsStyle.subTabButtonTextArea}>
+                {this.state.existNewTracking && <View style={assetsStyle.newItem}></View>}
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.tracking.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+          {this.state.subtab !== SubTabs.tracking && <TouchableOpacity style={[assetsStyle.subTabButton, {
+            backgroundColor: '#F5F5F5',
+            zIndex: 0,
+          }]} onPress={() => this.switchSubtab(SubTabs.tracking)}>
+            <View style={assetsStyle.subTabButtonArea}>
+              <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
+              <View style={assetsStyle.subTabButtonTextArea}>
+                {this.state.existNewTracking && <View style={assetsStyle.newItem}></View>}
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.tracking.toUpperCase()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>}
+
           {this.state.subtab === SubTabs.global && <TouchableOpacity style={[assetsStyle.subTabButton, {
             shadowOffset: { width: -2 },
             shadowOpacity: 0.15,
@@ -159,7 +207,7 @@ export class AssetsComponent extends React.Component {
           </TouchableOpacity>}
         </View>
 
-        {this.state.subtab !== SubTabs.global && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
+        {this.state.subtab == SubTabs.local && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
             {(this.state.isLoadingData && this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
@@ -217,6 +265,42 @@ export class AssetsComponent extends React.Component {
             </View>}
           </TouchableOpacity>
         </ScrollView>}
+
+        {this.state.subtab === SubTabs.tracking && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
+          <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
+            {(this.state.trackingBitmarks && this.state.trackingBitmarks.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
+              <Text style={assetsStyle.messageNoAssetLabel}>
+                {'NO TRACKING PROPERTY.'.toUpperCase()}
+              </Text>
+              <Text style={assetsStyle.messageNoAssetContent}>
+                By tracking a bitmark you can always view the latest bitmarks status and this is where all your tracking bitmarks will be displayed.
+              </Text>
+            </View>}
+            {(this.state.trackingBitmarks && this.state.trackingBitmarks.length > 0 && this.state.subtab === SubTabs.tracking) && <FlatList
+              ref={(ref) => this.listViewElement = ref}
+              extraData={this.state}
+              data={this.state.trackingBitmarks || []}
+              renderItem={({ item }) => {
+                return (<TouchableOpacity style={[assetsStyle.trackingRow]} onPress={() => {
+                  this.props.screenProps.homeNavigation.navigate('LocalPropertyDetail', { asset: item.asset, bitmark: item });
+                }} >
+                  {!item.isViewed && <View style={[assetsStyle.newItem, { top: 20 }]}></View>}
+                  <Text style={assetsStyle.trackingRowAssetName}>{item.asset.name}</Text>
+                  <Text style={assetsStyle.trackingRowUpdated}>
+                    {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + item.created_at.toUpperCase())}
+                  </Text>
+                  <Text style={assetsStyle.trackingRowCurrentOwner}>CURRENT OWNER: {item.owner === DataController.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
+                    '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'
+                  )}</Text>
+                </TouchableOpacity>)
+              }}
+            />}
+            {!this.state.isLoadingData && <View style={assetsStyle.messageNoAssetArea}>
+              <ActivityIndicator size="large" style={{ marginTop: 46, }} />
+            </View>}
+          </TouchableOpacity>
+        </ScrollView>}
+
         {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
           <BitmarkWebViewComponent screenProps={{ sourceUrl: config.registry_server_url + '?env=app', heightButtomController: 38 }} />
         </View>}

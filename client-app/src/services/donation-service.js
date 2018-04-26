@@ -112,15 +112,13 @@ const doLoadDonationTask = async (donationInformation) => {
   let totalTodoTask = 0;
   let bitmarkHealthDataTask = donationInformation.bitmarkHealthDataTask;
   if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
-    for (let rangeTime of bitmarkHealthDataTask.list) {
-      todoTasks.push({
-        title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
-        description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
-        taskType: donationInformation.commonTaskIds.bitmark_health_data,
-        number: 1,
-        list: [rangeTime],
-      });
-    }
+    todoTasks.push({
+      title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
+      description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
+      taskType: donationInformation.commonTaskIds.bitmark_health_data,
+      number: bitmarkHealthDataTask.list.length,
+      list: bitmarkHealthDataTask.list,
+    });
     totalTodoTask += bitmarkHealthDataTask.list.length;
   }
   if (donationInformation.joinedStudies && donationInformation.joinedStudies.length > 0) {
@@ -128,29 +126,15 @@ const doLoadDonationTask = async (donationInformation) => {
       if (study.tasks) {
         for (let taskType in study.tasks) {
           if (study.tasks[taskType].number) {
-            if (study.tasks[taskType].list && study.tasks[taskType].list.length > 1) {
-              for (let item of study.tasks[taskType].list) {
-                todoTasks.push({
-                  study,
-                  title: study.studyTasks[taskType].title,
-                  description: study.studyTasks[taskType].description,
-                  taskType,
-                  number: 1,
-                  list: [item],
-                  important: study.tasks[taskType].important,
-                });
-              }
-            } else {
-              todoTasks.push({
-                study,
-                title: study.studyTasks[taskType].title,
-                description: study.studyTasks[taskType].description,
-                important: study.tasks[taskType].important,
-                taskType,
-                number: study.tasks[taskType].number,
-                list: study.tasks[taskType].list,
-              });
-            }
+            todoTasks.push({
+              study,
+              title: study.studyTasks[taskType].title,
+              description: study.studyTasks[taskType].description,
+              important: study.tasks[taskType].important,
+              taskType,
+              number: study.tasks[taskType].number,
+              list: study.tasks[taskType].list,
+            });
             totalTodoTask += study.tasks[taskType].number;
           }
         }

@@ -7,7 +7,8 @@ import {
   LocalAssetDetailComponent,
   LocalPropertyTransferComponent,
   LocalIssueFileComponent,
-  LocalIssueFileEditLabelComponent
+  LocalIssueFileEditLabelComponent,
+  IftttActiveComponent,
 } from './properties';
 
 import { TransactionDetailComponent } from './transactions';
@@ -16,7 +17,6 @@ import {
   StudySettingComponent,
   StudyDonationComponent,
   StudyConsentComponent,
-  HealthDataMetadataComponent,
   HealthDataDataSourceComponent,
   HealthDataBitmarkComponent,
   Study1ExitSurvey2Component,
@@ -39,9 +39,9 @@ let HomeComponent = StackNavigator({
   HealthDataBitmark: { screen: HealthDataBitmarkComponent, },
   StudyDonation: { screen: StudyDonationComponent, },
   StudyConsent: { screen: StudyConsentComponent, },
-  HealthDataMetadata: { screen: HealthDataMetadataComponent, },
   HealthDataDataSource: { screen: HealthDataDataSourceComponent, },
   Study1ExitSurvey2: { screen: Study1ExitSurvey2Component, },
+  IftttActive: { screen: IftttActiveComponent, },
 
 }, {
     headerMode: 'none',

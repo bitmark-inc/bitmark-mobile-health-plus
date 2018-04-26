@@ -24,16 +24,20 @@ export class BottomTabsComponent extends React.Component {
     this.handerChangeActiveIncomingTransferOffer = this.handerChangeActiveIncomingTransferOffer.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
+    this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
 
     let localAssets = DataController.getUserBitmarks().localAssets || [];
     let haveNewBitmark = localAssets.findIndex(asset => !asset.isViewed) >= 0;
     let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
-      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0) +
+      (DataController.getIftttInformation().bitmarkFiles ? DataController.getIftttInformation().bitmarkFiles.length : 0);
+    let { trackingBitmarks } = DataController.getTrackingBitmarks();
     this.state = {
       mainTab: this.props.mainTab,
       haveNewBitmark,
       transactionNumber,
+      existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
     };
     NotificationService.setApplicationIconBadgeNumber(transactionNumber);
   }
@@ -42,24 +46,28 @@ export class BottomTabsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangeActiveIncomingTransferOffer);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
   }
 
   handerChangeActiveIncomingTransferOffer() {
     let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
-      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0) +
+      (DataController.getIftttInformation().bitmarkFiles ? DataController.getIftttInformation().bitmarkFiles.length : 0);
     this.setState({ transactionNumber });
     NotificationService.setApplicationIconBadgeNumber(transactionNumber);
   }
 
   handerDonationInformationChange() {
     let transactionNumber = (DataController.getTransactionData().activeIncompingTransferOffers ? DataController.getTransactionData().activeIncompingTransferOffers.length : 0) +
-      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0);
+      (DataController.getDonationInformation().totalTodoTask ? DataController.getDonationInformation().totalTodoTask : 0) +
+      (DataController.getIftttInformation().bitmarkFiles ? DataController.getIftttInformation().bitmarkFiles.length : 0);
     this.setState({ transactionNumber });
     NotificationService.setApplicationIconBadgeNumber(transactionNumber);
   }
@@ -67,6 +75,10 @@ export class BottomTabsComponent extends React.Component {
     let localAssets = DataController.getUserBitmarks().localAssets || [];
     let haveNewBitmark = localAssets.findIndex(asset => !asset.isViewed) >= 0;
     this.setState({ haveNewBitmark });
+  }
+  handerChangeTrackingBitmarks() {
+    let { trackingBitmarks } = DataController.getTrackingBitmarks();
+    this.setState({ existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0 });
   }
 
   switchMainTab(mainTab) {
@@ -87,7 +99,7 @@ export class BottomTabsComponent extends React.Component {
     return (
       <View style={userStyle.bottomTabArea}>
         <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.properties)}>
-          {this.state.haveNewBitmark > 0 && <View style={userStyle.haveNewBitmark} />}
+          {(this.state.haveNewBitmark || this.state.existNewTracking) && <View style={userStyle.haveNewBitmark} />}
           <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.properties
             ? require('./../../../../assets/imgs/properties-icon-enable.png')
             : require('./../../../../assets/imgs/properties-icon-disable.png')} />

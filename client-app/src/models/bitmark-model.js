@@ -57,10 +57,44 @@ const doGetAllBitmarks = async (accountNumber, lastOffset) => {
   return totalData;
 };
 
-const doGetProvenance = (bitmark) => {
+const getListBitmarks = (bitmarkIds) => {
+  let queryString = '';
+  return new Promise((resolve, reject) => {
+    if (bitmarkIds && bitmarkIds.length > 0) {
+      bitmarkIds.forEach(bitmarkId => {
+        queryString += queryString ? `&bitmark_ids=${bitmarkId}` : `?bitmark_ids=${bitmarkId}`;
+      });
+    }
+    if (!queryString) {
+      return resolve([]);
+    }
+    let statusCode;
+    fetch(config.api_server_url + `/v1/bitmarks` + queryString, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        console.log('getListBitmarks data :', data);
+        return reject(new Error('getListBitmarks error :' + JSON.stringify(data)));
+      }
+      resolve(data.bitmarks || []);
+    }).catch(reject);
+  });
+};
+
+const doGetProvenance = (bitmarkId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    fetch(config.api_server_url + `/v1/bitmarks/${bitmark.id}?provenance=true&pending=true`, {
+    fetch(config.api_server_url + `/v1/bitmarks/${bitmarkId}?provenance=true&pending=true`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -73,9 +107,11 @@ const doGetProvenance = (bitmark) => {
       if (statusCode >= 400) {
         return reject(new Error('doGetProvenance error :' + JSON.stringify(data)));
       }
-      let provenance = (data.bitmark && data.bitmark.provenance) ? data.bitmark.provenance : [];
+      let bitmark = data.bitmark;
+      let provenance = (bitmark && bitmark.provenance) ? bitmark.provenance : [];
       provenance.forEach(item => item.created_at = moment(item.created_at).format('YYYY MMM DD HH:mm:ss'));
-      resolve(provenance);
+      bitmark.provenance = provenance;
+      resolve({ bitmark, provenance });
     }).catch(reject);
   });
 };
@@ -218,6 +254,88 @@ const doGetBitmarkInformation = (bitmarkId) => {
   });
 };
 
+const doAddTrackinBitmark = async (bitmarkAccount, timestamp, signature, bitmark_id, tx_id, status) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks`;
+    fetch(bitmarkUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        timestamp,
+        signature,
+        requester: bitmarkAccount,
+      },
+      body: JSON.stringify({
+        bitmark_id, tx_id, status
+      })
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`doAddTrackinBitmark error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doStopTrackingBitmark = async (bitmarkAccount, timestamp, signature, bitmark_id) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks/${bitmark_id}`;
+    fetch(bitmarkUrl, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        timestamp,
+        signature,
+        requester: bitmarkAccount,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`doStopTrackingBitmark error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doGetAllTrackingBitmark = async (bitmarkAccount) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks`;
+    fetch(bitmarkUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: bitmarkAccount,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`doGetAllTrackingBitmark error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 let BitmarkModel = {
   doGetAssetInformation,
   doGetAllBitmarks,
@@ -229,6 +347,11 @@ let BitmarkModel = {
   doGetBitmarkInformation,
   getTransactionDetail,
   getAllTransactions,
+  getListBitmarks,
+
+  doAddTrackinBitmark,
+  doStopTrackingBitmark,
+  doGetAllTrackingBitmark,
 };
 
 export { BitmarkModel };

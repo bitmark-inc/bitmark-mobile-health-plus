@@ -6,7 +6,7 @@ import { TransactionService } from '.';
 
 // ================================================================================================
 // ================================================================================================
-let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
+const doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
   let lastOffset = null;
   if (oldLocalAssets) {
     oldLocalAssets.forEach(asset => {
@@ -20,6 +20,8 @@ let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
   if (data && data.bitmarks && data.assets) {
     for (let bitmark of data.bitmarks) {
       bitmark.bitmark_id = bitmark.id;
+      let { provenance } = await BitmarkModel.doGetProvenance(bitmark.id);
+      bitmark.provenance = provenance;
       bitmark.isViewed = false;
       if (bitmark.owner === bitmarkAccountNumber) {
         let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
@@ -53,17 +55,17 @@ let doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
     }
   }
   let outgoingTransferOffers = await TransactionService.doGetActiveOutgoinTransferOffers(bitmarkAccountNumber);
-  localAssets.forEach(asset => {
+  for (let asset of localAssets) {
     asset.totalPending = 0;
     asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
-    asset.bitmarks.forEach(bitmark => {
+    for (let bitmark of asset.bitmarks) {
       let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
       bitmark.displayStatus = transferOffer ? 'transferring' : bitmark.status;
       bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
       asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
       asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
-    });
-  });
+    }
+  }
   localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
   CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, localAssets);
   return localAssets;
@@ -121,6 +123,64 @@ const doGetBitmarkInformation = async (bitmarkId) => {
   return data;
 };
 
+const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) => {
+  oldTrackingBitmarks = oldTrackingBitmarks || [];
+  let oldStatuses = {};
+  let allTrackingBitmarksFromServer = await BitmarkModel.doGetAllTrackingBitmark(bitmarkAccountNumber);
+  allTrackingBitmarksFromServer.bitmarks.forEach(tb => {
+    oldStatuses[tb.bitmark_id] = {
+      lastHistory: {
+        status: tb.status,
+        head_id: tb.tx_id,
+      },
+    };
+  });
+  oldTrackingBitmarks.forEach(otb => {
+    if (oldStatuses[otb.id]) {
+      oldStatuses[otb.id].lastHistory = otb.lastHistory;
+      oldStatuses[otb.id].asset = otb.asset;
+    }
+  });
+  let bitmarkIds = Object.keys(oldStatuses);
+  let bitmarks = await BitmarkModel.getListBitmarks(bitmarkIds);
+  let trackingBitmarks = [];
+  for (let bitmark of bitmarks) {
+    let oldStatus = oldStatuses[bitmark.id];
+    let bitmarkFullInfo = await BitmarkModel.doGetBitmarkInformation(bitmark.id);
+    bitmark.asset = bitmarkFullInfo.asset;
+
+    if (oldStatus.lastHistory.head_id !== bitmark.head_id ||
+      (oldStatus.lastHistory.head_id === bitmark.head_id && oldStatus.lastHistory.status !== bitmark.status)) {
+      bitmark.isViewed = false;
+    } else {
+      bitmark.isViewed = true;
+    }
+    bitmark.lastHistory = oldStatus.lastHistory;
+
+    bitmark.displayStatus = bitmark.status;
+    trackingBitmarks.push(bitmark);
+  }
+  return trackingBitmarks;
+};
+
+const doGetProvenance = async (bitmarkId, headId, status) => {
+  console.log('doGetProvenance :', bitmarkId, headId, status);
+  let { provenance } = await BitmarkModel.doGetProvenance(bitmarkId);
+  if (headId && status) {
+    let isViewed = false;
+    provenance.forEach(hs => {
+      if (hs.tx_id === headId) {
+        hs.isViewed = hs.status === status;
+        isViewed = true;
+      } else {
+        hs.isViewed = isViewed;
+      }
+    });
+  }
+  console.log(provenance);
+  return provenance;
+};
+
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
@@ -129,6 +189,8 @@ let BitmarkService = {
   doCheckMetadata,
   doIssueFile,
   doGetBitmarkInformation,
+  doGetTrackingBitmarks,
+  doGetProvenance,
 };
 
 export { BitmarkService };

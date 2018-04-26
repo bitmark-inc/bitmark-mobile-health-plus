@@ -12,7 +12,6 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
   }
 
   let allTransactions = await BitmarkModel.getAllTransactions(accountNumber, lastOffset);
-  console.log('allTransactions :', allTransactions);
   let completedTransfers = merge([], oldTransactions || []);
 
   for (let transaction of allTransactions) {
@@ -22,7 +21,6 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
       existingOldTransaction.assetId = transaction.asset_id;
       existingOldTransaction.blockNumber = transaction.block_number;
       existingOldTransaction.assetName = transactionData.asset.name;
-      existingOldTransaction.from = transactionData.tx.owner;
       existingOldTransaction.timestamp = transaction.block ? moment(transaction.block.created_at) : '';
       existingOldTransaction.status = transaction.status;
       existingOldTransaction.txid = transaction.id;

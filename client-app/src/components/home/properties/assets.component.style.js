@@ -37,7 +37,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   subTabButton: {
-    width: '50%',
+    width: '33.3%',
     height: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -117,6 +117,12 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: '900',
     color: 'white'
+  },
+  newItem: {
+    backgroundColor: '#0060F2',
+    width: 10, height: 10,
+    position: 'absolute', left: 9,
+    borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
   },
 
   assetRowArea: {
@@ -208,6 +214,42 @@ export default StyleSheet.create({
     height: 12,
     resizeMode: 'contain',
   },
+
+
+  trackingRow: {
+    width: '100%',
+    flexDirection: 'column',
+    borderBottomColor: '#EDF0F4',
+    borderBottomWidth: 1,
+    paddingLeft: convertWidth(28),
+    paddingRight: convertWidth(19),
+    paddingTop: 19,
+    paddingBottom: 19,
+  },
+  trackingRowAssetName: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 14,
+    lineHeight: 16,
+    width: '100%',
+  },
+  trackingRowUpdated: {
+    marginTop: 7,
+    fontFamily: 'Andale Mono',
+    fontSize: 14,
+    lineHeight: 16,
+    color: '#0060F2',
+    width: '100%',
+  },
+  trackingRowCurrentOwner: {
+    marginTop: 12,
+    fontFamily: 'Andale Mono',
+    fontSize: 14,
+    lineHeight: 16,
+    color: '#0060F2',
+    width: '100%',
+  },
+
 
   globalArea: {
     flex: 1,

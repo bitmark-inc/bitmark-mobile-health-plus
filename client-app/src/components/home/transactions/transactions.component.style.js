@@ -180,6 +180,21 @@ export default StyleSheet.create({
     height: 18,
     resizeMode: 'contain',
   },
+  iftttTask: {
+    flexDirection: 'column',
+    marginTop: 12,
+  },
+  iftttTitle: {
+    fontFamily: 'Avenir heavy',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  iftttDescription: {
+    marginTop: 3,
+    fontFamily: 'Avenir light',
+    fontSize: 14,
+    fontWeight: '300',
+  },
 
   completedTransfer: {
     paddingLeft: convertWidth(19),

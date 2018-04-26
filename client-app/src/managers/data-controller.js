@@ -8,8 +8,9 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK, IftttModel, BitmarkModel } from '../models';
 import { DonationService } from '../services/donation-service';
+import { FileUtil } from '../utils';
 
 let userInformation = {};
 let userData = {
@@ -17,6 +18,8 @@ let userData = {
   activeIncompingTransferOffers: null,
   transactions: null,
   donationInformation: null,
+  trackingBitmarks: null,
+  iftttInformation: null,
 };
 let isLoadingData = false;
 // ================================================================================================================================================
@@ -69,7 +72,6 @@ const runGetActiveIncomingTransferOfferInBackground = () => {
       }
       resolve();
       isRunningGetActiveIncomingTransferOfferInBackground = false;
-      console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground success :');
     }).catch(error => {
       resolve();
       isRunningGetActiveIncomingTransferOfferInBackground = false;
@@ -93,7 +95,6 @@ const runGetTransactionsInBackground = () => {
       }
       resolve();
       isRunningGetTransactionsInBackground = false;
-      console.log('runOnBackground  runGetTransactionsInBackground success :');
     }).catch(error => {
       resolve();
       isRunningGetTransactionsInBackground = false;
@@ -118,7 +119,6 @@ const runGetLocalBitmarksInBackground = () => {
       }
       resolve();
       isRunningGetLocalBitmarksInBackground = false;
-      console.log('runOnBackground  runGetLocalBitmarksInBackground success :', localAssets);
     }).catch(error => {
       resolve();
       isRunningGetLocalBitmarksInBackground = false;
@@ -142,7 +142,6 @@ const runGetDonationInformationInBackground = () => {
       }
       resolve();
       isRunningGetDonationInformationInBackground = false;
-      console.log('runOnBackground  runGetDonationInformationInBackground success :', donationInformation);
     }).catch(error => {
       resolve();
       isRunningGetDonationInformationInBackground = false;
@@ -150,6 +149,54 @@ const runGetDonationInformationInBackground = () => {
     });
   });
 };
+
+let isRunningGetTrackingBitmarksInBackground = false;
+const runGetTrackingBitmarksInBackground = () => {
+  return new Promise((resolve) => {
+    if (isRunningGetTrackingBitmarksInBackground) {
+      return doCheckRunning(() => isRunningGetTrackingBitmarksInBackground).then(resolve);
+    }
+    isRunningGetTrackingBitmarksInBackground = true;
+    BitmarkService.doGetTrackingBitmarks(userInformation.bitmarkAccountNumber, userData.trackingBitmarks).then(trackingBitmarks => {
+      trackingBitmarks = trackingBitmarks || [];
+      if (userData.trackingBitmarks === null || JSON.stringify(trackingBitmarks) !== JSON.stringify(userData.trackingBitmarks)) {
+        userData.trackingBitmarks = trackingBitmarks;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
+      }
+      resolve();
+      isRunningGetTrackingBitmarksInBackground = false;
+    }).catch(error => {
+      resolve();
+      isRunningGetTrackingBitmarksInBackground = false;
+      console.log('runOnBackground  runGetTrackingBitmarksInBackground error :', error);
+    });
+  });
+};
+
+let isRunningGetIFTTTInformationInBackground = false
+const runGetIFTTTInformationInBackground = () => {
+  return new Promise((resolve) => {
+    if (isRunningGetIFTTTInformationInBackground) {
+      return doCheckRunning(() => isRunningGetIFTTTInformationInBackground).then(resolve);
+    }
+    isRunningGetIFTTTInformationInBackground = true;
+    IftttModel.doGetIFtttInformation(userInformation.bitmarkAccountNumber).then(iftttInformation => {
+      iftttInformation = iftttInformation || {};
+      if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
+        userData.iftttInformation = iftttInformation;
+        CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, userData.iftttInformation);
+      }
+      resolve();
+      isRunningGetIFTTTInformationInBackground = false;
+    }).catch(error => {
+      resolve();
+      isRunningGetIFTTTInformationInBackground = false;
+      console.log('runOnBackground  runGetIFTTTInformationInBackground error :', error);
+    });
+  });
+};
+
+
 const configNotification = () => {
   const onRegisterred = async (registerredNotificaitonInfo) => {
     let notificationUUID = registerredNotificaitonInfo ? registerredNotificaitonInfo.token : null;
@@ -196,6 +243,8 @@ const runOnBackground = async () => {
           runGetTransactionsInBackground(),
           runGetActiveIncomingTransferOfferInBackground(),
           runGetDonationInformationInBackground(),
+          runGetTrackingBitmarksInBackground(),
+          runGetIFTTTInformationInBackground(),
         ]).then(resolve);
       });
     };
@@ -208,8 +257,14 @@ const runOnBackground = async () => {
     if (JSON.stringify(userData.donationInformation) !== JSON.stringify(oldUserData.donationInformation)) {
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
     }
+    if (JSON.stringify(userData.iftttInformation) !== JSON.stringify(oldUserData.iftttInformation)) {
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
+    }
     if (JSON.stringify(userData.transactions) !== JSON.stringify(oldUserData.transactions)) {
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS);
+    }
+    if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
     }
     if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
@@ -296,6 +351,11 @@ const doOpenApp = async () => {
     if (userData.donationInformation === null || JSON.stringify(donationInformation) !== JSON.stringify(userData.donationInformation)) {
       userData.donationInformation = donationInformation || {};
       EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+    }
+    let iftttInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION);
+    if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
+      userData.iftttInformation = iftttInformation || {};
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
     }
     let localAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
     localAssets = localAssets.length > 0 ? localAssets : [];
@@ -385,38 +445,113 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
 const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
   let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmark.id);
   filePath = filePath.replace('file://', '');
-
-  // let lastDotIndex = filePath.lastIndexOf('.');
-  // let extName = filePath.substring(lastDotIndex + 1, filePath.length);
-  // if (extName === 'zip') {
-
-  //   // let folderPath = FileUtil.DocumentDirectory + '/test';
-  //   // await FileUtil.mkdir(folderPath);
-  //   // let tempfile = folderPath + '/test.txt';
-  //   // await FileUtil.create(tempfile, "Test zip and unzip file!", 'utf8');
-
-  //   // let zipFile = await FileUtil.zip(folderPath, FileUtil.DocumentDirectory + '/test.zip');
-  //   // await FileUtil.remove(tempfile);
-  //   // console.log('zipFile :', zipFile);
-
-  //   // let unZipfile = await FileUtil.unzip(zipFile, folderPath);
-  //   // console.log('unZipfile :', unZipfile);
-
-  //   let folderUnZip = await FileUtil.unzip(filePath, FileUtil.DocumentDirectory + '/' + bitmark.id);
-  //   console.log('folderUnZip :', folderUnZip)
-  //   return folderUnZip;
-  // }
   return filePath;
 };
 
-const doUpdateViewStatus = async (asset) => {
-  let localAsset = userData.localAssets.find(la => la.id === asset.id);
-  if (localAsset && !localAsset.isViewed) {
-    localAsset.isViewed = true;
-    localAsset.bitmarks.forEach(bitmark => bitmark.isViewed = true);
-    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, userData.localAssets);
-    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+const doUpdateViewStatus = async (assetId, bitmarkId) => {
+  if (assetId && bitmarkId) {
+    let localAsset = (userData.localAssets || []).find(la => la.id === assetId);
+    if (localAsset && !localAsset.isViewed) {
+      let assetViewed = true;
+      localAsset.bitmarks.forEach(bitmark => {
+        if (bitmarkId === bitmark.id) {
+          bitmark.isViewed = true;
+        }
+        if (!bitmark.isViewed && assetViewed) {
+          assetViewed = false;
+        }
+      });
+      localAsset.isViewed = assetViewed;
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, userData.localAssets);
+      EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+    }
   }
+  if (bitmarkId) {
+    let trackingBitmark = (userData.trackingBitmarks || []).find(tb => tb.id === bitmarkId);
+    if (trackingBitmark) {
+      let hasChanging = !trackingBitmark.isViewed;
+      trackingBitmark.isViewed = true;
+      trackingBitmark.lastHistory = {
+        status: trackingBitmark.status,
+        head_id: trackingBitmark.head_id,
+      };
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKIING_BITMARKS, userData.trackingBitmarks);
+      if (hasChanging) {
+        EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+      }
+    }
+  }
+};
+
+const doTrackingBitmark = async (touchFaceIdSession, asset, bitmark) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await BitmarkModel.doAddTrackinBitmark(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature,
+    bitmark.id, bitmark.head_id, bitmark.status);
+  let oldUserData = merge({}, userData);
+  await runGetTrackingBitmarksInBackground();
+  if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
+  }
+  return true;
+};
+const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await BitmarkModel.doStopTrackingBitmark(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, bitmark.id);
+
+  let oldUserData = merge({}, userData);
+  await runGetTrackingBitmarksInBackground();
+  if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
+  }
+  return true;
+};
+
+const doGetProvenance = async (bitmarkId) => {
+  let trackingBitmark = (userData.trackingBitmarks || []).find(tb => tb.id === bitmarkId);
+  if (trackingBitmark) {
+    return await BitmarkService.doGetProvenance(bitmarkId, trackingBitmark.lastHistory.head_id, trackingBitmark.lastHistory.status);
+  } else {
+    return await BitmarkService.doGetProvenance(bitmarkId);
+  }
+}
+
+const doReloadIFTTTInformation = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetIFTTTInformationInBackground();
+  if (JSON.stringify(userData.iftttInformation) !== JSON.stringify(oldUserData.iftttInformation)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
+  }
+};
+
+const doRevokeIftttToken = async (touchFaceIdSession) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let iftttInformation = await IftttModel.doRevokeIftttToken(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
+    userData.iftttInformation = iftttInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, userData.iftttInformation);
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
+  }
+  return iftttInformation;
+};
+const doIssueIftttData = async (touchFaceIdSession, iftttBitmarkFile) => {
+  let folderPath = FileUtil.CacheDirectory + '/Bitmark-IFTTT';
+  await FileUtil.mkdir(folderPath);
+  let filename = iftttBitmarkFile.assetInfo.filePath.substring(iftttBitmarkFile.assetInfo.filePath.lastIndexOf("/") + 1, iftttBitmarkFile.assetInfo.filePath.length);
+  let filePath = folderPath + '/' + filename;
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let downloadResult = await IftttModel.downloadBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.id, filePath);
+  if (downloadResult.statusCode >= 400) {
+    throw new Error('Download file error!');
+  }
+  await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, iftttBitmarkFile.assetInfo.propertyName, iftttBitmarkFile.assetInfo.metadata, 1);
+  let iftttInformation = await IftttModel.doRemoveBitmarkFile(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, iftttBitmarkFile.id);
+
+  if (userData.iftttInformation === null || JSON.stringify(iftttInformation) !== JSON.stringify(userData.iftttInformation)) {
+    userData.iftttInformation = iftttInformation;
+    CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, userData.iftttInformation);
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION);
+  }
+  return iftttInformation;
 };
 
 const getTransactionData = () => {
@@ -427,6 +562,10 @@ const getTransactionData = () => {
 }
 const getUserBitmarks = () => {
   return merge({}, { localAssets: userData.localAssets });
+};
+
+const getTrackingBitmarks = () => {
+  return merge({}, { trackingBitmarks: userData.trackingBitmarks });
 };
 
 const getUserInformation = () => {
@@ -462,6 +601,14 @@ const getDonationInformation = () => {
   return merge({}, userData.donationInformation || {});
 };
 
+const getTrackingBitmarkInformation = (bitmarkId) => {
+  return (userData.trackingBitmarks || []).find(bitmark => bitmark.id === bitmarkId);
+}
+
+const getIftttInformation = () => {
+  return merge({}, userData.iftttInformation || {});
+};
+
 const DataController = {
   doOpenApp,
   doLogin,
@@ -479,14 +626,24 @@ const DataController = {
   doBitmarkHealthData,
   doDownloadBitmark,
   doUpdateViewStatus,
+  doTrackingBitmark,
+  doStopTrackingBitmark,
+  doGetProvenance,
+
+  doReloadIFTTTInformation,
+  doRevokeIftttToken,
+  doIssueIftttData,
 
   getTransactionData,
   getUserBitmarks,
+  getTrackingBitmarks,
   getUserInformation,
   getApplicationVersion,
   getApplicationBuildNumber,
   getLocalBitmarkInformation,
   getDonationInformation,
+  getTrackingBitmarkInformation,
+  getIftttInformation,
   isLoadingData: () => isLoadingData,
 };
 

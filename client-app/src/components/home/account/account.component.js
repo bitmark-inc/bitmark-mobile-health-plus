@@ -24,6 +24,8 @@ export class AccountDetailComponent extends React.Component {
     this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
     this.inactiveBitmarkHealthData = this.inactiveBitmarkHealthData.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
+    this.revokeIFTTT = this.revokeIFTTT.bind(this);
+    this.handerChangeIftttInformation = this.handerChangeIftttInformation.bind(this);
 
     let subTab = (this.props.screenProps.subTab &&
       (this.props.screenProps.subTab === SubTabs.settings || this.props.screenProps.subTab === SubTabs.authorized))
@@ -35,6 +37,7 @@ export class AccountDetailComponent extends React.Component {
       notificationUUIDCopyText: 'COPY',
       userInfo: DataController.getUserInformation(),
       donationInformation: DataController.getDonationInformation(),
+      iftttInformation: DataController.getIftttInformation(),
       isLoadingData: DataController.isLoadingData(),
     };
   }
@@ -42,13 +45,18 @@ export class AccountDetailComponent extends React.Component {
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerChangeIftttInformation);
     EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerChangeIftttInformation);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo);
     EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+  }
+  handerChangeIftttInformation() {
+    this.setState({ iftttInformation: DataController.getIftttInformation() });
   }
   handerDonationInformationChange() {
     this.setState({ donationInformation: DataController.getDonationInformation() });
@@ -76,6 +84,26 @@ export class AccountDetailComponent extends React.Component {
       style: 'cancel',
       onPress: () => {
         AppController.doInactiveBitmarkHealthData().then((result) => {
+          if (result) {
+            DataController.doReloadUserData();
+            this.props.navigation.goBack();
+          }
+        }).catch(error => {
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+          console.log('doInactiveBitmarkHealthData error :', error);
+        });
+      }
+    }]);
+  }
+
+  revokeIFTTT() {
+    Alert.alert('Are you sure you want to revoke access to your IFTTT?', '', [{
+      text: 'No',
+    }, {
+      text: 'Yes',
+      style: 'cancel',
+      onPress: () => {
+        AppController.doRevokeIftttToken().then((result) => {
           if (result) {
             DataController.doReloadUserData();
             this.props.navigation.goBack();
@@ -189,11 +217,32 @@ export class AccountDetailComponent extends React.Component {
                   <View style={accountStyle.authorizedItemDescription}>
                     <Image style={accountStyle.authorizedItemDescriptionIcon} source={require('./../../../../assets/imgs/icon_health.png')} />
                     <View style={accountStyle.authorizedItemDescriptionDetail}>
-                      <Text style={accountStyle.authorizedItemDescriptionText}>CAN:{'\n'}Extract data from the Health app and register property rights. Repeats weekly (Sunday 11AM).</Text>
+                      <Text style={accountStyle.authorizedItemDescriptionText}>Can:{'\n'}Extract data from the Health app and register property rights. Repeats weekly (Sunday 11AM).</Text>
                       <TouchableOpacity style={accountStyle.authorizedViewButton} onPress={() => {
                         this.props.screenProps.homeNavigation.navigate('HealthDataDataSource')
                       }}>
                         <Text style={accountStyle.authorizedViewButtonText}>{'VIEW DATA TYPES »'.toUpperCase()} </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>}
+
+                {this.state.iftttInformation && this.state.iftttInformation.connectIFTTT && <View style={accountStyle.authorizedItem}>
+                  <View style={accountStyle.authorizedItemTitle}>
+                    <Text style={accountStyle.authorizedItemTitleText} >IFTTT</Text>
+                    <TouchableOpacity style={accountStyle.authorizedItemRemoveButton} onPress={this.revokeIFTTT}>
+                      <Text style={accountStyle.authorizedItemRemoveButtonText}>REMOVE</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={accountStyle.authorizedItemDescription}>
+                    <Image style={accountStyle.authorizedItemDescriptionIcon} source={require('./../../../../assets/imgs/ifttt-icon.png')} />
+                    <View style={accountStyle.authorizedItemDescriptionDetail}>
+                      <Text style={accountStyle.authorizedItemDescriptionText}>Can:{'\n'}Deliver registration requests{'\n'}Trigger when applets run.</Text>
+                      <TouchableOpacity style={accountStyle.authorizedViewButton} onPress={() => {
+                        this.props.screenProps.homeNavigation.navigate('IftttActive')
+                      }}>
+                        <Text style={accountStyle.authorizedViewButtonText}>{'VIEW APPLETS » '.toUpperCase()} </Text>
                       </TouchableOpacity>
                     </View>
                   </View>

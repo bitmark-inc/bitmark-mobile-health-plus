@@ -19,8 +19,9 @@ const SubTabs = {
 };
 
 const ActionTypes = {
-  transfer: 'Property Transfer Request',
-  donation: '',
+  transfer: 'transfer',
+  donation: 'donation',
+  ifttt: 'ifttt',
 };
 
 export class TransactionsComponent extends React.Component {
@@ -33,6 +34,8 @@ export class TransactionsComponent extends React.Component {
     this.reloadData = this.reloadData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
+    this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
+
     this.clickToActionRequired = this.clickToActionRequired.bind(this);
     this.generateData = this.generateData.bind(this);
     this.clickToCompleted = this.clickToCompleted.bind(this);
@@ -60,6 +63,7 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
     EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
@@ -72,7 +76,7 @@ export class TransactionsComponent extends React.Component {
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
     EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
   }
 
@@ -100,6 +104,17 @@ export class TransactionsComponent extends React.Component {
         item.type = ActionTypes.donation;
         item.typeTitle = item.study ? 'Property DONATION Request' : 'Property ISSUANCE Request';
         item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null);
+        actionRequired.push(item);
+      });
+    }
+
+    let ifttInformation = DataController.getIftttInformation();
+    if (ifttInformation.bitmarkFiles) {
+      ifttInformation.bitmarkFiles.forEach(item => {
+        item.key = actionRequired.length;
+        item.type = ActionTypes.ifttt;
+        item.typeTitle = 'Property ISSUANCE Request';
+        item.timestamp = item.assetInfo.timestamp;
         actionRequired.push(item);
       });
     }
@@ -196,6 +211,13 @@ export class TransactionsComponent extends React.Component {
       isLoadingData: DataController.isLoadingData(),
     });
   }
+  handerIftttInformationChange() {
+    let { actionRequired, completed, donationInformation } = this.generateData();
+    this.setState({
+      actionRequired, completed, donationInformation,
+      isLoadingData: DataController.isLoadingData(),
+    });
+  }
   handerChangePendingTransactions() {
     let { actionRequired, completed, donationInformation } = this.generateData();
     this.setState({
@@ -256,6 +278,19 @@ export class TransactionsComponent extends React.Component {
           EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
         });
       }
+    } else if (item.type === ActionTypes.ifttt) {
+      AppController.doIssueIftttData(item, {
+        indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
+      }, {
+          indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
+        }).then(result => {
+          if (result) {
+            DataController.doReloadUserData();
+          }
+        }).catch(error => {
+          console.log('doStudyTask error:', error);
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+        });
     }
   }
 
@@ -345,16 +380,21 @@ export class TransactionsComponent extends React.Component {
                       <Text style={transactionsStyle.transferOfferTitleTime} >{moment(item.timestamp).format('YYYY MMM DD').toUpperCase()}</Text>
                       <Image style={transactionsStyle.transferOfferTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                     </View>
-                    {!!item.transferOffer && <Text style={transactionsStyle.transferOfferContent}>Sign to accept the property
+                    {item.type === ActionTypes.transfer && <Text style={transactionsStyle.transferOfferContent}>Sign to accept the property
                         <Text style={transactionsStyle.transferOfferAssetName}> {item.transferOffer.asset.name} </Text>transfer request.
                       </Text>}
 
-                    {!item.transferOffer && <View style={transactionsStyle.donationTask}>
-                      <Text style={transactionsStyle.donationTaskTitle} >{item.title}</Text>
+                    {item.type === ActionTypes.donation && <View style={transactionsStyle.donationTask}>
+                      <Text style={transactionsStyle.donationTaskTitle} >{item.title + (item.number > 1 ? ` (${item.number})` : '')}</Text>
                       <View style={transactionsStyle.donationTaskDescriptionArea}>
                         <Text style={transactionsStyle.donationTaskDescription}>{item.description}</Text>
                         {item.important && <Image style={transactionsStyle.donationTaskImportantIcon} source={require('../../../../assets/imgs/important-blue.png')} />}
                       </View>
+                    </View>}
+
+                    {item.type === ActionTypes.ifttt && <View style={transactionsStyle.iftttTask}>
+                      <Text style={transactionsStyle.iftttTitle}>{item.assetInfo.propertyName}</Text>
+                      <Text style={transactionsStyle.iftttDescription}>Sign your bitmark issuance for your IFTTT data.</Text>
                     </View>}
                   </TouchableOpacity>)
                 }} />
