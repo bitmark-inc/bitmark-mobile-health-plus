@@ -116,7 +116,7 @@ const doLoadDonationTask = async (donationInformation) => {
       title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
       description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
       taskType: donationInformation.commonTaskIds.bitmark_health_data,
-      number: 1,
+      number: bitmarkHealthDataTask.list.length,
       list: bitmarkHealthDataTask.list,
     });
     totalTodoTask += bitmarkHealthDataTask.list.length;
