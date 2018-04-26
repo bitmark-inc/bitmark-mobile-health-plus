@@ -35,9 +35,9 @@ export class ApplicationDetailComponent extends React.Component {
     };
     const requestSendFeedback = () => {
       Alert.alert('Send Feedback', 'Have a comment or suggestion? We are always making improvements based on community feedback', [{
-        text: 'Cancel', onPress: () => { }
+        text: 'Cancel', style: 'cancel',
       }, {
-        text: 'Send', style: 'cancel', onPress: sendFeedback,
+        text: 'Send', onPress: sendFeedback,
       }]);
     };
 
