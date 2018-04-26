@@ -34,16 +34,18 @@ type notification struct {
 }
 
 type Client struct {
-	url string
+	urls map[string]string
 }
 
-func New(url string) *Client {
-	return &Client{url}
+func New(urls map[string]string) *Client {
+	return &Client{urls}
 }
 
 func (c *Client) Send(title, message string, receivers map[string]map[string][]string, data map[string]interface{}, badge int) error {
-	notifications := make([]notification, 0)
+	var err error
 	for client, payloads := range receivers {
+		notifications := make([]notification, 0)
+
 		for platform, tokens := range payloads {
 			notifications = append(notifications, notification{
 				Topic:    clientTopics[client],
@@ -59,26 +61,30 @@ func (c *Client) Send(title, message string, receivers map[string]map[string][]s
 				},
 			})
 		}
-	}
+		log.Info("Pushing to client: ", client)
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"notifications": notifications})
+		resp, err := http.DefaultClient.Post(c.urls[client]+"/api/push", "application/json", body)
 
-	body := new(bytes.Buffer)
-	json.NewEncoder(body).Encode(map[string]interface{}{"notifications": notifications})
-	resp, err := http.DefaultClient.Post(c.url+"/api/push", "application/json", body)
-
-	// For debugging
-	if err != nil {
-		responseDump, err := httputil.DumpResponse(resp, true)
+		// For debugging
 		if err != nil {
-			log.Error(err)
+			responseDump, err := httputil.DumpResponse(resp, true)
+			if err != nil {
+				log.Error(err)
+			}
+			log.WithField("responseDump", responseDump).Error(err)
 		}
-		log.WithField("responseDump", responseDump).Error(err)
 	}
 
 	return err
 }
 
 func (c *Client) Ping() bool {
-	log.Info("Ping to:", c.url)
-	_, err := http.DefaultClient.Head(c.url)
+	var err error
+	for _, url := range c.urls {
+		log.Info("Ping to:", url)
+		_, err = http.DefaultClient.Head(url)
+	}
+
 	return err == nil
 }

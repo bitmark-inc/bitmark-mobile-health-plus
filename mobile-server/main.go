@@ -48,7 +48,8 @@ type Configuration struct {
 		MessageChannel string `hcl:"messageChannel"`
 		IFTTTServer    string `hcl:"iftttServer"`
 		PushServer     string `hcl:"pushServer"`
-	}
+		PushServerBeta string `hcl:"pushServerBeta"`
+	} `hcl:"external"`
 	DataDonation struct {
 		ResearcherAccounts map[string]string `hcl:"researchers"`
 	} `hcl:"data-donation"`
@@ -131,7 +132,12 @@ func main() {
 	pushStore := pushstore.NewPGStore(dbConn)
 	bitmarkStore := bitmarkstore.New(dbConn)
 
-	pushClient := gorush.New(config.External.PushServer)
+	log.Debug("config.External.PushServerBeta: ", config.External.PushServerBeta)
+
+	pushClient := gorush.New(map[string]string{
+		"primary": config.External.PushServer,
+		"beta":    config.External.PushServerBeta,
+	})
 	gatewayClient := gateway.New(config.External.CoreAPIServer)
 
 	if !pushClient.Ping() {

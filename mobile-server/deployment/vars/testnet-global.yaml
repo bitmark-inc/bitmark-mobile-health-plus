@@ -7,6 +7,7 @@ mobile:
   message_server: nsqd.default.svc.cluster.local:4150
   ifttt_server: https://when.test.bitmark.com
   push_server: http://push-notification-primary.mobile.svc.cluster.local
+  push_server_beta: http://push-notification-beta.mobile.svc.cluster.local
   db_host: bitmark-mobile-db.mobile.svc.cluster.local
   db_port: 5432
   push_notification_production: true

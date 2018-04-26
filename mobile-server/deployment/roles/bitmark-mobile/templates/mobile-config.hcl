@@ -11,6 +11,7 @@ external {
     messageChannel = "mobile-server"
     iftttServer = "{{ mobile.ifttt_server }}"
     pushServer = "{{ mobile.push_server }}"
+    pushServerBeta = "{{ mobile.push_server_beta }}"
 }
 
 db {
