@@ -236,7 +236,7 @@ export class AccountDetailComponent extends React.Component {
                   </View>
 
                   <View style={accountStyle.authorizedItemDescription}>
-                    <Image style={accountStyle.authorizedItemDescriptionIcon} source={require('./../../../../assets/imgs/icon_health.png')} />
+                    <Image style={accountStyle.authorizedItemDescriptionIcon} source={require('./../../../../assets/imgs/ifttt-icon.png')} />
                     <View style={accountStyle.authorizedItemDescriptionDetail}>
                       <Text style={accountStyle.authorizedItemDescriptionText}>Can:{'\n'}Deliver registration requests{'\n'}Trigger when applets run.</Text>
                       <TouchableOpacity style={accountStyle.authorizedViewButton} onPress={() => {
