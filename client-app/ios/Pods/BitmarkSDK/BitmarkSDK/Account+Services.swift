@@ -65,28 +65,14 @@ public extension Account {
         }
         
         if assetAccess.sessionData != nil {
-            let senderEncryptionPublicKey = self.encryptionKey.publicKey.hexEncodedString
-            
-            let assetEnryption = try AssetEncryption.encryptionKey(fromSessionData: assetAccess.sessionData!,
-                                                                   account: self,
-                                                                   senderEncryptionPublicKey: senderEncryptionPublicKey.hexDecodedData)
-            
-            guard let recipientEncrPubkey = try api.getEncryptionPublicKey(accountNumber: recipient) else {
-                return false
-            }
-            
-            let sessionData = try SessionData.createSessionData(account: self,
-                                                                sessionKey: assetEnryption.key, forRecipient: recipientEncrPubkey.hexDecodedData)
-            
-            let result = try api.updateSession(account: self, bitmarkId: bitmarkId, recipient: recipient, sessionData: sessionData)
-            if result == false {
-                print("Fail to update session data")
-                return false
-            }
+            try updateSessionData(bitmarkId: bitmarkId, sessionData: assetAccess.sessionData!, sender: assetAccess.sender!, recipient: recipient)
         }
         
         var transfer = Transfer()
-        transfer.set(from: bitmarkId)
+        guard let bitmarkInfo = try api.bitmarkInfo(bitmarkId: bitmarkId) else {
+            throw("Cannot find bitmark with id:" + bitmarkId)
+        }
+        transfer.set(from: bitmarkInfo.headId)
         try transfer.set(to: try AccountNumber(address: recipient))
         try transfer.sign(privateKey: self.authKey)
         
