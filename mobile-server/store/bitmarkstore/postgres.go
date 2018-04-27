@@ -36,12 +36,12 @@ func (b *BitmarkPGStore) DeleteTrackingBitmark(account, bitmarkID string) (bool,
 
 func (b *BitmarkPGStore) GetTrackingBitmarks(account string) ([]BitmarkTracking, error) {
 	rows, err := b.dbConn.Query(sqlQueryBitmarkTracking, account)
+	defer rows.Close()
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return nil, err
 		}
 	}
-	defer rows.Close()
 
 	items := make([]BitmarkTracking, 0)
 	for rows.Next() {
