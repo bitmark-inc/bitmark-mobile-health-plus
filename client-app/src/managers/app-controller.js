@@ -128,6 +128,10 @@ const doReloadUserData = async () => {
   return await DataController.doReloadUserData();
 };
 
+const doReloadDonationInformation = async () => {
+  return await DataController.doReloadDonationInformation();
+};
+
 const doGetTransferOfferDetail = async (transferOfferId) => {
   return await processing(TransactionService.doGetTransferOfferDetail(transferOfferId));
 };
@@ -311,6 +315,7 @@ let AppController = {
   doDownloadBitmark,
 
   doReloadUserData,
+  doReloadDonationInformation,
 
   doStartBackgroundProcess,
 }
