@@ -98,10 +98,10 @@ export class AccountDetailComponent extends React.Component {
 
   revokeIFTTT() {
     Alert.alert('Are you sure you want to revoke access to your IFTTT?', '', [{
+      style: 'cancel',
       text: 'No',
     }, {
       text: 'Yes',
-      style: 'cancel',
       onPress: () => {
         AppController.doRevokeIftttToken().then((result) => {
           if (result) {
