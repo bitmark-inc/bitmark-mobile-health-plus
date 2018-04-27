@@ -240,7 +240,7 @@ export class AccountDetailComponent extends React.Component {
                     <View style={accountStyle.authorizedItemDescriptionDetail}>
                       <Text style={accountStyle.authorizedItemDescriptionText}>Can:{'\n'}Deliver registration requests{'\n'}Trigger when applets run.</Text>
                       <TouchableOpacity style={accountStyle.authorizedViewButton} onPress={() => {
-                        this.props.screenProps.homeNavigation.navigate('IftttActive')
+                        this.props.screenProps.homeNavigation.navigate('IftttActive', { stage: 'view' })
                       }}>
                         <Text style={accountStyle.authorizedViewButtonText}>{'VIEW APPLETS » '.toUpperCase()} </Text>
                       </TouchableOpacity>

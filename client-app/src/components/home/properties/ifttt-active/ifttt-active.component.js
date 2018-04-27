@@ -17,11 +17,17 @@ export class IftttActiveComponent extends React.Component {
     this.onMessage = this.onMessage.bind(this);
     this.onNavigationStateChange = this.onNavigationStateChange.bind(this);
     this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
-
+    let stage;
+    if (this.props.navigation.state && this.props.navigation.state.params) {
+      stage = this.props.navigation.state.params.stage;
+    }
     this.state = {
       iftttInformation: DataController.getIftttInformation(),
       loading: true,
       processing: false,
+      currentUrl: config.ifttt_invite_url,
+      webViewUrl: config.ifttt_invite_url,
+      stage,
     }
     this.signed = false;
   }
@@ -57,15 +63,27 @@ export class IftttActiveComponent extends React.Component {
   }
 
   onNavigationStateChange(webViewState) {
-    let url = webViewState.url;
-    if (url === config.ifttt_bitmark_service_url && this.signed) {
-      DataController.doReloadIFTTTInformation().catch(error => {
-        console.log('doReloadIFTTTInformation : ', error);
-      });
+    let currentUrl = webViewState.url;
+    this.setState({ currentUrl });
+
+    if (!this.state.stage) {
+      if ((currentUrl === config.ifttt_bitmark_service_url || currentUrl === (config.ifttt_bitmark_service_settings_url)) && this.signed) {
+        DataController.doReloadIFTTTInformation().then(() => {
+          if (DataController.getIftttInformation().connectIFTTT && currentUrl === (config.ifttt_bitmark_service_settings_url)) {
+            this.setState({
+              webViewUrl: config.ifttt_bitmark_service_url,
+              currentUrl: config.ifttt_bitmark_service_url,
+            });
+          }
+        }).catch(error => {
+          console.log('doReloadIFTTTInformation : ', error);
+        });
+      }
     }
   }
 
   render() {
+    console.log('webViewUrl :', this.state.webViewUrl);
     return (
       <FullComponent
         header={(<View style={defaultStyle.header}>
@@ -90,13 +108,21 @@ export class IftttActiveComponent extends React.Component {
         content={(<View style={styles.main}>
           <WebView ref={(ref) => this.webViewRef = ref}
             dataDetectorTypes="none"
-            source={{ uri: config.ifttt_invite_url }}
+            source={{ uri: this.state.webViewUrl }}
             onMessage={this.onMessage}
             onNavigationStateChange={this.onNavigationStateChange}
             onLoadStart={() => this.setState({ loading: true })}
             onLoadEnd={() => {
               this.setState({ loading: false })
-              this.webViewRef.postMessage(DataController.getUserInformation().bitmarkAccountNumber);
+              if (this.state.currentUrl.indexOf(config.ifttt_server_url) >= 0) {
+                this.webViewRef.postMessage(DataController.getUserInformation().bitmarkAccountNumber);
+              }
+              if (!this.state.stage && (this.state.currentUrl === 'https://ifttt.com/discover' || this.state.currentUrl === config.ifttt_bitmark_service_url) && !this.signed) {
+                this.setState({
+                  webViewUrl: config.ifttt_bitmark_service_settings_url + '/connect',
+                  currentUrl: config.ifttt_bitmark_service_settings_url + '/connect',
+                });
+              }
             }}
           />
           {this.state.loading && !this.state.processing && <View style={{
@@ -119,8 +145,7 @@ IftttActiveComponent.propTypes = {
     goBack: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
-        refreshMarketStatus: PropTypes.func,
-        market: PropTypes.string,
+        stage: PropTypes.string,
       }),
     }),
   }),

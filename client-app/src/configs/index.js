@@ -22,6 +22,7 @@ let config = {
   ifttt_server_url: 'https://channel.devel.bitmark.com:8090',
   ifttt_invite_url: 'https://ifttt.com/features/redeem?code=10403-fa99108249f426f459a2e1033ddfbbb5',
   ifttt_bitmark_service_url: 'https://ifttt.com/bitmarkdevel',
+  ifttt_bitmark_service_settings_url: "https://ifttt.com/services/bitmarkdevel/settings"
 };
 
 if (config.network === NETWORKS.testnet) {
@@ -31,6 +32,7 @@ if (config.network === NETWORKS.testnet) {
   config.ifttt_server_url = 'https://when.test.bitmark.com:9090';
   config.ifttt_invite_url = 'https://ifttt.com/features/redeem?code=10518-3f2950b543e7a5a2dc307de0c05775e4';
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmarktest';
+  config.ifttt_bitmark_service_settings_url = "https://ifttt.com/services/bitmarktest/settings";
 } else if (config.network === NETWORKS.livenet) {
   config.bitmark_network = NETWORKS.livenet;
   config.api_server_url = 'https://api.bitmark.com';
@@ -42,6 +44,7 @@ if (config.network === NETWORKS.testnet) {
   config.ifttt_server_url = 'https://when.live.bitmark.com:8090';
   config.ifttt_invite_url = 'https://ifttt.com/features/redeem?code=9187-5ba0e766190b2d174a5a3708fe2002ae';
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmark';
+  config.ifttt_bitmark_service_settings_url = "https://ifttt.com/services/bitmark/settings";
 }
 
 let ios = {
