@@ -16,12 +16,14 @@ func (s *Server) AddPushToken(c *gin.Context) {
 	}
 
 	if err := c.BindJSON(&req); err != nil {
+		c.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	account := c.GetString("requester")
 	if err := s.pushStore.AddPushToken(account, req.Token, req.Platform, req.Client); err != nil {
+		c.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
@@ -37,6 +39,7 @@ func (s *Server) RemovePushToken(c *gin.Context) {
 	account := c.GetString("requester")
 	success, err := s.pushStore.RemovePushToken(account, pushToken)
 	if err != nil {
+		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}

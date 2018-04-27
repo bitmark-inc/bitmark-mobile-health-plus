@@ -14,17 +14,20 @@ func (s *Server) AddBitmarkTracking(c *gin.Context) {
 	}
 
 	if err := c.BindJSON(&req); err != nil {
+		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	account := c.GetString("requester")
 	if err := s.pushStore.AddAccount(account); err != nil {
+		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
 	if err := s.bitmarkStore.AddTrackingBitmark(account, req.BitmarkID, req.TxID, req.Status); err != nil {
+		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
@@ -38,6 +41,7 @@ func (s *Server) DeleteBitmarkTracking(c *gin.Context) {
 	account := c.GetString("requester")
 	_, err := s.bitmarkStore.DeleteTrackingBitmark(account, bitmarkID)
 	if err != nil {
+		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
@@ -50,6 +54,7 @@ func (s *Server) ListBitmarkTracking(c *gin.Context) {
 
 	bitmarks, err := s.bitmarkStore.GetTrackingBitmarks(account)
 	if err != nil {
+		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
