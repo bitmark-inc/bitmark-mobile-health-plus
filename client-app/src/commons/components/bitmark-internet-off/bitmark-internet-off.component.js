@@ -20,10 +20,9 @@ export class BitmarkInternetOffComponent extends React.Component {
           activeOpacity={1}
           onPress={() => {
             Alert.alert('Network Error', 'Failed to connect to Bitmark. Please check your device’s network connection.', [{
-              text: 'Cancel',
+              text: 'Cancel', style: 'cancel',
             }, {
               text: 'Retry',
-              style: 'cancel',
               onPress: () => {
                 if (this.props.tryConnectInternet) {
                   this.props.tryConnectInternet();

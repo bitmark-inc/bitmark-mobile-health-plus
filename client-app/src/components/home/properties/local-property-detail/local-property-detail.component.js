@@ -107,10 +107,9 @@ export class LocalPropertyDetailComponent extends React.Component {
     //TODO
     if (!this.state.isTracking) {
       Alert.alert('Track This Bitmark', 'By tracking a bitmark you can always view the latest bitmarks status in the tracked properties list, are you sure you want to do it?', [{
-        text: 'NO'
+        text: 'NO', style: 'cancel',
       }, {
         text: 'YES',
-        style: 'cancel',
         onPress: () => {
           AppController.doTrackingBitmark(this.state.asset, this.state.bitmark).catch(error => {
             EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
@@ -120,10 +119,9 @@ export class LocalPropertyDetailComponent extends React.Component {
       }]);
     } else {
       Alert.alert('Stop Tracking', 'By stop tracking a bitmark, the bitmark will be removed from the tracked list, are you sure you want to do it?', [{
-        text: 'NO'
+        text: 'NO', style: 'cancel',
       }, {
         text: 'YES',
-        style: 'cancel',
         onPress: () => {
           AppController.doStopTrackingBitmark(this.state.bitmark).catch(error => {
             EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
