@@ -9,7 +9,7 @@ import (
 
 type BitmarkPGStore struct {
 	BitmarkStore
-	dbConn *pgx.Conn
+	dbConn *pgx.ConnPool
 }
 
 const (
@@ -18,7 +18,7 @@ const (
 	sqlQueryBitmarkTracking  = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
 )
 
-func New(dbConn *pgx.Conn) *BitmarkPGStore {
+func New(dbConn *pgx.ConnPool) *BitmarkPGStore {
 	return &BitmarkPGStore{
 		dbConn: dbConn,
 	}

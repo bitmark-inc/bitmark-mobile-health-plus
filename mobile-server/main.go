@@ -11,6 +11,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/internalapi"
+	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
 	"github.com/bitmark-inc/mobile-app/mobile-server/server"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
@@ -73,18 +74,23 @@ func (config *Configuration) Load(configFile string) error {
 	return nil
 }
 
-func openDb(host string, port uint16, dbname, user, passwd string) (*pgx.Conn, error) {
-	// logger := logmodule.NewPgxLogger()
+func openDb(host string, port uint16, dbname, user, passwd string) (*pgx.ConnPool, error) {
+	logger := logmodule.NewPgxLogger()
 	dbconfig := pgx.ConnConfig{
 		Host:     host,
 		Port:     port,
 		Database: dbname,
 		User:     user,
 		Password: passwd,
-		// Logger:   logger,
+		Logger:   logger,
 	}
 
-	c, err := pgx.Connect(dbconfig)
+	poolConfig := pgx.ConnPoolConfig{
+		ConnConfig:     dbconfig,
+		MaxConnections: 5,
+	}
+
+	c, err := pgx.NewConnPool(poolConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -140,12 +146,12 @@ func main() {
 	})
 	gatewayClient := gateway.New(config.External.CoreAPIServer)
 
-	if !pushClient.Ping() {
-		log.Panic("Failed to ping to push server")
-	}
-	if !gatewayClient.Ping() {
-		log.Panic("Failed to ping to gateway server")
-	}
+	// if !pushClient.Ping() {
+	// 	log.Panic("Failed to ping to push server")
+	// }
+	// if !gatewayClient.Ping() {
+	// 	log.Panic("Failed to ping to gateway server")
+	// }
 
 	nc := initializeWatcher(&config, pushStore, pushClient, gatewayClient)
 

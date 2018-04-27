@@ -10,7 +10,7 @@ import (
 
 type PushPGStore struct {
 	PushStore
-	dbConn *pgx.Conn
+	dbConn *pgx.ConnPool
 }
 
 type NotificationToken struct {
@@ -29,7 +29,7 @@ const (
 	sqlQueryPushItemCount = "SELECT count(id) FROM mobile.push_item WHERE account_number = $1 AND status <> 'completed'"
 )
 
-func NewPGStore(dbConn *pgx.Conn) *PushPGStore {
+func NewPGStore(dbConn *pgx.ConnPool) *PushPGStore {
 	return &PushPGStore{
 		dbConn: dbConn,
 	}

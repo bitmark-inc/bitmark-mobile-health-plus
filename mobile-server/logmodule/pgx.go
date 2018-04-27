@@ -17,11 +17,11 @@ func (l *PgxLogger) Log(level pgx.LogLevel, msg string, data map[string]interfac
 	logEntry := log.WithFields(data)
 	switch level {
 	case pgx.LogLevelTrace:
-		logEntry.Debug(msg)
+		// logEntry.Debug(msg)
 	case pgx.LogLevelDebug:
-		logEntry.Debug(msg)
+		// logEntry.Debug(msg)
 	case pgx.LogLevelInfo:
-		logEntry.Info(msg)
+		// logEntry.Info(msg)
 	case pgx.LogLevelWarn:
 		logEntry.Warn(msg)
 	case pgx.LogLevelError:
