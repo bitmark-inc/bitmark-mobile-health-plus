@@ -4,6 +4,7 @@ import {
   View, Text, TouchableOpacity, Image,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import { NavigationActions } from 'react-navigation';
 
 import issuanceOptionsStyle from './issuance-options.component.style';
@@ -16,6 +17,7 @@ export class IssuanceOptionsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.onChooseFile = this.onChooseFile.bind(this);
+    this.onChoosePhotoFile = this.onChoosePhotoFile.bind(this);
     this.issueHealthData = this.issueHealthData.bind(this);
     this.issueIftttData = this.issueIftttData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
@@ -44,7 +46,7 @@ export class IssuanceOptionsComponent extends React.Component {
     this.setState({ iftttInformation: DataController.getIftttInformation() });
   }
 
-  onChooseFile() {
+  onChoosePhotoFile() {
     let options = {
       title: '',
       takePhotoButtonTitle: '',
@@ -55,31 +57,34 @@ export class IssuanceOptionsComponent extends React.Component {
       if (response.error || response.didCancel) {
         return;
       }
-      let filePath = response.uri.replace('file://', '');
-      let fileName = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
-      let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
-      AppController.doCheckFileToIssue(filePath).then(asset => {
-        if (asset && asset.registrant && asset.accessibility === 'public') {
-          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'The file has already been registered as public in the Bitmark blockchain. We will soon be able to support issuing more bitmarks for this public asset in the mobile app.' });
-          return;
-        }
-        let existingAsset = !!(asset && asset.registrant);
-        let metadataList = [];
-        if (existingAsset) {
-          let key = 0;
-          for (let label in asset.metadata) {
-            metadataList.push({ key, label, value: asset.metadata[label] });
-            key++;
-          }
-        }
-        this.props.screenProps.homeNavigation.navigate('LocalIssueFile', {
-          filePath, fileName, fileFormat, asset,
-          fingerprint: asset.fingerprint
-        });
-      }).catch(error => {
-        console.log('onChooseFile error :', error);
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+
+      this.prepareToIssue(response);
+    });
+  }
+
+  onChooseFile() {
+    DocumentPicker.show({
+      filetype: [DocumentPickerUtil.allFiles()],
+    }, (error, response) => {
+      if (error) return;
+      this.prepareToIssue(response);
+    });
+  }
+
+  prepareToIssue(response) {
+    let filePath = response.uri.replace('file://', '');
+    filePath = decodeURIComponent(filePath);
+
+    let fileName = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
+    let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
+    AppController.doCheckFileToIssue(filePath).then(asset => {
+      this.props.screenProps.homeNavigation.navigate('LocalIssueFile', {
+        filePath, fileName, fileFormat, asset,
+        fingerprint: asset.fingerprint
       });
+    }).catch(error => {
+      console.log('onChooseFile error :', error);
+      EventEmiterService.emit(EventEmiterService.events.error);
     });
   }
 
@@ -132,6 +137,8 @@ export class IssuanceOptionsComponent extends React.Component {
         </View>
         <View style={issuanceOptionsStyle.content}>
           <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.onChooseFile}>
+            <Text style={issuanceOptionsStyle.optionButtonText}>FILES</Text>
+          </TouchableOpacity><TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.onChoosePhotoFile}>
             <Text style={issuanceOptionsStyle.optionButtonText}>PHOTOS</Text>
           </TouchableOpacity>
           <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.issueHealthData}>
