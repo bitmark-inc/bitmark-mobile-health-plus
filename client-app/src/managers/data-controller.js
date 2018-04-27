@@ -615,6 +615,7 @@ const DataController = {
   doLogout,
   doStartBackgroundProcess,
   doReloadUserData,
+  doReloadDonationInformation: runGetDonationInformationInBackground,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,

@@ -71,9 +71,7 @@ export class UserComponent extends React.Component {
   handerReceivedNotification(data) {
     console.log('UserComponent handerReceivedNotification data :', data);
     if (data.event === 'transfer_request' && data.offer_id) {
-      AppController.doReloadUserData().then(() => {
-        return AppController.doGetTransferOfferDetail(data.offer_id);
-      }).then(transferOfferDetail => {
+      AppController.doGetTransferOfferDetail(data.offer_id).then(transferOfferDetail => {
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
@@ -93,103 +91,92 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
     } else if (data.event === 'transfer_rejected') {
-      AppController.doReloadUserData().then(() => {
-        let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
-        const resetHomePage = NavigationActions.reset({
-          index: 1,
-          actions: [
-            NavigationActions.navigate({
-              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
-            }),
-            NavigationActions.navigate({
-              routeName: 'LocalPropertyDetail',
-              params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
-            }),
-          ]
-        });
-        this.props.navigation.dispatch(resetHomePage);
-      }).catch(error => {
-        console.log('handerReceivedNotification transfer_rejected error :', error);
+      let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
+      const resetHomePage = NavigationActions.reset({
+        index: 1,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
+          }),
+          NavigationActions.navigate({
+            routeName: 'LocalPropertyDetail',
+            params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
+          }),
+        ]
       });
+      this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'transfer_completed' || data.event === 'transfer_accepted') {
-      AppController.doReloadUserData().then(() => {
+      const resetHomePage = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: {
+              displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
+              needReloadData: true,
+            }
+          }),
+        ]
+      });
+      this.props.navigation.dispatch(resetHomePage);
+    } else if (data.event === 'transfer_failed') {
+      let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
+      const resetHomePage = NavigationActions.reset({
+        index: 1,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
+          }),
+          NavigationActions.navigate({
+            routeName: 'LocalPropertyDetail',
+            params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
+          }),
+        ]
+      });
+      this.props.navigation.dispatch(resetHomePage);
+    } else if (data.event === 'DONATE_DATA' && data.studyData && data.studyData.studyId && data.studyData.taskType) {
+      if (data.studyData.taskType === 'donations') {
+        AppController.doReloadDonationInformation().then(() => {
+          let donationInformation = DataController.getDonationInformation();
+          let studyTask = (donationInformation.todoTasks || []).find(task => (task.study && task.study.studyId === data.studyData.studyId && task.taskType === data.studyData.taskType));
+          if (studyTask && studyTask.taskType === studyTask.study.taskIds.donations) {
+            const resetHomePage = NavigationActions.reset({
+              index: 1,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: 'User', params: {
+                    displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                    needReloadData: true,
+                  }
+                }),
+                NavigationActions.navigate({
+                  routeName: 'StudyDonation', params: {
+                    study: studyTask.study,
+                    list: studyTask.list,
+                  }
+                }),
+              ]
+            });
+            this.props.navigation.dispatch(resetHomePage);
+          }
+        }).catch(error => {
+          console.log('handerReceivedNotification BITMARK_DATA error :', error);
+        });
+      } else {
         const resetHomePage = NavigationActions.reset({
           index: 0,
           actions: [
             NavigationActions.navigate({
               routeName: 'User', params: {
-                displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
+                displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
                 needReloadData: true,
               }
             }),
           ]
         });
         this.props.navigation.dispatch(resetHomePage);
-      }).catch((error) => {
-        console.log('log out error :', error);
-      });
-    } else if (data.event === 'transfer_failed') {
-      AppController.doReloadUserData().then(() => {
-        let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
-        const resetHomePage = NavigationActions.reset({
-          index: 1,
-          actions: [
-            NavigationActions.navigate({
-              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
-            }),
-            NavigationActions.navigate({
-              routeName: 'LocalPropertyDetail',
-              params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
-            }),
-          ]
-        });
-        this.props.navigation.dispatch(resetHomePage);
-      }).catch(error => {
-        console.log('handerReceivedNotification transfer_rejected error :', error);
-      });
-    } else if (data.event === 'DONATE_DATA' && data.studyData && data.studyData.studyId && data.studyData.taskType) {
-      AppController.doReloadUserData().then(() => {
-
-        let donationInformation = DataController.getDonationInformation();
-        let studyTask = (donationInformation.todoTasks || []).find(task => (task.study && task.study.studyId === data.studyData.studyId && task.taskType === data.studyData.taskType));
-        if (studyTask && studyTask.taskType === studyTask.study.taskIds.donations) {
-          const resetHomePage = NavigationActions.reset({
-            index: 1,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'User', params: {
-                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
-                  needReloadData: true,
-                }
-              }),
-              NavigationActions.navigate({
-                routeName: 'StudyDonation', params: {
-                  study: studyTask.study,
-                  list: studyTask.list,
-                }
-              }),
-            ]
-          });
-          this.props.navigation.dispatch(resetHomePage);
-        } else if (studyTask) {
-          const resetHomePage = NavigationActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'User', params: {
-                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
-                  needReloadData: true,
-                }
-              }),
-            ]
-          });
-          this.props.navigation.dispatch(resetHomePage);
-        }
-      }).catch(error => {
-        console.log('handerReceivedNotification BITMARK_DATA error :', error);
-      });
+      }
     } else if (data.event === 'STUDY_DETAIL') {
-      AppController.doReloadUserData().then(() => {
+      AppController.doReloadDonationInformation().then(() => {
         let donationInformation = DataController.getDonationInformation();
         let study = DonationService.getStudy(donationInformation, data.studyId);
         if (study) {
@@ -210,7 +197,7 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification STUDY_DETAIL error :', error);
       });
     } else if (data.event === 'BITMARK_DATA') {
-      AppController.doReloadUserData().then(() => {
+      AppController.doReloadDonationInformation().then(() => {
         let donationInformation = DataController.getDonationInformation();
         let bitmarkHealthDataTask = (donationInformation.todoTasks || []).find(task => task.taskType === donationInformation.commonTaskIds.bitmark_health_data);
         if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
@@ -234,22 +221,18 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification BITMARK_DATA error :', error);
       });
     } else if (data.event === 'DONATION_SUCCESS') {
-      AppController.doReloadUserData().then(() => {
-        const resetHomePage = NavigationActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({
-              routeName: 'User', params: {
-                displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
-                needReloadData: true,
-              }
-            }),
-          ]
-        });
-        this.props.navigation.dispatch(resetHomePage);
-      }).catch((error) => {
-        console.log('log out error :', error);
+      const resetHomePage = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: {
+              displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
+              needReloadData: true,
+            }
+          }),
+        ]
       });
+      this.props.navigation.dispatch(resetHomePage);
     }
   }
 
