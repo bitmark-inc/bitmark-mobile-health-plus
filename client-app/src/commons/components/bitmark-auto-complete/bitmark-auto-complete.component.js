@@ -31,7 +31,7 @@ export class BitmarkAutoCompleteComponent extends React.Component {
     let tempDataSource = [];
     if (text) {
       dataSource.forEach((word, key) => {
-        if (word.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
+        if (word.toLowerCase().indexOf(text.toLowerCase()) === 0) {
           tempDataSource.push({ key, word });
         }
       });
