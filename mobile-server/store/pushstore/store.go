@@ -21,7 +21,7 @@ type PushStore interface {
 	AddPushToken(account, uuid, platform, client string) error
 	RemovePushToken(account, uuid string) (bool, error)
 	QueryPushTokens(account string) (map[string]map[string][]string, error)
-	AddPushItem(account, source, title, message string, data map[string]interface{}, pinned bool) error
+	AddPushItem(account, source, title, message string, data *map[string]interface{}, pinned bool) error
 	UpdatePushItem(id int, status string) error
 	QueryPushItems(account string) ([]PushItem, error)
 	QueryBadgeCount(account string) (int, error)
