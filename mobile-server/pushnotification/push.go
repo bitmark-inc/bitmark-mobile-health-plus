@@ -1,6 +1,8 @@
 package pushnotification
 
 import (
+	"context"
+
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 )
@@ -15,14 +17,14 @@ type PushInfo struct {
 	Silent  bool
 }
 
-func Push(p *PushInfo, store pushstore.PushStore, client *gorush.Client) error {
-	receivers, err := store.QueryPushTokens(p.Account)
+func Push(ctx context.Context, p *PushInfo, store pushstore.PushStore, client *gorush.Client) error {
+	receivers, err := store.QueryPushTokens(ctx, p.Account)
 	if err != nil {
 		return err
 	}
 
 	if !p.Silent {
-		if err := store.AddPushItem(p.Account, p.Source, p.Title, p.Message, p.Data, p.Pinned); err != nil {
+		if err := store.AddPushItem(ctx, p.Account, p.Source, p.Title, p.Message, p.Data, p.Pinned); err != nil {
 			return err
 		}
 	}

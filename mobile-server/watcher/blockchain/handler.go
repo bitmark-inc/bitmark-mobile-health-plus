@@ -1,6 +1,7 @@
 package blockchain
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
@@ -11,12 +12,14 @@ import (
 
 type BlockchainEventHandler struct {
 	nsq.Handler
+	ctx           context.Context
 	pushStore     pushstore.PushStore
 	pushAPIClient *gorush.Client
 }
 
-func New(store pushstore.PushStore, pushAPIClient *gorush.Client) *BlockchainEventHandler {
+func New(ctx context.Context, store pushstore.PushStore, pushAPIClient *gorush.Client) *BlockchainEventHandler {
 	return &BlockchainEventHandler{
+		ctx:           ctx,
 		pushStore:     store,
 		pushAPIClient: pushAPIClient,
 	}

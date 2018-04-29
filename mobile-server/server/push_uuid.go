@@ -22,7 +22,7 @@ func (s *Server) AddPushToken(c *gin.Context) {
 	}
 
 	account := c.GetString("requester")
-	if err := s.pushStore.AddPushToken(account, req.Token, req.Platform, req.Client); err != nil {
+	if err := s.pushStore.AddPushToken(c, account, req.Token, req.Platform, req.Client); err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -37,7 +37,7 @@ func (s *Server) RemovePushToken(c *gin.Context) {
 	pushToken := c.Param("token")
 
 	account := c.GetString("requester")
-	success, err := s.pushStore.RemovePushToken(account, pushToken)
+	success, err := s.pushStore.RemovePushToken(c, account, pushToken)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})

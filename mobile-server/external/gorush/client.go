@@ -2,12 +2,15 @@ package gorush
 
 import (
 	"bytes"
-	"encoding/json"
 	"net/http"
 	"net/http/httputil"
 
+	"github.com/json-iterator/go"
+
 	log "github.com/sirupsen/logrus"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var (
 	platformCode = map[string]int{

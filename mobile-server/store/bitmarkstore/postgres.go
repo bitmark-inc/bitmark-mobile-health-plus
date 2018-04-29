@@ -1,6 +1,7 @@
 package bitmarkstore
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -24,18 +25,18 @@ func New(dbConn *pgx.ConnPool) *BitmarkPGStore {
 	}
 }
 
-func (b *BitmarkPGStore) AddTrackingBitmark(account, bitmarkID, txID, status string) error {
-	_, err := b.dbConn.Exec(sqlInsertBitmarkTracking, account, bitmarkID, txID, status)
+func (b *BitmarkPGStore) AddTrackingBitmark(ctx context.Context, account, bitmarkID, txID, status string) error {
+	_, err := b.dbConn.ExecEx(ctx, sqlInsertBitmarkTracking, nil, account, bitmarkID, txID, status)
 	return err
 }
 
-func (b *BitmarkPGStore) DeleteTrackingBitmark(account, bitmarkID string) (bool, error) {
-	tag, err := b.dbConn.Exec(sqlDeleteBitmarkTracking, bitmarkID, account)
+func (b *BitmarkPGStore) DeleteTrackingBitmark(ctx context.Context, account, bitmarkID string) (bool, error) {
+	tag, err := b.dbConn.ExecEx(ctx, sqlDeleteBitmarkTracking, nil, bitmarkID, account)
 	return tag.RowsAffected() > 0, err
 }
 
-func (b *BitmarkPGStore) GetTrackingBitmarks(account string) ([]BitmarkTracking, error) {
-	rows, err := b.dbConn.Query(sqlQueryBitmarkTracking, account)
+func (b *BitmarkPGStore) GetTrackingBitmarks(ctx context.Context, account string) ([]BitmarkTracking, error) {
+	rows, err := b.dbConn.QueryEx(ctx, sqlQueryBitmarkTracking, nil, account)
 	defer rows.Close()
 	if err != nil {
 		if err != sql.ErrNoRows {

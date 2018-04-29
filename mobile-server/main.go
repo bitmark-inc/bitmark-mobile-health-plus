@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
@@ -26,7 +28,8 @@ import (
 )
 
 var (
-	g errgroup.Group
+	g   errgroup.Group
+	ctx context.Context
 )
 
 type Configuration struct {
@@ -111,7 +114,7 @@ func initializeWatcher(c *Configuration, store pushstore.PushStore, pushAPIClien
 		Stop:   make(chan struct{}),
 	}
 
-	twosigsHandler := twosigs.New(store, pushAPIClient, gatewayClient, c.DataDonation.ResearcherAccounts)
+	twosigsHandler := twosigs.New(ctx, store, pushAPIClient, gatewayClient, c.DataDonation.ResearcherAccounts)
 	nc.Add("transfer-offer", c.External.MessageChannel, twosigsHandler)
 	nc.Connect(c.External.MessageQueue)
 
@@ -139,8 +142,6 @@ func main() {
 	pushStore := pushstore.NewPGStore(dbConn)
 	bitmarkStore := bitmarkstore.New(dbConn)
 
-	log.Debug("config.External.PushServerBeta: ", config.External.PushServerBeta)
-
 	pushClient := gorush.New(map[string]string{
 		"primary": config.External.PushServer,
 		"beta":    config.External.PushServerBeta,
@@ -156,18 +157,36 @@ func main() {
 
 	nc := initializeWatcher(&config, pushStore, pushClient, gatewayClient)
 
+	mobileAPIServer := server.New(pushStore, bitmarkStore)
+	internalAPIServer := internalapi.New(pushStore, pushClient)
+
 	c := make(chan os.Signal, 2)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		log.Info("Server is preparing to stop")
-		dbConn.Close()
+		log.Info("Server is preparing to shutdown")
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		log.Info("Shutdown mobile api server")
+		if err := mobileAPIServer.Shutdown(ctx); err != nil {
+			log.Fatal("Server Shutdown:", err)
+		}
+
+		log.Info("Shutdown internal api server")
+		if err := internalAPIServer.Shutdown(ctx); err != nil {
+			log.Fatal("Server Shutdown:", err)
+		}
+
+		log.Info("Disconnect nsq")
 		nc.Close()
+
+		log.Info("Disconnect postgres")
+		dbConn.Close()
+
 		os.Exit(1)
 	}()
-
-	mobileAPIServer := server.New(pushStore, bitmarkStore)
-	internalAPIServer := internalapi.New(pushStore, pushClient)
 
 	g.Go(func() error {
 		return mobileAPIServer.Run(fmt.Sprintf(":%d", config.Listen.MobileAPI))
@@ -180,4 +199,9 @@ func main() {
 	if err := g.Wait(); err != nil {
 		log.Fatal(err)
 	}
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
 }

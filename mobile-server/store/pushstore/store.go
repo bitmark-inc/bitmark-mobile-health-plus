@@ -1,6 +1,7 @@
 package pushstore
 
 import (
+	"context"
 	"time"
 )
 
@@ -17,12 +18,12 @@ type PushItem struct {
 }
 
 type PushStore interface {
-	AddAccount(account string) error
-	AddPushToken(account, uuid, platform, client string) error
-	RemovePushToken(account, uuid string) (bool, error)
-	QueryPushTokens(account string) (map[string]map[string][]string, error)
-	AddPushItem(account, source, title, message string, data *map[string]interface{}, pinned bool) error
-	UpdatePushItem(id int, status string) error
-	QueryPushItems(account string) ([]PushItem, error)
-	QueryBadgeCount(account string) (int, error)
+	AddAccount(ctx context.Context, account string) error
+	AddPushToken(ctx context.Context, account, uuid, platform, client string) error
+	RemovePushToken(ctx context.Context, account, uuid string) (bool, error)
+	QueryPushTokens(ctx context.Context, account string) (map[string]map[string][]string, error)
+	AddPushItem(ctx context.Context, account, source, title, message string, data *map[string]interface{}, pinned bool) error
+	UpdatePushItem(ctx context.Context, id int, status string) error
+	QueryPushItems(ctx context.Context, account string) ([]PushItem, error)
+	QueryBadgeCount(ctx context.Context, account string) (int, error)
 }

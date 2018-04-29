@@ -1,13 +1,16 @@
 package gateway
 
 import (
-	"encoding/json"
 	"net/http"
 	"time"
+
+	"github.com/json-iterator/go"
 
 	bitmarksdk "github.com/bitmark-inc/bitmark-sdk-go"
 	log "github.com/sirupsen/logrus"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type Client struct {
 	url    string
