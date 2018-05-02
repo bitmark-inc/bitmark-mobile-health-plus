@@ -1,6 +1,6 @@
 # Gopkg.toml example
 #
-# Refer to https://github.com/golang/dep/blob/master/docs/Gopkg.toml.md
+# Refer to https://golang.github.io/dep/docs/Gopkg.toml.html
 # for detailed Gopkg.toml documentation.
 #
 # required = ["github.com/user/thing/cmd/thing"]
@@ -24,39 +24,12 @@
 #   go-tests = true
 #   unused-packages = true
 
+ignored = ["github.com/modern-go/test","github.com/modern-go/test/must","github.com/modern-go/test/should"]
 
 [[constraint]]
-  name = "github.com/gin-gonic/gin"
-  version = "1.2.0"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/hashicorp/hcl"
-
-[[constraint]]
-  name = "github.com/jackc/pgx"
-  version = "3.1.0"
-
-[[constraint]]
-  name = "github.com/nsqio/go-nsq"
-  version = "1.0.7"
-
-[[constraint]]
-  name = "github.com/sirupsen/logrus"
-  version = "1.0.5"
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/crypto"
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/sync"
+  name = "github.com/modern-go/concurrent"
+  version = "1.0.0"
 
 [prune]
   go-tests = true
   unused-packages = true
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/net"

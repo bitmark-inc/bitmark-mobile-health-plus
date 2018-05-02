@@ -1,8 +1,11 @@
 package gateway
 
 import (
+	"context"
 	"net/http"
 	"time"
+
+	"golang.org/x/net/context/ctxhttp"
 
 	"github.com/json-iterator/go"
 
@@ -19,8 +22,10 @@ type Client struct {
 
 func New(url string) *Client {
 	return &Client{
-		url:    url,
-		client: http.DefaultClient}
+		url: url,
+		client: &http.Client{
+			Timeout: 10 * time.Second,
+		}}
 }
 
 type TransferOffer struct {
@@ -36,9 +41,9 @@ type TransferOffer struct {
 	Open      bool                           `json:"open"`
 }
 
-func (c *Client) GetOfferIdInfo(offerID string) (*TransferOffer, error) {
+func (c *Client) GetOfferIdInfo(ctx context.Context, offerID string) (*TransferOffer, error) {
 	requestURL := c.url + "/v2/transfer_offers?offer_id=" + offerID
-	resp, err := c.client.Get(requestURL)
+	resp, err := ctxhttp.Get(ctx, c.client, requestURL)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +56,8 @@ func (c *Client) GetOfferIdInfo(offerID string) (*TransferOffer, error) {
 	return offer["offer"], nil
 }
 
-func (c *Client) Ping() bool {
+func (c *Client) Ping(ctx context.Context) bool {
 	log.Info("Ping to:", c.url)
-	_, err := c.client.Head(c.url)
+	_, err := ctxhttp.Head(ctx, c.client, c.url)
 	return err == nil
 }

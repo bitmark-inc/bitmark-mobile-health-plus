@@ -29,7 +29,7 @@ import (
 
 var (
 	g   errgroup.Group
-	ctx context.Context
+	ctx context.Context = context.Background()
 )
 
 type Configuration struct {
@@ -114,7 +114,7 @@ func initializeWatcher(c *Configuration, store pushstore.PushStore, pushAPIClien
 		Stop:   make(chan struct{}),
 	}
 
-	twosigsHandler := twosigs.New(ctx, store, pushAPIClient, gatewayClient, c.DataDonation.ResearcherAccounts)
+	twosigsHandler := twosigs.New(store, pushAPIClient, gatewayClient, c.DataDonation.ResearcherAccounts)
 	nc.Add("transfer-offer", c.External.MessageChannel, twosigsHandler)
 	nc.Connect(c.External.MessageQueue)
 
@@ -148,10 +148,10 @@ func main() {
 	})
 	gatewayClient := gateway.New(config.External.CoreAPIServer)
 
-	if !pushClient.Ping() {
+	if !pushClient.Ping(ctx) {
 		log.Panic("Failed to ping to push server")
 	}
-	if !gatewayClient.Ping() {
+	if !gatewayClient.Ping(ctx) {
 		log.Panic("Failed to ping to gateway server")
 	}
 

@@ -34,5 +34,5 @@ func Push(ctx context.Context, p *PushInfo, store pushstore.PushStore, client *g
 	// 	return err
 	// }
 
-	return client.Send(p.Title, p.Message, receivers, p.Data, 0, p.Silent)
+	return client.Send(ctx, p.Title, p.Message, receivers, p.Data, 0, p.Silent)
 }

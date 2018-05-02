@@ -2,10 +2,12 @@ package gorush
 
 import (
 	"bytes"
+	"context"
 	"net/http"
-	"net/http/httputil"
+	"time"
 
 	"github.com/json-iterator/go"
+	"golang.org/x/net/context/ctxhttp"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -38,14 +40,20 @@ type notification struct {
 }
 
 type Client struct {
-	urls map[string]string
+	urls   map[string]string
+	client *http.Client
 }
 
 func New(urls map[string]string) *Client {
-	return &Client{urls}
+	return &Client{
+		urls: urls,
+		client: &http.Client{
+			Timeout: 10 * time.Second,
+		},
+	}
 }
 
-func (c *Client) Send(title, message string, receivers map[string]map[string][]string, data *map[string]interface{}, badge int, silent bool) error {
+func (c *Client) Send(ctx context.Context, title, message string, receivers map[string]map[string][]string, data *map[string]interface{}, badge int, silent bool) error {
 	var err error
 	for client, payloads := range receivers {
 		notifications := make([]notification, 0)
@@ -69,26 +77,17 @@ func (c *Client) Send(title, message string, receivers map[string]map[string][]s
 		log.Info("Pushing to client: ", client)
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]interface{}{"notifications": notifications})
-		resp, err := http.DefaultClient.Post(c.urls[client]+"/api/push", "application/json", body)
-
-		// For debugging
-		if err != nil {
-			responseDump, err := httputil.DumpResponse(resp, true)
-			if err != nil {
-				log.Error(err)
-			}
-			log.WithField("responseDump", responseDump).Error(err)
-		}
+		_, err = ctxhttp.Post(ctx, c.client, c.urls[client]+"/api/push", "application/json", body)
 	}
 
 	return err
 }
 
-func (c *Client) Ping() bool {
+func (c *Client) Ping(ctx context.Context) bool {
 	var err error
 	for _, url := range c.urls {
 		log.Info("Ping to:", url)
-		_, err = http.DefaultClient.Head(url)
+		_, err = ctxhttp.Head(ctx, c.client, url)
 	}
 
 	return err == nil
