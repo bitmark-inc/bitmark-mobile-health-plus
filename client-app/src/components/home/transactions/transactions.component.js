@@ -23,6 +23,10 @@ const ActionTypes = {
   donation: 'donation',
   ifttt: 'ifttt',
 };
+let generateDataStore = {
+  actionRequired: [],
+  completed: []
+};
 
 export class TransactionsComponent extends React.Component {
   static SubTabs = SubTabs;
@@ -41,14 +45,12 @@ export class TransactionsComponent extends React.Component {
     this.clickToCompleted = this.clickToCompleted.bind(this);
 
     let subTab = (this.props.screenProps.subTab === SubTabs.required || this.props.screenProps.subTab === SubTabs.completed) ? this.props.screenProps.subTab : SubTabs.required;
-
-    let { actionRequired, completed, donationInformation } = this.generateData();
     this.state = {
       currentUser: DataController.getUserInformation(),
       subTab,
-      actionRequired,
-      completed,
-      donationInformation,
+      actionRequired: generateDataStore.actionRequired,
+      completed: generateDataStore.completed,
+      donationInformation: DataController.getDonationInformation(),
       isLoadingData: DataController.isLoadingData(),
     };
   }
@@ -65,6 +67,10 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
     EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    let { actionRequired, completed } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
+    this.setState({ actionRequired: generateDataStore.actionRequired, completed: generateDataStore.actionRequired })
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -128,7 +134,6 @@ export class TransactionsComponent extends React.Component {
     }) : actionRequired;
 
     let completed;
-    console.log('transactions :', transactionData.transactions);
     if (transactionData.transactions) {
       completed = [];
       let mapIssuance = [];
@@ -200,35 +205,49 @@ export class TransactionsComponent extends React.Component {
       if (!b || !b.timestamp) return -1;
       return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
     }) : completed;
-    console.log('completed :', completed);
-
-    return { actionRequired, completed, donationInformation };
+    console.log('generateData :', actionRequired, completed);
+    return { actionRequired, completed };
   }
   handerDonationInformationChange() {
-    let { actionRequired, completed, donationInformation } = this.generateData();
+    let { actionRequired, completed } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
     this.setState({
-      actionRequired, completed, donationInformation,
+      actionRequired, completed,
+      donationInformation: DataController.getDonationInformation(),
       isLoadingData: DataController.isLoadingData(),
     });
   }
   handerIftttInformationChange() {
-    let { actionRequired, completed, donationInformation } = this.generateData();
+    let { actionRequired, completed } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
+
     this.setState({
-      actionRequired, completed, donationInformation,
+      actionRequired, completed,
+      donationInformation: DataController.getDonationInformation(),
       isLoadingData: DataController.isLoadingData(),
     });
   }
   handerChangePendingTransactions() {
-    let { actionRequired, completed, donationInformation } = this.generateData();
+    let { actionRequired, completed } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
+
     this.setState({
-      actionRequired, completed, donationInformation,
+      actionRequired, completed,
+      donationInformation: DataController.getDonationInformation(),
       isLoadingData: DataController.isLoadingData(),
     });
   }
   handerChangeCompletedTransaction() {
-    let { actionRequired, completed, donationInformation } = this.generateData();
+    let { actionRequired, completed } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
+
     this.setState({
-      actionRequired, completed, donationInformation,
+      actionRequired, completed,
+      donationInformation: DataController.getDonationInformation(),
       isLoadingData: DataController.isLoadingData(),
     });
   }
@@ -240,10 +259,12 @@ export class TransactionsComponent extends React.Component {
 
   reloadData() {
     AppController.doReloadUserData().then(() => {
-      let { actionRequired, completed, donationInformation } = this.generateData();
-      console.log('actionRequired, completed, donationInformation :', actionRequired, completed, donationInformation);
+      let { actionRequired, completed } = this.generateData();
+      generateDataStore.actionRequired = actionRequired;
+      generateDataStore.completed = completed;
       this.setState({
-        actionRequired, completed, donationInformation,
+        actionRequired, completed,
+        donationInformation: DataController.getDonationInformation(),
         isLoadingData: DataController.isLoadingData(),
       });
     }).catch((error) => {
