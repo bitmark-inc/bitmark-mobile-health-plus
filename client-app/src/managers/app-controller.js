@@ -169,7 +169,7 @@ const doAcceptTransferBitmark = async (transferOffer, processingInfo, successInf
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await submitting(TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
+  return await submitting(DataController.doAcceptTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
 };
 
 const doCancelTransferBitmark = async (transferOfferId) => {
@@ -178,7 +178,7 @@ const doCancelTransferBitmark = async (transferOfferId) => {
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await processing(TransactionService.doCancelTransferBitmark(touchFaceIdSession, transferOfferId));
+  return await processing(DataController.doCancelTransferBitmark(touchFaceIdSession, transferOfferId));
 };
 
 const doRejectTransferBitmark = async (transferOffer, processingInfo, successInfo, errorInfo) => {
@@ -187,7 +187,7 @@ const doRejectTransferBitmark = async (transferOffer, processingInfo, successInf
     return null;
   }
   CommonModel.setFaceTouceSessionId(touchFaceIdSession);
-  return await submitting(TransactionService.doRejectTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
+  return await submitting(DataController.doRejectTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
 };
 
 

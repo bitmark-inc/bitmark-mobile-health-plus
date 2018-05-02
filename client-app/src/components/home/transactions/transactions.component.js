@@ -22,6 +22,10 @@ const ActionTypes = {
   transfer: 'Property Transfer Request',
   donation: '',
 };
+let generateDataStore = {
+  actionRequired: [],
+  completed: []
+};
 
 export class TransactionsComponent extends React.Component {
   static SubTabs = SubTabs;
@@ -38,14 +42,12 @@ export class TransactionsComponent extends React.Component {
     this.clickToCompleted = this.clickToCompleted.bind(this);
 
     let subTab = (this.props.screenProps.subTab === SubTabs.required || this.props.screenProps.subTab === SubTabs.completed) ? this.props.screenProps.subTab : SubTabs.required;
-
-    let { actionRequired, completed, donationInformation } = this.generateData();
     this.state = {
       currentUser: DataController.getUserInformation(),
       subTab,
-      actionRequired,
-      completed,
-      donationInformation,
+      actionRequired: generateDataStore.actionRequired,
+      completed: generateDataStore.completed,
+      donationInformation: DataController.getDonationInformation(),
       isLoadingData: DataController.isLoadingData(),
     };
   }
@@ -61,6 +63,10 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    let { actionRequired, completed, donationInformation } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
+    this.setState({ actionRequired, completed, donationInformation, });
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -191,6 +197,8 @@ export class TransactionsComponent extends React.Component {
   }
   handerDonationInformationChange() {
     let { actionRequired, completed, donationInformation } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -198,6 +206,8 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangePendingTransactions() {
     let { actionRequired, completed, donationInformation } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -205,6 +215,8 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangeCompletedTransaction() {
     let { actionRequired, completed, donationInformation } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -219,6 +231,8 @@ export class TransactionsComponent extends React.Component {
   reloadData() {
     AppController.doReloadUserData().then(() => {
       let { actionRequired, completed, donationInformation } = this.generateData();
+      generateDataStore.actionRequired = actionRequired;
+      generateDataStore.completed = completed;
       console.log('actionRequired, completed, donationInformation :', actionRequired, completed, donationInformation);
       this.setState({
         actionRequired, completed, donationInformation,

@@ -419,6 +419,36 @@ const doUpdateViewStatus = async (asset) => {
   }
 };
 
+const doAcceptTransferBitmark = async (touchFaceIdSession, transferOffer) => {
+  let oldUserData = merge({}, userData);
+  await TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer);
+  await runGetActiveIncomingTransferOfferInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  return userData.activeIncompingTransferOffers;
+};
+
+const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
+  let oldUserData = merge({}, userData);
+  await TransactionService.doCancelTransferBitmark(touchFaceIdSession, transferOfferId);
+  await runGetActiveIncomingTransferOfferInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  return userData.activeIncompingTransferOffers;
+};
+
+const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer, ) => {
+  let oldUserData = merge({}, userData);
+  await TransactionService.doRejectTransferBitmark(touchFaceIdSession, transferOffer);
+  await runGetActiveIncomingTransferOfferInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  return userData.activeIncompingTransferOffers;
+};
+
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers,
@@ -480,6 +510,9 @@ const DataController = {
   doBitmarkHealthData,
   doDownloadBitmark,
   doUpdateViewStatus,
+  doAcceptTransferBitmark,
+  doCancelTransferBitmark,
+  doRejectTransferBitmark,
 
   getTransactionData,
   getUserBitmarks,
