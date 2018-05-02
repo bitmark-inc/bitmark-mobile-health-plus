@@ -70,8 +70,8 @@ export class UserComponent extends React.Component {
 
   handerReceivedNotification(data) {
     console.log('UserComponent handerReceivedNotification data :', data);
-    if (data.event === 'transfer_request' && data.offer_id) {
-      AppController.doGetTransferOfferDetail(data.offer_id).then(transferOfferDetail => {
+    if (data.name === 'transfer_request' && data.id) {
+      AppController.doGetTransferOfferDetail(data.id).then(transferOfferDetail => {
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
@@ -90,7 +90,7 @@ export class UserComponent extends React.Component {
       }).catch(error => {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
-    } else if (data.event === 'transfer_rejected') {
+    } else if (data.name === 'transfer_rejected') {
       let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
       const resetHomePage = NavigationActions.reset({
         index: 1,
@@ -105,7 +105,7 @@ export class UserComponent extends React.Component {
         ]
       });
       this.props.navigation.dispatch(resetHomePage);
-    } else if (data.event === 'transfer_completed' || data.event === 'transfer_accepted') {
+    } else if (data.name === 'transfer_completed' || data.evnameent === 'transfer_accepted') {
       const resetHomePage = NavigationActions.reset({
         index: 0,
         actions: [
@@ -118,7 +118,7 @@ export class UserComponent extends React.Component {
         ]
       });
       this.props.navigation.dispatch(resetHomePage);
-    } else if (data.event === 'transfer_failed') {
+    } else if (data.name === 'transfer_failed') {
       let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
       const resetHomePage = NavigationActions.reset({
         index: 1,
