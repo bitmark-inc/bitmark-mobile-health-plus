@@ -136,10 +136,11 @@ export class IssuanceOptionsComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
         <View style={issuanceOptionsStyle.content}>
+          <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.onChoosePhotoFile}>
+            <Text style={issuanceOptionsStyle.optionButtonText}>PHOTOS</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.onChooseFile}>
             <Text style={issuanceOptionsStyle.optionButtonText}>FILES</Text>
-          </TouchableOpacity><TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.onChoosePhotoFile}>
-            <Text style={issuanceOptionsStyle.optionButtonText}>PHOTOS</Text>
           </TouchableOpacity>
           <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.issueHealthData}>
             <Text style={issuanceOptionsStyle.optionButtonText}>HEALTH DATA</Text>
