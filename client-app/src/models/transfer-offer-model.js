@@ -3,7 +3,7 @@ import { config } from './../configs';
 const doGetTransferOfferDetail = (transferOfferId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = config.api_server_url + `/v2/transfer_offers/${transferOfferId}`;
+    let tempURL = config.api_server_url + `/v2/transfer_offers?offer_id=${transferOfferId}`;
     fetch(tempURL, {
       method: 'GET',
       headers: {
