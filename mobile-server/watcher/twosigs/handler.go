@@ -61,13 +61,10 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 					Account: from,
 					Title:   "",
 					Message: message,
-					Data: &map[string]interface{}{
-						"event":    event,
-						"offer_id": offerID,
-					},
-					Pinned: false,
-					Source: "gateway",
-					Silent: false,
+					Data:    &data,
+					Pinned:  false,
+					Source:  "gateway",
+					Silent:  false,
 				}, h.pushStore, h.pushAPIClient)
 			}
 
