@@ -50,6 +50,8 @@
 		580AD8A92046893B000EEB1F /* AndaleMono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F150CA152023230B00C8FC17 /* AndaleMono.ttf */; };
 		580AD8AA2046893B000EEB1F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		580AD8AB2046893B000EEB1F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
+		580C4BE22099978D00AAEEE0 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580C4BE12099978D00AAEEE0 /* CloudKit.framework */; };
+		580C4C172099979200AAEEE0 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580C4BE12099978D00AAEEE0 /* CloudKit.framework */; };
 		584009D020243ABA00550ADB /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 584009A920243AA700550ADB /* libRCTCamera.a */; };
 		58400A98202C013C00550ADB /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
 		58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
@@ -568,6 +570,7 @@
 		579C1381393E59B3042E29F2 /* Pods-Bitmark.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.release.xcconfig"; sourceTree = "<group>"; };
 		580AD8B22046893B000EEB1F /* Bitmark beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bitmark beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		580AD8B32046893B000EEB1F /* Bitmark copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Bitmark copy-Info.plist"; path = "/Users/anhnguyen/Documents/go/src/github.com/bitmark-inc/mobile-app/client-app/ios/Bitmark copy-Info.plist"; sourceTree = "<absolute>"; };
+		580C4BE12099978D00AAEEE0 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		5840099F20243AA700550ADB /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		58557E6A2062041C00402734 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
@@ -725,6 +728,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
+				580C4BE22099978D00AAEEE0 /* CloudKit.framework in Frameworks */,
 				72A0ED28C921482083D1D737 /* libRNFS.a in Frameworks */,
 				B7856E9B0E4B4CF3BA90EB21 /* libRNMail.a in Frameworks */,
 				A75355ACD4CF4A668E3CF8D3 /* libRCTVideo.a in Frameworks */,
@@ -757,6 +761,7 @@
 				580AD8A12046893B000EEB1F /* libRCTText.a in Frameworks */,
 				580AD8A22046893B000EEB1F /* libRCTVibration.a in Frameworks */,
 				580AD8A32046893B000EEB1F /* libRCTWebSocket.a in Frameworks */,
+				580C4C172099979200AAEEE0 /* CloudKit.framework in Frameworks */,
 				580AD8A42046893B000EEB1F /* libRNFS.a in Frameworks */,
 				580AD8A52046893B000EEB1F /* libRNMail.a in Frameworks */,
 				580AD8A62046893B000EEB1F /* libRCTVideo.a in Frameworks */,
@@ -893,6 +898,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				580C4BE12099978D00AAEEE0 /* CloudKit.framework */,
 				F1D09CF7207707BF008B16EE /* libz.tbd */,
 				58557E6A2062041C00402734 /* HealthKit.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
