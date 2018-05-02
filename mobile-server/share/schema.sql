@@ -48,7 +48,7 @@ CREATE TABLE mobile.push_uuid (
     token TEXT NOT NULL,
     platform device_platform NOT NULL,
     client push_client DEFAULT 'primary',
-	  PRIMARY KEY(token, platform)
+	  PRIMARY KEY(account_number, token, platform)
 );
 
 -- push notification item status
