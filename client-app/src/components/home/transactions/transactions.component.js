@@ -67,10 +67,10 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
     EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
-    let { actionRequired, completed } = this.generateData();
+    let { actionRequired, completed, donationInformation } = this.generateData();
     generateDataStore.actionRequired = actionRequired;
     generateDataStore.completed = completed;
-    this.setState({ actionRequired: generateDataStore.actionRequired, completed: generateDataStore.actionRequired })
+    this.setState({ actionRequired, completed, donationInformation })
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -206,48 +206,44 @@ export class TransactionsComponent extends React.Component {
       return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
     }) : completed;
     console.log('generateData :', actionRequired, completed);
-    return { actionRequired, completed };
+    return { actionRequired, completed, donationInformation };
   }
   handerDonationInformationChange() {
-    let { actionRequired, completed } = this.generateData();
+    let { actionRequired, completed, donationInformation } = this.generateData();
     generateDataStore.actionRequired = actionRequired;
     generateDataStore.completed = completed;
     this.setState({
-      actionRequired, completed,
-      donationInformation: DataController.getDonationInformation(),
+      donationInformation,
       isLoadingData: DataController.isLoadingData(),
     });
   }
   handerIftttInformationChange() {
-    let { actionRequired, completed } = this.generateData();
+    let { actionRequired, completed, donationInformation } = this.generateData();
     generateDataStore.actionRequired = actionRequired;
     generateDataStore.completed = completed;
 
     this.setState({
-      actionRequired, completed,
-      donationInformation: DataController.getDonationInformation(),
+      actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
     });
   }
   handerChangePendingTransactions() {
-    let { actionRequired, completed } = this.generateData();
+    let { actionRequired, completed, donationInformation } = this.generateData();
     generateDataStore.actionRequired = actionRequired;
     generateDataStore.completed = completed;
 
     this.setState({
-      actionRequired, completed,
-      donationInformation: DataController.getDonationInformation(),
+      actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
     });
   }
   handerChangeCompletedTransaction() {
-    let { actionRequired, completed } = this.generateData();
+    let { actionRequired, completed, donationInformation } = this.generateData();
     generateDataStore.actionRequired = actionRequired;
     generateDataStore.completed = completed;
 
     this.setState({
-      actionRequired, completed,
-      donationInformation: DataController.getDonationInformation(),
+      actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
     });
   }
@@ -259,12 +255,11 @@ export class TransactionsComponent extends React.Component {
 
   reloadData() {
     AppController.doReloadUserData().then(() => {
-      let { actionRequired, completed } = this.generateData();
+      let { actionRequired, completed, donationInformation } = this.generateData();
       generateDataStore.actionRequired = actionRequired;
       generateDataStore.completed = completed;
       this.setState({
-        actionRequired, completed,
-        donationInformation: DataController.getDonationInformation(),
+        actionRequired, completed, donationInformation,
         isLoadingData: DataController.isLoadingData(),
       });
     }).catch((error) => {
