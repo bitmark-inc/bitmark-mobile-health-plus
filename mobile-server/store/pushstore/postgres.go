@@ -101,7 +101,7 @@ func (p *PushPGStore) QueryPushTokens(account string) (map[string]map[string][]s
 	return clients, nil
 }
 
-func (p *PushPGStore) AddPushItem(account, source, title, message string, data map[string]interface{}, pinned bool) error {
+func (p *PushPGStore) AddPushItem(account, source, title, message string, data *map[string]interface{}, pinned bool) error {
 	if err := p.AddAccount(account); err != nil {
 		return err
 	}

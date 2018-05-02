@@ -57,11 +57,11 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 		if okForApp && app == "bitmark-data-donation" {
 			if okForMessage && okForData {
 				data["offer_id"] = offerID
-				return pushnotification.Push(pushnotification.PushInfo{
+				return pushnotification.Push(&pushnotification.PushInfo{
 					Account: from,
 					Title:   "",
 					Message: message,
-					Data:    data,
+					Data:    &data,
 					Pinned:  false,
 					Source:  "gateway",
 					Silent:  false,
@@ -75,41 +75,41 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 	// For p2p transfers
 	switch event {
 	case EventTransferRequest:
-		return pushnotification.Push(pushnotification.PushInfo{
+		return pushnotification.Push(&pushnotification.PushInfo{
 			Account: to,
 			Title:   "",
 			Message: messages[event],
-			Data:    data,
+			Data:    &data,
 			Pinned:  false,
 			Source:  "gateway",
 			Silent:  false,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferAccepted:
-		return pushnotification.Push(pushnotification.PushInfo{
+		return pushnotification.Push(&pushnotification.PushInfo{
 			Account: from,
 			Title:   "",
 			Message: messages[event],
-			Data:    data,
+			Data:    &data,
 			Pinned:  false,
 			Source:  "gateway",
 			Silent:  false,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferFailed:
-		return pushnotification.Push(pushnotification.PushInfo{
+		return pushnotification.Push(&pushnotification.PushInfo{
 			Account: to,
 			Title:   "",
 			Message: messages[event],
-			Data:    data,
+			Data:    &data,
 			Pinned:  false,
 			Source:  "gateway",
 			Silent:  false,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferRejected:
-		return pushnotification.Push(pushnotification.PushInfo{
+		return pushnotification.Push(&pushnotification.PushInfo{
 			Account: from,
 			Title:   "",
 			Message: messages[event],
-			Data:    data,
+			Data:    &data,
 			Pinned:  false,
 			Source:  "gateway",
 			Silent:  false,

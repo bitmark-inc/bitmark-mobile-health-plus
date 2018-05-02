@@ -83,11 +83,12 @@ func openDb(host string, port uint16, dbname, user, passwd string) (*pgx.ConnPoo
 		User:     user,
 		Password: passwd,
 		Logger:   logger,
+		LogLevel: pgx.LogLevelWarn,
 	}
 
 	poolConfig := pgx.ConnPoolConfig{
 		ConnConfig:     dbconfig,
-		MaxConnections: 5,
+		MaxConnections: 25,
 	}
 
 	c, err := pgx.NewConnPool(poolConfig)
@@ -146,12 +147,12 @@ func main() {
 	})
 	gatewayClient := gateway.New(config.External.CoreAPIServer)
 
-	// if !pushClient.Ping() {
-	// 	log.Panic("Failed to ping to push server")
-	// }
-	// if !gatewayClient.Ping() {
-	// 	log.Panic("Failed to ping to gateway server")
-	// }
+	if !pushClient.Ping() {
+		log.Panic("Failed to ping to push server")
+	}
+	if !gatewayClient.Ping() {
+		log.Panic("Failed to ping to gateway server")
+	}
 
 	nc := initializeWatcher(&config, pushStore, pushClient, gatewayClient)
 
