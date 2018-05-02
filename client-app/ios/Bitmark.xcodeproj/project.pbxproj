@@ -2443,8 +2443,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios;
 				PRODUCT_NAME = Bitmark;
-				PROVISIONING_PROFILE = "5b7f3e2f-461d-4320-aca7-84dc6d276610";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Development";
+				PROVISIONING_PROFILE = "09b23ea1-93c1-49c2-bf14-596555a85b86";
+				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Distribution";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
