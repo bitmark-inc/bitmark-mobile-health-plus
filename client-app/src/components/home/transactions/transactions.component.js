@@ -52,6 +52,8 @@ export class TransactionsComponent extends React.Component {
       completed: generateDataStore.completed,
       donationInformation: DataController.getDonationInformation(),
       isLoadingData: DataController.isLoadingData(),
+      lengthDisplayActionRequired: 10,
+      lengthDisplayCompleted: 10,
     };
   }
 
@@ -67,10 +69,13 @@ export class TransactionsComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
     EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
-    let { actionRequired, completed, donationInformation } = this.generateData();
-    generateDataStore.actionRequired = actionRequired;
-    generateDataStore.completed = completed;
-    this.setState({ actionRequired, completed, donationInformation })
+    setTimeout(() => {
+      let { actionRequired, completed, donationInformation } = this.generateData();
+      generateDataStore.actionRequired = actionRequired;
+      generateDataStore.completed = completed;
+      this.setState({ actionRequired, completed, donationInformation })
+    }, 1000);
+
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -379,15 +384,25 @@ export class TransactionsComponent extends React.Component {
           </TouchableOpacity>}
         </View>
 
-        <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
+        {this.state.subTab === SubTabs.required && <ScrollView style={[transactionsStyle.scrollSubTabArea]}
+          onScroll={(scrollEvent) => {
+            if (!this.spaceNeedLoadActionRequire) {
+              this.spaceNeedLoadActionRequire = scrollEvent.nativeEvent.contentSize.height / 2;
+            }
+            if (scrollEvent.nativeEvent.contentOffset.y >= (scrollEvent.nativeEvent.contentSize.height - this.spaceNeedLoadActionRequire) && this.state.lengthDisplayActionRequired < this.state.actionRequired.length) {
+              this.setState({ lengthDisplayActionRequired: this.state.lengthDisplayActionRequired + 10 });
+            }
+          }}
+          scrollEventThrottle={1}
+        >
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
+            {this.state.actionRequired && this.state.actionRequired.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO ACTIONS REQUIRED.</Text>
               <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where you will receive any requests that require your signature.</Text>
             </View>}
 
-            {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length > 0 && <View style={transactionsStyle.contentSubTab}>
-              <FlatList data={this.state.actionRequired}
+            {this.state.actionRequired && this.state.actionRequired.length > 0 && <View style={transactionsStyle.contentSubTab}>
+              <FlatList data={this.state.actionRequired.slice(0, Math.min(this.state.lengthDisplayActionRequired, this.state.actionRequired.length))}
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (<TouchableOpacity style={transactionsStyle.transferOfferRow} onPress={() => this.clickToActionRequired(item)}>
@@ -415,13 +430,30 @@ export class TransactionsComponent extends React.Component {
                   </TouchableOpacity>)
                 }} />
             </View>}
+            {(!this.state.isLoadingData || this.state.lengthDisplayActionRequired < this.state.actionRequired.length) && <View style={transactionsStyle.contentSubTab}>
+              <ActivityIndicator size="large" style={{ marginTop: 46, }} />
+            </View>}
+          </TouchableOpacity>
+        </ScrollView>}
 
-            {this.state.subTab === SubTabs.completed && this.state.completed && this.state.completed.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
+        {this.state.subTab === SubTabs.completed && <ScrollView style={[transactionsStyle.scrollSubTabArea]}
+          onScroll={(scrollEvent) => {
+            if (!this.spaceNeedLoadActionCompleted) {
+              this.spaceNeedLoadActionCompleted = scrollEvent.nativeEvent.contentSize.height / 2;
+            }
+            if (scrollEvent.nativeEvent.contentOffset.y >= (scrollEvent.nativeEvent.contentSize.height - this.spaceNeedLoadActionCompleted) && this.state.lengthDisplayCompleted < this.state.completed.length) {
+              this.setState({ lengthDisplayCompleted: this.state.lengthDisplayCompleted + 10 });
+            }
+          }}
+          scrollEventThrottle={1}
+        >
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            {this.state.completed && this.state.completed.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY.</Text>
               <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where your history of completed transaction will be stored.</Text>
             </View>}
-            {this.state.subTab === SubTabs.completed && this.state.completed && this.state.completed.length > 0 && <View style={transactionsStyle.contentSubTab}>
-              <FlatList data={this.state.completed}
+            {this.state.completed && this.state.completed.length > 0 && <View style={transactionsStyle.contentSubTab}>
+              <FlatList data={this.state.completed.slice(0, Math.min(this.state.lengthDisplayCompleted, this.state.completed.length))}
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (
@@ -459,11 +491,11 @@ export class TransactionsComponent extends React.Component {
                   )
                 }} />
             </View >}
-            {!this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
+            {(!this.state.isLoadingData || this.state.lengthDisplayCompleted < this.state.completed.length) && <View style={transactionsStyle.contentSubTab}>
               <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>
-        </ScrollView>
+        </ScrollView>}
       </View >
     );
   }
