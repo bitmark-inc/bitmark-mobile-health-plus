@@ -27,7 +27,6 @@ export class StudyDetailComponent extends React.Component {
     this.state = {
       study: study,
     };
-    console.log('this.props :', props);
   }
   render() {
     let DetailComponent = (this.state.study && this.state.study.studyId && this.state.study.joinedDate)

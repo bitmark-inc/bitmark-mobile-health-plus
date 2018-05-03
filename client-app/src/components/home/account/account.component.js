@@ -201,6 +201,14 @@ export class AccountDetailComponent extends React.Component {
               <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}>
                 <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device »'.toUpperCase()} </Text>
               </TouchableOpacity>
+
+              <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountMigrate') }}>
+                <Text style={accountStyle.accountRemoveButtonText}>{'MIGRATE WEB ACCOUNT »'.toUpperCase()} </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountSignIn') }}>
+                <Text style={accountStyle.accountRemoveButtonText}>{'SIGN IN USING MOBILE APP »'.toUpperCase()} </Text>
+              </TouchableOpacity>
             </View>}
 
             {this.state.subTab === SubTabs.authorized && <View style={accountStyle.contentSubTab}>
