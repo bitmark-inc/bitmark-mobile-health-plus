@@ -74,7 +74,7 @@ export class IssuanceOptionsComponent extends React.Component {
         });
       }).catch(error => {
         console.log('onChooseFile error :', error);
-        EventEmiterService.emit(EventEmiterService.events.error);
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
       });
     });
   }
