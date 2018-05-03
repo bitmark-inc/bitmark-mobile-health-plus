@@ -49,7 +49,7 @@ export class WebAccountMigrateComponent extends React.Component {
     this.setState({ step: STEPS.confirm });
     AppController.doMigrateWebAccount(scanData.data).catch(error => {
       console.log('doMigrateWebAccount error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'This account cannot be migrated now. Try again later.' });
     });
   }
 

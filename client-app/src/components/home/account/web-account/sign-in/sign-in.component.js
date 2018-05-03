@@ -23,7 +23,7 @@ export class WebAccountSignInComponent extends React.Component {
   onBarCodeRead(scanData) {
     AppController.doSignInOnWebApp(scanData.data).catch(error => {
       console.log('doSignInOnWebApp error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'Cannot sign in this Bitmark account. Please try again later.' });
     });
   }
 
