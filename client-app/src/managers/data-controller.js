@@ -584,6 +584,44 @@ const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer, ) => {
   return userData.activeIncompingTransferOffers;
 };
 
+const doIssueFile = async (touchFaceIdSession, filepath, assetName, metadatList, quantity) => {
+  let oldUserData = merge({}, userData);
+  let result = await BitmarkService.doIssueFile(touchFaceIdSession, filepath, assetName, metadatList, quantity);
+  await runGetLocalBitmarksInBackground();
+  if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+  }
+  return result;
+};
+
+const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
+  let oldUserData = merge({}, userData);
+  let result = await TransactionService.doTransferBitmark(touchFaceIdSession, bitmarkId, receiver);
+  await runGetActiveIncomingTransferOfferInBackground();
+  await runGetLocalBitmarksInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+  }
+  return result;
+};
+
+const doMigrateWebAccount = async (touchFaceIdSession, token) => {
+  let oldUserData = merge({}, userData);
+  let result = await BitmarkService.doMigrateWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
+  await runGetLocalBitmarksInBackground();
+  if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+  }
+  return result;
+};
+
+const doSignInOnWebApp = async (touchFaceIdSession, token) => {
+  return await BitmarkService.doSignInOnWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
+};
+
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers,
@@ -666,6 +704,10 @@ const DataController = {
   doAcceptTransferBitmark,
   doCancelTransferBitmark,
   doRejectTransferBitmark,
+  doIssueFile,
+  doTransferBitmark,
+  doMigrateWebAccount,
+  doSignInOnWebApp,
 
   getTransactionData,
   getUserBitmarks,

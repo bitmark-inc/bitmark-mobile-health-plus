@@ -8,7 +8,8 @@ import Camera from 'react-native-camera';
 import componentStyle from './sign-in.component.style';
 
 import defaultStyles from '../../../../../commons/styles';
-import { DataController } from '../../../../../managers';
+import { DataController, AppController } from '../../../../../managers';
+import { EventEmiterService } from '../../../../../services';
 
 export class WebAccountSignInComponent extends React.Component {
   constructor(props) {
@@ -20,7 +21,10 @@ export class WebAccountSignInComponent extends React.Component {
   }
 
   onBarCodeRead(scanData) {
-    console.log('scanData :', scanData);
+    AppController.doSignInOnWebApp(scanData.data).catch(error => {
+      console.log('doSignInOnWebApp error:', error);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+    });
   }
 
   render() {

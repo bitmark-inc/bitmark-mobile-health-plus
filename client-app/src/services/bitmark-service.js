@@ -164,7 +164,6 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) 
 };
 
 const doGetProvenance = async (bitmarkId, headId, status) => {
-  console.log('doGetProvenance :', bitmarkId, headId, status);
   let { provenance } = await BitmarkModel.doGetProvenance(bitmarkId);
   if (headId && status) {
     let isViewed = false;
@@ -181,6 +180,15 @@ const doGetProvenance = async (bitmarkId, headId, status) => {
   return provenance;
 };
 
+const doMigrateWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, token) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  return await BitmarkModel.doMigrateWebAccount(bitmarkAccountNumber, token, signatureData.timestamp, signatureData.signature);
+};
+const doSignInOnWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, token) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  return await BitmarkModel.doSignInOnWebAccount(bitmarkAccountNumber, token, signatureData.timestamp, signatureData.signature);
+}
+
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
@@ -191,6 +199,8 @@ let BitmarkService = {
   doGetBitmarkInformation,
   doGetTrackingBitmarks,
   doGetProvenance,
+  doMigrateWebAccount,
+  doSignInOnWebAccount,
 };
 
 export { BitmarkService };

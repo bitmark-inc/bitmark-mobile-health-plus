@@ -9,7 +9,8 @@ import componentStyle from './migrate.component.style';
 
 import defaultStyles from '../../../../../commons/styles';
 // import { config } from '../../../../../configs/index';
-import { DataController } from '../../../../../managers';
+import { DataController, AppController } from '../../../../../managers';
+import { EventEmiterService } from '../../../../../services';
 
 // import {
 //   ios,
@@ -46,6 +47,10 @@ export class WebAccountMigrateComponent extends React.Component {
   onBarCodeRead(scanData) {
     console.log('scanData :', scanData);
     this.setState({ step: STEPS.confirm });
+    AppController.doMigrateWebAccount(scanData.data).catch(error => {
+      console.log('doMigrateWebAccount error:', error);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+    });
   }
 
   render() {
