@@ -361,11 +361,10 @@ const doGetAllTrackingBitmark = async (bitmarkAccount) => {
   });
 };
 
-const doMigrateWebAccount = async (bitmarkAccount, token, timestamp, signature) => {
+const doConfirmWebAccount = async (bitmarkAccount, code, timestamp, signature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    // sTODO
-    let bitmarkUrl = config.web_account_server_url + `/api/migrate`;
+    let bitmarkUrl = config.web_account_server_url + `/s/api/mobile/confirmations`;
     fetch(bitmarkUrl, {
       method: 'POST',
       headers: {
@@ -375,37 +374,7 @@ const doMigrateWebAccount = async (bitmarkAccount, token, timestamp, signature) 
         timestamp,
         signature,
       },
-      body: JSON.stringify({ token })
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode < 400) {
-        return response.json();
-      }
-      return response.text();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error(`doGetAllTrackingBitmark error :` + JSON.stringify(data)));
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-}
-
-const doSignInOnWebAccount = async (bitmarkAccount, token, timestamp, signature) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    // sTODO
-    let bitmarkUrl = config.web_account_server_url + `/api/sign-in`;
-    fetch(bitmarkUrl, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        requester: bitmarkAccount,
-        timestamp,
-        signature,
-      },
-      body: JSON.stringify({ token })
+      body: JSON.stringify({ code })
     }).then((response) => {
       statusCode = response.status;
       if (statusCode < 400) {
@@ -438,8 +407,7 @@ let BitmarkModel = {
   doAddTrackinBitmark,
   doStopTrackingBitmark,
   doGetAllTrackingBitmark,
-  doMigrateWebAccount,
-  doSignInOnWebAccount,
+  doConfirmWebAccount,
 };
 
 export { BitmarkModel };

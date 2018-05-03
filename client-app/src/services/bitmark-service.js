@@ -182,14 +182,10 @@ const doGetProvenance = async (bitmarkId, headId, status) => {
   return provenance;
 };
 
-const doMigrateWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, token) => {
+const doConfirmWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, token) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  return await BitmarkModel.doMigrateWebAccount(bitmarkAccountNumber, token, signatureData.timestamp, signatureData.signature);
+  return await BitmarkModel.doConfirmWebAccount(bitmarkAccountNumber, token, signatureData.timestamp, signatureData.signature);
 };
-const doSignInOnWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, token) => {
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  return await BitmarkModel.doSignInOnWebAccount(bitmarkAccountNumber, token, signatureData.timestamp, signatureData.signature);
-}
 
 // ================================================================================================
 // ================================================================================================
@@ -201,8 +197,7 @@ let BitmarkService = {
   doGetBitmarkInformation,
   doGetTrackingBitmarks,
   doGetProvenance,
-  doMigrateWebAccount,
-  doSignInOnWebAccount,
+  doConfirmWebAccount,
 };
 
 export { BitmarkService };

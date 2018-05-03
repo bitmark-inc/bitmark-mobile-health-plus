@@ -610,7 +610,7 @@ const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
 
 const doMigrateWebAccount = async (touchFaceIdSession, token) => {
   let oldUserData = merge({}, userData);
-  let result = await BitmarkService.doMigrateWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
+  let result = await BitmarkService.doConfirmWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
   await runGetLocalBitmarksInBackground();
   if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
@@ -619,7 +619,7 @@ const doMigrateWebAccount = async (touchFaceIdSession, token) => {
 };
 
 const doSignInOnWebApp = async (touchFaceIdSession, token) => {
-  return await BitmarkService.doSignInOnWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
+  return await BitmarkService.doConfirmWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
 };
 
 const getTransactionData = () => {
