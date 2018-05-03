@@ -159,7 +159,7 @@ const doGetAssetAccessibility = (assetId) => {
       if (statusCode >= 400) {
         return reject(new Error('getAssetInfo error :' + JSON.stringify(data)));
       }
-      resolve(data.asset);
+      resolve(data);
     }).catch(reject);
   });
 };
