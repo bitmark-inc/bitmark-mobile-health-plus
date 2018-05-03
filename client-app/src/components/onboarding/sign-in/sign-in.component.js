@@ -18,7 +18,7 @@ let PreCheckResults = {
 };
 
 // madelena testnet
-// let testWords = ["account", "pulse", "disease", "funny", "sound", "aim", "rice", "ozone", "clay", "skate", "garbage", "bottom", "credit", "club", "easily", "lumber", "song", "noodle", "gaze", "duty", "enable", "butter", "citizen", "cradle",];
+// let testWords = ["acid", "dinner", "west", "satisfy", "ranch", "include", "remove", "vanish", "visual", "shift", "delay", "spot", "table", "feed", "volume", "oblige", "crisp", "bracket", "acoustic", "nurse", "where", "wreck", "fly", "marriage",];
 // madelena livenet
 // let testWords = ["absent", "ostrich", "injury", "pill", "episode", "permit", "endless", "happy", "thing", "devote", "robust", "earth", "punch", "robot", "jelly", "demand", "topple", "diamond", "climb", "turn", "reveal", "suspect", "fat", "assault",];
 
