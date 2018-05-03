@@ -12,6 +12,7 @@ import defaultStyle from './../../../../../commons/styles';
 import { AppController, DataController } from '../../../../../managers';
 import { EventEmiterService } from '../../../../../services';
 import { BottomTabsComponent } from '../../../bottom-tabs/bottom-tabs.component';
+import { FileUtil } from '../../../../../utils';
 
 export class IssuanceOptionsComponent extends React.Component {
   constructor(props) {
@@ -71,9 +72,14 @@ export class IssuanceOptionsComponent extends React.Component {
     });
   }
 
-  prepareToIssue(response) {
+  async prepareToIssue(response) {
     let filePath = response.uri.replace('file://', '');
     filePath = decodeURIComponent(filePath);
+
+    // Move file from "tmp" folder to "cache" folder
+    let destPath = FileUtil.CacheDirectory + '/' + response.fileName;
+    await FileUtil.moveFileSafe(filePath, destPath);
+    filePath = destPath;
 
     let fileName = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
     let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
