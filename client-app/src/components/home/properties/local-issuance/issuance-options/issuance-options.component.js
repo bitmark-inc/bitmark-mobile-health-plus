@@ -84,13 +84,17 @@ export class IssuanceOptionsComponent extends React.Component {
     let fileName = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
     let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
     AppController.doCheckFileToIssue(filePath).then(asset => {
+      if (asset && asset.registrant && asset.accessibility === 'public') {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'The file has already been registered as public in the Bitmark blockchain. We will soon be able to support issuing more bitmarks for this public asset in the mobile app.' });
+        return;
+      }
       this.props.screenProps.homeNavigation.navigate('LocalIssueFile', {
         filePath, fileName, fileFormat, asset,
         fingerprint: asset.fingerprint
       });
     }).catch(error => {
       console.log('onChooseFile error :', error);
-      EventEmiterService.emit(EventEmiterService.events.error);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
     });
   }
 
