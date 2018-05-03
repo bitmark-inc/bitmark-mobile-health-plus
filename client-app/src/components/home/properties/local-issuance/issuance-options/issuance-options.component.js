@@ -60,7 +60,7 @@ export class IssuanceOptionsComponent extends React.Component {
       let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
       AppController.doCheckFileToIssue(filePath).then(asset => {
         if (asset && asset.registrant && asset.accessibility === 'public') {
-          EventEmiterService.emit(EventEmiterService.events.error, { message: 'This file is already registered as public asset. Mobile app does not support issuing public asset at the moment.' });
+          EventEmiterService.emit(EventEmiterService.events.error, { message: 'The file has already been registered as public in the Bitmark blockchain. We will soon be able to support issuing more bitmarks for this public asset in the mobile app.' });
           return;
         }
         let existingAsset = !!(asset && asset.registrant);
