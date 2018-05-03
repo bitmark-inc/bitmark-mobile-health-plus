@@ -140,6 +140,31 @@ const doGetAssetInformation = (assetId) => {
   });
 };
 
+const doGetAssetAccessibility = (assetId) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    fetch(config.api_server_url + `/v2/assets/${assetId}/info`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode === 404) {
+        return resolve();
+      }
+      if (statusCode >= 400) {
+        return reject(new Error('getAssetInfo error :' + JSON.stringify(data)));
+      }
+      resolve(data.asset);
+    }).catch(reject);
+  });
+};
+
+
 const doPrepareAssetInfo = async (filePath) => {
   return await BitmarkSDK.getAssetInfo(filePath);
 };
@@ -408,6 +433,7 @@ let BitmarkModel = {
   getTransactionDetail,
   getAllTransactions,
   getListBitmarks,
+  doGetAssetAccessibility,
 
   doAddTrackinBitmark,
   doStopTrackingBitmark,

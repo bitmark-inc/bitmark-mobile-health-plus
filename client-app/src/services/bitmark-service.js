@@ -77,6 +77,8 @@ const doCheckFileToIssue = async (filePath) => {
   if (!assetInformation) {
     return assetInfo;
   } else {
+    let accessibilityData = await BitmarkModel.doGetAssetAccessibility(assetInfo.id);
+    assetInformation.accessibility = accessibilityData.accessibility;
     return assetInformation;
   }
 };

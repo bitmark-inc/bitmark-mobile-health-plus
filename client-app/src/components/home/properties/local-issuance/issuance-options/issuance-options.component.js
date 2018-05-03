@@ -59,6 +59,10 @@ export class IssuanceOptionsComponent extends React.Component {
       let fileName = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
       let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
       AppController.doCheckFileToIssue(filePath).then(asset => {
+        if (asset && asset.registrant && asset.accessibility === 'public') {
+          EventEmiterService.emit(EventEmiterService.events.error, { message: 'This file is already registered as public asset. Mobile app does not support issuing public asset at the moment.' });
+          return;
+        }
         let existingAsset = !!(asset && asset.registrant);
         let metadataList = [];
         if (existingAsset) {
