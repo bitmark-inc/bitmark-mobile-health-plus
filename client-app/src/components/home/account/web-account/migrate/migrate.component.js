@@ -52,8 +52,8 @@ export class WebAccountMigrateComponent extends React.Component {
 
   onConfirmMigration() {
     AppController.doMigrateWebAccount(this.state.token).then(result => {
-      if (!result) {
-        this.setState({ step: STEPS.done });
+      if (result) {
+        this.setState({ step: STEPS.done, email: result.email });
       }
     }).catch(error => {
       console.log('doMigrateWebAccount error:', error);
