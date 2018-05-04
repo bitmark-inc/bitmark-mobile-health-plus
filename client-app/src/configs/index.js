@@ -66,5 +66,9 @@ export { config, ios, android };
 // ├────────────┼──────────────────────────────────────────────────────────────────┤
 // │ Staging    │ H0VznPOIIkUc31GdXzWi5vSAifvk5247aad0-6cc3-4dd7-b247-c76a433163da │
 // └────────────┴──────────────────────────────────────────────────────────────────┘
-// code-push release-react Bitmark ios -m --description "update code" [--targetBinaryVersion "~1.1.1]"
+// https://microsoft.github.io/code-push/docs/cli.html#link-6
+// code-push app add Bitmark ios react-native
+// code-push release-react Bitmark ios 
+// code-push release-react Bitmark ios -d Production
+// code-push release-react Bitmark ios -d Production -m --description "update code" [--targetBinaryVersion "~1.1.1]"
 // 
