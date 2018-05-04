@@ -1,5 +1,7 @@
 import moment from 'moment';
 import { union } from 'lodash';
+import DeviceInfo from 'react-native-device-info';
+
 import {
   DonationModel,
   CommonModel,
@@ -326,6 +328,10 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
       dateRange.endDate,
       randomString({ length: 8, numeric: true, letters: false, })
     );
+
+    let deviceName = DeviceInfo.getDeviceName();
+    let deviceId = DeviceInfo.getDeviceId();
+    tempData.data = tempData.data.replace(new RegExp(deviceName, 'g'), deviceId);
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, tempData.date, tempData.data, tempData.randomId);
     let format = 'YYYY MMM DD HH:mm:ss';
     let extra = {
