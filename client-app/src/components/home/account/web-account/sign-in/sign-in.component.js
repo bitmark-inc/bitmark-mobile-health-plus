@@ -21,9 +21,15 @@ export class WebAccountSignInComponent extends React.Component {
   }
 
   onBarCodeRead(scanData) {
-    AppController.doSignInOnWebApp(scanData.data).catch(error => {
+    this.cameraRef.stopPreview();
+    AppController.doSignInOnWebApp(scanData.data).then((result) => {
+      if (result) {
+        this.props.navigation.goBack();
+      }
+    }).catch(error => {
       console.log('doSignInOnWebApp error:', error);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'Cannot sign in this Bitmark account. Please try again later.' });
+      this.props.navigation.goBack();
     });
   }
 
@@ -38,7 +44,7 @@ export class WebAccountSignInComponent extends React.Component {
       </View>
       <View style={componentStyle.bodyContent}>
         <Text style={componentStyle.scanMessage}>Visit https://a.bitmark.com. Click ”SIGN IN WITH MOBILE APP” and then scan the QR code.</Text>
-        <Camera style={componentStyle.scanCamera} aspect={Camera.constants.Aspect.fill} onBarCodeRead={this.onBarCodeRead.bind(this)} />
+        <Camera ref={(ref) => this.cameraRef = ref} style={componentStyle.scanCamera} aspect={Camera.constants.Aspect.fill} onBarCodeRead={this.onBarCodeRead.bind(this)} />
       </View>
     </View>);
   }
