@@ -34,6 +34,7 @@ export class WebAccountMigrateComponent extends React.Component {
     this.state = {
       step: STEPS.scan,
       userInformation: DataController.getUserInformation(),
+      token: '',
     };
   }
 
@@ -46,8 +47,15 @@ export class WebAccountMigrateComponent extends React.Component {
   }
   onBarCodeRead(scanData) {
     console.log('scanData :', scanData);
-    this.setState({ step: STEPS.confirm });
-    AppController.doMigrateWebAccount(scanData.data).catch(error => {
+    this.setState({ step: STEPS.confirm, token: scanData.data });
+  }
+
+  onConfirmMigration() {
+    AppController.doMigrateWebAccount(this.state.token).then(result => {
+      if (!result) {
+        this.setState({ step: STEPS.done });
+      }
+    }).catch(error => {
       console.log('doMigrateWebAccount error:', error);
       EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'This account cannot be migrated now. Try again later.' });
     });
@@ -75,9 +83,7 @@ export class WebAccountMigrateComponent extends React.Component {
           <Text style={componentStyle.comfirmAccountNumber}>{this.state.userInformation.bitmarkAccountNumber}</Text>
           <Text style={componentStyle.comfirmMessageText}>on your mobile device.</Text>
         </View>
-        <TouchableOpacity style={componentStyle.comfirmButton} onPress={() => {
-          this.setState({ step: STEPS.done });
-        }}>
+        <TouchableOpacity style={componentStyle.comfirmButton} onPress={this.onConfirmMigration.bind(this)}>
           <Text style={componentStyle.comfirmButtonText}>CONFIRM</Text>
         </TouchableOpacity>
       </View>}
