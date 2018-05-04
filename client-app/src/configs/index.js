@@ -23,7 +23,7 @@ let config = {
   ifttt_invite_url: 'https://ifttt.com/features/redeem?code=10403-fa99108249f426f459a2e1033ddfbbb5',
   ifttt_bitmark_service_url: 'https://ifttt.com/bitmarkdevel',
   ifttt_bitmark_service_settings_url: "https://ifttt.com/services/bitmarkdevel/settings",
-  web_account_server_url: '',
+  web_account_server_url: 'http://192.168.0.109:8900',
 };
 
 if (config.network === NETWORKS.testnet) {
@@ -34,7 +34,8 @@ if (config.network === NETWORKS.testnet) {
   config.ifttt_invite_url = 'https://ifttt.com/features/redeem?code=10518-3f2950b543e7a5a2dc307de0c05775e4';
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmarktest';
   config.ifttt_bitmark_service_settings_url = "https://ifttt.com/services/bitmarktest/settings";
-  config.web_account_server_url = "https://account.test.bitmark.com";
+  // config.web_account_server_url = "https://account.test.bitmark.com";
+  config.web_account_server_url = "http://192.168.0.109:8900";
 } else if (config.network === NETWORKS.livenet) {
   config.bitmark_network = NETWORKS.livenet;
   config.api_server_url = 'https://api.bitmark.com';
