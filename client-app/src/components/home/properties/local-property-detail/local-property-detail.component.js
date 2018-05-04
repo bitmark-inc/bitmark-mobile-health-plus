@@ -155,7 +155,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
             </TouchableOpacity>
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
-              Clipboard.setString(this.state.bitmark.bitmark_id);
+              Clipboard.setString(this.state.bitmark.id);
               this.setState({ copied: true });
               setTimeout(() => { this.setState({ copied: false }) }, 1000);
             }}>
