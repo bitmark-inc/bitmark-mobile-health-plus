@@ -101,7 +101,7 @@ export class TransactionsComponent extends React.Component {
           key: actionRequired.length,
           transferOffer: item,
           type: ActionTypes.transfer,
-          typeTitle: 'Property Transfer Request',
+          typeTitle: 'OWNERSHIP TRANSFER REQUEST ',
           timestamp: moment(item.created_at),
         });
       });
@@ -113,7 +113,7 @@ export class TransactionsComponent extends React.Component {
       (donationInformation.todoTasks || []).forEach(item => {
         item.key = actionRequired.length;
         item.type = ActionTypes.donation;
-        item.typeTitle = item.study ? 'DONATION Request' : 'Property ISSUANCE Request';
+        item.typeTitle = item.study ? 'DONATION Request' : 'ISSUANCE Request';
         item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null);
         actionRequired.push(item);
       });
@@ -124,7 +124,7 @@ export class TransactionsComponent extends React.Component {
       ifttInformation.bitmarkFiles.forEach(item => {
         item.key = actionRequired.length;
         item.type = ActionTypes.ifttt;
-        item.typeTitle = 'Property ISSUANCE Request';
+        item.typeTitle = 'ISSUANCE Request';
         item.timestamp = item.assetInfo.timestamp;
         actionRequired.push(item);
       });
@@ -411,9 +411,11 @@ export class TransactionsComponent extends React.Component {
                       <Text style={transactionsStyle.transferOfferTitleTime} >{moment(item.timestamp).format('YYYY MMM DD').toUpperCase()}</Text>
                       <Image style={transactionsStyle.transferOfferTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                     </View>
-                    {item.type === ActionTypes.transfer && <Text style={transactionsStyle.transferOfferContent}>Sign to accept the property
-                        <Text style={transactionsStyle.transferOfferAssetName}> {item.transferOffer.asset.name} </Text>transfer request.
-                      </Text>}
+
+                    {item.type === ActionTypes.transfer && <View style={transactionsStyle.iftttTask}>
+                      <Text style={transactionsStyle.iftttTitle}>{item.transferOffer.asset.name}</Text>
+                      <Text style={transactionsStyle.iftttDescription}>Sign your bitmark transfer.</Text>
+                    </View>}
 
                     {item.type === ActionTypes.donation && <View style={transactionsStyle.donationTask}>
                       <Text style={transactionsStyle.donationTaskTitle} >{item.title + (item.number > 1 ? ` (${item.number})` : '')}</Text>
