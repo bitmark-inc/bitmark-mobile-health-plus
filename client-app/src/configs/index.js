@@ -35,7 +35,6 @@ if (config.network === NETWORKS.testnet) {
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmarktest';
   config.ifttt_bitmark_service_settings_url = "https://ifttt.com/services/bitmarktest/settings";
   config.web_account_server_url = "https://account.test.bitmark.com";
-  // config.web_account_server_url = "http://192.168.0.109:8900";
 } else if (config.network === NETWORKS.livenet) {
   config.bitmark_network = NETWORKS.livenet;
   config.api_server_url = 'https://api.bitmark.com';
