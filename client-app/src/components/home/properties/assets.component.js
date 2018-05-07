@@ -40,7 +40,7 @@ export class AssetsComponent extends React.Component {
       accountNumber: '',
       copyText: 'COPY',
       assets,
-      existNew: (assets || []).findIndex(asset => !asset.isViewed) >= 0,
+      existNewAsset: (assets || []).findIndex(asset => !asset.isViewed) >= 0,
       trackingBitmarks,
       existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
       isLoadingData: DataController.isLoadingData(),
@@ -131,7 +131,7 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                {this.state.existNew && <View style={{
+                {this.state.existNewAsset && <View style={{
                   backgroundColor: '#0060F2',
                   width: 10, height: 10,
                   position: 'absolute', left: 9,
