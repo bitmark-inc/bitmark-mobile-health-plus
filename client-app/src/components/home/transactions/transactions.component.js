@@ -113,7 +113,7 @@ export class TransactionsComponent extends React.Component {
       (donationInformation.todoTasks || []).forEach(item => {
         item.key = actionRequired.length;
         item.type = ActionTypes.donation;
-        item.typeTitle = item.study ? 'Property DONATION Request' : 'Property ISSUANCE Request';
+        item.typeTitle = item.study ? 'DONATION Request' : 'Property ISSUANCE Request';
         item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null);
         actionRequired.push(item);
       });
@@ -398,7 +398,7 @@ export class TransactionsComponent extends React.Component {
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             {this.state.actionRequired && this.state.actionRequired.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO ACTIONS REQUIRED.</Text>
-              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where you will receive any requests that require your signature.</Text>
+              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where you will receive authorization requests.</Text>
             </View>}
 
             {this.state.actionRequired && this.state.actionRequired.length > 0 && <View style={transactionsStyle.contentSubTab}>
@@ -450,7 +450,7 @@ export class TransactionsComponent extends React.Component {
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             {this.state.completed && this.state.completed.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY.</Text>
-              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where your history of completed transaction will be stored.</Text>
+              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>Your transaction history will be available here.</Text>
             </View>}
             {this.state.completed && this.state.completed.length > 0 && <View style={transactionsStyle.contentSubTab}>
               <FlatList data={this.state.completed.slice(0, Math.min(this.state.lengthDisplayCompleted, this.state.completed.length))}
