@@ -304,7 +304,7 @@ const doMigrateWebAccount = async (token) => {
 };
 
 const doSignInOnWebApp = async (token) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to sign-in.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to sign in.');
   if (!touchFaceIdSession) {
     return null;
   }
