@@ -113,6 +113,10 @@ export class AssetsComponent extends React.Component {
   }
 
   render() {
+    let totalBitmark = 0;
+    if (this.state.assets && this.state.assets.length > 0) {
+      this.state.assets.forEach(asset => totalBitmark += asset.bitmarks.length);
+    }
     return (
       <View style={assetsStyle.body}>
         <View style={[assetsStyle.header, { zIndex: 1 }]}>
@@ -137,7 +141,7 @@ export class AssetsComponent extends React.Component {
                   position: 'absolute', left: 9,
                   borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
                 }}></View>}
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({totalBitmark})</Text>
               </View>
             </View>
           </TouchableOpacity>}

@@ -20,8 +20,6 @@ const doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
   if (data && data.bitmarks && data.assets) {
     for (let bitmark of data.bitmarks) {
       bitmark.bitmark_id = bitmark.id;
-      let { provenance } = await BitmarkModel.doGetProvenance(bitmark.id);
-      bitmark.provenance = provenance;
       bitmark.isViewed = false;
       if (bitmark.owner === bitmarkAccountNumber) {
         let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
