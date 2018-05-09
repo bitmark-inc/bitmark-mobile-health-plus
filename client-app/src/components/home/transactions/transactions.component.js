@@ -94,6 +94,7 @@ export class TransactionsComponent extends React.Component {
   componentWillUnmount() {
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction, 'TransactionsComponent');
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions, 'TransactionsComponent');
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, 'TransactionsComponent');
     EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, 'TransactionsComponent');
     EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, 'TransactionsComponent');
   }
@@ -225,7 +226,7 @@ export class TransactionsComponent extends React.Component {
     generateDataStore.actionRequired = actionRequired;
     generateDataStore.completed = completed;
     this.setState({
-      donationInformation,
+      donationInformation, actionRequired, completed,
       isLoadingData: DataController.isLoadingData(),
     });
   }
