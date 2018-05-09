@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image, ActivityIndicator,
+  Alert,
 } from 'react-native';
 import moment from 'moment';
 
@@ -336,7 +337,30 @@ export class TransactionsComponent extends React.Component {
   }
 
   acceptAllTransfers() {
+    let transferOffers = [];
+    for (let item in this.state.acceptAllTransfers) {
+      if (item.type === ActionTypes.transfer) {
+        transferOffers.push(item.transferOffer);
+      }
+    }
 
+    Alert.alert('Sign All the Ownership Transfer Requests', `Accept “${transferOffers.length}” properties ownership transfer. `, [{
+      text: 'Cancel', style: 'cancel',
+    }, {
+      text: 'Yes',
+      onPress: () => {
+        AppController.acceptAllTransfers(transferOffers, { indicator: true, }, {
+          indicator: false, title: 'Acceptance Submitted', message: 'Your signature for the transfer requests have been successfully submitted to the Bitmark network.'
+        }, { indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.' }, result => {
+          if (result) {
+            DataController.doReloadIncommingTransferOffers();
+          }
+        }).catch(error => {
+          console.log('acceptAllTransfers error:', error);
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+        });
+      }
+    }]);
   }
 
   render() {

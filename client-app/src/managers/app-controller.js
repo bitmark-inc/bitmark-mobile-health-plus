@@ -169,6 +169,14 @@ const doAcceptTransferBitmark = async (transferOffer, processingInfo, successInf
   return await submitting(DataController.doAcceptTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
 };
 
+const acceptAllTransfers = async (transferOffers, processingInfo, successInfo, errorInfo) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  return await submitting(DataController.acceptAllTransfers(touchFaceIdSession, transferOffers), processingInfo, successInfo, errorInfo);
+};
+
 const doCancelTransferBitmark = async (transferOfferId) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouceSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
   if (!touchFaceIdSession) {
@@ -332,6 +340,7 @@ let AppController = {
   doGetTransferOfferDetail,
   doTransferBitmark,
   doAcceptTransferBitmark,
+  acceptAllTransfers,
   doRejectTransferBitmark,
   doCancelTransferBitmark,
   doRequirePermission,

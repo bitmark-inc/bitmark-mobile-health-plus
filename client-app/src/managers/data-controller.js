@@ -280,6 +280,21 @@ const doReloadUserData = async () => {
   EventEmiterService.emit(EventEmiterService.events.APP_LOADING_DATA, isLoadingData);
 };
 
+const doReloadIncommingTransferOffers = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetActiveIncomingTransferOfferInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+
+};
+const doReloadDonationInformation = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetDonationInformationInBackground();
+  if (JSON.stringify(userData.donationInformation) !== JSON.stringify(oldUserData.donationInformation)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
 // ================================================================================================================================================
 // ================================================================================================================================================
 let dataInterval = null;
@@ -563,6 +578,9 @@ const doAcceptTransferBitmark = async (touchFaceIdSession, transferOffer) => {
   }
   return userData.activeIncompingTransferOffers;
 };
+const acceptAllTransfers = async () => {
+  //TODO
+};
 
 const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
   let oldUserData = merge({}, userData);
@@ -683,7 +701,8 @@ const DataController = {
   doLogout,
   doStartBackgroundProcess,
   doReloadUserData,
-  doReloadDonationInformation: runGetDonationInformationInBackground,
+  doReloadIncommingTransferOffers,
+  doReloadDonationInformation,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,
@@ -702,6 +721,7 @@ const DataController = {
   doRevokeIftttToken,
   doIssueIftttData,
   doAcceptTransferBitmark,
+  acceptAllTransfers,
   doCancelTransferBitmark,
   doRejectTransferBitmark,
   doIssueFile,
