@@ -39,10 +39,17 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(newAccountFrom24Words::)
-  func newAccountFrom24Words(_ pharse: [String], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(newAccountFrom24Words:::)
+  func newAccountFrom24Words(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
+      let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(recoverPhrase: pharse)
+      
+      if account.accountNumber.network != network {
+        callback([false])
+        return
+      }
+      
       try KeychainUtil.saveCore(account.core)
       _ = try account.registerPublicEncryptionKey()
       let sessionId = AccountSession.shared.addSessionForAccount(account)
@@ -60,10 +67,17 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(try24Words::)
-  func try24Words(_ pharse: [String], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(try24Words:::)
+  func try24Words(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
+      let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(recoverPhrase: pharse)
+      
+      if account.accountNumber.network != network {
+        callback([false])
+        return
+      }
+
       callback([true, account.accountNumber.string])
     }
     catch let e {

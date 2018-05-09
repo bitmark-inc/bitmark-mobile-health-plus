@@ -6,7 +6,7 @@ const doCreateAccount = async () => {
 };
 
 const doLogin = async (pharse24Words) => {
-  return await BitmarkSDK.newAccountFrom24Words(pharse24Words);
+  return await BitmarkSDK.newAccountFrom24Words(pharse24Words, config.bitmark_network);
 }
 
 const doGetCurrentAccount = async (touchFaceIdSession) => {
@@ -14,7 +14,7 @@ const doGetCurrentAccount = async (touchFaceIdSession) => {
 };
 
 const doCheck24Words = async (pharse24Words) => {
-  return await BitmarkSDK.try24Words(pharse24Words);
+  return await BitmarkSDK.try24Words(pharse24Words, config.bitmark_network);
 };
 
 const doLogout = async () => {
