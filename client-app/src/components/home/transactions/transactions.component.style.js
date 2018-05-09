@@ -226,6 +226,20 @@ export default StyleSheet.create({
     marginLeft: convertWidth(15),
     fontFamily: 'Andale Mono',
     fontSize: 13,
-  }
+  },
 
+  acceptAllTransfersButton: {
+    width: '100%',
+    height: 38,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F2FAFF'
+  },
+  acceptAllTransfersButtonText: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 14,
+    color: '#0060F2'
+  },
 });

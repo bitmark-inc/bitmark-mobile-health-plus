@@ -39,7 +39,7 @@ export class TransactionsComponent extends React.Component {
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
     this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
-
+    this.acceptAllTransfers = this.acceptAllTransfers.bind(this);
     this.clickToActionRequired = this.clickToActionRequired.bind(this);
     this.generateData = this.generateData.bind(this);
     this.clickToCompleted = this.clickToCompleted.bind(this);
@@ -335,6 +335,10 @@ export class TransactionsComponent extends React.Component {
     }
   }
 
+  acceptAllTransfers() {
+
+  }
+
   render() {
     return (
       <View style={transactionsStyle.body}>
@@ -444,7 +448,11 @@ export class TransactionsComponent extends React.Component {
             </View>}
           </TouchableOpacity>
         </ScrollView>}
-
+        {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length > 0
+          && (this.state.actionRequired.findIndex(item => item.type === ActionTypes.transfer) >= 0) && <TouchableOpacity style={transactionsStyle.acceptAllTransfersButton} onPress={this.acceptAllTransfers} >
+            <Text style={transactionsStyle.acceptAllTransfersButtonText}>SIGN ALL OWNERSHIP TRANSFER REQUESTS</Text>
+          </TouchableOpacity>
+        }
         {this.state.subTab === SubTabs.completed && <ScrollView style={[transactionsStyle.scrollSubTabArea]}
           onScroll={(scrollEvent) => {
             if (!this.spaceNeedLoadActionCompleted) {
