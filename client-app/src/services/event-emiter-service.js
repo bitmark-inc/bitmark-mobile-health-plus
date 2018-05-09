@@ -19,9 +19,6 @@ let EventEmiterService = {
     CHANGE_USER_DATA_IFTTT_INFORMATION: 'change-user-data:ifttt-information',
   },
   on: (eventName, func, extra) => {
-    if (extra && EventEmiterService.event_extra[eventName] && EventEmiterService.event_extra[eventName][extra]) {
-      return;
-    }
     if (extra && (!EventEmiterService.event_extra[eventName] || !EventEmiterService.event_extra[eventName][extra])) {
       if (!EventEmiterService.event_extra[eventName]) {
         EventEmiterService.event_extra[eventName] = {};
