@@ -1,3 +1,4 @@
+import DeviceInfo from 'react-native-device-info';
 import { iosConfig, iosConstant } from './ios/ios.config';
 import { androidConfig, androidConstant } from './android/android.config';
 
@@ -5,10 +6,13 @@ let NETWORKS = {
   devnet: 'devnet',
   testnet: 'testnet',
   livenet: 'livenet',
-}
+};
+
+let network = NETWORKS.livenet;
+network = DeviceInfo.getBundleId() === 'com.bitmark.bitmarkios.development' ? NETWORKS.testnet : network;
+
 let config = {
-  network: NETWORKS.testnet,
-  // network: NETWORKS.devnet,
+  network,
 
   NETWORKS,
   bitmark_network: NETWORKS.testnet,
