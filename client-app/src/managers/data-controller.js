@@ -578,8 +578,16 @@ const doAcceptTransferBitmark = async (touchFaceIdSession, transferOffer) => {
   }
   return userData.activeIncompingTransferOffers;
 };
-const acceptAllTransfers = async () => {
-  //TODO
+const acceptAllTransfers = async (touchFaceIdSession, transferOffers) => {
+  let oldUserData = merge({}, userData);
+  for (let transferOffer of transferOffers) {
+    await TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer);
+  }
+  await runGetActiveIncomingTransferOfferInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  return userData.activeIncompingTransferOffers;
 };
 
 const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
