@@ -62,7 +62,7 @@ const getListBitmarks = (bitmarkIds) => {
   return new Promise((resolve, reject) => {
     if (bitmarkIds && bitmarkIds.length > 0) {
       bitmarkIds.forEach(bitmarkId => {
-        queryString += queryString ? `&bitmark_ids=${bitmarkId}` : `?bitmark_ids=${bitmarkId}`;
+        queryString += queryString ? `&bitmark_ids=${bitmarkId}` : `?bitmark_ids=${bitmarkId}&pending=true`;
       });
     }
     if (!queryString) {
