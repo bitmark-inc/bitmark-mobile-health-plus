@@ -19,6 +19,7 @@ import { FullComponent } from '../../commons/components';
 
 const MainTabs = BottomTabsComponent.MainTabs;
 
+let ComponentName = 'UserComponent';
 export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -26,6 +27,9 @@ export class UserComponent extends React.Component {
     this.reloadUserData = this.reloadUserData.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
+
+    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, null, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, null, ComponentName);
 
     let subTab;
     let mainTab = MainTabs.properties;
@@ -50,13 +54,13 @@ export class UserComponent extends React.Component {
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
-    EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData);
+    EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
-    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData);
+    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
   }
 
   reloadUserData() {

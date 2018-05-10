@@ -36,6 +36,9 @@ let EventEmiterService = {
     NativeAppEventEmitter.emit(eventName, data);
   },
   remove: (eventName, func, extra) => {
+    if (extra && EventEmiterService.event_extra[eventName] && EventEmiterService.event_extra[eventName][extra]) {
+      delete EventEmiterService.event_extra[eventName][extra];
+    }
     if (!func) {
       NativeAppEventEmitter.removeAllListeners(eventName + (extra || ''));
     } else {

@@ -18,6 +18,7 @@ import { EventEmiterService } from '../../../../services';
 import { config } from '../../../../configs';
 import { DataController } from '../../../../managers/data-controller';
 
+let ComponentName = 'LocalPropertyDetailComponent';
 export class LocalPropertyDetailComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -25,6 +26,8 @@ export class LocalPropertyDetailComponent extends React.Component {
     this.clickOnProvenance = this.clickOnProvenance.bind(this);
     this.changeTrackingBitmark = this.changeTrackingBitmark.bind(this);
     this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
+
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, null, ComponentName);
 
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
@@ -60,11 +63,11 @@ export class LocalPropertyDetailComponent extends React.Component {
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
   }
 
   handerChangeTrackingBitmarks() {

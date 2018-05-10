@@ -11,12 +11,16 @@ import { AppController, DataController } from '../../../../managers';
 import { FullComponent } from '../../../../commons/components';
 import { EventEmiterService } from '../../../../services';
 
+let ComponentName = 'IftttActiveComponent';
 export class IftttActiveComponent extends React.Component {
   constructor(props) {
     super(props);
     this.onMessage = this.onMessage.bind(this);
     this.onNavigationStateChange = this.onNavigationStateChange.bind(this);
     this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
+
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, null, ComponentName);
+
     let stage;
     if (this.props.navigation.state && this.props.navigation.state.params) {
       stage = this.props.navigation.state.params.stage;
@@ -34,10 +38,10 @@ export class IftttActiveComponent extends React.Component {
 
   // ==========================================================================================
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
   }
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
   }
   // ==========================================================================================
   handerIftttInformationChange() {
