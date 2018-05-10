@@ -170,9 +170,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               }]}>TRANSFER</Text>
             </TouchableOpacity> */}
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={this.changeTrackingBitmark}>
-              <Text style={[propertyDetailStyle.topButtonText, {
-                color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
-              }]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK'}</Text>
+              <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK'}</Text>
             </TouchableOpacity>
 
           </View>}
