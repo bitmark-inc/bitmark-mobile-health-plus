@@ -280,6 +280,22 @@ const doReloadUserData = async () => {
   EventEmiterService.emit(EventEmiterService.events.APP_LOADING_DATA, isLoadingData);
 };
 
+const doReloadDonationInformation = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetDonationInformationInBackground();
+  if (JSON.stringify(userData.donationInformation) !== JSON.stringify(oldUserData.donationInformation)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
+
+const doReloadTrackingBitmark = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetTrackingBitmarksInBackground();
+  if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
+  }
+};
+
 // ================================================================================================================================================
 // ================================================================================================================================================
 let dataInterval = null;
@@ -683,7 +699,8 @@ const DataController = {
   doLogout,
   doStartBackgroundProcess,
   doReloadUserData,
-  doReloadDonationInformation: runGetDonationInformationInBackground,
+  doReloadDonationInformation,
+  doReloadTrackingBitmark,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,

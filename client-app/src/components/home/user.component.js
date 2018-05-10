@@ -237,6 +237,25 @@ export class UserComponent extends React.Component {
         ]
       });
       this.props.navigation.dispatch(resetHomePage);
+    } else if (data.event === 'tracking_transfer_confirmed') {
+      DataController.doReloadTrackingBitmark().then(() => {
+        let trackingBitmark = DataController.getTrackingBitmarkInformation(data.bitmark_id);
+        const resetHomePage = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties, subTab: 'TRACKED' }, }
+            }),
+            NavigationActions.navigate({
+              routeName: 'LocalPropertyDetail',
+              params: { asset: trackingBitmark.asset, bitmark: trackingBitmark }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
+      }).catch(error => {
+        console.log('handerReceivedNotification tracking_transfer_confirmed error :', error);
+      });
     }
   }
 
