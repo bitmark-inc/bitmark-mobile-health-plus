@@ -19,6 +19,7 @@ const SubTabs = {
   other: 'BROWSE',
 };
 
+let ComponentName = 'DonationComponent';
 export class DonationComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -26,6 +27,9 @@ export class DonationComponent extends React.Component {
     this.contactBitmark = this.contactBitmark.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
+
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, null, ComponentName);
 
     let subTab = (this.props.screenProps.subTab && (this.props.screenProps.subTab === SubTabs.other || this.props.screenProps.subTab === SubTabs.joined)) ? this.props.screenProps.subTab : SubTabs.other;
     let donationInformation = DataController.getDonationInformation();
@@ -44,8 +48,8 @@ export class DonationComponent extends React.Component {
   }
   // ==========================================================================================
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -54,8 +58,8 @@ export class DonationComponent extends React.Component {
     }
   }
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
   }
   // ==========================================================================================
 

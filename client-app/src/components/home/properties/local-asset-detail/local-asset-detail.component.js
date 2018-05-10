@@ -15,13 +15,16 @@ import defaultStyle from './../../../../commons/styles';
 import { AppController, DataController } from '../../../../managers';
 import { EventEmiterService } from '../../../../services';
 
-
+let ComponentName = 'LocalAssetDetailComponent';
 export class LocalAssetDetailComponent extends React.Component {
   constructor(props) {
     super(props);
     this.cancelTransferring = this.cancelTransferring.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
     this.downloadAsset = this.downloadAsset.bind(this);
+
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
+
     let asset;
     asset = this.props.navigation.state.params.asset;
     let bitmarks = [];
@@ -52,12 +55,12 @@ export class LocalAssetDetailComponent extends React.Component {
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
     DataController.doUpdateViewStatus(this.state.asset);
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
   }
 
   handerChangeLocalBitmarks() {
