@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image, ActivityIndicator,
 } from 'react-native';
@@ -16,24 +17,25 @@ const SubTabs = {
   local: 'Yours',
   tracking: 'TRACKED',
   global: 'Global',
-}
+};
+let ComponentName = 'AssetsComponent';
 export class AssetsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.switchSubtab = this.switchSubtab.bind(this);
     this.addProperty = this.addProperty.bind(this);
-    this.convertToFlatListData = this.convertToFlatListData.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
     this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
 
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, null, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, null, ComponentName);
+
     let subtab = SubTabs.local;
-    let localAssets = DataController.getUserBitmarks().localAssets;
-    let assets = null;
-    if (subtab === SubTabs.local && localAssets) {
-      assets = this.convertToFlatListData(localAssets);
-    }
+    let assets = DataController.getUserBitmarks().localAssets;
+
     let { trackingBitmarks } = DataController.getTrackingBitmarks();
     if (trackingBitmarks) {
       trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
@@ -43,16 +45,18 @@ export class AssetsComponent extends React.Component {
       accountNumber: '',
       copyText: 'COPY',
       assets,
-      existNew: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0,
+      existNewAsset: (assets || []).findIndex(asset => !asset.isViewed) >= 0,
       trackingBitmarks,
       existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
       isLoadingData: DataController.isLoadingData(),
+      lengthDisplayAssets: 10,
+      shoudlLoadMoreAsset: false,
     };
   }
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
-    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -62,9 +66,9 @@ export class AssetsComponent extends React.Component {
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
   }
 
   handerChangeLocalBitmarks() {
@@ -95,11 +99,7 @@ export class AssetsComponent extends React.Component {
   }
 
   switchSubtab(subtab) {
-    let localAssets = DataController.getUserBitmarks().localAssets;
-    let assets = null;
-    if (localAssets) {
-      assets = this.convertToFlatListData(localAssets);
-    }
+    let assets = DataController.getUserBitmarks().localAssets;
     let { trackingBitmarks } = DataController.getTrackingBitmarks();
     if (trackingBitmarks) {
       trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
@@ -107,7 +107,7 @@ export class AssetsComponent extends React.Component {
     this.setState({
       subtab,
       assets,
-      existNewAsset: (localAssets || []).findIndex(asset => !asset.isViewed) >= 0,
+      existNewAsset: (assets || []).findIndex(asset => !asset.isViewed) >= 0,
       trackingBitmarks,
       existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
     });
@@ -118,6 +118,10 @@ export class AssetsComponent extends React.Component {
   }
 
   render() {
+    let totalBitmark = 0;
+    if (this.state.assets && this.state.assets.length > 0) {
+      this.state.assets.forEach(asset => totalBitmark += asset.bitmarks.length);
+    }
     return (
       <View style={assetsStyle.body}>
         <View style={[assetsStyle.header, { zIndex: 1 }]}>
@@ -136,13 +140,13 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                {this.state.existNew && <View style={{
+                {this.state.existNewAsset && <View style={{
                   backgroundColor: '#0060F2',
                   width: 10, height: 10,
                   position: 'absolute', left: 9,
                   borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
                 }}></View>}
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
+                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({totalBitmark})</Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -207,7 +211,17 @@ export class AssetsComponent extends React.Component {
           </TouchableOpacity>}
         </View>
 
-        {this.state.subtab == SubTabs.local && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
+        {this.state.subtab == SubTabs.local && <ScrollView style={[assetsStyle.scrollSubTabArea]}
+          onScroll={(scrollEvent) => {
+            if (!this.spaceNeedLoadMore) {
+              this.spaceNeedLoadMore = scrollEvent.nativeEvent.contentSize.height / 2;
+            }
+            if (scrollEvent.nativeEvent.contentOffset.y >= (scrollEvent.nativeEvent.contentSize.height - this.spaceNeedLoadMore) && this.state.lengthDisplayAssets < this.state.assets.length) {
+              this.setState({ lengthDisplayAssets: this.state.lengthDisplayAssets + 10 });
+            }
+          }}
+          scrollEventThrottle={1}
+        >
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
             {(this.state.isLoadingData && this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
@@ -223,44 +237,45 @@ export class AssetsComponent extends React.Component {
             {(this.state.assets && this.state.assets.length > 0 && this.state.subtab === SubTabs.local) && <FlatList
               ref={(ref) => this.listViewElement = ref}
               extraData={this.state}
-              data={this.state.assets || []}
+              data={(this.state.assets || []).slice(0, Math.min(this.state.lengthDisplayAssets, this.state.assets.length))}
+              keyExtractor={item => item.id}
               renderItem={({ item }) => {
                 return (<TouchableOpacity style={[assetsStyle.assetRowArea]} onPress={() => {
-                  this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item.asset });
+                  this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item });
                 }} >
-                  {!item.asset.isViewed && <View style={{
+                  {!item.isViewed && <View style={{
                     backgroundColor: '#0060F2',
                     width: 10, height: 10,
                     position: 'absolute', left: 9, top: 22,
                     borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
                   }}></View>}
 
-                  {/* {item.asset.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
-                    <Text style={[assetsStyle.assetBitmarksNumber, { color: '#0060F2' }]}>{item.asset.bitmarks.length}</Text>
+                  {/* {item.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
+                    <Text style={[assetsStyle.assetBitmarksNumber, { color: '#0060F2' }]}>{item.bitmarks.length}</Text>
                     <Image style={assetsStyle.assetBitmarksDetail} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
                     <Image style={[assetsStyle.assetBitmarksDetail, { marginRight: 7 }]} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
                   </View>}
-                  {item.asset.totalPending > 0 && <View style={assetsStyle.assetBitmarkTitle}>
-                    <Text style={assetsStyle.assetBitmarkPending}>PENDING... ({item.asset.totalPending + '/' + item.asset.bitmarks.length})</Text>
+                  {item.totalPending > 0 && <View style={assetsStyle.assetBitmarkTitle}>
+                    <Text style={assetsStyle.assetBitmarkPending}>PENDING... ({item.totalPending + '/' + item.bitmarks.length})</Text>
                   </View>} */}
 
                   <View style={assetsStyle.assetInfoArea}>
-                    <Text style={[assetsStyle.assetName, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.asset.name}</Text>
+                    <Text style={[assetsStyle.assetName, { color: item.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
-                      <Text style={[assetsStyle.assetCreator, { color: item.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
-                        ISSUER: {'[' + item.asset.registrant.substring(0, 4) + '...' + item.asset.registrant.substring(item.asset.registrant.length - 4, item.asset.registrant.length) + ']'}
+                      <Text style={[assetsStyle.assetCreator, { color: item.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
+                        ISSUER: {'[' + item.registrant.substring(0, 4) + '...' + item.registrant.substring(item.registrant.length - 4, item.registrant.length) + ']'}
                       </Text>
                     </View>
                     <View style={assetsStyle.assetQuantityArea}>
-                      {item.asset.totalPending === 0 && <Text style={assetsStyle.assetQuantity}>QUANTITY: {item.asset.bitmarks.length}</Text>}
-                      {item.asset.totalPending > 0 && <Text style={assetsStyle.assetQuantityPending}>QUANTITY: {item.asset.totalPending + '/' + item.asset.bitmarks.length} PENDING...</Text>}
-                      {item.asset.totalPending > 0 && <Image style={assetsStyle.assetQuantityPendingIcon} source={require('./../../../../assets/imgs/pending-status.png')} />}
+                      {item.totalPending === 0 && <Text style={assetsStyle.assetQuantity}>QUANTITY: {item.bitmarks.length}</Text>}
+                      {item.totalPending > 0 && <Text style={assetsStyle.assetQuantityPending}>QUANTITY: {item.totalPending + '/' + item.bitmarks.length} PENDING...</Text>}
+                      {item.totalPending > 0 && <Image style={assetsStyle.assetQuantityPendingIcon} source={require('./../../../../assets/imgs/pending-status.png')} />}
                     </View>
                   </View>
                 </TouchableOpacity>)
               }}
             />}
-            {!this.state.isLoadingData && <View style={assetsStyle.messageNoAssetArea}>
+            {(!this.state.isLoadingData || this.state.lengthDisplayAssets < this.state.assets.length) && <View style={assetsStyle.messageNoAssetArea}>
               <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>
@@ -287,7 +302,7 @@ export class AssetsComponent extends React.Component {
                   {!item.isViewed && <View style={[assetsStyle.newItem, { top: 20 }]}></View>}
                   <Text style={assetsStyle.trackingRowAssetName}>{item.asset.name}</Text>
                   <Text style={assetsStyle.trackingRowUpdated}>
-                    {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + item.created_at.toUpperCase())}
+                    {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + moment(item.created_at).format('YYYY MM DD HH:mm:ss').toUpperCase())}
                   </Text>
                   <Text style={assetsStyle.trackingRowCurrentOwner}>CURRENT OWNER: {item.owner === DataController.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
                     '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'

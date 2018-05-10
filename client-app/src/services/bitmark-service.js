@@ -20,8 +20,6 @@ const doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
   if (data && data.bitmarks && data.assets) {
     for (let bitmark of data.bitmarks) {
       bitmark.bitmark_id = bitmark.id;
-      let { provenance } = await BitmarkModel.doGetProvenance(bitmark.id);
-      bitmark.provenance = provenance;
       bitmark.isViewed = false;
       if (bitmark.owner === bitmarkAccountNumber) {
         let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
@@ -77,6 +75,8 @@ const doCheckFileToIssue = async (filePath) => {
   if (!assetInformation) {
     return assetInfo;
   } else {
+    let accessibilityData = await BitmarkModel.doGetAssetAccessibility(assetInfo.id);
+    assetInformation.accessibility = accessibilityData.accessibility;
     return assetInformation;
   }
 };
@@ -164,7 +164,6 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) 
 };
 
 const doGetProvenance = async (bitmarkId, headId, status) => {
-  console.log('doGetProvenance :', bitmarkId, headId, status);
   let { provenance } = await BitmarkModel.doGetProvenance(bitmarkId);
   if (headId && status) {
     let isViewed = false;
@@ -181,6 +180,11 @@ const doGetProvenance = async (bitmarkId, headId, status) => {
   return provenance;
 };
 
+const doConfirmWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, token) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  return await BitmarkModel.doConfirmWebAccount(bitmarkAccountNumber, token, signatureData.timestamp, signatureData.signature);
+};
+
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
@@ -191,6 +195,7 @@ let BitmarkService = {
   doGetBitmarkInformation,
   doGetTrackingBitmarks,
   doGetProvenance,
+  doConfirmWebAccount,
 };
 
 export { BitmarkService };

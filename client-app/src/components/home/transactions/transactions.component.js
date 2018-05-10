@@ -23,7 +23,12 @@ const ActionTypes = {
   donation: 'donation',
   ifttt: 'ifttt',
 };
+let generateDataStore = {
+  actionRequired: [],
+  completed: []
+};
 
+let ComponentName = 'TransactionsComponent';
 export class TransactionsComponent extends React.Component {
   static SubTabs = SubTabs;
   constructor(props) {
@@ -40,16 +45,23 @@ export class TransactionsComponent extends React.Component {
     this.generateData = this.generateData.bind(this);
     this.clickToCompleted = this.clickToCompleted.bind(this);
 
-    let subTab = (this.props.screenProps.subTab === SubTabs.required || this.props.screenProps.subTab === SubTabs.completed) ? this.props.screenProps.subTab : SubTabs.required;
 
-    let { actionRequired, completed, donationInformation } = this.generateData();
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, null, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, null, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, null, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, null, ComponentName);
+
+
+    let subTab = (this.props.screenProps.subTab === SubTabs.required || this.props.screenProps.subTab === SubTabs.completed) ? this.props.screenProps.subTab : SubTabs.required;
     this.state = {
       currentUser: DataController.getUserInformation(),
       subTab,
-      actionRequired,
-      completed,
-      donationInformation,
+      actionRequired: generateDataStore.actionRequired,
+      completed: generateDataStore.completed,
+      donationInformation: DataController.getDonationInformation(),
       isLoadingData: DataController.isLoadingData(),
+      lengthDisplayActionRequired: 10,
+      lengthDisplayCompleted: 10,
     };
   }
 
@@ -60,11 +72,18 @@ export class TransactionsComponent extends React.Component {
 
   componentDidMount() {
     this.switchSubtab(this.state.subTab);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
-    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
+    setTimeout(() => {
+      let { actionRequired, completed, donationInformation } = this.generateData();
+      generateDataStore.actionRequired = actionRequired;
+      generateDataStore.completed = completed;
+      this.setState({ actionRequired, completed, donationInformation })
+    }, 1000);
+
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -74,10 +93,11 @@ export class TransactionsComponent extends React.Component {
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRANSACTIONS, this.handerChangeCompletedTransaction, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER, this.handerChangePendingTransactions, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
   }
 
   generateData() {
@@ -90,7 +110,7 @@ export class TransactionsComponent extends React.Component {
           key: actionRequired.length,
           transferOffer: item,
           type: ActionTypes.transfer,
-          typeTitle: 'Property Transfer Request',
+          typeTitle: 'OWNERSHIP TRANSFER REQUEST ',
           timestamp: moment(item.created_at),
         });
       });
@@ -102,7 +122,7 @@ export class TransactionsComponent extends React.Component {
       (donationInformation.todoTasks || []).forEach(item => {
         item.key = actionRequired.length;
         item.type = ActionTypes.donation;
-        item.typeTitle = item.study ? 'Property DONATION Request' : 'Property ISSUANCE Request';
+        item.typeTitle = item.study ? 'DONATION Request' : 'ISSUANCE Request';
         item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null);
         actionRequired.push(item);
       });
@@ -113,7 +133,7 @@ export class TransactionsComponent extends React.Component {
       ifttInformation.bitmarkFiles.forEach(item => {
         item.key = actionRequired.length;
         item.type = ActionTypes.ifttt;
-        item.typeTitle = 'Property ISSUANCE Request';
+        item.typeTitle = 'ISSUANCE Request';
         item.timestamp = item.assetInfo.timestamp;
         actionRequired.push(item);
       });
@@ -128,7 +148,6 @@ export class TransactionsComponent extends React.Component {
     }) : actionRequired;
 
     let completed;
-    console.log('transactions :', transactionData.transactions);
     if (transactionData.transactions) {
       completed = [];
       let mapIssuance = [];
@@ -200,19 +219,23 @@ export class TransactionsComponent extends React.Component {
       if (!b || !b.timestamp) return -1;
       return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
     }) : completed;
-    console.log('completed :', completed);
-
+    console.log('generateData :', actionRequired, completed);
     return { actionRequired, completed, donationInformation };
   }
   handerDonationInformationChange() {
     let { actionRequired, completed, donationInformation } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
     this.setState({
-      actionRequired, completed, donationInformation,
+      donationInformation, actionRequired, completed,
       isLoadingData: DataController.isLoadingData(),
     });
   }
   handerIftttInformationChange() {
     let { actionRequired, completed, donationInformation } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
+
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -220,6 +243,9 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangePendingTransactions() {
     let { actionRequired, completed, donationInformation } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
+
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -227,6 +253,9 @@ export class TransactionsComponent extends React.Component {
   }
   handerChangeCompletedTransaction() {
     let { actionRequired, completed, donationInformation } = this.generateData();
+    generateDataStore.actionRequired = actionRequired;
+    generateDataStore.completed = completed;
+
     this.setState({
       actionRequired, completed, donationInformation,
       isLoadingData: DataController.isLoadingData(),
@@ -241,7 +270,8 @@ export class TransactionsComponent extends React.Component {
   reloadData() {
     AppController.doReloadUserData().then(() => {
       let { actionRequired, completed, donationInformation } = this.generateData();
-      console.log('actionRequired, completed, donationInformation :', actionRequired, completed, donationInformation);
+      generateDataStore.actionRequired = actionRequired;
+      generateDataStore.completed = completed;
       this.setState({
         actionRequired, completed, donationInformation,
         isLoadingData: DataController.isLoadingData(),
@@ -363,15 +393,25 @@ export class TransactionsComponent extends React.Component {
           </TouchableOpacity>}
         </View>
 
-        <ScrollView style={[transactionsStyle.scrollSubTabArea]}>
+        {this.state.subTab === SubTabs.required && <ScrollView style={[transactionsStyle.scrollSubTabArea]}
+          onScroll={(scrollEvent) => {
+            if (!this.spaceNeedLoadActionRequire) {
+              this.spaceNeedLoadActionRequire = scrollEvent.nativeEvent.contentSize.height / 2;
+            }
+            if (scrollEvent.nativeEvent.contentOffset.y >= (scrollEvent.nativeEvent.contentSize.height - this.spaceNeedLoadActionRequire) && this.state.lengthDisplayActionRequired < this.state.actionRequired.length) {
+              this.setState({ lengthDisplayActionRequired: this.state.lengthDisplayActionRequired + 10 });
+            }
+          }}
+          scrollEventThrottle={1}
+        >
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
+            {this.state.actionRequired && this.state.actionRequired.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO ACTIONS REQUIRED.</Text>
-              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where you will receive any requests that require your signature.</Text>
+              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where you will receive authorization requests.</Text>
             </View>}
 
-            {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length > 0 && <View style={transactionsStyle.contentSubTab}>
-              <FlatList data={this.state.actionRequired}
+            {this.state.actionRequired && this.state.actionRequired.length > 0 && <View style={transactionsStyle.contentSubTab}>
+              <FlatList data={this.state.actionRequired.slice(0, Math.min(this.state.lengthDisplayActionRequired, this.state.actionRequired.length))}
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (<TouchableOpacity style={transactionsStyle.transferOfferRow} onPress={() => this.clickToActionRequired(item)}>
@@ -380,9 +420,11 @@ export class TransactionsComponent extends React.Component {
                       <Text style={transactionsStyle.transferOfferTitleTime} >{moment(item.timestamp).format('YYYY MMM DD').toUpperCase()}</Text>
                       <Image style={transactionsStyle.transferOfferTitleIcon} source={require('../../../../assets/imgs/sign-request-icon.png')} />
                     </View>
-                    {item.type === ActionTypes.transfer && <Text style={transactionsStyle.transferOfferContent}>Sign to accept the property
-                        <Text style={transactionsStyle.transferOfferAssetName}> {item.transferOffer.asset.name} </Text>transfer request.
-                      </Text>}
+
+                    {item.type === ActionTypes.transfer && <View style={transactionsStyle.iftttTask}>
+                      <Text style={transactionsStyle.iftttTitle}>{item.transferOffer.asset.name}</Text>
+                      <Text style={transactionsStyle.iftttDescription}>Sign your bitmark transfer.</Text>
+                    </View>}
 
                     {item.type === ActionTypes.donation && <View style={transactionsStyle.donationTask}>
                       <Text style={transactionsStyle.donationTaskTitle} >{item.title + (item.number > 1 ? ` (${item.number})` : '')}</Text>
@@ -399,13 +441,30 @@ export class TransactionsComponent extends React.Component {
                   </TouchableOpacity>)
                 }} />
             </View>}
-
-            {this.state.subTab === SubTabs.completed && this.state.completed && this.state.completed.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
-              <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY.</Text>
-              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>This is where your history of completed transaction will be stored.</Text>
+            {(!this.state.isLoadingData || this.state.lengthDisplayActionRequired < this.state.actionRequired.length) && <View style={transactionsStyle.contentSubTab}>
+              <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
-            {this.state.subTab === SubTabs.completed && this.state.completed && this.state.completed.length > 0 && <View style={transactionsStyle.contentSubTab}>
-              <FlatList data={this.state.completed}
+          </TouchableOpacity>
+        </ScrollView>}
+
+        {this.state.subTab === SubTabs.completed && <ScrollView style={[transactionsStyle.scrollSubTabArea]}
+          onScroll={(scrollEvent) => {
+            if (!this.spaceNeedLoadActionCompleted) {
+              this.spaceNeedLoadActionCompleted = scrollEvent.nativeEvent.contentSize.height / 2;
+            }
+            if (scrollEvent.nativeEvent.contentOffset.y >= (scrollEvent.nativeEvent.contentSize.height - this.spaceNeedLoadActionCompleted) && this.state.lengthDisplayCompleted < this.state.completed.length) {
+              this.setState({ lengthDisplayCompleted: this.state.lengthDisplayCompleted + 10 });
+            }
+          }}
+          scrollEventThrottle={1}
+        >
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            {this.state.completed && this.state.completed.length === 0 && this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
+              <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY.</Text>
+              <Text style={transactionsStyle.messageNoRequiredTransferOffer}>Your transaction history will be available here.</Text>
+            </View>}
+            {this.state.completed && this.state.completed.length > 0 && <View style={transactionsStyle.contentSubTab}>
+              <FlatList data={this.state.completed.slice(0, Math.min(this.state.lengthDisplayCompleted, this.state.completed.length))}
                 extraData={this.state}
                 renderItem={({ item }) => {
                   return (
@@ -443,11 +502,11 @@ export class TransactionsComponent extends React.Component {
                   )
                 }} />
             </View >}
-            {!this.state.isLoadingData && <View style={transactionsStyle.contentSubTab}>
+            {(!this.state.isLoadingData || this.state.lengthDisplayCompleted < this.state.completed.length) && <View style={transactionsStyle.contentSubTab}>
               <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>
-        </ScrollView>
+        </ScrollView>}
       </View >
     );
   }

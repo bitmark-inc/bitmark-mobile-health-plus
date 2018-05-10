@@ -24,7 +24,6 @@
 
 - (NSDictionary *)exportData {
   return @{
-           @"name": [self.name removeIdentity],
            @"bundleIdentifier": self.bundleIdentifier
            };
 }

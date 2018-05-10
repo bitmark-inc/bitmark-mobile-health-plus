@@ -20,9 +20,9 @@ const BitmarkSDK = {
       });
     });
   },
-  newAccountFrom24Words: (pharse24Words) => {
+  newAccountFrom24Words: (pharse24Words, network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFrom24Words(pharse24Words, (ok, result) => {
+      SwiftBitmarkSDK.newAccountFrom24Words(pharse24Words, network, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
@@ -183,9 +183,9 @@ const BitmarkSDK = {
   },
 
   // don use session di
-  try24Words: (pharse24Words) => {
+  try24Words: (pharse24Words,network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.try24Words(pharse24Words, (ok, result, pharse24Words) => {
+      SwiftBitmarkSDK.try24Words(pharse24Words, network, (ok, result, pharse24Words) => {
         if (ok) {
           resolve({ bitmarkAccountNumber: result, pharse24Words });
         } else {

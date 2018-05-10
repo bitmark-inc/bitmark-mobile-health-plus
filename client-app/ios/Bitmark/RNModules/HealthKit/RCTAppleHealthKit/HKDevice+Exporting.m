@@ -13,7 +13,6 @@
 
 - (NSDictionary *)exportData {
   return @{
-           @"name": [self.name removeIdentity],
            @"manufacturer": self.manufacturer,
            @"model": self.model,
            @"hardwareVersion": self.hardwareVersion,

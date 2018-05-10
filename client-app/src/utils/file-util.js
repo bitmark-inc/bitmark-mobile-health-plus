@@ -15,10 +15,25 @@ const FileUtil = {
   remove: async (path) => {
     return RNFS.unlink(path);
   },
+  removeSafe: async (path) => {
+    try {
+      await RNFS.unlink(path);
+    } catch (err) {
+      console.log("File isn't existing");
+    }
+  },
   copyFile: async (sourcePath, destinationPath) => {
     return RNFS.copyFile(sourcePath, destinationPath);
   },
   moveFile: async (sourcePath, destinationPath) => {
+    return RNFS.moveFile(sourcePath, destinationPath);
+  },
+  moveFileSafe: async (sourcePath, destinationPath) => {
+    try {
+      await RNFS.unlink(destinationPath);
+    } catch (err) {
+      console.log("Destination path isn't existing");
+    }
     return RNFS.moveFile(sourcePath, destinationPath);
   },
   downloadFile: async (urlDownload, filePath, headers) => {

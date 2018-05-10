@@ -1,10 +1,13 @@
-
+import DeviceInfo from 'react-native-device-info';
 import { Text } from 'react-native';
 
 Text.defaultProps.allowFontScaling = false;
 
 import { BitmarkAppComponent, } from './src';
-export default BitmarkAppComponent;
+import { CodePushMainAppComponent, } from './src';
 
-// import { CodePushMainAppComponent, } from './src';
-// export default CodePushMainAppComponent;
+let ApplicationComponent = BitmarkAppComponent;
+if (DeviceInfo.getBundleId() === 'com.bitmark.bitmarkios' || DeviceInfo.getBundleId() === 'com.bitmark.bitmarkios.development') {
+  ApplicationComponent = CodePushMainAppComponent;
+}
+export default ApplicationComponent;

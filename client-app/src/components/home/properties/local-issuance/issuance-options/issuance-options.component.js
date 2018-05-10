@@ -4,6 +4,7 @@ import {
   View, Text, TouchableOpacity, Image,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import { NavigationActions } from 'react-navigation';
 
 import issuanceOptionsStyle from './issuance-options.component.style';
@@ -11,29 +12,36 @@ import defaultStyle from './../../../../../commons/styles';
 import { AppController, DataController } from '../../../../../managers';
 import { EventEmiterService } from '../../../../../services';
 import { BottomTabsComponent } from '../../../bottom-tabs/bottom-tabs.component';
+import { FileUtil } from '../../../../../utils';
 
+let ComponentName = 'IssuanceOptionsComponent';
 export class IssuanceOptionsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.onChooseFile = this.onChooseFile.bind(this);
+    this.onChoosePhotoFile = this.onChoosePhotoFile.bind(this);
     this.issueHealthData = this.issueHealthData.bind(this);
     this.issueIftttData = this.issueIftttData.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
+
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, ComponentName);
+
     this.state = {
       donationInformation: DataController.getDonationInformation(),
       iftttInformation: DataController.getIftttInformation(),
-    }
+    };
   }
 
   // ==========================================================================================
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
   }
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
   }
   // ==========================================================================================
   handerDonationInformationChange() {
@@ -44,7 +52,7 @@ export class IssuanceOptionsComponent extends React.Component {
     this.setState({ iftttInformation: DataController.getIftttInformation() });
   }
 
-  onChooseFile() {
+  onChoosePhotoFile() {
     let options = {
       title: '',
       takePhotoButtonTitle: '',
@@ -55,27 +63,43 @@ export class IssuanceOptionsComponent extends React.Component {
       if (response.error || response.didCancel) {
         return;
       }
-      let filePath = response.uri.replace('file://', '');
-      let fileName = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
-      let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
-      AppController.doCheckFileToIssue(filePath).then(asset => {
-        let existingAsset = !!(asset && asset.registrant);
-        let metadataList = [];
-        if (existingAsset) {
-          let key = 0;
-          for (let label in asset.metadata) {
-            metadataList.push({ key, label, value: asset.metadata[label] });
-            key++;
-          }
-        }
-        this.props.screenProps.homeNavigation.navigate('LocalIssueFile', {
-          filePath, fileName, fileFormat, asset,
-          fingerprint: asset.fingerprint
-        });
-      }).catch(error => {
-        console.log('onChooseFile error :', error);
-        EventEmiterService.emit(EventEmiterService.events.error);
+
+      this.prepareToIssue(response);
+    });
+  }
+
+  onChooseFile() {
+    DocumentPicker.show({
+      filetype: [DocumentPickerUtil.allFiles(), "public.data"],
+    }, (error, response) => {
+      if (error) return;
+      this.prepareToIssue(response);
+    });
+  }
+
+  async prepareToIssue(response) {
+    let filePath = response.uri.replace('file://', '');
+    filePath = decodeURIComponent(filePath);
+
+    // Move file from "tmp" folder to "cache" folder
+    let destPath = FileUtil.CacheDirectory + '/' + response.fileName;
+    await FileUtil.moveFileSafe(filePath, destPath);
+    filePath = destPath;
+
+    let fileName = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
+    let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
+    AppController.doCheckFileToIssue(filePath).then(asset => {
+      if (asset && asset.registrant && asset.accessibility === 'public') {
+        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'The file has already been registered as public in the Bitmark blockchain. We will soon be able to support issuing more bitmarks for this public asset in the mobile app.' });
+        return;
+      }
+      this.props.screenProps.homeNavigation.navigate('LocalIssueFile', {
+        filePath, fileName, fileFormat, asset,
+        fingerprint: asset.fingerprint
       });
+    }).catch(error => {
+      console.log('onChooseFile error :', error);
+      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
     });
   }
 
@@ -127,8 +151,11 @@ export class IssuanceOptionsComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>
         <View style={issuanceOptionsStyle.content}>
-          <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.onChooseFile}>
+          <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.onChoosePhotoFile}>
             <Text style={issuanceOptionsStyle.optionButtonText}>PHOTOS</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.onChooseFile}>
+            <Text style={issuanceOptionsStyle.optionButtonText}>FILES</Text>
           </TouchableOpacity>
           <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.issueHealthData}>
             <Text style={issuanceOptionsStyle.optionButtonText}>HEALTH DATA</Text>

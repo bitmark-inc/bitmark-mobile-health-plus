@@ -32,6 +32,7 @@ platform :ios do
       adhoc: true
     )
     build_app(
+      export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "Bitmark.xcworkspace", 
       scheme: "Bitmark",
       include_bitcode: false
@@ -53,6 +54,7 @@ platform :ios do
       force: false
     )
     build_app(
+      export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "Bitmark.xcworkspace", 
       scheme: "Bitmark beta",
       include_bitcode: false

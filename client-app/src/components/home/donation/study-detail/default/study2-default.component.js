@@ -55,16 +55,16 @@ export class Study2DefaultComponent extends React.Component {
           <View style={styles.infoArea}>
             <Text style={styles.infoAreaTitle}>Data Requirements</Text>
             <View style={styles.infoAreaListItem} >
-              <Text style={styles.infoAreaItem}>•	 Activity </Text>
-              <Text style={styles.infoAreaItem}>•	 Mindfulness</Text>
-              <Text style={styles.infoAreaItem}>•	 Nutrition</Text>
-              <Text style={styles.infoAreaItem}>•	 Sleep</Text>
+              <Text style={styles.infoAreaItem}>•	 Activity</Text>
+              <Text style={styles.infoAreaItem}>•	 Blood Glucose</Text>
               <Text style={styles.infoAreaItem}>•	 Body Measurements</Text>
-              <Text style={styles.infoAreaItem}>•	 Health Records</Text>
-              <Text style={styles.infoAreaItem}>•	 Heart</Text>
-              <Text style={styles.infoAreaItem}>•	 Reproductive Health</Text>
-              <Text style={styles.infoAreaItem}>•	 Results</Text>
-              <Text style={styles.infoAreaItem}>•	 Vitals</Text>
+              <Text style={styles.infoAreaItem}>•	 Characteristics</Text>
+              <Text style={styles.infoAreaItem}>•	 Mindfulness Session</Text>
+              <Text style={styles.infoAreaItem}>•	 Nutrition</Text>
+              <Text style={styles.infoAreaItem}>•	 Respiratory Rate</Text>
+              <Text style={styles.infoAreaItem}>•	 Sleep Analysis</Text>
+              <Text style={styles.infoAreaItem}>•	 Stand Hours</Text>
+              <Text style={styles.infoAreaItem}>•	 UV Exposure</Text>
             </View>
           </View>
 

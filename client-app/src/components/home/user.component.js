@@ -19,6 +19,7 @@ import { FullComponent } from '../../commons/components';
 
 const MainTabs = BottomTabsComponent.MainTabs;
 
+let ComponentName = 'UserComponent';
 export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -26,6 +27,9 @@ export class UserComponent extends React.Component {
     this.reloadUserData = this.reloadUserData.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
+
+    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, null, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, null, ComponentName);
 
     let subTab;
     let mainTab = MainTabs.properties;
@@ -50,13 +54,13 @@ export class UserComponent extends React.Component {
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
-    EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData);
+    EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
+    EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
   }
 
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification);
-    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData);
+    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
+    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
   }
 
   reloadUserData() {
@@ -70,8 +74,8 @@ export class UserComponent extends React.Component {
 
   handerReceivedNotification(data) {
     console.log('UserComponent handerReceivedNotification data :', data);
-    if (data.event === 'transfer_request' && data.offer_id) {
-      AppController.doGetTransferOfferDetail(data.offer_id).then(transferOfferDetail => {
+    if (data.name === 'transfer_request' && data.id) {
+      AppController.doGetTransferOfferDetail(data.id).then(transferOfferDetail => {
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
@@ -90,7 +94,7 @@ export class UserComponent extends React.Component {
       }).catch(error => {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
-    } else if (data.event === 'transfer_rejected') {
+    } else if (data.name === 'transfer_rejected') {
       let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
       const resetHomePage = NavigationActions.reset({
         index: 1,
@@ -105,7 +109,7 @@ export class UserComponent extends React.Component {
         ]
       });
       this.props.navigation.dispatch(resetHomePage);
-    } else if (data.event === 'transfer_completed' || data.event === 'transfer_accepted') {
+    } else if (data.name === 'transfer_completed' || data.evnameent === 'transfer_accepted') {
       const resetHomePage = NavigationActions.reset({
         index: 0,
         actions: [
@@ -118,7 +122,7 @@ export class UserComponent extends React.Component {
         ]
       });
       this.props.navigation.dispatch(resetHomePage);
-    } else if (data.event === 'transfer_failed') {
+    } else if (data.name === 'transfer_failed') {
       let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
       const resetHomePage = NavigationActions.reset({
         index: 1,
@@ -233,6 +237,25 @@ export class UserComponent extends React.Component {
         ]
       });
       this.props.navigation.dispatch(resetHomePage);
+    } else if (data.event === 'tracking_transfer_confirmed') {
+      DataController.doReloadTrackingBitmark().then(() => {
+        let trackingBitmark = DataController.getTrackingBitmarkInformation(data.bitmark_id);
+        const resetHomePage = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties, subTab: 'TRACKED' }, }
+            }),
+            NavigationActions.navigate({
+              routeName: 'LocalPropertyDetail',
+              params: { asset: trackingBitmark.asset, bitmark: trackingBitmark }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
+      }).catch(error => {
+        console.log('handerReceivedNotification tracking_transfer_confirmed error :', error);
+      });
     }
   }
 

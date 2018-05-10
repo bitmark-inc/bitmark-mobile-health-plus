@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.2</string>
+	<string>1.2.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -54,10 +54,14 @@
 	<string>Touch/Face ID or a passcode is required to authorize your transactions.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your health data</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to your health data</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>
+	<key>NSMotionUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -80,10 +84,6 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-  <key>NSHealthUpdateUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like to your health data</string>
-  <key>NSMotionUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

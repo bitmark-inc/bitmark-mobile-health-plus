@@ -140,6 +140,31 @@ const doGetAssetInformation = (assetId) => {
   });
 };
 
+const doGetAssetAccessibility = (assetId) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    fetch(config.api_server_url + `/v2/assets/${assetId}/info`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode === 404) {
+        return resolve();
+      }
+      if (statusCode >= 400) {
+        return reject(new Error('getAssetInfo error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+
 const doPrepareAssetInfo = async (filePath) => {
   return await BitmarkSDK.getAssetInfo(filePath);
 };
@@ -336,6 +361,35 @@ const doGetAllTrackingBitmark = async (bitmarkAccount) => {
   });
 };
 
+const doConfirmWebAccount = async (bitmarkAccount, code, timestamp, signature) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.web_account_server_url + `/s/api/mobile/confirmations`;
+    fetch(bitmarkUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: bitmarkAccount,
+        timestamp,
+        signature,
+      },
+      body: JSON.stringify({ code })
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`doGetAllTrackingBitmark error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+}
+
 let BitmarkModel = {
   doGetAssetInformation,
   doGetAllBitmarks,
@@ -348,10 +402,12 @@ let BitmarkModel = {
   getTransactionDetail,
   getAllTransactions,
   getListBitmarks,
+  doGetAssetAccessibility,
 
   doAddTrackinBitmark,
   doStopTrackingBitmark,
   doGetAllTrackingBitmark,
+  doConfirmWebAccount,
 };
 
 export { BitmarkModel };

@@ -280,6 +280,22 @@ const doReloadUserData = async () => {
   EventEmiterService.emit(EventEmiterService.events.APP_LOADING_DATA, isLoadingData);
 };
 
+const doReloadDonationInformation = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetDonationInformationInBackground();
+  if (JSON.stringify(userData.donationInformation) !== JSON.stringify(oldUserData.donationInformation)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
+  }
+};
+
+const doReloadTrackingBitmark = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetTrackingBitmarksInBackground();
+  if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
+  }
+};
+
 // ================================================================================================================================================
 // ================================================================================================================================================
 let dataInterval = null;
@@ -554,6 +570,74 @@ const doIssueIftttData = async (touchFaceIdSession, iftttBitmarkFile) => {
   return iftttInformation;
 };
 
+const doAcceptTransferBitmark = async (touchFaceIdSession, transferOffer) => {
+  let oldUserData = merge({}, userData);
+  await TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer);
+  await runGetActiveIncomingTransferOfferInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  return userData.activeIncompingTransferOffers;
+};
+
+const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
+  let oldUserData = merge({}, userData);
+  await TransactionService.doCancelTransferBitmark(touchFaceIdSession, transferOfferId);
+  await runGetActiveIncomingTransferOfferInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  return userData.activeIncompingTransferOffers;
+};
+
+const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer, ) => {
+  let oldUserData = merge({}, userData);
+  await TransactionService.doRejectTransferBitmark(touchFaceIdSession, transferOffer);
+  await runGetActiveIncomingTransferOfferInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  return userData.activeIncompingTransferOffers;
+};
+
+const doIssueFile = async (touchFaceIdSession, filepath, assetName, metadatList, quantity) => {
+  let oldUserData = merge({}, userData);
+  let result = await BitmarkService.doIssueFile(touchFaceIdSession, filepath, assetName, metadatList, quantity);
+  await runGetLocalBitmarksInBackground();
+  if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+  }
+  return result;
+};
+
+const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
+  let oldUserData = merge({}, userData);
+  let result = await TransactionService.doTransferBitmark(touchFaceIdSession, bitmarkId, receiver);
+  await runGetActiveIncomingTransferOfferInBackground();
+  await runGetLocalBitmarksInBackground();
+  if (JSON.stringify(userData.activeIncompingTransferOffers) !== JSON.stringify(oldUserData.activeIncompingTransferOffers)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER);
+  }
+  if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+  }
+  return result;
+};
+
+const doMigrateWebAccount = async (touchFaceIdSession, token) => {
+  let oldUserData = merge({}, userData);
+  let result = await BitmarkService.doConfirmWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
+  await runGetLocalBitmarksInBackground();
+  if (JSON.stringify(userData.localAssets) !== JSON.stringify(oldUserData.localAssets)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS);
+  }
+  return result;
+};
+
+const doSignInOnWebApp = async (touchFaceIdSession, token) => {
+  return await BitmarkService.doConfirmWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
+};
+
 const getTransactionData = () => {
   return merge({}, {
     activeIncompingTransferOffers: userData.activeIncompingTransferOffers,
@@ -615,7 +699,8 @@ const DataController = {
   doLogout,
   doStartBackgroundProcess,
   doReloadUserData,
-  doReloadDonationInformation: runGetDonationInformationInBackground,
+  doReloadDonationInformation,
+  doReloadTrackingBitmark,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,
@@ -630,10 +715,16 @@ const DataController = {
   doTrackingBitmark,
   doStopTrackingBitmark,
   doGetProvenance,
-
   doReloadIFTTTInformation,
   doRevokeIftttToken,
   doIssueIftttData,
+  doAcceptTransferBitmark,
+  doCancelTransferBitmark,
+  doRejectTransferBitmark,
+  doIssueFile,
+  doTransferBitmark,
+  doMigrateWebAccount,
+  doSignInOnWebApp,
 
   getTransactionData,
   getUserBitmarks,

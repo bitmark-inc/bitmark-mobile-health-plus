@@ -8,7 +8,7 @@ import { NavigationActions } from 'react-navigation';
 
 
 import { FullComponent } from './../../../../../commons/components';
-import { convertWidth } from './../../../../../utils';
+import { convertWidth, FileUtil } from './../../../../../utils';
 import { BitmarkService } from './../../../../../services';
 
 import localAddPropertyStyle from './issue-file.component.style';
@@ -75,6 +75,9 @@ export class LocalIssueFileComponent extends React.Component {
         indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
       }).then((data) => {
         if (data !== null) {
+          // Remove temp asset file
+          FileUtil.removeSafe(this.state.filePath);
+
           const resetHomePage = NavigationActions.reset({
             index: 0,
             actions: [

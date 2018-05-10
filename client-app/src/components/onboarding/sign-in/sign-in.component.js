@@ -17,31 +17,13 @@ let PreCheckResults = {
   error: 'RETRY'
 };
 
-// let testWords = ["account",
-//   "pulse",
-//   "disease",
-//   "funny",
-//   "sound",
-//   "aim",
-//   "rice",
-//   "ozone",
-//   "clay",
-//   "skate",
-//   "garbage",
-//   "bottom",
-//   "credit",
-//   "club",
-//   "easily",
-//   "lumber",
-//   "song",
-//   "noodle",
-//   "gaze",
-//   "duty",
-//   "enable",
-//   "butter",
-//   "citizen",
-//   "cradle",];
+// madelena testnet
+// let testWords = ["acid", "dinner", "west", "satisfy", "ranch", "include", "remove", "vanish", "visual", "shift", "delay", "spot", "table", "feed", "volume", "oblige", "crisp", "bracket", "acoustic", "nurse", "where", "wreck", "fly", "marriage",];
+// madelena livenet
+// let testWords = ["absent", "ostrich", "injury", "pill", "episode", "permit", "endless", "happy", "thing", "devote", "robust", "earth", "punch", "robot", "jelly", "demand", "topple", "diamond", "climb", "turn", "reveal", "suspect", "fat", "assault",];
 
+// let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
+// let testWords = ["accuse", "angry", "thing", "alone", "day", "guitar", "gown", "possible", "rotate", "erupt", "teach", "myth", "final", "rule", "conduct", "term", "mom", "soldier", "prepare", "bench", "hurt", "banana", "joy", "asset",];
 export class SignInComponent extends React.Component {
 
   constructor(props) {

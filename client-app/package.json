@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "ios": "react-native run-ios",
+    "ios-test": "react-native run-ios --scheme 'Bitmark dev'",
+    "ios-live": "react-native run-ios",
     "test": "jest"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "react-native-camera": "^0.13.0",
     "react-native-code-push": "^5.3.2",
     "react-native-device-info": "^0.13.0",
+    "react-native-document-picker": "^2.1.0",
     "react-native-fs": "^2.9.7",
     "react-native-image-picker": "^0.26.7",
     "react-native-mail": "^3.0.5",

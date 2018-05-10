@@ -233,7 +233,6 @@ export class NewAccountComponent extends React.Component {
             paginationStyle={newAccountStyle.swipePagination}
             ref={swiper => this.swiper = swiper}
             onIndexChanged={(index) => {
-              console.log('index :', index);
               this.setState({
                 index: index,
               });

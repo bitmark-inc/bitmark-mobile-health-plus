@@ -134,27 +134,7 @@ export default StyleSheet.create({
     resizeMode: 'contain',
     marginLeft: convertWidth(3),
   },
-  transferOfferContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  transferOfferSenderFix: {
-    fontFamily: 'Andale Mono',
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  transferOfferSenderName: {
-    fontFamily: 'Andale Mono',
-    fontSize: 13,
-    fontWeight: '900',
-  },
-  transferOfferAssetName: {
-    fontFamily: 'Avenir black',
-    fontSize: 13,
-    fontWeight: '900',
-    width: convertWidth(150),
-  },
+
   donationTask: {
     marginTop: 12,
     flexDirection: 'column',
