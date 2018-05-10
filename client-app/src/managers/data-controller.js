@@ -295,6 +295,15 @@ const doReloadDonationInformation = async () => {
     EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION);
   }
 };
+
+const doReloadTrackingBitmark = async () => {
+  let oldUserData = merge({}, userData);
+  await runGetTrackingBitmarksInBackground();
+  if (JSON.stringify(userData.trackingBitmarks) !== JSON.stringify(oldUserData.trackingBitmarks)) {
+    EventEmiterService.emit(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS);
+  }
+};
+
 // ================================================================================================================================================
 // ================================================================================================================================================
 let dataInterval = null;
@@ -711,6 +720,7 @@ const DataController = {
   doReloadUserData,
   doReloadIncommingTransferOffers,
   doReloadDonationInformation,
+  doReloadTrackingBitmark,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,
