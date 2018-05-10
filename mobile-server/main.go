@@ -106,9 +106,9 @@ func main() {
 	pushClient := gorush.New(conf.PushClients)
 	gatewayClient := gateway.New(conf.External.CoreAPIServer)
 
-	// if !pushClient.Ping(ctx) {
-	// 	log.Panic("Failed to ping to push server")
-	// }
+	if !pushClient.Ping(ctx) {
+		log.Panic("Failed to ping to push server")
+	}
 	if !gatewayClient.Ping(ctx) {
 		log.Panic("Failed to ping to gateway server")
 	}
