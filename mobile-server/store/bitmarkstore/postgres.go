@@ -14,9 +14,11 @@ type BitmarkPGStore struct {
 }
 
 const (
-	sqlInsertBitmarkTracking = "INSERT INTO mobile.bitmark_tracking(account_number, bitmark_id, tx_id, status) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING"
-	sqlDeleteBitmarkTracking = "DELETE FROM mobile.bitmark_tracking WHERE bitmark_id = $1 AND account_number = $2"
-	sqlQueryBitmarkTracking  = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
+	sqlInsertBitmarkTracking          = "INSERT INTO mobile.bitmark_tracking(account_number, bitmark_id, tx_id, status) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING"
+	sqlDeleteBitmarkTracking          = "DELETE FROM mobile.bitmark_tracking WHERE bitmark_id = $1 AND account_number = $2"
+	sqlQueryBitmarkTracking           = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
+	sqlQueryBitmarkTrackingAvailable  = "SELECT EXISTS (SELECT 1 FROM mobile.bitmark_tracking WHERE bitmark_id = $1 LIMIT 1)"
+	sqlQueryAccountHasTrackingBitmark = "SELECT array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = $1"
 )
 
 func New(dbConn *pgx.ConnPool) *BitmarkPGStore {
@@ -61,4 +63,20 @@ func (b *BitmarkPGStore) GetTrackingBitmarks(ctx context.Context, account string
 	}
 
 	return items, nil
+}
+
+func (b *BitmarkPGStore) TestTrackingBitmark(ctx context.Context, bitmarkID string) (bool, error) {
+	row := b.dbConn.QueryRowEx(ctx, sqlQueryBitmarkTrackingAvailable, nil, bitmarkID)
+
+	var available bool
+	err := row.Scan(&available)
+	return available, err
+}
+
+func (b *BitmarkPGStore) GetAccountHasTrackingBitmark(ctx context.Context, bitmarkID string) ([]string, error) {
+	row := b.dbConn.QueryRowEx(ctx, sqlQueryAccountHasTrackingBitmark, nil, bitmarkID)
+
+	var accountNumbers []string
+	err := row.Scan(&accountNumbers)
+	return accountNumbers, err
 }

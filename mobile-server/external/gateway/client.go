@@ -41,6 +41,25 @@ type TransferOffer struct {
 	Open      bool                           `json:"open"`
 }
 
+type Bitmark struct {
+	ID          string    `json:"id"`
+	Owner       string    `json:"owner"`
+	Issuer      string    `json:"issuer"`
+	IssuedAt    time.Time `json:"issued_at"`
+	BlockNumber int       `json:"block_number"`
+	Offset      int64     `json:"offset"`
+	Status      string    `json:"status"`
+}
+
+type BitmarkInfo struct {
+	Bitmark Bitmark `json:"bitmark"`
+	Asset   struct {
+		ID       string            `json:"id"`
+		Name     string            `json:"name"`
+		Metadata map[string]string `json:"metadata"`
+	} `json:"asset"`
+}
+
 func (c *Client) GetOfferIdInfo(ctx context.Context, offerID string) (*TransferOffer, error) {
 	requestURL := c.url + "/v2/transfer_offers?offer_id=" + offerID
 	resp, err := ctxhttp.Get(ctx, c.client, requestURL)
@@ -60,4 +79,21 @@ func (c *Client) Ping(ctx context.Context) bool {
 	log.Info("Ping to:", c.url)
 	_, err := ctxhttp.Head(ctx, c.client, c.url)
 	return err == nil
+}
+
+func (c *Client) GetBitmarkInfo(ctx context.Context, bitmarkID string) (*BitmarkInfo, error) {
+	bitmarkInfoURL := c.url + "/v1/bitmarks/" + bitmarkID + "?asset=true"
+	response, err := ctxhttp.Get(ctx, c.client, bitmarkInfoURL)
+	if err != nil {
+		return nil, err
+	}
+
+	var bitmarkInfo BitmarkInfo
+
+	decoder := json.NewDecoder(response.Body)
+	if err := decoder.Decode(&bitmarkInfo); err != nil {
+		return nil, err
+	}
+
+	return &bitmarkInfo, nil
 }

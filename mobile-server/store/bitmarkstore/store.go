@@ -16,4 +16,6 @@ type BitmarkStore interface {
 	AddTrackingBitmark(ctx context.Context, account, bitmarkID, txID, status string) error
 	GetTrackingBitmarks(ctx context.Context, account string) ([]BitmarkTracking, error)
 	DeleteTrackingBitmark(ctx context.Context, account, bitmarkID string) (bool, error)
+	TestTrackingBitmark(ctx context.Context, bitmarkID string) (bool, error)
+	GetAccountHasTrackingBitmark(ctx context.Context, bitmarkID string) ([]string, error)
 }

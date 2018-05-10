@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/bitmark-inc/mobile-app/mobile-server/config"
 	"github.com/json-iterator/go"
 	"golang.org/x/net/context/ctxhttp"
 
@@ -18,11 +19,6 @@ var (
 	platformCode = map[string]int{
 		"ios":     1,
 		"android": 2,
-	}
-
-	clientTopics = map[string]string{
-		"primary": "com.bitmark.bitmarkios",
-		"beta":    "com.bitmark.bitmarkios.inhouse",
 	}
 )
 
@@ -40,13 +36,13 @@ type notification struct {
 }
 
 type Client struct {
-	urls   map[string]string
-	client *http.Client
+	pushClients map[string]config.PushServerInfo
+	client      *http.Client
 }
 
-func New(urls map[string]string) *Client {
+func New(pushClients map[string]config.PushServerInfo) *Client {
 	return &Client{
-		urls: urls,
+		pushClients: pushClients,
 		client: &http.Client{
 			Timeout: 10 * time.Second,
 		},
@@ -57,10 +53,14 @@ func (c *Client) Send(ctx context.Context, title, message string, receivers map[
 	var err error
 	for client, payloads := range receivers {
 		notifications := make([]notification, 0)
+		pushserverInfo, ok := c.pushClients[client]
 
 		for platform, tokens := range payloads {
+			if !ok {
+				log.Error("Cannot find client matches with: ", client)
+			}
 			notifications = append(notifications, notification{
-				Topic:    clientTopics[client],
+				Topic:    pushserverInfo.Topic,
 				Tokens:   tokens,
 				Platform: platformCode[platform],
 				Message:  message,
@@ -77,7 +77,7 @@ func (c *Client) Send(ctx context.Context, title, message string, receivers map[
 		log.Info("Pushing to client: ", client)
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]interface{}{"notifications": notifications})
-		_, err = ctxhttp.Post(ctx, c.client, c.urls[client]+"/api/push", "application/json", body)
+		_, err = ctxhttp.Post(ctx, c.client, pushserverInfo.URI+"/api/push", "application/json", body)
 	}
 
 	return err
@@ -85,9 +85,9 @@ func (c *Client) Send(ctx context.Context, title, message string, receivers map[
 
 func (c *Client) Ping(ctx context.Context) bool {
 	var err error
-	for _, url := range c.urls {
-		log.Info("Ping to:", url)
-		_, err = ctxhttp.Head(ctx, c.client, url)
+	for _, pushClient := range c.pushClients {
+		log.Info("Ping to:", pushClient.URI)
+		_, err = ctxhttp.Head(ctx, c.client, pushClient.URI)
 	}
 
 	return err == nil
