@@ -78,7 +78,7 @@ platform :ios do
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "Bitmark.xcworkspace", 
-      scheme: "Bitmark development",
+      scheme: "Bitmark dev",
       include_bitcode: false
     )
     hockey(
