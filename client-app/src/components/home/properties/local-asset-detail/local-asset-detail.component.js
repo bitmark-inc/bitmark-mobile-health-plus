@@ -14,6 +14,7 @@ import assetDetailStyle from './local-asset-detail.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { AppController, DataController } from '../../../../managers';
 import { EventEmiterService } from '../../../../services';
+import { config } from '../../../../configs';
 
 let ComponentName = 'LocalAssetDetailComponent';
 export class LocalAssetDetailComponent extends React.Component {
@@ -197,29 +198,6 @@ export class LocalAssetDetailComponent extends React.Component {
                           </TouchableOpacity>
                         </View>);
                       }
-                      // if (item.bitmark.displayStatus === 'donating') {
-                      //   return (<View style={[assetDetailStyle.bitmarksRow]} >
-                      //     {!this.state.bitmarkViewed[item.bitmark.id] && <View style={assetDetailStyle.bitmarkNotView}></View>}
-                      //     <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-                      //     <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                      //       <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>DONATING…</Text>
-                      //     </TouchableOpacity>
-                      //   </View>);
-                      // }
-                      // if (item.bitmark.displayStatus === 'transferring') {
-                      //   return (<View style={[assetDetailStyle.bitmarksRow]} >
-                      //     {!this.state.bitmarkViewed[item.bitmark.id] && <View style={assetDetailStyle.bitmarkNotViewcle}></View>}
-                      //     <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
-
-                      //     <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                      //       <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>TRANSFERRING…</Text>
-                      //     </TouchableOpacity>
-
-                      //     <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.transferOfferId)}>
-                      //       <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>CANCEL</Text>
-                      //     </TouchableOpacity>
-                      //   </View>);
-                      // }
                       return (<View style={[assetDetailStyle.bitmarksRow]} >
                         {!this.state.bitmarkViewed[item.bitmark.id] && <View style={{
                           backgroundColor: '#0060F2',
@@ -233,11 +211,11 @@ export class LocalAssetDetailComponent extends React.Component {
                         }}>
                           <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
                         </TouchableOpacity>
-                        {/* <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
+                        {config.network === config.NETWORKS.testnet && <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset });
                         }}>
                           <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>TRANSFER</Text>
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>}
                       </View>);
                     }}
                   />

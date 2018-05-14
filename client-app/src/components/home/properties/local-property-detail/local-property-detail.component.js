@@ -144,7 +144,7 @@ export class LocalPropertyDetailComponent extends React.Component {
           </TouchableOpacity>
           <View style={defaultStyle.headerCenter}>
             <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(180), }]} numberOfLines={1}>{this.state.asset.name} </Text>
-            {this.state.asset.bitmarks && this.state.asset.bitmarkslengh > 0 && <Text style={[defaultStyle.headerTitle]}>({this.state.asset.bitmarks.indexOf(this.state.bitmark) + 1}/{this.state.asset.bitmarks.length})</Text>}
+            {this.state.asset.bitmarks && this.state.asset.bitmarks.length > 0 && <Text style={[defaultStyle.headerTitle]}>({this.state.asset.bitmarks.indexOf(this.state.bitmark) + 1}/{this.state.asset.bitmarks.length})</Text>}
           </View>
           <TouchableOpacity style={[defaultStyle.headerRight, { padding: 4 }]} onPress={() => this.setState({ displayTopButton: !this.state.displayTopButton })}>
             <Image style={propertyDetailStyle.threeDotIcon} source={this.state.displayTopButton
@@ -165,13 +165,13 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={propertyDetailStyle.topButtonText}>COPY BITMARK ID</Text>
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
-            {/* <TouchableOpacity style={propertyDetailStyle.topButton}
+            {config.network === config.NETWORKS.testnet && <TouchableOpacity style={propertyDetailStyle.topButton}
               disabled={this.state.bitmark.displayStatus !== 'confirmed'}
               onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
               <Text style={[propertyDetailStyle.topButtonText, {
                 color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
               }]}>TRANSFER</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>}
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={this.changeTrackingBitmark}>
               <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK'}</Text>
             </TouchableOpacity>
