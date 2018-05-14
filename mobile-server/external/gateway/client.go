@@ -1,13 +1,19 @@
 package gateway
 
 import (
-	"encoding/json"
+	"context"
 	"net/http"
 	"time"
+
+	"golang.org/x/net/context/ctxhttp"
+
+	"github.com/json-iterator/go"
 
 	bitmarksdk "github.com/bitmark-inc/bitmark-sdk-go"
 	log "github.com/sirupsen/logrus"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type Client struct {
 	url    string
@@ -16,8 +22,10 @@ type Client struct {
 
 func New(url string) *Client {
 	return &Client{
-		url:    url,
-		client: http.DefaultClient}
+		url: url,
+		client: &http.Client{
+			Timeout: 10 * time.Second,
+		}}
 }
 
 type TransferOffer struct {
@@ -33,9 +41,28 @@ type TransferOffer struct {
 	Open      bool                           `json:"open"`
 }
 
-func (c *Client) GetOfferIdInfo(offerID string) (*TransferOffer, error) {
+type Bitmark struct {
+	ID          string    `json:"id"`
+	Owner       string    `json:"owner"`
+	Issuer      string    `json:"issuer"`
+	IssuedAt    time.Time `json:"issued_at"`
+	BlockNumber int       `json:"block_number"`
+	Offset      int64     `json:"offset"`
+	Status      string    `json:"status"`
+}
+
+type BitmarkInfo struct {
+	Bitmark Bitmark `json:"bitmark"`
+	Asset   struct {
+		ID       string            `json:"id"`
+		Name     string            `json:"name"`
+		Metadata map[string]string `json:"metadata"`
+	} `json:"asset"`
+}
+
+func (c *Client) GetOfferIdInfo(ctx context.Context, offerID string) (*TransferOffer, error) {
 	requestURL := c.url + "/v2/transfer_offers?offer_id=" + offerID
-	resp, err := c.client.Get(requestURL)
+	resp, err := ctxhttp.Get(ctx, c.client, requestURL)
 	if err != nil {
 		return nil, err
 	}
@@ -48,8 +75,25 @@ func (c *Client) GetOfferIdInfo(offerID string) (*TransferOffer, error) {
 	return offer["offer"], nil
 }
 
-func (c *Client) Ping() bool {
+func (c *Client) Ping(ctx context.Context) bool {
 	log.Info("Ping to:", c.url)
-	_, err := c.client.Head(c.url)
+	_, err := ctxhttp.Head(ctx, c.client, c.url)
 	return err == nil
+}
+
+func (c *Client) GetBitmarkInfo(ctx context.Context, bitmarkID string) (*BitmarkInfo, error) {
+	bitmarkInfoURL := c.url + "/v1/bitmarks/" + bitmarkID + "?asset=true"
+	response, err := ctxhttp.Get(ctx, c.client, bitmarkInfoURL)
+	if err != nil {
+		return nil, err
+	}
+
+	var bitmarkInfo BitmarkInfo
+
+	decoder := json.NewDecoder(response.Body)
+	if err := decoder.Decode(&bitmarkInfo); err != nil {
+		return nil, err
+	}
+
+	return &bitmarkInfo, nil
 }

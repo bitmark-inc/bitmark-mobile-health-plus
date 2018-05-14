@@ -1,42 +1,107 @@
 package blockchain
 
 import (
-	"encoding/json"
+	"context"
+	"fmt"
+	"strconv"
+	"time"
 
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
+	"github.com/bitmark-inc/mobile-app/mobile-server/pushnotification"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/nsqio/go-nsq"
+	memcache "github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
 )
 
 type BlockchainEventHandler struct {
 	nsq.Handler
 	pushStore     pushstore.PushStore
+	bitmarkStore  bitmarkstore.BitmarkStore
 	pushAPIClient *gorush.Client
+	gatewayClient *gateway.Client
+	cache         *memcache.Cache
 }
 
-func New(store pushstore.PushStore, pushAPIClient *gorush.Client) *BlockchainEventHandler {
+func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *BlockchainEventHandler {
+	c := memcache.New(2*time.Minute, 5*time.Minute)
 	return &BlockchainEventHandler{
-		pushStore:     store,
+		pushStore:     pushStore,
+		bitmarkStore:  bitmarkStore,
 		pushAPIClient: pushAPIClient,
+		gatewayClient: gatewayClient,
+		cache:         c,
 	}
 }
 
 func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
-	var data map[string]interface{}
+	var data blockInfo
 	if err := json.Unmarshal(message.Body, &data); err != nil {
+		log.Error(err)
 		return err
 	}
 
-	log.Debug("Handle event for data", data)
-	// return pushnotification.Push(pushnotification.PushInfo{
-	// 	Account: "e1pFRPqPhY2gpgJTpCiwXDnVeouY9EjHY6STtKwdN6Z4bp4sog",
-	// 	Title:   data["name"].(string),
-	// 	Message: data["body"].(string),
-	// 	Data:    data,
-	// 	Source:  "gateway",
-	// 	Pinned:  false,
-	// 	Silent:  true,
-	// }, h.pushStore, h.pushAPIClient)
+	// log.Debugf("Handle message: %+v", data)
+
+	// De-duplication
+	blockKey := strconv.FormatInt(data.BlockNumber, 10)
+	_, found := h.cache.Get(blockKey)
+	if found {
+		log.Info("Found duplicated block event: ", data.BlockNumber)
+		return nil
+	}
+
+	h.cache.Set(blockKey, true, memcache.DefaultExpiration)
+
+	// get bitmarkid
+	bitmarkIDs := make([]string, 0)
+	for _, bitmark := range data.Transfers {
+		bitmarkIDs = append(bitmarkIDs, bitmark.BitmarkID)
+	}
+
+	ctx := context.Background()
+
+	// aggregate accounts
+	accountsInfo, err := h.bitmarkStore.GetAccountHasTrackingBitmark(ctx, bitmarkIDs)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if len(accountsInfo) == 0 {
+		log.Info("Found no bitmarks matched with tracking list in block: ", data.BlockNumber)
+		return nil
+	}
+
+	for bitmarkID, accounts := range accountsInfo {
+		// get bitmark info to build message
+		bitmarkInfo, err := h.gatewayClient.GetBitmarkInfo(ctx, bitmarkID)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+		event := EventTrackingBitmarkConfirmed
+		pushMessage := fmt.Sprintf(messages[event], bitmarkInfo.Asset.Name)
+		pushData := &map[string]interface{}{
+			"bitmark_id": bitmarkID,
+			"event":      event,
+		}
+
+		for _, account := range accounts {
+			pushnotification.Push(ctx, &pushnotification.PushInfo{
+				Account: account,
+				Title:   "",
+				Message: pushMessage,
+				Data:    pushData,
+				Source:  "gateway",
+				Pinned:  false,
+				Silent:  true,
+			}, h.pushStore, h.pushAPIClient)
+		}
+	}
+
 	return nil
 }

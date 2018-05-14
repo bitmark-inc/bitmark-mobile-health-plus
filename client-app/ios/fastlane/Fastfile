@@ -63,4 +63,26 @@ platform :ios do
       api_token: "58599adb15fb45e588c850af7b79a432"
       )
   end
+  lane :development do
+    version_number = latest_hockey_build_number(
+      api_token: "b6fb005cafb04a33a812013c13384480"
+    ).to_i
+    increment_build_number(
+      xcodeproj: "Bitmark.xcodeproj",
+      build_number: (version_number + 1).to_i
+    )
+    cert
+    sigh(
+      force: false
+    )
+    build_app(
+      export_options: {iCloudContainerEnvironment: 'Production'},
+      workspace: "Bitmark.xcworkspace", 
+      scheme: "Bitmark dev",
+      include_bitcode: false
+    )
+    hockey(
+      api_token: "b6fb005cafb04a33a812013c13384480"
+      )
+  end
 end

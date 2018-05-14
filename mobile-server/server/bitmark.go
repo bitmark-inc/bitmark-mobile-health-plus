@@ -20,13 +20,13 @@ func (s *Server) AddBitmarkTracking(c *gin.Context) {
 	}
 
 	account := c.GetString("requester")
-	if err := s.pushStore.AddAccount(account); err != nil {
+	if err := s.pushStore.AddAccount(c, account); err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	if err := s.bitmarkStore.AddTrackingBitmark(account, req.BitmarkID, req.TxID, req.Status); err != nil {
+	if err := s.bitmarkStore.AddTrackingBitmark(c, account, req.BitmarkID, req.TxID, req.Status); err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -39,7 +39,7 @@ func (s *Server) DeleteBitmarkTracking(c *gin.Context) {
 	bitmarkID := c.Param("bitmarkid")
 
 	account := c.GetString("requester")
-	_, err := s.bitmarkStore.DeleteTrackingBitmark(account, bitmarkID)
+	_, err := s.bitmarkStore.DeleteTrackingBitmark(c, account, bitmarkID)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -52,7 +52,7 @@ func (s *Server) DeleteBitmarkTracking(c *gin.Context) {
 func (s *Server) ListBitmarkTracking(c *gin.Context) {
 	account := c.Request.Header.Get("requester")
 
-	bitmarks, err := s.bitmarkStore.GetTrackingBitmarks(account)
+	bitmarks, err := s.bitmarkStore.GetTrackingBitmarks(c, account)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

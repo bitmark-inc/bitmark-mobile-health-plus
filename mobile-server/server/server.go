@@ -1,6 +1,9 @@
 package server
 
 import (
+	"context"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
@@ -10,6 +13,7 @@ import (
 
 type Server struct {
 	router *gin.Engine
+	server *http.Server
 
 	// Stores
 	pushStore    pushstore.PushStore
@@ -43,7 +47,18 @@ func (s *Server) Run(addr string) error {
 		notifications.GET("", s.NotificationList)
 	}
 
-	return s.router.Run(addr)
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: s.router,
+	}
+
+	s.server = srv
+
+	return srv.ListenAndServe()
+}
+
+func (s *Server) Shutdown(ctx context.Context) error {
+	return s.server.Shutdown(ctx)
 }
 
 func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore) *Server {

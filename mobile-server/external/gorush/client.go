@@ -2,22 +2,23 @@ package gorush
 
 import (
 	"bytes"
-	"encoding/json"
+	"context"
 	"net/http"
-	"net/http/httputil"
+	"time"
+
+	"github.com/bitmark-inc/mobile-app/mobile-server/config"
+	"github.com/json-iterator/go"
+	"golang.org/x/net/context/ctxhttp"
 
 	log "github.com/sirupsen/logrus"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var (
 	platformCode = map[string]int{
 		"ios":     1,
 		"android": 2,
-	}
-
-	clientTopics = map[string]string{
-		"primary": "com.bitmark.bitmarkios",
-		"beta":    "com.bitmark.bitmarkios.inhouse",
 	}
 )
 
@@ -35,21 +36,31 @@ type notification struct {
 }
 
 type Client struct {
-	urls map[string]string
+	pushClients map[string]config.PushServerInfo
+	client      *http.Client
 }
 
-func New(urls map[string]string) *Client {
-	return &Client{urls}
+func New(pushClients map[string]config.PushServerInfo) *Client {
+	return &Client{
+		pushClients: pushClients,
+		client: &http.Client{
+			Timeout: 10 * time.Second,
+		},
+	}
 }
 
-func (c *Client) Send(title, message string, receivers map[string]map[string][]string, data *map[string]interface{}, badge int, silent bool) error {
+func (c *Client) Send(ctx context.Context, title, message string, receivers map[string]map[string][]string, data *map[string]interface{}, badge int, silent bool) error {
 	var err error
 	for client, payloads := range receivers {
 		notifications := make([]notification, 0)
+		pushserverInfo, ok := c.pushClients[client]
+		if !ok {
+			log.Error("Cannot find client matches with: ", client)
+		}
 
 		for platform, tokens := range payloads {
 			notifications = append(notifications, notification{
-				Topic:    clientTopics[client],
+				Topic:    pushserverInfo.Topic,
 				Tokens:   tokens,
 				Platform: platformCode[platform],
 				Message:  message,
@@ -66,26 +77,17 @@ func (c *Client) Send(title, message string, receivers map[string]map[string][]s
 		log.Info("Pushing to client: ", client)
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]interface{}{"notifications": notifications})
-		resp, err := http.DefaultClient.Post(c.urls[client]+"/api/push", "application/json", body)
-
-		// For debugging
-		if err != nil {
-			responseDump, err := httputil.DumpResponse(resp, true)
-			if err != nil {
-				log.Error(err)
-			}
-			log.WithField("responseDump", responseDump).Error(err)
-		}
+		_, err = ctxhttp.Post(ctx, c.client, pushserverInfo.URI+"/api/push", "application/json", body)
 	}
 
 	return err
 }
 
-func (c *Client) Ping() bool {
+func (c *Client) Ping(ctx context.Context) bool {
 	var err error
-	for _, url := range c.urls {
-		log.Info("Ping to:", url)
-		_, err = http.DefaultClient.Head(url)
+	for _, pushClient := range c.pushClients {
+		log.Info("Ping to:", pushClient.URI)
+		_, err = ctxhttp.Head(ctx, c.client, pushClient.URI)
 	}
 
 	return err == nil
