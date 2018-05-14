@@ -230,7 +230,7 @@ export default StyleSheet.create({
 
   acceptAllTransfersButton: {
     width: '100%',
-    height: 38,
+    height: 45,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
