@@ -78,5 +78,7 @@ CREATE TABLE mobile.bitmark_tracking (
       PRIMARY KEY(bitmark_id, account_number)
 );
 
+CREATE INDEX idx_bitmark_tracking_bitmark_id ON mobile.bitmark_tracking(bitmark_id);
+
 -- finished
 SET search_path TO DEFAULT;

@@ -13,6 +13,18 @@ external {
     pushServerBeta = "http://n.devel.bitmark.com"
 }
 
+push-notification {
+    primary = {
+        host = "https://n.devel.bitmark.com:31675"
+        topic = "com.bitmark.bitmarkios"
+    }
+
+    beta = {
+        host = "https://n.devel.bitmark.com:31675"
+        topic = "com.bitmark.bitmarkios.development"
+    }
+}
+
 db {
     host = "mobile-devnet.c2yhyb2xjk0n.ap-southeast-1.rds.amazonaws.com"
     port = 25432

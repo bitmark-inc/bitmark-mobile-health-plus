@@ -22,7 +22,7 @@ let config = {
   registry_server_url: 'https://registry.test.bitmark.com',
   trade_server_url: 'https://trade.devel.bitmark.com',
   donation_server_url: 'http://192.168.0.202:9001',
-  mobile_server_url: 'https://bm.devel.bitmark.com',
+  mobile_server_url: 'http://192.168.0.113:9005',
   ifttt_server_url: 'https://channel.devel.bitmark.com:8090',
   ifttt_invite_url: 'https://ifttt.com/features/redeem?code=10403-fa99108249f426f459a2e1033ddfbbb5',
   ifttt_bitmark_service_url: 'https://ifttt.com/bitmarkdevel',
@@ -33,7 +33,7 @@ let config = {
 if (config.network === NETWORKS.testnet) {
   config.trade_server_url = 'https://trade.test.bitmark.com';
   config.donation_server_url = 'https://data-donation.test.bitmark.com';
-  config.mobile_server_url = 'https://bm.test.bitmark.com';
+  config.mobile_server_url = 'http://192.168.0.113:9005';
   config.ifttt_server_url = 'https://when.test.bitmark.com:9090';
   config.ifttt_invite_url = 'https://ifttt.com/features/redeem?code=10518-3f2950b543e7a5a2dc307de0c05775e4';
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmarktest';

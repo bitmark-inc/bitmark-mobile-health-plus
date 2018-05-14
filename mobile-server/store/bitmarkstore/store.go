@@ -1,6 +1,7 @@
 package bitmarkstore
 
 import (
+	"context"
 	"time"
 )
 
@@ -12,7 +13,8 @@ type BitmarkTracking struct {
 }
 
 type BitmarkStore interface {
-	AddTrackingBitmark(account, bitmarkID, txID, status string) error
-	GetTrackingBitmarks(account string) ([]BitmarkTracking, error)
-	DeleteTrackingBitmark(account, bitmarkID string) (bool, error)
+	AddTrackingBitmark(ctx context.Context, account, bitmarkID, txID, status string) error
+	GetTrackingBitmarks(ctx context.Context, account string) ([]BitmarkTracking, error)
+	DeleteTrackingBitmark(ctx context.Context, account, bitmarkID string) (bool, error)
+	GetAccountHasTrackingBitmark(ctx context.Context, bitmarkIDs []string) (map[string][]string, error)
 }

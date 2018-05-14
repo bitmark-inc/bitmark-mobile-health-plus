@@ -1,6 +1,9 @@
 package internalapi
 
 import (
+	"context"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
@@ -10,6 +13,7 @@ import (
 
 type InternalAPIServer struct {
 	router *gin.Engine
+	server *http.Server
 
 	// Stores
 	pushStore pushstore.PushStore
@@ -27,7 +31,18 @@ func (s *InternalAPIServer) Run(addr string) error {
 	pushNotification := api.Group("/push_notifications")
 	pushNotification.POST("", s.PushNotification)
 
-	return s.router.Run(addr)
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: s.router,
+	}
+
+	s.server = srv
+
+	return srv.ListenAndServe()
+}
+
+func (s *InternalAPIServer) Shutdown(ctx context.Context) error {
+	return s.server.Shutdown(ctx)
 }
 
 func New(pushStore pushstore.PushStore, pushClient *gorush.Client) *InternalAPIServer {

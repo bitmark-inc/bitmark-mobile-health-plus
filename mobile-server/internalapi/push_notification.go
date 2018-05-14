@@ -23,7 +23,7 @@ func (s *InternalAPIServer) PushNotification(c *gin.Context) {
 		return
 	}
 
-	receivers, err := s.pushStore.QueryPushTokens(req.Account)
+	receivers, err := s.pushStore.QueryPushTokens(c, req.Account)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -36,7 +36,7 @@ func (s *InternalAPIServer) PushNotification(c *gin.Context) {
 		return
 	}
 
-	if err := pushnotification.Push(&pushnotification.PushInfo{
+	if err := pushnotification.Push(c, &pushnotification.PushInfo{
 		Account: req.Account,
 		Title:   req.Title,
 		Message: req.Message,

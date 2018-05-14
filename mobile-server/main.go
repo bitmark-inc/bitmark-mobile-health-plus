@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
+
+	"github.com/bitmark-inc/mobile-app/mobile-server/config"
+	"github.com/bitmark-inc/mobile-app/mobile-server/watcher/blockchain"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
@@ -19,60 +23,15 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher/twosigs"
 	nsq "github.com/nsqio/go-nsq"
 
-	"github.com/hashicorp/hcl"
 	"github.com/jackc/pgx"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 )
 
 var (
-	g errgroup.Group
+	g   errgroup.Group
+	ctx context.Context = context.Background()
 )
-
-type Configuration struct {
-	Network string `hcl:"network"`
-	Listen  struct {
-		MobileAPI   int `hcl:"mobileAPI"`
-		InternalAPI int `hcl:"internalAPI"`
-	} `hcl:"listen"`
-	DB struct {
-		Host     string `hcl:"host"`
-		Port     int    `hcl:"port"`
-		Username string `hcl:"username"`
-		Password string `hcl:"password"`
-		DBName   string `hcl:"dbname"`
-		SSLMode  string `hcl:"sslmode"`
-	} `hcl:"db"`
-	External struct {
-		CoreAPIServer  string `hcl:"coreAPIServer"`
-		MessageQueue   string `hcl:"messageQueue"`
-		MessageChannel string `hcl:"messageChannel"`
-		IFTTTServer    string `hcl:"iftttServer"`
-		PushServer     string `hcl:"pushServer"`
-		PushServerBeta string `hcl:"pushServerBeta"`
-	} `hcl:"external"`
-	DataDonation struct {
-		ResearcherAccounts map[string]string `hcl:"researchers"`
-	} `hcl:"data-donation"`
-}
-
-func (config *Configuration) Load(configFile string) error {
-	f, err := os.Open(configFile)
-	if err != nil {
-		return err
-	}
-
-	b, err := ioutil.ReadAll(f)
-	if err != nil {
-		return err
-	}
-
-	if err = hcl.Unmarshal(b, config); nil != err {
-		return err
-	}
-
-	return nil
-}
 
 func openDb(host string, port uint16, dbname, user, passwd string) (*pgx.ConnPool, error) {
 	logger := logmodule.NewPgxLogger()
@@ -105,14 +64,18 @@ func initializeLog() {
 	log.SetLevel(log.DebugLevel)
 }
 
-func initializeWatcher(c *Configuration, store pushstore.PushStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *watcher.NotifyClient {
+func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *watcher.NotifyClient {
 	nc := &watcher.NotifyClient{
 		Queues: make([]*nsq.Consumer, 0),
 		Stop:   make(chan struct{}),
 	}
 
-	twosigsHandler := twosigs.New(store, pushAPIClient, gatewayClient, c.DataDonation.ResearcherAccounts)
+	twosigsHandler := twosigs.New(pushStore, pushAPIClient, gatewayClient, c.DataDonation.ResearcherAccounts)
 	nc.Add("transfer-offer", c.External.MessageChannel, twosigsHandler)
+
+	blockchainHandler := blockchain.New(pushStore, bitmarkStore, pushAPIClient, gatewayClient)
+	nc.Add("new-block", c.External.MessageChannel, blockchainHandler)
+
 	nc.Connect(c.External.MessageQueue)
 
 	return nc
@@ -120,18 +83,18 @@ func initializeWatcher(c *Configuration, store pushstore.PushStore, pushAPIClien
 
 func main() {
 	var configFile string
-	var config Configuration
 
 	flag.StringVar(&configFile, "conf", "./mobile-server.conf", "mobile server configuration")
 	flag.Parse()
 
 	initializeLog()
 
-	if err := config.Load(configFile); err != nil {
+	conf, err := config.LoadConfig(configFile)
+	if err != nil {
 		log.Panic("can not open config file", err)
 	}
 
-	dbConn, err := openDb(config.DB.Host, uint16(config.DB.Port), config.DB.DBName, config.DB.Username, config.DB.Password)
+	dbConn, err := openDb(conf.DB.Host, uint16(conf.DB.Port), conf.DB.DBName, conf.DB.Username, conf.DB.Password)
 	if err != nil {
 		log.Panic("cannot connect to db", err)
 	}
@@ -139,45 +102,64 @@ func main() {
 	pushStore := pushstore.NewPGStore(dbConn)
 	bitmarkStore := bitmarkstore.New(dbConn)
 
-	log.Debug("config.External.PushServerBeta: ", config.External.PushServerBeta)
+	// push api client
+	pushClient := gorush.New(conf.PushClients)
+	gatewayClient := gateway.New(conf.External.CoreAPIServer)
 
-	pushClient := gorush.New(map[string]string{
-		"primary": config.External.PushServer,
-		"beta":    config.External.PushServerBeta,
-	})
-	gatewayClient := gateway.New(config.External.CoreAPIServer)
-
-	if !pushClient.Ping() {
+	if !pushClient.Ping(ctx) {
 		log.Panic("Failed to ping to push server")
 	}
-	if !gatewayClient.Ping() {
+	if !gatewayClient.Ping(ctx) {
 		log.Panic("Failed to ping to gateway server")
 	}
 
-	nc := initializeWatcher(&config, pushStore, pushClient, gatewayClient)
+	nc := initializeWatcher(conf, pushStore, bitmarkStore, pushClient, gatewayClient)
+
+	mobileAPIServer := server.New(pushStore, bitmarkStore)
+	internalAPIServer := internalapi.New(pushStore, pushClient)
 
 	c := make(chan os.Signal, 2)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		log.Info("Server is preparing to stop")
-		dbConn.Close()
+		log.Info("Server is preparing to shutdown")
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		log.Info("Shutdown mobile api server")
+		if err := mobileAPIServer.Shutdown(ctx); err != nil {
+			log.Fatal("Server Shutdown:", err)
+		}
+
+		log.Info("Shutdown internal api server")
+		if err := internalAPIServer.Shutdown(ctx); err != nil {
+			log.Fatal("Server Shutdown:", err)
+		}
+
+		log.Info("Disconnect nsq")
 		nc.Close()
+
+		log.Info("Disconnect postgres")
+		dbConn.Close()
+
 		os.Exit(1)
 	}()
 
-	mobileAPIServer := server.New(pushStore, bitmarkStore)
-	internalAPIServer := internalapi.New(pushStore, pushClient)
-
 	g.Go(func() error {
-		return mobileAPIServer.Run(fmt.Sprintf(":%d", config.Listen.MobileAPI))
+		return mobileAPIServer.Run(fmt.Sprintf(":%d", conf.Listen.MobileAPI))
 	})
 
 	g.Go(func() error {
-		return internalAPIServer.Run(fmt.Sprintf(":%d", config.Listen.InternalAPI))
+		return internalAPIServer.Run(fmt.Sprintf(":%d", conf.Listen.InternalAPI))
 	})
 
 	if err := g.Wait(); err != nil {
 		log.Fatal(err)
 	}
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
 }
