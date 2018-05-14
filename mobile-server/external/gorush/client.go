@@ -54,11 +54,11 @@ func (c *Client) Send(ctx context.Context, title, message string, receivers map[
 	for client, payloads := range receivers {
 		notifications := make([]notification, 0)
 		pushserverInfo, ok := c.pushClients[client]
+		if !ok {
+			log.Error("Cannot find client matches with: ", client)
+		}
 
 		for platform, tokens := range payloads {
-			if !ok {
-				log.Error("Cannot find client matches with: ", client)
-			}
 			notifications = append(notifications, notification{
 				Topic:    pushserverInfo.Topic,
 				Tokens:   tokens,

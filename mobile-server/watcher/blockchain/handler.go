@@ -2,8 +2,6 @@ package blockchain
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"fmt"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
@@ -33,7 +31,7 @@ func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, 
 }
 
 func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
-	var data map[string]interface{}
+	var data blockInfo
 	if err := json.Unmarshal(message.Body, &data); err != nil {
 		log.Error(err)
 		return err
@@ -43,61 +41,51 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 
 	// h.bitmarkStore.TestTrackingBitmark(context.Background(), )
 
-	name, okName := data["name"].(string)
-	if !okName && name != "new_transfers" {
-		return nil
-	}
-
-	bitmarkID, okBitmarkID := data["body"].(string)
-	if !okBitmarkID {
-		return errors.New("failed to parse bitmark id")
+	bitmarkIDs := make([]string, 0)
+	for _, bitmark := range data.Transfers {
+		bitmarkIDs = append(bitmarkIDs, bitmark.BitmarkID)
 	}
 
 	ctx := context.Background()
 
-	// prevent overhead on db
-	isMatched, err := h.bitmarkStore.TestTrackingBitmark(ctx, bitmarkID)
+	// aggregate accounts
+	accountsInfo, err := h.bitmarkStore.GetAccountHasTrackingBitmark(ctx, bitmarkIDs)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	if !isMatched {
-		log.Debug("No bitmard ids matched")
+	if len(accountsInfo) == 0 {
+		log.Info("Found no bitmarks matched with tracking list in block: ", data.BlockNumber)
 		return nil
 	}
 
-	// aggregate accounts
-	accounts, err := h.bitmarkStore.GetAccountHasTrackingBitmark(ctx, bitmarkID)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
+	for bitmarkID, accounts := range accountsInfo {
+		// get bitmark info to build message
+		bitmarkInfo, err := h.gatewayClient.GetBitmarkInfo(ctx, bitmarkID)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
 
-	// get bitmark info to build message
-	bitmarkInfo, err := h.gatewayClient.GetBitmarkInfo(ctx, bitmarkID)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
+		event := EventTrackingBitmarkConfirmed
+		pushMessage := fmt.Sprintf(messages[event], bitmarkInfo.Asset.Name)
+		pushData := &map[string]interface{}{
+			"bitmark_id": bitmarkID,
+			"event":      event,
+		}
 
-	event := EventTrackingBitmarkConfirmed
-	pushMessage := fmt.Sprintf(messages[event], bitmarkInfo.Asset.Name)
-	pushData := &map[string]interface{}{
-		"bitmark_id": bitmarkID,
-		"event":      event,
-	}
-
-	for _, account := range accounts {
-		pushnotification.Push(ctx, &pushnotification.PushInfo{
-			Account: account,
-			Title:   "",
-			Message: pushMessage,
-			Data:    pushData,
-			Source:  "gateway",
-			Pinned:  false,
-			Silent:  true,
-		}, h.pushStore, h.pushAPIClient)
+		for _, account := range accounts {
+			pushnotification.Push(ctx, &pushnotification.PushInfo{
+				Account: account,
+				Title:   "",
+				Message: pushMessage,
+				Data:    pushData,
+				Source:  "gateway",
+				Pinned:  false,
+				Silent:  true,
+			}, h.pushStore, h.pushAPIClient)
+		}
 	}
 
 	return nil

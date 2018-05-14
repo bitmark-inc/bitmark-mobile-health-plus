@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx"
+	"github.com/json-iterator/go"
 )
 
 type BitmarkPGStore struct {
@@ -13,12 +14,13 @@ type BitmarkPGStore struct {
 	dbConn *pgx.ConnPool
 }
 
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
+
 const (
 	sqlInsertBitmarkTracking          = "INSERT INTO mobile.bitmark_tracking(account_number, bitmark_id, tx_id, status) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING"
 	sqlDeleteBitmarkTracking          = "DELETE FROM mobile.bitmark_tracking WHERE bitmark_id = $1 AND account_number = $2"
 	sqlQueryBitmarkTracking           = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
-	sqlQueryBitmarkTrackingAvailable  = "SELECT EXISTS (SELECT 1 FROM mobile.bitmark_tracking WHERE bitmark_id = $1 LIMIT 1)"
-	sqlQueryAccountHasTrackingBitmark = "SELECT array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = $1"
+	sqlQueryAccountHasTrackingBitmark = "SELECT bitmark_id, array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = ANY($1) GROUP BY bitmark_id"
 )
 
 func New(dbConn *pgx.ConnPool) *BitmarkPGStore {
@@ -65,18 +67,27 @@ func (b *BitmarkPGStore) GetTrackingBitmarks(ctx context.Context, account string
 	return items, nil
 }
 
-func (b *BitmarkPGStore) TestTrackingBitmark(ctx context.Context, bitmarkID string) (bool, error) {
-	row := b.dbConn.QueryRowEx(ctx, sqlQueryBitmarkTrackingAvailable, nil, bitmarkID)
+func (b *BitmarkPGStore) GetAccountHasTrackingBitmark(ctx context.Context, bitmarkIDs []string) (map[string][]string, error) {
+	rows, err := b.dbConn.QueryEx(ctx, sqlQueryAccountHasTrackingBitmark, nil, bitmarkIDs)
 
-	var available bool
-	err := row.Scan(&available)
-	return available, err
-}
+	defer rows.Close()
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, err
+		}
+	}
 
-func (b *BitmarkPGStore) GetAccountHasTrackingBitmark(ctx context.Context, bitmarkID string) ([]string, error) {
-	row := b.dbConn.QueryRowEx(ctx, sqlQueryAccountHasTrackingBitmark, nil, bitmarkID)
+	result := make(map[string][]string)
 
-	var accountNumbers []string
-	err := row.Scan(&accountNumbers)
-	return accountNumbers, err
+	for rows.Next() {
+		var bitmarkID string
+		var accountNumbers []string
+		if err := rows.Scan(&bitmarkID, &accountNumbers); err != nil {
+			return nil, err
+		}
+
+		result[bitmarkID] = accountNumbers
+	}
+
+	return result, nil
 }
