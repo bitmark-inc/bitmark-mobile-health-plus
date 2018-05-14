@@ -3,6 +3,8 @@ package blockchain
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"time"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
@@ -10,6 +12,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/nsqio/go-nsq"
+	memcache "github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -19,14 +22,17 @@ type BlockchainEventHandler struct {
 	bitmarkStore  bitmarkstore.BitmarkStore
 	pushAPIClient *gorush.Client
 	gatewayClient *gateway.Client
+	cache         *memcache.Cache
 }
 
 func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *BlockchainEventHandler {
+	c := memcache.New(2*time.Minute, 5*time.Minute)
 	return &BlockchainEventHandler{
 		pushStore:     pushStore,
 		bitmarkStore:  bitmarkStore,
 		pushAPIClient: pushAPIClient,
 		gatewayClient: gatewayClient,
+		cache:         c,
 	}
 }
 
@@ -37,10 +43,19 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 		return err
 	}
 
-	log.Debugf("Handle message: %+v", data)
+	// log.Debugf("Handle message: %+v", data)
 
-	// h.bitmarkStore.TestTrackingBitmark(context.Background(), )
+	// De-duplication
+	blockKey := strconv.FormatInt(data.BlockNumber, 10)
+	_, found := h.cache.Get(blockKey)
+	if found {
+		log.Info("Found duplicated block event: ", data.BlockNumber)
+		return nil
+	}
 
+	h.cache.Set(blockKey, true, memcache.DefaultExpiration)
+
+	// get bitmarkid
 	bitmarkIDs := make([]string, 0)
 	for _, bitmark := range data.Transfers {
 		bitmarkIDs = append(bitmarkIDs, bitmark.BitmarkID)
