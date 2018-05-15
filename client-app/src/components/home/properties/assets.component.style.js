@@ -124,7 +124,7 @@ export default StyleSheet.create({
   newItem: {
     backgroundColor: '#0060F2',
     width: 10, height: 10,
-    position: 'absolute', left: 6, top: 10,
+    position: 'absolute', left: convertWidth(6), top: 10,
     borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
   },
 

@@ -174,7 +174,7 @@ export default StyleSheet.create({
   bitmarkNotView: {
     backgroundColor: '#0060F2',
     width: 10, height: 10,
-    position: 'absolute', left: 9, top: 12,
+    position: 'absolute', left: convertWidth(9), top: 12,
     borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
   },
   bitmarksRowNo: {
