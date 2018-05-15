@@ -8,7 +8,7 @@ const (
 
 var (
 	messages = map[string]string{
-		EventTrackingBitmarkConfirmed: "The property %s has been updated, tap to view tracking details.",
+		EventTrackingBitmarkConfirmed: "The property \"%s\" has been updated, tap to view tracking details.",
 	}
 )
 
