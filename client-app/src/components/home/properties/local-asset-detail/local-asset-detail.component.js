@@ -59,11 +59,6 @@ export class LocalAssetDetailComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
     DataController.doUpdateViewStatus(this.state.asset);
   }
-
-  componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
-  }
-
   handerChangeLocalBitmarks() {
     let data = DataController.getLocalBitmarkInformation(null, this.state.asset.id);
     if (data.asset) {

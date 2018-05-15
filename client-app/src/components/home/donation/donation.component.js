@@ -57,10 +57,6 @@ export class DonationComponent extends React.Component {
       }
     }
   }
-  componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
-  }
   // ==========================================================================================
 
   handerLoadingData() {

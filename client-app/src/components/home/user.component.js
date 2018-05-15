@@ -58,11 +58,6 @@ export class UserComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
   }
 
-  componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
-  }
-
   reloadUserData() {
     AppController.doReloadUserData();
   }

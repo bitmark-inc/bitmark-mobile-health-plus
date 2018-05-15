@@ -65,12 +65,6 @@ export class AssetsComponent extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
-  }
-
   handerChangeLocalBitmarks() {
     this.switchSubtab(this.state.subtab);
   }

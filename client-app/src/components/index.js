@@ -92,9 +92,6 @@ class MainComponent extends Component {
     });
   }
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
-    EventEmiterService.remove(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
-    EventEmiterService.remove(EventEmiterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
@@ -156,7 +153,6 @@ class MainComponent extends Component {
   }
 
   doTryConnectInternet() {
-    console.log('doTryConnectInternet ====');
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
     NetInfo.isConnected.fetch().then().done(() => {
       NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
