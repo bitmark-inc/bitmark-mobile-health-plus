@@ -340,7 +340,7 @@ export class TransactionsComponent extends React.Component {
 
   acceptAllTransfers() {
     let transferOffers = [];
-    for (let item in this.state.actionRequired) {
+    for (let item of this.state.actionRequired) {
       if (item.type === ActionTypes.transfer) {
         transferOffers.push(item.transferOffer);
       }
