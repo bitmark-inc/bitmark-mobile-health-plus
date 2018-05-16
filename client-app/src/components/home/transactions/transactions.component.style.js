@@ -234,7 +234,10 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F2FAFF'
+    backgroundColor: '#F2FAFF',
+    borderTopColor: '#0060F2',
+    borderTopWidth: 3,
+    marginBottom: 1,
   },
   acceptAllTransfersButtonText: {
     fontFamily: 'Avenir Black',
