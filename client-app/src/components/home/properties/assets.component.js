@@ -65,12 +65,6 @@ export class AssetsComponent extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
-  }
-
   handerChangeLocalBitmarks() {
     this.switchSubtab(this.state.subtab);
   }
@@ -122,6 +116,7 @@ export class AssetsComponent extends React.Component {
     if (this.state.assets && this.state.assets.length > 0) {
       this.state.assets.forEach(asset => totalBitmark += asset.bitmarks.length);
     }
+    let totalTrackingBitmarks = this.state.trackingBitmarks ? this.state.trackingBitmarks.length : 0;
     return (
       <View style={assetsStyle.body}>
         <View style={[assetsStyle.header, { zIndex: 1 }]}>
@@ -140,13 +135,11 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                {this.state.existNewAsset && <View style={{
-                  backgroundColor: '#0060F2',
-                  width: 10, height: 10,
-                  position: 'absolute', left: 9,
-                  borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
-                }}></View>}
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.local.toUpperCase()} ({totalBitmark})</Text>
+                {this.state.existNewAsset && <View style={assetsStyle.newItem}></View>}
+                <Text style={[assetsStyle.subTabButtonText, { marginLeft: totalBitmark > 99 ? 10 : 0 }]}>
+                  {SubTabs.local.toUpperCase()}
+                  <Text style={{ fontSize: totalBitmark > 9 ? 10 : 14 }}>{(totalBitmark > 0 ? ` (${totalBitmark > 99 ? '99+' : totalBitmark})` : '')}</Text>
+                </Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -157,7 +150,11 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.local.toUpperCase()} ({this.state.assets ? this.state.assets.length : 0})</Text>
+                {this.state.existNewAsset && <View style={assetsStyle.newItem}></View>}
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1', marginLeft: totalBitmark > 99 ? 10 : 0 }]}>
+                  {SubTabs.local.toUpperCase()}
+                  <Text style={{ fontSize: totalBitmark > 9 ? 10 : 14 }}>{(totalBitmark > 0 ? ` (${totalBitmark > 99 ? '99+' : totalBitmark})` : '')}</Text>
+                </Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -169,8 +166,11 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                {this.state.existNewTracking && <View style={assetsStyle.newItem}></View>}
-                <Text style={assetsStyle.subTabButtonText}>{SubTabs.tracking.toUpperCase()}</Text>
+                {<View style={assetsStyle.newItem}></View>}
+                <Text style={[assetsStyle.subTabButtonText, { marginLeft: totalTrackingBitmarks > 9 ? 10 : 0 }]}>
+                  {SubTabs.tracking.toUpperCase()}
+                  <Text style={{ fontSize: totalTrackingBitmarks > 9 ? 10 : 14 }}>{(totalTrackingBitmarks > 0 ? ` (${totalTrackingBitmarks > 99 ? '99+' : totalTrackingBitmarks})` : '')}</Text>
+                </Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -181,8 +181,11 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                {this.state.existNewTracking && <View style={assetsStyle.newItem}></View>}
-                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.tracking.toUpperCase()}</Text>
+                {<View style={assetsStyle.newItem}></View>}
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1', marginLeft: totalTrackingBitmarks > 9 ? 10 : 0 }]}>
+                  {SubTabs.tracking.toUpperCase()}
+                  <Text style={{ fontSize: totalTrackingBitmarks > 9 ? 10 : 14 }}>{(totalTrackingBitmarks > 0 ? ` (${totalTrackingBitmarks > 99 ? '99+' : totalTrackingBitmarks})` : '')}</Text>
+                </Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -243,12 +246,7 @@ export class AssetsComponent extends React.Component {
                 return (<TouchableOpacity style={[assetsStyle.assetRowArea]} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('LocalAssetDetail', { asset: item });
                 }} >
-                  {!item.isViewed && <View style={{
-                    backgroundColor: '#0060F2',
-                    width: 10, height: 10,
-                    position: 'absolute', left: 9, top: 22,
-                    borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
-                  }}></View>}
+                  {!item.isViewed && <View style={[assetsStyle.newItem, { top: 22 }]}></View>}
 
                   {/* {item.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
                     <Text style={[assetsStyle.assetBitmarksNumber, { color: '#0060F2' }]}>{item.bitmarks.length}</Text>

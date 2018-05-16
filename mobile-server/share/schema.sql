@@ -40,7 +40,7 @@ CREATE TABLE mobile.account (
 -- device_platform enumeration
 CREATE TYPE device_platform AS ENUM ('ios', 'android');
 
-CREATE TYPE push_client AS ENUM('primary', 'beta');
+CREATE TYPE push_client AS ENUM('primary', 'beta', 'development');
 
 -- TABLE push_uuid
 CREATE TABLE mobile.push_uuid (

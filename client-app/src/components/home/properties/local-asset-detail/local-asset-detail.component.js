@@ -59,11 +59,6 @@ export class LocalAssetDetailComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
     DataController.doUpdateViewStatus(this.state.asset);
   }
-
-  componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
-  }
-
   handerChangeLocalBitmarks() {
     let data = DataController.getLocalBitmarkInformation(null, this.state.asset.id);
     if (data.asset) {
@@ -199,12 +194,7 @@ export class LocalAssetDetailComponent extends React.Component {
                         </View>);
                       }
                       return (<View style={[assetDetailStyle.bitmarksRow]} >
-                        {!this.state.bitmarkViewed[item.bitmark.id] && <View style={{
-                          backgroundColor: '#0060F2',
-                          width: 10, height: 10,
-                          position: 'absolute', left: 9, top: 12,
-                          borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
-                        }}></View>}
+                        {!this.state.bitmarkViewed[item.bitmark.id] && <View style={assetDetailStyle.bitmarkNotView}></View>}
                         <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
                         <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });

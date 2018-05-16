@@ -53,8 +53,9 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   subTabButtonTextArea: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'center',
     height: 35,
   },
@@ -64,6 +65,8 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     textAlign: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   activeSubTabBar: {
     height: 4,
@@ -121,7 +124,7 @@ export default StyleSheet.create({
   newItem: {
     backgroundColor: '#0060F2',
     width: 10, height: 10,
-    position: 'absolute', left: 9,
+    position: 'absolute', left: convertWidth(6), top: 10,
     borderWidth: 1, borderRadius: 5, borderColor: '#0060F2'
   },
 

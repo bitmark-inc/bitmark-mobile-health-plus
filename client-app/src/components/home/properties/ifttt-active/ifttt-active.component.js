@@ -40,9 +40,6 @@ export class IftttActiveComponent extends React.Component {
   componentDidMount() {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
   }
-  componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
-  }
   // ==========================================================================================
   handerIftttInformationChange() {
     this.setState({ iftttInformation: DataController.getIftttInformation() });

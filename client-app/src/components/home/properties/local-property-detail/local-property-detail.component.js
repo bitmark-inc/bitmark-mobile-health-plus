@@ -66,9 +66,6 @@ export class LocalPropertyDetailComponent extends React.Component {
     EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
   }
 
-  componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
-  }
 
   handerChangeTrackingBitmarks() {
     this.setState({ loading: true });
@@ -154,9 +151,9 @@ export class LocalPropertyDetailComponent extends React.Component {
         </View></TouchableWithoutFeedback>)}
         content={(<TouchableWithoutFeedback onPress={() => this.setState({ displayTopButton: false })}><View style={propertyDetailStyle.body}>
           {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-            <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.displayStatus !== 'confirmed'} onPress={this.downloadAsset}>
+            {this.state.bitmark.owner === DataController.getUserInformation().bitmarkAccountNumber && <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.displayStatus !== 'confirmed'} onPress={this.downloadAsset}>
               <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
               Clipboard.setString(this.state.bitmark.id);
               this.setState({ copied: true });
@@ -165,7 +162,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={propertyDetailStyle.topButtonText}>COPY BITMARK ID</Text>
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
-            {config.network === config.NETWORKS.testnet && <TouchableOpacity style={propertyDetailStyle.topButton}
+            {config.network === config.NETWORKS.testnet && this.state.bitmark.owner === DataController.getUserInformation().bitmarkAccountNumber && <TouchableOpacity style={propertyDetailStyle.topButton}
               disabled={this.state.bitmark.displayStatus !== 'confirmed'}
               onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
               <Text style={[propertyDetailStyle.topButtonText, {

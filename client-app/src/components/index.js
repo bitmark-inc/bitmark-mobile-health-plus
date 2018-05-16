@@ -156,7 +156,6 @@ class MainComponent extends Component {
   }
 
   doTryConnectInternet() {
-    console.log('doTryConnectInternet ====');
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
     NetInfo.isConnected.fetch().then().done(() => {
       NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
