@@ -53,7 +53,7 @@ export class StudyDonationComponent extends React.Component {
                     }
                   }).catch(error => {
                     console.log('doDonateHealthData error:', error);
-                    EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+                    EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { onClose: () => this.props.navigation.goBack() });
                   });
               }}>
                 <Text style={donationStyles.bitmarkButtonText}>DONATE</Text>

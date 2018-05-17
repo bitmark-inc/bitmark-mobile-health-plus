@@ -46,7 +46,6 @@ const FileUtil = {
   },
 
   zip: async (inputPath, outputPath) => {
-    console.log('zip :', inputPath, outputPath);
     return zip(inputPath, outputPath);
   },
   unzip: async (inputPath, outputPath) => {
