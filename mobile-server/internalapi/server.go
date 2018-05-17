@@ -8,6 +8,7 @@ import (
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 )
 
@@ -16,7 +17,8 @@ type InternalAPIServer struct {
 	server *http.Server
 
 	// Stores
-	pushStore pushstore.PushStore
+	pushStore    pushstore.PushStore
+	bitmarkStore bitmarkstore.BitmarkStore
 
 	// External API
 	pushAPIClient *gorush.Client
@@ -30,6 +32,13 @@ func (s *InternalAPIServer) Run(addr string) error {
 
 	pushNotification := api.Group("/push_notifications")
 	pushNotification.POST("", s.PushNotification)
+
+	trackingBitmarks := api.Group("/tracking_bitmarks")
+	trackingBitmarks.GET("", s.ListBitmarkTracking)
+	trackingBitmarks.Use(authenticate())
+	{
+		trackingBitmarks.POST("", s.AddBitmarkTracking)
+	}
 
 	srv := &http.Server{
 		Addr:    addr,
@@ -45,12 +54,13 @@ func (s *InternalAPIServer) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func New(pushStore pushstore.PushStore, pushClient *gorush.Client) *InternalAPIServer {
+func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, pushClient *gorush.Client) *InternalAPIServer {
 	r := gin.New()
 
 	return &InternalAPIServer{
 		router:        r,
 		pushStore:     pushStore,
+		bitmarkStore:  bitmarkStore,
 		pushAPIClient: pushClient,
 	}
 }
