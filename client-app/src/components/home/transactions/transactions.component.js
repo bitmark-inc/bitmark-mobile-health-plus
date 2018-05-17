@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image, ActivityIndicator,
+  Alert,
 } from 'react-native';
 import moment from 'moment';
 
@@ -40,7 +41,7 @@ export class TransactionsComponent extends React.Component {
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
     this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
-
+    this.acceptAllTransfers = this.acceptAllTransfers.bind(this);
     this.clickToActionRequired = this.clickToActionRequired.bind(this);
     this.generateData = this.generateData.bind(this);
     this.clickToCompleted = this.clickToCompleted.bind(this);
@@ -329,6 +330,33 @@ export class TransactionsComponent extends React.Component {
     }
   }
 
+  acceptAllTransfers() {
+    let transferOffers = [];
+    for (let item of this.state.actionRequired) {
+      if (item.type === ActionTypes.transfer) {
+        transferOffers.push(item.transferOffer);
+      }
+    }
+
+    Alert.alert('Sign All the Ownership Transfer Requests', `Accept “${transferOffers.length}” properties ownership transfer. `, [{
+      text: 'Cancel', style: 'cancel',
+    }, {
+      text: 'Yes',
+      onPress: () => {
+        AppController.acceptAllTransfers(transferOffers, { indicator: true, }, {
+          indicator: false, title: 'Acceptance Submitted', message: 'Your signature for the transfer requests have been successfully submitted to the Bitmark network.'
+        }, { indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.' }, result => {
+          if (result) {
+            DataController.doReloadIncommingTransferOffers();
+          }
+        }).catch(error => {
+          console.log('acceptAllTransfers error:', error);
+          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+        });
+      }
+    }]);
+  }
+
   render() {
     return (
       <View style={transactionsStyle.body}>
@@ -438,7 +466,11 @@ export class TransactionsComponent extends React.Component {
             </View>}
           </TouchableOpacity>
         </ScrollView>}
-
+        {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length > 0
+          && (this.state.actionRequired.findIndex(item => item.type === ActionTypes.transfer) >= 0) && <TouchableOpacity style={transactionsStyle.acceptAllTransfersButton} onPress={this.acceptAllTransfers} >
+            <Text style={transactionsStyle.acceptAllTransfersButtonText}>SIGN ALL OWNERSHIP TRANSFER REQUESTS</Text>
+          </TouchableOpacity>
+        }
         {this.state.subTab === SubTabs.completed && <ScrollView style={[transactionsStyle.scrollSubTabArea]}
           onScroll={(scrollEvent) => {
             if (!this.spaceNeedLoadActionCompleted) {
