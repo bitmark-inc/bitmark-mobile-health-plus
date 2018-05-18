@@ -12,8 +12,10 @@ import { BitmarkComponent } from '../../../../commons/components';
 import transactionDetailStyle from './transaction-detail.component.style';
 
 import defaultStyle from './../../../../commons/styles';
-import { AppController } from '../../../../processors';
+import { AppProcessor } from '../../../../processors';
 import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
+import { BitmarkModel } from '../../../../models';
+import { EventEmitterService } from '../../../../services';
 
 export class TransactionDetailComponent extends React.Component {
   constructor(props) {
@@ -31,7 +33,15 @@ export class TransactionDetailComponent extends React.Component {
     this.state = {
       transferOffer,
       metadataList,
+      transactionData: null
     };
+    BitmarkModel.doGetTransactionDetail(transferOffer.record.link).then(transactionData => {
+      console.log('transactionData :', transactionData);
+      this.setState({ transactionData })
+    }).catch(error => {
+      console.log('TransactionDetailComponent doGetTransactionDetail error :', error);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+    });
   }
 
   doReject() {
@@ -40,7 +50,7 @@ export class TransactionDetailComponent extends React.Component {
     }, {
       text: 'Yes',
       onPress: () => {
-        AppController.doRejectTransferBitmark(this.state.transferOffer, { indicator: true, }, {
+        AppProcessor.doRejectTransferBitmark(this.state.transferOffer, { indicator: true, }, {
           indicator: false, title: 'Transfer Rejected!', message: 'You’ve rejected the bitmark transfer request! '
         }, {
             indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.'
@@ -60,13 +70,14 @@ export class TransactionDetailComponent extends React.Component {
               this.props.navigation.dispatch(resetHomePage);
             }
           }).catch(error => {
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
             console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
           });
       },
     }]);
   }
   doAccept() {
-    AppController.doAcceptTransferBitmark(this.state.transferOffer, {
+    AppProcessor.doAcceptTransferBitmark(this.state.transferOffer, {
       indicator: true,
     }, {
         indicator: false, title: 'Acceptance Submitted', message: 'Your signature for the transfer request has been successfully submitted to the Bitmark network.'
@@ -88,6 +99,7 @@ export class TransactionDetailComponent extends React.Component {
           this.props.navigation.dispatch(resetHomePage);
         }
       }).catch(error => {
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
         console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
       });
   }
@@ -129,7 +141,8 @@ export class TransactionDetailComponent extends React.Component {
                 </View>
                 <View style={transactionDetailStyle.externalAreaRow}>
                   <Text style={transactionDetailStyle.externalAreaRowLabel}>TIMESTAMP:</Text>
-                  <Text style={transactionDetailStyle.externalAreaRowValue}>BLOCK #{this.state.transferOffer.tx.block_number}{'\n'}{moment(this.state.transferOffer.block.created_at).format('DD MMM YYYY HH:mm:ss')}</Text>
+                  {this.state.transactionData && <Text style={transactionDetailStyle.externalAreaRowValue}>BLOCK #{this.state.transactionData.tx.block_number}{'\n'}{moment(this.state.transactionData.block.created_at).format('DD MMM YYYY HH:mm:ss')}</Text>}
+                  {!this.state.transactionData && <Text style={transactionDetailStyle.externalAreaRowValue}>BLOCK #...{'\n'}</Text>}
                 </View>
                 <View style={transactionDetailStyle.metadataArea}>
                   <FlatList data={this.state.metadataList}

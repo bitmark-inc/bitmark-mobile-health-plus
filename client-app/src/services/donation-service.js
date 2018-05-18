@@ -105,7 +105,6 @@ const getStudy = (donationInformation, studyId) => {
 };
 const doLoadDonationTask = async (donationInformation) => {
   if (!donationInformation.createdAt) {
-    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
     return donationInformation;
   }
   donationInformation = await doCheckDataSource(donationInformation);
@@ -176,7 +175,6 @@ const doLoadDonationTask = async (donationInformation) => {
   });
   donationInformation.completedTasks = completedTasks;
 
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
   return donationInformation;
 }
 

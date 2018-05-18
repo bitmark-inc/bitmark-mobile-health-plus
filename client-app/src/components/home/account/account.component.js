@@ -85,12 +85,7 @@ export class AccountDetailComponent extends React.Component {
     }, {
       text: 'Yes',
       onPress: () => {
-        AppProcessor.doInactiveBitmarkHealthData().then((result) => {
-          if (result) {
-            DataProcessor.doReloadUserData();
-            this.props.navigation.goBack();
-          }
-        }).catch(error => {
+        AppProcessor.doInactiveBitmarkHealthData().then().catch(error => {
           EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
           console.log('doInactiveBitmarkHealthData error :', error);
         });
