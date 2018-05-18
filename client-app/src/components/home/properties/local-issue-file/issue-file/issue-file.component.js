@@ -7,13 +7,13 @@ import {
 import { NavigationActions } from 'react-navigation';
 
 
-import { FullComponent } from './../../../../../commons/components';
+import { BitmarkComponent } from './../../../../../commons/components';
 import { convertWidth, FileUtil } from './../../../../../utils';
 import { BitmarkService } from './../../../../../services';
 
 import localAddPropertyStyle from './issue-file.component.style';
 import defaultStyle from './../../../../../commons/styles';
-import { AppController } from '../../../../../managers';
+import { AppController } from '../../../../../processors';
 
 export class LocalIssueFileComponent extends React.Component {
   constructor(props) {
@@ -183,8 +183,8 @@ export class LocalIssueFileComponent extends React.Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={(event) => { event.stopPropagation(); Keyboard.dismiss(); }}>
-        <FullComponent
-          contentConatainerStyle={{ backgroundColor: 'white' }}
+        <BitmarkComponent
+          contentContainerStyle={{ backgroundColor: 'white' }}
           ref={(ref) => this.fullRef = ref}
           header={(<View style={defaultStyle.header}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
@@ -215,7 +215,7 @@ export class LocalIssueFileComponent extends React.Component {
                 editable={!this.state.existingAsset}
                 returnKeyType="done"
                 returnKeyLabel="Done"
-                onFocus={() => this.fullRef.setForcusElement(this.assetNameInputRef)}
+                onFocus={() => this.fullRef.setFocusElement(this.assetNameInputRef)}
               />}
               {!!this.state.assetNameError && <Text style={localAddPropertyStyle.assetNameInputError}>{this.state.assetNameError}</Text>}
 
@@ -269,7 +269,7 @@ export class LocalIssueFileComponent extends React.Component {
                             blurOnSubmit={true}
                             editable={!this.state.existingAsset}
                             onFocus={() => {
-                              this.fullRef.setForcusElement(this['valueInput_' + item.key]);
+                              this.fullRef.setFocusElement(this['valueInput_' + item.key]);
                               this.setState({ isEditingMetadata: false });
                             }}
                           />
@@ -308,7 +308,7 @@ export class LocalIssueFileComponent extends React.Component {
                 keyboardType={'numeric'}
                 returnKeyType="done"
                 returnKeyLabel="Done"
-                onFocus={() => this.fullRef.setForcusElement(this.quantityInputRef)}
+                onFocus={() => this.fullRef.setFocusElement(this.quantityInputRef)}
               />
               {!!this.state.quantityError && <Text style={localAddPropertyStyle.quantityInputError}>{this.state.quantityError}</Text>}
               <Text style={localAddPropertyStyle.ownershipClaimLabel}>{'Ownership claim'.toUpperCase()}</Text>

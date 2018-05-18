@@ -8,8 +8,8 @@ import {
 import defaultStyle from './../../../../../commons/styles';
 import activeDonationStyle from './health-data-active.component.style';
 
-import { DataController, AppController } from '../../../../../managers';
-import { EventEmiterService } from '../../../../../services';
+import { DataProcessor, AppProcessor } from '../../../../../processors';
+import { EventEmitterService } from '../../../../../services';
 import moment from 'moment';
 
 
@@ -18,20 +18,20 @@ export class HealthDataActiveComponent extends React.Component {
     super(props);
     this.doActiveBitmarkHealthData = this.doActiveBitmarkHealthData.bind(this);
     this.state = {
-      user: DataController.getUserInformation(),
+      user: DataProcessor.getUserInformation(),
     };
   }
 
   doActiveBitmarkHealthData() {
-    AppController.doRequirePermission().then(() => {
-      AppController.doActiveBitmarkHealthData(moment().toDate()).then(result => {
+    AppProcessor.doRequirePermission().then(() => {
+      AppProcessor.doActiveBitmarkHealthData(moment().toDate()).then(result => {
         if (result !== null) {
           this.swiper.scrollBy(1);
-          DataController.doReloadUserData();
+          DataProcessor.doReloadUserData();
         }
       }).catch(error => {
         console.log('doActiveBitmarkHealthData error :', error);
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
       });
     }).catch(error => {
       console.log('doRequirePermission error :', error);

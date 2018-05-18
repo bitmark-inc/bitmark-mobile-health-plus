@@ -5,12 +5,12 @@ import {
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
-import { FullComponent } from './../../../../../commons/components';
+import { BitmarkComponent } from './../../../../../commons/components';
 
 import bitmarkHealthStyles from './health-data-bitmark.component.style';
 import defaultStyle from './../../../../../commons/styles';
-import { AppController, DataController } from '../../../../../managers';
-import { EventEmiterService } from '../../../../../services';
+import { AppProcessor, DataProcessor } from '../../../../../processors';
+import { EventEmitterService } from '../../../../../services';
 import { convertWidth } from '../../../../../utils';
 import { BottomTabsComponent } from '../../../bottom-tabs/bottom-tabs.component';
 
@@ -22,7 +22,7 @@ export class HealthDataBitmarkComponent extends React.Component {
   }
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         header={(<View style={defaultStyle.header}>
           <TouchableOpacity style={[defaultStyle.headerLeft, { width: 40 }]} onPress={() => this.props.navigation.goBack()} >
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../assets/imgs/header_blue_icon.png')} />
@@ -41,14 +41,14 @@ export class HealthDataBitmarkComponent extends React.Component {
             </Text>
           </View>
           <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
-            AppController.doBitmarkHealthData(this.state.list, {
+            AppProcessor.doBitmarkHealthData(this.state.list, {
               indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
             }, {
                 indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
 
               }).then((result) => {
                 if (result !== null) {
-                  DataController.doReloadUserData();
+                  DataProcessor.doReloadUserData();
                   const resetHomePage = NavigationActions.reset({
                     index: 0,
                     actions: [
@@ -63,8 +63,8 @@ export class HealthDataBitmarkComponent extends React.Component {
                   this.props.navigation.dispatch(resetHomePage);
                 }
               }).catch(error => {
-                console.log('doBitmarkHelthData error:', error);
-                EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+                console.log('doBitmarkHealthData error:', error);
+                EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
               })
           }}>
             <Text style={bitmarkHealthStyles.bitmarkButtonText}>ISSUE</Text>

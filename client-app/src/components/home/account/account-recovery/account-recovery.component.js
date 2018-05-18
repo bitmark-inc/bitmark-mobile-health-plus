@@ -6,11 +6,11 @@ import {
 } from 'react-native';
 
 import { UserModel } from "./../../../../models";
-import { AppController } from './../../../../managers';
+import { AppController } from './../../../../processors';
 
 import accountRecoveryStyle from './account-recovery.component.style';
 import defaultStyle from './../../../../commons/styles';
-let curretnUser;
+let currentUser;
 class RecoveryPhraseComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -20,7 +20,7 @@ class RecoveryPhraseComponent extends React.Component {
     const recoveryPhrase = () => {
       AppController.doGetCurrentAccount(isSignOut ? 'Please sign to remove access.' : 'Please sign to access the bitmark recovery phrases.').then((user) => {
         if (user) {
-          curretnUser = user;
+          currentUser = user;
           this.props.navigation.navigate('WriteDownRecoveryPhrase');
         }
       }).catch(error => {
@@ -77,15 +77,15 @@ RecoveryPhraseComponent.propTypes = {
 class WriteDownRecoveryPhraseComponent extends React.Component {
   constructor(props) {
     super(props);
-    let userInfo = curretnUser;
-    console.log('curretnUser :', curretnUser);
+    let userInfo = currentUser;
+    console.log('currentUser :', currentUser);
     let smallerList = [];
     let biggerList = [];
-    for (let index in userInfo.pharse24Words) {
+    for (let index in userInfo.phrase24Words) {
       if (index < 12) {
-        smallerList.push({ key: index, word: userInfo.pharse24Words[index] });
+        smallerList.push({ key: index, word: userInfo.phrase24Words[index] });
       } else {
-        biggerList.push({ key: index, word: userInfo.pharse24Words[index] });
+        biggerList.push({ key: index, word: userInfo.phrase24Words[index] });
       }
     }
     this.state = { smallerList: smallerList, biggerList: biggerList };
@@ -198,8 +198,8 @@ class TryRecoveryPhraseComponent extends React.Component {
     }
     UserModel.doGetCurrentUser().then(user => {
       let result = [];
-      for (let index in curretnUser.pharse24Words) {
-        result.push({ key: index, word: curretnUser.pharse24Words[index] });
+      for (let index in currentUser.phrase24Words) {
+        result.push({ key: index, word: currentUser.phrase24Words[index] });
       }
       let randomWords = [];
       for (let index = 0; index < 24; index++) {
@@ -381,12 +381,12 @@ class TryRecoveryPhraseComponent extends React.Component {
 
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
-    let remainRandomeWords = [];
+    let remainRandomWords = [];
     (this.state.randomWords || []).forEach((item, index) => {
       if (!item.cannotReset) {
         let tempItem = Object.assign({}, item);
         tempItem.index = index;
-        remainRandomeWords.push(tempItem);
+        remainRandomWords.push(tempItem);
       }
     })
     return (
@@ -447,7 +447,7 @@ class TryRecoveryPhraseComponent extends React.Component {
             </View>
           </View>
           {this.state.testResult.length === 0 && <View style={accountRecoveryStyle.ranDomWordsArea}>
-            <FlatList data={remainRandomeWords}
+            <FlatList data={remainRandomWords}
               scrollEnabled={false}
               horizontal={false}
               numColumns={4}

@@ -67,7 +67,7 @@ const doGetOutgoingTransferOffers = (accountNumber) => {
   });
 };
 
-const doAccepTransferOffer = (accountNumber, bitmarkId, timestamp, signature, countersignature) => {
+const doAcceptTransferOffer = (accountNumber, bitmarkId, timestamp, signature, countersignature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = config.api_server_url + `/v2/transfer_offers/${bitmarkId}`;
@@ -87,7 +87,7 @@ const doAccepTransferOffer = (accountNumber, bitmarkId, timestamp, signature, co
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('doAccepTransferOffer error :' + JSON.stringify(data)));
+        return reject(new Error('doAcceptTransferOffer error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
@@ -148,7 +148,7 @@ let TransferOfferModel = {
   doGetTransferOfferDetail,
   doGetIncomingTransferOffers,
   doGetOutgoingTransferOffers,
-  doAccepTransferOffer,
+  doAcceptTransferOffer,
   doRejectTransferOffer,
   doCancelTransferOffer,
 };

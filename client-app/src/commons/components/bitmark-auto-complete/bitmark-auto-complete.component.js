@@ -10,7 +10,7 @@ import styles from './bitmark-auto-complete.component.style';
 export class BitmarkAutoCompleteComponent extends React.Component {
   static statuses = {
     done: 'done',
-    inputing: 'inputing'
+    inputting: 'inputting'
   }
   constructor(props) {
     super(props);

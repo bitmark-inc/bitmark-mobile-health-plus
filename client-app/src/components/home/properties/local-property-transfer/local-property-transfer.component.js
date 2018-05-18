@@ -5,13 +5,13 @@ import {
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
-import { FullComponent } from './../../../../commons/components';
+import { BitmarkComponent } from './../../../../commons/components';
 import { convertWidth } from './../../../../utils';
 
 import propertyTransferStyle from './local-property-transfer.component.style';
 import defaultStyle from './../../../../commons/styles';
-import { AppController } from '../../../../managers/app-controller';
-import { AccountService, EventEmiterService } from '../../../../services';
+import { AppProcessor } from '../../../../processors/app-processor';
+import { AccountService, EventEmitterService } from '../../../../services';
 
 
 export class LocalPropertyTransferComponent extends React.Component {
@@ -42,7 +42,7 @@ export class LocalPropertyTransferComponent extends React.Component {
       this.setState({
         bitmarkAccountError: '',
       });
-      AppController.doTransferBitmark(this.state.bitmark, this.state.bitmarkAccount).then((result) => {
+      AppProcessor.doTransferBitmark(this.state.bitmark, this.state.bitmarkAccount).then((result) => {
         if (result) {
           const resetMainPage = NavigationActions.reset({
             index: 0,
@@ -54,10 +54,10 @@ export class LocalPropertyTransferComponent extends React.Component {
             })]
           });
           this.props.navigation.dispatch(resetMainPage);
-          EventEmiterService.emit(EventEmiterService.events.NEED_RELOAD_USER_DATA);
+          EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
         }
       }).catch(error => {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
           onClose: this.props.navigation.goBack
         });
         console.log('transfer bitmark error :', error);
@@ -70,7 +70,7 @@ export class LocalPropertyTransferComponent extends React.Component {
 
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         header={(<View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />

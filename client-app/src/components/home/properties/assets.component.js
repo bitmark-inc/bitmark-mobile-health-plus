@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image, ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 
 import { config } from './../../../configs';
 import assetsStyle from './assets.component.style';
-import { AppController, DataController } from '../../../managers';
-import { EventEmiterService } from '../../../services';
+import { AppProcessor, DataProcessor } from '../../../processors';
+import { EventEmitterService } from '../../../services';
 
 import defaultStyle from './../../../commons/styles';
-import { BitmarkWebViewComponent } from '../../../commons/components/bitmark-web-view/bitmark-web-view.component';
+import { BitmarkWebViewComponent } from './../../../commons/components';
+
+let currentSize = Dimensions.get('window');
 
 const SubTabs = {
   local: 'Yours',
@@ -22,41 +25,60 @@ let ComponentName = 'AssetsComponent';
 export class AssetsComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.switchSubtab = this.switchSubtab.bind(this);
+    this.switchSubTab = this.switchSubTab.bind(this);
     this.addProperty = this.addProperty.bind(this);
     this.reloadData = this.reloadData.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
     this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
 
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, null, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.APP_LOADING_DATA, null, ComponentName);
 
-    let subtab = SubTabs.local;
-    let assets = DataController.getUserBitmarks().localAssets;
+    let subTab = SubTabs.local;
 
-    let { trackingBitmarks } = DataController.getTrackingBitmarks();
-    if (trackingBitmarks) {
-      trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
-    }
     this.state = {
-      subtab,
+      totalAssets: 0,
+      totalBitmark: 0,
+      totalTrackingBitmarks: 0,
+      subTab,
       accountNumber: '',
       copyText: 'COPY',
-      assets,
-      existNewAsset: (assets || []).findIndex(asset => !asset.isViewed) >= 0,
-      trackingBitmarks,
-      existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
-      isLoadingData: DataController.isLoadingData(),
-      lengthDisplayAssets: 10,
-      shoudlLoadMoreAsset: false,
+      assets: null,
+      existNewAsset: false,
+      trackingBitmarks: null,
+      existNewTracking: false,
+      appLoadingData: DataProcessor.isAppLoadingData(),
+      gettingData: true,
+      lengthDisplayAssets: 0,
+
     };
+
+    const doGetScreenData = async () => {
+      let { localAssets, totalAssets, totalBitmarks, existNewAsset } = await DataProcessor.doGetLocalBitmarks(1);
+      let { trackingBitmarks, existNewTrackingBitmark, totalTrackingBitmarks } = await DataProcessor.doGetTrackingBitmarks(1);
+      if (trackingBitmarks) {
+        trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
+      }
+      this.setState({
+        totalAssets,
+        totalBitmarks,
+        totalTrackingBitmarks,
+        assets: localAssets,
+        existNewAsset,
+        trackingBitmarks,
+        existNewTracking: existNewTrackingBitmark,
+        gettingData: false,
+        lengthDisplayAssets: localAssets.length,
+      });
+    }
+    doGetScreenData();
   }
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
-    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -66,19 +88,36 @@ export class AssetsComponent extends React.Component {
   }
 
   handerChangeLocalBitmarks() {
-    this.switchSubtab(this.state.subtab);
+    DataProcessor.doGetLocalBitmarks(this.state.lengthDisplayAssets).then(({ localAssets, totalAssets, totalBitmarks, existNewAsset }) => {
+      this.setState({
+        totalBitmarks,
+        totalAssets,
+        assets: localAssets,
+        existNewAsset,
+      });
+    }).catch(error => {
+      console.log('doGetLocalBitmarks error:', error);
+    });
   }
 
   handerLoadingData() {
-    this.setState({ isLoadingData: DataController.isLoadingData() });
+    this.setState({ appLoadingData: DataProcessor.isAppLoadingData() });
   }
   handerChangeTrackingBitmarks() {
-    this.switchSubtab(this.state.subtab);
+    DataProcessor.doGetTrackingBitmarks(1).then(({ trackingBitmarks, existNewTrackingBitmark, totalTrackingBitmarks }) => {
+      this.setState({
+        trackingBitmarks,
+        totalTrackingBitmarks,
+        existNewTracking: existNewTrackingBitmark,
+      });
+    }).catch(error => {
+      console.log('doGetTrackingBitmarks error:', error);
+    });
   }
 
   reloadData() {
-    AppController.doReloadUserData().then(() => {
-      this.switchSubtab(this.state.subtab);
+    AppProcessor.doReloadUserData().then(() => {
+      this.switchSubTab(this.state.subTab);
     }).catch((error) => {
       console.log('getUserBitmark error :', error);
     });
@@ -92,19 +131,8 @@ export class AssetsComponent extends React.Component {
     return tempBitmarks;
   }
 
-  switchSubtab(subtab) {
-    let assets = DataController.getUserBitmarks().localAssets;
-    let { trackingBitmarks } = DataController.getTrackingBitmarks();
-    if (trackingBitmarks) {
-      trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
-    }
-    this.setState({
-      subtab,
-      assets,
-      existNewAsset: (assets || []).findIndex(asset => !asset.isViewed) >= 0,
-      trackingBitmarks,
-      existNewTracking: (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0,
-    });
+  switchSubTab(subTab) {
+    this.setState({ subTab, });
   }
 
   addProperty() {
@@ -112,11 +140,6 @@ export class AssetsComponent extends React.Component {
   }
 
   render() {
-    let totalBitmark = 0;
-    if (this.state.assets && this.state.assets.length > 0) {
-      this.state.assets.forEach(asset => totalBitmark += asset.bitmarks.length);
-    }
-    let totalTrackingBitmarks = this.state.trackingBitmarks ? this.state.trackingBitmarks.length : 0;
     return (
       <View style={assetsStyle.body}>
         <View style={[assetsStyle.header, { zIndex: 1 }]}>
@@ -128,7 +151,7 @@ export class AssetsComponent extends React.Component {
         </View>
 
         <View style={assetsStyle.subTabArea}>
-          {this.state.subtab === SubTabs.local && <TouchableOpacity style={[assetsStyle.subTabButton, {
+          {this.state.subTab === SubTabs.local && <TouchableOpacity style={[assetsStyle.subTabButton, {
             shadowOffset: { width: 2 },
             shadowOpacity: 0.15,
           }]}>
@@ -136,30 +159,27 @@ export class AssetsComponent extends React.Component {
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
                 {this.state.existNewAsset && <View style={assetsStyle.newItem}></View>}
-                <Text style={[assetsStyle.subTabButtonText, { marginLeft: totalBitmark > 99 ? 10 : 0 }]}>
+                <Text style={[assetsStyle.subTabButtonText, { marginLeft: this.state.totalBitmarks > 9 ? 10 : 0 }]}>
                   {SubTabs.local.toUpperCase()}
-                  <Text style={{ fontSize: totalBitmark > 9 ? 10 : 14 }}>{(totalBitmark > 0 ? ` (${totalBitmark > 99 ? '99+' : totalBitmark})` : '')}</Text>
+                  <Text style={{ fontSize: this.state.totalBitmarks > 9 ? 10 : 14 }}>{(this.state.totalBitmarks > 0 ? ` (${this.state.totalBitmarks > 99 ? '99+' : this.state.totalBitmarks})` : '')}</Text>
                 </Text>
               </View>
             </View>
           </TouchableOpacity>}
-          {this.state.subtab !== SubTabs.local && <TouchableOpacity style={[assetsStyle.subTabButton, {
+          {this.state.subTab !== SubTabs.local && <TouchableOpacity style={[assetsStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
-          }]} onPress={() => this.switchSubtab(SubTabs.local)}>
+          }]} onPress={() => this.switchSubTab(SubTabs.local)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
                 {this.state.existNewAsset && <View style={assetsStyle.newItem}></View>}
-                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1', marginLeft: totalBitmark > 99 ? 10 : 0 }]}>
-                  {SubTabs.local.toUpperCase()}
-                  <Text style={{ fontSize: totalBitmark > 9 ? 10 : 14 }}>{(totalBitmark > 0 ? ` (${totalBitmark > 99 ? '99+' : totalBitmark})` : '')}</Text>
-                </Text>
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1', marginLeft: this.state.totalBitmarks > 9 ? 10 : 0 }]}>{SubTabs.local.toUpperCase()}<Text style={{ fontSize: this.state.totalBitmarks > 9 ? 10 : 14 }}>{(this.state.totalBitmarks > 0 ? ` (${this.state.totalBitmarks > 99 ? '99+' : this.state.totalBitmarks})` : '')}</Text></Text>
               </View>
             </View>
           </TouchableOpacity>}
 
-          {this.state.subtab === SubTabs.tracking && <TouchableOpacity style={[assetsStyle.subTabButton, {
+          {this.state.subTab === SubTabs.tracking && <TouchableOpacity style={[assetsStyle.subTabButton, {
             shadowOffset: { width: -2 },
             shadowOpacity: 0.15,
           }]}>
@@ -167,30 +187,24 @@ export class AssetsComponent extends React.Component {
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
                 {<View style={assetsStyle.newItem}></View>}
-                <Text style={[assetsStyle.subTabButtonText, { marginLeft: totalTrackingBitmarks > 9 ? 10 : 0 }]}>
-                  {SubTabs.tracking.toUpperCase()}
-                  <Text style={{ fontSize: totalTrackingBitmarks > 9 ? 10 : 14 }}>{(totalTrackingBitmarks > 0 ? ` (${totalTrackingBitmarks > 99 ? '99+' : totalTrackingBitmarks})` : '')}</Text>
-                </Text>
+                <Text style={[assetsStyle.subTabButtonText, { marginLeft: this.state.totalTrackingBitmarks > 9 ? 10 : 0 }]}>{SubTabs.tracking.toUpperCase()}<Text style={{ fontSize: this.state.totalTrackingBitmarks > 9 ? 10 : 14 }}>{(this.state.totalTrackingBitmarks > 0 ? ` (${this.state.totalTrackingBitmarks > 99 ? '99+' : this.state.totalTrackingBitmarks})` : '')}</Text></Text>
               </View>
             </View>
           </TouchableOpacity>}
-          {this.state.subtab !== SubTabs.tracking && <TouchableOpacity style={[assetsStyle.subTabButton, {
+          {this.state.subTab !== SubTabs.tracking && <TouchableOpacity style={[assetsStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
-          }]} onPress={() => this.switchSubtab(SubTabs.tracking)}>
+          }]} onPress={() => this.switchSubTab(SubTabs.tracking)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
                 {<View style={assetsStyle.newItem}></View>}
-                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1', marginLeft: totalTrackingBitmarks > 9 ? 10 : 0 }]}>
-                  {SubTabs.tracking.toUpperCase()}
-                  <Text style={{ fontSize: totalTrackingBitmarks > 9 ? 10 : 14 }}>{(totalTrackingBitmarks > 0 ? ` (${totalTrackingBitmarks > 99 ? '99+' : totalTrackingBitmarks})` : '')}</Text>
-                </Text>
+                <Text style={[assetsStyle.subTabButtonText, { color: '#C1C1C1', marginLeft: this.state.totalTrackingBitmarks > 9 ? 10 : 0 }]}>{SubTabs.tracking.toUpperCase()}<Text style={{ fontSize: this.state.totalTrackingBitmarks > 9 ? 10 : 14 }}>{(this.state.totalTrackingBitmarks > 0 ? ` (${this.state.totalTrackingBitmarks > 99 ? '99+' : this.state.totalTrackingBitmarks})` : '')}</Text></Text>
               </View>
             </View>
           </TouchableOpacity>}
 
-          {this.state.subtab === SubTabs.global && <TouchableOpacity style={[assetsStyle.subTabButton, {
+          {this.state.subTab === SubTabs.global && <TouchableOpacity style={[assetsStyle.subTabButton, {
             shadowOffset: { width: -2 },
             shadowOpacity: 0.15,
           }]}>
@@ -201,10 +215,10 @@ export class AssetsComponent extends React.Component {
               </View>
             </View>
           </TouchableOpacity>}
-          {this.state.subtab !== SubTabs.global && <TouchableOpacity style={[assetsStyle.subTabButton, {
+          {this.state.subTab !== SubTabs.global && <TouchableOpacity style={[assetsStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
-          }]} onPress={() => this.switchSubtab(SubTabs.global)}>
+          }]} onPress={() => this.switchSubTab(SubTabs.global)}>
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
@@ -214,33 +228,38 @@ export class AssetsComponent extends React.Component {
           </TouchableOpacity>}
         </View>
 
-        {this.state.subtab == SubTabs.local && <ScrollView style={[assetsStyle.scrollSubTabArea]}
-          onScroll={(scrollEvent) => {
-            if (!this.spaceNeedLoadMore) {
-              this.spaceNeedLoadMore = scrollEvent.nativeEvent.contentSize.height / 2;
+        {this.state.subTab == SubTabs.local && <ScrollView style={[assetsStyle.scrollSubTabArea]}
+          onScroll={async (scrollEvent) => {
+            if (this.loadingDataWhenScroll) {
+              return;
             }
-            if (scrollEvent.nativeEvent.contentOffset.y >= (scrollEvent.nativeEvent.contentSize.height - this.spaceNeedLoadMore) && this.state.lengthDisplayAssets < this.state.assets.length) {
-              this.setState({ lengthDisplayAssets: this.state.lengthDisplayAssets + 10 });
+            if (scrollEvent.nativeEvent.contentOffset.y >= (scrollEvent.nativeEvent.contentSize.height - currentSize.height) && (this.state.lengthDisplayAssets < this.state.totalAssets)) {
+              this.loadingDataWhenScroll = true;
+              let lengthDisplayAssets = Math.min(this.state.totalAssets, this.state.lengthDisplayAssets + 20);
+              let { localAssets } = await DataProcessor.doGetLocalBitmarks(lengthDisplayAssets);
+              this.setState({ lengthDisplayAssets: localAssets.length, assets: localAssets });
             }
+            this.loadingDataWhenScroll = false;
           }}
           scrollEventThrottle={1}
         >
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
-            {(this.state.isLoadingData && this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
-              {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
+            {(!this.state.appLoadingData && this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
+              {(this.state.subTab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
+
                 {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
               </Text>}
-              {(this.state.subtab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
+              {(this.state.subTab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
                 Here you will issue property titles (bitmarks), view and manage your properties, and have general account access and control.
                 </Text>}
-              {(this.state.subtab === SubTabs.local) && <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
+              {(this.state.subTab === SubTabs.local) && <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
                 <Text style={assetsStyle.addFirstPropertyButtonText}>{'create first property'.toUpperCase()}</Text>
               </TouchableOpacity>}
             </View>}
-            {(this.state.assets && this.state.assets.length > 0 && this.state.subtab === SubTabs.local) && <FlatList
+            {(this.state.assets && this.state.assets.length > 0 && this.state.subTab === SubTabs.local) && <FlatList
               ref={(ref) => this.listViewElement = ref}
               extraData={this.state}
-              data={(this.state.assets || []).slice(0, Math.min(this.state.lengthDisplayAssets, this.state.assets.length))}
+              data={this.state.assets || []}
               keyExtractor={item => item.id}
               renderItem={({ item }) => {
                 return (<TouchableOpacity style={[assetsStyle.assetRowArea]} onPress={() => {
@@ -273,13 +292,13 @@ export class AssetsComponent extends React.Component {
                 </TouchableOpacity>)
               }}
             />}
-            {(!this.state.isLoadingData || this.state.lengthDisplayAssets < this.state.assets.length) && <View style={assetsStyle.messageNoAssetArea}>
+            {(this.state.gettingData || this.state.appLoadingData || (this.state.assets && this.state.lengthDisplayAssets < this.state.totalAssets)) && <View style={assetsStyle.messageNoAssetArea}>
               <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>
         </ScrollView>}
 
-        {this.state.subtab === SubTabs.tracking && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
+        {this.state.subTab === SubTabs.tracking && <ScrollView style={[assetsStyle.scrollSubTabArea]}>
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
             {(this.state.trackingBitmarks && this.state.trackingBitmarks.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               <Text style={assetsStyle.messageNoAssetLabel}>
@@ -289,7 +308,7 @@ export class AssetsComponent extends React.Component {
                 By tracking a bitmark you can always view the latest bitmarks status and this is where all your tracking bitmarks will be displayed.
               </Text>
             </View>}
-            {(this.state.trackingBitmarks && this.state.trackingBitmarks.length > 0 && this.state.subtab === SubTabs.tracking) && <FlatList
+            {(this.state.trackingBitmarks && this.state.trackingBitmarks.length > 0 && this.state.subTab === SubTabs.tracking) && <FlatList
               ref={(ref) => this.listViewElement = ref}
               extraData={this.state}
               data={this.state.trackingBitmarks || []}
@@ -302,20 +321,20 @@ export class AssetsComponent extends React.Component {
                   <Text style={assetsStyle.trackingRowUpdated}>
                     {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + moment(item.created_at).format('YYYY MM DD HH:mm:ss').toUpperCase())}
                   </Text>
-                  <Text style={assetsStyle.trackingRowCurrentOwner}>CURRENT OWNER: {item.owner === DataController.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
+                  <Text style={assetsStyle.trackingRowCurrentOwner}>CURRENT OWNER: {item.owner === DataProcessor.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
                     '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'
                   )}</Text>
                 </TouchableOpacity>)
               }}
             />}
-            {!this.state.isLoadingData && <View style={assetsStyle.messageNoAssetArea}>
+            {this.state.gettingData || this.state.appLoadingData && <View style={assetsStyle.messageNoAssetArea}>
               <ActivityIndicator size="large" style={{ marginTop: 46, }} />
             </View>}
           </TouchableOpacity>
         </ScrollView>}
 
-        {this.state.subtab === SubTabs.global && <View style={assetsStyle.globalArea}>
-          <BitmarkWebViewComponent screenProps={{ sourceUrl: config.registry_server_url + '?env=app', heightButtomController: 38 }} />
+        {this.state.subTab === SubTabs.global && <View style={assetsStyle.globalArea}>
+          <BitmarkWebViewComponent screenProps={{ sourceUrl: config.registry_server_url + '?env=app', heightButtonController: 38 }} />
         </View>}
       </View>
     );

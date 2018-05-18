@@ -7,9 +7,9 @@ import {
 import styles from './ifttt-active.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { config } from '../../../../configs';
-import { AppController, DataController } from '../../../../managers';
-import { FullComponent } from '../../../../commons/components';
-import { EventEmiterService } from '../../../../services';
+import { AppProcessor, DataProcessor } from '../../../../processors';
+import { BitmarkComponent } from '../../../../commons/components';
+import { EventEmitterService } from '../../../../services';
 
 let ComponentName = 'IftttActiveComponent';
 export class IftttActiveComponent extends React.Component {
@@ -19,37 +19,42 @@ export class IftttActiveComponent extends React.Component {
     this.onNavigationStateChange = this.onNavigationStateChange.bind(this);
     this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
 
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, null, ComponentName);
 
     let stage;
     if (this.props.navigation.state && this.props.navigation.state.params) {
       stage = this.props.navigation.state.params.stage;
     }
     this.state = {
-      iftttInformation: DataController.getIftttInformation(),
+      iftttInformation: null,
       loading: true,
       processing: false,
       currentUrl: config.ifttt_invite_url,
       webViewUrl: config.ifttt_invite_url,
       stage,
     }
+    let doGetScreenData = async () => {
+      let iftttInformation = await DataProcessor.doGetIftttInformation();
+      this.setState({ iftttInformation, gettingData: false });
+    }
+    doGetScreenData();
     this.signed = false;
   }
 
   // ==========================================================================================
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
   }
   // ==========================================================================================
-  handerIftttInformationChange() {
-    this.setState({ iftttInformation: DataController.getIftttInformation() });
+  handerIftttInformationChange(iftttInformation) {
+    this.setState({ iftttInformation });
   }
 
   onMessage(event) {
     let message = event.nativeEvent.data;
     if (message === 'enable-ifttt') {
       this.setState({ processing: true });
-      AppController.doCreateSignatureData('Please sign to connect IFTTT data', true).then(data => {
+      AppProcessor.doCreateSignatureData('Please sign to connect IFTTT data', true).then(data => {
         this.setState({ processing: false });
         if (!data) {
           return;
@@ -69,8 +74,8 @@ export class IftttActiveComponent extends React.Component {
 
     if (!this.state.stage) {
       if ((currentUrl === config.ifttt_bitmark_service_url || currentUrl === (config.ifttt_bitmark_service_settings_url)) && this.signed) {
-        DataController.doReloadIFTTTInformation().then(() => {
-          if (DataController.getIftttInformation().connectIFTTT && currentUrl === (config.ifttt_bitmark_service_settings_url)) {
+        DataProcessor.doReloadIFTTTInformation().then((iftttInformation) => {
+          if (iftttInformation.connectIFTTT && currentUrl === (config.ifttt_bitmark_service_settings_url)) {
             this.setState({
               webViewUrl: config.ifttt_bitmark_service_url,
               currentUrl: config.ifttt_bitmark_service_url,
@@ -86,11 +91,11 @@ export class IftttActiveComponent extends React.Component {
   render() {
     console.log('webViewUrl :', this.state.webViewUrl);
     return (
-      <FullComponent
+      <BitmarkComponent
         header={(<View style={defaultStyle.header}>
           {this.state.iftttInformation && this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={defaultStyle.headerLeft} />}
           {!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => {
-            DataController.doReloadIFTTTInformation().catch(error => {
+            DataProcessor.doReloadIFTTTInformation().catch(error => {
               console.log('doReloadIFTTTInformation : ', error);
             });
             this.props.navigation.goBack();
@@ -116,7 +121,7 @@ export class IftttActiveComponent extends React.Component {
             onLoadEnd={() => {
               this.setState({ loading: false })
               if (this.state.currentUrl.indexOf(config.ifttt_server_url) >= 0) {
-                this.webViewRef.postMessage(DataController.getUserInformation().bitmarkAccountNumber);
+                this.webViewRef.postMessage(DataProcessor.getUserInformation().bitmarkAccountNumber);
               }
               if (!this.state.stage && (this.state.currentUrl === 'https://ifttt.com/discover' || this.state.currentUrl === config.ifttt_bitmark_service_url) && !this.signed) {
                 this.setState({

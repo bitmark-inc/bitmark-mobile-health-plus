@@ -17,7 +17,7 @@ import {
   StudySettingComponent,
   StudyDonationComponent,
   StudyConsentComponent,
-  HealthDataDataSourceComponent,
+  HealthDataSourceComponent,
   HealthDataBitmarkComponent,
   Study1ExitSurvey2Component,
 } from './donation';
@@ -39,7 +39,7 @@ let HomeComponent = StackNavigator({
   HealthDataBitmark: { screen: HealthDataBitmarkComponent, },
   StudyDonation: { screen: StudyDonationComponent, },
   StudyConsent: { screen: StudyConsentComponent, },
-  HealthDataDataSource: { screen: HealthDataDataSourceComponent, },
+  HealthDataSource: { screen: HealthDataSourceComponent, },
   Study1ExitSurvey2: { screen: Study1ExitSurvey2Component, },
   IftttActive: { screen: IftttActiveComponent, },
 

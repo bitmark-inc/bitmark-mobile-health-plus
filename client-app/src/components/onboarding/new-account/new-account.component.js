@@ -11,13 +11,13 @@ import Video from 'react-native-video';
 
 import {
   BitmarkWebViewComponent,
-  FullComponent
+  BitmarkComponent
 } from './../../../commons/components';
 import defaultStyle from './../../../commons/styles';
 
 import newAccountStyle from './new-account.component.style';
 
-import { AppController } from '../../../managers';
+import { AppController } from '../../../processors';
 
 
 class PropertyPrivateYourDataComponent extends React.Component {
@@ -26,7 +26,7 @@ class PropertyPrivateYourDataComponent extends React.Component {
   }
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         backgroundColor='white'
         ref={(ref) => this.fullRef = ref}
         header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
@@ -124,7 +124,7 @@ class BuildDigitalAssetComponent extends React.Component {
   }
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         backgroundColor='white'
         ref={(ref) => this.fullRef = ref}
         header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
@@ -246,7 +246,7 @@ export class NewAccountComponent extends React.Component {
               <View style={newAccountStyle.swipeDotButton} />
             }>
 
-            <FullComponent
+            <BitmarkComponent
               ref={(ref) => this.fullRef = ref}
               header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
                 <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
@@ -280,7 +280,7 @@ export class NewAccountComponent extends React.Component {
               )}
             />
 
-            <FullComponent
+            <BitmarkComponent
               ref={(ref) => this.fullRef = ref}
               header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
               content={(

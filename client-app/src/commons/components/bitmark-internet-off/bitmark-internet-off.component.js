@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import internetOffStyles from './bitmark-internet-off.component.style';
-import { FullComponent } from '..';
+import { BitmarkComponent } from '..';
 import { ios } from '../../../configs';
 export class BitmarkInternetOffComponent extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export class BitmarkInternetOffComponent extends React.Component {
   }
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         mainStyle={{ zIndex: ios.constant.zIndex.internetOff, backgroundColor: 'rgba(0,0,0,0.7)', }}
         content={(<TouchableOpacity style={internetOffStyles.content}
           activeOpacity={1}

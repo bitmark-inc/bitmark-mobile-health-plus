@@ -12,7 +12,7 @@ let configure = (onRegister, onNotification) => {
 
 let isRequesting = false;
 let requestResult = null;
-let waitRequestPermistion = () => {
+let waitRequestPermission = () => {
   return new Promise((resolve) => {
     let checkRequestDone = () => {
       if (!isRequesting) {
@@ -26,7 +26,7 @@ let waitRequestPermistion = () => {
 };
 let doRequestNotificationPermissions = async () => {
   if (isRequesting) {
-    return await waitRequestPermistion();
+    return await waitRequestPermission();
   }
   isRequesting = true;
   requestResult = await NotificationModel.doRequestNotificationPermissions();
@@ -34,10 +34,10 @@ let doRequestNotificationPermissions = async () => {
   return requestResult;
 };
 
-let doCheckNotificaitonPermission = () => {
+let doCheckNotificationPermission = () => {
   return new Promise((resolve) => {
     doRequestNotificationPermissions().then(resolve).catch(error => {
-      console.log('NotificationService doCheckNotificaitonPermission error :', error);
+      console.log('NotificationService doCheckNotificationPermission error :', error);
       resolve();
     })
   });
@@ -79,7 +79,7 @@ let NotificationService = {
   removeAllDeliveredNotifications,
 
   doRequestNotificationPermissions,
-  doCheckNotificaitonPermission,
+  doCheckNotificationPermission,
   doRegisterNotificationInfo,
   doTryDeregisterNotificationInfo,
 };

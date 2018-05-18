@@ -8,9 +8,9 @@ import {
 import defaultStyle from '../../../../../../commons/styles';
 import styles from './study1-exit-survey-2.component.style';
 
-import { FullComponent } from '../../../../../../commons/components';
-import { AppController, DataController } from './../../../../../../managers';
-import { EventEmiterService } from '../../../../../../services';
+import { BitmarkComponent } from '../../../../../../commons/components';
+import { AppProcessor, DataProcessor } from '../../../../../../processors';
+import { EventEmitterService } from '../../../../../../services';
 
 export class Study1ExitSurvey2Component extends React.Component {
   constructor(props) {
@@ -34,14 +34,14 @@ export class Study1ExitSurvey2Component extends React.Component {
     }
   }
   doCompletedTask() {
-    AppController.doCompletedStudyTask(this.state.study, this.state.study.taskIds.exit_survey_2, this.state.email ? { email: this.state.email } : null).then((result) => {
+    AppProcessor.doCompletedStudyTask(this.state.study, this.state.study.taskIds.exit_survey_2, this.state.email ? { email: this.state.email } : null).then((result) => {
       if (result) {
-        DataController.doReloadUserData();
+        DataProcessor.doReloadUserData();
         this.props.navigation.goBack();
       }
     }).catch(error => {
       console.log('doCompletedStudyTask study1_exit_survey_2 error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
     });
   }
 
@@ -54,7 +54,7 @@ export class Study1ExitSurvey2Component extends React.Component {
           loop={false}
           showsPagination={false}
         >
-          <FullComponent
+          <BitmarkComponent
             backgroundColor={'white'}
             ref={(ref) => this.fullRef = ref}
             header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
@@ -86,7 +86,7 @@ export class Study1ExitSurvey2Component extends React.Component {
             )}
           />
 
-          <FullComponent
+          <BitmarkComponent
             backgroundColor={'white'}
             ref={(ref) => this.fullRef = ref}
             header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
@@ -120,16 +120,16 @@ export class Study1ExitSurvey2Component extends React.Component {
             )}
           />
 
-          <FullComponent
+          <BitmarkComponent
             backgroundColor={'white'}
             ref={(ref) => this.fullRef = ref}
             content={(
               <ScrollView>
                 <View style={styles.swipePage}>
-                  <Text style={[styles.congratulations]}>{"CONGRATULATONS!\nYOU'VE COMPLETED\nGLOBAL WOMEN'S HEATLTH OUTCOMES STUDY!"}</Text>
+                  <Text style={[styles.congratulations]}>{"CONGRATULATONS!\nYOU'VE COMPLETED\nGLOBAL WOMEN'S HEALTH OUTCOMES STUDY!"}</Text>
                   <Image style={styles.madelenaImage} source={require('./../../../../../../../assets/imgs/madelena.png')} />
                   <Text style={[styles.madelenaName,]}>Madelena Ng, Doctoral Candidate</Text>
-                  <Text style={[styles.madelenaThankMessage,]}>“Thank you for donating your data, and helping close the gap in women's health.”</Text>
+                  <Text style={[styles.madelenaThankMessage,]}>{"“Thank you for donating your data, and helping close the gap in women's health.”"}</Text>
                   <TouchableOpacity style={[styles.interestedButton, { marginTop: 97 }]} onPress={this.doCompletedTask}>
                     <Text style={styles.interestedButtonText}>Done</Text>
                   </TouchableOpacity>

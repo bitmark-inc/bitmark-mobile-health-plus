@@ -10,8 +10,8 @@ import Mailer from 'react-native-mail';
 import { StudyCardComponent } from './study-card/study-card.component';
 
 import donationStyle from './donation.component.style';
-import { DataController, AppController } from '../../../managers';
-import { EventEmiterService } from '../../../services';
+import { DataProcessor, AppProcessor } from '../../../processors';
+import { EventEmitterService } from '../../../services';
 import defaultStyle from './../../../commons/styles';
 
 const SubTabs = {
@@ -28,28 +28,40 @@ export class DonationComponent extends React.Component {
     this.reloadData = this.reloadData.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
 
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.APP_LOADING_DATA, null, ComponentName);
 
     let subTab = (this.props.screenProps.subTab && (this.props.screenProps.subTab === SubTabs.other || this.props.screenProps.subTab === SubTabs.joined)) ? this.props.screenProps.subTab : SubTabs.other;
-    let donationInformation = DataController.getDonationInformation();
-    let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies);
-    if (studies) {
-      studies.forEach(study => {
-        study.key = study.studyId
-      });
-    }
+
     this.state = {
-      donationInformation,
+      donationInformation: null,
       subTab,
-      studies,
-      isLoadingData: DataController.isLoadingData(),
+      studies: null,
+      appLoadingData: DataProcessor.isAppLoadingData(),
+      gettingData: true,
     };
+
+    const doGetScreenData = async () => {
+      let donationInformation = await DataProcessor.doGetDonationInformation();
+      let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies);
+      if (studies) {
+        studies.forEach(study => {
+          study.key = study.studyId
+        });
+      }
+      console.log('donationInformation :', donationInformation, studies);
+      this.setState({
+        donationInformation,
+        studies,
+        gettingData: false,
+      });
+    };
+    doGetScreenData();
   }
   // ==========================================================================================
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
-    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
     if (this.props.screenProps.needReloadData) {
       this.reloadData();
       if (this.props.screenProps.doneReloadData) {
@@ -60,29 +72,34 @@ export class DonationComponent extends React.Component {
   // ==========================================================================================
 
   handerLoadingData() {
-    this.setState({ isLoadingData: DataController.isLoadingData() });
+    this.setState({ appLoadingData: DataProcessor.isAppLoadingData() });
   }
 
   reloadData() {
-    AppController.doReloadUserData().then(() => {
-      this.switchSubtab(this.state.subtab);
+    AppProcessor.doReloadUserData().then(() => {
+      this.switchSubTab(this.state.subTab);
     }).catch((error) => {
       console.log('getUserBitmark error :', error);
     });
   }
-  handerDonationInformationChange() {
-    this.switchSubtab();
-  }
-  switchSubtab(subTab) {
-    subTab = subTab || this.state.subTab;
-    let donationInformation = DataController.getDonationInformation();
-    let studies = (subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies);
+  handerDonationInformationChange(donationInformation) {
+    let studies = (this.state.subTab === SubTabs.other ? donationInformation.otherStudies : donationInformation.joinedStudies);
     if (studies) {
       studies.forEach(study => {
         study.key = study.studyId
       });
     }
-    this.setState({ subTab, studies, donationInformation });
+    this.setState({ donationInformation, studies });
+  }
+  switchSubTab(subTab) {
+    subTab = subTab || this.state.subTab;
+    let studies = (subTab === SubTabs.other ? this.state.donationInformation.otherStudies : this.state.donationInformation.joinedStudies);
+    if (studies) {
+      studies.forEach(study => {
+        study.key = study.studyId
+      });
+    }
+    this.setState({ subTab, studies });
   }
   contactBitmark() {
     Mailer.mail({ recipients: ['support@bitmark.com'], }, (error) => {
@@ -116,7 +133,7 @@ export class DonationComponent extends React.Component {
           {this.state.subTab !== SubTabs.other && <TouchableOpacity style={[donationStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
-          }]} onPress={() => this.switchSubtab(SubTabs.other)}>
+          }]} onPress={() => this.switchSubTab(SubTabs.other)}>
             <View style={donationStyle.subTabButtonArea}>
               <View style={[donationStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={donationStyle.subTabButtonTextArea}>
@@ -139,7 +156,7 @@ export class DonationComponent extends React.Component {
           {this.state.subTab !== SubTabs.joined && <TouchableOpacity style={[donationStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
-          }]} onPress={() => this.switchSubtab(SubTabs.joined)}>
+          }]} onPress={() => this.switchSubTab(SubTabs.joined)}>
             <View style={donationStyle.subTabButtonArea}>
               <View style={[donationStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={donationStyle.subTabButtonTextArea}>
@@ -181,7 +198,7 @@ export class DonationComponent extends React.Component {
             <Text style={donationStyle.noCardTitle}>HAVEN’T JOINED ANY STUDIES?</Text>
             <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
           </View>}
-          {!this.state.isLoadingData && <View style={donationStyle.content}>
+          {(this.state.appLoadingData || this.state.gettingData) && <View style={donationStyle.content}>
             <ActivityIndicator size="large" style={{ marginTop: 46, }} />
           </View>}
         </ScrollView>

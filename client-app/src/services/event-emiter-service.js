@@ -1,6 +1,6 @@
 import { NativeAppEventEmitter } from 'react-native';
 
-let EventEmiterService = {
+let EventEmitterService = {
   event_extra: {},
   events: {
     COMPONENT_MOUNTING: 'app-component-mounting',
@@ -13,31 +13,32 @@ let EventEmiterService = {
     CHANGE_USER_INFO: 'change-user-info',
     CHANGE_USER_DATA_LOCAL_BITMARKS: 'change-user-data:local-bitmarks',
     CHANGE_USER_DATA_TRACKING_BITMARKS: 'change-user-data:tracking-bitmarks',
-    CHANGE_USER_DATA_ACTIVE_INCOMING_TRANSFER_OFFER: 'change-user-data:active-incoming-transfer-offer',
-    CHANGE_USER_DATA_TRANSACTIONS: 'change-user-data:transactions',
     CHANGE_USER_DATA_DONATION_INFORMATION: 'change-user-data:donation-information',
     CHANGE_USER_DATA_IFTTT_INFORMATION: 'change-user-data:ifttt-information',
+
+    CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA: 'change-transaction-screen-action-required-data',
+    CHANGE_TRANSACTION_SCREEN_HISTORIES_DATA: 'change-transaction-screen-histories-data',
   },
   on: (eventName, func, extra) => {
-    if (extra && (!EventEmiterService.event_extra[eventName] || !EventEmiterService.event_extra[eventName][extra])) {
-      if (!EventEmiterService.event_extra[eventName]) {
-        EventEmiterService.event_extra[eventName] = {};
+    if (extra && (!EventEmitterService.event_extra[eventName] || !EventEmitterService.event_extra[eventName][extra])) {
+      if (!EventEmitterService.event_extra[eventName]) {
+        EventEmitterService.event_extra[eventName] = {};
       }
-      EventEmiterService.event_extra[eventName][extra] = true;
+      EventEmitterService.event_extra[eventName][extra] = true;
     }
     NativeAppEventEmitter.addListener(eventName + (extra || ''), func);
   },
   emit: (eventName, data) => {
-    if (EventEmiterService.event_extra[eventName]) {
-      for (let extra in EventEmiterService.event_extra[eventName]) {
+    if (EventEmitterService.event_extra[eventName]) {
+      for (let extra in EventEmitterService.event_extra[eventName]) {
         NativeAppEventEmitter.emit(eventName + (extra || ''), data);
       }
     }
     NativeAppEventEmitter.emit(eventName, data);
   },
   remove: (eventName, func, extra) => {
-    if (extra && EventEmiterService.event_extra[eventName] && EventEmiterService.event_extra[eventName][extra]) {
-      delete EventEmiterService.event_extra[eventName][extra];
+    if (extra && EventEmitterService.event_extra[eventName] && EventEmitterService.event_extra[eventName][extra]) {
+      delete EventEmitterService.event_extra[eventName][extra];
     }
     if (!func) {
       NativeAppEventEmitter.removeAllListeners(eventName + (extra || ''));
@@ -47,4 +48,4 @@ let EventEmiterService = {
   }
 };
 
-export { EventEmiterService };
+export { EventEmitterService };

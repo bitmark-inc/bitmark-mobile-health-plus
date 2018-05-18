@@ -18,7 +18,6 @@ let config = {
   bitmark_network: NETWORKS.testnet,
   appLink: 'https://itunes.apple.com/us/app/bitmark/id1213686437?ls=1&mt=8',
   api_server_url: 'https://api.test.bitmark.com',
-  preive_asset_url: 'https://preview.assets.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
   trade_server_url: 'https://trade.devel.bitmark.com',
   donation_server_url: 'http://192.168.0.202:9001',
@@ -42,7 +41,6 @@ if (config.network === NETWORKS.testnet) {
 } else if (config.network === NETWORKS.livenet) {
   config.bitmark_network = NETWORKS.livenet;
   config.api_server_url = 'https://api.bitmark.com';
-  config.preive_asset_url = 'https://preview.assets.bitmark.com';
   config.registry_server_url = 'https://registry.bitmark.com';
   config.trade_server_url = 'https://trade.bitmark.com';
   config.mobile_server_url = 'https://bm.bitmark.com';
@@ -86,3 +84,6 @@ export { config, ios, android };
 // livetnet
 // code-push release-react Bitmark ios -d Production
 // code-push release-react Bitmark ios -d Production -m --description "update code" [--targetBinaryVersion "~1.1.1]"
+
+
+// react-native run-ios --device "Bitmark’s iPhone" --scheme 'Bitmark dev'

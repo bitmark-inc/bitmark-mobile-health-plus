@@ -12,10 +12,10 @@ import { DonationComponent } from './donation';
 
 
 import { BottomTabsComponent } from './bottom-tabs/bottom-tabs.component';
-import { AppController, DataController } from '../../managers';
-import { EventEmiterService } from '../../services';
+import { AppProcessor, DataProcessor } from '../../processors';
+import { EventEmitterService } from '../../services';
 import { DonationService } from '../../services/donation-service';
-import { FullComponent } from '../../commons/components';
+import { BitmarkComponent } from '../../commons/components';
 
 const MainTabs = BottomTabsComponent.MainTabs;
 
@@ -28,8 +28,8 @@ export class UserComponent extends React.Component {
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
 
-    EventEmiterService.remove(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, null, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.NEED_RELOAD_USER_DATA, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.NEED_RELOAD_USER_DATA, null, ComponentName);
 
     let subTab;
     let mainTab = MainTabs.properties;
@@ -54,12 +54,12 @@ export class UserComponent extends React.Component {
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
-    EventEmiterService.on(EventEmiterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
   }
 
   reloadUserData() {
-    AppController.doReloadUserData();
+    AppProcessor.doReloadUserData();
   }
 
   switchMainTab(mainTab) {
@@ -70,7 +70,7 @@ export class UserComponent extends React.Component {
   handerReceivedNotification(data) {
     console.log('UserComponent handerReceivedNotification data :', data);
     if (data.name === 'transfer_request' && data.id) {
-      AppController.doGetTransferOfferDetail(data.id).then(transferOfferDetail => {
+      AppProcessor.doGetTransferOfferDetail(data.id).then(transferOfferDetail => {
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
@@ -90,21 +90,22 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification transfer_required error :', error);
       });
     } else if (data.name === 'transfer_rejected') {
-      let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
-      const resetHomePage = NavigationActions.reset({
-        index: 1,
-        actions: [
-          NavigationActions.navigate({
-            routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
-          }),
-          NavigationActions.navigate({
-            routeName: 'LocalPropertyDetail',
-            params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
-          }),
-        ]
+      DataProcessor.doGetLocalBitmarkInformation(data.bitmark_id).then(bitmarkInformation => {
+        const resetHomePage = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
+            }),
+            NavigationActions.navigate({
+              routeName: 'LocalPropertyDetail',
+              params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
       });
-      this.props.navigation.dispatch(resetHomePage);
-    } else if (data.name === 'transfer_completed' || data.evnameent === 'transfer_accepted') {
+    } else if (data.name === 'transfer_completed' || data.name === 'transfer_accepted') {
       const resetHomePage = NavigationActions.reset({
         index: 0,
         actions: [
@@ -118,24 +119,24 @@ export class UserComponent extends React.Component {
       });
       this.props.navigation.dispatch(resetHomePage);
     } else if (data.name === 'transfer_failed') {
-      let bitmarkInformation = DataController.getLocalBitmarkInformation(data.bitmark_id);
-      const resetHomePage = NavigationActions.reset({
-        index: 1,
-        actions: [
-          NavigationActions.navigate({
-            routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
-          }),
-          NavigationActions.navigate({
-            routeName: 'LocalPropertyDetail',
-            params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
-          }),
-        ]
+      DataProcessor.doGetLocalBitmarkInformation(data.bitmark_id).then(bitmarkInformation => {
+        const resetHomePage = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
+            }),
+            NavigationActions.navigate({
+              routeName: 'LocalPropertyDetail',
+              params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
       });
-      this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'DONATE_DATA' && data.studyData && data.studyData.studyId && data.studyData.taskType) {
       if (data.studyData.taskType === 'donations') {
-        AppController.doReloadDonationInformation().then(() => {
-          let donationInformation = DataController.getDonationInformation();
+        AppProcessor.doReloadDonationInformation().then((donationInformation) => {
           let studyTask = (donationInformation.todoTasks || []).find(task => (task.study && task.study.studyId === data.studyData.studyId && task.taskType === data.studyData.taskType));
           if (studyTask && studyTask.taskType === studyTask.study.taskIds.donations) {
             const resetHomePage = NavigationActions.reset({
@@ -175,8 +176,7 @@ export class UserComponent extends React.Component {
         this.props.navigation.dispatch(resetHomePage);
       }
     } else if (data.event === 'STUDY_DETAIL') {
-      AppController.doReloadDonationInformation().then(() => {
-        let donationInformation = DataController.getDonationInformation();
+      AppProcessor.doReloadDonationInformation().then((donationInformation) => {
         let study = DonationService.getStudy(donationInformation, data.studyId);
         if (study) {
           const resetHomePage = NavigationActions.reset({
@@ -196,8 +196,7 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification STUDY_DETAIL error :', error);
       });
     } else if (data.event === 'BITMARK_DATA') {
-      AppController.doReloadDonationInformation().then(() => {
-        let donationInformation = DataController.getDonationInformation();
+      AppProcessor.doReloadDonationInformation().then((donationInformation) => {
         let bitmarkHealthDataTask = (donationInformation.todoTasks || []).find(task => task.taskType === donationInformation.commonTaskIds.bitmark_health_data);
         if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
           const resetHomePage = NavigationActions.reset({
@@ -233,8 +232,8 @@ export class UserComponent extends React.Component {
       });
       this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'tracking_transfer_confirmed') {
-      DataController.doReloadTrackingBitmark().then(() => {
-        let trackingBitmark = DataController.getTrackingBitmarkInformation(data.bitmark_id);
+      DataProcessor.doReloadTrackingBitmark().then(() => {
+        let trackingBitmark = DataProcessor.getTrackingBitmarkInformation(data.bitmark_id);
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
@@ -255,7 +254,7 @@ export class UserComponent extends React.Component {
   }
 
   logout() {
-    AppController.doLogout().then(() => {
+    AppProcessor.doLogout().then(() => {
       const resetMainPage = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Main' })]
@@ -268,7 +267,7 @@ export class UserComponent extends React.Component {
 
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         content={(<View style={{ flex: 1 }}>
           {this.state.displayedTab.mainTab === MainTabs.properties && <PropertiesComponent screenProps={{
             homeNavigation: this.props.navigation,

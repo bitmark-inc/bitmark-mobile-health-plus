@@ -4,12 +4,12 @@ import {
   View, Image, Text, TouchableOpacity,
 } from 'react-native';
 
-import { FullComponent } from './../../../../commons/components';
+import { BitmarkComponent } from './../../../../commons/components';
 
 import donationStyles from './study-donation.component.style';
 import defaultStyle from './../../../../commons/styles';
-import { AppController, DataController } from '../../../../managers';
-import { EventEmiterService } from '../../../../services';
+import { AppProcessor, DataProcessor } from '../../../../processors';
+import { EventEmitterService } from '../../../../services';
 import { convertWidth } from '../../../../utils';
 export class StudyDonationComponent extends React.Component {
   constructor(props) {
@@ -20,7 +20,7 @@ export class StudyDonationComponent extends React.Component {
   }
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         content={(
           <View style={[donationStyles.body]}>
             <View style={[donationStyles.header]}>
@@ -42,18 +42,18 @@ export class StudyDonationComponent extends React.Component {
                 By signing you are consenting to give the researcher rights to use this donation in their study. Your consent will be recorded in the Bitmark blockchain.
               </Text>
               <TouchableOpacity style={donationStyles.bitmarkButton} onPress={() => {
-                AppController.doDonateHealthData(this.state.study, this.state.list, {
+                AppProcessor.doDonateHealthData(this.state.study, this.state.list, {
                   indicator: true, title: 'Transferring your encrypted data to the researcher...', message: ''
                 }, {
                     indicator: false, title: 'Donation Successful!', message: 'Thank you for donating your data to help current and future generations!'
                   }).then((result) => {
                     if (result) {
-                      DataController.doReloadUserData();
+                      DataProcessor.doReloadUserData();
                       this.props.navigation.goBack();
                     }
                   }).catch(error => {
                     console.log('doDonateHealthData error:', error);
-                    EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { onClose: () => this.props.navigation.goBack() });
+                    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: () => this.props.navigation.goBack() });
                   });
               }}>
                 <Text style={donationStyles.bitmarkButtonText}>DONATE</Text>

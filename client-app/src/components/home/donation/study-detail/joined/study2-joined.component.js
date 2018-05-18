@@ -55,7 +55,7 @@ export class Study2JoinedComponent extends React.Component {
             </TouchableOpacity>
             <View style={styles.infoButtonBar} />
             <TouchableOpacity style={[styles.infoButton]} onPress={() => {
-              this.props.navigation.navigate('HealthDataDataSource', { dataTypes: this.state.study.dataTypes, })
+              this.props.navigation.navigate('HealthDataSource', { dataTypes: this.state.study.dataTypes, })
             }}>
               <Text style={styles.infoButtonText}>View Data Types</Text>
             </TouchableOpacity>

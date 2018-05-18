@@ -4,12 +4,12 @@ import {
   View, Text, TouchableOpacity, Image, FlatList,
 } from 'react-native';
 
-import { FullComponent } from './../../../../../commons/components';
+import { BitmarkComponent } from './../../../../../commons/components';
 
 import defaultStyle from './../../../../../commons/styles';
 import myStyle from './health-data-metadata.component.style';
 
-import { DataController } from '../../../../../managers';
+import { DataProcessor } from '../../../../../processors';
 import { StudyCommonModel } from '../../../../../models';
 
 
@@ -18,7 +18,7 @@ export class HealthDataMetadataComponent extends React.Component {
     super(props);
 
     let metadataList = [];
-    let metadata = StudyCommonModel.getMetadataOfBitmarkHealthData(DataController.getUserInformation().bitmarkAccountNumber);
+    let metadata = StudyCommonModel.getMetadataOfBitmarkHealthData(DataProcessor.getUserInformation().bitmarkAccountNumber);
     for (let key in metadata) {
       metadataList.push({ key, value: metadata[key] });
     }
@@ -29,7 +29,7 @@ export class HealthDataMetadataComponent extends React.Component {
 
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         header={(<View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../assets/imgs/header_blue_icon.png')} />

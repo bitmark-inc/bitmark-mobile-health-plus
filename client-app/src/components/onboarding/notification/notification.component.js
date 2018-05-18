@@ -27,7 +27,7 @@ export class NotificationComponent extends React.Component {
     }
     return (
       <View style={[notificationStyle.body]}>
-        <ScrollView style={[notificationStyle.scrolConten]} >
+        <ScrollView style={[notificationStyle.scrollContent]} >
           <Text style={[notificationStyle.notificationTitle]}>NOTIFICATIONS</Text>
           <Image style={[notificationStyle.notificationImage]} source={require('../../../../assets/imgs/notification.png')} />
           <Text style={[notificationStyle.notificationDescription,]}>

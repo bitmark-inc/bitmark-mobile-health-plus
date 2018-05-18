@@ -8,12 +8,12 @@ import {
 import DefaultStudies from './default';
 import JoinedStudies from './joined';
 
-import { FullComponent } from './../../../../commons/components';
+import { BitmarkComponent } from './../../../../commons/components';
 
 import defaultStyle from './../../../../commons/styles';
 import studyDetailsStyles from './study-detail.component.style';
-import { AppController, DataController } from '../../../../managers';
-import { EventEmiterService } from '../../../../services';
+import { AppProcessor, DataProcessor } from '../../../../processors';
+import { EventEmitterService } from '../../../../services';
 
 export class StudyDetailComponent extends React.Component {
   constructor(props) {
@@ -32,7 +32,7 @@ export class StudyDetailComponent extends React.Component {
     let DetailComponent = (this.state.study && this.state.study.studyId && this.state.study.joinedDate)
       ? JoinedStudies[this.state.study.studyId] : DefaultStudies[this.state.study.studyId];
     return (
-      <FullComponent
+      <BitmarkComponent
         header={<View style={[defaultStyle.header]}>
           <TouchableOpacity style={[defaultStyle.headerLeft]} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
@@ -61,14 +61,14 @@ export class StudyDetailComponent extends React.Component {
     }, {
       text: 'Leave',
       onPress: () => {
-        AppController.doLeaveStudy(this.state.study.studyId).then((result) => {
+        AppProcessor.doLeaveStudy(this.state.study.studyId).then((result) => {
           if (result !== null) {
-            DataController.doReloadUserData();
+            DataProcessor.doReloadUserData();
             this.props.navigation.goBack();
           }
         }).catch(error => {
           console.log('doLeaveStudy error:', error);
-          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
             onClose: () => {
               this.props.navigation.goBack();
             }

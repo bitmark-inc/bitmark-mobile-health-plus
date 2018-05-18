@@ -4,7 +4,7 @@ import {
   View, Text, TouchableOpacity, Image, TextInput, FlatList, ScrollView,
 } from 'react-native';
 
-import { FullComponent } from './../../../../../commons/components';
+import { BitmarkComponent } from './../../../../../commons/components';
 import localAddPropertyStyle from './edit-label.component.style';
 import defaultStyle from './../../../../../commons/styles';
 
@@ -23,24 +23,24 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
     this.onChangeText = this.onChangeText.bind(this);
     this.onChooseLabel = this.onChooseLabel.bind(this);
 
-    let suggesions = [];
+    let suggestions = [];
     let label = this.props.navigation.state.params.label || ''
     MetadataLabelSamples.forEach((text, key) => {
       if (!label || text.toLowerCase().indexOf(label.toLowerCase()) >= 0) {
-        suggesions.push({ key, text });
+        suggestions.push({ key, text });
       }
     });
-    this.state = { label: this.props.navigation.state.params.label || '', suggesions };
+    this.state = { label: this.props.navigation.state.params.label || '', suggestions };
   }
 
   onChangeText(label) {
-    let suggesions = [];
+    let suggestions = [];
     MetadataLabelSamples.forEach((text, key) => {
       if (!label || text.toLowerCase().indexOf(label.toLowerCase()) >= 0) {
-        suggesions.push({ key, text });
+        suggestions.push({ key, text });
       }
     });
-    this.setState({ label, suggesions });
+    this.setState({ label, suggestions });
   }
 
   onChooseLabel(text) {
@@ -49,7 +49,7 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
   }
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         header={(<View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
@@ -79,12 +79,12 @@ export class LocalIssueFileEditLabelComponent extends React.Component {
               <Image style={localAddPropertyStyle.removeLabelNumberIcon} source={require('../../../../../../assets/imgs/remove-icon.png')} />
             </TouchableOpacity>}
             <View style={localAddPropertyStyle.inputLabelBar} />
-            <View style={localAddPropertyStyle.suggesionsList}>
+            <View style={localAddPropertyStyle.suggestionsList}>
               <FlatList
-                data={this.state.suggesions}
+                data={this.state.suggestions}
                 renderItem={({ item }) => {
-                  return (<TouchableOpacity style={localAddPropertyStyle.suggesionsButton} onPress={() => this.onChooseLabel(item.text)}>
-                    <Text style={localAddPropertyStyle.suggesionsButtonText}>{item.text}</Text>
+                  return (<TouchableOpacity style={localAddPropertyStyle.suggestionsButton} onPress={() => this.onChooseLabel(item.text)}>
+                    <Text style={localAddPropertyStyle.suggestionsButtonText}>{item.text}</Text>
                   </TouchableOpacity>);
                 }}
               />

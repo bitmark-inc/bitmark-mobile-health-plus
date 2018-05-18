@@ -46,21 +46,21 @@ export default StyleSheet.create({
     fontWeight: '900',
     width: convertWidth(150),
   },
-  extenalArea: {
+  externalArea: {
     marginTop: 44,
   },
-  extenalAreaRow: {
+  externalAreaRow: {
     flexDirection: 'row',
     marginTop: 9,
   },
 
-  extenalAreaRowLabel: {
+  externalAreaRowLabel: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     color: '#0060F2',
     width: convertWidth(117),
   },
-  extenalAreaRowValue: {
+  externalAreaRowValue: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     width: convertWidth(198),
@@ -68,17 +68,17 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
-  extenalAreaRowValueIssuerView: {
+  externalAreaRowValueIssuerView: {
     width: convertWidth(198),
     flexDirection: 'row',
     alignItems: 'center'
   },
-  extenalAreaRowValueIssuer_: {
+  externalAreaRowValueIssuer_: {
     fontFamily: 'Andale Mono',
     color: '#0060F2',
     fontSize: 13,
   },
-  extenalAreaRowValueIssuer: {
+  externalAreaRowValueIssuer: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     width: convertWidth(190),

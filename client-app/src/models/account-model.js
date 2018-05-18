@@ -5,16 +5,16 @@ const doCreateAccount = async () => {
   return await BitmarkSDK.newAccount(config.bitmark_network);
 };
 
-const doLogin = async (pharse24Words) => {
-  return await BitmarkSDK.newAccountFrom24Words(pharse24Words, config.bitmark_network);
+const doLogin = async (phrase24Words) => {
+  return await BitmarkSDK.newAccountFrom24Words(phrase24Words, config.bitmark_network);
 }
 
 const doGetCurrentAccount = async (touchFaceIdSession) => {
   return await BitmarkSDK.accountInfo(touchFaceIdSession);
 };
 
-const doCheck24Words = async (pharse24Words) => {
-  return await BitmarkSDK.try24Words(pharse24Words, config.bitmark_network);
+const doCheck24Words = async (phrase24Words) => {
+  return await BitmarkSDK.try24Words(phrase24Words, config.bitmark_network);
 };
 
 const doLogout = async () => {

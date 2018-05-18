@@ -9,8 +9,8 @@ import { NavigationActions } from 'react-navigation';
 
 import issuanceOptionsStyle from './issuance-options.component.style';
 import defaultStyle from './../../../../../commons/styles';
-import { AppController, DataController } from '../../../../../managers';
-import { EventEmiterService } from '../../../../../services';
+import { AppProcessor, DataProcessor } from '../../../../../processors';
+import { EventEmitterService } from '../../../../../services';
 import { BottomTabsComponent } from '../../../bottom-tabs/bottom-tabs.component';
 import { FileUtil } from '../../../../../utils';
 
@@ -25,27 +25,39 @@ export class IssuanceOptionsComponent extends React.Component {
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerIftttInformationChange = this.handerIftttInformationChange.bind(this);
 
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, ComponentName);
 
     this.state = {
-      donationInformation: DataController.getDonationInformation(),
-      iftttInformation: DataController.getIftttInformation(),
+      donationInformation: null,
+      iftttInformation: null,
     };
+
+    const doGetScreenData = async () => {
+      let donationInformation = await DataProcessor.doGetDonationInformation();
+      let iftttInformation = await DataProcessor.doGetIftttInformation();
+      this.setState({
+        donationInformation,
+        iftttInformation,
+        gettingData: false,
+      });
+    }
+    doGetScreenData();
+
   }
 
   // ==========================================================================================
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerIftttInformationChange, ComponentName);
   }
   // ==========================================================================================
-  handerDonationInformationChange() {
-    this.setState({ donationInformation: DataController.getDonationInformation() });
+  handerDonationInformationChange(donationInformation) {
+    this.setState({ donationInformation });
   }
 
-  handerIftttInformationChange() {
-    this.setState({ iftttInformation: DataController.getIftttInformation() });
+  handerIftttInformationChange(iftttInformation) {
+    this.setState({ iftttInformation });
   }
 
   onChoosePhotoFile() {
@@ -84,9 +96,9 @@ export class IssuanceOptionsComponent extends React.Component {
 
     let fileName = response.fileName.substring(0, response.fileName.lastIndexOf('.'));
     let fileFormat = response.fileName.substring(response.fileName.lastIndexOf('.'));
-    AppController.doCheckFileToIssue(filePath).then(asset => {
+    AppProcessor.doCheckFileToIssue(filePath).then(asset => {
       if (asset && asset.registrant && asset.accessibility === 'public') {
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'The file has already been registered as public in the Bitmark blockchain. We will soon be able to support issuing more bitmarks for this public asset in the mobile app.' });
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { message: 'The file has already been registered as public in the Bitmark blockchain. We will soon be able to support issuing more bitmarks for this public asset in the mobile app.' });
         return;
       }
       this.props.screenProps.homeNavigation.navigate('LocalIssueFile', {
@@ -95,12 +107,12 @@ export class IssuanceOptionsComponent extends React.Component {
       });
     }).catch(error => {
       console.log('onChooseFile error :', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
     });
   }
 
   issueHealthData() {
-    if (!this.state.donationInformation.activeBitmarkHealthDataAt) {
+    if (!this.state.donationInformation || !this.state.donationInformation.activeBitmarkHealthDataAt) {
       this.props.navigation.navigate('HealthDataActive')
     } else {
       const resetHomePage = NavigationActions.reset({
@@ -118,7 +130,7 @@ export class IssuanceOptionsComponent extends React.Component {
     }
   }
   issueIftttData() {
-    if (!this.state.iftttInformation.connectIFTTT) {
+    if (!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT) {
       this.props.screenProps.homeNavigation.navigate('IftttActive');
     } else {
       const resetHomePage = NavigationActions.reset({
@@ -155,13 +167,13 @@ export class IssuanceOptionsComponent extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.issueHealthData}>
             <Text style={issuanceOptionsStyle.optionButtonText}>HEALTH DATA</Text>
-            {!this.state.donationInformation.activeBitmarkHealthDataAt && <Image style={issuanceOptionsStyle.optionButtonNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
-            {!!this.state.donationInformation.activeBitmarkHealthDataAt && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
+            {(!this.state.donationInformation || !this.state.donationInformation.activeBitmarkHealthDataAt) && <Image style={issuanceOptionsStyle.optionButtonNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
+            {this.state.donationInformation && !!this.state.donationInformation.activeBitmarkHealthDataAt && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
           </TouchableOpacity>
           <TouchableOpacity style={issuanceOptionsStyle.optionButton} onPress={this.issueIftttData}>
             <Text style={issuanceOptionsStyle.optionButtonText}>IFTTT DATA</Text>
-            {!this.state.iftttInformation.connectIFTTT && <Image style={issuanceOptionsStyle.optionButtonNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
-            {!!this.state.iftttInformation.connectIFTTT && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
+            {(!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT) && <Image style={issuanceOptionsStyle.optionButtonNextIcon} source={require('./../../../../../../assets/imgs/next-icon-blue.png')} />}
+            {this.state.iftttInformation && !!this.state.iftttInformation.connectIFTTT && <Text style={issuanceOptionsStyle.optionButtonStatus}>{'Authorized'.toUpperCase()}</Text>}
           </TouchableOpacity>
 
           <Text style={issuanceOptionsStyle.message}>

@@ -10,43 +10,43 @@ const {
   Keyboard,
   Animated,
 } = ReactNative;
-import styles from './full.component.style';
+import styles from './bitmark.component.style';
 import { ios } from './../../../configs';
 
 const { StatusBarManager } = NativeModules;
 
 const currentSize = Dimensions.get('window');
 
-export class FullComponent extends React.Component {
+export class BitmarkComponent extends React.Component {
   constructor(props) {
     super(props);
     this.statusBarChanged = this.statusBarChanged.bind(this);
     this.getAppHeight = this.getAppHeight.bind(this);
     this.refresh = this.refresh.bind(this);
     this.getContentHeight = this.getContentHeight.bind(this);
-    this.onkeyboardWillShow = this.onkeyboardWillShow.bind(this);
-    this.onkeyboardDidShow = this.onkeyboardDidShow.bind(this);
-    this.onkeyboardDidHide = this.onkeyboardDidHide.bind(this);
-    this.setForcusElement = this.setForcusElement.bind(this);
+    this.onKeyboardWillShow = this.onKeyboardWillShow.bind(this);
+    this.onKeyboardDidShow = this.onKeyboardDidShow.bind(this);
+    this.onKeyboardDidHide = this.onKeyboardDidHide.bind(this);
+    this.setFocusElement = this.setFocusElement.bind(this);
     this.doScroll = this.doScroll.bind(this);
 
     let headerHeight = !this.props.header ? 0 : (this.props.headerHeight || (ios.constant.headerSize.height - ios.constant.headerSize.paddingTop));
     let footerHeight = !this.props.footer ? 0 : (this.props.footerHeight || ios.constant.bottomTabsHeight + ios.constant.blankFooter);
-    let keyboardExtenalHeight = this.props.keyboardExtenal ? (this.props.headerHeight || ios.constant.autoCompleteHeight) : 0;
+    let keyboardExternalHeight = this.props.keyboardExternal ? (this.props.headerHeight || ios.constant.autoCompleteHeight) : 0;
     let statusBarHeight = 0;
     let bodyHeight = currentSize.height - ios.constant.headerSize.paddingTop;
-    let conntentHeight = bodyHeight - headerHeight - footerHeight;
+    let contentHeight = bodyHeight - headerHeight - footerHeight;
     this.state = {
-      conntentHeightAnimation: new Animated.Value(conntentHeight + footerHeight),
-      conntentHeight,
+      contentHeightAnimation: new Animated.Value(contentHeight + footerHeight),
+      contentHeight,
       headerHeight,
       footerHeight,
       statusBarHeight,
       keyboardHeight: 0,
       keyboardY: currentSize.height,
-      keyboardExtenalHeight,
-      keyboardExtenalOpacity: new Animated.Value(0),
-      keyboardExtenalBottom: new Animated.Value(0),
+      keyboardExternalHeight,
+      keyboardExternalOpacity: new Animated.Value(0),
+      keyboardExternalBottom: new Animated.Value(0),
       bodyHeight,
     };
     this.scrollYPosition = 0;
@@ -54,9 +54,9 @@ export class FullComponent extends React.Component {
 
   componentDidMount() {
     StatusBarIOS.addListener('statusBarFrameWillChange', this.statusBarChanged);
-    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.onkeyboardWillShow);
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onkeyboardDidShow);
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onkeyboardDidHide);
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.onKeyboardWillShow);
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide);
     this.refresh();
   }
 
@@ -66,59 +66,59 @@ export class FullComponent extends React.Component {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
   }
-  onkeyboardWillShow(event) {
+  onKeyboardWillShow(event) {
     if (event.easing === 'keyboard') {
       this.oldScrollYPosition = this.scrollYPosition;
     }
   }
-  onkeyboardDidShow(keyboardEvent) {
+  onKeyboardDidShow(keyboardEvent) {
     if (keyboardEvent.easing !== 'keyboard') {
       return;
     }
-    console.log('onkeyboardDidShow :', keyboardEvent);
+    console.log('onKeyboardDidShow :', keyboardEvent);
     let keyboardHeight = keyboardEvent.endCoordinates.height;
     let keyboardY = keyboardEvent.endCoordinates.screenY;
-    let conntentHeight = this.state.bodyHeight - this.state.headerHeight - Math.max(this.state.footerHeight, this.state.keyboardExtenalHeight) - keyboardHeight;
-    this.setState({ keyboardHeight, keyboardY, conntentHeight });
-    this.doScroll(keyboardHeight, keyboardY, conntentHeight);
+    let contentHeight = this.state.bodyHeight - this.state.headerHeight - Math.max(this.state.footerHeight, this.state.keyboardExternalHeight) - keyboardHeight;
+    this.setState({ keyboardHeight, keyboardY, contentHeight });
+    this.doScroll(keyboardHeight, keyboardY, contentHeight);
   }
 
-  onkeyboardDidHide() {
+  onKeyboardDidHide() {
     let keyboardHeight = 0;
-    let conntentHeight = this.state.bodyHeight - this.state.headerHeight - this.state.footerHeight;
-    this.setState({ keyboardHeight, conntentHeight });
-    this.doScroll(keyboardHeight, null, conntentHeight);
+    let contentHeight = this.state.bodyHeight - this.state.headerHeight - this.state.footerHeight;
+    this.setState({ keyboardHeight, contentHeight });
+    this.doScroll(keyboardHeight, null, contentHeight);
   }
 
   statusBarChanged(statusbarData) {
     let statusBarHeight = statusbarData.frame.height - ios.constant.headerSize.paddingTop;
     let bodyHeight = statusBarHeight ? (currentSize.height - statusbarData.frame.height) : (currentSize.height - ios.constant.headerSize.paddingTop);
-    let conntentHeight = bodyHeight - this.state.headerHeight - Math.max(this.state.footerHeight, this.state.keyboardHeight ? this.state.keyboardExtenalHeight : 0) - this.state.keyboardHeight;
-    let statusBarHeightChange = this.state.conntentHeight - conntentHeight;
-    this.setState({ bodyHeight, conntentHeight, statusBarHeight });
-    this.doScroll(this.state.keyboardHeight, this.state.keyboardY, conntentHeight, statusBarHeightChange);
+    let contentHeight = bodyHeight - this.state.headerHeight - Math.max(this.state.footerHeight, this.state.keyboardHeight ? this.state.keyboardExternalHeight : 0) - this.state.keyboardHeight;
+    let statusBarHeightChange = this.state.contentHeight - contentHeight;
+    this.setState({ bodyHeight, contentHeight, statusBarHeight });
+    this.doScroll(this.state.keyboardHeight, this.state.keyboardY, contentHeight, statusBarHeightChange);
   }
 
-  async doScroll(keyboardHeight, keyboardY, conntentHeight, statusBarHeightChange) {
+  async doScroll(keyboardHeight, keyboardY, contentHeight, statusBarHeightChange) {
     statusBarHeightChange = statusBarHeightChange || 0;
     let oldScrollYPosition = this.oldScrollYPosition || 0;
 
     let listAnimations = [];
-    listAnimations.push(Animated.spring(this.state.conntentHeightAnimation, {
-      toValue: conntentHeight + this.state.footerHeight,
+    listAnimations.push(Animated.spring(this.state.contentHeightAnimation, {
+      toValue: contentHeight + this.state.footerHeight,
       duration: 200,
     }));
-    listAnimations.push(Animated.spring(this.state.keyboardExtenalBottom, {
+    listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
       toValue: keyboardHeight,
       duration: 200,
     }));
     if (keyboardHeight > 0) {
-      listAnimations.push(Animated.spring(this.state.keyboardExtenalOpacity, {
+      listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
         toValue: 1,
         duration: 200,
       }));
     } else {
-      listAnimations.push(Animated.spring(this.state.keyboardExtenalOpacity, {
+      listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
         toValue: 0,
         duration: 200,
       }));
@@ -126,11 +126,11 @@ export class FullComponent extends React.Component {
     Animated.parallel(listAnimations).start();
 
     if (keyboardHeight > 0) {
-      if (statusBarHeightChange === 0 && this.forcsedElement) {
-        this.forcsedElement.measureInWindow((x, y, width, height) => {
-          if (this.scrollRef && ((y + height) > (keyboardY - Math.max(this.state.keyboardExtenalHeight, this.state.footerHeight)))) {
-            let forcsedElementYPosition = oldScrollYPosition + y + height - keyboardY + this.state.footerHeight + statusBarHeightChange + Math.max(this.state.keyboardExtenalHeight, this.state.footerHeight);
-            this.scrollRef.scrollTo({ x: 0, y: forcsedElementYPosition, animated: true });
+      if (statusBarHeightChange === 0 && this.focusedElement) {
+        this.focusedElement.measureInWindow((x, y, width, height) => {
+          if (this.scrollRef && ((y + height) > (keyboardY - Math.max(this.state.keyboardExternalHeight, this.state.footerHeight)))) {
+            let focusedElementYPosition = oldScrollYPosition + y + height - keyboardY + this.state.footerHeight + statusBarHeightChange + Math.max(this.state.keyboardExternalHeight, this.state.footerHeight);
+            this.scrollRef.scrollTo({ x: 0, y: focusedElementYPosition, animated: true });
           }
         });
       } else if (this.scrollRef && statusBarHeightChange !== 0) {
@@ -140,11 +140,11 @@ export class FullComponent extends React.Component {
   }
 
   getAppHeight() {
-    return this.state.conntentHeight;
+    return this.state.contentHeight;
   }
 
   getContentHeight() {
-    return this.state.conntentHeight;
+    return this.state.contentHeight;
   }
 
   refresh() {
@@ -152,10 +152,10 @@ export class FullComponent extends React.Component {
       StatusBarManager.getHeight(result => {
         let statusBarHeight = ios.config.isIPhoneX ? 0 : (result.height - ios.constant.headerSize.paddingTop);
         let bodyHeight = statusBarHeight ? (currentSize.height - result.height) : (currentSize.height - ios.constant.headerSize.paddingTop);
-        let conntentHeight = bodyHeight - this.state.headerHeight - this.state.footerHeight;
-        this.setState({ bodyHeight, conntentHeight, statusBarHeight });
-        Animated.spring(this.state.conntentHeightAnimation, {
-          toValue: conntentHeight + this.state.footerHeight,
+        let contentHeight = bodyHeight - this.state.headerHeight - this.state.footerHeight;
+        this.setState({ bodyHeight, contentHeight, statusBarHeight });
+        Animated.spring(this.state.contentHeightAnimation, {
+          toValue: contentHeight + this.state.footerHeight,
           duration: 200,
         }).start();
       });
@@ -163,9 +163,9 @@ export class FullComponent extends React.Component {
 
   }
 
-  setForcusElement(element) {
-    this.forcsedElement = element;
-    this.doScroll(this.state.keyboardHeight, this.state.keyboardY, this.state.conntentHeight);
+  setFocusElement(element) {
+    this.focusedElement = element;
+    this.doScroll(this.state.keyboardHeight, this.state.keyboardY, this.state.contentHeight);
   }
 
   render() {
@@ -198,7 +198,7 @@ export class FullComponent extends React.Component {
           </View>}
 
           <Animated.View style={[styles.contentFooter, {
-            height: this.state.conntentHeightAnimation,
+            height: this.state.contentHeightAnimation,
             top: this.state.headerHeight,
             paddingBottom: this.state.footerHeight,
             // borderWidth: 2, borderColor: 'blue'
@@ -206,7 +206,7 @@ export class FullComponent extends React.Component {
           >
             <View style={[styles.content, {
               // borderWidth: 2, borderColor: 'red',
-            }, this.props.contentConatainerStyle]}>
+            }, this.props.contentContainerStyle]}>
               {this.props.contentInScroll &&
                 <ScrollView ref={ref => this.scrollRef = ref} scrollEventThrottle={16} onScroll={(event) => {
                   this.scrollYPosition = event.nativeEvent.contentOffset.y;
@@ -224,13 +224,13 @@ export class FullComponent extends React.Component {
           </Animated.View>
 
           {
-            this.state.keyboardExtenalHeight > 0 && this.state.keyboardHeight > 0 && <Animated.View style={[styles.keyboardExtenal, {
-              height: this.state.keyboardExtenalHeight,
-              bottom: this.state.keyboardExtenalBottom,
-              opacity: this.state.keyboardExtenalOpacity,
+            this.state.keyboardExternalHeight > 0 && this.state.keyboardHeight > 0 && <Animated.View style={[styles.keyboardExternal, {
+              height: this.state.keyboardExternalHeight,
+              bottom: this.state.keyboardExternalBottom,
+              opacity: this.state.keyboardExternalOpacity,
               // borderWidth: 2, borderColor: 'red',
             }]}>
-              {this.props.keyboardExtenal}
+              {this.props.keyboardExternal}
             </Animated.View>
           }
         </View>
@@ -239,7 +239,7 @@ export class FullComponent extends React.Component {
   }
 }
 
-FullComponent.propTypes = {
+BitmarkComponent.propTypes = {
   backgroundColor: PropTypes.string,
   mainStyle: PropTypes.object,
 
@@ -247,12 +247,13 @@ FullComponent.propTypes = {
   headerHeight: PropTypes.number,
 
   contentInScroll: PropTypes.bool,
-  contentConatainerStyle: PropTypes.object,
+  contentContainerStyle: PropTypes.object,
   content: PropTypes.any.isRequired,
 
   footer: PropTypes.any,
   footerHeight: PropTypes.number,
 
-  keyboardExtenalHeight: PropTypes.number,
-  keyboardExtenal: PropTypes.any,
+  keyboardExternalHeight: PropTypes.number,
+
+  keyboardExternal: PropTypes.any,
 }

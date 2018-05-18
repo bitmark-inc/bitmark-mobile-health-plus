@@ -6,11 +6,11 @@ import {
   Alert,
 } from 'react-native';
 
-import { EventEmiterService } from "./../../../services";
+import { EventEmitterService } from "./../../../services";
 import accountStyle from './account.component.style';
 
 import defaultStyle from './../../../commons/styles';
-import { DataController, AppController } from '../../../managers';
+import { DataProcessor, AppProcessor } from '../../../processors';
 
 const SubTabs = {
   settings: 'SETTINGS',
@@ -27,52 +27,55 @@ export class AccountDetailComponent extends React.Component {
     this.revokeIFTTT = this.revokeIFTTT.bind(this);
     this.handerChangeIftttInformation = this.handerChangeIftttInformation.bind(this);
 
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, null, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.CHANGE_USER_INFO, null, ComponentName);
-    EventEmiterService.remove(EventEmiterService.events.APP_LOADING_DATA, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_INFO, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.APP_LOADING_DATA, null, ComponentName);
 
     let subTab = (this.props.screenProps.subTab &&
       (this.props.screenProps.subTab === SubTabs.settings || this.props.screenProps.subTab === SubTabs.authorized))
       ? this.props.screenProps.subTab : SubTabs.settings;
-    console.log('subtab :', subTab);
+
     this.state = {
       subTab,
       accountNumberCopyText: '',
       notificationUUIDCopyText: 'COPY',
-      userInfo: DataController.getUserInformation(),
-      donationInformation: DataController.getDonationInformation(),
-      iftttInformation: DataController.getIftttInformation(),
-      isLoadingData: DataController.isLoadingData(),
+      userInfo: DataProcessor.getUserInformation(),
+      donationInformation: null,
+      iftttInformation: null,
+      appLoadingData: DataProcessor.isAppLoadingData(),
+      gettingData: true,
     };
+    let doGetScreenData = async () => {
+      let donationInformation = await DataProcessor.doGetDonationInformation();
+      let iftttInformation = await DataProcessor.doGetIftttInformation();
+      this.setState({ donationInformation, iftttInformation, gettingData: false });
+    }
+    doGetScreenData();
   }
 
   componentDidMount() {
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo, ComponentName);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
-    EventEmiterService.on(EventEmiterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerChangeIftttInformation, ComponentName);
-    EventEmiterService.on(EventEmiterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, this.handerChangeIftttInformation, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.APP_LOADING_DATA, this.handerLoadingData, ComponentName);
   }
 
-  handerChangeIftttInformation() {
-    this.setState({ iftttInformation: DataController.getIftttInformation() });
+  handerChangeIftttInformation(iftttInformation) {
+    this.setState({ iftttInformation });
   }
-  handerDonationInformationChange() {
-    this.setState({ donationInformation: DataController.getDonationInformation() });
+  handerDonationInformationChange(donationInformation) {
+    this.setState({ donationInformation });
   }
-  handerChangeUserInfo() {
-    this.setState({ userInfo: DataController.getUserInformation() });
+  handerChangeUserInfo(userInfo) {
+    this.setState({ userInfo });
   }
   handerLoadingData() {
-    this.setState({ isLoadingData: DataController.isLoadingData() });
+    this.setState({ appLoadingData: DataProcessor.isAppLoadingData() });
   }
 
-  switchSubtab(subTab) {
-    this.setState({
-      subTab,
-      userInfo: DataController.getUserInformation(),
-      donationInformation: DataController.getDonationInformation(),
-    });
+  switchSubTab(subTab) {
+    this.setState({ subTab, });
   }
 
   inactiveBitmarkHealthData() {
@@ -82,13 +85,13 @@ export class AccountDetailComponent extends React.Component {
     }, {
       text: 'Yes',
       onPress: () => {
-        AppController.doInactiveBitmarkHealthData().then((result) => {
+        AppProcessor.doInactiveBitmarkHealthData().then((result) => {
           if (result) {
-            DataController.doReloadUserData();
+            DataProcessor.doReloadUserData();
             this.props.navigation.goBack();
           }
         }).catch(error => {
-          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
           console.log('doInactiveBitmarkHealthData error :', error);
         });
       }
@@ -102,13 +105,13 @@ export class AccountDetailComponent extends React.Component {
     }, {
       text: 'Yes',
       onPress: () => {
-        AppController.doRevokeIftttToken().then((result) => {
+        AppProcessor.doRevokeIftttToken().then((result) => {
           if (result) {
-            DataController.doReloadUserData();
+            DataProcessor.doReloadUserData();
             this.props.navigation.goBack();
           }
         }).catch(error => {
-          EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
           console.log('doInactiveBitmarkHealthData error :', error);
         });
       }
@@ -142,7 +145,7 @@ export class AccountDetailComponent extends React.Component {
           {this.state.subTab !== SubTabs.settings && <TouchableOpacity style={[accountStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
-          }]} onPress={() => this.switchSubtab(SubTabs.settings)}>
+          }]} onPress={() => this.switchSubTab(SubTabs.settings)}>
             <View style={accountStyle.subTabButtonArea}>
               <View style={[accountStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={accountStyle.subTabButtonTextArea}>
@@ -165,7 +168,7 @@ export class AccountDetailComponent extends React.Component {
           {this.state.subTab !== SubTabs.authorized && <TouchableOpacity style={[accountStyle.subTabButton, {
             backgroundColor: '#F5F5F5',
             zIndex: 0,
-          }]} onPress={() => this.switchSubtab(SubTabs.authorized)}>
+          }]} onPress={() => this.switchSubTab(SubTabs.authorized)}>
             <View style={accountStyle.subTabButtonArea}>
               <View style={[accountStyle.activeSubTabBar, { backgroundColor: '#F5F5F5' }]}></View>
               <View style={accountStyle.subTabButtonTextArea}>
@@ -226,7 +229,7 @@ export class AccountDetailComponent extends React.Component {
                     <View style={accountStyle.authorizedItemDescriptionDetail}>
                       <Text style={accountStyle.authorizedItemDescriptionText}>Can:{'\n'}Extract data from the Health app and register property rights. Repeats weekly (Sunday 11AM).</Text>
                       <TouchableOpacity style={accountStyle.authorizedViewButton} onPress={() => {
-                        this.props.screenProps.homeNavigation.navigate('HealthDataDataSource')
+                        this.props.screenProps.homeNavigation.navigate('HealthDataSource')
                       }}>
                         <Text style={accountStyle.authorizedViewButtonText}>{'VIEW DATA TYPES »'.toUpperCase()} </Text>
                       </TouchableOpacity>
@@ -254,7 +257,7 @@ export class AccountDetailComponent extends React.Component {
                     </View>
                   </View>
                 </View>}
-                {!this.state.isLoadingData && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
+                {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
               </View>
             </View>}
           </TouchableOpacity>

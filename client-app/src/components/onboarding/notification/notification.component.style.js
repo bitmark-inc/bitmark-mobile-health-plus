@@ -6,7 +6,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'white',
   },
-  scrolConten: {
+  scrollContent: {
     width: '100%',
     paddingLeft: 51,
     paddingRight: 51,

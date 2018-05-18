@@ -3,7 +3,7 @@ let SwiftBitmarkSDK = NativeModules.BitmarkSDK;
 
 const newError = (reason, defaultMessage) => {
   let message = (reason && typeof (reason) === 'string') ? reason : defaultMessage;
-  message = message || 'Interal application error!'
+  message = message || 'Internal application error!'
   return new Error(message);
 }
 
@@ -20,9 +20,9 @@ const BitmarkSDK = {
       });
     });
   },
-  newAccountFrom24Words: (pharse24Words, network) => {
+  newAccountFrom24Words: (phrase24Words, network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFrom24Words(pharse24Words, network, (ok, result) => {
+      SwiftBitmarkSDK.newAccountFrom24Words(phrase24Words, network, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
@@ -70,9 +70,9 @@ const BitmarkSDK = {
   },
   accountInfo: (sessionId) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.accountInfo(sessionId, (ok, result, pharse24Words) => {
+      SwiftBitmarkSDK.accountInfo(sessionId, (ok, result, phrase24Words) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber: result, pharse24Words });
+          resolve({ bitmarkAccountNumber: result, phrase24Words });
         } else {
           reject(newError(result, 'Can not get current account!'));
         }
@@ -183,11 +183,11 @@ const BitmarkSDK = {
   },
 
   // don use session di
-  try24Words: (pharse24Words,network) => {
+  try24Words: (phrase24Words, network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.try24Words(pharse24Words, network, (ok, result, pharse24Words) => {
+      SwiftBitmarkSDK.try24Words(phrase24Words, network, (ok, result, phrase24Words) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber: result, pharse24Words });
+          resolve({ bitmarkAccountNumber: result, phrase24Words });
         } else {
           reject(newError(result, 'Can not try 24 words!'));
         }
@@ -217,9 +217,9 @@ const BitmarkSDK = {
       });
     });
   },
-  validateAccountNumber: (accountNumber, netowrk) => {
+  validateAccountNumber: (accountNumber, network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.validateAccountNumber(accountNumber, netowrk, (ok, result) => {
+      SwiftBitmarkSDK.validateAccountNumber(accountNumber, network, (ok, result) => {
         if (ok) {
           resolve();
         } else {

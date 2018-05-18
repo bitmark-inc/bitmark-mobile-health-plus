@@ -13,7 +13,7 @@ import applicationDetailStyle from './application-detail.component.style';
 
 import defaultStyles from '../../../../commons/styles';
 import { config } from '../../../../configs/index';
-import { DataController } from '../../../../managers';
+import { DataProcessor } from '../../../../processors';
 
 import {
   ios,
@@ -55,7 +55,7 @@ export class ApplicationDetailComponent extends React.Component {
       Mailer.mail({
         subject: 'Suggestion for Bitmark iOS',
         recipients: ['support@bitmark.com'],
-        body: 'App version: ' + DataController.getApplicationVersion() + ' (' + DataController.getApplicationBuildNumber() + ')',
+        body: 'App version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
       }, (error) => {
         if (error) {
           Alert.alert('Error', 'Could not send mail. Please send a mail to support@bitmark.com');
@@ -94,7 +94,7 @@ export class ApplicationDetailComponent extends React.Component {
           </View>
 
           <View style={applicationDetailStyle.donorInfo}>
-            <Text style={applicationDetailStyle.version}>Version: {DataController.getApplicationVersion()} ({DataController.getApplicationBuildNumber() + (config.network !== 'livenet' ? '-' + config.network : '')})</Text>
+            <Text style={applicationDetailStyle.version}>Version: {DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== 'livenet' ? '-' + config.network : '')})</Text>
           </View>
 
           <View style={applicationDetailStyle.bottomArea}>

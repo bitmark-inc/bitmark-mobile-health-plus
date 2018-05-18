@@ -8,27 +8,27 @@ import Camera from 'react-native-camera';
 import componentStyle from './sign-in.component.style';
 
 import defaultStyles from '../../../../../commons/styles';
-import { DataController, AppController } from '../../../../../managers';
-import { EventEmiterService } from '../../../../../services';
+import { DataProcessor, AppProcessor } from '../../../../../processors';
+import { EventEmitterService } from '../../../../../services';
 
 export class WebAccountSignInComponent extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      userInformation: DataController.getUserInformation(),
+      userInformation: DataProcessor.getUserInformation(),
     };
   }
 
   onBarCodeRead(scanData) {
     this.cameraRef.stopPreview();
-    AppController.doSignInOnWebApp(scanData.data).then((result) => {
+    AppProcessor.doSignInOnWebApp(scanData.data).then((result) => {
       if (result) {
         this.props.navigation.goBack();
       }
     }).catch(error => {
       console.log('doSignInOnWebApp error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'Cannot sign in this Bitmark account. Please try again later.' });
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { message: 'Cannot sign in this Bitmark account. Please try again later.' });
       this.props.navigation.goBack();
     });
   }

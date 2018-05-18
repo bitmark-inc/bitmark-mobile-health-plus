@@ -3,7 +3,9 @@ import { merge } from 'lodash';
 import { TransferOfferModel, BitmarkSDK, BitmarkModel, CommonModel } from '../models';
 import { sortList } from '../utils';
 
-const getAllTransactions = async (accountNumber, oldTransactions) => {
+const doGetAllTransactions = async (accountNumber) => {
+  let oldTransactions = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || {};
+  oldTransactions = oldTransactions || [];
   let lastOffset = null;
   if (oldTransactions) {
     oldTransactions.forEach(oldTx => {
@@ -11,13 +13,13 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
     });
   }
 
-  let allTransactions = await BitmarkModel.getAllTransactions(accountNumber, lastOffset);
+  let allTransactions = await BitmarkModel.doGetAllTransactions(accountNumber, lastOffset);
   let completedTransfers = merge([], oldTransactions || []);
 
   for (let transaction of allTransactions) {
     let existingOldTransaction = completedTransfers.find(item => item.txid === transaction.id);
     if (existingOldTransaction) {
-      let transactionData = await BitmarkModel.getTransactionDetail(transaction.id);
+      let transactionData = await BitmarkModel.doGetTransactionDetail(transaction.id);
       existingOldTransaction.assetId = transaction.asset_id;
       existingOldTransaction.blockNumber = transaction.block_number;
       existingOldTransaction.assetName = transactionData.asset.name;
@@ -28,7 +30,7 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
     } else {
       if (transaction.owner === accountNumber) {
         if (transaction.id && transaction.previous_id) {
-          let previousTransactionData = await BitmarkModel.getTransactionDetail(transaction.previous_id);
+          let previousTransactionData = await BitmarkModel.doGetTransactionDetail(transaction.previous_id);
           completedTransfers.push({
             assetName: previousTransactionData.asset.name,
             from: previousTransactionData.tx.owner,
@@ -40,7 +42,7 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
             offset: transaction.offset,
           });
         } else if (transaction.id && !transaction.previous_id) {
-          let transactionData = await BitmarkModel.getTransactionDetail(transaction.id);
+          let transactionData = await BitmarkModel.doGetTransactionDetail(transaction.id);
           let record = {
             assetId: transaction.asset_id,
             blockNumber: transaction.block_number,
@@ -54,7 +56,7 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
           completedTransfers.push(record);
         }
       } else if (transaction.id) {
-        let nextTransactionData = await BitmarkModel.getTransactionDetail(transaction.id);
+        let nextTransactionData = await BitmarkModel.doGetTransactionDetail(transaction.id);
         completedTransfers.push({
           assetName: nextTransactionData.asset.name,
           from: accountNumber,
@@ -69,32 +71,38 @@ const getAllTransactions = async (accountNumber, oldTransactions) => {
     }
   }
   completedTransfers = sortList(completedTransfers, (a, b) => b.offset - a.offset);
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, completedTransfers);
   return completedTransfers;
 };
 
 const doGetActiveIncomingTransferOffers = async (accountNumber) => {
   let activeIncomingTransferOffers = [];
   let allIncomingTransferOffers = await TransferOfferModel.doGetIncomingTransferOffers(accountNumber);
+
+  let bitmarkIds = [];
+  allIncomingTransferOffers.forEach(incomingTransferOffer => {
+    if (incomingTransferOffer.status === 'open') {
+      bitmarkIds.push(incomingTransferOffer.bitmark_id);
+    }
+  });
+
+  let allData = await BitmarkModel.doGetListBitmarks(bitmarkIds, { includeAsset: true });
+  let bitmarks = allData ? (allData.bitmarks || []) : [];
+  let assets = allData ? (allData.assets || []) : [];
+
   for (let incomingTransferOffer of allIncomingTransferOffers) {
     if (incomingTransferOffer.status === 'open') {
-      let transactionData = await BitmarkModel.getTransactionDetail(incomingTransferOffer.record.link);
-      let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
-      incomingTransferOffer.tx = transactionData.tx;
-      incomingTransferOffer.block = transactionData.block;
-      incomingTransferOffer.asset = bitmarkInformation.asset;
-      incomingTransferOffer.bitmark = bitmarkInformation.bitmark;
+      incomingTransferOffer.bitmark = bitmarks.find(bm => bm.id === incomingTransferOffer.bitmark_id);
+      incomingTransferOffer.asset = assets.find(a => a.id === incomingTransferOffer.bitmark.asset_id);
       incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at);
       activeIncomingTransferOffers.push(incomingTransferOffer);
     }
   }
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, activeIncomingTransferOffers);
   return activeIncomingTransferOffers;
 };
 
-const doGetActiveOutgoinTransferOffers = async (accountNumber) => {
-  let outgoinTransferOffers = await TransferOfferModel.doGetOutgoingTransferOffers(accountNumber);
-  return outgoinTransferOffers.filter(item => item.status === 'open');
+const doGetActiveOutgoingTransferOffers = async (accountNumber) => {
+  let outgoingTransferOffers = await TransferOfferModel.doGetOutgoingTransferOffers(accountNumber);
+  return outgoingTransferOffers.filter(item => item.status === 'open');
 };
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
@@ -103,7 +111,7 @@ const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
 
 const doGetTransferOfferDetail = async (transferOfferId) => {
   let incomingTransferOffer = await TransferOfferModel.doGetTransferOfferDetail(transferOfferId);
-  let transactionData = await BitmarkModel.getTransactionDetail(incomingTransferOffer.record.link);
+  let transactionData = await BitmarkModel.doGetTransactionDetail(incomingTransferOffer.record.link);
   let bitmarkInformation = await BitmarkModel.doGetBitmarkInformation(transactionData.tx.bitmark_id);
   incomingTransferOffer.tx = transactionData.tx;
   incomingTransferOffer.block = transactionData.block;
@@ -129,11 +137,11 @@ const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
 };
 
 const TransactionService = {
-  getAllTransactions,
+  doGetAllTransactions,
   doTransferBitmark,
   doGetTransferOfferDetail,
   doGetActiveIncomingTransferOffers,
-  doGetActiveOutgoinTransferOffers,
+  doGetActiveOutgoingTransferOffers,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doCancelTransferBitmark,

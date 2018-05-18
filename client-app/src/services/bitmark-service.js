@@ -6,7 +6,9 @@ import { TransactionService } from '.';
 
 // ================================================================================================
 // ================================================================================================
-const doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
+const doGetBitmarks = async (bitmarkAccountNumber) => {
+  let oldLocalAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
+  oldLocalAssets = oldLocalAssets || [];
   let lastOffset = null;
   if (oldLocalAssets) {
     oldLocalAssets.forEach(asset => {
@@ -52,7 +54,7 @@ const doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
       }
     }
   }
-  let outgoingTransferOffers = await TransactionService.doGetActiveOutgoinTransferOffers(bitmarkAccountNumber);
+  let outgoingTransferOffers = await TransactionService.doGetActiveOutgoingTransferOffers(bitmarkAccountNumber);
   for (let asset of localAssets) {
     asset.totalPending = 0;
     asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
@@ -65,7 +67,6 @@ const doGetBitmarks = async (bitmarkAccountNumber, oldLocalAssets) => {
     }
   }
   localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
-  CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, localAssets);
   return localAssets;
 };
 
@@ -106,14 +107,14 @@ const doCheckMetadata = (metadataList) => {
   });
 };
 
-const doIssueFile = async (touchFaceIdSession, filepath, assetName, metadataList, quantity) => {
+const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity) => {
   let metadata = {};
   metadataList.forEach(item => {
     if (item.label && item.value) {
       metadata[item.label] = item.value;
     }
   });
-  return await BitmarkModel.doIssueFile(touchFaceIdSession, filepath, assetName, metadata, quantity);
+  return await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, assetName, metadata, quantity);
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {
@@ -123,7 +124,8 @@ const doGetBitmarkInformation = async (bitmarkId) => {
   return data;
 };
 
-const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) => {
+const doGetTrackingBitmarks = async (bitmarkAccountNumber) => {
+  let oldTrackingBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS);
   oldTrackingBitmarks = oldTrackingBitmarks || [];
   let oldStatuses = {};
   let allTrackingBitmarksFromServer = await BitmarkModel.doGetAllTrackingBitmark(bitmarkAccountNumber);
@@ -142,7 +144,8 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber, oldTrackingBitmarks) 
     }
   });
   let bitmarkIds = Object.keys(oldStatuses);
-  let bitmarks = await BitmarkModel.getListBitmarks(bitmarkIds);
+  let allData = await BitmarkModel.doGetListBitmarks(bitmarkIds);
+  let bitmarks = allData ? (allData.bitmarks || []) : [];
   let trackingBitmarks = [];
   for (let bitmark of bitmarks) {
     let oldStatus = oldStatuses[bitmark.id];

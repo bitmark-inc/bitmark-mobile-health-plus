@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { chunk } from 'lodash';
 
 import { config } from './../configs';
 import { BitmarkSDK } from './adapters';
@@ -57,13 +58,14 @@ const doGetAllBitmarks = async (accountNumber, lastOffset) => {
   return totalData;
 };
 
-const getListBitmarks = (bitmarkIds) => {
+const doGetList100Bitmarks = (bitmarkIds, external) => {
   let queryString = '';
   return new Promise((resolve, reject) => {
     if (bitmarkIds && bitmarkIds.length > 0) {
       bitmarkIds.forEach(bitmarkId => {
         queryString += queryString ? `&bitmark_ids=${bitmarkId}` : `?bitmark_ids=${bitmarkId}&pending=true`;
       });
+      queryString += (external && external.includeAsset) ? '&asset=true' : '';
     }
     if (!queryString) {
       return resolve([]);
@@ -83,12 +85,34 @@ const getListBitmarks = (bitmarkIds) => {
       return response.text();
     }).then((data) => {
       if (statusCode >= 400) {
-        console.log('getListBitmarks data :', data);
-        return reject(new Error('getListBitmarks error :' + JSON.stringify(data)));
+        return reject(new Error('doGetList100Bitmarks error :' + JSON.stringify(data)));
       }
-      resolve(data.bitmarks || []);
+      resolve(data);
     }).catch(reject);
   });
+};
+
+const doGetListBitmarks = async (bitmarkIds, external) => {
+  let groupListBitmarks = chunk(bitmarkIds, 100);
+  let returnedData;
+  for (let each100Bitmarks of groupListBitmarks) {
+    let data = await doGetList100Bitmarks(each100Bitmarks, external);
+    if (!returnedData) {
+      returnedData = data;
+    } else {
+      returnedData.bitmarks = (returnedData.bitmarks || []).concat(data.bitmarks || []);
+      if (external && external.includeAsset) {
+        returnedData.assets = returnedData.assets || [];
+        (data.assets || []).forEach(asset => {
+          let exist = (returnedData.assets || []).findIndex(ea => ea.id == asset.id) >= 0;
+          if (!exist) {
+            returnedData.assets.push(asset);
+          }
+        });
+      }
+    }
+  }
+  return returnedData;
 };
 
 const doGetProvenance = (bitmarkId) => {
@@ -207,7 +231,7 @@ const get100Transactions = (accountNumber, offsetNumber) => {
   });
 };
 
-const getAllTransactions = async (accountNumber, lastOffset) => {
+const doGetAllTransactions = async (accountNumber, lastOffset) => {
   let totalTxs;
   let canContinue = true;
   while (canContinue) {
@@ -233,7 +257,7 @@ const getAllTransactions = async (accountNumber, lastOffset) => {
   return totalTxs;
 };
 
-const getTransactionDetail = (txid) => {
+const doGetTransactionDetail = (txid) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = config.api_server_url + `/v1/txs/${txid}?pending=true&asset=true&block=true`;
@@ -248,7 +272,7 @@ const getTransactionDetail = (txid) => {
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('getTransactionDetail error :' + JSON.stringify(data)));
+        return reject(new Error('doGetTransactionDetail error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
@@ -279,7 +303,7 @@ const doGetBitmarkInformation = (bitmarkId) => {
   });
 };
 
-const doAddTrackinBitmark = async (bitmarkAccount, timestamp, signature, bitmark_id, tx_id, status) => {
+const doAddTrackingBitmark = async (bitmarkAccount, timestamp, signature, bitmark_id, tx_id, status) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = config.mobile_server_url + `/api/tracking_bitmarks`;
@@ -300,7 +324,7 @@ const doAddTrackinBitmark = async (bitmarkAccount, timestamp, signature, bitmark
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error(`doAddTrackinBitmark error :` + JSON.stringify(data)));
+        return reject(new Error(`doAddTrackingBitmark error :` + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
@@ -399,12 +423,12 @@ let BitmarkModel = {
   doIssueThenTransferFile,
   doCheckMetadata,
   doGetBitmarkInformation,
-  getTransactionDetail,
-  getAllTransactions,
-  getListBitmarks,
+  doGetTransactionDetail,
+  doGetAllTransactions,
+  doGetListBitmarks,
   doGetAssetAccessibility,
 
-  doAddTrackinBitmark,
+  doAddTrackingBitmark,
   doStopTrackingBitmark,
   doGetAllTrackingBitmark,
   doConfirmWebAccount,

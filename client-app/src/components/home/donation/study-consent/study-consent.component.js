@@ -5,14 +5,14 @@ import {
   WebView,
   Share,
 } from 'react-native';
-import { FullComponent } from './../../../../commons/components';
+import { BitmarkComponent } from './../../../../commons/components';
 
 import defaultStyle from './../../../../commons/styles';
 
 import styles from './study-consent.component.style';
 
-import { AppController } from '../../../../managers';
-import { EventEmiterService } from '../../../../services';
+import { AppController } from '../../../../processors';
+import { EventEmitterService } from '../../../../services';
 
 export class StudyConsentComponent extends React.Component {
   constructor(props) {
@@ -30,11 +30,11 @@ export class StudyConsentComponent extends React.Component {
         shareConsent(filePath);
       }).catch(error => {
         console.log('doDownloadStudyConsent error:', error);
-        EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
       });
     };
     return (
-      <FullComponent
+      <BitmarkComponent
         header={(<View style={[defaultStyle.header]}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>Study Consent</Text>

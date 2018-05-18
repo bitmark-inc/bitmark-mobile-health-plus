@@ -43,17 +43,17 @@ export default StyleSheet.create({
     marginLeft: convertWidth(10),
     width: convertWidth(337),
   },
-  suggesionsList: {
+  suggestionsList: {
     marginTop: 5,
     marginBottom: 20,
     width: '100%',
   },
-  suggesionsButton: {
+  suggestionsButton: {
     width: '100%',
     paddingTop: 10,
     paddingLeft: 10,
   },
-  suggesionsButtonText: {
+  suggestionsButtonText: {
     fontFamily: 'Andale Mono',
     fontSize: 15,
     color: '#0060F2',

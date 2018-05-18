@@ -52,21 +52,21 @@ export default StyleSheet.create({
     flexDirection: 'column',
     marginTop: 60,
   },
-  comfirmMessageText: {
+  confirmMessageText: {
     fontFamily: 'Avenir Black',
     fontSize: 17,
     fontWeight: '300',
     width: convertWidth(337),
     marginTop: 20,
   },
-  comfirmAccountNumber: {
+  confirmAccountNumber: {
     fontFamily: 'Avenir Black',
     fontSize: 17,
     fontWeight: '900',
     width: convertWidth(337),
     marginTop: 20,
   },
-  comfirmButton: {
+  confirmButton: {
     height: 45,
     marginTop: 200,
     backgroundColor: '#0060F2',
@@ -75,7 +75,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     width: convertWidth(337),
   },
-  comfirmButtonText: {
+  confirmButtonText: {
     fontFamily: 'Avenir Black',
     fontSize: 17,
     fontWeight: '900',

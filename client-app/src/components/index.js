@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import ReactNative from 'react-native';
+import KeepAwake from "react-native-keep-awake";
+
 // import PushNotification from 'react-native-push-notification';
 
 const {
@@ -21,9 +23,9 @@ import {
   BitmarkInternetOffComponent,
 } from './../commons/components';
 import { HomeComponent } from './../components/home';
-import { OnboardingComponent } from './onboarding';
-import { EventEmiterService } from './../services';
-import { AppController, DataController } from '../managers';
+import { OnBoardingComponent } from './onboarding';
+import { EventEmitterService } from './../services';
+import { AppProcessor, DataProcessor } from '../processors';
 import { CommonModel } from '../models';
 
 class MainComponent extends Component {
@@ -33,7 +35,7 @@ class MainComponent extends Component {
     this.handleDeppLink = this.handleDeppLink.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.handerProcessingEvent = this.handerProcessingEvent.bind(this);
-    this.handerSumittinggEvent = this.handerSumittinggEvent.bind(this);
+    this.handerSubmittingEvent = this.handerSubmittingEvent.bind(this);
     this.handleNetworkChange = this.handleNetworkChange.bind(this);
     this.handerProcessErrorEvent = this.handerProcessErrorEvent.bind(this);
     this.doTryConnectInternet = this.doTryConnectInternet.bind(this);
@@ -82,9 +84,9 @@ class MainComponent extends Component {
       this.setState({ justCreatedBitmarkAccount });
     }
 
-    EventEmiterService.on(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
-    EventEmiterService.on(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
-    EventEmiterService.on(EventEmiterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
+    EventEmitterService.on(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
+    EventEmitterService.on(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
+    EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.addEventListener('change', this.handleAppStateChange);
     NetInfo.isConnected.fetch().then().done(() => {
@@ -92,9 +94,9 @@ class MainComponent extends Component {
     });
   }
   componentWillUnmount() {
-    EventEmiterService.remove(EventEmiterService.events.APP_PROCESSING, this.handerProcessingEvent);
-    EventEmiterService.remove(EventEmiterService.events.APP_SUBMITTING, this.handerSumittinggEvent);
-    EventEmiterService.remove(EventEmiterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
+    EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
+    EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
+    EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
@@ -103,6 +105,13 @@ class MainComponent extends Component {
   handerProcessingEvent(processing) {
     let processingCount = this.state.processingCount + (processing ? 1 : -1);
     this.setState({ processingCount });
+
+    if (processingCount === 1) {
+      KeepAwake.activate();
+    } else if (processingCount === 0) {
+      KeepAwake.deactivate();
+    }
+
   }
 
   handerProcessErrorEvent(processError) {
@@ -123,8 +132,15 @@ class MainComponent extends Component {
     }]);
   }
 
-  handerSumittinggEvent(submitting) {
+  handerSubmittingEvent(submitting) {
     this.setState({ submitting });
+
+    if (submitting) {
+      KeepAwake.activate();
+    } else {
+      KeepAwake.deactivate();
+    }
+
   }
 
   handleDeppLink(event) {
@@ -163,12 +179,12 @@ class MainComponent extends Component {
   }
 
   doOpenApp() {
-    DataController.doOpenApp().then(user => {
+    DataProcessor.doOpenApp().then(user => {
       this.setState({ user });
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
           if (ok) {
-            AppController.doStartBackgroundProcess(this.state.justCreatedBitmarkAccount);
+            AppProcessor.doStartBackgroundProcess(this.state.justCreatedBitmarkAccount);
             setTimeout(() => {
               this.setState({ justCreatedBitmarkAccount: false });
             }, 5000);
@@ -193,7 +209,7 @@ class MainComponent extends Component {
   render() {
     let DisplayedComponent = LoadingComponent;
     if (this.state.user) {
-      DisplayedComponent = this.state.user.bitmarkAccountNumber ? HomeComponent : OnboardingComponent;
+      DisplayedComponent = this.state.user.bitmarkAccountNumber ? HomeComponent : OnBoardingComponent;
     }
     return (
       <View style={{ flex: 1 }}>
@@ -238,3 +254,4 @@ let BitmarkAppComponent = StackNavigator({
   }
 );
 export { BitmarkAppComponent };
+export * from './code-push/code-push.component';

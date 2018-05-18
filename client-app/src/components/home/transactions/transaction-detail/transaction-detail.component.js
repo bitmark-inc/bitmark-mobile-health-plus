@@ -7,12 +7,12 @@ import {
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
-import { FullComponent } from '../../../../commons/components';
+import { BitmarkComponent } from '../../../../commons/components';
 
 import transactionDetailStyle from './transaction-detail.component.style';
 
 import defaultStyle from './../../../../commons/styles';
-import { AppController } from '../../../../managers';
+import { AppController } from '../../../../processors';
 import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
 
 export class TransactionDetailComponent extends React.Component {
@@ -94,7 +94,7 @@ export class TransactionDetailComponent extends React.Component {
 
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         header={(<View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
@@ -114,30 +114,30 @@ export class TransactionDetailComponent extends React.Component {
                 <Text style={transactionDetailStyle.transferOfferAssetName}> {this.state.transferOffer.asset.name} </Text>
                 to you. Please sign the request to receive the property transfer.
               </Text>
-              <View style={transactionDetailStyle.extenalArea}>
-                <View style={transactionDetailStyle.extenalAreaRow}>
-                  <Text style={transactionDetailStyle.extenalAreaRowLabel}>BITMARK ID:</Text>
-                  <Text style={transactionDetailStyle.extenalAreaRowValue} numberOfLines={1}>{this.state.transferOffer.bitmark.id}</Text>
+              <View style={transactionDetailStyle.externalArea}>
+                <View style={transactionDetailStyle.externalAreaRow}>
+                  <Text style={transactionDetailStyle.externalAreaRowLabel}>BITMARK ID:</Text>
+                  <Text style={transactionDetailStyle.externalAreaRowValue} numberOfLines={1}>{this.state.transferOffer.bitmark.id}</Text>
                 </View>
-                <View style={transactionDetailStyle.extenalAreaRow}>
-                  <Text style={transactionDetailStyle.extenalAreaRowLabel}>ISSUER:</Text>
-                  <View style={transactionDetailStyle.extenalAreaRowValueIssuerView}>
-                    <Text style={transactionDetailStyle.extenalAreaRowValueIssuer_}>[</Text>
-                    <Text style={transactionDetailStyle.extenalAreaRowValueIssuer} numberOfLines={1}>{this.state.transferOffer.asset.registrant}</Text>
-                    <Text style={transactionDetailStyle.extenalAreaRowValueIssuer_}>]</Text>
+                <View style={transactionDetailStyle.externalAreaRow}>
+                  <Text style={transactionDetailStyle.externalAreaRowLabel}>ISSUER:</Text>
+                  <View style={transactionDetailStyle.externalAreaRowValueIssuerView}>
+                    <Text style={transactionDetailStyle.externalAreaRowValueIssuer_}>[</Text>
+                    <Text style={transactionDetailStyle.externalAreaRowValueIssuer} numberOfLines={1}>{this.state.transferOffer.asset.registrant}</Text>
+                    <Text style={transactionDetailStyle.externalAreaRowValueIssuer_}>]</Text>
                   </View>
                 </View>
-                <View style={transactionDetailStyle.extenalAreaRow}>
-                  <Text style={transactionDetailStyle.extenalAreaRowLabel}>TIMESTAMP:</Text>
-                  <Text style={transactionDetailStyle.extenalAreaRowValue}>BLOCK #{this.state.transferOffer.tx.block_number}{'\n'}{moment(this.state.transferOffer.block.created_at).format('DD MMM YYYY HH:mm:ss')}</Text>
+                <View style={transactionDetailStyle.externalAreaRow}>
+                  <Text style={transactionDetailStyle.externalAreaRowLabel}>TIMESTAMP:</Text>
+                  <Text style={transactionDetailStyle.externalAreaRowValue}>BLOCK #{this.state.transferOffer.tx.block_number}{'\n'}{moment(this.state.transferOffer.block.created_at).format('DD MMM YYYY HH:mm:ss')}</Text>
                 </View>
                 <View style={transactionDetailStyle.metadataArea}>
                   <FlatList data={this.state.metadataList}
                     extraData={this.state}
                     renderItem={({ item }) => {
                       return (
-                        <View style={transactionDetailStyle.extenalAreaRow}>
-                          <Text style={transactionDetailStyle.extenalAreaRowLabel}>{item.key}:</Text>
+                        <View style={transactionDetailStyle.externalAreaRow}>
+                          <Text style={transactionDetailStyle.externalAreaRowLabel}>{item.key}:</Text>
                           <Text style={transactionDetailStyle.metadataRowValue}>{item.description}</Text>
                         </View>
                       )

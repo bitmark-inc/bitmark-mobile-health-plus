@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import defaultStyles from './../../../commons/styles';
 import signStyle from './sign-in.component.style';
-import { BitmarkAutoCompleteComponent, FullComponent } from './../../../commons/components';
+import { BitmarkAutoCompleteComponent, BitmarkComponent } from './../../../commons/components';
 import { dictionary24Words, convertWidth } from './../../../utils';
-import { AppController } from '../../../managers';
+import { AppController } from '../../../processors';
 
 let PreCheckResults = {
   success: 'SUBMIT',
@@ -32,7 +32,7 @@ export class SignInComponent extends React.Component {
     this.onFocus = this.onFocus.bind(this);
     this.onSubmitWord = this.onSubmitWord.bind(this);
     this.selectIndex = this.selectIndex.bind(this);
-    this.checkStatusInputing = this.checkStatusInputing.bind(this);
+    this.checkStatusInputting = this.checkStatusInputting.bind(this);
     this.doCheck24Word = this.doCheck24Word.bind(this);
     this.submit24Words = this.submit24Words.bind(this);
     this.doSignIn = this.doSignIn.bind(this);
@@ -64,7 +64,7 @@ export class SignInComponent extends React.Component {
       dataSource: dictionary24Words,
       keyBoardHeight: 0,
     };
-    // setTimeout(this.checkStatusInputing, 200);
+    // setTimeout(this.checkStatusInputting, 200);
   }
 
   onChangeText(index, text) {
@@ -81,14 +81,14 @@ export class SignInComponent extends React.Component {
       inputtedWords[index - 12].word = text;
       this.setState({ biggerList: inputtedWords });
     }
-    this.checkStatusInputing();
+    this.checkStatusInputting();
   }
 
   onFocus(index) {
     this.setState({
       selectedIndex: index
     });
-    this.fullRef.setForcusElement(this.inputtedRefs[index]);
+    this.fullRef.setFocusElement(this.inputtedRefs[index]);
     if (this.autoCompleteElement) {
       let text = index < 12 ? this.state.smallerList[index].word : this.state.biggerList[index - 12].word;
       this.autoCompleteElement.filter(text);
@@ -119,10 +119,10 @@ export class SignInComponent extends React.Component {
   selectIndex(index) {
     this.inputtedRefs[index].focus();
     this.onFocus(index);
-    this.checkStatusInputing();
+    this.checkStatusInputting();
   }
 
-  checkStatusInputing() {
+  checkStatusInputting() {
     let countNumberInputtedWord = 0;
     this.state.smallerList.forEach(item => {
       countNumberInputtedWord = countNumberInputtedWord + (item.word ? 1 : 0)
@@ -134,7 +134,7 @@ export class SignInComponent extends React.Component {
       preCheckResult: null,
       remainWordNumber: 24 - countNumberInputtedWord,
     });
-    let status = countNumberInputtedWord === 24 ? BitmarkAutoCompleteComponent.statuses.done : BitmarkAutoCompleteComponent.statuses.inputing;
+    let status = countNumberInputtedWord === 24 ? BitmarkAutoCompleteComponent.statuses.done : BitmarkAutoCompleteComponent.statuses.inputting;
     if (this.autoCompleteElement) {
       this.autoCompleteElement.setStatus(status);
     }
@@ -204,7 +204,7 @@ export class SignInComponent extends React.Component {
 
   render() {
     return (
-      <FullComponent
+      <BitmarkComponent
         backgroundColor={'#F5F5F5'}
         ref={(ref) => this.fullRef = ref}
         header={(<TouchableWithoutFeedback onPress={Keyboard.dismiss} >
@@ -219,7 +219,7 @@ export class SignInComponent extends React.Component {
           </View>
         </TouchableWithoutFeedback>
         )}
-        contentConatainerStyle={{ backgroundColor: 'white' }}
+        contentContainerStyle={{ backgroundColor: 'white' }}
         contentInScroll={true}
         content={(<TouchableWithoutFeedback onPress={Keyboard.dismiss} >
           <TouchableOpacity activeOpacity={1} style={signStyle.mainContent}>
@@ -293,7 +293,7 @@ export class SignInComponent extends React.Component {
           </TouchableOpacity>
         </TouchableWithoutFeedback>
         )}
-        keyboardExtenal={(
+        keyboardExternal={(
           <BitmarkAutoCompleteComponent ref={(ref) => this.autoCompleteElement = ref}
             dataSource={this.state.dataSource}
             onSelectWord={this.onSubmitWord}

@@ -12,9 +12,9 @@ import defaultStyle from './../../../../commons/styles';
 import styles from './study-settings.component.style';
 
 import { StudiesModel, AppleHealthKitModel } from '../../../../models';
-import { EventEmiterService } from '../../../../services';
-import { AppController, DataController } from '../../../../managers';
-import { FullComponent } from '../../../../commons/components';
+import { EventEmitterService } from '../../../../services';
+import { AppProcessor, DataProcessor } from '../../../../processors';
+import { BitmarkComponent } from '../../../../commons/components';
 import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
 
 // loading ==> connect-data  ==>loading=>thank-you
@@ -68,15 +68,15 @@ export class StudySettingComponent extends React.Component {
   }
   doJoinStudy() {
     AppleHealthKitModel.initHealthKit(this.state.study.dataTypes).then(() => {
-      return AppController.doJoinStudy(this.state.study.studyId);
+      return AppProcessor.doJoinStudy(this.state.study.studyId);
     }).then((result) => {
       if (result != null) {
-        DataController.doReloadUserData();
+        DataProcessor.doReloadUserData();
         this.setState({ status: SettingStatus.thank_you, });
       }
     }).catch(error => {
       console.log('initHealthKit error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
         onClose: () => {
           this.props.navigation.goBack();
         }
@@ -106,7 +106,7 @@ export class StudySettingComponent extends React.Component {
       );
     }
     return (
-      <FullComponent
+      <BitmarkComponent
         backgroundColor={this.state.status === SettingStatus.thank_you ? 'white' : '#F5F5F5'}
         header={(<View style={[defaultStyle.header, { backgroundColor: this.state.status === SettingStatus.thank_you ? 'white' : '#F5F5F5' }]}>
           {this.state.status !== SettingStatus.thank_you && <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>

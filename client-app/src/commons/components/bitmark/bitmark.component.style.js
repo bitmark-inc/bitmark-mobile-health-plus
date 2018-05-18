@@ -28,7 +28,7 @@ export default StyleSheet.create({
     position: 'absolute',
     bottom: 0,
   },
-  keyboardExtenal: {
+  keyboardExternal: {
     width: convertWidth(375),
     position: 'absolute',
 

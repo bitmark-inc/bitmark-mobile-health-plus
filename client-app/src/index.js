@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View } from 'react-native';
 
 import codePush from "react-native-code-push";
-import { BitmarkAppComponent } from './components';
+import { BitmarkAppComponent, CodePushUpdateComponent } from './components';
 
 export class MainAppComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       status: null,
-      progress: null,
+      progress: 0,
     };
 
     codePush.getCurrentPackage().then(updateInfo => {
@@ -38,23 +38,17 @@ export class MainAppComponent extends React.Component {
   }
 
   codePushDownloadDidProgress(progress) {
-    this.setState({ progress: Math.floor(progress.receivedBytes * 100 / progress.totalBytes) + " %." });
+    this.setState({ progress: Math.floor(progress.receivedBytes * 100 / progress.totalBytes) });
     console.log(Math.floor(progress.receivedBytes * 100 / progress.totalBytes));
   }
 
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {this.state.status && this.state.status === 'downloading' && this.state.status === 'installing' && <View style={{
-          position: 'absolute', top: 0, width: '100%', height: '100%', zIndex: 1000, backgroundColor: 'rgba(0,0,0,0.5)',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-          <ActivityIndicator size="large" />
-        </View>}
+        <CodePushUpdateComponent shouldRender={this.state.status && (this.state.status === 'downloading' || this.state.status === 'installing')}
+          status={this.state.status} progress={this.state.progress} />
         <BitmarkAppComponent />
-      </View >
+      </View>
     );
   }
 }
@@ -62,9 +56,11 @@ export class MainAppComponent extends React.Component {
 let codePushOptions = {
   updateDialog: {
     title: '"Bitmark"\nNeeds to Be Updated',
-    mandatoryUpdateMessage: 'This app needs to be updated to ensure its reliability and security.',
-    mandatoryContinueButtonLabel: "UPDATE",
-    optionalIgnoreButtonLabel: null,
+    optionalUpdateMessage: 'The developer of this app needs to update it to improve its compatibility. This will be quick and will not affect any of your data.',
+    mandatoryUpdateMessage: 'The developer of this app needs to update it to improve its compatibility. This will be quick and will not affect any of your data.',
+    optionalInstallButtonLabel: 'Update',
+    mandatoryContinueButtonLabel: 'Update',
+    optionalIgnoreButtonLabel: null
   },
   checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
   installMode: codePush.InstallMode.IMMEDIATE

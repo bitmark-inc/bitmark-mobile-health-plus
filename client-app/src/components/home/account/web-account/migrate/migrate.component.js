@@ -9,8 +9,8 @@ import componentStyle from './migrate.component.style';
 
 import defaultStyles from '../../../../../commons/styles';
 // import { config } from '../../../../../configs/index';
-import { DataController, AppController } from '../../../../../managers';
-import { EventEmiterService } from '../../../../../services';
+import { DataProcessor, AppProcessor } from '../../../../../processors';
+import { EventEmitterService } from '../../../../../services';
 
 // import {
 //   ios,
@@ -33,7 +33,7 @@ export class WebAccountMigrateComponent extends React.Component {
 
     this.state = {
       step: STEPS.scan,
-      userInformation: DataController.getUserInformation(),
+      userInformation: DataProcessor.getUserInformation(),
       token: '',
     };
   }
@@ -51,13 +51,13 @@ export class WebAccountMigrateComponent extends React.Component {
   }
 
   onConfirmMigration() {
-    AppController.doMigrateWebAccount(this.state.token).then(result => {
+    AppProcessor.doMigrateWebAccount(this.state.token).then(result => {
       if (result) {
         this.setState({ step: STEPS.done, email: result.email });
       }
     }).catch(error => {
       console.log('doMigrateWebAccount error:', error);
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESS_ERROR, { message: 'This account cannot be migrated now. Try again later.' });
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { message: 'This account cannot be migrated now. Try again later.' });
     });
   }
 
@@ -79,20 +79,20 @@ export class WebAccountMigrateComponent extends React.Component {
 
       {this.state.step === STEPS.confirm && <View style={componentStyle.bodyContent}>
         <View style={componentStyle.confirmMessageArea}>
-          <Text style={componentStyle.comfirmMessageText}>All the properties in this account will be transferred to the account:</Text>
-          <Text style={componentStyle.comfirmAccountNumber}>{this.state.userInformation.bitmarkAccountNumber}</Text>
-          <Text style={componentStyle.comfirmMessageText}>on your mobile device.</Text>
+          <Text style={componentStyle.confirmMessageText}>All the properties in this account will be transferred to the account:</Text>
+          <Text style={componentStyle.confirmAccountNumber}>{this.state.userInformation.bitmarkAccountNumber}</Text>
+          <Text style={componentStyle.confirmMessageText}>on your mobile device.</Text>
         </View>
-        <TouchableOpacity style={componentStyle.comfirmButton} onPress={this.onConfirmMigration.bind(this)}>
-          <Text style={componentStyle.comfirmButtonText}>CONFIRM</Text>
+        <TouchableOpacity style={componentStyle.confirmButton} onPress={this.onConfirmMigration.bind(this)}>
+          <Text style={componentStyle.confirmButtonText}>CONFIRM</Text>
         </TouchableOpacity>
       </View>}
 
       {this.state.step === STEPS.done && <View style={componentStyle.bodyContent}>
         <View style={componentStyle.confirmMessageArea}>
-          <Text style={componentStyle.comfirmMessageText}>We’ve sent an email to: </Text>
-          <Text style={componentStyle.comfirmAccountNumber}>{this.state.email || 'your@email.com'}</Text>
-          <Text style={componentStyle.comfirmMessageText}>Follow the link in that email to authorize this migration.</Text>
+          <Text style={componentStyle.confirmMessageText}>We’ve sent an email to: </Text>
+          <Text style={componentStyle.confirmAccountNumber}>{this.state.email || 'your@email.com'}</Text>
+          <Text style={componentStyle.confirmMessageText}>Follow the link in that email to authorize this migration.</Text>
         </View>
       </View>}
 

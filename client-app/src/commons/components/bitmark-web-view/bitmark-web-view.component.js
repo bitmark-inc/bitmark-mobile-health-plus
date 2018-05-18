@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import {
   Text, View, TouchableOpacity, WebView, Image, Share,
 } from 'react-native';
-import { FullComponent } from './../bitmark-app-component';
+import { BitmarkComponent } from './../bitmark';
 
 import defaultStyles from './../../styles/index';
 import termsStyles from './bitmark-web-view.component.style';
 import { ios } from '../../../configs';
-import { EventEmiterService } from './../../../services';
+import { EventEmitterService } from './../../../services';
 
 class WebViewComponent extends React.Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class WebViewComponent extends React.Component {
   onNavigationStateChange(navState) {
     if (this.needShare) {
       this.needShare = false;
-      EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, false);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       let title
       if (this.props.screenProps) {
         title = this.props.screenProps.title;
@@ -34,7 +34,7 @@ class WebViewComponent extends React.Component {
 
   doShare() {
     this.needShare = true;
-    EventEmiterService.emit(EventEmiterService.events.APP_PROCESSING, true);
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
     this.webViewRef.reload();
   }
 
@@ -63,12 +63,12 @@ class WebViewComponent extends React.Component {
       sourceUrl = this.props.navigation.state.params.sourceUrl;
     }
 
-    let heightButtomController;
+    let heightButtonController;
     if (this.props.screenProps) {
-      heightButtomController = this.props.screenProps.heightButtomController;
+      heightButtonController = this.props.screenProps.heightButtonController;
     }
     if (this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) {
-      heightButtomController = this.props.navigation.state.params.heightButtomController;
+      heightButtonController = this.props.navigation.state.params.heightButtonController;
     }
 
     let hideBottomController;
@@ -100,20 +100,20 @@ class WebViewComponent extends React.Component {
         />
       </View>
       {!hideBottomController && <View style={[termsStyles.bottomController, {
-        height: (heightButtomController || 57) + (isFullScreen ? ios.constant.blankFooter : 0),
+        height: (heightButtonController || 57) + (isFullScreen ? ios.constant.blankFooter : 0),
         paddingBottom: (isFullScreen ? ios.constant.blankFooter : 0),
       }]}>
-        <TouchableOpacity style={termsStyles.webViewControllButton} onPress={() => { console.log('source :', this.webViewRef.getWebViewHandle()); this.webViewRef.goBack(); }}>
-          <Image style={termsStyles.webViewControllIcon} source={require('./../../../../assets/imgs/webview-back.png')} />
+        <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { console.log('source :', this.webViewRef.getWebViewHandle()); this.webViewRef.goBack(); }}>
+          <Image style={termsStyles.webViewControlIcon} source={require('./../../../../assets/imgs/webview-back.png')} />
         </TouchableOpacity>
-        <TouchableOpacity style={termsStyles.webViewControllButton} onPress={() => { this.webViewRef.goForward(); }}>
-          <Image style={termsStyles.webViewControllIcon} source={require('./../../../../assets/imgs/webview-next.png')} />
+        <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { this.webViewRef.goForward(); }}>
+          <Image style={termsStyles.webViewControlIcon} source={require('./../../../../assets/imgs/webview-next.png')} />
         </TouchableOpacity>
-        {/* <TouchableOpacity style={termsStyles.webViewControllButton} onPress={() => { this.webViewRef.reload(); }}>
-          <Image style={[termsStyles.webViewControllIcon]} source={require('./../../../../assets/imgs/webview-reload.png')} />
+        {/* <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { this.webViewRef.reload(); }}>
+          <Image style={[termsStyles.webViewControlIcon]} source={require('./../../../../assets/imgs/webview-reload.png')} />
         </TouchableOpacity> */}
-        {/* <TouchableOpacity style={termsStyles.webViewControllButton} onPress={this.doShare}>
-          <Image style={[termsStyles.webViewControllIcon, { width: 17, height: 24 }]} source={require('./../../../../assets/imgs/webview-share.png')} />
+        {/* <TouchableOpacity style={termsStyles.webViewControlButton} onPress={this.doShare}>
+          <Image style={[termsStyles.webViewControlIcon, { width: 17, height: 24 }]} source={require('./../../../../assets/imgs/webview-share.png')} />
         </TouchableOpacity> */}
       </View>}
     </View>);
@@ -126,7 +126,7 @@ WebViewComponent.propTypes = {
     sourceUrl: PropTypes.string,
     isFullScreen: PropTypes.bool,
     setShowPagination: PropTypes.func,
-    heightButtomController: PropTypes.number,
+    heightButtonController: PropTypes.number,
     hideBottomController: PropTypes.bool,
   }),
   navigation: PropTypes.shape({
@@ -137,7 +137,7 @@ WebViewComponent.propTypes = {
         sourceUrl: PropTypes.string,
         title: PropTypes.string,
         isFullScreen: PropTypes.bool,
-        heightButtomController: PropTypes.number,
+        heightButtonController: PropTypes.number,
         hideBottomController: PropTypes.bool,
       })
     })
@@ -158,7 +158,7 @@ export class BitmarkWebViewComponent extends React.Component {
     }
     if (isFullScreen) {
       return (
-        <FullComponent
+        <BitmarkComponent
           content={(<WebViewComponent screenProps={this.props.screenProps} navigation={this.props.navigation} />)}
         />
       );

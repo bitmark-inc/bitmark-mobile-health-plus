@@ -30,13 +30,13 @@ export default StyleSheet.create({
     paddingRight: convertWidth(60),
     backgroundColor: '#F8F8F8',
   },
-  webViewControllButton: {
+  webViewControlButton: {
     paddingTop: 2,
     paddingBottom: 2,
     paddingLeft: 4,
     paddingRight: 4,
   },
-  webViewControllIcon: {
+  webViewControlIcon: {
     width: 20,
     height: 19,
     resizeMode: 'contain',

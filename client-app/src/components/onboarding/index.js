@@ -7,7 +7,7 @@ import { FaceTouchIdComponent } from './face-touch-id';
 import { NotificationComponent } from './notification';
 
 
-let OnboardingComponent = StackNavigator({
+let OnBoardingComponent = StackNavigator({
   Welcome: { screen: WelcomeComponent, },
   NewAccount: { screen: NewAccountComponent, },
   SignIn: { screen: SignInComponent, },
@@ -24,4 +24,4 @@ let OnboardingComponent = StackNavigator({
   }
 );
 
-export { OnboardingComponent };
+export { OnBoardingComponent };
