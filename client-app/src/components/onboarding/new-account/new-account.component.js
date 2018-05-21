@@ -17,7 +17,7 @@ import defaultStyle from './../../../commons/styles';
 
 import newAccountStyle from './new-account.component.style';
 
-import { AppController } from '../../../processors';
+import { AppProcessor } from '../../../processors';
 
 
 class PropertyPrivateYourDataComponent extends React.Component {
@@ -321,7 +321,7 @@ export class NewAccountComponent extends React.Component {
             />
             <FullPropertyPrivateYourDataComponent screenProps={{
               newAccountNavigation: this.props.navigation,
-              createBitmarkAccount: AppController.doCreateNewAccount,
+              createBitmarkAccount: AppProcessor.doCreateNewAccount,
               setShowPagination: (show) => {
                 this.setState({
                   showPagination: show,

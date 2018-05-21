@@ -11,7 +11,7 @@ import defaultStyle from './../../../../commons/styles';
 
 import styles from './study-consent.component.style';
 
-import { AppController } from '../../../../processors';
+import { AppProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
 
 export class StudyConsentComponent extends React.Component {
@@ -26,7 +26,7 @@ export class StudyConsentComponent extends React.Component {
       Share.share({ title: this.state.study.title, message: this.state.study.title + '\n' + this.state.study.description, url: filePath });
     };
     const downloadConsent = () => {
-      AppController.doDownloadStudyConsent(this.state.study).then(filePath => {
+      AppProcessor.doDownloadStudyConsent(this.state.study).then(filePath => {
         shareConsent(filePath);
       }).catch(error => {
         console.log('doDownloadStudyConsent error:', error);

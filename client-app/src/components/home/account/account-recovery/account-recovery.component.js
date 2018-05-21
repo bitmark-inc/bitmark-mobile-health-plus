@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import { UserModel } from "./../../../../models";
-import { AppController } from './../../../../processors';
+import { AppProcessor } from './../../../../processors';
 
 import accountRecoveryStyle from './account-recovery.component.style';
 import defaultStyle from './../../../../commons/styles';
@@ -18,7 +18,7 @@ class RecoveryPhraseComponent extends React.Component {
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
     const recoveryPhrase = () => {
-      AppController.doGetCurrentAccount(isSignOut ? 'Please sign to remove access.' : 'Please sign to access the bitmark recovery phrases.').then((user) => {
+      AppProcessor.doGetCurrentAccount(isSignOut ? 'Please sign to remove access.' : 'Please sign to access the bitmark recovery phrases.').then((user) => {
         if (user) {
           currentUser = user;
           this.props.navigation.navigate('WriteDownRecoveryPhrase');
@@ -280,7 +280,7 @@ class TryRecoveryPhraseComponent extends React.Component {
     for (let i = 0; i < temp.length; i++) {
       inputtedWords.push(temp[i].word);
     }
-    AppController.doCheck24Words(inputtedWords).then((user) => {
+    AppProcessor.doCheck24Words(inputtedWords).then((user) => {
       if (this.state.user.bitmarkAccountNumber === user.bitmarkAccountNumber) {
         this.setState({ testResult: 'done' });
       } else {

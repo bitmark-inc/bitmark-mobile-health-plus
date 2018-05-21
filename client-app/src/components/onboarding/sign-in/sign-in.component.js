@@ -10,7 +10,7 @@ import defaultStyles from './../../../commons/styles';
 import signStyle from './sign-in.component.style';
 import { BitmarkAutoCompleteComponent, BitmarkComponent } from './../../../commons/components';
 import { dictionary24Words, convertWidth } from './../../../utils';
-import { AppController } from '../../../processors';
+import { AppProcessor } from '../../../processors';
 
 let PreCheckResults = {
   success: 'SUBMIT',
@@ -147,7 +147,7 @@ export class SignInComponent extends React.Component {
         let inputtedWords = [];
         this.state.smallerList.forEach(item => inputtedWords.push(item.word));
         this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-        AppController.doCheck24Words(inputtedWords).then(() => {
+        AppProcessor.doCheck24Words(inputtedWords).then(() => {
           this.setState({ preCheckResult: PreCheckResults.success });
           resolve(true);
         }).catch((error) => {
@@ -199,7 +199,7 @@ export class SignInComponent extends React.Component {
     let inputtedWords = [];
     this.state.smallerList.forEach(item => inputtedWords.push(item.word));
     this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-    return await AppController.doLogin(inputtedWords);
+    return await AppProcessor.doLogin(inputtedWords);
   }
 
   render() {

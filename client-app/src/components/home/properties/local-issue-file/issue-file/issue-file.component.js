@@ -13,7 +13,7 @@ import { BitmarkService } from './../../../../../services';
 
 import localAddPropertyStyle from './issue-file.component.style';
 import defaultStyle from './../../../../../commons/styles';
-import { AppController } from '../../../../../processors';
+import { AppProcessor } from '../../../../../processors';
 
 export class LocalIssueFileComponent extends React.Component {
   constructor(props) {
@@ -69,7 +69,7 @@ export class LocalIssueFileComponent extends React.Component {
   // ==========================================================================================
   // ==========================================================================================
   onIssueFile() {
-    AppController.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), {
+    AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), {
       indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
     }, {
         indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
