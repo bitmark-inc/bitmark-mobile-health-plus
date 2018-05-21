@@ -498,6 +498,10 @@ const doOpenApp = async () => {
     userCacheScreenData.propertiesScreen.localAssets = localAssets.slice(0, userCacheScreenData.propertiesScreen.localAssetsLength);
 
     let trackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
+    if (!Array.isArray(trackingBitmarks)) {
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS, []);
+      trackingBitmarks = [];
+    }
     userCacheScreenData.propertiesScreen.totalTrackingBitmarks = trackingBitmarks.length;
     userCacheScreenData.propertiesScreen.existNewTrackingBitmark = (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0;
     userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.slice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
@@ -615,7 +619,8 @@ const doTrackingBitmark = async (touchFaceIdSession, asset, bitmark) => {
 };
 const doStopTrackingBitmark = async (touchFaceIdSession, bitmark) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  let trackingBitmarks = await BitmarkModel.doStopTrackingBitmark(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, bitmark.id);
+  await BitmarkModel.doStopTrackingBitmark(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, bitmark.id);
+  let trackingBitmarks = await runGetTrackingBitmarksInBackground();
   await doCheckNewTrackingBitmarks(trackingBitmarks);
   return true;
 };
