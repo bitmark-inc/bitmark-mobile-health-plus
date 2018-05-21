@@ -62,7 +62,6 @@ export class TransactionDetailComponent extends React.Component {
                   NavigationActions.navigate({
                     routeName: 'User', params: {
                       displayedTab: { mainTab: BottomTabsComponent.MainTabs.transaction, subTab: 'ACTION REQUIRED' },
-                      needReloadData: true,
                     }
                   }),
                 ]
@@ -91,7 +90,6 @@ export class TransactionDetailComponent extends React.Component {
               NavigationActions.navigate({
                 routeName: 'User', params: {
                   displayedTab: { mainTab: BottomTabsComponent.MainTabs.properties },
-                  needReloadData: true,
                 }
               }),
             ]

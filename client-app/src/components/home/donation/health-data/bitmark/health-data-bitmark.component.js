@@ -55,7 +55,6 @@ export class HealthDataBitmarkComponent extends React.Component {
                       NavigationActions.navigate({
                         routeName: 'User', params: {
                           displayedTab: { mainTab: BottomTabsComponent.transaction, subTab: 'HISTORY' },
-                          needReloadData: true,
                         }
                       }),
                     ]

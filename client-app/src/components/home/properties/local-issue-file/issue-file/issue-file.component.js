@@ -84,7 +84,6 @@ export class LocalIssueFileComponent extends React.Component {
               NavigationActions.navigate({
                 routeName: 'User', params: {
                   displayedTab: { mainTab: 'Properties' },
-                  needReloadData: true,
                 }
               }),
             ]

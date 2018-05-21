@@ -121,7 +121,6 @@ export class IssuanceOptionsComponent extends React.Component {
           NavigationActions.navigate({
             routeName: 'User', params: {
               displayedTab: { mainTab: BottomTabsComponent.MainTabs.account, subTab: 'AUTHORIZED' },
-              needReloadData: true,
             }
           }),
         ]
@@ -139,7 +138,6 @@ export class IssuanceOptionsComponent extends React.Component {
           NavigationActions.navigate({
             routeName: 'User', params: {
               displayedTab: { mainTab: BottomTabsComponent.MainTabs.account, subTab: 'AUTHORIZED' },
-              needReloadData: true,
             }
           }),
         ]

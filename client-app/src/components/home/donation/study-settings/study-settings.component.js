@@ -90,7 +90,6 @@ export class StudySettingComponent extends React.Component {
         NavigationActions.navigate({
           routeName: 'User', params: {
             displayedTab: { mainTab: BottomTabsComponent.MainTabs.transaction, subTab: 'ACTION REQUIRED' },
-            needReloadData: true,
           }
         })
       ]

@@ -49,7 +49,6 @@ export class LocalPropertyTransferComponent extends React.Component {
             actions: [NavigationActions.navigate({
               routeName: 'User', params: {
                 displayedTab: { mainTab: 'Properties' },
-                needReloadData: true,
               }
             })]
           });
