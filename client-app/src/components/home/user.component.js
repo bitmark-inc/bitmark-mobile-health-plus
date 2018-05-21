@@ -233,7 +233,7 @@ export class UserComponent extends React.Component {
       this.props.navigation.dispatch(resetHomePage);
     } else if (data.event === 'tracking_transfer_confirmed') {
       DataProcessor.doReloadTrackingBitmark().then(() => {
-        let trackingBitmark = DataProcessor.getTrackingBitmarkInformation(data.bitmark_id);
+        let trackingBitmark = DataProcessor.doGetTrackingBitmarkInformation(data.bitmark_id);
         const resetHomePage = NavigationActions.reset({
           index: 1,
           actions: [
