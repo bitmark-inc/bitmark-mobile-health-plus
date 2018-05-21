@@ -186,7 +186,7 @@ export class AssetsComponent extends React.Component {
             <View style={assetsStyle.subTabButtonArea}>
               <View style={[assetsStyle.activeSubTabBar, { backgroundColor: '#0060F2' }]}></View>
               <View style={assetsStyle.subTabButtonTextArea}>
-                {<View style={assetsStyle.newItem}></View>}
+                {this.existNewTracking && <View style={assetsStyle.newItem}></View>}
                 <Text style={[assetsStyle.subTabButtonText, { marginLeft: this.state.totalTrackingBitmarks > 9 ? 10 : 0 }]}>{SubTabs.tracking.toUpperCase()}<Text style={{ fontSize: this.state.totalTrackingBitmarks > 9 ? 10 : 14 }}>{(this.state.totalTrackingBitmarks > 0 ? ` (${this.state.totalTrackingBitmarks > 99 ? '99+' : this.state.totalTrackingBitmarks})` : '')}</Text></Text>
               </View>
             </View>
