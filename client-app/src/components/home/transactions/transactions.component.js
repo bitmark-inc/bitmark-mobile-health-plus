@@ -65,6 +65,8 @@ export class TransactionsComponent extends React.Component {
 
       let { actionRequired, totalActionRequired } = await DataProcessor.doGetTransactionScreenActionRequired(1);
       let { completed, totalCompleted } = await DataProcessor.doGetTransactionScreenHistories(1);
+      let donationInformation = await DataProcessor.doGetDonationInformation();
+
       this.setState({
         totalActionRequired,
         totalCompleted,
@@ -73,6 +75,7 @@ export class TransactionsComponent extends React.Component {
         gettingData: false,
         lengthDisplayActionRequired: actionRequired.length,
         lengthDisplayCompleted: completed.length,
+        donationInformation,
       });
     }
     doGetScreenData();
@@ -98,17 +101,17 @@ export class TransactionsComponent extends React.Component {
     }
   }
 
-  handerChangeScreenData({ actionRequired, completed, donationInformation }) {
-    let totalCompleted = completed ? completed.length : this.state.totalCompleted;
-    let totalActionRequired = actionRequired ? actionRequired.length : this.state.totalActionRequired;
+  async handerChangeScreenData() {
+    let { actionRequired, totalActionRequired } = await DataProcessor.doGetTransactionScreenActionRequired(this.state.lengthDisplayActionRequired);
+    let { completed, totalCompleted } = await DataProcessor.doGetTransactionScreenHistories(this.state.lengthDisplayCompleted);
 
     let lengthDisplayActionRequired = Math.min(this.state.lengthDisplayActionRequired, totalActionRequired);
     let lengthDisplayCompleted = Math.min(this.state.lengthDisplayCompleted, totalCompleted);
 
-    donationInformation = donationInformation || this.donationInformation;
+    let donationInformation = await DataProcessor.doGetDonationInformation();
     this.setState({
-      actionRequired: actionRequired ? actionRequired.splice(0, lengthDisplayActionRequired) : this.state.actionRequired,
-      completed: completed ? completed.splice(0, lengthDisplayCompleted) : this.state.completed,
+      actionRequired: actionRequired ? actionRequired.slice(0, lengthDisplayActionRequired) : this.state.actionRequired,
+      completed: completed ? completed.slice(0, lengthDisplayCompleted) : this.state.completed,
       lengthDisplayActionRequired,
       lengthDisplayCompleted,
       totalActionRequired,

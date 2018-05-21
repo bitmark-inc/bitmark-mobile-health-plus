@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { merge } from 'lodash';
 import { BitmarkModel, CommonModel } from "../models";
-import { sortList } from './../utils';
 import { TransactionService } from '.';
 
 // ================================================================================================
@@ -57,7 +56,7 @@ const doGetBitmarks = async (bitmarkAccountNumber) => {
   let outgoingTransferOffers = await TransactionService.doGetActiveOutgoingTransferOffers(bitmarkAccountNumber);
   for (let asset of localAssets) {
     asset.totalPending = 0;
-    asset.bitmarks = sortList(asset.bitmarks, ((a, b) => b.offset - a.offset));
+    asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
     for (let bitmark of asset.bitmarks) {
       let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
       bitmark.displayStatus = transferOffer ? 'transferring' : bitmark.status;
@@ -66,7 +65,7 @@ const doGetBitmarks = async (bitmarkAccountNumber) => {
       asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
     }
   }
-  localAssets = sortList(localAssets, ((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset));
+  localAssets = localAssets.sort((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset);
   return localAssets;
 };
 

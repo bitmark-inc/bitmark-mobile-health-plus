@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { merge } from 'lodash';
 import { TransferOfferModel, BitmarkSDK, BitmarkModel, CommonModel } from '../models';
-import { sortList } from '../utils';
 
 const doGetAllTransactions = async (accountNumber) => {
   let oldTransactions = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || {};
@@ -70,7 +69,7 @@ const doGetAllTransactions = async (accountNumber) => {
       }
     }
   }
-  completedTransfers = sortList(completedTransfers, (a, b) => b.offset - a.offset);
+  completedTransfers = completedTransfers.sort((a, b) => b.offset - a.offset);
   return completedTransfers;
 };
 

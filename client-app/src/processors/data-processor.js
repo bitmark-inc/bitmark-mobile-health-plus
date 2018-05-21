@@ -10,7 +10,7 @@ import {
 } from "../services";
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, IftttModel, BitmarkModel } from '../models';
 import { DonationService } from '../services/donation-service';
-import { FileUtil, sortList } from '../utils';
+import { FileUtil } from '../utils';
 
 let userInformation = {};
 let userCacheScreenData = {
@@ -97,7 +97,7 @@ const doCheckNewTrackingBitmarks = async (trackingBitmarks) => {
       await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS, trackingBitmarks);
       userCacheScreenData.propertiesScreen.totalTrackingBitmarks = trackingBitmarks.length;
       userCacheScreenData.propertiesScreen.existNewTrackingBitmark = (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0;
-      userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.splice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
+      userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.slice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
       EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, trackingBitmarks);
     }
   }
@@ -112,7 +112,7 @@ const doCheckNewBitmarks = async (localAssets) => {
       localAssets.forEach(asset => userCacheScreenData.propertiesScreen.totalBitmarks += asset.bitmarks.length);
       userCacheScreenData.propertiesScreen.totalAssets = localAssets.length;
       userCacheScreenData.propertiesScreen.existNewAsset = localAssets.findIndex(asset => !asset.isViewed) >= 0;
-      userCacheScreenData.propertiesScreen.localAssets = localAssets.splice(0, userCacheScreenData.propertiesScreen.localAssetsLength);
+      userCacheScreenData.propertiesScreen.localAssets = localAssets.slice(0, userCacheScreenData.propertiesScreen.localAssetsLength);
 
       EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, localAssets);
     }
@@ -495,20 +495,20 @@ const doOpenApp = async () => {
     localAssets.forEach(asset => userCacheScreenData.propertiesScreen.totalBitmarks += asset.bitmarks.length);
     userCacheScreenData.propertiesScreen.totalAssets = localAssets.length;
     userCacheScreenData.propertiesScreen.existNewAsset = localAssets.findIndex(asset => !asset.isViewed) >= 0;
-    userCacheScreenData.propertiesScreen.localAssets = localAssets.splice(0, userCacheScreenData.propertiesScreen.localAssetsLength);
+    userCacheScreenData.propertiesScreen.localAssets = localAssets.slice(0, userCacheScreenData.propertiesScreen.localAssetsLength);
 
     let trackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
     userCacheScreenData.propertiesScreen.totalTrackingBitmarks = trackingBitmarks.length;
     userCacheScreenData.propertiesScreen.existNewTrackingBitmark = (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0;
-    userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.splice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
+    userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.slice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
 
     let actionRequired = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED)) || [];
     userCacheScreenData.transactionsScreen.totalActionRequired = actionRequired.length;
-    userCacheScreenData.transactionsScreen.actionRequired = actionRequired.splice(0, userCacheScreenData.transactionsScreen.actionRequiredLength);
+    userCacheScreenData.transactionsScreen.actionRequired = actionRequired.slice(0, userCacheScreenData.transactionsScreen.actionRequiredLength);
 
     let completed = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY)) || [];
     userCacheScreenData.transactionsScreen.totalCompleted = completed.length;
-    userCacheScreenData.transactionsScreen.completed = completed.splice(0, userCacheScreenData.transactionsScreen.completedLength);
+    userCacheScreenData.transactionsScreen.completed = completed.slice(0, userCacheScreenData.transactionsScreen.completedLength);
   }
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
 
@@ -598,7 +598,7 @@ const doUpdateViewStatus = async (assetId, bitmarkId) => {
       if (hasChanging) {
         userCacheScreenData.propertiesScreen.totalTrackingBitmarks = trackingBitmarks.length;
         userCacheScreenData.propertiesScreen.existNewTrackingBitmark = (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0;
-        userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.splice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
+        userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.slice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
         EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, trackingBitmarks);
       }
     }
@@ -732,7 +732,7 @@ const doGetLocalBitmarks = async (length) => {
     localAssets = userCacheScreenData.propertiesScreen.localAssets;
   } else {
     let allLocalAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
-    localAssets = length ? allLocalAssets.splice(0, length) : allLocalAssets;
+    localAssets = length ? allLocalAssets.slice(0, length) : allLocalAssets;
   }
   return {
     localAssets,
@@ -748,7 +748,7 @@ const doGetTrackingBitmarks = async (length) => {
     trackingBitmarks = userCacheScreenData.propertiesScreen.trackingBitmarks;
   } else {
     let allTrackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
-    trackingBitmarks = length ? allTrackingBitmarks.splice(0, length) : allTrackingBitmarks;
+    trackingBitmarks = length ? allTrackingBitmarks.slice(0, length) : allTrackingBitmarks;
   }
 
   return {
@@ -852,7 +852,8 @@ const doGenerateTransactionActionRequiredData = async () => {
       actionRequired.push(item);
     });
   }
-  actionRequired = actionRequired ? sortList(actionRequired, (a, b) => {
+
+  actionRequired = actionRequired ? actionRequired.sort((a, b) => {
     if (a.important) { return -1; }
     if (b.important) { return 1; }
     if (!a.timestamp) return 1;
@@ -862,20 +863,14 @@ const doGenerateTransactionActionRequiredData = async () => {
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, actionRequired);
   userCacheScreenData.transactionsScreen.totalActionRequired = actionRequired.length;
-  userCacheScreenData.transactionsScreen.actionRequired = actionRequired.splice(0, userCacheScreenData.transactionsScreen.actionRequiredLength);
+  userCacheScreenData.transactionsScreen.actionRequired = actionRequired.slice(0, userCacheScreenData.transactionsScreen.actionRequiredLength);
 
   EventEmitterService.emit(EventEmitterService.events.CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA, { actionRequired, donationInformation });
   console.log('actionRequired :', actionRequired);
-  // if (!transactionScreenData) {
-  //   transactionScreenData = {};
-  // }
-  // transactionScreenData.actionRequired = actionRequired;
-  // transactionScreenData.donationInformation = donationInformation;
   return { actionRequired, donationInformation };
 };
 
 const doGenerateTransactionHistoryData = async () => {
-
   let transactions = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || [];
   let donationInformation = await doGetDonationInformation();
 
@@ -945,22 +940,17 @@ const doGenerateTransactionHistoryData = async () => {
       });
     });
   }
-  completed = completed ? sortList(completed, (a, b) => {
+  completed = completed ? completed.sort((a, b) => {
     if (!a || !a.timestamp) return -1;
     if (!b || !b.timestamp) return -1;
     return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
   }) : completed;
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY, completed);
   userCacheScreenData.transactionsScreen.totalCompleted = completed.length;
-  userCacheScreenData.transactionsScreen.completed = completed.splice(0, userCacheScreenData.transactionsScreen.completedLength);
+  userCacheScreenData.transactionsScreen.completed = completed.slice(0, userCacheScreenData.transactionsScreen.completedLength);
 
   EventEmitterService.emit(EventEmitterService.events.CHANGE_TRANSACTION_SCREEN_HISTORIES_DATA, { completed, donationInformation });
   console.log('completed :', completed);
-  // if (!transactionScreenData) {
-  //   transactionScreenData = {};
-  // }
-  // transactionScreenData.completed = completed;
-  // transactionScreenData.donationInformation = donationInformation;
   return { completed, donationInformation };
 };
 
@@ -970,7 +960,7 @@ const doGetTransactionScreenActionRequired = async (length) => {
     actionRequired = userCacheScreenData.transactionsScreen.actionRequired;
   } else {
     let allActionRequired = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED)) || [];
-    actionRequired = (length && length < allActionRequired.length) ? allActionRequired.splice(0, length) : allActionRequired;
+    actionRequired = (length && length < allActionRequired.length) ? allActionRequired.slice(0, length) : allActionRequired;
   }
   return {
     actionRequired,
@@ -995,7 +985,7 @@ const doGetTransactionScreenHistories = async (length) => {
     completed = userCacheScreenData.transactionsScreen.completed;
   } else {
     let allCompleted = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY)) || [];
-    completed = length ? allCompleted.splice(0, length) : allCompleted;
+    completed = length ? allCompleted.slice(0, length) : allCompleted;
   }
   return {
     completed,
