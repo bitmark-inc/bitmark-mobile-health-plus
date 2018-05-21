@@ -39,46 +39,54 @@ let userCacheScreenData = {
 
 let isLoadingData = false;
 // ================================================================================================================================================
-const doCheckNewDonationInformation = async (donationInformation) => {
+const doCheckNewDonationInformation = async (donationInformation, isLoadingAllUserData) => {
   if (donationInformation) {
     let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
     if (JSON.stringify(donationInformation) !== JSON.stringify(oldData)) {
       await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
       EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, donationInformation);
+    }
+    if (!isLoadingAllUserData) {
       await doGenerateTransactionActionRequiredData();
       await doGenerateTransactionHistoryData();
     }
   }
 };
 
-const doCheckNewActiveIncomingTransferOffers = async (activeIncomingTransferOffers) => {
+const doCheckNewActiveIncomingTransferOffers = async (activeIncomingTransferOffers, isLoadingAllUserData) => {
   if (activeIncomingTransferOffers) {
     let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS)) || [];
     if (JSON.stringify(activeIncomingTransferOffers) !== JSON.stringify(oldData)) {
       await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, activeIncomingTransferOffers);
+      if (!isLoadingAllUserData) {
+        await doGenerateTransactionActionRequiredData();
+      }
     }
-    await doGenerateTransactionActionRequiredData();
   }
 };
 
-const doCheckNewIftttInformation = async (iftttInformation) => {
+const doCheckNewIftttInformation = async (iftttInformation, isLoadingAllUserData) => {
   if (iftttInformation) {
     let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION)) || {};
     if (JSON.stringify(iftttInformation) !== JSON.stringify(oldData)) {
       await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, iftttInformation);
       EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, iftttInformation);
-      await doGenerateTransactionActionRequiredData();
+      if (!isLoadingAllUserData) {
+        await doGenerateTransactionActionRequiredData();
+      }
     }
   }
 };
 
-const doCheckNewTransactions = async (transactions) => {
+const doCheckNewTransactions = async (transactions, isLoadingAllUserData) => {
   if (transactions) {
     let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || [];
     if (JSON.stringify(transactions) !== JSON.stringify(oldData)) {
       await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, transactions);
+      if (!isLoadingAllUserData) {
+        await doGenerateTransactionHistoryData();
+      }
     }
-    await doGenerateTransactionHistoryData();
   }
 };
 
@@ -355,18 +363,21 @@ const runOnBackground = async () => {
           runGetTransactionsInBackground(),
           runGetActiveIncomingTransferOfferInBackground(),
           runGetDonationInformationInBackground(),
-          runGetTrackingBitmarksInBackground(),
           runGetIFTTTInformationInBackground(),
+          runGetTrackingBitmarksInBackground(),
         ]).then(resolve);
       });
     };
     let parallelResults = await runParallel();
-    await doCheckNewTransactions(parallelResults[0]);
-    await doCheckNewActiveIncomingTransferOffers(parallelResults[1]);
-    await doCheckNewDonationInformation(parallelResults[2]);
-    await doCheckNewTrackingBitmarks(parallelResults[3]);
-    await doCheckNewIftttInformation(parallelResults[4]);
+    await doCheckNewTransactions(parallelResults[0], true);
+    await doCheckNewActiveIncomingTransferOffers(parallelResults[1], true);
+    await doCheckNewDonationInformation(parallelResults[2], true);
+    await doCheckNewIftttInformation(parallelResults[3], true);
 
+    await doGenerateTransactionActionRequiredData();
+    await doGenerateTransactionHistoryData();
+
+    await doCheckNewTrackingBitmarks(parallelResults[4]);
     let localAsset = await runGetLocalBitmarksInBackground();
     localAsset = recheckLocalAssets(localAsset, parallelResults[2]);
     await doCheckNewBitmarks(localAsset);
@@ -716,7 +727,6 @@ const doGetProvenance = (bitmarkId) => {
 };
 
 const doGetLocalBitmarks = async (length) => {
-  console.log('doGetLocalBitmarks :', length, userCacheScreenData.propertiesScreen.localAssets.length);
   let localAssets;
   if (length && length <= userCacheScreenData.propertiesScreen.localAssets.length) {
     localAssets = userCacheScreenData.propertiesScreen.localAssets;

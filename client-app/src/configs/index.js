@@ -87,3 +87,4 @@ export { config, ios, android };
 
 
 // react-native run-ios --device "Bitmark’s iPhone" --scheme 'Bitmark dev'
+// react-native run-ios --device "iPhone 5 testing" --scheme 'Bitmark dev'
