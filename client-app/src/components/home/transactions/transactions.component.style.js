@@ -234,7 +234,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F2FAFF',
+    backgroundColor: '#F5F5F5',
     borderTopColor: '#0060F2',
     borderTopWidth: 3,
     marginBottom: 1,
