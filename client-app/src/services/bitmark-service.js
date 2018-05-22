@@ -143,13 +143,13 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber) => {
     }
   });
   let bitmarkIds = Object.keys(oldStatuses);
-  let allData = await BitmarkModel.doGetListBitmarks(bitmarkIds);
+  let allData = await BitmarkModel.doGetListBitmarks(bitmarkIds, { includeAsset: true });
   let bitmarks = allData ? (allData.bitmarks || []) : [];
+  let assets = allData ? (allData.assets || []) : [];
   let trackingBitmarks = [];
   for (let bitmark of bitmarks) {
     let oldStatus = oldStatuses[bitmark.id];
-    let bitmarkFullInfo = await BitmarkModel.doGetBitmarkInformation(bitmark.id);
-    bitmark.asset = bitmarkFullInfo.asset;
+    bitmark.asset = assets.find(asset => asset.id === bitmark.asset_id);
 
     if (oldStatus.lastHistory.head_id !== bitmark.head_id ||
       (oldStatus.lastHistory.head_id === bitmark.head_id && oldStatus.lastHistory.status !== bitmark.status)) {
