@@ -115,6 +115,7 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
           let oldAsset = localAssets[oldAssetIndex];
           let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => bitmark.id === ob.id);
           if (oldBitmarkIndex >= 0) {
+            hasChanging = true;
             oldAsset.bitmarks.splice(oldBitmarkIndex, 1);
             if (oldAsset.bitmarks.length === 0) {
               localAssets.splice(oldAssetIndex, 1);

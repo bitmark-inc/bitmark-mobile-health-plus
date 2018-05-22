@@ -154,7 +154,10 @@ const doGet100Transactions = async (accountNumber, oldTransactions, lastOffset) 
 
   if (hasChanging) {
     completedTransfers = completedTransfers.sort((a, b) => b.offset - a.offset);
-    return completedTransfers;
+    return {
+      transactions: completedTransfers,
+      lastOffset
+    };
   }
 };
 
