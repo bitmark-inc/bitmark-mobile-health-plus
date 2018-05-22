@@ -73,6 +73,87 @@ const doGetAllTransactions = async (accountNumber) => {
   return completedTransfers;
 };
 
+const doGet100Transactions = async (accountNumber, oldTransactions) => {
+  let hasChanging = false;
+  if (!oldTransactions) {
+    hasChanging = true;
+    oldTransactions = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || {};
+  }
+  oldTransactions = oldTransactions || [];
+  let lastOffset = null;
+  if (oldTransactions) {
+    oldTransactions.forEach(oldTx => {
+      lastOffset = lastOffset ? Math.max(lastOffset, oldTx.offset) : oldTx.offset;
+    });
+  }
+  let data = await BitmarkModel.doGet100Transactions(accountNumber, lastOffset);
+  let completedTransfers = merge([], oldTransactions || []);
+
+  for (let transaction of data.txs) {
+    transaction.block = data.blocks.find(block => block.number === transaction.block_number);
+    let existingOldTransaction = completedTransfers.find(item => item.txid === transaction.id);
+    if (existingOldTransaction) {
+      hasChanging = true;
+      let transactionData = await BitmarkModel.doGetTransactionDetail(transaction.id);
+      existingOldTransaction.assetId = transaction.asset_id;
+      existingOldTransaction.blockNumber = transaction.block_number;
+      existingOldTransaction.assetName = transactionData.asset.name;
+      existingOldTransaction.timestamp = transaction.block ? moment(transaction.block.created_at) : '';
+      existingOldTransaction.status = transaction.status;
+      existingOldTransaction.txid = transaction.id;
+      existingOldTransaction.offset = transaction.offset;
+    } else {
+      if (transaction.owner === accountNumber) {
+        if (transaction.id && transaction.previous_id) {
+          hasChanging = true;
+          let previousTransactionData = await BitmarkModel.doGetTransactionDetail(transaction.previous_id);
+          completedTransfers.push({
+            assetName: previousTransactionData.asset.name,
+            from: previousTransactionData.tx.owner,
+            to: accountNumber,
+            timestamp: transaction.block ? moment(transaction.block.created_at) : '',
+            status: transaction.status,
+            txid: transaction.id,
+            previousId: transaction.previous_id,
+            offset: transaction.offset,
+          });
+        } else if (transaction.id && !transaction.previous_id) {
+          hasChanging = true;
+          let transactionData = await BitmarkModel.doGetTransactionDetail(transaction.id);
+          let record = {
+            assetId: transaction.asset_id,
+            blockNumber: transaction.block_number,
+            assetName: transactionData.asset.name,
+            from: transactionData.tx.owner,
+            timestamp: transaction.block ? moment(transaction.block.created_at) : '',
+            status: transaction.status,
+            txid: transaction.id,
+            offset: transaction.offset,
+          };
+          completedTransfers.push(record);
+        }
+      } else if (transaction.id) {
+        hasChanging = true;
+        let nextTransactionData = await BitmarkModel.doGetTransactionDetail(transaction.id);
+        completedTransfers.push({
+          assetName: nextTransactionData.asset.name,
+          from: accountNumber,
+          to: transaction.owner,
+          timestamp: nextTransactionData.block ? moment(nextTransactionData.block.created_at) : '',
+          status: nextTransactionData.tx.status,
+          offset: transaction.offset,
+          txid: transaction.id,
+          previousId: transaction.previous_id,
+        });
+      }
+    }
+  }
+  if (hasChanging) {
+    completedTransfers = completedTransfers.sort((a, b) => b.offset - a.offset);
+    return completedTransfers;
+  }
+};
+
 const doGetActiveIncomingTransferOffers = async (accountNumber) => {
   let activeIncomingTransferOffers = [];
   let allIncomingTransferOffers = await TransferOfferModel.doGetIncomingTransferOffers(accountNumber);
@@ -137,6 +218,7 @@ const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
 
 const TransactionService = {
   doGetAllTransactions,
+  doGet100Transactions,
   doTransferBitmark,
   doGetTransferOfferDetail,
   doGetActiveIncomingTransferOffers,

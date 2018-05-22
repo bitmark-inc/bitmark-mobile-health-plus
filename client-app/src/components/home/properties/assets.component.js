@@ -56,8 +56,8 @@ export class AssetsComponent extends React.Component {
     };
 
     const doGetScreenData = async () => {
-      let { localAssets, totalAssets, totalBitmarks, existNewAsset } = await DataProcessor.doGetLocalBitmarks(1);
-      let { trackingBitmarks, existNewTrackingBitmark, totalTrackingBitmarks } = await DataProcessor.doGetTrackingBitmarks(1);
+      let { localAssets, totalAssets, totalBitmarks, existNewAsset } = await DataProcessor.doGetLocalBitmarks(0);
+      let { trackingBitmarks, existNewTrackingBitmark, totalTrackingBitmarks } = await DataProcessor.doGetTrackingBitmarks(0);
       if (trackingBitmarks) {
         trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
       }
@@ -94,6 +94,7 @@ export class AssetsComponent extends React.Component {
         totalAssets,
         assets: localAssets,
         existNewAsset,
+        lengthDisplayAssets: localAssets.length,
       });
     }).catch(error => {
       console.log('doGetLocalBitmarks error:', error);

@@ -208,7 +208,7 @@ const doIssueThenTransferFile = async (touchFaceIdSession, filePath, assetName, 
 };
 
 
-const get100Transactions = (accountNumber, offsetNumber) => {
+const doGet100Transactions = (accountNumber, offsetNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = config.api_server_url + `/v1/txs?owner=${accountNumber}&pending=true&to=later&sent=true&block=true`;
@@ -224,7 +224,7 @@ const get100Transactions = (accountNumber, offsetNumber) => {
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error('get100Transactions error :' + JSON.stringify(data)));
+        return reject(new Error('doGet100Transactions error :' + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
@@ -235,7 +235,7 @@ const doGetAllTransactions = async (accountNumber, lastOffset) => {
   let totalTxs;
   let canContinue = true;
   while (canContinue) {
-    let data = await get100Transactions(accountNumber, lastOffset);
+    let data = await doGet100Transactions(accountNumber, lastOffset);
     data.txs.forEach(tx => {
       tx.block = data.blocks.find(block => block.number === tx.block_number);
     });
@@ -416,6 +416,7 @@ const doConfirmWebAccount = async (bitmarkAccount, code, timestamp, signature) =
 
 let BitmarkModel = {
   doGetAssetInformation,
+  doGet100Bitmarks,
   doGetAllBitmarks,
   doGetProvenance,
   doPrepareAssetInfo,
@@ -425,6 +426,7 @@ let BitmarkModel = {
   doGetBitmarkInformation,
   doGetTransactionDetail,
   doGetAllTransactions,
+  doGet100Transactions,
   doGetListBitmarks,
   doGetAssetAccessibility,
 

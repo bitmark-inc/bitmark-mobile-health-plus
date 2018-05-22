@@ -63,8 +63,8 @@ export class TransactionsComponent extends React.Component {
 
     const doGetScreenData = async () => {
 
-      let { actionRequired, totalActionRequired } = await DataProcessor.doGetTransactionScreenActionRequired(1);
-      let { completed, totalCompleted } = await DataProcessor.doGetTransactionScreenHistories(1);
+      let { actionRequired, totalActionRequired } = await DataProcessor.doGetTransactionScreenActionRequired(0);
+      let { completed, totalCompleted } = await DataProcessor.doGetTransactionScreenHistories(0);
       let donationInformation = await DataProcessor.doGetDonationInformation();
 
       this.setState({
@@ -105,15 +105,12 @@ export class TransactionsComponent extends React.Component {
     let { actionRequired, totalActionRequired } = await DataProcessor.doGetTransactionScreenActionRequired(this.state.lengthDisplayActionRequired);
     let { completed, totalCompleted } = await DataProcessor.doGetTransactionScreenHistories(this.state.lengthDisplayCompleted);
 
-    let lengthDisplayActionRequired = Math.min(this.state.lengthDisplayActionRequired, totalActionRequired);
-    let lengthDisplayCompleted = Math.min(this.state.lengthDisplayCompleted, totalCompleted);
-
     let donationInformation = await DataProcessor.doGetDonationInformation();
     this.setState({
-      actionRequired: actionRequired ? actionRequired.slice(0, lengthDisplayActionRequired) : this.state.actionRequired,
-      completed: completed ? completed.slice(0, lengthDisplayCompleted) : this.state.completed,
-      lengthDisplayActionRequired,
-      lengthDisplayCompleted,
+      actionRequired: actionRequired,
+      completed: completed,
+      lengthDisplayActionRequired: actionRequired.length,
+      lengthDisplayCompleted: completed.length,
       totalActionRequired,
       totalCompleted,
       donationInformation,
@@ -357,7 +354,7 @@ export class TransactionsComponent extends React.Component {
           scrollEventThrottle={1}
         >
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-            {this.state.completed && this.state.completed.length === 0 && this.state.appLoadingData && <View style={transactionsStyle.contentSubTab}>
+            {this.state.completed && this.state.completed.length === 0 && !this.state.appLoadingData && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO TRANSACTION HISTORY.</Text>
               <Text style={transactionsStyle.messageNoRequiredTransferOffer}>Your transaction history will be available here.</Text>
             </View>}

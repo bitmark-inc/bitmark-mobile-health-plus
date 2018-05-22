@@ -78,18 +78,6 @@ const doCheckNewIftttInformation = async (iftttInformation, isLoadingAllUserData
   }
 };
 
-const doCheckNewTransactions = async (transactions, isLoadingAllUserData) => {
-  if (transactions) {
-    let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || [];
-    if (JSON.stringify(transactions) !== JSON.stringify(oldData)) {
-      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, transactions);
-      if (!isLoadingAllUserData) {
-        await doGenerateTransactionHistoryData();
-      }
-    }
-  }
-};
-
 const doCheckNewTrackingBitmarks = async (trackingBitmarks) => {
   if (trackingBitmarks) {
     let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
@@ -103,6 +91,15 @@ const doCheckNewTrackingBitmarks = async (trackingBitmarks) => {
   }
 };
 
+const doCheckNewTransactions = async (transactions) => {
+  if (transactions) {
+    let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || [];
+    if (JSON.stringify(transactions) !== JSON.stringify(oldData)) {
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, transactions);
+      await doGenerateTransactionHistoryData();
+    }
+  }
+};
 const doCheckNewBitmarks = async (localAssets) => {
   if (localAssets) {
     let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
@@ -174,6 +171,7 @@ const runGetActiveIncomingTransferOfferInBackground = () => {
       if (!isRunningGetActiveIncomingTransferOfferInBackground) {
         resultActiveIncomingTransferOffers = null;
       }
+      console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground success');
     }).catch(error => {
       resolve([]);
       isRunningGetActiveIncomingTransferOfferInBackground--;
@@ -181,72 +179,6 @@ const runGetActiveIncomingTransferOfferInBackground = () => {
         resultActiveIncomingTransferOffers = null;
       }
       console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground error :', error);
-    });
-  });
-};
-
-let isRunningGetTransactionsInBackground = 0;
-let resultTransactions = null;
-const runGetTransactionsInBackground = () => {
-  return new Promise((resolve) => {
-    if (isRunningGetTransactionsInBackground) {
-      isRunningGetTransactionsInBackground++;
-      return doCheckRunning(() => isRunningGetTransactionsInBackground).then(() => {
-        resolve(resultTransactions);
-        isRunningGetTransactionsInBackground--;
-        if (!isRunningGetTransactionsInBackground) {
-          resultTransactions = null;
-        }
-      });
-    }
-    isRunningGetTransactionsInBackground++;
-    TransactionService.doGetAllTransactions(userInformation.bitmarkAccountNumber).then(transactions => {
-      resultTransactions = transactions || [];
-      resolve(resultTransactions);
-      isRunningGetTransactionsInBackground--;
-      if (!isRunningGetTransactionsInBackground) {
-        resultTransactions = null;
-      }
-    }).catch(error => {
-      resolve([]);
-      isRunningGetTransactionsInBackground--;
-      if (!isRunningGetTransactionsInBackground) {
-        resultTransactions = null;
-      }
-      console.log('runOnBackground  runGetTransactionsInBackground error :', error);
-    });
-  });
-};
-
-let isRunningGetLocalBitmarksInBackground = 0;
-let resultLocalBitmarks;
-const runGetLocalBitmarksInBackground = () => {
-  return new Promise((resolve) => {
-    if (isRunningGetLocalBitmarksInBackground) {
-      isRunningGetLocalBitmarksInBackground++;
-      return doCheckRunning(() => isRunningGetLocalBitmarksInBackground).then(() => {
-        resolve(resultLocalBitmarks);
-        isRunningGetLocalBitmarksInBackground--;
-        if (!isRunningGetLocalBitmarksInBackground) {
-          resultLocalBitmarks = null;
-        }
-      });
-    }
-    isRunningGetLocalBitmarksInBackground++;
-    BitmarkService.doGetBitmarks(userInformation.bitmarkAccountNumber).then(localAssets => {
-      resultLocalBitmarks = localAssets || []
-      resolve(resultLocalBitmarks);
-      isRunningGetLocalBitmarksInBackground--;
-      if (!isRunningGetLocalBitmarksInBackground) {
-        resultLocalBitmarks = null;
-      }
-    }).catch(error => {
-      resolve();
-      isRunningGetLocalBitmarksInBackground--;
-      if (!isRunningGetLocalBitmarksInBackground) {
-        resultLocalBitmarks = null;
-      }
-      console.log('runOnBackground  runGetLocalBitmarksInBackground error :', error);
     });
   });
 };
@@ -273,6 +205,7 @@ const runGetDonationInformationInBackground = () => {
       if (!isRunningGetDonationInformationInBackground) {
         resultDonationInformation = null;
       }
+      console.log('runOnBackground  runGetDonationInformationInBackground success');
     }).catch(error => {
       resolve();
       isRunningGetDonationInformationInBackground--;
@@ -306,6 +239,7 @@ const runGetTrackingBitmarksInBackground = () => {
       if (!isRunningGetTrackingBitmarksInBackground) {
         resultTrackingBitmarks = null;
       }
+      console.log('runOnBackground  runGetTrackingBitmarksInBackground success');
     }).catch(error => {
       resolve();
       isRunningGetTrackingBitmarksInBackground--;
@@ -339,6 +273,7 @@ const runGetIFTTTInformationInBackground = () => {
       if (!isRunningGetIFTTTInformationInBackground) {
         resultIftttInformation = null;
       }
+      console.log('runOnBackground  runGetIFTTTInformationInBackground success');
     }).catch(error => {
       resolve();
       isRunningGetIFTTTInformationInBackground--;
@@ -346,6 +281,83 @@ const runGetIFTTTInformationInBackground = () => {
         resultIftttInformation = null;
       }
       console.log('runOnBackground  runGetIFTTTInformationInBackground error :', error);
+    });
+  });
+};
+// ================================================================================================================================================
+// special process
+let isRunningGetTransactionsInBackground = 0;
+const runGetTransactionsInBackground = () => {
+  return new Promise((resolve) => {
+    if (isRunningGetTransactionsInBackground) {
+      isRunningGetTransactionsInBackground++;
+      return doCheckRunning(() => isRunningGetTransactionsInBackground).then(() => {
+        resolve();
+        isRunningGetTransactionsInBackground--;
+      });
+    }
+    isRunningGetTransactionsInBackground++;
+
+    let doGetAllTransactions = async () => {
+      let oldTransactions;
+      let canContinue = true;
+      while (canContinue) {
+        let data = await TransactionService.doGet100Transactions(userInformation.bitmarkAccountNumber, oldTransactions);
+        canContinue = !!data;
+        if (data) {
+          oldTransactions = data;
+          await doCheckNewTransactions(oldTransactions);
+        }
+      }
+    };
+
+    doGetAllTransactions().then(() => {
+      resolve();
+      isRunningGetTransactionsInBackground--;
+      console.log('runOnBackground  runGetTransactionsInBackground success');
+    }).catch(error => {
+      resolve([]);
+      isRunningGetTransactionsInBackground--;
+      console.log('runOnBackground  runGetTransactionsInBackground error :', error);
+    });
+  });
+};
+
+let isRunningGetLocalBitmarksInBackground = 0;
+const runGetLocalBitmarksInBackground = (donationInformation) => {
+  return new Promise((resolve) => {
+    if (isRunningGetLocalBitmarksInBackground) {
+      isRunningGetLocalBitmarksInBackground++;
+      return doCheckRunning(() => isRunningGetLocalBitmarksInBackground).then(() => {
+        resolve();
+        isRunningGetLocalBitmarksInBackground--;
+      });
+    }
+    isRunningGetLocalBitmarksInBackground++;
+
+    let doGetAllBitmarks = async () => {
+      let oldLocalAssets, outgoingTransferOffers;
+      let canContinue = true;
+      while (canContinue) {
+        let data = await BitmarkService.doGet100Bitmarks(userInformation.bitmarkAccountNumber, oldLocalAssets, outgoingTransferOffers);
+        canContinue = !!data;
+        if (data) {
+          oldLocalAssets = data.localAssets;
+          outgoingTransferOffers = data.outgoingTransferOffers;
+          oldLocalAssets = recheckLocalAssets(oldLocalAssets, donationInformation);
+          await doCheckNewBitmarks(oldLocalAssets);
+        }
+      }
+    }
+
+    doGetAllBitmarks().then(() => {
+      resolve();
+      isRunningGetLocalBitmarksInBackground--;
+      console.log('runOnBackground  runGetLocalBitmarksInBackground success');
+    }).catch(error => {
+      resolve();
+      isRunningGetLocalBitmarksInBackground--;
+      console.log('runOnBackground  runGetLocalBitmarksInBackground error :', error);
     });
   });
 };
@@ -360,27 +372,29 @@ const runOnBackground = async () => {
     let runParallel = () => {
       return new Promise((resolve) => {
         Promise.all([
-          runGetTransactionsInBackground(),
+          runGetTrackingBitmarksInBackground(),
           runGetActiveIncomingTransferOfferInBackground(),
           runGetDonationInformationInBackground(),
           runGetIFTTTInformationInBackground(),
-          runGetTrackingBitmarksInBackground(),
         ]).then(resolve);
       });
     };
     let parallelResults = await runParallel();
-    await doCheckNewTransactions(parallelResults[0], true);
+    await doCheckNewTrackingBitmarks(parallelResults[0]);
     await doCheckNewActiveIncomingTransferOffers(parallelResults[1], true);
     await doCheckNewDonationInformation(parallelResults[2], true);
     await doCheckNewIftttInformation(parallelResults[3], true);
-
     await doGenerateTransactionActionRequiredData();
-    await doGenerateTransactionHistoryData();
 
-    await doCheckNewTrackingBitmarks(parallelResults[4]);
-    let localAsset = await runGetLocalBitmarksInBackground();
-    localAsset = recheckLocalAssets(localAsset, parallelResults[2]);
-    await doCheckNewBitmarks(localAsset);
+    let doParallel = () => {
+      return new Promise((resolve) => {
+        Promise.all([
+          runGetLocalBitmarksInBackground(parallelResults[2]),
+          runGetTransactionsInBackground()
+        ]).then(resolve);
+      });
+    }
+    await doParallel();
   }
   console.log('runOnBackground done ====================================');
 };
@@ -430,11 +444,6 @@ const configNotification = () => {
       setTimeout(() => {
         EventEmitterService.emit(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
       }, 1000);
-    } else if (notificationData.event === 'transfer_request' || notificationData.event === 'transfer_completed' || notificationData.event === 'transfer_accepted') {
-      runGetActiveIncomingTransferOfferInBackground();
-      runGetTransactionsInBackground();
-    } else if (notificationData.event === 'transfer_rejected' || notificationData.event === 'transfer_failed') {
-      runGetLocalBitmarksInBackground();
     }
   };
   NotificationService.configure(onRegistered, onReceivedNotification);
@@ -683,30 +692,24 @@ const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer, ) => {
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity) => {
   let result = await BitmarkService.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity);
-  let localAssets = await runGetLocalBitmarksInBackground();
   let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
-  localAssets = recheckLocalAssets(localAssets, donationInformation);
-  await doCheckNewBitmarks(localAssets);
+  await runGetLocalBitmarksInBackground(donationInformation);
   return result;
 };
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
   let result = await TransactionService.doTransferBitmark(touchFaceIdSession, bitmarkId, receiver);
   let activeIncomingTransferOffers = await runGetActiveIncomingTransferOfferInBackground();
-  let localAssets = await runGetLocalBitmarksInBackground();
-  let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
   doCheckNewActiveIncomingTransferOffers(activeIncomingTransferOffers);
-  localAssets = recheckLocalAssets(localAssets, donationInformation);
-  await doCheckNewBitmarks(localAssets);
+  let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
+  await runGetLocalBitmarksInBackground(donationInformation);
   return result;
 };
 
 const doMigrateWebAccount = async (touchFaceIdSession, token) => {
   let result = await BitmarkService.doConfirmWebAccount(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
-  let localAssets = await runGetLocalBitmarksInBackground();
   let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
-  localAssets = recheckLocalAssets(localAssets, donationInformation);
-  await doCheckNewBitmarks(localAssets);
+  await runGetLocalBitmarksInBackground(donationInformation);
   return result;
 };
 
@@ -733,7 +736,7 @@ const doGetProvenance = (bitmarkId) => {
 
 const doGetLocalBitmarks = async (length) => {
   let localAssets;
-  if (length && length <= userCacheScreenData.propertiesScreen.localAssets.length) {
+  if (length !== undefined && length <= userCacheScreenData.propertiesScreen.localAssets.length) {
     localAssets = userCacheScreenData.propertiesScreen.localAssets;
   } else {
     let allLocalAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
@@ -749,7 +752,7 @@ const doGetLocalBitmarks = async (length) => {
 
 const doGetTrackingBitmarks = async (length) => {
   let trackingBitmarks;
-  if (length && length <= userCacheScreenData.propertiesScreen.trackingBitmarks.length) {
+  if (length !== undefined && length <= userCacheScreenData.propertiesScreen.trackingBitmarks.length) {
     trackingBitmarks = userCacheScreenData.propertiesScreen.trackingBitmarks;
   } else {
     let allTrackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
@@ -961,7 +964,7 @@ const doGenerateTransactionHistoryData = async () => {
 
 const doGetTransactionScreenActionRequired = async (length) => {
   let actionRequired;
-  if (length && length <= userCacheScreenData.transactionsScreen.actionRequired.length) {
+  if (length !== undefined && length <= userCacheScreenData.transactionsScreen.actionRequired.length) {
     actionRequired = userCacheScreenData.transactionsScreen.actionRequired;
   } else {
     let allActionRequired = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED)) || [];
@@ -986,7 +989,7 @@ const doGetAllTransfersOffers = async () => {
 
 const doGetTransactionScreenHistories = async (length) => {
   let completed;
-  if (length && length <= userCacheScreenData.transactionsScreen.completed.length) {
+  if (length !== undefined && length <= userCacheScreenData.transactionsScreen.completed.length) {
     completed = userCacheScreenData.transactionsScreen.completed;
   } else {
     let allCompleted = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY)) || [];

@@ -69,6 +69,85 @@ const doGetBitmarks = async (bitmarkAccountNumber) => {
   return localAssets;
 };
 
+const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, outgoingTransferOffers) => {
+  let hasChanging = false;
+  if (!oldLocalAssets) {
+    hasChanging = true;
+    oldLocalAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
+  }
+  oldLocalAssets = oldLocalAssets || [];
+  let lastOffset = null;
+  if (oldLocalAssets) {
+    oldLocalAssets.forEach(asset => {
+      asset.bitmarks.forEach(bitmark => {
+        lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
+      });
+    });
+  }
+  let data = await BitmarkModel.doGet100Bitmarks(bitmarkAccountNumber, lastOffset);
+  let localAssets = merge([], oldLocalAssets || []);
+
+  if (data && data.bitmarks && data.assets) {
+    for (let bitmark of data.bitmarks) {
+      bitmark.bitmark_id = bitmark.id;
+      bitmark.isViewed = false;
+      if (bitmark.owner === bitmarkAccountNumber) {
+        hasChanging = true;
+        let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
+        if (oldAsset) {
+          let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => ob.id === bitmark.id);
+          if (oldBitmarkIndex >= 0) {
+            oldAsset.bitmarks[oldBitmarkIndex] = bitmark;
+          } else {
+            oldAsset.bitmarks.push(bitmark);
+          }
+          oldAsset.isViewed = false;
+        } else {
+          let newAsset = data.assets.find(asset => asset.id === bitmark.asset_id);
+          newAsset.bitmarks = [bitmark];
+          newAsset.isViewed = false;
+          localAssets.push(newAsset);
+        }
+      } else {
+        let oldAssetIndex = (localAssets).findIndex(asset => asset.id === bitmark.asset_id);
+        if (oldAssetIndex >= 0) {
+          let oldAsset = localAssets[oldAssetIndex];
+          let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => bitmark.id === ob.id);
+          if (oldBitmarkIndex >= 0) {
+            oldAsset.bitmarks.splice(oldBitmarkIndex, 1);
+            if (oldAsset.bitmarks.length === 0) {
+              localAssets.splice(oldAssetIndex, 1);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (!outgoingTransferOffers) {
+    outgoingTransferOffers = await TransactionService.doGetActiveOutgoingTransferOffers(bitmarkAccountNumber);
+    outgoingTransferOffers = outgoingTransferOffers || [];
+    hasChanging = true;
+  }
+  for (let asset of localAssets) {
+    asset.totalPending = 0;
+    asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
+    for (let bitmark of asset.bitmarks) {
+      let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
+      bitmark.displayStatus = transferOffer ? 'transferring' : bitmark.status;
+      bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
+      asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
+      asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
+    }
+  }
+  if (hasChanging) {
+    localAssets = localAssets.sort((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset);
+    return {
+      localAssets,
+      outgoingTransferOffers,
+    };
+  }
+};
+
 const doCheckFileToIssue = async (filePath) => {
   let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
   let assetInformation = await BitmarkModel.doGetAssetInformation(assetInfo.id);
@@ -191,6 +270,7 @@ const doConfirmWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, tok
 // ================================================================================================
 let BitmarkService = {
   doGetBitmarks,
+  doGet100Bitmarks,
   doCheckFileToIssue,
   doCheckMetadata,
   doIssueFile,
