@@ -29,16 +29,16 @@ export default StyleSheet.create({
     flexDirection: 'column',
   },
   indicatorTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '700',
     textAlign: 'center',
-    width: convertWidth(234),
+    width: convertWidth(230),
   },
   indicatorMessage: {
     fontSize: 13,
     fontWeight: '400',
     textAlign: 'center',
-    width: convertWidth(250),
+    width: convertWidth(235),
     marginTop: 5,
   },
 });
