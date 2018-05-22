@@ -485,6 +485,16 @@ const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
   if (userInformation && userInformation.bitmarkAccountNumber) {
     configNotification();
+
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, []);
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, []);
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, []);
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS, []);
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, {});
+
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, []);
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY, []);
+
     let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
     userCacheScreenData.propertiesScreen.totalBitmarks = 0;
     localAssets.forEach(asset => userCacheScreenData.propertiesScreen.totalBitmarks += asset.bitmarks.length);

@@ -126,6 +126,15 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
     }
   }
 
+  for (let asset of localAssets) {
+    asset.totalPending = 0;
+    asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
+    for (let bitmark of asset.bitmarks) {
+      asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
+      asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
+    }
+  }
+
   if (hasChanging) {
     localAssets = localAssets.sort((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset);
     return {
