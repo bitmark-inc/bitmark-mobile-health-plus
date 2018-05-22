@@ -102,20 +102,6 @@ const doCheckNewBitmarks = async (localAssets) => {
 };
 // ================================================================================================================================================
 
-const doCheckRunning = (checkRunning) => {
-  return new Promise((resolve) => {
-    let checkAndReturn = () => {
-      let isRunning = checkRunning();
-      if (!isRunning) {
-        resolve();
-      } else {
-        setTimeout(checkAndReturn, 200);
-      }
-    }
-    checkAndReturn();
-  })
-};
-
 const recheckLocalAssets = (localAssets, donationInformation, ) => {
   if (donationInformation && donationInformation.completedTasks) {
     for (let asset of localAssets) {
@@ -134,154 +120,91 @@ const recheckLocalAssets = (localAssets, donationInformation, ) => {
   return localAssets;
 };
 
-let isRunningGetActiveIncomingTransferOfferInBackground = 0;
-let resultActiveIncomingTransferOffers;
+let queueGetActiveTransferOffer = [];
 const runGetActiveIncomingTransferOfferInBackground = () => {
   return new Promise((resolve) => {
-    if (isRunningGetActiveIncomingTransferOfferInBackground) {
-      isRunningGetActiveIncomingTransferOfferInBackground++;
-      return doCheckRunning(() => isRunningGetActiveIncomingTransferOfferInBackground).then(() => {
-        resolve(resultActiveIncomingTransferOffers);
-        isRunningGetActiveIncomingTransferOfferInBackground--;
-        if (!isRunningGetActiveIncomingTransferOfferInBackground) {
-          resultActiveIncomingTransferOffers = null;
-        }
-      });
+    queueGetActiveTransferOffer.push(resolve);
+    if (queueGetActiveTransferOffer.length > 1) {
+      return;
     }
-    isRunningGetActiveIncomingTransferOfferInBackground++;
     TransactionService.doGetActiveIncomingTransferOffers(userInformation.bitmarkAccountNumber).then(activeIncomingTransferOffers => {
-      resultActiveIncomingTransferOffers = activeIncomingTransferOffers || [];
-      resolve(activeIncomingTransferOffers || []);
-      isRunningGetActiveIncomingTransferOfferInBackground--;
-      if (!isRunningGetActiveIncomingTransferOfferInBackground) {
-        resultActiveIncomingTransferOffers = null;
-      }
       console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground success');
+      queueGetActiveTransferOffer.forEach(queueResolve => queueResolve(activeIncomingTransferOffers));
+      queueGetActiveTransferOffer = [];
     }).catch(error => {
-      resolve([]);
-      isRunningGetActiveIncomingTransferOfferInBackground--;
-      if (!isRunningGetActiveIncomingTransferOfferInBackground) {
-        resultActiveIncomingTransferOffers = null;
-      }
+      queueGetActiveTransferOffer.forEach(queueResolve => queueResolve());
+      queueGetActiveTransferOffer = [];
       console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground error :', error);
     });
   });
 };
 
-let isRunningGetDonationInformationInBackground = 0;
-let resultDonationInformation;
+
+let queueGetDonationInformation = [];
 const runGetDonationInformationInBackground = () => {
   return new Promise((resolve) => {
-    if (isRunningGetDonationInformationInBackground) {
-      isRunningGetDonationInformationInBackground++;
-      return doCheckRunning(() => isRunningGetDonationInformationInBackground).then(() => {
-        resolve(resultDonationInformation);
-        isRunningGetDonationInformationInBackground--;
-        if (!isRunningGetDonationInformationInBackground) {
-          resultDonationInformation = null;
-        }
-      });
+    queueGetDonationInformation.push(resolve);
+    if (queueGetDonationInformation.length > 1) {
+      return;
     }
-    isRunningGetDonationInformationInBackground++;
     DonationService.doGetUserInformation(userInformation.bitmarkAccountNumber).then(donationInformation => {
-      resultDonationInformation = donationInformation || {};
-      resolve(resultDonationInformation);
-      isRunningGetDonationInformationInBackground--;
-      if (!isRunningGetDonationInformationInBackground) {
-        resultDonationInformation = null;
-      }
       console.log('runOnBackground  runGetDonationInformationInBackground success');
+      queueGetDonationInformation.forEach(queueResolve => queueResolve(donationInformation));
+      queueGetDonationInformation = [];
     }).catch(error => {
-      resolve();
-      isRunningGetDonationInformationInBackground--;
-      if (!isRunningGetDonationInformationInBackground) {
-        resultDonationInformation = null;
-      }
+      queueGetDonationInformation.forEach(queueResolve => queueResolve());
+      queueGetDonationInformation = [];
       console.log('runOnBackground  runGetDonationInformationInBackground error :', error);
     });
   });
 };
 
-let isRunningGetTrackingBitmarksInBackground = 0;
-let resultTrackingBitmarks;
+let queueGetTrackingBitmarks = [];
 const runGetTrackingBitmarksInBackground = () => {
   return new Promise((resolve) => {
-    if (isRunningGetTrackingBitmarksInBackground) {
-      isRunningGetTrackingBitmarksInBackground++;
-      return doCheckRunning(() => isRunningGetTrackingBitmarksInBackground).then(() => {
-        resolve(resultTrackingBitmarks);
-        isRunningGetTrackingBitmarksInBackground--;
-        if (!isRunningGetTrackingBitmarksInBackground) {
-          resultTrackingBitmarks = null;
-        }
-      });
+    queueGetTrackingBitmarks.push(resolve);
+    if (queueGetTrackingBitmarks.length > 1) {
+      return;
     }
-    isRunningGetTrackingBitmarksInBackground++;
     BitmarkService.doGetTrackingBitmarks(userInformation.bitmarkAccountNumber).then(trackingBitmarks => {
-      resultTrackingBitmarks = trackingBitmarks || [];
-      resolve(resultTrackingBitmarks);
-      isRunningGetTrackingBitmarksInBackground--;
-      if (!isRunningGetTrackingBitmarksInBackground) {
-        resultTrackingBitmarks = null;
-      }
       console.log('runOnBackground  runGetTrackingBitmarksInBackground success');
+      queueGetTrackingBitmarks.forEach(queueResolve => queueResolve(trackingBitmarks));
+      queueGetTrackingBitmarks = [];
     }).catch(error => {
-      resolve();
-      isRunningGetTrackingBitmarksInBackground--;
-      if (!isRunningGetTrackingBitmarksInBackground) {
-        resultTrackingBitmarks = null;
-      }
+      queueGetTrackingBitmarks.forEach(queueResolve => queueResolve());
+      queueGetTrackingBitmarks = [];
       console.log('runOnBackground  runGetTrackingBitmarksInBackground error :', error);
     });
   });
 };
 
-let isRunningGetIFTTTInformationInBackground = 0;
-let resultIftttInformation;
+let queueGetIFTTTInformation = [];
 const runGetIFTTTInformationInBackground = () => {
   return new Promise((resolve) => {
-    if (isRunningGetIFTTTInformationInBackground) {
-      isRunningGetIFTTTInformationInBackground++;
-      return doCheckRunning(() => isRunningGetIFTTTInformationInBackground).then(() => {
-        resolve(resultIftttInformation);
-        isRunningGetIFTTTInformationInBackground--;
-        if (!isRunningGetIFTTTInformationInBackground) {
-          resultIftttInformation = null;
-        }
-      });
+    queueGetIFTTTInformation.push(resolve);
+    if (queueGetIFTTTInformation.length > 1) {
+      return;
     }
-    isRunningGetIFTTTInformationInBackground++;
     IftttModel.doGetIFtttInformation(userInformation.bitmarkAccountNumber).then(iftttInformation => {
-      resultIftttInformation = iftttInformation || {};
-      resolve(resultIftttInformation);
-      isRunningGetIFTTTInformationInBackground--;
-      if (!isRunningGetIFTTTInformationInBackground) {
-        resultIftttInformation = null;
-      }
       console.log('runOnBackground  runGetIFTTTInformationInBackground success');
+      queueGetIFTTTInformation.forEach(queueResolve => queueResolve(iftttInformation));
+      queueGetIFTTTInformation = [];
     }).catch(error => {
-      resolve();
-      isRunningGetIFTTTInformationInBackground--;
-      if (!isRunningGetIFTTTInformationInBackground) {
-        resultIftttInformation = null;
-      }
+      queueGetIFTTTInformation.forEach(queueResolve => queueResolve());
+      queueGetIFTTTInformation = [];
       console.log('runOnBackground  runGetIFTTTInformationInBackground error :', error);
     });
   });
 };
 // ================================================================================================================================================
 // special process
-let isRunningGetTransactionsInBackground = 0;
+let queueGetTransactions = [];
 const runGetTransactionsInBackground = () => {
   return new Promise((resolve) => {
-    if (isRunningGetTransactionsInBackground) {
-      isRunningGetTransactionsInBackground++;
-      return doCheckRunning(() => isRunningGetTransactionsInBackground).then(() => {
-        resolve();
-        isRunningGetTransactionsInBackground--;
-      });
+    queueGetTransactions.push(resolve);
+    if (queueGetTransactions.length > 1) {
+      return;
     }
-    isRunningGetTransactionsInBackground++;
 
     let doGetAllTransactions = async () => {
       let oldTransactions, lastOffset;
@@ -298,28 +221,24 @@ const runGetTransactionsInBackground = () => {
     };
 
     doGetAllTransactions().then(() => {
-      resolve();
-      isRunningGetTransactionsInBackground--;
       console.log('runOnBackground  runGetTransactionsInBackground success');
+      queueGetTransactions.forEach(queueResolve => queueResolve());
+      queueGetTransactions = [];
     }).catch(error => {
-      resolve([]);
-      isRunningGetTransactionsInBackground--;
+      queueGetTransactions.forEach(queueResolve => queueResolve());
+      queueGetTransactions = [];
       console.log('runOnBackground  runGetTransactionsInBackground error :', error);
     });
   });
 };
 
-let isRunningGetLocalBitmarksInBackground = 0;
+let queueGetLocalBitmarks = [];
 const runGetLocalBitmarksInBackground = (donationInformation) => {
   return new Promise((resolve) => {
-    if (isRunningGetLocalBitmarksInBackground) {
-      isRunningGetLocalBitmarksInBackground++;
-      return doCheckRunning(() => isRunningGetLocalBitmarksInBackground).then(() => {
-        resolve();
-        isRunningGetLocalBitmarksInBackground--;
-      });
+    queueGetLocalBitmarks.push(resolve);
+    if (queueGetLocalBitmarks.length > 1) {
+      return;
     }
-    isRunningGetLocalBitmarksInBackground++;
 
     let doGetAllBitmarks = async () => {
       let oldLocalAssets, lastOffset;
@@ -337,13 +256,13 @@ const runGetLocalBitmarksInBackground = (donationInformation) => {
     }
 
     doGetAllBitmarks().then(() => {
-      resolve();
-      isRunningGetLocalBitmarksInBackground--;
+      queueGetLocalBitmarks.forEach(queueResolve => queueResolve());
+      queueGetLocalBitmarks = [];
       console.log('runOnBackground  runGetLocalBitmarksInBackground success');
     }).catch(error => {
-      resolve();
-      isRunningGetLocalBitmarksInBackground--;
       console.log('runOnBackground  runGetLocalBitmarksInBackground error :', error);
+      queueGetLocalBitmarks.forEach(queueResolve => queueResolve());
+      queueGetLocalBitmarks = [];
     });
   });
 };
