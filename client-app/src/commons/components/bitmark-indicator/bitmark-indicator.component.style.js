@@ -25,18 +25,20 @@ export default StyleSheet.create({
   },
   textArea: {
     marginBottom: 28,
+    alignItems: 'center',
+    flexDirection: 'column',
   },
   indicatorTitle: {
-    fontSize: 15.42,
-    fontWeight: '800',
+    fontSize: 15,
+    fontWeight: '700',
     textAlign: 'center',
     width: convertWidth(234),
   },
   indicatorMessage: {
-    fontSize: 15.42,
+    fontSize: 13,
     fontWeight: '400',
     textAlign: 'center',
     width: convertWidth(250),
-    marginTop: 10,
+    marginTop: 5,
   },
 });
