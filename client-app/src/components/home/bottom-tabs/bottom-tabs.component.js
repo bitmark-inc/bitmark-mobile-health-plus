@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, TouchableOpacity, Image, Text,
 } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+// import { NavigationActions } from 'react-navigation';
 
 import userStyle from './bottom-tabs.component.style';
 import { EventEmitterService, NotificationService } from '../../../services';
@@ -34,7 +34,7 @@ export class BottomTabsComponent extends React.Component {
 
     this.state = {
       existNewAsset: false,
-      totalActionRequired: 0,
+      totalTasks: 0,
       existNewTracking: false,
       componentMounting: 0,
       mainTab: props.mainTab,
@@ -43,15 +43,15 @@ export class BottomTabsComponent extends React.Component {
     const doGetScreenData = async () => {
       let { existNewTrackingBitmark } = await DataProcessor.doGetTrackingBitmarks(1);
       let { existNewAsset } = await DataProcessor.doGetLocalBitmarks(1);
-      let { totalActionRequired } = await DataProcessor.doGetTransactionScreenActionRequired(1);
+      let { totalTasks } = await DataProcessor.doGetTransactionScreenActionRequired(1);
 
       this.setState({
-        totalActionRequired,
+        totalTasks,
         existNewAsset,
         existNewTracking: existNewTrackingBitmark,
       });
 
-      NotificationService.setApplicationIconBadgeNumber(totalActionRequired || 0);
+      NotificationService.setApplicationIconBadgeNumber(totalTasks || 0);
     }
     doGetScreenData();
   }
@@ -63,9 +63,9 @@ export class BottomTabsComponent extends React.Component {
   }
 
   handerChangeActiveIncomingTransferOffer() {
-    DataProcessor.doGetTransactionScreenActionRequired(1).then(({ totalActionRequired }) => {
-      this.setState({ totalActionRequired });
-      NotificationService.setApplicationIconBadgeNumber(totalActionRequired || 0);
+    DataProcessor.doGetTransactionScreenActionRequired(1).then(({ totalTasks }) => {
+      this.setState({ totalTasks });
+      NotificationService.setApplicationIconBadgeNumber(totalTasks || 0);
     }).catch(error => {
       console.log('doGetTransactionScreenActionRequired error:', error);
     });
@@ -119,8 +119,8 @@ export class BottomTabsComponent extends React.Component {
         </TouchableOpacity>
 
         <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.transaction)}>
-          {this.state.totalActionRequired > 0 && <View style={userStyle.transactionNumber}>
-            <Text style={userStyle.transactionNumberText}>{this.state.totalActionRequired < 100 ? this.state.totalActionRequired : 99}</Text>
+          {this.state.totalTasks > 0 && <View style={userStyle.transactionNumber}>
+            <Text style={userStyle.transactionNumberText}>{this.state.totalTasks < 100 ? this.state.totalTasks : 99}</Text>
           </View>}
           <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.transaction
             ? require('./../../../../assets/imgs/transaction-icon-enable.png')

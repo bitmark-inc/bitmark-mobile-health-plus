@@ -15,6 +15,7 @@ import { FileUtil } from '../utils';
 let userInformation = {};
 let userCacheScreenData = {
   transactionsScreen: {
+    totalTasks: 0,
     totalActionRequired: 0,
     actionRequiredLength: 20,
     actionRequired: [],
@@ -431,6 +432,9 @@ const doOpenApp = async () => {
     userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.slice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
 
     let actionRequired = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED)) || [];
+    let totalTasks = 0;
+    actionRequired.forEach(item => totalTasks += (item.number ? item.number : 1));
+    userCacheScreenData.transactionsScreen.totalTasks = totalTasks;
     userCacheScreenData.transactionsScreen.totalActionRequired = actionRequired.length;
     userCacheScreenData.transactionsScreen.actionRequired = actionRequired.slice(0, userCacheScreenData.transactionsScreen.actionRequiredLength);
 
@@ -740,6 +744,7 @@ const ActionTypes = {
 };
 const doGenerateTransactionActionRequiredData = async () => {
   let actionRequired;
+  let totalTasks = 0;
   let activeIncomingTransferOffers = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS)) || [];
   if (activeIncomingTransferOffers) {
     actionRequired = actionRequired || [];
@@ -751,6 +756,7 @@ const doGenerateTransactionActionRequiredData = async () => {
         typeTitle: 'OWNERSHIP TRANSFER REQUEST ',
         timestamp: moment(item.created_at),
       });
+      totalTasks++;
     });
   }
 
@@ -763,6 +769,7 @@ const doGenerateTransactionActionRequiredData = async () => {
       item.typeTitle = item.study ? 'DONATION Request' : 'ISSUANCE Request';
       item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null);
       actionRequired.push(item);
+      totalTasks++;
     });
   }
   let iftttInformation = await doGetIftttInformation();
@@ -773,6 +780,7 @@ const doGenerateTransactionActionRequiredData = async () => {
       item.typeTitle = 'ISSUANCE Request';
       item.timestamp = item.assetInfo.timestamp;
       actionRequired.push(item);
+      totalTasks += item.number;
     });
   }
 
@@ -785,12 +793,12 @@ const doGenerateTransactionActionRequiredData = async () => {
   }) : actionRequired;
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, actionRequired);
+  userCacheScreenData.transactionsScreen.totalTasks = totalTasks;
   userCacheScreenData.transactionsScreen.totalActionRequired = actionRequired.length;
   userCacheScreenData.transactionsScreen.actionRequired = actionRequired.slice(0, userCacheScreenData.transactionsScreen.actionRequiredLength);
 
   EventEmitterService.emit(EventEmitterService.events.CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA, { actionRequired, donationInformation });
   console.log('actionRequired :', actionRequired);
-  return { actionRequired, donationInformation };
 };
 
 const doGenerateTransactionHistoryData = async () => {
@@ -887,6 +895,7 @@ const doGetTransactionScreenActionRequired = async (length) => {
   }
   return {
     actionRequired,
+    totalTasks: userCacheScreenData.transactionsScreen.totalTasks,
     totalActionRequired: userCacheScreenData.transactionsScreen.totalActionRequired,
   }
 };
