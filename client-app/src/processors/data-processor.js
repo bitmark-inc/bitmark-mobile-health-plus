@@ -769,7 +769,7 @@ const doGenerateTransactionActionRequiredData = async () => {
       item.typeTitle = item.study ? 'DONATION Request' : 'ISSUANCE Request';
       item.timestamp = (item.list && item.list.length > 0) ? item.list[0].startDate : (item.study ? item.study.joinedDate : null);
       actionRequired.push(item);
-      totalTasks++;
+      totalTasks += item.number;
     });
   }
   let iftttInformation = await doGetIftttInformation();
@@ -780,7 +780,7 @@ const doGenerateTransactionActionRequiredData = async () => {
       item.typeTitle = 'ISSUANCE Request';
       item.timestamp = item.assetInfo.timestamp;
       actionRequired.push(item);
-      totalTasks += item.number;
+      totalTasks++;
     });
   }
 

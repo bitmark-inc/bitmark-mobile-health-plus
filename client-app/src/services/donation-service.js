@@ -308,16 +308,17 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     };
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount, extra);
     await FileUtil.remove(prepareResult.filePath);
-    return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
+    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
+    return doGetUserInformation(bitmarkAccountNumber);
   } else if ((study.studyId === 'study2' && taskType === study.taskIds.task3) ||
     (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2)) {
-    return await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
+    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
+    return doGetUserInformation(bitmarkAccountNumber);
   }
   throw new Error('Can not detect task and study');
 };
 
 const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, study, list) => {
-  let donationInformation;
   for (let dateRange of list) {
     let healthRawData = await doGetHealthKitData(study.dataTypes, dateRange.startDate, dateRange.endDate);
     let tempData = StudiesModel[study.studyId].generateHealthKitAsset(study, bitmarkAccountNumber,
@@ -326,7 +327,6 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
       dateRange.endDate,
       randomString({ length: 8, numeric: true, letters: false, })
     );
-
     let deviceName = DeviceInfo.getDeviceName();
     let deviceId = DeviceInfo.getDeviceId();
     tempData.data = tempData.data.replace(new RegExp(deviceName, 'g'), deviceId);
@@ -339,9 +339,9 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     };
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount, extra);
     await FileUtil.remove(filePath);
-    donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment(dateRange.endDate).toDate(), study.studyId, bitmarkId);
+    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment(dateRange.endDate).toDate(), study.studyId, bitmarkId);
   }
-  return donationInformation;
+  return doGetUserInformation(bitmarkAccountNumber);
 };
 
 const removeEmptyValueData = (healthData) => {
@@ -374,7 +374,8 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
     let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.assetMetadata, 1);
     await FileUtil.remove(filePath);
-    donationInformation = await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment(dateRange.endDate).toDate(), null, issueResult[0]);
+    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment(dateRange.endDate).toDate(), null, issueResult[0]);
+    return doGetUserInformation(bitmarkAccountNumber);
   }
   return donationInformation;
 };
