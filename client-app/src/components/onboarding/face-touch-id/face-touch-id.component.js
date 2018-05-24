@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity, ScrollView,
+  View, Text, Image, TouchableOpacity,
   Linking,
   AppState,
   // NativeModules,
@@ -9,6 +9,7 @@ import {
 import { CommonModel } from './../../../models';
 
 import faceTouchIdStyle from './face-touch-id.component.style';
+import { BitmarkComponent } from '../../../commons/components';
 
 export class FaceTouchIdComponent extends React.Component {
   constructor(props) {
@@ -58,32 +59,41 @@ export class FaceTouchIdComponent extends React.Component {
 
   render() {
     return (
-      <View style={[faceTouchIdStyle.body]}>
-        <ScrollView style={[faceTouchIdStyle.scrollContent]} >
+      <BitmarkComponent
+        backgroundColor='white'
+        contentInScroll={true}
+        content={(<View style={[faceTouchIdStyle.body]}>
           <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>
             TOUCH/FACE ID & PASSCODE
-          </Text>
+            </Text>
           <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>
             Touch/Face ID or a passcode is required to authorize your transactions.
-          </Text>
+            </Text>
           <View style={faceTouchIdStyle.passcodeRemindImages}>
             <Image style={[faceTouchIdStyle.touchIdImage]} source={require('../../../../assets/imgs/touch-id.png')} />
             <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />
           </View>
-          <View style={faceTouchIdStyle.enableButtonArea}>
-            <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
-              onPress={() => {
-                if (!this.state.supported) {
-                  Linking.openURL('app-settings:');
-                } else {
-                  this.doContinue();
-                }
-              }}>
-              <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
+
+        </View>)}
+
+        footerHeight={45}
+        footer={(<View style={faceTouchIdStyle.enableButtonArea}>
+          <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
+            onPress={() => {
+              if (!this.state.supported) {
+                Linking.openURL('app-settings:');
+              } else {
+                this.doContinue();
+              }
+            }}>
+            <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
+          </TouchableOpacity>
+        </View>)}
+      />
+
+
+
+
     );
   }
 }

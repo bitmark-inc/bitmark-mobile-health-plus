@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { convertWidth } from '../../../utils';
 import { ios } from '../../../configs';
+import { iosConstant } from '../../../configs/ios/ios.config';
 
 export default StyleSheet.create({
   body: {
@@ -21,6 +22,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
+    paddingBottom: 70 + ios.constant.blankFooter,
   },
   swipeDotButton: {
     backgroundColor: '#C4C4C4',
@@ -34,7 +36,7 @@ export default StyleSheet.create({
   },
   swipePagination: {
     position: 'absolute',
-    bottom: 15 + ios.constant.blankFooter,
+    bottom: 70 + ios.constant.blankFooter,
   },
 
   introductionArea: {
@@ -52,7 +54,7 @@ export default StyleSheet.create({
   introductionDescription: {
     marginTop: 40,
     left: convertWidth(50),
-    width: convertWidth(265),
+    width: convertWidth(275),
     fontFamily: 'Avenir light',
     fontWeight: '300',
     fontSize: 17,
@@ -80,7 +82,7 @@ export default StyleSheet.create({
   introductionTermPrivacy: {
     marginTop: 66,
     left: convertWidth(50),
-    width: 272,
+    width: convertWidth(272),
   },
   termPrivacySecondLine: {
     flexDirection: 'row',
@@ -89,14 +91,14 @@ export default StyleSheet.create({
   },
   bitmarkTermsPrivacyText: {
     fontFamily: 'Avenir light',
-    fontSize: 14,
+    fontSize: 17,
     fontWeight: '300',
     lineHeight: 22,
   },
   bitmarkTermsPrivacyButtonText: {
     fontFamily: 'Avenir light',
     color: '#0060F2',
-    fontSize: 14,
+    fontSize: 17,
     fontWeight: '300',
     textDecorationLine: 'underline',
     lineHeight: 22,
@@ -104,7 +106,7 @@ export default StyleSheet.create({
 
   skipButtonArea: {
     position: 'absolute',
-    bottom: 35 + ios.constant.blankFooter,
+    bottom: 23 + ios.constant.blankFooter,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
@@ -116,7 +118,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0060F2',
   },
   skipButtonText: {
     fontFamily: 'Avenir black',
@@ -127,23 +128,26 @@ export default StyleSheet.create({
   },
 
   letDoItButtonArea: {
-    marginTop: 60,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
   },
   letDoItButton: {
     marginTop: 10,
-    width: convertWidth(275),
-    minHeight: 42,
+    width: convertWidth(375),
+    minHeight: 45,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     backgroundColor: '#0060F2',
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   letDoItButtonText: {
-    fontFamily: 'Avenir black',
+    fontFamily: 'Avenir Black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

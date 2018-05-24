@@ -5,13 +5,10 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
+    paddingLeft: convertWidth(50),
+    paddingRight: convertWidth(50),
+    paddingBottom: 90,
   },
-  scrollContent: {
-    width: '100%',
-    paddingLeft: 51,
-    paddingRight: 51,
-  },
-
   // notification
   notificationTitle: {
     fontFamily: 'Avenir black',
@@ -37,24 +34,25 @@ export default StyleSheet.create({
   },
 
   enableButtonArea: {
-    marginTop: 40,
     flexDirection: 'column',
     width: '100%',
   },
   enableButton: {
-    minHeight: 42,
-    width: convertWidth(275),
+    height: 45,
+    width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     backgroundColor: '#0060F2',
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   enableButtonText: {
     fontFamily: 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',
-    color: 'white'
+    color: 'white',
   },
 });

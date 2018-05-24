@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { convertWidth } from '../../../utils';
+import { iosConstant } from '../../../configs/ios/ios.config';
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -53,21 +54,24 @@ export default StyleSheet.create({
   },
 
   enableButtonArea: {
-    marginTop: 80,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     width: '100%',
+    position: 'absolute',
+    bottom: 0,
   },
   enableButton: {
-    minHeight: 42,
-    width: convertWidth(275),
+    height: 45,
+    width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     backgroundColor: '#0060F2',
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   enableButtonText: {
     fontFamily: 'Avenir black',
