@@ -4,6 +4,7 @@ import { BitmarkSDK } from './adapters';
 import { config } from '../configs';
 
 const doCreateAccount = async () => {
+  await CookieManager.clearAll();
   return await BitmarkSDK.newAccount(config.bitmark_network);
 };
 
