@@ -3,6 +3,7 @@ import {
   ios,
   android // TODO
 } from './../../../../../configs';
+import { convertWidth } from '../../../../../utils';
 let constant = Platform.select({
   ios: ios.constant,
   android: android.constant
@@ -48,7 +49,7 @@ export default StyleSheet.create({
   },
   cardMessage: {
     marginTop: 5,
-    width: 340,
+    width: convertWidth(340),
     fontSize: 15,
     fontWeight: '300',
     fontFamily: 'Avenir black',
