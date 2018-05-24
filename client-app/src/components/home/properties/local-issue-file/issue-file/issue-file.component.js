@@ -201,6 +201,13 @@ export class LocalIssueFileComponent extends React.Component {
                 <Text style={localAddPropertyStyle.fingerprintInfoMessage}>GENERATED FROM </Text>
                 <Text style={localAddPropertyStyle.fingerprintInfoFilename} numberOfLines={1} >{this.state.fileName}</Text>
                 <Text style={localAddPropertyStyle.fingerprintInfoFileFormat}>{this.state.fileFormat}</Text>
+              
+              </View>
+                <Text style={localAddPropertyStyle.assetTypeLabel}>ASSET TYPE</Text>
+                <Text style={localAddPropertyStyle.assetTypeValue}>ASSET TYPE</Text>
+                <Text style={localAddPropertyStyle.assetTypeValue}>ASSET TYPE</Text>
+              <View>
+                
               </View>
               <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
               {!this.state.existingAsset && <TextInput
