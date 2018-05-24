@@ -44,18 +44,18 @@ class PropertyPrivateYourDataComponent extends React.Component {
                   <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark</Text>
                   <View style={[newAccountStyle.termPrivacySecondLine]}>
                     <TouchableOpacity onPress={() => {
-                      this.props.navigation.navigate('BitmarkWebView', {
-                        title: 'Privacy Policy',
-                        sourceUrl: 'https://bitmark.com/privacy',
-                        isFullScreen: true,
-                      });
+                      this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl: 'https://bitmark.com/term', isFullScreen: true, });
                       this.props.screenProps.setShowPagination(false);
                     }}>
                       <Text style={[newAccountStyle.bitmarkTermsPrivacyButtonText]}>Terms of Service</Text>
                     </TouchableOpacity>
                     <Text style={newAccountStyle.bitmarkTermsPrivacyText}> and </Text>
                     <TouchableOpacity onPress={() => {
-                      this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl: 'https://bitmark.com/term', isFullScreen: true, });
+                      this.props.navigation.navigate('BitmarkWebView', {
+                        title: 'Privacy Policy',
+                        sourceUrl: 'https://bitmark.com/privacy',
+                        isFullScreen: true,
+                      });
                       this.props.screenProps.setShowPagination(false);
                     }}>
                       <Text style={[newAccountStyle.bitmarkTermsPrivacyButtonText]}>Privacy Policy</Text>
