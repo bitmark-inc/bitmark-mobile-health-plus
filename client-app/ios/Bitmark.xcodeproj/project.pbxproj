@@ -251,6 +251,9 @@
 		F1D09CF620770778008B16EE /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CC020770726008B16EE /* libCodePush.a */; };
 		F1D09CF8207707BF008B16EE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CF7207707BF008B16EE /* libz.tbd */; };
 		F1D09CF9207707CB008B16EE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CF7207707BF008B16EE /* libz.tbd */; };
+		F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
+		F1F6E2E220B6BF6000CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
+		F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -639,6 +642,13 @@
 			remoteGlobalIDString = F886647B1F4ADB500036D01B;
 			remoteInfo = "CodePush-tvOS";
 		};
+		F1F6E2D620B6BF4000CECD53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1BD725DA1CF77A8B005DBD79;
+			remoteInfo = RNCookieManagerIOS;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -791,6 +801,7 @@
 		F18C03B8204929BC00FA36E4 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		F1D09CBA20770725008B16EE /* CodePush.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		F1D09CF7207707BF008B16EE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCookieManagerIOS.xcodeproj; path = "../node_modules/react-native-cookies/ios/RNCookieManagerIOS.xcodeproj"; sourceTree = "<group>"; };
 		FD055631D7E5490F8244DCED /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -808,6 +819,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
 				0E4065AB2091E23B005E1CBD /* libRNDocumentPicker.a in Frameworks */,
 				F1D09CF8207707BF008B16EE /* libz.tbd in Frameworks */,
 				F1D09CF520770768008B16EE /* libCodePush.a in Frameworks */,
@@ -842,6 +854,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1F6E2E220B6BF6000CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
 				0E617E8420A2FB23007A3A24 /* libRNDocumentPicker.a in Frameworks */,
 				F1D09CF9207707CB008B16EE /* libz.tbd in Frameworks */,
 				F1D09CF620770778008B16EE /* libCodePush.a in Frameworks */,
@@ -876,6 +889,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
 				F179A25020AF9775002D5539 /* libKCKeepAwake.a in Frameworks */,
 				0E617E4F20A2FAE4007A3A24 /* libRNDocumentPicker.a in Frameworks */,
 				58908AA620A18A5A00C0064A /* libz.tbd in Frameworks */,
@@ -1308,6 +1322,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */,
 				F179A21520AF9760002D5539 /* KCKeepAwake.xcodeproj */,
 				0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */,
 				F1D09CBA20770725008B16EE /* CodePush.xcodeproj */,
@@ -1443,6 +1458,14 @@
 			children = (
 				F1D09CC020770726008B16EE /* libCodePush.a */,
 				F1D09CC220770726008B16EE /* libCodePush.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1F6E2A620B6BF4000CECD53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1675,6 +1698,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = F1F6E2A620B6BF4000CECD53 /* Products */;
+					ProjectRef = F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */;
 				},
 				{
 					ProductGroup = F18C03B9204929BC00FA36E4 /* Products */;
@@ -2088,6 +2115,13 @@
 			fileType = archive.ar;
 			path = libCodePush.a;
 			remoteRef = F1D09CC120770726008B16EE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCookieManagerIOS.a;
+			remoteRef = F1F6E2D620B6BF4000CECD53 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2732,7 +2766,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios;
 				PRODUCT_NAME = Bitmark;
-				PROVISIONING_PROFILE = "2dfcefe4-47f9-48da-9ff2-a8fd9e0c57d4";
+				PROVISIONING_PROFILE = "5b7f3e2f-461d-4320-aca7-84dc6d276610";
 				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
