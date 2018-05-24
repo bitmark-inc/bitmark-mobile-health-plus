@@ -131,6 +131,7 @@ export class BitmarkComponent extends React.Component {
           if (this.scrollRef && ((y + height) > (keyboardY - Math.max(this.state.keyboardExternalHeight, this.state.footerHeight)))) {
             let focusedElementYPosition = oldScrollYPosition + y + height - keyboardY + this.state.footerHeight + statusBarHeightChange + Math.max(this.state.keyboardExternalHeight, this.state.footerHeight);
             this.scrollRef.scrollTo({ x: 0, y: focusedElementYPosition, animated: true });
+            this.oldScrollYPosition = focusedElementYPosition;
           }
         });
       } else if (this.scrollRef && statusBarHeightChange !== 0) {
@@ -210,6 +211,9 @@ export class BitmarkComponent extends React.Component {
               {this.props.contentInScroll &&
                 <ScrollView ref={ref => this.scrollRef = ref} scrollEventThrottle={16} onScroll={(event) => {
                   this.scrollYPosition = event.nativeEvent.contentOffset.y;
+                  if (this.state.keyboardHeight) {
+                    this.oldScrollYPosition = this.scrollYPosition;
+                  }
                   // console.log('this.scrollYPosition :', this.scrollYPosition);
                 }}>
                   {this.props.content}
