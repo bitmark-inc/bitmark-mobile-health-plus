@@ -154,7 +154,7 @@ const doGetProvenance = async (bitmark) => {
 };
 
 const doTransferBitmark = async (bitmark, receiver) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to send the bitmark transfer request.');
   if (!touchFaceIdSession) {
     return null;
   }

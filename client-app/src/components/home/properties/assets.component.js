@@ -247,15 +247,11 @@ export class AssetsComponent extends React.Component {
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
             {(!this.state.appLoadingData && this.state.assets && this.state.assets.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               {(this.state.subTab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetLabel}>
-
-                {'YOU DO NOT OWN ANY PROPERTY.'.toUpperCase()}
+                {'Welcome to Bitmark!'.toUpperCase()}
               </Text>}
               {(this.state.subTab === SubTabs.local) && <Text style={assetsStyle.messageNoAssetContent}>
-                Here you will issue property titles (bitmarks), view and manage your properties, and have general account access and control.
+                Register, track, and trade property rights for your digital assets.
                 </Text>}
-              {(this.state.subTab === SubTabs.local) && <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
-                <Text style={assetsStyle.addFirstPropertyButtonText}>{'create first property'.toUpperCase()}</Text>
-              </TouchableOpacity>}
             </View>}
             {(this.state.assets && this.state.assets.length > 0 && this.state.subTab === SubTabs.local) && <FlatList
               ref={(ref) => this.listViewElement = ref}
@@ -303,10 +299,10 @@ export class AssetsComponent extends React.Component {
           <TouchableOpacity activeOpacity={1} style={assetsStyle.contentSubTab}>
             {(this.state.trackingBitmarks && this.state.trackingBitmarks.length === 0) && <View style={assetsStyle.messageNoAssetArea}>
               <Text style={assetsStyle.messageNoAssetLabel}>
-                {'NO TRACKING PROPERTY.'.toUpperCase()}
+                {'Welcome to Bitmark!'.toUpperCase()}
               </Text>
               <Text style={assetsStyle.messageNoAssetContent}>
-                By tracking a bitmark you can always view the latest bitmarks status and this is where all your tracking bitmarks will be displayed.
+                Register, track, and trade property rights for your digital assets.
               </Text>
             </View>}
             {(this.state.trackingBitmarks && this.state.trackingBitmarks.length > 0 && this.state.subTab === SubTabs.tracking) && <FlatList
@@ -337,6 +333,12 @@ export class AssetsComponent extends React.Component {
         {this.state.subTab === SubTabs.global && <View style={assetsStyle.globalArea}>
           <BitmarkWebViewComponent screenProps={{ sourceUrl: config.registry_server_url + '?env=app', heightButtonController: 38 }} />
         </View>}
+
+        {(!this.state.appLoadingData && this.state.assets && this.state.assets.length === 0 && this.state.subTab === SubTabs.local) &&
+          <TouchableOpacity style={assetsStyle.addFirstPropertyButton} onPress={this.addProperty}>
+            <Text style={assetsStyle.addFirstPropertyButtonText}>{'create first property'.toUpperCase()}</Text>
+          </TouchableOpacity>
+        }
       </View>
     );
   }

@@ -4,6 +4,7 @@ import {
   android // TODO
 } from './../../../../configs';
 import { convertWidth } from '../../../../utils';
+import { iosConstant } from '../../../../configs/ios/ios.config';
 let constant = Platform.select({
   ios: ios.constant,
   android: android.constant
@@ -98,9 +99,8 @@ export default StyleSheet.create({
     backgroundColor: '#0060F2',
     width: '100%',
     minHeight: 42,
-    paddingTop: 11,
-    paddingBottom: 11,
-    marginBottom: 10 + constant.blankFooter,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',

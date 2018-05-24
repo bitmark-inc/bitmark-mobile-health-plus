@@ -31,9 +31,10 @@ export default StyleSheet.create({
     width: '100%',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
+    paddingBottom: 45,
   },
   description: {
-    marginTop: 87,
+    marginTop: 38,
     width: convertWidth(327),
     fontFamily: 'Avenir Light',
     fontSize: 17,
@@ -41,7 +42,7 @@ export default StyleSheet.create({
     minHeight: 248,
   },
   accessIconArea: {
-    marginTop: 7,
+    marginTop: 90,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
@@ -142,14 +143,12 @@ export default StyleSheet.create({
   },
 
   bottomButtonArea: {
-    marginTop: 50,
-    marginBottom: 10,
     width: '100%',
-    paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19),
+    position: 'absolute',
+    bottom: 0,
   },
   bottomButton: {
-    width: convertWidth(337),
+    width: convertWidth(375),
     minHeight: 45,
     paddingTop: 11,
     paddingBottom: 11,

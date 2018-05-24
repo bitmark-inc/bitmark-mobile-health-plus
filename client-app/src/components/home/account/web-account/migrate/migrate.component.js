@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Text, View, TouchableOpacity, Image,
 } from 'react-native';
+import Hyperlink from 'react-native-hyperlink';
 import Camera from 'react-native-camera';
 
 import componentStyle from './migrate.component.style';
@@ -32,7 +33,7 @@ export class WebAccountMigrateComponent extends React.Component {
     super(props);
 
     this.state = {
-      step: STEPS.scan,
+      step: STEPS.confirm,
       userInformation: DataProcessor.getUserInformation(),
       token: '',
     };
@@ -73,7 +74,12 @@ export class WebAccountMigrateComponent extends React.Component {
         <TouchableOpacity style={defaultStyles.headerRight} />
       </View>
       {this.state.step === STEPS.scan && <View style={componentStyle.bodyContent}>
-        <Text style={componentStyle.scanMessage}>Visit https://a.bitmark.com and sign in your web account. Click ”Migrate web account” and then scan the QR code.</Text>
+        <Hyperlink
+          linkStyle={{ color: '#0060F2', }}
+          linkText={url => url}
+        >
+          <Text style={componentStyle.scanMessage}>Visit https://a.bitmark.com and sign in your web account. Click ”Migrate web account” and then scan the QR code.</Text>
+        </Hyperlink>
         <Camera style={componentStyle.scanCamera} aspect={Camera.constants.Aspect.fill} onBarCodeRead={this.onBarCodeRead.bind(this)} />
       </View>}
 

@@ -8,7 +8,7 @@ export default StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#EDF0F4',
+    backgroundColor: 'white',
   },
   header: {
     flexDirection: 'row',
@@ -23,8 +23,8 @@ export default StyleSheet.create({
   recoveryPhraseContent: {
     flex: 1,
     flexDirection: 'column',
-    paddingLeft: convertWidth(33),
-    paddingRight: convertWidth(33),
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
     backgroundColor: 'white',
   },
   recoveryPhraseWarningIcon: {
@@ -37,20 +37,19 @@ export default StyleSheet.create({
   recoveryDescription: {
     fontFamily: 'Avenir Heavy',
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '400',
     lineHeight: 18,
     marginTop: 23,
-    width: convertWidth(309),
+    width: convertWidth(337),
   },
   recoveryPhraseBottomButton: {
-    width: convertWidth(309),
-    minHeight: 42,
+    width: convertWidth(375),
+    height: 45,
     backgroundColor: '#0060F2',
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
   },
   recoveryPhraseBottomButtonText: {
     fontFamily: 'Avenir Black',
@@ -108,9 +107,6 @@ export default StyleSheet.create({
     width: convertWidth(108),
   },
 
-  ranDomWordsArea: {
-    marginTop: 10,
-  },
   recoveryPhraseChoose: {
     height: 29,
     flexDirection: 'row',
@@ -140,12 +136,13 @@ export default StyleSheet.create({
   recoveryPhraseTestResult: {
     flexDirection: 'column',
     alignItems: 'center',
+    marginTop: 27,
+    marginBottom: 27,
   },
   recoveryPhraseTestTitle: {
     fontFamily: 'Avenir Light',
     fontSize: 15,
     fontWeight: '900',
-    marginTop: 27,
   },
   recoveryPhraseTestMessage: {
     fontFamily: 'Avenir Light',

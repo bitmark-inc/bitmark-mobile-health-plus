@@ -68,12 +68,13 @@ export default StyleSheet.create({
   },
   confirmButton: {
     height: 45,
-    marginTop: 200,
     backgroundColor: '#0060F2',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: convertWidth(337),
+    width: convertWidth(375),
+    position: 'absolute',
+    bottom: 0,
   },
   confirmButtonText: {
     fontFamily: 'Avenir Black',

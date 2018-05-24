@@ -33,7 +33,7 @@ export default StyleSheet.create({
   },
   topButtonsArea: {
     position: 'absolute',
-    top: 0,
+    top: 3,
     right: 0,
     zIndex: 10,
     width: 198,

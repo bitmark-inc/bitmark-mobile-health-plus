@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper';
 import { StackNavigator, } from 'react-navigation';
-import Hyperlink from 'react-native-hyperlink'
+import Hyperlink from 'react-native-hyperlink';
 import {
   View, Text, TouchableOpacity, Image,
   StatusBar,
@@ -47,7 +47,7 @@ class PropertyPrivateYourDataComponent extends React.Component {
 
               >
                 <Hyperlink
-                  onPress={(url, text) => {
+                  onPress={(url) => {
                     if (url === 'https://bitmark.com/privacy') {
                       this.props.navigation.navigate('BitmarkWebView', { title: 'Privacy Policy', sourceUrl: 'https://bitmark.com/privacy', isFullScreen: true, });
                       this.props.screenProps.setShowPagination(false);

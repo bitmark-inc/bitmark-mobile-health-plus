@@ -4,7 +4,7 @@ import {
   Text, View, TouchableOpacity, Image,
 } from 'react-native';
 import Camera from 'react-native-camera';
-
+import Hyperlink from 'react-native-hyperlink';
 import componentStyle from './sign-in.component.style';
 
 import defaultStyles from '../../../../../commons/styles';
@@ -43,7 +43,12 @@ export class WebAccountSignInComponent extends React.Component {
         <TouchableOpacity style={defaultStyles.headerRight} />
       </View>
       <View style={componentStyle.bodyContent}>
-        <Text style={componentStyle.scanMessage}>Visit https://a.bitmark.com. Click ”SIGN IN WITH MOBILE APP” and then scan the QR code.</Text>
+        <Hyperlink
+          linkStyle={{ color: '#0060F2', }}
+          linkText={url => url}
+        >
+          <Text style={componentStyle.scanMessage}>Visit https://a.bitmark.com. Click ”SIGN IN WITH MOBILE APP” and then scan the QR code.</Text>
+        </Hyperlink>
         <Camera ref={(ref) => this.cameraRef = ref} style={componentStyle.scanCamera} aspect={Camera.constants.Aspect.fill} onBarCodeRead={this.onBarCodeRead.bind(this)} />
       </View>
     </View>);

@@ -111,8 +111,10 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#0060F2',
     marginTop: 30,
-    width: convertWidth(337),
-    minHeight: 42,
+    width: convertWidth(375),
+    minHeight: 45,
+    position: 'absolute',
+    bottom: 0,
   },
   addFirstPropertyButtonText: {
     fontFamily: 'Avenir black',
