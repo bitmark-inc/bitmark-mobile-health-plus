@@ -136,7 +136,14 @@ class BitmarkSDK: NSObject {
       let propertyName = input["property_name"] as! String
       let metadata = input["metadata"] as! [String: String]
       let quantity = input["quantity"] as! Int
-      let result = try account.issueBitmarks(assetFile: URL(fileURLWithPath: fileURL), accessibility: .privateAsset, propertyName: propertyName, propertyMetadata: metadata, quantity: quantity)
+      let isPublicAsset = input["is_public_asset"] as! Bool
+      
+      var accessibility = Accessibility.privateAsset
+      if isPublicAsset {
+        accessibility = Accessibility.publicAsset
+      }
+      
+      let result = try account.issueBitmarks(assetFile: URL(fileURLWithPath: fileURL), accessibility: accessibility, propertyName: propertyName, propertyMetadata: metadata, quantity: quantity)
       let issues = result.0
       let issueIds = issues.map {$0.txId! }
       callback([true, issueIds])
