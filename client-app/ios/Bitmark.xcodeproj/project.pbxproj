@@ -227,6 +227,8 @@
 		58908ACA20A18A5A00C0064A /* GMSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28C205FB76900937D78 /* GMSelected@2x.png */; };
 		58908ACB20A18A5A00C0064A /* GMEmptyFolder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28D205FB76900937D78 /* GMEmptyFolder@2x.png */; };
 		589626E9201B28380026C4A5 /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
+		58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
+		58B4A9ED20B6C8A5000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		58C9513920202AF80050A9D4 /* TouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9510D20202AF70050A9D4 /* TouchID.m */; };
 		58CB4892201EC63A0058B364 /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
 		58FC1E56201B21CC00F60AF9 /* BitmarkSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FC1E55201B21CC00F60AF9 /* BitmarkSDK.swift */; };
@@ -820,6 +822,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
+				58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */,
 				0E4065AB2091E23B005E1CBD /* libRNDocumentPicker.a in Frameworks */,
 				F1D09CF8207707BF008B16EE /* libz.tbd in Frameworks */,
 				F1D09CF520770768008B16EE /* libCodePush.a in Frameworks */,
@@ -855,6 +858,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1F6E2E220B6BF6000CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
+				58B4A9ED20B6C8A5000FF769 /* libKCKeepAwake.a in Frameworks */,
 				0E617E8420A2FB23007A3A24 /* libRNDocumentPicker.a in Frameworks */,
 				F1D09CF9207707CB008B16EE /* libz.tbd in Frameworks */,
 				F1D09CF620770778008B16EE /* libCodePush.a in Frameworks */,
