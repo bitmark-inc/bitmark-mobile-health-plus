@@ -11,7 +11,7 @@ let iosConstant = {
   subTabSizeHeight: 39,
   bottomTabsHeight: 56,
   blankFooter,
-  autoCompleteHeight: 42,
+  autoCompleteHeight: 45,
   defaultWindowSize: {
     width: 375,
     height: windowHeight,

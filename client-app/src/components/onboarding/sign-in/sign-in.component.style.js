@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { convertWidth } from './../../../utils'
 import { ios } from '../../../configs';
+import { iosConstant } from '../../../configs/ios/ios.config';
 
 export default StyleSheet.create({
   body: {
@@ -104,9 +105,10 @@ export default StyleSheet.create({
     ],
   },
   submitButton: {
-    marginTop: 10,
-    minHeight: 42,
-    width: convertWidth(335),
+    height: 45,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
+    width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
