@@ -14,6 +14,7 @@ import assetDetailStyle from './local-asset-detail.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
+import { config } from './../../../../configs';
 
 let ComponentName = 'LocalAssetDetailComponent';
 export class LocalAssetDetailComponent extends React.Component {
@@ -222,11 +223,11 @@ export class LocalAssetDetailComponent extends React.Component {
                         }}>
                           <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
                         </TouchableOpacity>
-                        {/* <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
+                        {config.network !== config.NETWORKS.livenet && <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset });
                         }}>
                           <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>TRANSFER</Text>
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>}
                       </View>);
                     }}
                   />
