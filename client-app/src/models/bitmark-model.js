@@ -388,7 +388,7 @@ const doGetAllTrackingBitmark = async (bitmarkAccount) => {
 const doConfirmWebAccount = async (bitmarkAccount, code, timestamp, signature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let bitmarkUrl = config.web_account_server_url + `/s/api/mobile/confirmations`;
+    let bitmarkUrl = config.web_app_server_url + `/s/api/mobile/confirmations`;
     fetch(bitmarkUrl, {
       method: 'POST',
       headers: {
