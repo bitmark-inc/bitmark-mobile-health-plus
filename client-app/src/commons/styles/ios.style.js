@@ -51,5 +51,5 @@ export default StyleSheet.create({
     color: '#0060F2',
     marginRight: 19,
     textAlign: 'right',
-  },
+  }
 });

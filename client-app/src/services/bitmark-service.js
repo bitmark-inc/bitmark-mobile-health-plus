@@ -182,14 +182,14 @@ const doCheckMetadata = (metadataList) => {
   });
 };
 
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity) => {
+const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
   let metadata = {};
   metadataList.forEach(item => {
     if (item.label && item.value) {
       metadata[item.label] = item.value;
     }
   });
-  return await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, assetName, metadata, quantity);
+  return await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {

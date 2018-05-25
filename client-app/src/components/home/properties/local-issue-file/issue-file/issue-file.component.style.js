@@ -64,6 +64,84 @@ export default StyleSheet.create({
     lineHeight: 14,
   },
 
+  assetTypeLabel: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 16,
+    lineHeight: 19,
+    marginLeft: convertWidth(19),
+    marginTop: 20,
+    height: 28,
+  },
+
+  helpIcon: {
+    width: 10,
+    height: 10,
+    resizeMode: 'contain',
+    marginTop: 25,
+    marginLeft: 5,
+  },
+
+  assetTypeTypeInfo: {
+    fontFamily: 'Avenir Light',
+    fontWeight: '300',
+    fontSize: 14,
+    marginLeft: convertWidth(19),
+    marginTop: 5,
+  },
+
+  assetTypeChooser: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: convertWidth(19),
+    marginRight: convertWidth(19),
+    borderColor: '#0060F2',
+    borderWidth: 1
+  },
+  
+  assetTypeActiveButton: {
+    backgroundColor: '#0060F2',
+    width: '50%',
+    height: 25,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  assetTypeActiveButtonText: {
+    fontFamily: 'Avenir Light',
+    color: '#FFFFFF',
+    fontSize: 12
+  },
+
+  assetTypeInActiveButton: {
+    backgroundColor: '#FFFFFF',
+    width: '50%',
+    height: 25,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  assetTypeInActiveButtonText: {
+    fontFamily: 'Avenir Light',
+    color: 'rgba(0, 96, 242, 0.6)',
+    fontSize: 12
+  },
+
+  assetTypeHelper: {
+    flex: 1,
+    marginTop: 10,
+    marginLeft: convertWidth(19),
+    marginRight: convertWidth(19)
+  },
+
+  assetTypeHelperLinkText: {
+    fontFamily: 'Avenir Black',
+    fontSize: 12,
+    color: '#0060F2'
+  },
+
   assetNameLabel: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',

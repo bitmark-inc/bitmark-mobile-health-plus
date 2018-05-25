@@ -635,8 +635,8 @@ const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer, ) => {
   return activeIncomingTransferOffers;
 };
 
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity) => {
-  let result = await BitmarkService.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity);
+const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
+  let result = await BitmarkService.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset);
   let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
   await runGetLocalBitmarksInBackground(donationInformation);
   return result;
