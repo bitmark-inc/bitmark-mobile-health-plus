@@ -226,8 +226,8 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     paddingLeft: convertWidth(28),
     paddingRight: convertWidth(19),
-    paddingTop: 19,
-    paddingBottom: 19,
+    paddingTop: 22,
+    paddingBottom: 22,
   },
   trackingRowAssetName: {
     fontFamily: 'Avenir Black',
@@ -237,7 +237,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   trackingRowUpdated: {
-    marginTop: 7,
+    marginTop: 10,
     fontFamily: 'Andale Mono',
     fontSize: 14,
     lineHeight: 16,

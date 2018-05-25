@@ -317,7 +317,7 @@ export class AssetsComponent extends React.Component {
                 return (<TouchableOpacity style={[assetsStyle.trackingRow]} onPress={() => {
                   this.props.screenProps.homeNavigation.navigate('LocalPropertyDetail', { asset: item.asset, bitmark: item });
                 }} >
-                  {!item.isViewed && <View style={[assetsStyle.newItem, { top: 20 }]}></View>}
+                  {!item.isViewed && <View style={[assetsStyle.newItem, { top: 22 }]}></View>}
                   <Text style={assetsStyle.trackingRowAssetName}>{item.asset.name}</Text>
                   <Text style={assetsStyle.trackingRowUpdated}>
                     {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + moment(item.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}
