@@ -141,12 +141,12 @@ const doCheckFileToIssue = async (filePath) => {
   return await processing(BitmarkService.doCheckFileToIssue(filePath));
 };
 
-const doIssueFile = async (filePath, assetName, metadataList, quantity, processingInfo, successInfo) => {
+const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo, successInfo) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to issue bitmarks.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity), processingInfo, successInfo);
+  return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset), processingInfo, successInfo);
 };
 
 const doGetProvenance = async (bitmark) => {

@@ -9,6 +9,7 @@ import {
   LocalIssueFileComponent,
   LocalIssueFileEditLabelComponent,
   IftttActiveComponent,
+  AssetTypeHelpComponent,
 } from './properties';
 
 import { TransactionDetailComponent } from './transactions';
@@ -30,6 +31,7 @@ let HomeComponent = StackNavigator({
   LocalPropertyDetail: { screen: LocalPropertyDetailComponent, },
   LocalPropertyTransfer: { screen: LocalPropertyTransferComponent, },
   LocalIssueFile: { screen: LocalIssueFileComponent, },
+  AssetTypeHelp: { screen: AssetTypeHelpComponent},
   LocalIssueFileEditLabel: { screen: LocalIssueFileEditLabelComponent, },
 
   TransactionDetail: { screen: TransactionDetailComponent, },

@@ -188,6 +188,48 @@ const doGetAssetAccessibility = (assetId) => {
   });
 };
 
+const doGetAssetTextContent = (assetId) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    fetch(config.preview_asset_url + `/${assetId}`, {
+      method: 'GET'
+    }).then((response) => {
+      statusCode = response.status;
+      return response.text();
+    }).then((data) => {
+      if (statusCode === 404) {
+        return resolve();
+      }
+      if (statusCode >= 400) {
+        return reject(new Error('getAssetInfo error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doGetAssetTextContentType = (assetId) => {
+  return new Promise((resolve, reject) => {
+    fetch(config.preview_asset_url + `/${assetId}`, {
+      method: 'HEAD'
+    }).then((response) => {
+      let contentType;
+      let contentTypeHeader = response.headers.get('content-type');
+
+      if (contentTypeHeader) {
+        if (contentTypeHeader.startsWith('text/plain')) {
+          contentType = 'text';
+        } else if (contentTypeHeader.startsWith('image/')) {
+          contentType = 'image';
+        }
+      }
+
+      return resolve(contentType);
+    }).catch(() => {
+      resolve();
+    });
+  });
+};
 
 const doPrepareAssetInfo = async (filePath) => {
   return await BitmarkSDK.getAssetInfo(filePath);
@@ -197,8 +239,8 @@ const doCheckMetadata = async (metadata) => {
   return await BitmarkSDK.validateMetadata(metadata);
 };
 
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadata, quantity) => {
-  let result = await BitmarkSDK.issueFile(touchFaceIdSession, filePath, assetName, metadata, quantity);
+const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset) => {
+  let result = await BitmarkSDK.issueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
   return result;
 };
 
@@ -429,6 +471,8 @@ let BitmarkModel = {
   doGet100Transactions,
   doGetListBitmarks,
   doGetAssetAccessibility,
+  doGetAssetTextContentType,
+  doGetAssetTextContent,
 
   doAddTrackingBitmark,
   doStopTrackingBitmark,
