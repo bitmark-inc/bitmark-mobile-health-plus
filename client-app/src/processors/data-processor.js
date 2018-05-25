@@ -330,6 +330,11 @@ const doReloadIncomingTransferOffers = async () => {
   return activeIncomingTransferOffers;
 };
 
+const doReloadLocalBitmarks = async () => {
+  let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
+  return await runGetLocalBitmarksInBackground(donationInformation);
+};
+
 const configNotification = () => {
   const onRegistered = async (registeredNotificationInfo) => {
     let notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
@@ -931,6 +936,7 @@ const DataProcessor = {
   doLogout,
   doStartBackgroundProcess,
   doReloadUserData,
+  doReloadLocalBitmarks,
   doReloadDonationInformation,
   doReloadTrackingBitmark,
   doReloadIncomingTransferOffers,

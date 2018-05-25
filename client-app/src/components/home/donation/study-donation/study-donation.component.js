@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Image, Text, TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 import { BitmarkComponent } from './../../../../commons/components';
@@ -44,17 +45,18 @@ export class StudyDonationComponent extends React.Component {
               <TouchableOpacity style={donationStyles.bitmarkButton} onPress={() => {
                 AppProcessor.doDonateHealthData(this.state.study, this.state.list, {
                   indicator: true, title: 'Transferring your encrypted data to the researcher...', message: ''
-                }, {
-                    indicator: false, title: 'Donation Successful!', message: 'Thank you for donating your data to help current and future generations!'
-                  }).then((result) => {
-                    if (result) {
-                      DataProcessor.doReloadUserData();
-                      this.props.navigation.goBack();
-                    }
-                  }).catch(error => {
-                    console.log('doDonateHealthData error:', error);
-                    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: () => this.props.navigation.goBack() });
-                  });
+                }).then((result) => {
+                  if (result) {
+                    DataProcessor.doReloadUserData();
+                    Alert.alert('Donation Successful!', 'Thank you for donating your data to help current and future generations!', [{
+                      text: 'OK',
+                      onPress: () => this.props.navigation.goBack()
+                    }]);
+                  }
+                }).catch(error => {
+                  console.log('doDonateHealthData error:', error);
+                  EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: () => this.props.navigation.goBack() });
+                });
               }}>
                 <Text style={donationStyles.bitmarkButtonText}>DONATE</Text>
               </TouchableOpacity>

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Image, Text, TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -43,28 +44,30 @@ export class HealthDataBitmarkComponent extends React.Component {
           <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
             AppProcessor.doBitmarkHealthData(this.state.list, {
               indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
-            }, {
-                indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
-
-              }).then((result) => {
-                if (result !== null) {
-                  DataProcessor.doReloadUserData();
-                  const resetHomePage = NavigationActions.reset({
-                    index: 0,
-                    actions: [
-                      NavigationActions.navigate({
-                        routeName: 'User', params: {
-                          displayedTab: { mainTab: BottomTabsComponent.transaction, subTab: 'HISTORY' },
-                        }
-                      }),
-                    ]
-                  });
-                  this.props.navigation.dispatch(resetHomePage);
-                }
-              }).catch(error => {
-                console.log('doBitmarkHealthData error:', error);
-                EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
-              })
+            }).then((result) => {
+              if (result !== null) {
+                DataProcessor.doReloadUserData();
+                Alert.alert('Issuance Successful!', 'Now you’ve created your property. Let’s verify that your property is showing up in your account.', [{
+                  text: 'OK',
+                  onPress: () => {
+                    const resetHomePage = NavigationActions.reset({
+                      index: 0,
+                      actions: [
+                        NavigationActions.navigate({
+                          routeName: 'User', params: {
+                            displayedTab: { mainTab: BottomTabsComponent.transaction, subTab: 'HISTORY' },
+                          }
+                        }),
+                      ]
+                    });
+                    this.props.navigation.dispatch(resetHomePage);
+                  }
+                }]);
+              }
+            }).catch(error => {
+              console.log('doBitmarkHealthData error:', error);
+              EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+            })
           }}>
             <Text style={bitmarkHealthStyles.bitmarkButtonText}>ISSUE</Text>
           </TouchableOpacity>

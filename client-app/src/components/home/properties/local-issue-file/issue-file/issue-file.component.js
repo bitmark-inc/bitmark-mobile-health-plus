@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, Image, TextInput, FlatList, TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -71,29 +72,31 @@ export class LocalIssueFileComponent extends React.Component {
   onIssueFile() {
     AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), {
       indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
-    }, {
-        indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
-      }).then((data) => {
-        if (data !== null) {
-          // Remove temp asset file
-          FileUtil.removeSafe(this.state.filePath);
-
-          const resetHomePage = NavigationActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'User', params: {
-                  displayedTab: { mainTab: 'Properties' },
-                }
-              }),
-            ]
-          });
-          this.props.navigation.dispatch(resetHomePage);
-        }
-      }).catch(error => {
-        this.setState({ issueError: 'There was a problem issuing bitmarks. Please try again.' });
-        console.log('issue bitmark error :', error);
-      });
+    }).then((data) => {
+      if (data !== null) {
+        // Remove temp asset file
+        FileUtil.removeSafe(this.state.filePath);
+        Alert.alert('Issuance Successful!', 'Now you’ve created your property. Let’s verify that your property is showing up in your account.', [{
+          text: 'OK',
+          onPress: () => {
+            const resetHomePage = NavigationActions.reset({
+              index: 0,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: 'User', params: {
+                    displayedTab: { mainTab: 'Properties' },
+                  }
+                }),
+              ]
+            });
+            this.props.navigation.dispatch(resetHomePage);
+          }
+        }]);
+      }
+    }).catch(error => {
+      this.setState({ issueError: 'There was a problem issuing bitmarks. Please try again.' });
+      console.log('issue bitmark error :', error);
+    });
   }
 
   doInputAssetName(assetName) {

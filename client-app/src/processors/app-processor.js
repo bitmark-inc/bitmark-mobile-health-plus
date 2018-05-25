@@ -42,31 +42,13 @@ let processing = (promise) => {
   });
 };
 
-let submitting = (promise, processingData, successData, errorData) => {
+let submitting = (promise, processingData) => {
   EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, processingData || { indicator: true });
   return new Promise((resolve, reject) => {
     commonProcess(promise, (data) => {
-      if (successData) {
-        EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, successData);
-        setTimeout(() => {
-          EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, null);
-          resolve(data);
-        }, 2000);
-      } else {
-        EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, null);
-        resolve(data);
-      }
+      resolve(data);
     }, (error) => {
-      if (errorData) {
-        EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, errorData);
-        setTimeout(() => {
-          EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, null);
-          reject(error);
-        }, 2000);
-      } else {
-        EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, null);
-        reject(error);
-      }
+      reject(error);
     });
   });
 };
@@ -141,12 +123,12 @@ const doCheckFileToIssue = async (filePath) => {
   return await processing(BitmarkService.doCheckFileToIssue(filePath));
 };
 
-const doIssueFile = async (filePath, assetName, metadataList, quantity, processingInfo, successInfo) => {
+const doIssueFile = async (filePath, assetName, metadataList, quantity, processingInfo) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to issue bitmarks.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity), processingInfo, successInfo);
+  return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity), processingInfo);
 };
 
 const doGetProvenance = async (bitmark) => {
@@ -161,20 +143,20 @@ const doTransferBitmark = async (bitmark, receiver) => {
   return await processing(DataProcessor.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
 };
 
-const doAcceptTransferBitmark = async (transferOffer, processingInfo, successInfo, errorInfo) => {
+const doAcceptTransferBitmark = async (transferOffer, processingInfo) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doAcceptTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
+  return await submitting(DataProcessor.doAcceptTransferBitmark(touchFaceIdSession, transferOffer), processingInfo);
 };
 
-const doAcceptAllTransfers = async (transferOffers, processingInfo, successInfo, errorInfo) => {
+const doAcceptAllTransfers = async (transferOffers, processingInfo) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doAcceptAllTransfers(touchFaceIdSession, transferOffers), processingInfo, successInfo, errorInfo);
+  return await submitting(DataProcessor.doAcceptAllTransfers(touchFaceIdSession, transferOffers), processingInfo);
 };
 
 
@@ -186,12 +168,12 @@ const doCancelTransferBitmark = async (transferOfferId) => {
   return await processing(DataProcessor.doCancelTransferBitmark(touchFaceIdSession, transferOfferId));
 };
 
-const doRejectTransferBitmark = async (transferOffer, processingInfo, successInfo, errorInfo) => {
+const doRejectTransferBitmark = async (transferOffer, processingInfo) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doRejectTransferBitmark(touchFaceIdSession, transferOffer), processingInfo, successInfo, errorInfo);
+  return await submitting(DataProcessor.doRejectTransferBitmark(touchFaceIdSession, transferOffer), processingInfo);
 };
 
 
@@ -250,19 +232,19 @@ const doCompletedStudyTask = async (study, taskType, result) => {
   }
   return await processing(DataProcessor.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
 };
-const doDonateHealthData = async (study, list, processingData, successData) => {
+const doDonateHealthData = async (study, list, processingData) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to donate your health data.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doDonateHealthData(touchFaceIdSession, study, list), processingData, successData);
+  return await submitting(DataProcessor.doDonateHealthData(touchFaceIdSession, study, list), processingData);
 };
-const doBitmarkHealthData = async (list, processingData, successData) => {
+const doBitmarkHealthData = async (list, processingData) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to bitmark your weekly health data.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doBitmarkHealthData(touchFaceIdSession, list), processingData, successData);
+  return await submitting(DataProcessor.doBitmarkHealthData(touchFaceIdSession, list), processingData);
 };
 const doDownloadStudyConsent = async (study) => {
   return await processing(DonationService.doDownloadStudyConsent(study));
@@ -298,12 +280,12 @@ const doRevokeIftttToken = async () => {
   }
   return await processing(DataProcessor.doRevokeIftttToken(touchFaceIdSession));
 };
-const doIssueIftttData = async (iftttBitmarkFile, processingInfo, successInfo) => {
+const doIssueIftttData = async (iftttBitmarkFile, processingInfo) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to issuance.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doIssueIftttData(touchFaceIdSession, iftttBitmarkFile), processingInfo, successInfo);
+  return await submitting(DataProcessor.doIssueIftttData(touchFaceIdSession, iftttBitmarkFile), processingInfo);
 };
 
 const doMigrateWebAccount = async (token) => {

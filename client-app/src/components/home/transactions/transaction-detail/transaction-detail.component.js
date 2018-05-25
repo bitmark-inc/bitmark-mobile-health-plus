@@ -51,55 +51,57 @@ export class TransactionDetailComponent extends React.Component {
       text: 'Yes',
       onPress: () => {
         AppProcessor.doRejectTransferBitmark(this.state.transferOffer, { indicator: true, }, {
-          indicator: false, title: 'Transfer Rejected!', message: 'You’ve rejected the bitmark transfer request! '
-        }, {
-            indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.'
-          }).then(data => {
-            if (data) {
-              const resetHomePage = NavigationActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'User', params: {
-                      displayedTab: { mainTab: BottomTabsComponent.MainTabs.transaction, subTab: 'ACTION REQUIRED' },
-                    }
-                  }),
-                ]
-              });
-              this.props.navigation.dispatch(resetHomePage);
-            }
-          }).catch(error => {
-            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
-            console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
-          });
+          indicator: false, title: '', message: ''
+        }).then(data => {
+          if (data) {
+            Alert.alert('Transfer Rejected!', 'You’ve rejected the bitmark transfer request!', [{
+              text: 'OK',
+              onPress: () => {
+                const resetHomePage = NavigationActions.reset({
+                  index: 0,
+                  actions: [
+                    NavigationActions.navigate({
+                      routeName: 'User', params: {
+                        displayedTab: { mainTab: BottomTabsComponent.MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                      }
+                    }),
+                  ]
+                });
+                this.props.navigation.dispatch(resetHomePage);
+              }
+            }]);
+          }
+        }).catch(error => {
+          Alert.alert('Request Failed', 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.');
+          console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
+        });
       },
     }]);
   }
   doAccept() {
-    AppProcessor.doAcceptTransferBitmark(this.state.transferOffer, {
-      indicator: true,
-    }, {
-        indicator: false, title: 'Acceptance Submitted', message: 'Your signature for the transfer request has been successfully submitted to the Bitmark network.'
-      }, {
-        indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.'
-      }).then(data => {
-        if (data) {
-          const resetHomePage = NavigationActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'User', params: {
-                  displayedTab: { mainTab: BottomTabsComponent.MainTabs.properties },
-                }
-              }),
-            ]
-          });
-          this.props.navigation.dispatch(resetHomePage);
-        }
-      }).catch(error => {
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
-        console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
-      });
+    AppProcessor.doAcceptTransferBitmark(this.state.transferOffer, { indicator: true, }).then(data => {
+      if (data) {
+        Alert.alert('Acceptance Submitted', 'Your signature for the transfer request has been successfully submitted to the Bitmark network.', [{
+          text: 'OK',
+          onPress: () => {
+            const resetHomePage = NavigationActions.reset({
+              index: 0,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: 'User', params: {
+                    displayedTab: { mainTab: BottomTabsComponent.MainTabs.properties },
+                  }
+                }),
+              ]
+            });
+            this.props.navigation.dispatch(resetHomePage);
+          }
+        }]);
+      }
+    }).catch(error => {
+      Alert.alert('Request Failed', 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.');
+      console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
+    });
   }
 
   render() {

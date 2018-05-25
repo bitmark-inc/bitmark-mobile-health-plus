@@ -165,16 +165,15 @@ export class TransactionsComponent extends React.Component {
     } else if (item.type === ActionTypes.ifttt) {
       AppProcessor.doIssueIftttData(item, {
         indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
-      }, {
-          indicator: false, title: 'Issuance Successful!', message: 'Now you’ve created your property. Let’s verify that your property is showing up in your account.'
-        }).then(result => {
-          if (result) {
-            DataProcessor.doReloadUserData();
-          }
-        }).catch(error => {
-          console.log('doStudyTask error:', error);
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
-        });
+      }).then(result => {
+        if (result) {
+          DataProcessor.doReloadUserData();
+          Alert.alert('Issuance Successful!', 'Now you’ve created your property. Let’s verify that your property is showing up in your account.');
+        }
+      }).catch(error => {
+        console.log('doStudyTask error:', error);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+      });
     }
   }
 
@@ -199,15 +198,13 @@ export class TransactionsComponent extends React.Component {
       }, {
         text: 'Yes',
         onPress: () => {
-          AppProcessor.doAcceptAllTransfers(transferOffers, { indicator: true, }, {
-            indicator: false, title: 'Acceptance Submitted', message: 'Your signature for the transfer requests have been successfully submitted to the Bitmark network.'
-          }, { indicator: false, title: 'Request Failed', message: 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.' }, result => {
+          AppProcessor.doAcceptAllTransfers(transferOffers, { indicator: true, }, result => {
             if (result) {
-              DataProcessor.doReloadIncomingTransferOffers();
+              Alert.alert('Acceptance Submitted', 'Your signature for the transfer request has been successfully submitted to the Bitmark network.');
             }
           }).catch(error => {
             console.log('acceptAllTransfers error:', error);
-            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+            Alert.alert('Request Failed', 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.');
           });
         }
       }]);
