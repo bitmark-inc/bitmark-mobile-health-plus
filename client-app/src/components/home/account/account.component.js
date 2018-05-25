@@ -11,6 +11,7 @@ import accountStyle from './account.component.style';
 
 import defaultStyle from './../../../commons/styles';
 import { DataProcessor, AppProcessor } from '../../../processors';
+import { config } from '../../../configs';
 
 const SubTabs = {
   settings: 'SETTINGS',
@@ -199,13 +200,13 @@ export class AccountDetailComponent extends React.Component {
                 <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device »'.toUpperCase()} </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountMigrate') }}>
+              {config.network !== config.NETWORKS.livenet && <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountMigrate') }}>
                 <Text style={accountStyle.accountRemoveButtonText}>{'MIGRATE WEB ACCOUNT »'.toUpperCase()} </Text>
-              </TouchableOpacity>
+              </TouchableOpacity>}
 
-              <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountSignIn') }}>
+              {config.network !== config.NETWORKS.livenet &&<TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountSignIn') }}>
                 <Text style={accountStyle.accountRemoveButtonText}>{'SIGN IN USING MOBILE APP »'.toUpperCase()} </Text>
-              </TouchableOpacity>
+              </TouchableOpacity>}
             </View>}
 
             {this.state.subTab === SubTabs.authorized && <View style={accountStyle.contentSubTab}>

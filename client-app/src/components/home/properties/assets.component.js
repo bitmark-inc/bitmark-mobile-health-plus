@@ -316,7 +316,7 @@ export class AssetsComponent extends React.Component {
                   {!item.isViewed && <View style={[assetsStyle.newItem, { top: 20 }]}></View>}
                   <Text style={assetsStyle.trackingRowAssetName}>{item.asset.name}</Text>
                   <Text style={assetsStyle.trackingRowUpdated}>
-                    {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + moment(item.created_at).format('YYYY MM DD HH:mm:ss').toUpperCase())}
+                    {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + moment(item.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}
                   </Text>
                   <Text style={assetsStyle.trackingRowCurrentOwner}>CURRENT OWNER: {item.owner === DataProcessor.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
                     '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'
