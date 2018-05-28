@@ -80,6 +80,16 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>ResearchKit-Font-Normal</key>
+	<string>Avenir</string>
+  <key>ResearchKit-Font-Light</key>
+  <string>Avenir-Light</string>
+  <key>ResearchKit-Font-Medium</key>
+  <string>Avenir-Medium</string>
+  <key>ResearchKit-Font-Thin</key>
+  <string>Avenir-Light</string>
+  <key>ResearchKit-Font-Bold</key>
+  <string>Avenir-Black</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

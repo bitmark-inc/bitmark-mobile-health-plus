@@ -31,6 +31,7 @@
 
 #import "ORKFootnoteLabel.h"
 #import "ORKSkin.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKFootnoteLabel
@@ -38,7 +39,7 @@
 + (UIFont *)defaultFont {
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleFootnote];
     const CGFloat defaultSize = 12;
-    return [UIFont systemFontOfSize:[[descriptor objectForKey:UIFontDescriptorSizeAttribute] doubleValue] - defaultSize + ORKGetMetricForWindow(ORKScreenMetricFontSizeFootnote, nil)];
+    return ORKDefaultFontWithSize([[descriptor objectForKey:UIFontDescriptorSizeAttribute] doubleValue] - defaultSize + ORKGetMetricForWindow(ORKScreenMetricFontSizeFootnote, nil));
 }
 
 @end

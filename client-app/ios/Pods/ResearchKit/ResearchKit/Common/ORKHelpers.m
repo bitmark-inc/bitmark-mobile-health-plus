@@ -378,11 +378,28 @@ CGFloat ORKTableViewLeftMargin(UITableView *tableView) {
     }
 }
 
+UIFont *ORKBoldFontWithSize(CGFloat size) {
+    UIFont *font = nil;
+    NSString *researchKitFont = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"ResearchKit-Font-Bold"];
+    if (researchKitFont) {
+        font = [UIFont fontWithName:researchKitFont size:size];
+    }
+    else {
+        font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:size];
+        if (!font) {
+            font = [UIFont boldSystemFontOfSize:size];
+        }
+    }
+    return font;
+}
+
 UIFont *ORKThinFontWithSize(CGFloat size) {
     UIFont *font = nil;
-    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 8, .minorVersion = 2, .patchVersion = 0}]) {
-        font = [UIFont systemFontOfSize:size weight:UIFontWeightThin];
-    } else {
+    NSString *researchKitFont = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"ResearchKit-Font-Thin"];
+    if (researchKitFont) {
+        font = [UIFont fontWithName:researchKitFont size:size];
+    }
+    else {
         font = [UIFont fontWithName:@".HelveticaNeueInterface-Thin" size:size];
         if (!font) {
             font = [UIFont systemFontOfSize:size];
@@ -393,9 +410,11 @@ UIFont *ORKThinFontWithSize(CGFloat size) {
 
 UIFont *ORKMediumFontWithSize(CGFloat size) {
     UIFont *font = nil;
-    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 8, .minorVersion = 2, .patchVersion = 0}]) {
-        font = [UIFont systemFontOfSize:size weight:UIFontWeightMedium];
-    } else {
+    NSString *researchKitFont = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"ResearchKit-Font-Medium"];
+    if (researchKitFont) {
+        font = [UIFont fontWithName:researchKitFont size:size];
+    }
+    else {
         font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:size];
         if (!font) {
             font = [UIFont systemFontOfSize:size];
@@ -406,15 +425,27 @@ UIFont *ORKMediumFontWithSize(CGFloat size) {
 
 UIFont *ORKLightFontWithSize(CGFloat size) {
     UIFont *font = nil;
-    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 8, .minorVersion = 2, .patchVersion = 0}]) {
-        font = [UIFont systemFontOfSize:size weight:UIFontWeightLight];
-    } else {
+    NSString *researchKitFont = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"ResearchKit-Font-Light"];
+    if (researchKitFont) {
+        font = [UIFont fontWithName:researchKitFont size:size];
+    }
+    else {
         font = [UIFont fontWithName:@".HelveticaNeueInterface-Light" size:size];
         if (!font) {
             font = [UIFont systemFontOfSize:size];
         }
     }
     return font;
+}
+
+UIFont *ORKDefaultFontWithSize(CGFloat size) {
+    NSString *researchKitFont = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"ResearchKit-Font-Normal"];
+    if (researchKitFont) {
+        return [UIFont fontWithName:researchKitFont size:size];
+    }
+    else {
+        return [UIFont systemFontOfSize:size];
+    }
 }
 
 NSURL *ORKURLFromBookmarkData(NSData *data) {

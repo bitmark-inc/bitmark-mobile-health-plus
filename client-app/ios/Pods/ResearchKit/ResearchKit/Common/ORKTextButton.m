@@ -30,6 +30,7 @@
 
 
 #import "ORKTextButton.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKTextButton
@@ -91,7 +92,7 @@
 + (UIFont *)defaultFont {
     // regular, 14
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleCaption1];
-    return [UIFont systemFontOfSize:((NSNumber *)[descriptor objectForKey: UIFontDescriptorSizeAttribute]).doubleValue + 2.0];
+    return ORKDefaultFontWithSize(((NSNumber *)[descriptor objectForKey: UIFontDescriptorSizeAttribute]).doubleValue + 2.0);
 }
 
 - (CGSize)intrinsicContentSize {

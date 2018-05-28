@@ -30,13 +30,14 @@
 
 
 #import "ORKScaleRangeLabel.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKScaleRangeLabel
 
 + (UIFont *)defaultFont {
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleHeadline];
-    return [UIFont systemFontOfSize:[[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue]];
+    return ORKDefaultFontWithSize([[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue]);
 }
 
 @end

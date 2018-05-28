@@ -30,13 +30,14 @@
 
 
 #import "ORKFormTextView.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKFormTextView
 
 + (UIFont *)defaultFont {
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleSubheadline];
-    return [UIFont systemFontOfSize:((NSNumber *)[descriptor objectForKey:UIFontDescriptorSizeAttribute]).doubleValue + 2.0];
+    return ORKDefaultFontWithSize(((NSNumber *)[descriptor objectForKey:UIFontDescriptorSizeAttribute]).doubleValue + 2.0);
 }
 
 @end

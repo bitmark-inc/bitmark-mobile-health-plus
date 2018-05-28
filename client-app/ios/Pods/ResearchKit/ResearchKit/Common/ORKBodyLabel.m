@@ -30,6 +30,7 @@
 
 
 #import "ORKBodyLabel.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKBodyLabel
@@ -37,7 +38,7 @@
 + (UIFont *)defaultFont {
     // Unused
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
-    return [UIFont systemFontOfSize:[[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue]];
+    return ORKDefaultFontWithSize([[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue]);
 }
 
 @end
