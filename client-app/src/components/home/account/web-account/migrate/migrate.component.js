@@ -33,7 +33,7 @@ export class WebAccountMigrateComponent extends React.Component {
     super(props);
 
     this.state = {
-      step: STEPS.confirm,
+      step: STEPS.scan,
       userInformation: DataProcessor.getUserInformation(),
       token: '',
     };
