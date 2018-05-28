@@ -46,8 +46,10 @@ let submitting = (promise, processingData) => {
   EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, processingData || { indicator: true });
   return new Promise((resolve, reject) => {
     commonProcess(promise, (data) => {
+      EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, null);
       resolve(data);
     }, (error) => {
+      EventEmitterService.emit(EventEmitterService.events.APP_SUBMITTING, null);
       reject(error);
     });
   });
