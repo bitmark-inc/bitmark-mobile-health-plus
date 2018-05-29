@@ -113,13 +113,14 @@ const BitmarkSDK = {
     });
   },
 
-  issueFile: (sessionId, filePath, property_name, metadata, quantity) => {
+  issueFile: (sessionId, filePath, propertyName, metadata, quantity, isPublicAsset) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.issueFile(sessionId, {
         url: filePath,
-        property_name,
+        property_name: propertyName,
         metadata,
         quantity,
+        is_public_asset: isPublicAsset
       }, (ok, results) => {
         if (ok && results) {
           resolve(results);

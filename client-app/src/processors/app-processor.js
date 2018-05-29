@@ -64,8 +64,8 @@ const doCheckFileToIssue = async (filePath) => {
   return executeTask('doGetTransferOfferDetail', { filePath });
 };
 
-const doIssueFile = async (filePath, assetName, metadataList, quantity, processingInfo) => {
-  return executeTask('doGetProvenance', { filePath, assetName, metadataList, quantity, processingInfo });
+const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo) => {
+  return executeTask('doGetProvenance', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
 };
 
 const doGetProvenance = async (bitmark) => {

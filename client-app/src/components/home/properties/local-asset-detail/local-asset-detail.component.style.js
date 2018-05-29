@@ -214,6 +214,12 @@ export default StyleSheet.create({
     fontWeight: '900',
     color: '#CCCCCC',
     fontStyle: 'italic'
+  },
+  
+  assetPreview: {
+    marginLeft: convertWidth(19),
+    marginRight: convertWidth(19),
+    height: 125
   }
 
 });

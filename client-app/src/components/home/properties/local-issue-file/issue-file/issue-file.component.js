@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, Image, TextInput, FlatList, TouchableWithoutFeedback,
-  Keyboard,
   Alert,
+  Keyboard,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -27,6 +27,7 @@ export class LocalIssueFileComponent extends React.Component {
     this.addNewMetadataField = this.addNewMetadataField.bind(this);
 
     this.doInputQuantity = this.doInputQuantity.bind(this);
+    this.toggleAssetType = this.toggleAssetType.bind(this);
 
     if (!this.props.navigation.state || !this.props.navigation.state.params) {
       this.props.navigation.state = {
@@ -37,6 +38,7 @@ export class LocalIssueFileComponent extends React.Component {
     }
     let metadataList = [];
     let { asset, fingerprint, fileName, fileFormat, filePath } = this.props.navigation.state.params;
+    let assetAccessibility;
     let existingAsset = !!(asset && asset.name);
     if (existingAsset) {
       let key = 0;
@@ -44,9 +46,14 @@ export class LocalIssueFileComponent extends React.Component {
         metadataList.push({ key, label, value: asset.metadata[label] });
         key++;
       }
+      assetAccessibility = asset.accessibility;
+    } else {
+      assetAccessibility = 'private';
     }
+
     this.state = {
       existingAsset,
+      assetAccessibility,
       fingerprint,
       metadataList,
       filePath,
@@ -70,7 +77,8 @@ export class LocalIssueFileComponent extends React.Component {
   // ==========================================================================================
   // ==========================================================================================
   onIssueFile() {
-    AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), {
+    let isPublicAsset = this.state.assetAccessibility === 'public' ? true : false;
+    AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), isPublicAsset, {
       indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
     }).then((data) => {
       if (data !== null) {
@@ -182,6 +190,15 @@ export class LocalIssueFileComponent extends React.Component {
     this.checkIssuance(this.state.assetName, this.state.metadataList, quantity);
   }
 
+  toggleAssetType(accessibility) {
+    if (accessibility === this.state.assetAccessibility) return;
+
+    this.setState({
+      assetAccessibility: this.state.assetAccessibility === 'public' ? 'private' : 'public'
+    });
+  }
+
+
   render() {
     return (
       <TouchableWithoutFeedback onPress={(event) => { event.stopPropagation(); Keyboard.dismiss(); }}>
@@ -205,6 +222,56 @@ export class LocalIssueFileComponent extends React.Component {
                 <Text style={localAddPropertyStyle.fingerprintInfoFilename} numberOfLines={1} >{this.state.fileName}</Text>
                 <Text style={localAddPropertyStyle.fingerprintInfoFileFormat}>{this.state.fileFormat}</Text>
               </View>
+
+              <View>
+                {/*Asset Type Label*/}
+                <View style={{ flex: 1, flexDirection: 'row', height: '100%' }}>
+                  <Text style={localAddPropertyStyle.assetTypeLabel}>ASSET TYPE</Text>
+                  {this.state.existingAsset &&
+                    <TouchableOpacity onPress={() => {
+                      this.props.navigation.navigate('AssetTypeHelp');
+                    }}>
+                      <Image style={localAddPropertyStyle.helpIcon} source={require('./../../../../../../assets/imgs/icon_help.png')} />
+                    </TouchableOpacity>
+                  }
+                </View>
+
+                {/* Asset Type Value / Chooser */}
+                {this.state.existingAsset ? (
+                  // Asset Type value
+                  <Text style={localAddPropertyStyle.assetTypeTypeInfo}>{this.state.assetAccessibility.charAt(0).toUpperCase() + this.state.assetAccessibility.slice(1)} asset</Text>
+                ) : (
+                    <View>
+                      {/*Asset Type chooser*/}
+                      <View style={localAddPropertyStyle.assetTypeChooser}>
+                        <TouchableOpacity onPress={() => this.toggleAssetType('private')}
+                          style={this.state.assetAccessibility !== 'public' ? localAddPropertyStyle.assetTypeActiveButton : localAddPropertyStyle.assetTypeInActiveButton}>
+                          <Text style={this.state.assetAccessibility !== 'public' ? localAddPropertyStyle.assetTypeActiveButtonText : localAddPropertyStyle.assetTypeInActiveButtonText}>
+                            Private asset
+                      </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.toggleAssetType('public')}
+                          style={this.state.assetAccessibility === 'public' ? localAddPropertyStyle.assetTypeActiveButton : localAddPropertyStyle.assetTypeInActiveButton}>
+                          <Text style={this.state.assetAccessibility === 'public' ? localAddPropertyStyle.assetTypeActiveButtonText : localAddPropertyStyle.assetTypeInActiveButtonText}>
+                            Public asset
+                      </Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      {/*Asset Type helper*/}
+                      <View style={localAddPropertyStyle.assetTypeHelper}>
+                        <TouchableOpacity onPress={() => {
+                          this.props.navigation.navigate('AssetTypeHelp');
+                        }}>
+                          <Text style={localAddPropertyStyle.assetTypeHelperLinkText}>
+                            What are Private and Public assets?
+                      </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )}
+              </View>
+
               <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
               {!this.state.existingAsset && <TextInput
                 ref={(ref) => this.assetNameInputRef = ref}

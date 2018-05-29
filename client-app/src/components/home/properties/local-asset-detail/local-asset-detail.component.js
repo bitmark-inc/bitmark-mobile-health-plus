@@ -15,6 +15,7 @@ import defaultStyle from './../../../../commons/styles';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
 import { config } from './../../../../configs';
+import { BitmarkModel } from "../../../../models";
 
 let ComponentName = 'LocalAssetDetailComponent';
 export class LocalAssetDetailComponent extends React.Component {
@@ -28,6 +29,7 @@ export class LocalAssetDetailComponent extends React.Component {
 
     let asset;
     asset = this.props.navigation.state.params.asset;
+
     let bitmarks = [];
     let bitmarkCanDownload;
     asset.bitmarks.forEach((bitmark, index) => {
@@ -52,9 +54,18 @@ export class LocalAssetDetailComponent extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
     DataProcessor.doUpdateViewStatus(this.state.asset);
+
+    // Augment info for asset preview
+    let contentType = await BitmarkModel.doGetAssetTextContentType(this.state.asset.id);
+    if (contentType && contentType === 'text') {
+      let text = await BitmarkModel.doGetAssetTextContent(this.state.asset.id);
+      this.setState({assetTextContent: text});
+    }
+    
+    this.setState({contentType});
   }
 
   handerChangeLocalBitmarks() {
@@ -166,6 +177,28 @@ export class LocalAssetDetailComponent extends React.Component {
                   }}
                 />
               </View>}
+              
+              {/*Preview*/}
+              {/*Text preview*/}
+            {this.state.contentType && this.state.contentType === 'text' &&
+              <ScrollView style={assetDetailStyle.assetPreview}>
+                <TouchableOpacity style={{flex: 1}}>
+                {this.state.assetTextContent &&
+                  <Text>{this.state.assetTextContent}</Text>
+                }
+                </TouchableOpacity>
+              </ScrollView>
+            }
+              {/*Image preview*/}
+            {this.state.contentType && this.state.contentType === 'image' &&
+              <View style={assetDetailStyle.assetPreview}>
+                <Image
+                  style={{width: 125, height: 125}}
+                  source={{uri: `${config.preview_asset_url}/${this.state.asset.id}`}}
+                />
+              </View>
+            }
+
               <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
               <View style={assetDetailStyle.bitmarksArea}>
                 <View style={assetDetailStyle.bitmarksHeader}>
