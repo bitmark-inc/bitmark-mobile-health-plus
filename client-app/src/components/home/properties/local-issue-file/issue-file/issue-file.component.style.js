@@ -103,7 +103,7 @@ export default StyleSheet.create({
   assetTypeActiveButton: {
     backgroundColor: '#0060F2',
     width: '50%',
-    height: 25,
+    height: 29,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center'
@@ -112,13 +112,13 @@ export default StyleSheet.create({
   assetTypeActiveButtonText: {
     fontFamily: 'Avenir Light',
     color: '#FFFFFF',
-    fontSize: 12
+    fontSize: 17
   },
 
   assetTypeInActiveButton: {
     backgroundColor: '#FFFFFF',
     width: '50%',
-    height: 25,
+    height: 29,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center'
@@ -127,7 +127,7 @@ export default StyleSheet.create({
   assetTypeInActiveButtonText: {
     fontFamily: 'Avenir Light',
     color: 'rgba(0, 96, 242, 0.6)',
-    fontSize: 12
+    fontSize: 17
   },
 
   assetTypeHelper: {
