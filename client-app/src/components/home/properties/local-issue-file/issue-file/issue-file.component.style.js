@@ -75,20 +75,14 @@ export default StyleSheet.create({
     height: 28,
   },
 
-  helpIcon: {
-    width: 10,
-    height: 10,
-    resizeMode: 'contain',
-    marginTop: 25,
-    marginLeft: 5,
+  assetTypeTypeInfoContainer: {
+    marginLeft: convertWidth(19)
   },
 
   assetTypeTypeInfo: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
-    fontSize: 14,
-    marginLeft: convertWidth(19),
-    marginTop: 5,
+    fontSize: 17
   },
 
   assetTypeChooser: {

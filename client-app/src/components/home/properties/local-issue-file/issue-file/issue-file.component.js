@@ -230,53 +230,52 @@ export class LocalIssueFileComponent extends React.Component {
                 <Text style={localAddPropertyStyle.fingerprintInfoFileFormat}>{this.state.fileFormat}</Text>
               </View>
 
+              {/*Asset Type*/}
               <View>
                 {/*Asset Type Label*/}
-                <View style={{ flex: 1, flexDirection: 'row', height: '100%' }}>
-                  <Text style={localAddPropertyStyle.assetTypeLabel}>ASSET TYPE</Text>
-                  {this.state.existingAsset &&
+                <Text style={localAddPropertyStyle.assetTypeLabel}>ASSET TYPE</Text>
+              
+                {/* Asset Type value / Asset Type chooser */}
+              {this.state.existingAsset ? (
+                // Asset Type value
+                <View style={localAddPropertyStyle.assetTypeTypeInfoContainer}>
+                  <Text style={localAddPropertyStyle.assetTypeTypeInfo}>{this.state.assetAccessibility.charAt(0).toUpperCase() + this.state.assetAccessibility.slice(1)} asset</Text>
+                  <TouchableOpacity onPress={() => {
+                    this.props.navigation.navigate('AssetTypeHelp');
+                  }}>
+                    <Text style={localAddPropertyStyle.assetTypeHelperLinkText}>What is asset type?</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View>
+                  {/*Asset Type chooser*/}
+                  <View style={localAddPropertyStyle.assetTypeChooser}>
+                    <TouchableOpacity onPress={() => this.toggleAssetType('private')}
+                                      style={this.state.assetAccessibility !== 'public' ? localAddPropertyStyle.assetTypeActiveButton : localAddPropertyStyle.assetTypeInActiveButton}>
+                      <Text style={this.state.assetAccessibility !== 'public' ? localAddPropertyStyle.assetTypeActiveButtonText : localAddPropertyStyle.assetTypeInActiveButtonText}>
+                        Private asset
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.toggleAssetType('public')}
+                                      style={this.state.assetAccessibility === 'public' ? localAddPropertyStyle.assetTypeActiveButton : localAddPropertyStyle.assetTypeInActiveButton}>
+                      <Text style={this.state.assetAccessibility === 'public' ? localAddPropertyStyle.assetTypeActiveButtonText : localAddPropertyStyle.assetTypeInActiveButtonText}>
+                        Public asset
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  {/*Asset Type helper*/}
+                  <View style={localAddPropertyStyle.assetTypeHelper}>
                     <TouchableOpacity onPress={() => {
                       this.props.navigation.navigate('AssetTypeHelp');
                     }}>
-                      <Image style={localAddPropertyStyle.helpIcon} source={require('./../../../../../../assets/imgs/icon_help.png')} />
+                      <Text style={localAddPropertyStyle.assetTypeHelperLinkText}>
+                        What are Private and Public assets?
+                      </Text>
                     </TouchableOpacity>
-                  }
+                  </View>
                 </View>
-
-                {/* Asset Type Value / Chooser */}
-                {this.state.existingAsset ? (
-                  // Asset Type value
-                  <Text style={localAddPropertyStyle.assetTypeTypeInfo}>{this.state.assetAccessibility.charAt(0).toUpperCase() + this.state.assetAccessibility.slice(1)} asset</Text>
-                ) : (
-                    <View>
-                      {/*Asset Type chooser*/}
-                      <View style={localAddPropertyStyle.assetTypeChooser}>
-                        <TouchableOpacity onPress={() => this.toggleAssetType('private')}
-                          style={this.state.assetAccessibility !== 'public' ? localAddPropertyStyle.assetTypeActiveButton : localAddPropertyStyle.assetTypeInActiveButton}>
-                          <Text style={this.state.assetAccessibility !== 'public' ? localAddPropertyStyle.assetTypeActiveButtonText : localAddPropertyStyle.assetTypeInActiveButtonText}>
-                            Private asset
-                      </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.toggleAssetType('public')}
-                          style={this.state.assetAccessibility === 'public' ? localAddPropertyStyle.assetTypeActiveButton : localAddPropertyStyle.assetTypeInActiveButton}>
-                          <Text style={this.state.assetAccessibility === 'public' ? localAddPropertyStyle.assetTypeActiveButtonText : localAddPropertyStyle.assetTypeInActiveButtonText}>
-                            Public asset
-                      </Text>
-                        </TouchableOpacity>
-                      </View>
-
-                      {/*Asset Type helper*/}
-                      <View style={localAddPropertyStyle.assetTypeHelper}>
-                        <TouchableOpacity onPress={() => {
-                          this.props.navigation.navigate('AssetTypeHelp');
-                        }}>
-                          <Text style={localAddPropertyStyle.assetTypeHelperLinkText}>
-                            What are Private and Public assets?
-                      </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  )}
+              )}
               </View>
 
               <Text style={localAddPropertyStyle.assetNameLabel}>PROPERTY NAME</Text>
