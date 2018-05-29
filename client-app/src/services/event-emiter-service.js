@@ -9,6 +9,8 @@ let EventEmitterService = {
     APP_PROCESS_ERROR: 'app-process-error',
     APP_LOADING_DATA: 'app-load-fist-data',
     APP_RECEIVED_NOTIFICATION: 'app-received-notification',
+    APP_TASK: 'app-task:',
+
     NEED_RELOAD_USER_DATA: 'need-reload-user-data',
     CHANGE_USER_INFO: 'change-user-info',
     CHANGE_USER_DATA_LOCAL_BITMARKS: 'change-user-data:local-bitmarks',
