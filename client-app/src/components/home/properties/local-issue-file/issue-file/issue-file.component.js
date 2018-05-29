@@ -79,12 +79,12 @@ export class LocalIssueFileComponent extends React.Component {
   onIssueFile() {
     let isPublicAsset = this.state.assetAccessibility === 'public' ? true : false;
     AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), isPublicAsset, {
-      indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
+      indicator: true, title: 'Sending your transaction to the Bitmark network...', message: ''
     }).then((data) => {
       if (data !== null) {
         // Remove temp asset file
         FileUtil.removeSafe(this.state.filePath);
-        Alert.alert('Issuance Successful!', 'Now you’ve created your property. Let’s verify that your property is showing up in your account.', [{
+        Alert.alert('Success!', 'Your property rights have been registered.', [{
           text: 'OK',
           onPress: () => {
             const resetHomePage = NavigationActions.reset({
@@ -125,7 +125,7 @@ export class LocalIssueFileComponent extends React.Component {
       quantity = quantity.replace(/[^0-9]/g, '');
       let quantityNumber = parseInt(quantity);
       if (isNaN(quantityNumber) || quantityNumber <= 0) {
-        quantityError = 'You must create at least one bitmark. ';
+        quantityError = 'Create property requires a minimum quantity of 1 bitmark issuance.';
       } else if (quantityNumber > 100) {
         quantityError = 'You cannot issue more than 100 bitmarks.';
       }
@@ -388,7 +388,7 @@ export class LocalIssueFileComponent extends React.Component {
               />
               {!!this.state.quantityError && <Text style={localAddPropertyStyle.quantityInputError}>{this.state.quantityError}</Text>}
               <Text style={localAddPropertyStyle.ownershipClaimLabel}>{'Ownership claim'.toUpperCase()}</Text>
-              <Text style={localAddPropertyStyle.ownershipClaimMessage}>{'“I hereby claim that I am the legal owner of this asset and want this property to be irrevocably issued and recorded in the Bitmark blockchain.”'}</Text>
+              <Text style={localAddPropertyStyle.ownershipClaimMessage}>{'"I hereby claim that I am the legal owner of this asset and want these properties rights to be irrevocably issued and recorded on the Bitmark blockchain."'}</Text>
               {!!this.state.issueError && <Text style={localAddPropertyStyle.issueError}>{this.state.issueError}</Text>}
             </View>
           </TouchableOpacity>)}
