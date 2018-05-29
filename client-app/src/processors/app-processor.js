@@ -1,6 +1,6 @@
 import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
-import { registerTasks } from './app-functional';
+import { registerTasks } from './app-tasks-register';
 
 import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel } from './../models';
 import { AccountService, BitmarkService, EventEmitterService, TransactionService } from './../services'
@@ -43,8 +43,8 @@ let processing = (promise) => {
   });
 };
 
-const executeTask = (takKey, data) => {
-  let taskId = `${takKey}_${moment().toDate().getTime()}`;
+const executeTask = (taskKey, data) => {
+  let taskId = `${taskKey}_${moment().toDate().getTime()}`;
   data = data || {};
   data.taskId = taskId;
   return new Promise((resolve, reject) => {
@@ -56,7 +56,7 @@ const executeTask = (takKey, data) => {
         reject(error);
       }
     });
-    AppRegistry.startHeadlessTask(taskId, takKey, data);
+    AppRegistry.startHeadlessTask(taskId, taskKey, data);
   });
 }
 // ================================================================================================

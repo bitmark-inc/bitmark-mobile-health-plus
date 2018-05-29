@@ -249,7 +249,7 @@ const doSignInOnWebApp = async ({ token }) => {
 // ================================================================================================
 // ================================================================================================
 
-let AppProcessFunctional = {
+let AppTasks = {
   doLogin,
   doLogout,
   doIssueFile,
@@ -279,10 +279,10 @@ let AppProcessFunctional = {
 let registeredTasks = {};
 
 const registerTasks = () => {
-  for (let taskKey in AppProcessFunctional) {
+  for (let taskKey in AppTasks) {
     console.log('taskKey :', taskKey);
-    if (taskKey && AppProcessFunctional[taskKey] && !registeredTasks[taskKey]) {
-      const func = AppProcessFunctional[taskKey];
+    if (taskKey && AppTasks[taskKey] && !registeredTasks[taskKey]) {
+      const func = AppTasks[taskKey];
       AppRegistry.registerHeadlessTask(taskKey, () => {
         return (taskData) =>
           func(taskData).then(result => {
