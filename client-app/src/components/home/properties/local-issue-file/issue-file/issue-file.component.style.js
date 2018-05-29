@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { convertWidth } from './../../../../../utils';
 import { ios, } from './../../../../../configs';
+import { iosConstant } from '../../../../../configs/ios/ios.config';
 
 export default StyleSheet.create({
   scroll: {
@@ -98,7 +99,7 @@ export default StyleSheet.create({
     borderColor: '#0060F2',
     borderWidth: 1
   },
-  
+
   assetTypeActiveButton: {
     backgroundColor: '#0060F2',
     width: '50%',
@@ -362,16 +363,15 @@ export default StyleSheet.create({
   },
 
   issueButton: {
-    marginLeft: convertWidth(19),
-    width: convertWidth(330),
-    minHeight: 42,
+    width: convertWidth(375),
+    minHeight: 45,
     borderTopWidth: 2,
     backgroundColor: '#F5F5F5',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
-    marginBottom: 10 + ios.constant.blankFooter,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   issueButtonText: {
     fontFamily: 'Avenir Black',

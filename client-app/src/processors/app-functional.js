@@ -1,8 +1,8 @@
 import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 
-import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel } from './../models';
-import { AccountService, BitmarkService, EventEmitterService, TransactionService } from './../services'
+import { CommonModel, AccountModel, FaceTouchId, } from './../models';
+import { EventEmitterService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { ios } from '../configs';
 import { DonationService } from '../services/donation-service';
@@ -57,30 +57,6 @@ let submitting = (promise, processingData) => {
 
 // ================================================================================================
 // ================================================================================================
-const doCreateNewAccount = async () => {
-  if (Platform.OS === 'ios' && ios.config.isIPhoneX) {
-    await FaceTouchId.authenticate();
-  }
-  let touchFaceIdSession = await AccountModel.doCreateAccount();
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouchSessionId(touchFaceIdSession);
-  return await processing(AccountService.doGetCurrentAccount(touchFaceIdSession));
-};
-
-const doGetCurrentAccount = async ({ touchFaceIdMessage }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  let userInfo = await processing(AccountModel.doGetCurrentAccount(touchFaceIdSession));
-  return userInfo;
-};
-
-const doCheck24Words = async ({ phrase24Words }) => {
-  return await AccountModel.doCheck24Words(phrase24Words);
-};
 
 const doLogin = async ({ phrase24Words }) => {
   if (Platform.OS === 'ios' && ios.config.isIPhoneX) {
@@ -98,43 +74,12 @@ const doLogout = async () => {
   return await processing(DataProcessor.doLogout());
 };
 
-const doCreateSignatureData = async ({ touchFaceIdMessage, newSession }) => {
-  if (newSession) {
-    let sessionId = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
-    if (!sessionId) {
-      return null;
-    }
-  }
-  return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
-};
-
-const doReloadUserData = async () => {
-  return await DataProcessor.doReloadUserData();
-};
-
-const doReloadDonationInformation = async () => {
-  return await DataProcessor.doReloadDonationInformation();
-};
-
-const doGetTransferOfferDetail = async ({ transferOfferId }) => {
-  return await processing(TransactionService.doGetTransferOfferDetail(transferOfferId));
-};
-
-
-const doCheckFileToIssue = async ({ filePath }) => {
-  return await processing(BitmarkService.doCheckFileToIssue(filePath));
-};
-
 const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to issue bitmarks.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch ID for "Bitmark" Authorize bitmark issuance.');
   if (!touchFaceIdSession) {
     return null;
   }
   return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset), processingInfo);
-};
-
-const doGetProvenance = async ({ bitmark }) => {
-  return await processing(DataProcessor.doGetProvenance(bitmark.id));
 };
 
 const doTransferBitmark = async ({ bitmark, receiver }) => {
@@ -178,13 +123,6 @@ const doRejectTransferBitmark = async ({ transferOffer, processingInfo }) => {
   return await submitting(DataProcessor.doRejectTransferBitmark(touchFaceIdSession, transferOffer), processingInfo);
 };
 
-
-const doRequirePermission = async () => {
-  let donationInformation = await DataProcessor.doGetDonationInformation();
-  if (donationInformation) {
-    await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
-  }
-};
 
 const doActiveBitmarkHealthData = async ({ activeBitmarkHealthDataAt }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to start bitmarking health data.');
@@ -306,35 +244,20 @@ const doSignInOnWebApp = async ({ token }) => {
   return await processing(DataProcessor.doSignInOnWebApp(touchFaceIdSession, token));
 };
 
-const doGetAllTransfersOffers = async () => {
-  return await processing(DataProcessor.doGetAllTransfersOffers());
-};
 
-const doStartBackgroundProcess = async ({ justCreatedBitmarkAccount }) => {
-  return DataProcessor.doStartBackgroundProcess(justCreatedBitmarkAccount);
-  // return await processing(DataProcessor.doStartBackgroundProcess(justCreatedBitmarkAccount));
-};
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
 
 let AppProcessFunctional = {
-  doCreateNewAccount,
-  doGetCurrentAccount,
-  doCheck24Words,
   doLogin,
   doLogout,
-  doCreateSignatureData,
-  doCheckFileToIssue,
   doIssueFile,
-  doGetProvenance,
-  doGetTransferOfferDetail,
   doTransferBitmark,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doAcceptAllTransfers,
   doCancelTransferBitmark,
-  doRequirePermission,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
   doJoinStudy,
@@ -349,12 +272,8 @@ let AppProcessFunctional = {
   doStopTrackingBitmark,
   doRevokeIftttToken,
   doIssueIftttData,
-  doReloadUserData,
-  doReloadDonationInformation,
   doMigrateWebAccount,
   doSignInOnWebApp,
-  doGetAllTransfersOffers,
-  doStartBackgroundProcess,
 };
 
 let registeredTasks = {};

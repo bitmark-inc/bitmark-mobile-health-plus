@@ -176,8 +176,15 @@ export class LocalIssueFileComponent extends React.Component {
   }
 
   removeMetadata(key) {
-    let metadataList = this.state.metadataList.filter((item) => item.key != key);
-    this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
+    Alert.alert('Are you sure you want to delet this label?', '', [{
+      text: 'Cancel', style: 'cancel',
+    }, {
+      text: 'Yes',
+      onPress: () => {
+        let metadataList = this.state.metadataList.filter((item) => item.key != key);
+        this.checkIssuance(this.state.assetName, metadataList, this.state.quantity);
+      }
+    }]);
   }
 
   addNewMetadataField() {
@@ -206,11 +213,11 @@ export class LocalIssueFileComponent extends React.Component {
           contentContainerStyle={{ backgroundColor: 'white' }}
           ref={(ref) => this.fullRef = ref}
           header={(<View style={defaultStyle.header}>
-            <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+            <TouchableOpacity style={[defaultStyle.headerLeft, { width: 50, }]} onPress={() => this.props.navigation.goBack()}>
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../../assets/imgs/header_blue_icon.png')} />
             </TouchableOpacity>
-            <Text style={defaultStyle.headerTitle}>REGISTER</Text>
-            <TouchableOpacity style={defaultStyle.headerRight} />
+            <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(375) - 100 }]}>{'Register property rights'.toUpperCase()}</Text>
+            <TouchableOpacity style={[defaultStyle.headerRight, { width: 50, }]} />
           </View>)}
           contentInScroll={true}
           content={(<TouchableOpacity activeOpacity={1} style={localAddPropertyStyle.body}>
@@ -383,15 +390,19 @@ export class LocalIssueFileComponent extends React.Component {
               <Text style={localAddPropertyStyle.ownershipClaimLabel}>{'Ownership claim'.toUpperCase()}</Text>
               <Text style={localAddPropertyStyle.ownershipClaimMessage}>{'“I hereby claim that I am the legal owner of this asset and want this property to be irrevocably issued and recorded in the Bitmark blockchain.”'}</Text>
               {!!this.state.issueError && <Text style={localAddPropertyStyle.issueError}>{this.state.issueError}</Text>}
-              <TouchableOpacity
-                style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
-                onPress={this.onIssueFile}
-                disabled={!this.state.canIssue}
-              >
-                <Text style={[localAddPropertyStyle.issueButtonText, { color: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}>ISSUE</Text>
-              </TouchableOpacity>
             </View>
           </TouchableOpacity>)}
+
+          footerHeight={45}
+          footer={(
+            <TouchableOpacity
+              style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
+              onPress={this.onIssueFile}
+              disabled={!this.state.canIssue}
+            >
+              <Text style={[localAddPropertyStyle.issueButtonText, { color: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}>ISSUE</Text>
+            </TouchableOpacity>
+          )}
         />
       </TouchableWithoutFeedback>
     );
