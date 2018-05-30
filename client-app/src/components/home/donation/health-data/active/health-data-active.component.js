@@ -26,7 +26,8 @@ export class HealthDataActiveComponent extends React.Component {
   doActiveBitmarkHealthData() {
     AppProcessor.doRequirePermission().then(() => {
       AppProcessor.doActiveBitmarkHealthData(moment().toDate()).then(result => {
-        if (result !== null) {
+        console.log('doActiveBitmarkHealthData :', result)
+        if (result) {
           this.swiper.scrollBy(1);
           DataProcessor.doReloadUserData();
         }

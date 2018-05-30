@@ -62,10 +62,10 @@ export class LocalAssetDetailComponent extends React.Component {
     let contentType = await BitmarkModel.doGetAssetTextContentType(this.state.asset.id);
     if (contentType && contentType === 'text') {
       let text = await BitmarkModel.doGetAssetTextContent(this.state.asset.id);
-      this.setState({assetTextContent: text});
+      this.setState({ assetTextContent: text });
     }
-    
-    this.setState({contentType});
+
+    this.setState({ contentType });
   }
 
   handerChangeLocalBitmarks() {
@@ -115,7 +115,7 @@ export class LocalAssetDetailComponent extends React.Component {
     AppProcessor.doDownloadBitmark(this.state.bitmarkCanDownload, {
       indicator: true, title: 'Preparing to export...', message: `Downloading “${this.state.asset.name}”...`
     }).then(filePath => {
-      if (filePath !== null) {
+      if (filePath) {
         Share.share({ title: this.state.asset.name, message: '', url: filePath });
       }
     }).catch(error => {
@@ -177,27 +177,27 @@ export class LocalAssetDetailComponent extends React.Component {
                   }}
                 />
               </View>}
-              
+
               {/*Preview*/}
               {/*Text preview*/}
-            {this.state.contentType && this.state.contentType === 'text' &&
-              <ScrollView style={assetDetailStyle.assetPreview}>
-                <TouchableOpacity style={{flex: 1}}>
-                {this.state.assetTextContent &&
-                  <Text>{this.state.assetTextContent}</Text>
-                }
-                </TouchableOpacity>
-              </ScrollView>
-            }
+              {this.state.contentType && this.state.contentType === 'text' &&
+                <ScrollView style={assetDetailStyle.assetPreview}>
+                  <TouchableOpacity style={{ flex: 1 }}>
+                    {this.state.assetTextContent &&
+                      <Text>{this.state.assetTextContent}</Text>
+                    }
+                  </TouchableOpacity>
+                </ScrollView>
+              }
               {/*Image preview*/}
-            {this.state.contentType && this.state.contentType === 'image' &&
-              <View style={assetDetailStyle.assetPreview}>
-                <Image
-                  style={{width: 125, height: 125}}
-                  source={{uri: `${config.preview_asset_url}/${this.state.asset.id}`}}
-                />
-              </View>
-            }
+              {this.state.contentType && this.state.contentType === 'image' &&
+                <View style={assetDetailStyle.assetPreview}>
+                  <Image
+                    style={{ width: 125, height: 125 }}
+                    source={{ uri: `${config.preview_asset_url}/${this.state.asset.id}` }}
+                  />
+                </View>
+              }
 
               <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
               <View style={assetDetailStyle.bitmarksArea}>

@@ -62,7 +62,7 @@ export class StudyDetailComponent extends React.Component {
       text: 'Leave',
       onPress: () => {
         AppProcessor.doLeaveStudy(this.state.study.studyId).then((result) => {
-          if (result !== null) {
+          if (result) {
             DataProcessor.doReloadUserData();
             this.props.navigation.goBack();
           }

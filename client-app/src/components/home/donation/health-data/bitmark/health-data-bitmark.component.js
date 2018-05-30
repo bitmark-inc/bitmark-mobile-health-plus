@@ -45,7 +45,7 @@ export class HealthDataBitmarkComponent extends React.Component {
             AppProcessor.doBitmarkHealthData(this.state.list, {
               indicator: true, title: '', message: 'Sending your transaction to the Bitmark network...'
             }).then((result) => {
-              if (result !== null) {
+              if (result) {
                 DataProcessor.doReloadUserData();
                 Alert.alert('Issuance Successful!', 'Now you’ve created your property. Let’s verify that your property is showing up in your account.', [{
                   text: 'OK',

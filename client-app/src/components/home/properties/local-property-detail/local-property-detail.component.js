@@ -80,7 +80,7 @@ export class LocalPropertyDetailComponent extends React.Component {
     AppProcessor.doDownloadBitmark(this.state.bitmark, {
       indicator: true, title: 'Preparing to export...', message: `Downloading “${this.state.asset.name}”...`
     }).then(filePath => {
-      if (filePath !== null) {
+      if (filePath) {
         Share.share({ title: this.state.asset.name, message: '', url: filePath });
       }
     }).catch(error => {

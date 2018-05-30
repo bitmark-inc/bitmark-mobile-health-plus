@@ -81,7 +81,7 @@ export class LocalIssueFileComponent extends React.Component {
     AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), isPublicAsset, {
       indicator: true, title: '', message: 'Sending your transaction to the Bitmark network...'
     }).then((data) => {
-      if (data !== null) {
+      if (data) {
         // Remove temp asset file
         FileUtil.removeSafe(this.state.filePath);
         Alert.alert('Success!', 'Your property rights have been registered.', [{
