@@ -106,7 +106,7 @@ class WebViewComponent extends React.Component {
         <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { console.log('source :', this.webViewRef.getWebViewHandle()); this.webViewRef.goBack(); }}>
           <Image style={termsStyles.webViewControlIcon} source={require('./../../../../assets/imgs/webview-back.png')} />
         </TouchableOpacity>
-        <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { this.webViewRef.goForward(); }}>
+        <TouchableOpacity style={[termsStyles.webViewControlButton, { marginLeft: 90 }]} onPress={() => { this.webViewRef.goForward(); }}>
           <Image style={termsStyles.webViewControlIcon} source={require('./../../../../assets/imgs/webview-next.png')} />
         </TouchableOpacity>
         {/* <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { this.webViewRef.reload(); }}>

@@ -97,7 +97,7 @@ export class LocalPropertyDetailComponent extends React.Component {
   changeTrackingBitmark() {
     if (!this.state.isTracking) {
       Alert.alert('Track This Bitmark', 'By tracking a bitmark you can always view the latest bitmarks status in the tracked properties list, are you sure you want to do it?', [{
-        text: 'NO', style: 'cancel',
+        text: 'Cancel', style: 'cancel',
       }, {
         text: 'YES',
         onPress: () => {
@@ -109,7 +109,7 @@ export class LocalPropertyDetailComponent extends React.Component {
       }]);
     } else {
       Alert.alert('Stop Tracking', 'By stop tracking a bitmark, the bitmark will be removed from the tracked list, are you sure you want to do it?', [{
-        text: 'NO', style: 'cancel',
+        text: 'Cancel', style: 'cancel',
       }, {
         text: 'YES',
         onPress: () => {

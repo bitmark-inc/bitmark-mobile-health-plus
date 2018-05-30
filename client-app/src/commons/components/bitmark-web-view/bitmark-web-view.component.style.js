@@ -25,7 +25,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingLeft: convertWidth(60),
     paddingRight: convertWidth(60),
     backgroundColor: '#F8F8F8',
