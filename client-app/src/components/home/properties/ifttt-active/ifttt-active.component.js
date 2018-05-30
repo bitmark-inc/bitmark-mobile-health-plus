@@ -119,9 +119,14 @@ export class IftttActiveComponent extends React.Component {
             onNavigationStateChange={this.onNavigationStateChange}
             onLoadStart={() => this.setState({ loading: true })}
             onLoadEnd={() => {
-              this.setState({ loading: false })
-              if (this.state.currentUrl.indexOf(config.ifttt_server_url) >= 0) {
-                this.webViewRef.postMessage(DataProcessor.getUserInformation().bitmarkAccountNumber);
+              this.setState({ loading: false });
+              let bitmarkAccountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
+
+              if (this.state.currentUrl.indexOf(config.ifttt_server_url) >= 0 && this.state.currentUrl.indexOf(bitmarkAccountNumber) < 0) {
+                this.setState({
+                  webViewUrl: this.state.currentUrl + `&bitmark_account=${bitmarkAccountNumber}`,
+                  currentUrl: this.state.currentUrl + `&bitmark_account=${bitmarkAccountNumber}`,
+                });
               }
               if (!this.state.stage && !this.signed &&
                 (this.state.currentUrl.indexOf('https://ifttt.com/onboarding') >= 0 || this.state.currentUrl.indexOf('https://ifttt.com/discover') >= 0 || this.state.currentUrl === config.ifttt_bitmark_service_url)) {
