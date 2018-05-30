@@ -168,7 +168,7 @@ export default StyleSheet.create({
   noAuthorizedMessage: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
-    fontSize: 15,
+    fontSize: 17,
     marginTop: 16,
   },
   authorizedItem: {

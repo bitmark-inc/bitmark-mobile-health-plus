@@ -10,6 +10,7 @@ import { config } from '../../../../configs';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import { BitmarkComponent } from '../../../../commons/components';
 import { EventEmitterService } from '../../../../services';
+import { convertWidth } from '../../../../utils';
 
 let ComponentName = 'IftttActiveComponent';
 export class IftttActiveComponent extends React.Component {
@@ -93,8 +94,8 @@ export class IftttActiveComponent extends React.Component {
     return (
       <BitmarkComponent
         header={(<View style={defaultStyle.header}>
-          {this.state.iftttInformation && this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={defaultStyle.headerLeft} />}
-          {!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => {
+          {this.state.iftttInformation && this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={[defaultStyle.headerLeft, { width: 60 }]} />}
+          {!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={[defaultStyle.headerLeft, { width: 60 }]} onPress={() => {
             DataProcessor.doReloadIFTTTInformation().catch(error => {
               console.log('doReloadIFTTTInformation : ', error);
             });
@@ -102,9 +103,9 @@ export class IftttActiveComponent extends React.Component {
           }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>}
-          <Text style={defaultStyle.headerTitle}>IFTTT DATA</Text>
-          {(!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT) && <TouchableOpacity style={defaultStyle.headerRight} />}
-          {this.state.iftttInformation && this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+          <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(375) - 120, }]}>REGISTER YOUR IFTTT DATA</Text>
+          {(!this.state.iftttInformation || !this.state.iftttInformation.connectIFTTT) && <TouchableOpacity style={[defaultStyle.headerRight, { width: 60 }]} />}
+          {this.state.iftttInformation && this.state.iftttInformation.connectIFTTT && <TouchableOpacity style={[defaultStyle.headerRight, { width: 60 }]} onPress={() => {
             this.props.navigation.goBack();
           }}>
             <Text style={defaultStyle.headerRightText}>Done</Text>

@@ -104,7 +104,8 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
           <TouchableOpacity style={[defaultStyle.headerRight, { width: 40 }]} />
         </View>
         <ScrollView style={accountRecoveryStyle.recoveryPhraseContent}>
-          <Text style={accountRecoveryStyle.writeRecoveryPhraseContentMessage}>Please write down your recovery phrase in the exact sequence below:</Text>
+          {!isSignOut && <Text style={accountRecoveryStyle.writeRecoveryPhraseContentMessage}>Please write down your recovery phrase in the exact sequence below:</Text>}
+          {isSignOut && <Text style={accountRecoveryStyle.writeRecoveryPhraseContentMessage}>Write down your recovery phrase in the exact sequence below:</Text>}
           <View style={accountRecoveryStyle.writeRecoveryPhraseContentList}>
             <View style={accountRecoveryStyle.writeRecoveryPhraseContentHalfList}>
               <FlatList data={this.state.smallerList}
@@ -480,7 +481,7 @@ class TryRecoveryPhraseComponent extends React.Component {
         </View>}
         {this.state.testResult === 'retry' && <View style={accountRecoveryStyle.recoveryPhraseTestResult}>
           <Text style={[accountRecoveryStyle.recoveryPhraseTestTitle, { color: '#FF003C' }]}>Error!</Text>
-          <Text style={[accountRecoveryStyle.recoveryPhraseTestMessage, { color: '#FF003C' }]}>Would you like to try again?</Text>
+          <Text style={[accountRecoveryStyle.recoveryPhraseTestMessage, { color: '#FF003C' }]}>Please try again!</Text>
         </View>}
         {this.state.testResult.length > 0 && <TouchableOpacity style={accountRecoveryStyle.recoveryPhraseBottomButton}
           onPress={() => this.doAfterInputtedAllWord()}>

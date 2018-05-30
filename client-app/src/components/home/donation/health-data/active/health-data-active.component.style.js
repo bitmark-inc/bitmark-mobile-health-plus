@@ -68,7 +68,7 @@ export default StyleSheet.create({
     fontWeight: '900',
     width: convertWidth(337),
     color: '#0060F2',
-    marginTop: 81,
+    marginTop: 38,
   },
 
   healthDataDescription: {
@@ -76,7 +76,7 @@ export default StyleSheet.create({
     fontSize: 17,
     fontWeight: '300',
     width: convertWidth(337),
-    marginTop: 81,
+    marginTop: 50,
   },
 
   bitmarkRequestTouchIdTitle: {
