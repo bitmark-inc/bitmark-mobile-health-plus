@@ -280,12 +280,10 @@ let registeredTasks = {};
 
 const registerTasks = () => {
   for (let taskKey in AppTasks) {
-    console.log('taskKey :', taskKey);
     if (taskKey && AppTasks[taskKey] && !registeredTasks[taskKey]) {
-      const func = AppTasks[taskKey];
       AppRegistry.registerHeadlessTask(taskKey, () => {
         return (taskData) =>
-          func(taskData).then(result => {
+          AppTasks[taskKey](taskData).then(result => {
             EventEmitterService.emit(`${EventEmitterService.events.APP_TASK}${taskData.taskId}`, { ok: true, result });
           }).catch(error => {
             EventEmitterService.emit(`${EventEmitterService.events.APP_TASK}${taskData.taskId}`, { ok: false, error });

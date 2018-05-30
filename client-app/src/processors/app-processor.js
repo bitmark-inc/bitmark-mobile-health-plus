@@ -48,7 +48,7 @@ const executeTask = (taskKey, data) => {
   data = data || {};
   data.taskId = taskId;
   return new Promise((resolve, reject) => {
-    EventEmitterService.on(`${EventEmitterService.events.APP_TASK}${taskId}`, (ok, result, error) => {
+    EventEmitterService.on(`${EventEmitterService.events.APP_TASK}${taskId}`, ({ ok, result, error }) => {
       EventEmitterService.remove(`${EventEmitterService.events.APP_TASK}${taskId}`);
       if (ok) {
         resolve(result);
