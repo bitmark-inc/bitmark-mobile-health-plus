@@ -72,14 +72,12 @@ const doCheckNewIftttInformation = async (iftttInformation, isLoadingAllUserData
 
 const doCheckNewTrackingBitmarks = async (trackingBitmarks) => {
   if (trackingBitmarks) {
-    let oldData = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
-    if (JSON.stringify(trackingBitmarks) !== JSON.stringify(oldData)) {
-      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS, trackingBitmarks);
-      userCacheScreenData.propertiesScreen.totalTrackingBitmarks = trackingBitmarks.length;
-      userCacheScreenData.propertiesScreen.existNewTrackingBitmark = (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0;
-      userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.slice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
-      EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, trackingBitmarks);
-    }
+    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS, trackingBitmarks);
+    userCacheScreenData.propertiesScreen.totalTrackingBitmarks = trackingBitmarks.length;
+    userCacheScreenData.propertiesScreen.existNewTrackingBitmark = (trackingBitmarks || []).findIndex(bm => !bm.isViewed) >= 0;
+    console.log('doCheckNewTrackingBitmarks :', userCacheScreenData.propertiesScreen.existNewTrackingBitmark);
+    userCacheScreenData.propertiesScreen.trackingBitmarks = trackingBitmarks.slice(0, userCacheScreenData.propertiesScreen.trackingBitmarksLength);
+    EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, trackingBitmarks);
   }
 };
 

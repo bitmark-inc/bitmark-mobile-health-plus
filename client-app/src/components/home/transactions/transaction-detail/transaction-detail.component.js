@@ -62,7 +62,7 @@ export class TransactionDetailComponent extends React.Component {
                   actions: [
                     NavigationActions.navigate({
                       routeName: 'User', params: {
-                        displayedTab: { mainTab: BottomTabsComponent.MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                        displayedTab: { mainTab: BottomTabsComponent.MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
                       }
                     }),
                   ]

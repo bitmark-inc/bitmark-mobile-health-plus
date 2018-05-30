@@ -76,7 +76,7 @@ export class UserComponent extends React.Component {
           actions: [
             NavigationActions.navigate({
               routeName: 'User', params: {
-                displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
               }
             }),
             NavigationActions.navigate({
@@ -144,7 +144,7 @@ export class UserComponent extends React.Component {
               actions: [
                 NavigationActions.navigate({
                   routeName: 'User', params: {
-                    displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                    displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
                     needReloadData: true,
                   }
                 }),
@@ -167,7 +167,7 @@ export class UserComponent extends React.Component {
           actions: [
             NavigationActions.navigate({
               routeName: 'User', params: {
-                displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
                 needReloadData: true,
               }
             }),
@@ -204,7 +204,7 @@ export class UserComponent extends React.Component {
             actions: [
               NavigationActions.navigate({
                 routeName: 'User', params: {
-                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTION REQUIRED' },
+                  displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
                   needReloadData: true,
                 }
               }),

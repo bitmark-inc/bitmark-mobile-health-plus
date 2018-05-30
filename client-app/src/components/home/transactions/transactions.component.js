@@ -16,7 +16,7 @@ import { convertWidth } from '../../../utils';
 import { config } from '../../../configs';
 
 const SubTabs = {
-  required: 'ACTION REQUIRED',
+  required: 'ACTIONS REQUIRED',
   completed: 'HISTORY',
 };
 

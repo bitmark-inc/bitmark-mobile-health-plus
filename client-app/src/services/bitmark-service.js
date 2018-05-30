@@ -216,6 +216,7 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber) => {
     if (oldStatuses[otb.id]) {
       oldStatuses[otb.id].lastHistory = otb.lastHistory;
       oldStatuses[otb.id].asset = otb.asset;
+      oldStatuses[otb.id].isViewed = otb.isViewed;
     }
   });
   let bitmarkIds = Object.keys(oldStatuses);
@@ -231,7 +232,7 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber) => {
       (oldStatus.lastHistory.head_id === bitmark.head_id && oldStatus.lastHistory.status !== bitmark.status)) {
       bitmark.isViewed = false;
     } else {
-      bitmark.isViewed = true;
+      bitmark.isViewed = !!oldStatus.isViewed;
     }
     bitmark.lastHistory = oldStatus.lastHistory;
 
