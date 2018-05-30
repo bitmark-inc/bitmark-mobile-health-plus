@@ -80,7 +80,7 @@ export default StyleSheet.create({
     height: 180 * convertWidth(320) / 320,
   },
   introductionTermPrivacy: {
-    marginTop: 66,
+    marginTop: 233,
     left: convertWidth(50),
     width: convertWidth(272),
   },

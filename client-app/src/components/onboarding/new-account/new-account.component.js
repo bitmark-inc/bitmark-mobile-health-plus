@@ -59,7 +59,7 @@ class PropertyPrivateYourDataComponent extends React.Component {
                   }}
                   linkStyle={newAccountStyle.bitmarkTermsPrivacyButtonText}
                   linkText={url => url === 'https://bitmark.com/term' ? 'Terms of Service' : (url === 'https://bitmark.com/privacy' ? 'Privacy Policy' : '')}>
-                  <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark https://bitmark.com/privacy and https://bitmark.com/term</Text>
+                  <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark https://bitmark.com/term and https://bitmark.com/privacy</Text>
                 </Hyperlink>
               </View>
             </View>
