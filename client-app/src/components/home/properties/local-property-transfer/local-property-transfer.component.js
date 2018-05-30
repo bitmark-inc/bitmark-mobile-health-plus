@@ -98,20 +98,21 @@ export class LocalPropertyTransferComponent extends React.Component {
                 </View>
                 <Text style={propertyTransferStyle.accountNumberError}>{this.state.bitmarkAccountError}</Text>
                 <Text style={propertyTransferStyle.transferMessage}>Enter the Bitmark account number to which you would like to transfer ownership of this property.</Text>
-                <TouchableOpacity style={[propertyTransferStyle.sendButton, {
-                  borderTopColor: this.state.bitmarkAccount ? '#0060F2' : '#A4B5CD'
-                }]}
-                  disabled={!this.state.bitmarkAccount}
-                  onPress={this.onSendProperty}>
-                  <Text style={[propertyTransferStyle.sendButtonText, {
-                    color: this.state.bitmarkAccount ? '#0060F2' : '#C2C2C2'
-                  }]}>SEND</Text>
-                </TouchableOpacity>
                 <Text style={propertyTransferStyle.accountNumberError}>{this.state.transferError}</Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
         )}
+        footerHeight={45}
+        footer={(<TouchableOpacity style={[propertyTransferStyle.sendButton, {
+          borderTopColor: this.state.bitmarkAccount ? '#0060F2' : '#A4B5CD'
+        }]}
+          disabled={!this.state.bitmarkAccount}
+          onPress={this.onSendProperty}>
+          <Text style={[propertyTransferStyle.sendButtonText, {
+            color: this.state.bitmarkAccount ? '#0060F2' : '#C2C2C2'
+          }]}>SEND</Text>
+        </TouchableOpacity>)}
       />
     );
   }

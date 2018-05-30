@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { convertWidth } from './../../../../utils';
+import { iosConstant } from '../../../../configs/ios/ios.config';
 
 
 export default StyleSheet.create({
@@ -81,14 +82,15 @@ export default StyleSheet.create({
     width: convertWidth(336),
   },
   sendButton: {
-    marginTop: 31,
-    width: convertWidth(336),
-    minHeight: 42,
+    width: convertWidth(375),
+    height: 45,
     borderTopWidth: 3,
     backgroundColor: '#F5F5F5',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   sendButtonText: {
     fontFamily: 'Avenir Black',
