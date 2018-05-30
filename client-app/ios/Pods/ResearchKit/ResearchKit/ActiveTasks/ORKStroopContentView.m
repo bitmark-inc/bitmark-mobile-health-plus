@@ -48,7 +48,7 @@
         _colorLabel.numberOfLines = 1;
         _colorLabel.textAlignment = NSTextAlignmentCenter;
         _colorLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [_colorLabel setFont:[UIFont systemFontOfSize:60]];
+        [_colorLabel setFont:ORKDefaultFontWithSize(60)];
         [_colorLabel setAdjustsFontSizeToFitWidth:YES];
         
         

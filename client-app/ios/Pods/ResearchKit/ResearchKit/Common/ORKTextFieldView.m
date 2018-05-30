@@ -162,7 +162,7 @@ static NSString *const FilledBulletString = @"\u25CF";
 
 - (id)ork_createTextLabelWithTextColor:(UIColor *)textColor {
     UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    textLabel.font = [UIFont systemFontOfSize:17];
+    textLabel.font = ORKDefaultFontWithSize(17);
     [textLabel setOpaque:NO];
     [textLabel setBackgroundColor:nil];
     textLabel.contentMode = UIViewContentModeRedraw;
@@ -372,6 +372,10 @@ static const UIEdgeInsets paddingGuess = (UIEdgeInsets){.left = 2, .right = 6};
     
     // Make sure it can't escape out the right of the view
     suffixFrame.origin.x = MIN(xOffset, xMaximum);
+    
+    suffixFrame.size.height = CGRectGetHeight(self.bounds);
+    suffixFrame.origin.y = 0;
+    
     return suffixFrame;
 }
 

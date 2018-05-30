@@ -44,7 +44,7 @@
     CGFloat fontSize = [[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue] - defaultHeadlineSize + ORKGetMetricForWindow(surveyMode ? ORKScreenMetricFontSizeSurveyHeadline : ORKScreenMetricFontSizeHeadline, nil);
     CGFloat maxFontSize = ORKGetMetricForWindow(surveyMode ? ORKScreenMetricMaxFontSizeSurveyHeadline : ORKScreenMetricMaxFontSizeHeadline, nil);
     
-    return ORKLightFontWithSize(MIN(maxFontSize, fontSize));
+    return ORKBoldFontWithSize(MIN(maxFontSize, fontSize));
 }
 
 + (UIFont *)defaultFont {

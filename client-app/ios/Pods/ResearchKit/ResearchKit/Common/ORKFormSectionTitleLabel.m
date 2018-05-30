@@ -30,6 +30,7 @@
 
 
 #import "ORKFormSectionTitleLabel.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKFormSectionTitleLabel
@@ -37,7 +38,7 @@
 + (UIFont *)defaultFont {
     // regular, 14
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleHeadline];
-    return [UIFont systemFontOfSize:[[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue] - 3.0];
+    return ORKDefaultFontWithSize([[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue] - 3.0);
 }
 
 @end

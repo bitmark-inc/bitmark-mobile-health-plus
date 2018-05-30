@@ -86,5 +86,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>ResearchKit-Font-Bold</key>
+  <string>Avenir-Black</string>
+  <key>ResearchKit-Font-Light</key>
+  <string>Avenir-Light</string>
+  <key>ResearchKit-Font-Medium</key>
+  <string>Avenir-Medium</string>
+  <key>ResearchKit-Font-Normal</key>
+  <string>Avenir</string>
+  <key>ResearchKit-Font-Thin</key>
+  <string>Avenir-Light</string>
 </dict>
 </plist>

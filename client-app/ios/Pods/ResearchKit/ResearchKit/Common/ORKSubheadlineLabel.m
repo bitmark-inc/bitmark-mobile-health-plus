@@ -32,6 +32,7 @@
 #import "ORKSubheadlineLabel.h"
 
 #import "ORKSkin.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKSubheadlineLabel
@@ -39,7 +40,7 @@
 + (UIFont *)defaultFont {
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleSubheadline];
     const CGFloat defaultSize = 15;
-    return [UIFont systemFontOfSize:[[descriptor objectForKey:UIFontDescriptorSizeAttribute] doubleValue] - defaultSize + ORKGetMetricForWindow(ORKScreenMetricFontSizeSubheadline, nil)];
+    return ORKDefaultFontWithSize([[descriptor objectForKey:UIFontDescriptorSizeAttribute] doubleValue] - defaultSize + ORKGetMetricForWindow(ORKScreenMetricFontSizeSubheadline, nil));
 }
 
 @end

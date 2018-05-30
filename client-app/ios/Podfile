@@ -5,7 +5,7 @@ def pods
     
     pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
     pod 'KeychainAccess'
-    pod 'ResearchKit'
+    pod 'ResearchKit', :git => 'https://github.com/bitmark-inc/ResearchKit.git'
     
 end
 
@@ -13,8 +13,6 @@ target 'Bitmark' do
   use_frameworks!
 
   pods
-
-  pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
 
   target 'BitmarkTests' do
     inherit! :search_paths
@@ -24,6 +22,14 @@ target 'Bitmark' do
 end
 
 target 'Bitmark beta' do
+    use_frameworks!
+    
+    pods
+    pod 'HockeySDK'
+    
+end
+
+target 'Bitmark dev' do
     use_frameworks!
     
     pods

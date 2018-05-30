@@ -31,6 +31,7 @@
 
 #import "ORKBorderedButton.h"
 #import "ORKTextButton_Internal.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKBorderedButton {
@@ -110,7 +111,7 @@
 + (UIFont *)defaultFont {
     // regular, 17
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleHeadline];
-    return [UIFont systemFontOfSize:[[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue]];
+    return ORKDefaultFontWithSize([[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue]);
 }
 
 @end

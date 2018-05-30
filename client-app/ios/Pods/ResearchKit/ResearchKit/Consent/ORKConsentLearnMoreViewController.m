@@ -51,7 +51,17 @@
 - (instancetype)initWithHTMLContent:(NSString *)content {
     self = [super init];
     if (self) {
-        self.content = [ORKConsentDocument wrapHTMLBody:content mobile:YES];
+        NSString *researchKitFontNormal = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"ResearchKit-Font-Normal"];
+        if (researchKitFontNormal) {
+            self.content = [NSString stringWithFormat:@"<span style=\"font-family: %@; font-size: %i\">%@</span>",
+                            researchKitFontNormal,
+                            16,
+                            content];
+        }
+        else {
+            self.content = [ORKConsentDocument wrapHTMLBody:content mobile:YES];
+        }
+        
     }
     return self;
 }

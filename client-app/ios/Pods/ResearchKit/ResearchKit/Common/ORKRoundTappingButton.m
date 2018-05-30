@@ -30,6 +30,7 @@
 
 #import "ORKTextButton_Internal.h"
 #import "ORKRoundTappingButton.h"
+#import "ORKHelpers_Internal.h"
 
 
 @implementation ORKRoundTappingButton
@@ -54,7 +55,7 @@ static const CGFloat RoundTappingButtonDiameter = 104;
 + (UIFont *)defaultFont {
     // regular, 20
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleHeadline];
-    return [UIFont systemFontOfSize:((NSNumber *)[descriptor objectForKey:UIFontDescriptorSizeAttribute]).doubleValue + 3.0];
+    return ORKDefaultFontWithSize(((NSNumber *)[descriptor objectForKey:UIFontDescriptorSizeAttribute]).doubleValue + 3.0);
 }
 
 #pragma mark Accessibility

@@ -32,6 +32,7 @@
 #import "ORKContinueButton.h"
 
 #import "ORKSkin.h"
+#import "ORKHelpers_Internal.h"
 
 
 static const CGFloat ContinueButtonTouchMargin = 10;
@@ -102,7 +103,7 @@ static const CGFloat ContinueButtonTouchMargin = 10;
 
 + (UIFont *)defaultFont {
     UIFontDescriptor *descriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleHeadline];
-    return [UIFont systemFontOfSize:[[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue]];
+    return ORKDefaultFontWithSize([[descriptor objectForKey: UIFontDescriptorSizeAttribute] doubleValue]);
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
