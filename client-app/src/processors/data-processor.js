@@ -542,6 +542,8 @@ const doUpdateViewStatus = async (assetId, bitmarkId) => {
       });
       localAsset.isViewed = assetViewed;
       await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, localAssets);
+      userCacheScreenData.propertiesScreen.existNewAsset = localAssets.findIndex(asset => !asset.isViewed) >= 0;
+      userCacheScreenData.propertiesScreen.localAssets = localAssets.slice(0, userCacheScreenData.propertiesScreen.localAssetsLength);
       EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, localAssets);
     }
   }
