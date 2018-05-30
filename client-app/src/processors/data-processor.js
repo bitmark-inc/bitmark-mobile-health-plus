@@ -394,6 +394,30 @@ const doLogout = async () => {
   await AccountModel.doLogout();
   await UserModel.doRemoveUserInfo();
   userInformation = {};
+  userCacheScreenData = {
+    transactionsScreen: {
+      totalTasks: 0,
+      totalActionRequired: 0,
+      actionRequiredLength: 20,
+      actionRequired: [],
+
+      totalCompleted: 0,
+      completedLength: 20,
+      completed: [],
+    },
+    propertiesScreen: {
+      localAssets: [],
+      localAssetsLength: 20,
+      totalAssets: 0,
+      existNewAsset: false,
+      totalBitmarks: 0,
+
+      trackingBitmarks: [],
+      trackingBitmarksLength: 20,
+      totalTrackingBitmarks: 0,
+      existNewTrackingBitmark: false,
+    },
+  };
 };
 
 
