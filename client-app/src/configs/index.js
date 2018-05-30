@@ -78,11 +78,11 @@ export { config, ios, android };
 
 
 // testnet
-// code-push release-react Bitmark ios --pre "Bitmark dev"
+// code-push release-react Bitmark ios --pre "Bitmark dev" --mandatory true
 // code-push release-react Bitmark ios --pre "Bitmark dev" -m --description "update code" [--targetBinaryVersion "~1.1.1]"
 
 // livetnet
-// code-push release-react Bitmark ios -d Production
+// code-push release-react Bitmark ios -d Production --mandatory true
 // code-push release-react Bitmark ios -d Production -m --description "update code" [--targetBinaryVersion "~1.1.1]"
 
 
