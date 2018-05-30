@@ -18,7 +18,7 @@ let PreCheckResults = {
 };
 
 // madelena testnet
-let testWords = ["acid", "dinner", "west", "satisfy", "ranch", "include", "remove", "vanish", "visual", "shift", "delay", "spot", "table", "feed", "volume", "oblige", "crisp", "bracket", "acoustic", "nurse", "where", "wreck", "fly", "marriage",];
+// let testWords = ["acid", "dinner", "west", "satisfy", "ranch", "include", "remove", "vanish", "visual", "shift", "delay", "spot", "table", "feed", "volume", "oblige", "crisp", "bracket", "acoustic", "nurse", "where", "wreck", "fly", "marriage",];
 // madelena livenet
 // let testWords = ["absent", "ostrich", "injury", "pill", "episode", "permit", "endless", "happy", "thing", "devote", "robust", "earth", "punch", "robot", "jelly", "demand", "topple", "diamond", "climb", "turn", "reveal", "suspect", "fat", "assault",];
 
@@ -43,14 +43,14 @@ export class SignInComponent extends React.Component {
       if (index < 12) {
         smallerList.push({
           key: index,
-          word: testWords[index],
-          // word: '',
+          // word: testWords[index],
+          word: '',
         });
       } else {
         biggerList.push({
           key: index,
-          word: testWords[index],
-          // word: '',
+          // word: testWords[index],
+          word: '',
         });
       }
     }
@@ -64,7 +64,7 @@ export class SignInComponent extends React.Component {
       dataSource: dictionary24Words,
       keyBoardHeight: 0,
     };
-    setTimeout(this.checkStatusInputting, 200);
+    // setTimeout(this.checkStatusInputting, 200);
   }
 
   onChangeText(index, text) {
