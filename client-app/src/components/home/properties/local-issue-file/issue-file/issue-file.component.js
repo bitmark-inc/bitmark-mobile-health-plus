@@ -79,7 +79,7 @@ export class LocalIssueFileComponent extends React.Component {
   onIssueFile() {
     let isPublicAsset = this.state.assetAccessibility === 'public' ? true : false;
     AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), isPublicAsset, {
-      indicator: true, title: 'Sending your transaction to the Bitmark network...', message: ''
+      indicator: true, title: '', message: 'Sending your transaction to the Bitmark network...'
     }).then((data) => {
       if (data !== null) {
         // Remove temp asset file

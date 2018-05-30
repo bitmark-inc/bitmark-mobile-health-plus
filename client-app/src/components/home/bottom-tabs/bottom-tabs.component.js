@@ -12,7 +12,7 @@ import { DataProcessor } from '../../../processors';
 const MainTabs = {
   properties: 'Properties',
   transaction: 'Transactions',
-  donation: 'Donation',
+  donation: 'Donations',
   account: 'Account',
 };
 let ComponentName = 'BottomTabsComponent';

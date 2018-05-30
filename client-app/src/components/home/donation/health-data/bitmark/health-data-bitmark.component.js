@@ -43,7 +43,7 @@ export class HealthDataBitmarkComponent extends React.Component {
           </View>
           <TouchableOpacity style={bitmarkHealthStyles.bitmarkButton} onPress={() => {
             AppProcessor.doBitmarkHealthData(this.state.list, {
-              indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
+              indicator: true, title: '', message: 'Sending your transaction to the Bitmark network...'
             }).then((result) => {
               if (result !== null) {
                 DataProcessor.doReloadUserData();
