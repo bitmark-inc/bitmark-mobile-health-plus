@@ -60,22 +60,6 @@ export class BitmarkComponent extends React.Component {
     this.refresh();
   }
 
-  componentWillReceiveProps(nextProps) {
-    let headerHeight = !nextProps.header ? 0 : (nextProps.headerHeight || (ios.constant.headerSize.height - ios.constant.headerSize.paddingTop));
-    let footerHeight = !nextProps.footer ? 0 : (nextProps.footerHeight || ios.constant.bottomTabsHeight + ios.constant.blankFooter);
-    let keyboardExternalHeight = nextProps.keyboardExternal ? (nextProps.headerHeight || ios.constant.autoCompleteHeight) : 0;
-    let bodyHeight = currentSize.height - ios.constant.headerSize.paddingTop;
-    let contentHeight = bodyHeight - headerHeight - footerHeight;
-    this.setState({
-      contentHeightAnimation: new Animated.Value(contentHeight + footerHeight),
-      contentHeight,
-      headerHeight,
-      footerHeight,
-      keyboardExternalHeight,
-      bodyHeight,
-    });
-  }
-
   componentWillUnmount() {
     StatusBarIOS.removeListener('statusBarFrameWillChange', this.statusBarChanged);
     this.keyboardWillShowListener.remove();
@@ -88,24 +72,18 @@ export class BitmarkComponent extends React.Component {
     }
   }
   onKeyboardDidShow(keyboardEvent) {
-    if (this.props.onKeyboardDidShow) {
-      this.props.onKeyboardDidShow(keyboardEvent);
-    }
     if (keyboardEvent.easing !== 'keyboard') {
       return;
     }
     console.log('onKeyboardDidShow :', keyboardEvent);
     let keyboardHeight = keyboardEvent.endCoordinates.height;
     let keyboardY = keyboardEvent.endCoordinates.screenY;
-    let contentHeight = this.state.bodyHeight - this.state.headerHeight - Math.max(this.state.footerHeight, this.state.keyboardExternalHeight) - keyboardHeight;
+    let contentHeight = this.state.bodyHeight - this.state.headerHeight - this.state.keyboardExternalHeight - keyboardHeight;
     this.setState({ keyboardHeight, keyboardY, contentHeight });
     this.doScroll(keyboardHeight, keyboardY, contentHeight);
   }
 
   onKeyboardDidHide() {
-    if (this.props.onKeyboardDidHide) {
-      this.props.onKeyboardDidHide();
-    }
     let keyboardHeight = 0;
     let contentHeight = this.state.bodyHeight - this.state.headerHeight - this.state.footerHeight;
     this.setState({ keyboardHeight, contentHeight });
@@ -243,7 +221,7 @@ export class BitmarkComponent extends React.Component {
               {!this.props.contentInScroll && this.props.content}
             </View>
 
-            {this.state.footerHeight > 0 && <View style={[styles.footer, {
+            {this.state.footerHeight > 0 && this.state.keyboardHeight === 0 && <View style={[styles.footer, {
               height: this.state.footerHeight,
               // borderWidth: 2, borderColor: 'red',
             }]}>{this.props.footer}</View>}
@@ -282,7 +260,4 @@ BitmarkComponent.propTypes = {
   keyboardExternalHeight: PropTypes.number,
 
   keyboardExternal: PropTypes.any,
-
-  onKeyboardDidShow: PropTypes.func,
-  onKeyboardDidHide: PropTypes.func,
 }
