@@ -66,6 +66,7 @@ export class LocalIssueFileComponent extends React.Component {
       quantity: null,
       selectedMetadata: null,
       isEditingMetadata: false,
+      isKeyBoardShow: false,
 
       assetNameError: '',
       quantityError: '',
@@ -392,16 +393,23 @@ export class LocalIssueFileComponent extends React.Component {
             </View>
           </TouchableOpacity>)}
 
-          footerHeight={45}
-          footer={(
-            <TouchableOpacity
-              style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
-              onPress={this.onIssueFile}
-              disabled={!this.state.canIssue}
-            >
-              <Text style={[localAddPropertyStyle.issueButtonText, { color: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}>ISSUE</Text>
-            </TouchableOpacity>
-          )}
+          footerHeight={this.state.isKeyBoardShow ? 0 : 45}
+          footer={this.state.isKeyBoardShow ? null : (<TouchableOpacity
+            style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
+            onPress={this.onIssueFile}
+            disabled={!this.state.canIssue}
+          >
+            <Text style={[localAddPropertyStyle.issueButtonText, { color: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}>ISSUE</Text>
+          </TouchableOpacity>)
+          }
+          onKeyboardDidShow={() => {
+            console.log('onKeyboardDidShow');
+            this.setState({ isKeyBoardShow: true });
+          }}
+          onKeyboardDidHide={() => {
+            console.log('onKeyboardDidHide');
+            this.setState({ isKeyBoardShow: false });
+          }}
         />
       </TouchableWithoutFeedback>
     );
