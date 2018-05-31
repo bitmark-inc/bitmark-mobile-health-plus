@@ -120,7 +120,7 @@ const BitmarkSDK = {
         property_name: propertyName,
         metadata,
         quantity,
-        is_public_asset: isPublicAsset
+        is_public_asset: !!isPublicAsset
       }, (ok, results) => {
         if (ok && results) {
           resolve(results);
