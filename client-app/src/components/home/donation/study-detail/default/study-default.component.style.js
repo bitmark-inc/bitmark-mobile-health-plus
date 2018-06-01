@@ -110,7 +110,7 @@ export default StyleSheet.create({
     backgroundColor: '#0060F2',
     marginTop: 20,
     width: '100%',
-    minHeight: 45,
+    height: 45 + constant.blankFooter / 2,
     paddingTop: 10,
     paddingBottom: Math.max(10, constant.blankFooter),
   },

@@ -114,6 +114,38 @@ export default StyleSheet.create({
     marginLeft: convertWidth(19),
   },
 
+  metadataArea: {
+    marginTop: 26,
+    flexDirection: 'row',
+  },
+  metadataItem: {
+    width: convertWidth(340),
+    flexDirection: 'row',
+    marginLeft: convertWidth(19),
+  },
+  metadataItemLabel: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    fontWeight: '900',
+    color: '#0060F2',
+    width: convertWidth(117),
+    marginTop: 1,
+  },
+  metadataItemValue: {
+    fontFamily: 'Avenir Black',
+    fontSize: 14,
+    fontWeight: '400',
+    width: convertWidth(196),
+    marginLeft: convertWidth(22),
+  },
+
+  assetPreview: {
+    marginLeft: convertWidth(19),
+    marginRight: convertWidth(19),
+    height: 125
+  },
+
+
   provenanceLabel: {
     fontFamily: 'Avenir Black',
     fontSize: 14,
@@ -131,13 +163,14 @@ export default StyleSheet.create({
     backgroundColor: '#F5F5F5',
     width: convertWidth(337),
     height: 18,
-    marginLeft: convertWidth(23),
+    marginLeft: convertWidth(19),
     marginTop: 18,
   },
   provenancesHeaderLabelTimestamp: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 14,
+    marginLeft: convertWidth(4),
     width: convertWidth(170),
   },
   provenancesHeaderLabelOwner: {

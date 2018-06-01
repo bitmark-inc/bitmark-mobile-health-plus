@@ -98,7 +98,7 @@ export default StyleSheet.create({
   bottomButton: {
     backgroundColor: '#0060F2',
     width: '100%',
-    minHeight: 42,
+    height: 45 + iosConstant.blankFooter / 2,
     paddingTop: 10,
     paddingBottom: Math.max(10, iosConstant.blankFooter),
     flexDirection: 'row',

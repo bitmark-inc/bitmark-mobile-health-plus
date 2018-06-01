@@ -39,12 +39,16 @@ export class NotificationComponent extends React.Component {
           <Image style={[notificationStyle.notificationImage]} source={require('../../../../assets/imgs/notification.png')} />
         </View>)}
 
-        footerHeight={90}
+        footerHeight={90 + iosConstant.blankFooter / 2}
         footer={(<View style={notificationStyle.enableButtonArea}>
           <TouchableOpacity style={[notificationStyle.enableButton]} onPress={requestNotification}>
             <Text style={notificationStyle.enableButtonText}>ENABLE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[notificationStyle.enableButton, { backgroundColor: 'white', paddingBottom: Math.max(10, iosConstant.blankFooter) }]} onPress={() => {
+          <TouchableOpacity style={[notificationStyle.enableButton, {
+            backgroundColor: 'white',
+            paddingBottom: Math.max(10, iosConstant.blankFooter),
+            height: 45 + iosConstant.blankFooter / 2
+          }]} onPress={() => {
             this.props.screenProps.rootNavigation.dispatch(resetMainPage);
           }}>
             <Text style={[notificationStyle.enableButtonText, { color: '#0060F2' }]}>LATER</Text>

@@ -1,5 +1,6 @@
 import { StyleSheet, } from 'react-native';
 import { convertWidth } from './../../../../utils'
+import { iosConstant } from '../../../../configs/ios/ios.config';
 
 export default StyleSheet.create({
   body: {
@@ -96,20 +97,19 @@ export default StyleSheet.create({
   buttonsArea: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: convertWidth(338),
-    marginTop: 20,
-    marginBottom: 20,
-    backgroundColor: '#F5F5F5',
+    width: convertWidth(375),
+    backgroundColor: 'white',
   },
   rejectButton: {
     borderTopWidth: 3,
     borderTopColor: '#A4B5CD',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: 12.5,
-    paddingBottom: 12.5,
-    width: convertWidth(169),
-    minHeight: 45,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
+    width: '50%',
+    height: 45 + iosConstant.blankFooter / 2,
+    backgroundColor: '#F5F5F5',
   },
   rejectButtonText: {
     fontFamily: 'Avenir black',
@@ -122,10 +122,11 @@ export default StyleSheet.create({
     borderTopColor: '#0060F2',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: 12.5,
-    paddingBottom: 12.5,
-    width: convertWidth(169),
-    minHeight: 45,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
+    width: '50%',
+    height: 45 + iosConstant.blankFooter / 2,
+    backgroundColor: '#F5F5F5',
   },
   acceptButtonText: {
     fontFamily: 'Avenir black',

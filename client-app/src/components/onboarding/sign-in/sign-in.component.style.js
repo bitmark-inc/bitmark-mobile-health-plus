@@ -105,7 +105,7 @@ export default StyleSheet.create({
     ],
   },
   submitButton: {
-    height: 45,
+    height: 45 + iosConstant.blankFooter / 2,
     paddingTop: 10,
     paddingBottom: Math.max(10, iosConstant.blankFooter),
     width: convertWidth(375),

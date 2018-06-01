@@ -19,6 +19,7 @@ import defaultStyle from './../../../commons/styles';
 import newAccountStyle from './new-account.component.style';
 
 import { AppProcessor } from '../../../processors';
+import { iosConstant } from '../../../configs/ios/ios.config';
 
 
 class PropertyPrivateYourDataComponent extends React.Component {
@@ -65,7 +66,7 @@ class PropertyPrivateYourDataComponent extends React.Component {
             </View>
           </View>
         )}
-        footerHeight={45}
+        footerHeight={45 + iosConstant.blankFooter / 2}
         footer={(<View style={newAccountStyle.letDoItButtonArea}>
           <TouchableOpacity style={[newAccountStyle.letDoItButton]} onPress={() => {
             this.props.screenProps.newAccountNavigation.navigate('FaceTouchId', { doContinue: this.props.screenProps.createBitmarkAccount });

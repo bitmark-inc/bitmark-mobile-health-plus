@@ -12,6 +12,7 @@ import propertyTransferStyle from './local-property-transfer.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { AppProcessor } from '../../../../processors/app-processor';
 import { AccountService, EventEmitterService } from '../../../../services';
+import { iosConstant } from '../../../../configs/ios/ios.config';
 
 
 export class LocalPropertyTransferComponent extends React.Component {
@@ -103,7 +104,7 @@ export class LocalPropertyTransferComponent extends React.Component {
             </ScrollView>
           </View>
         )}
-        footerHeight={45}
+        footerHeight={45 + iosConstant.blankFooter / 2}
         footer={(<TouchableOpacity style={[propertyTransferStyle.sendButton, {
           borderTopColor: this.state.bitmarkAccount ? '#0060F2' : '#A4B5CD'
         }]}

@@ -17,6 +17,7 @@ import { AppProcessor } from '../../../../processors/app-processor';
 import { EventEmitterService } from '../../../../services';
 import { config } from '../../../../configs';
 import { DataProcessor } from '../../../../processors/data-processor';
+import { BitmarkModel } from '../../../../models';
 
 let ComponentName = 'LocalPropertyDetailComponent';
 export class LocalPropertyDetailComponent extends React.Component {
@@ -34,7 +35,14 @@ export class LocalPropertyDetailComponent extends React.Component {
     let bitmark = this.props.navigation.state.params.bitmark;
 
     let provenanceViewed = {};
+    let metadata = [];
+    let index = 0;
+    for (let label in asset.metadata) {
+      metadata.push({ key: index, label, value: asset.metadata[label] });
+      index++;
+    }
     this.state = {
+      metadata,
       provenanceViewed,
       isTracking: false,
       asset,
@@ -61,7 +69,16 @@ export class LocalPropertyDetailComponent extends React.Component {
       DataProcessor.doUpdateViewStatus(null, this.state.bitmark.id);
     }
 
+    // Augment info for asset preview
+    let contentType = await BitmarkModel.doGetAssetTextContentType(this.state.asset.id);
+    let assetTextContent;
+    if (contentType && contentType === 'text') {
+      assetTextContent = await BitmarkModel.doGetAssetTextContent(this.state.asset.id);
+    }
+
     this.setState({
+      contentType,
+      assetTextContent,
       provenance, provenanceViewed, gettingData: false,
       isTracking: !!trackingBitmark,
     });
@@ -173,6 +190,43 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>
                 ISSUED {this.state.bitmark.displayStatus === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}{'\n'}BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
               </Text>
+
+              {this.state.metadata && this.state.metadata.length > 0 && <View style={propertyDetailStyle.metadataArea}>
+                <FlatList
+                  scrollEnabled={false}
+                  extraData={this.state}
+                  data={this.state.metadata || []}
+                  renderItem={({ item }) => {
+                    return (<View style={[propertyDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
+                      <Text style={[propertyDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{item.label}:</Text>
+                      <Text style={[propertyDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
+                    </View>);
+                  }}
+                />
+              </View>}
+
+              {/*Preview*/}
+              {/*Text preview*/}
+              {this.state.contentType && this.state.contentType === 'text' &&
+                <ScrollView style={propertyDetailStyle.assetPreview}>
+                  <TouchableOpacity style={{ flex: 1 }}>
+                    {this.state.assetTextContent &&
+                      <Text>{this.state.assetTextContent}</Text>
+                    }
+                  </TouchableOpacity>
+                </ScrollView>
+              }
+              {/*Image preview*/}
+              {this.state.contentType && this.state.contentType === 'image' &&
+                <View style={propertyDetailStyle.assetPreview}>
+                  <Image
+                    style={{ width: 125, height: 125 }}
+                    source={{ uri: `${config.preview_asset_url}/${this.state.asset.id}` }}
+                  />
+                </View>
+              }
+
+
               <Text style={[propertyDetailStyle.provenanceLabel, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>PROVENANCE</Text>
               <View style={propertyDetailStyle.provenancesArea}>
                 <View style={propertyDetailStyle.provenancesHeader}>

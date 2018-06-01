@@ -11,6 +11,7 @@ import signStyle from './sign-in.component.style';
 import { BitmarkAutoCompleteComponent, BitmarkComponent } from './../../../commons/components';
 import { dictionary24Words, convertWidth } from './../../../utils';
 import { AppProcessor } from '../../../processors';
+import { iosConstant } from '../../../configs/ios/ios.config';
 
 let PreCheckResults = {
   success: 'SUBMIT',
@@ -288,7 +289,7 @@ export class SignInComponent extends React.Component {
           </TouchableOpacity>
         </TouchableWithoutFeedback>
         )}
-        footerHeight={45}
+        footerHeight={45 + iosConstant.blankFooter / 2}
         footer={(
           <TouchableOpacity style={[signStyle.submitButton, {
             backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'

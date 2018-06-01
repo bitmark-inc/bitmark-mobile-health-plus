@@ -83,7 +83,7 @@ export default StyleSheet.create({
   },
   sendButton: {
     width: convertWidth(375),
-    height: 45,
+    height: 45 + iosConstant.blankFooter / 2,
     borderTopWidth: 3,
     backgroundColor: '#F5F5F5',
     flexDirection: 'column',

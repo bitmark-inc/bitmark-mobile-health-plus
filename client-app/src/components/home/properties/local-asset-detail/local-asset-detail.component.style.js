@@ -149,7 +149,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: convertWidth(340),
-    marginLeft: convertWidth(23),
+    marginLeft: convertWidth(19),
     height: 18,
     backgroundColor: '#F5F5F5',
     marginTop: 18,
@@ -215,7 +215,7 @@ export default StyleSheet.create({
     color: '#CCCCCC',
     fontStyle: 'italic'
   },
-  
+
   assetPreview: {
     marginLeft: convertWidth(19),
     marginRight: convertWidth(19),

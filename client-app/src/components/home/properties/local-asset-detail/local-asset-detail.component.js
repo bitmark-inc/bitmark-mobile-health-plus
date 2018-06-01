@@ -16,6 +16,7 @@ import { AppProcessor, DataProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
 import { config } from './../../../../configs';
 import { BitmarkModel } from "../../../../models";
+import { convertWidth } from '../../../../utils';
 
 let ComponentName = 'LocalAssetDetailComponent';
 export class LocalAssetDetailComponent extends React.Component {
@@ -202,7 +203,7 @@ export class LocalAssetDetailComponent extends React.Component {
               <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
               <View style={assetDetailStyle.bitmarksArea}>
                 <View style={assetDetailStyle.bitmarksHeader}>
-                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>NO.</Text>
+                  <Text style={[assetDetailStyle.bitmarksHeaderLabel, { marginLeft: convertWidth(4) }]}>NO.</Text>
                   <Text style={assetDetailStyle.bitmarksHeaderLabel}>ACTION</Text>
                 </View>
                 <View style={assetDetailStyle.bitmarkListArea}>

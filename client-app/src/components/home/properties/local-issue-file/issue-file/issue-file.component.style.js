@@ -342,6 +342,7 @@ export default StyleSheet.create({
     marginLeft: convertWidth(19),
     width: convertWidth(332),
     marginTop: 12,
+    marginBottom: 20,
   },
 
   issueError: {
@@ -357,7 +358,7 @@ export default StyleSheet.create({
 
   issueButton: {
     width: convertWidth(375),
-    minHeight: 45,
+    minHeight: 45 + iosConstant.blankFooter,
     borderTopWidth: 2,
     backgroundColor: '#F5F5F5',
     flexDirection: 'column',

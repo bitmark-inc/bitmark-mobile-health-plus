@@ -15,6 +15,7 @@ import { BitmarkService } from './../../../../../services';
 import localAddPropertyStyle from './issue-file.component.style';
 import defaultStyle from './../../../../../commons/styles';
 import { AppProcessor } from '../../../../../processors';
+import { iosConstant } from '../../../../../configs/ios/ios.config';
 
 export class LocalIssueFileComponent extends React.Component {
   constructor(props) {
@@ -77,8 +78,8 @@ export class LocalIssueFileComponent extends React.Component {
   // ==========================================================================================
   // ==========================================================================================
   onIssueFile() {
-    let isPublicAsset = this.state.assetAccessibility === 'public' ? true : false;
-    AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), isPublicAsset, {
+    console.log('assetAccessibility :', this.state.assetAccessibility);
+    AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), this.state.assetAccessibility === 'public', {
       indicator: true, title: '', message: 'Sending your transaction to the Bitmark network...'
     }).then((data) => {
       if (data) {
@@ -392,7 +393,7 @@ export class LocalIssueFileComponent extends React.Component {
             </View>
           </TouchableOpacity>)}
 
-          footerHeight={45}
+          footerHeight={45 + iosConstant.blankFooter}
           footer={(<TouchableOpacity
             style={[localAddPropertyStyle.issueButton, { borderTopColor: this.state.canIssue ? '#0060F2' : '#C2C2C2' }]}
             onPress={this.onIssueFile}

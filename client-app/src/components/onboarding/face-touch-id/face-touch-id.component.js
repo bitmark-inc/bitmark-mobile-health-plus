@@ -10,6 +10,7 @@ import { CommonModel } from './../../../models';
 
 import faceTouchIdStyle from './face-touch-id.component.style';
 import { BitmarkComponent } from '../../../commons/components';
+import { iosConstant } from '../../../configs/ios/ios.config';
 
 export class FaceTouchIdComponent extends React.Component {
   constructor(props) {
@@ -76,7 +77,7 @@ export class FaceTouchIdComponent extends React.Component {
 
         </View>)}
 
-        footerHeight={45}
+        footerHeight={45 + iosConstant.blankFooter / 2}
         footer={(<View style={faceTouchIdStyle.enableButtonArea}>
           <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
             onPress={() => {

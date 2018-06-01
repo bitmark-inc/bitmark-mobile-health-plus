@@ -137,7 +137,7 @@ export default StyleSheet.create({
   letDoItButton: {
     marginTop: 10,
     width: convertWidth(375),
-    minHeight: 45,
+    minHeight: 45 + iosConstant.blankFooter / 2,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

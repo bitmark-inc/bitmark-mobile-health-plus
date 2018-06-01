@@ -16,6 +16,7 @@ import { AppProcessor } from '../../../../processors';
 import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
 import { BitmarkModel } from '../../../../models';
 import { EventEmitterService } from '../../../../services';
+import { iosConstant } from '../../../../configs/ios/ios.config';
 
 export class TransactionDetailComponent extends React.Component {
   constructor(props) {
@@ -99,7 +100,7 @@ export class TransactionDetailComponent extends React.Component {
         }]);
       }
     }).catch(error => {
-      Alert.alert('Request Failed', 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.');
+      Alert.alert('Request Failed', 'This error may be due to a request expiration or a network error.\nPlease try again later.');
       console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
     });
   }
@@ -122,9 +123,9 @@ export class TransactionDetailComponent extends React.Component {
                 <Text style={transactionDetailStyle.transferOfferSenderFix}>[</Text>
                 <Text style={transactionDetailStyle.transferOfferSenderName} numberOfLines={1}>{this.state.transferOffer.from.substring(0, 12)}...</Text>
                 <Text style={transactionDetailStyle.transferOfferSenderFix}>] </Text>
-                has requested to transfer the property
+                has transferred the property
                 <Text style={transactionDetailStyle.transferOfferAssetName}> {this.state.transferOffer.asset.name} </Text>
-                to you. Please sign the request to receive the property transfer.
+                to you. Please sign for receipt to accept the property transfer.
               </Text>
               <View style={transactionDetailStyle.externalArea}>
                 <View style={transactionDetailStyle.externalAreaRow}>
@@ -157,17 +158,19 @@ export class TransactionDetailComponent extends React.Component {
                     }} />
                 </View>
               </View>
-              <View style={transactionDetailStyle.buttonsArea}>
-                <TouchableOpacity style={transactionDetailStyle.rejectButton} onPress={this.doReject}>
-                  <Text style={transactionDetailStyle.rejectButtonText}>REJECT</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={transactionDetailStyle.acceptButton} onPress={this.doAccept}>
-                  <Text style={transactionDetailStyle.acceptButtonText}>ACCEPT</Text>
-                </TouchableOpacity>
-              </View>
             </TouchableOpacity>
           </ScrollView>
         </View >)}
+
+        footerHeight={45 + iosConstant.blankFooter / 2}
+        footer={(<View style={transactionDetailStyle.buttonsArea}>
+          <TouchableOpacity style={transactionDetailStyle.rejectButton} onPress={this.doReject}>
+            <Text style={transactionDetailStyle.rejectButtonText}>REJECT</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[transactionDetailStyle.acceptButton, { marginLeft: 1 }]} onPress={this.doAccept}>
+            <Text style={transactionDetailStyle.acceptButtonText}>ACCEPT</Text>
+          </TouchableOpacity>
+        </View>)}
       />
 
     );
