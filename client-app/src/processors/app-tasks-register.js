@@ -229,7 +229,7 @@ const doIssueIftttData = async ({ iftttBitmarkFile, processingInfo }) => {
 };
 
 const doMigrateWebAccount = async ({ token }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to migration.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize your account migration.');
   if (!touchFaceIdSession) {
     return null;
   }
