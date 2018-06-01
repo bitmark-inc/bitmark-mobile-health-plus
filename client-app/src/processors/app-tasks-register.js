@@ -91,7 +91,7 @@ const doTransferBitmark = async ({ bitmark, receiver }) => {
 };
 
 const doAcceptTransferBitmark = async ({ transferOffer, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to accept the bitmark transfer request.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -99,7 +99,7 @@ const doAcceptTransferBitmark = async ({ transferOffer, processingInfo }) => {
 };
 
 const doAcceptAllTransfers = async ({ transferOffers, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to authorize your transactions.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to accept the bitmark transfer request.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -108,7 +108,7 @@ const doAcceptAllTransfers = async ({ transferOffers, processingInfo }) => {
 
 
 const doCancelTransferBitmark = async ({ transferOfferId }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to cancel the bitmark transfer request.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -116,7 +116,7 @@ const doCancelTransferBitmark = async ({ transferOfferId }) => {
 };
 
 const doRejectTransferBitmark = async ({ transferOffer, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to authorize your transactions');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to reject the bitmark transfer request.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -173,14 +173,14 @@ const doCompletedStudyTask = async ({ study, taskType, result }) => {
   return await processing(DataProcessor.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
 };
 const doDonateHealthData = async ({ study, list, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to donate your health data.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Please sign your data donation for ${study.title}.`);
   if (!touchFaceIdSession) {
     return null;
   }
   return await submitting(DataProcessor.doDonateHealthData(touchFaceIdSession, study, list), processingData);
 };
 const doBitmarkHealthData = async ({ list, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to bitmark your weekly health data.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Please sign your bitmark issuance for your health data.`);
   if (!touchFaceIdSession) {
     return null;
   }
@@ -221,7 +221,7 @@ const doRevokeIftttToken = async () => {
   return await processing(DataProcessor.doRevokeIftttToken(touchFaceIdSession));
 };
 const doIssueIftttData = async ({ iftttBitmarkFile, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to issuance.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your bitmark issuance for your IFTTT data.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -237,7 +237,7 @@ const doMigrateWebAccount = async ({ token }) => {
 };
 
 const doSignInOnWebApp = async ({ token }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to sign in.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Sign in using your mobile device.');
   if (!touchFaceIdSession) {
     return null;
   }

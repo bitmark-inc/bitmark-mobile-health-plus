@@ -47,7 +47,7 @@ export class HealthDataBitmarkComponent extends React.Component {
             }).then((result) => {
               if (result) {
                 DataProcessor.doReloadUserData();
-                Alert.alert('Issuance Successful!', 'Now you’ve created your property. Let’s verify that your property is showing up in your account.', [{
+                Alert.alert('Success!', 'Your property rights have been registered.', [{
                   text: 'OK',
                   onPress: () => {
                     const resetHomePage = NavigationActions.reset({
