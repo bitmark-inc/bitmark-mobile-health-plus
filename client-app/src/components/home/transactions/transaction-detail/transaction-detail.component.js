@@ -72,7 +72,7 @@ export class TransactionDetailComponent extends React.Component {
             }]);
           }
         }).catch(error => {
-          Alert.alert('Request Failed', 'This error may be due to a request expiration or a network error. We will inform the property owner that the property transfer failed. Please try again later or contact the property owner to resend a property transfer request.');
+          Alert.alert('Request Failed', 'This error may be due to a request expiration or a network error.\nPlease try again later.');
           console.log('TransactionDetailComponent doRejectTransferBitmark error:', error);
         });
       },
