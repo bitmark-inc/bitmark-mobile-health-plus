@@ -66,8 +66,10 @@ func initializeLog() {
 
 func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *watcher.NotifyClient {
 	nc := &watcher.NotifyClient{
-		Queues: make([]*nsq.Consumer, 0),
-		Stop:   make(chan struct{}),
+		Queues:   make([]*nsq.Consumer, 0),
+		Stop:     make(chan struct{}),
+		CertPath: c.External.MessageQueue.CrtFile,
+		KeyFile:  c.External.MessageQueue.KeyFile,
 	}
 
 	twosigsHandler := twosigs.New(pushStore, pushAPIClient, gatewayClient, c.DataDonation.ResearcherAccounts)
@@ -76,7 +78,7 @@ func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, b
 	blockchainHandler := blockchain.New(pushStore, bitmarkStore, pushAPIClient, gatewayClient)
 	nc.Add("new-block", c.External.MessageChannel, blockchainHandler)
 
-	nc.Connect(c.External.MessageQueue)
+	nc.Connect(c.External.MessageQueue.Server)
 
 	return nc
 }

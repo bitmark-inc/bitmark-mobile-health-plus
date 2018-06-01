@@ -7,7 +7,11 @@ listen {
 
 external {
     coreAPIServer = "https://api.test.bitmark.com"
-    messageQueue = "q.cluster.test.bitmark.com:32150"
+    messageQueue {
+        server = "q.cluster.devel.bitmark.com:32150"
+        crtFile = "./nsq-cers/nsq.crt"
+        keyFile = "./nsq-cers/nsq.key"
+    }
     iftttServer = "https://when.test.bitmark.com"
     pushServer = "http://n.devel.bitmark.com"
     pushServerBeta = "http://n.devel.bitmark.com"
