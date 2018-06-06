@@ -89,7 +89,7 @@ export class LocalAssetDetailComponent extends React.Component {
 
   cancelTransferring(transferOfferId) {
     Alert.alert('Are you sure you want to cancel this property transfer?', '', [{
-      text: 'No', style: 'cancel',
+      text: 'Cancel', style: 'cancel',
     }, {
       text: 'Yes',
       onPress: () => {

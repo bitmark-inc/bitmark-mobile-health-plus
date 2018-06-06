@@ -81,7 +81,7 @@ export class AccountDetailComponent extends React.Component {
 
   inactiveBitmarkHealthData() {
     Alert.alert('Are you sure you want to revoke access to your HealthKit data?', '', [{
-      text: 'No',
+      text: 'Cancel',
       style: 'cancel',
     }, {
       text: 'Yes',
@@ -97,7 +97,7 @@ export class AccountDetailComponent extends React.Component {
   revokeIFTTT() {
     Alert.alert('Are you sure you want to revoke access to your IFTTT?', '', [{
       style: 'cancel',
-      text: 'No',
+      text: 'Cancel',
     }, {
       text: 'Yes',
       onPress: () => {

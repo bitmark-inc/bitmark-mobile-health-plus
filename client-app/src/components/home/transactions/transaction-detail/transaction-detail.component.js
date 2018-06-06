@@ -47,7 +47,7 @@ export class TransactionDetailComponent extends React.Component {
 
   doReject() {
     Alert.alert('Are you sure you want to reject this property transfer request?', '', [{
-      text: 'No', style: 'cancel',
+      text: 'Cancel', style: 'cancel',
     }, {
       text: 'Yes',
       onPress: () => {
