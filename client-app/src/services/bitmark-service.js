@@ -66,10 +66,14 @@ const doGetBitmarks = async (bitmarkAccountNumber) => {
     }
   }
   localAssets = localAssets.sort((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset);
-  return localAssets;
+  return {
+    localAssets,
+    lastOffset,
+    outgoingTransferOffers,
+  };
 };
 
-const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset) => {
+const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset, outgoingTransferOffers) => {
   let hasChanging = false;
   if (!oldLocalAssets) {
     hasChanging = true;
@@ -125,12 +129,14 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
       }
     }
   }
-
+  outgoingTransferOffers = outgoingTransferOffers ? outgoingTransferOffers : (await TransactionService.doGetActiveOutgoingTransferOffers(bitmarkAccountNumber));
   for (let asset of localAssets) {
     asset.totalPending = 0;
     asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
     for (let bitmark of asset.bitmarks) {
-      bitmark.displayStatus = bitmark.status;
+      let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
+      bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
+      bitmark.displayStatus = transferOffer ? 'transferring' : bitmark.status;
       asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
       asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
     }
@@ -141,6 +147,7 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
     return {
       localAssets,
       lastOffset,
+      outgoingTransferOffers,
     };
   }
 };

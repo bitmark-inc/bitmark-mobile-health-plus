@@ -196,7 +196,7 @@ export class DonationComponent extends React.Component {
 
           {this.state.studies && this.state.studies.length === 0 && this.state.subTab === SubTabs.joined && <View style={donationStyle.content}>
             <Text style={donationStyle.noCardTitle}>HAVEN’T JOINED ANY STUDIES?</Text>
-            <Text style={donationStyle.noCardMessage}>Browse studies to find where you can donate your data.</Text>
+            <Text style={donationStyle.noCardMessage}>Browse studies to learn where you can donate your data and help advance public health.</Text>
           </View>}
           {(this.state.appLoadingData || this.state.gettingData) && <View style={donationStyle.content}>
             <ActivityIndicator size="large" style={{ marginTop: 46, }} />

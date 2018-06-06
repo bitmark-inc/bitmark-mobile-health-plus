@@ -61,6 +61,7 @@ export class AssetsComponent extends React.Component {
       if (trackingBitmarks) {
         trackingBitmarks.forEach((trackingBitmark, index) => trackingBitmark.key = index);
       }
+      console.log('localAssets :', localAssets);
       this.setState({
         totalAssets,
         totalBitmarks,

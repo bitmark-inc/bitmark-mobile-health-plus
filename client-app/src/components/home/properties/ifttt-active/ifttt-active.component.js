@@ -55,7 +55,7 @@ export class IftttActiveComponent extends React.Component {
     let message = event.nativeEvent.data;
     if (message === 'enable-ifttt') {
       this.setState({ processing: true });
-      AppProcessor.doCreateSignatureData('Please sign to connect IFTTT data', true).then(data => {
+      AppProcessor.doCreateSignatureData('Please sign to connect your IFTTT account.', true).then(data => {
         this.setState({ processing: false });
         if (!data) {
           return;
