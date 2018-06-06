@@ -1,12 +1,16 @@
 package watcher
 
 import (
+	"crypto/tls"
+
 	"github.com/nsqio/go-nsq"
 )
 
 type NotifyClient struct {
-	Queues []*nsq.Consumer
-	Stop   chan struct{}
+	Queues   []*nsq.Consumer
+	Stop     chan struct{}
+	CertPath string
+	KeyFile  string
 }
 
 func (nc *NotifyClient) Close() {
@@ -25,6 +29,17 @@ func (nc *NotifyClient) Connect(hostPort string) error {
 
 func (nc *NotifyClient) Add(topic, channel string, handler nsq.Handler) error {
 	config := nsq.NewConfig()
+	cert, err := tls.LoadX509KeyPair(nc.CertPath, nc.KeyFile)
+	if err != nil {
+		panic(err)
+	}
+	tlsConfig := &tls.Config{
+		Certificates:       []tls.Certificate{cert},
+		InsecureSkipVerify: true,
+	}
+	config.TlsV1 = true
+	config.TlsConfig = tlsConfig
+
 	q, err := nsq.NewConsumer(topic, channel, config)
 	if err != nil {
 		return err

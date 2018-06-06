@@ -28,8 +28,12 @@ type Configuration struct {
 	} `hcl:"db"`
 	PushClients map[string]PushServerInfo `hcl:"push-notification"`
 	External    struct {
-		CoreAPIServer  string `hcl:"coreAPIServer"`
-		MessageQueue   string `hcl:"messageQueue"`
+		CoreAPIServer string `hcl:"coreAPIServer"`
+		MessageQueue  struct {
+			Server  string `hcl:"server"`
+			CrtFile string `hcl:"crtFile"`
+			KeyFile string `hcl:"keyFile"`
+		} `hcl:"messageQueue"`
 		MessageChannel string `hcl:"messageChannel"`
 		IFTTTServer    string `hcl:"iftttServer"`
 		PushServer     string `hcl:"pushServer"`
