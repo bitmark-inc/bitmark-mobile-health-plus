@@ -612,9 +612,7 @@ const doIssueIftttData = async (touchFaceIdSession, iftttBitmarkFile) => {
 
 const doAcceptTransferBitmark = async (touchFaceIdSession, transferOffer) => {
   await TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer);
-  let activeIncomingTransferOffers = await runGetActiveIncomingTransferOfferInBackground();
-  await doCheckNewActiveIncomingTransferOffers(activeIncomingTransferOffers);
-  return activeIncomingTransferOffers;
+  return await doReloadIncomingTransferOffers();
 };
 
 const doAcceptAllTransfers = async (touchFaceIdSession, transferOffers) => {
@@ -626,16 +624,12 @@ const doAcceptAllTransfers = async (touchFaceIdSession, transferOffers) => {
 
 const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
   await TransactionService.doCancelTransferBitmark(touchFaceIdSession, transferOfferId);
-  let activeIncomingTransferOffers = await runGetActiveIncomingTransferOfferInBackground();
-  await doCheckNewActiveIncomingTransferOffers(activeIncomingTransferOffers);
-  return activeIncomingTransferOffers;
+  return await doReloadIncomingTransferOffers();
 };
 
 const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer, ) => {
   await TransactionService.doRejectTransferBitmark(touchFaceIdSession, transferOffer);
-  let activeIncomingTransferOffers = await runGetActiveIncomingTransferOfferInBackground();
-  await doCheckNewActiveIncomingTransferOffers(activeIncomingTransferOffers);
-  return activeIncomingTransferOffers;
+  return await doReloadIncomingTransferOffers();
 };
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
@@ -647,8 +641,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
   let result = await TransactionService.doTransferBitmark(touchFaceIdSession, bitmarkId, receiver);
-  let activeIncomingTransferOffers = await runGetActiveIncomingTransferOfferInBackground();
-  doCheckNewActiveIncomingTransferOffers(activeIncomingTransferOffers);
+  await doReloadIncomingTransferOffers();
   let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
   await runGetLocalBitmarksInBackground(donationInformation);
   return result;

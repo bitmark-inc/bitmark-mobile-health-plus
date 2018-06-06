@@ -114,7 +114,7 @@ export class DonationComponent extends React.Component {
       <View style={donationStyle.body}>
         <View style={donationStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>STUDIES</Text>
+          <Text style={defaultStyle.headerTitle}>DONATIONS</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>
 
