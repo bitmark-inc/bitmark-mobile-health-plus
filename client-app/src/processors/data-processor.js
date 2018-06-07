@@ -106,7 +106,9 @@ const recheckLocalAssets = (localAssets, donationInformation) => {
     for (let asset of localAssets) {
       for (let bitmark of asset.bitmarks) {
         let isDonating = donationInformation.completedTasks.findIndex(item => (item.taskType !== donationInformation.commonTaskIds.bitmark_health_data && item.bitmarkId === bitmark.id));
-        bitmark.displayStatus = (bitmark.displayStatus === 'transferring' && isDonating) ? 'donating' : bitmark.displayStatus;
+        if(isDonating && (bitmark.status === 'pending' || bitmark.displayStatus === 'transferring')) {
+          bitmark.displayStatus = 'donating';
+        }
       }
     }
   }
