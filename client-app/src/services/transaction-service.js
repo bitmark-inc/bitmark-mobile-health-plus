@@ -178,10 +178,13 @@ const doGetActiveIncomingTransferOffers = async (accountNumber) => {
 
   for (let incomingTransferOffer of allIncomingTransferOffers) {
     if (incomingTransferOffer.status === 'open') {
-      incomingTransferOffer.bitmark = bitmarks.find(bm => bm.id === incomingTransferOffer.bitmark_id);
-      incomingTransferOffer.asset = assets.find(a => a.id === incomingTransferOffer.bitmark.asset_id);
-      incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at);
-      activeIncomingTransferOffers.push(incomingTransferOffer);
+      let bitmark = bitmarks.find(bm => bm.id === incomingTransferOffer.bitmark_id && bm.status === 'confirmed');
+      if (bitmark) {
+        incomingTransferOffer.bitmark = bitmark;
+        incomingTransferOffer.asset = assets.find(a => a.id === incomingTransferOffer.bitmark.asset_id);
+        incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at);
+        activeIncomingTransferOffers.push(incomingTransferOffer);
+      }
     }
   }
   return activeIncomingTransferOffers;
