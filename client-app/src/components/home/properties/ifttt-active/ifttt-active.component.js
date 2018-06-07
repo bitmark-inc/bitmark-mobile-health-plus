@@ -55,14 +55,16 @@ export class IftttActiveComponent extends React.Component {
     let message = event.nativeEvent.data;
     if (message === 'enable-ifttt') {
       this.setState({ processing: true });
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
       AppProcessor.doCreateSignatureData('Please sign to connect your IFTTT account.', true).then(data => {
-        this.setState({ processing: false });
+        // this.setState({ processing: false });
         if (!data) {
           return;
         }
         this.signed = true;
         this.webViewRef.postMessage(JSON.stringify(data));
       }).catch(error => {
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
         this.setState({ processing: false });
         console.log('IftttActiveComponent createSignatureData error :', error);
       });
@@ -76,6 +78,8 @@ export class IftttActiveComponent extends React.Component {
     if (!this.state.stage) {
       if ((currentUrl === config.ifttt_bitmark_service_url || currentUrl === (config.ifttt_bitmark_service_settings_url)) && this.signed) {
         DataProcessor.doReloadIFTTTInformation().then((iftttInformation) => {
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+          this.setState({ processing: false });
           if (iftttInformation.connectIFTTT && currentUrl === (config.ifttt_bitmark_service_settings_url)) {
             this.setState({
               webViewUrl: config.ifttt_bitmark_service_url,
