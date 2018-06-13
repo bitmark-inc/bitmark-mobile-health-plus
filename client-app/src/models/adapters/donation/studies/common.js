@@ -8,6 +8,8 @@ let generateSurveyAsset = (studyInformation, bitmarkAccount, donateData, donateD
     assetMetadata: {
       Creator: bitmarkAccount,
       Created: moment(donateDate).format('YYYY MMM DD HH:mm:ss'),
+      Source: 'HealthKit',
+      Relation: studyInformation.studyCode,
     },
     assetType: donateDataType,
     date: donateDate,
