@@ -14,8 +14,6 @@ import { FileUtil } from '../utils';
 import { DataCacheProcessor } from './data-cache-processor';
 
 let userInformation = {};
-
-
 let isLoadingData = false;
 // ================================================================================================================================================
 const doCheckNewDonationInformation = async (donationInformation, isLoadingAllUserData) => {
