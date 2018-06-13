@@ -43,7 +43,7 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 		return err
 	}
 
-	// log.Debugf("Handle message: %+v", data)
+	log.Debugf("Handle message: %+v", data)
 
 	// De-duplication
 	blockKey := strconv.FormatInt(data.BlockNumber, 10)

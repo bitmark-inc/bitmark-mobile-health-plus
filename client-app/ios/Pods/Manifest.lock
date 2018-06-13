@@ -1,17 +1,17 @@
 PODS:
-  - BigInt (3.0.1):
+  - BigInt (3.1.0):
     - SipHash (~> 1.2)
   - BitmarkSDK (0.0.5):
     - BigInt
     - CryptoSwift
     - TweetNacl
-  - CryptoSwift (0.9.0)
+  - CryptoSwift (0.10.0)
   - HockeySDK (5.1.2):
     - HockeySDK/DefaultLib (= 5.1.2)
   - HockeySDK/DefaultLib (5.1.2)
   - KeychainAccess (3.1.0)
   - ResearchKit (1.5.2)
-  - SipHash (1.2.0)
+  - SipHash (1.2.2)
   - TweetNacl (1.0.1)
 
 DEPENDENCIES:
@@ -28,20 +28,20 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   BitmarkSDK:
-    :commit: 01dd0c146de441aa46fc8ec1c72495086d52a639
+    :commit: 414b4d86a8500759502f2d317dc72b3f99cff9d8
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
   ResearchKit:
     :commit: 0b9690f4e586e7a5f4dfd655c7359f928c8e24ce
     :git: https://github.com/bitmark-inc/ResearchKit.git
 
 SPEC CHECKSUMS:
-  BigInt: 8e8a52161c745cd3ab78e3dc346a9fbee51e6cf6
+  BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
   BitmarkSDK: a4bc0e93818530a90a325bedcbfc2f7a21d2fba4
-  CryptoSwift: bca8c5b653dcc2d9734409242a070ff53bafac86
+  CryptoSwift: 6c778d69282bed3b4e975ff97a79d074f20bb011
   HockeySDK: 38b7e2726af1ea86ae97ce4b5de33ab0817e3500
   KeychainAccess: 94c5540b32eabf7bc32bfb976a268e8ea05fd6da
   ResearchKit: 76d9e3d4c1823d510f04d5ab1bf57bba568d59ff
-  SipHash: c6e9e43e9c531b5bc6602545130c26194a6d31ce
+  SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
 PODFILE CHECKSUM: 21fc1486c9d04e3033a47b1dcaafcc2c02e06781

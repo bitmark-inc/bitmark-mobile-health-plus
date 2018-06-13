@@ -76,7 +76,7 @@ func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, b
 	nc.Add("transfer-offer", c.External.MessageChannel, twosigsHandler)
 
 	blockchainHandler := blockchain.New(pushStore, bitmarkStore, pushAPIClient, gatewayClient)
-	nc.Add("new-block", c.External.MessageChannel, blockchainHandler)
+	nc.Add("blockchain", c.External.MessageChannel, blockchainHandler)
 
 	nc.Connect(c.External.MessageQueue.Server)
 
@@ -108,12 +108,12 @@ func main() {
 	pushClient := gorush.New(conf.PushClients)
 	gatewayClient := gateway.New(conf.External.CoreAPIServer)
 
-	if !pushClient.Ping(ctx) {
-		log.Panic("Failed to ping to push server")
-	}
-	if !gatewayClient.Ping(ctx) {
-		log.Panic("Failed to ping to gateway server")
-	}
+	// if !pushClient.Ping(ctx) {
+	// 	log.Panic("Failed to ping to push server")
+	// }
+	// if !gatewayClient.Ping(ctx) {
+	// 	log.Panic("Failed to ping to gateway server")
+	// }
 
 	nc := initializeWatcher(conf, pushStore, bitmarkStore, pushClient, gatewayClient)
 
