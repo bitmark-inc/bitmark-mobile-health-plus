@@ -32,6 +32,8 @@ let generateHealthKitAsset = (studyInformation, bitmarkAccount, donateData, dona
     assetMetadata: {
       Creator: bitmarkAccount,
       'Created (date)': moment(donateDate).format('YYYY MMM DD HH:mm:ss'),
+      Source: 'HealthKit',
+      Relation: studyInformation.studyCode,
     },
     assetType: donateDataType,
     date: donateDate,
