@@ -140,6 +140,7 @@ export default StyleSheet.create({
   },
 
   assetPreview: {
+    marginTop: 15,
     marginLeft: convertWidth(19),
     marginRight: convertWidth(19),
     height: 125
