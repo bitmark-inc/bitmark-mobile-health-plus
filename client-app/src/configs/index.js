@@ -27,7 +27,7 @@ let config = {
   ifttt_bitmark_service_url: 'https://ifttt.com/bitmarkdevel',
   ifttt_bitmark_service_settings_url: "https://ifttt.com/services/bitmarkdevel/settings",
   web_app_server_url: 'http://192.168.0.109:8900',
-  preview_asset_url: 'https://preview.assets.test.bitmark.com'
+  preview_asset_url: 'https://preview.test.bitmarkaccountassets.com'
 };
 
 if (config.network === NETWORKS.testnet) {
@@ -39,7 +39,7 @@ if (config.network === NETWORKS.testnet) {
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmarktest';
   config.ifttt_bitmark_service_settings_url = "https://ifttt.com/services/bitmarktest/settings";
   config.web_app_server_url = "https://webapp.test.bitmark.com";
-  config.preview_asset_url = "https://preview.assets.test.bitmark.com";
+  config.preview_asset_url = "https://preview.test.bitmarkaccountassets.com";
 } else if (config.network === NETWORKS.livenet) {
   config.bitmark_network = NETWORKS.livenet;
   config.api_server_url = 'https://api.bitmark.com';
@@ -52,7 +52,7 @@ if (config.network === NETWORKS.testnet) {
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmark';
   config.ifttt_bitmark_service_settings_url = "https://ifttt.com/services/bitmark/settings";
   config.web_app_server_url = "https://account.bitmark.com";
-  config.preview_asset_url = "https://preview.assets.bitmark.com"
+  config.preview_asset_url = "https://preview.bitmarkaccountassets.com"
 }
 
 let ios = {
