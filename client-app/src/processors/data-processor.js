@@ -736,7 +736,7 @@ const doGetIftttInformation = async () => {
 // ======================================================================================================================================================================================
 // ======================================================================================================================================================================================
 const ActionTypes = {
-  transfer: 'transfer',
+  transfer: 'SIGN TO RECEIVE BITMARK',
   donation: 'donation',
   ifttt: 'ifttt',
 };
@@ -831,7 +831,7 @@ const doGenerateTransactionHistoryData = async () => {
           researcherName = donationCompletedTask.study.researcherName.substring(0, donationCompletedTask.study.researcherName.indexOf(','));
         }
       } else {
-        title = 'TRANSFER';
+        title = 'SEND';
         type = 'P2P TRANSFER';
         let exitCompleted = completed.find(cItem => (cItem.txid === item.previousId && cItem.type === 'DONATION'));
         if (exitCompleted) {

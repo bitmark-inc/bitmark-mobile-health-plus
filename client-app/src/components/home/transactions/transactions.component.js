@@ -21,7 +21,7 @@ const SubTabs = {
 };
 
 const ActionTypes = {
-  transfer: 'transfer',
+  transfer: 'SIGN TO RECEIVE BITMARK',
   donation: 'donation',
   ifttt: 'ifttt',
 };
@@ -80,8 +80,7 @@ export class TransactionsComponent extends React.Component {
     }
     doGetScreenData();
   }
-
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let subTab = (nextProps.subTab === SubTabs.required || nextProps.subTab === SubTabs.completed) ? nextProps.subTab : this.state.subTab;
     this.setState({ subTab });
   }
@@ -178,10 +177,10 @@ export class TransactionsComponent extends React.Component {
   }
 
   clickToCompleted(item) {
-    if (item.title === 'TRANSFER' && item.type === 'P2P TRANSFER') {
+    if (item.title === 'SEND' && item.type === 'P2P TRANSFER') {
       let sourceUrl = config.registry_server_url + `/transaction/${item.txid}?env=app`;
       this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
-    } else if (item.title === 'TRANSFER' && item.type === 'DONATION' && item.previousId) {
+    } else if (item.title === 'SEND' && item.type === 'DONATION' && item.previousId) {
       let sourceUrl = config.registry_server_url + `/transaction/${item.txid}?env=app`;
       this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
     } else if (item.title === 'ISSUANCE') {
@@ -193,7 +192,7 @@ export class TransactionsComponent extends React.Component {
   async acceptAllTransfers() {
     AppProcessor.doGetAllTransfersOffers().then(transferOffers => {
       console.log(transferOffers);
-      Alert.alert('Sign All the Ownership Transfer Requests', `Accept “${transferOffers.length}” properties ownership transfer. `, [{
+      Alert.alert('Sign for acceptance of all bitmarks sent to you?', `Accept “${transferOffers.length}” properties sent to you.`, [{
         text: 'Cancel', style: 'cancel',
       }, {
         text: 'Yes',
@@ -304,7 +303,7 @@ export class TransactionsComponent extends React.Component {
 
                     {item.type === ActionTypes.transfer && <View style={transactionsStyle.iftttTask}>
                       <Text style={transactionsStyle.iftttTitle}>{item.transferOffer.asset.name}</Text>
-                      <Text style={transactionsStyle.iftttDescription}>Sign your bitmark transfer.</Text>
+                      <Text style={transactionsStyle.iftttDescription}>Sign to receive the bitmark from {'[' + item.transferOffer.bitmark.owner.substring(0, 4) + '...' + item.transferOffer.bitmark.owner.substring(item.transferOffer.bitmark.owner.length - 4, item.transferOffer.bitmark.owner.length) + ']'}.</Text>
                     </View>}
 
                     {item.type === ActionTypes.donation && <View style={transactionsStyle.donationTask}>
@@ -331,7 +330,7 @@ export class TransactionsComponent extends React.Component {
         </ScrollView>}
         {this.state.subTab === SubTabs.required && this.state.actionRequired && this.state.actionRequired.length > 0
           && (this.state.actionRequired.findIndex(item => item.type === ActionTypes.transfer) >= 0) && <TouchableOpacity style={transactionsStyle.acceptAllTransfersButton} onPress={this.acceptAllTransfers} >
-            <Text style={transactionsStyle.acceptAllTransfersButtonText}>SIGN ALL OWNERSHIP TRANSFER REQUESTS</Text>
+            <Text style={transactionsStyle.acceptAllTransfersButtonText}>SIGN FOR ALL BITMARKS SENT TO YOU</Text>
           </TouchableOpacity>
         }
 

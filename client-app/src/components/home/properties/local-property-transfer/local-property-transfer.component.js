@@ -85,7 +85,7 @@ export class LocalPropertyTransferComponent extends React.Component {
           <View style={propertyTransferStyle.body}>
             <ScrollView style={propertyTransferStyle.content}>
               <TouchableOpacity activeOpacity={1} style={propertyTransferStyle.mainContent}>
-                <Text style={propertyTransferStyle.transferTitle}>TRANSFER</Text>
+                <Text style={propertyTransferStyle.transferTitle}>SEND BITMARK</Text>
                 <View style={propertyTransferStyle.inputAccountNumberBar} >
                   <TextInput style={propertyTransferStyle.inputAccountNumber} placeholder='BITMARK ACCOUNT'
                     onChangeText={(bitmarkAccount) => this.setState({ bitmarkAccount })}
@@ -98,7 +98,7 @@ export class LocalPropertyTransferComponent extends React.Component {
                   </TouchableOpacity>}
                 </View>
                 <Text style={propertyTransferStyle.accountNumberError}>{this.state.bitmarkAccountError}</Text>
-                <Text style={propertyTransferStyle.transferMessage}>Enter the Bitmark account number to which you would like to transfer ownership of this property.</Text>
+                <Text style={propertyTransferStyle.transferMessage}>Enter the Bitmark account number to which you would like to send ownership of this property.</Text>
                 <Text style={propertyTransferStyle.accountNumberError}>{this.state.transferError}</Text>
               </TouchableOpacity>
             </ScrollView>

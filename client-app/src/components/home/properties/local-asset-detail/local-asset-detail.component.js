@@ -88,13 +88,12 @@ export class LocalAssetDetailComponent extends React.Component {
   }
 
   cancelTransferring(transferOfferId) {
-    Alert.alert('Are you sure you want to cancel this property transfer?', '', [{
+    Alert.alert('Cancel Send Request', 'Are you sure you want to cancel this request?', [{
       text: 'Cancel', style: 'cancel',
     }, {
       text: 'Yes',
       onPress: () => {
         AppProcessor.doCancelTransferBitmark(transferOfferId).then((result) => {
-          console.log('cancel result :', result);
           if (result) {
             EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
           }
@@ -235,20 +234,20 @@ export class LocalAssetDetailComponent extends React.Component {
                       //     </TouchableOpacity>
                       //   </View>);
                       // }
-                      // if (item.bitmark.displayStatus === 'transferring') {
-                      //   return (<View style={[assetDetailStyle.bitmarksRow]} >
-                      //     {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
-                      //     <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                      if (item.bitmark.displayStatus === 'transferring') {
+                        return (<View style={[assetDetailStyle.bitmarksRow]} >
+                          {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
+                          <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
 
-                      //     <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                      //       <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>TRANSFERRING…</Text>
-                      //     </TouchableOpacity>
+                          <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>SEND</Text>
+                          </TouchableOpacity>
 
-                      //     <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.transferOfferId)}>
-                      //       <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>CANCEL</Text>
-                      //     </TouchableOpacity>
-                      //   </View>);
-                      // }
+                          <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.transferOfferId)}>
+                            <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>CANCEL</Text>
+                          </TouchableOpacity>
+                        </View>);
+                      }
                       return (<View style={[assetDetailStyle.bitmarksRow]} >
                         {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
                         <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
