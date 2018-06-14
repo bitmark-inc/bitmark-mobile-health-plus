@@ -41,12 +41,12 @@ public extension Network {
     public static let livenet = Network(name: "livenet",
                                         addressValue: 0x00,
                                         apiServerURL: URL(string: "https://api.bitmark.com")!,
-                                        assetServerURL: URL(string: "https://assets.bitmark.com")!)
+                                        assetServerURL: URL(string: "https://bitmarkaccountassets.com")!)
     
     public static let testnet = Network(name: "testnet",
                                         addressValue: 0x01,
                                         apiServerURL: URL(string: "https://api.test.bitmark.com")!,
-                                        assetServerURL: URL(string: "https://assets.test.bitmark.com")!)
+                                        assetServerURL: URL(string: "https://test.bitmarkaccountassets.com")!)
 }
 
 public struct Config {

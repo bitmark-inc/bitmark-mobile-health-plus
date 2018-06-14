@@ -114,4 +114,39 @@ extension API {
         
         return true
     }
+    
+    internal func getTransferOffer(withId offerID: String) throws -> TransferOffer {
+        var url = URLComponents(url: endpoint.apiServerURL.appendingPathComponent("/v2/transfer_offers"), resolvingAgainstBaseURL: false)!
+        url.queryItems = [
+            URLQueryItem(name: "offer_id", value: offerID)
+        ]
+        
+        let urlRequest = URLRequest(url: url.url!)
+        
+        let (d, res) = try urlSession.synchronousDataTask(with: urlRequest)
+        guard let response = res,
+            let data = d else {
+                throw("Cannot get http response")
+        }
+        
+        if !(200..<300 ~= response.statusCode) {
+            throw("Request status" + String(response.statusCode))
+        }
+        
+        guard let responseData = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+            throw("Cannot parse response")
+        }
+        
+        guard let offerInfo = responseData["offer"] as? [String: Any],
+            let record = offerInfo["record"] as? [String: Any],
+            let link = record["link"] as? String,
+            let owner = record["owner"] as? String,
+            let signature = record["signature"] as? String else {
+                throw("Invalid response from gateway server")
+        }
+        
+        let offer = TransferOffer(txId: link, receiver: try AccountNumber(address: owner), signature: signature.hexDecodedData)
+        
+        return offer
+    }
 }
