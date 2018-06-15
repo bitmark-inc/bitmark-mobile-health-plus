@@ -736,7 +736,7 @@ const doGetIftttInformation = async () => {
 // ======================================================================================================================================================================================
 // ======================================================================================================================================================================================
 const ActionTypes = {
-  transfer: 'SIGN TO RECEIVE BITMARK',
+  transfer: 'transfer',
   donation: 'donation',
   ifttt: 'ifttt',
 };
@@ -751,7 +751,7 @@ const doGenerateTransactionActionRequiredData = async () => {
         key: actionRequired.length,
         transferOffer: item,
         type: ActionTypes.transfer,
-        typeTitle: 'OWNERSHIP TRANSFER REQUEST ',
+        typeTitle: 'SIGN TO RECEIVE BITMARK',
         timestamp: moment(item.created_at),
       });
       totalTasks++;

@@ -21,7 +21,7 @@ const SubTabs = {
 };
 
 const ActionTypes = {
-  transfer: 'SIGN TO RECEIVE BITMARK',
+  transfer: 'transfer',
   donation: 'donation',
   ifttt: 'ifttt',
 };
