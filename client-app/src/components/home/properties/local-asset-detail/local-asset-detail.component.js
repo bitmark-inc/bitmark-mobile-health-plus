@@ -240,7 +240,7 @@ export class LocalAssetDetailComponent extends React.Component {
                           <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
 
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>SEND</Text>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>SENDING</Text>
                           </TouchableOpacity>
 
                           <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} onPress={() => this.cancelTransferring(item.bitmark.transferOfferId)}>
@@ -259,7 +259,7 @@ export class LocalAssetDetailComponent extends React.Component {
                         {config.network !== config.NETWORKS.livenet && <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset });
                         }}>
-                          <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>TRANSFER</Text>
+                          <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>SEND</Text>
                         </TouchableOpacity>}
                       </View>);
                     }}

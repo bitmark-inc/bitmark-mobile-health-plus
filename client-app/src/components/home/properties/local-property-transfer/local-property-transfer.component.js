@@ -87,7 +87,7 @@ export class LocalPropertyTransferComponent extends React.Component {
               <TouchableOpacity activeOpacity={1} style={propertyTransferStyle.mainContent}>
                 <Text style={propertyTransferStyle.transferTitle}>SEND BITMARK</Text>
                 <View style={propertyTransferStyle.inputAccountNumberBar} >
-                  <TextInput style={propertyTransferStyle.inputAccountNumber} placeholder='BITMARK ACCOUNT'
+                  <TextInput style={propertyTransferStyle.inputAccountNumber} placeholder='RECIPIENT BITMARK ACCOUNT NUMBER'
                     onChangeText={(bitmarkAccount) => this.setState({ bitmarkAccount })}
                     returnKeyType="done"
                     value={this.state.bitmarkAccount}
