@@ -1,5 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
-import moment from 'moment';
+import moment, { version } from 'moment';
 
 import {
   EventEmitterService,
@@ -12,6 +12,7 @@ import { CommonModel, AccountModel, UserModel, BitmarkSDK, IftttModel, BitmarkMo
 import { DonationService } from '../services/donation-service';
 import { FileUtil } from '../utils';
 import { DataCacheProcessor } from './data-cache-processor';
+import { config } from '../configs';
 
 let userInformation = {};
 let isLoadingData = false;
@@ -388,19 +389,26 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 
+const checkAppNeedResetLocalData = async () => {
+  if (config.needResetLocalData) {
+    let appInfo = await CommonModel.doGetLocalData(CommonModel.KEYS.APP_INFORMATION);
+    if (appInfo && appInfo.resetLocalDataAt === config.needResetLocalData) {
+      return false;
+    }
+    return true;
+  }
+  return false;
+};
+
 const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
   if (userInformation && userInformation.bitmarkAccountNumber) {
     configNotification();
 
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, []);
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, []);
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, []);
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS, []);
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, {});
-
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, []);
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY, []);
+    let needResetLocalData = await checkAppNeedResetLocalData();
+    if (needResetLocalData) {
+      await UserModel.resetUserLocalData();
+    }
 
     let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
     let trackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];

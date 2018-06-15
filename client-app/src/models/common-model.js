@@ -5,6 +5,8 @@ import { AsyncStorage } from 'react-native';
 import { config } from './../configs';
 
 const KEYS = {
+  APP_INFORMATION: 'app-information',
+
   USER_INFORMATION: 'bitmark-app',
 
   //original data

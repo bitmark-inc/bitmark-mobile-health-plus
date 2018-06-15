@@ -27,7 +27,7 @@ const doUpdateUserInfo = async (userInfo) => {
   return await CommonModel.doSetLocalData(CommonModel.KEYS.USER_INFORMATION, currentUser);
 };
 
-const doRemoveUserInfo = async () => {
+const resetUserLocalData = async () => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, []);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, []);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, []);
@@ -36,6 +36,10 @@ const doRemoveUserInfo = async () => {
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, []);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY, []);
+}
+
+const doRemoveUserInfo = async () => {
+  await resetUserLocalData();
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_INFORMATION, {});
 };
@@ -45,6 +49,7 @@ let UserModel = {
   doGetCurrentUser,
   doUpdateUserInfo,
   doRemoveUserInfo,
+  resetUserLocalData,
 };
 
 export { UserModel };
