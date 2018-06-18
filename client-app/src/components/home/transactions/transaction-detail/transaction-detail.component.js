@@ -55,7 +55,7 @@ export class TransactionDetailComponent extends React.Component {
           indicator: false, title: '', message: ''
         }).then(data => {
           if (data) {
-            Alert.alert('Receipt rejected!', 'You’ve rejected tto sign for receipt of this bitmark!', [{
+            Alert.alert('Receipt rejected!', 'You’ve rejected to sign for receipt of this bitmark!', [{
               text: 'OK',
               onPress: () => {
                 const resetHomePage = NavigationActions.reset({
