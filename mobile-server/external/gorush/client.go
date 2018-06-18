@@ -23,16 +23,16 @@ var (
 )
 
 type notification struct {
-	Title            string                  `json:"title"`
-	Topic            string                  `json:"topic"`
-	Tokens           []string                `json:"tokens"`
-	Platform         int                     `json:"platform"`
-	Message          string                  `json:"message"`
-	Data             *map[string]interface{} `json:"data"`
-	Alert            map[string]interface{}  `json:"alert"`
-	Badge            int                     `json:"badge"`
-	Sound            string                  `json:"sound"`
-	ContentAvailable bool                    `json:"content_available"`
+	Title    string                  `json:"title"`
+	Topic    string                  `json:"topic"`
+	Tokens   []string                `json:"tokens"`
+	Platform int                     `json:"platform"`
+	Message  string                  `json:"message"`
+	Data     *map[string]interface{} `json:"data"`
+	Alert    map[string]interface{}  `json:"alert"`
+	Badge    int                     `json:"badge"`
+	Sound    string                  `json:"sound"`
+	// ContentAvailable bool                    `json:"content_available"`
 }
 
 type Client struct {
@@ -71,7 +71,7 @@ func (c *Client) Send(ctx context.Context, title, message string, receivers map[
 					"title": title,
 					"body":  message,
 				},
-				ContentAvailable: !silent,
+				// ContentAvailable: !silent,
 			})
 		}
 		log.Info("Pushing to client: ", client)
