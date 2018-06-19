@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.8</string>
+	<string>1.2.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -66,6 +66,16 @@
 	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+	<key>ResearchKit-Font-Bold</key>
+	<string>Avenir-Black</string>
+	<key>ResearchKit-Font-Light</key>
+	<string>Avenir-Light</string>
+	<key>ResearchKit-Font-Medium</key>
+	<string>Avenir-Medium</string>
+	<key>ResearchKit-Font-Normal</key>
+	<string>Avenir</string>
+	<key>ResearchKit-Font-Thin</key>
+	<string>Avenir-Light</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AndaleMono.ttf</string>
@@ -86,15 +96,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>ResearchKit-Font-Bold</key>
-  <string>Avenir-Black</string>
-  <key>ResearchKit-Font-Light</key>
-  <string>Avenir-Light</string>
-  <key>ResearchKit-Font-Medium</key>
-  <string>Avenir-Medium</string>
-  <key>ResearchKit-Font-Normal</key>
-  <string>Avenir</string>
-  <key>ResearchKit-Font-Thin</key>
-  <string>Avenir-Light</string>
 </dict>
 </plist>
