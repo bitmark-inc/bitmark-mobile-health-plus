@@ -392,12 +392,13 @@ const doDeactiveApplication = async () => {
 const checkAppNeedResetLocalData = async () => {
   if (config.needResetLocalData) {
     let appInfo = await CommonModel.doGetLocalData(CommonModel.KEYS.APP_INFORMATION);
-    if (appInfo && appInfo.resetLocalDataAt === config.needResetLocalData) {
-      return false;
+    if (!appInfo || appInfo.resetLocalDataAt !== config.needResetLocalData) {
+      appInfo = appInfo || {};
+      appInfo.resetLocalDataAt = config.needResetLocalData;
+      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+      await UserModel.resetUserLocalData();
     }
-    return true;
   }
-  return false;
 };
 
 const doOpenApp = async () => {
@@ -405,10 +406,7 @@ const doOpenApp = async () => {
   if (userInformation && userInformation.bitmarkAccountNumber) {
     configNotification();
 
-    let needResetLocalData = await checkAppNeedResetLocalData();
-    if (needResetLocalData) {
-      await UserModel.resetUserLocalData();
-    }
+    await checkAppNeedResetLocalData();
 
     let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
     let trackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
