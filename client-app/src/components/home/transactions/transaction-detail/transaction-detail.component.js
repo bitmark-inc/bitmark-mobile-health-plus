@@ -46,7 +46,7 @@ export class TransactionDetailComponent extends React.Component {
   }
 
   doReject() {
-    Alert.alert('Are you sure you want to reject this property transfer request?', '', [{
+    Alert.alert('Are you sure you want to reject receipt of this property?', '', [{
       text: 'Cancel', style: 'cancel',
     }, {
       text: 'Yes',
@@ -55,7 +55,7 @@ export class TransactionDetailComponent extends React.Component {
           indicator: false, title: '', message: ''
         }).then(data => {
           if (data) {
-            Alert.alert('Transfer Rejected!', 'You’ve rejected the bitmark transfer request!', [{
+            Alert.alert('Receipt rejected!', 'You’ve rejected to sign for receipt of this bitmark!', [{
               text: 'OK',
               onPress: () => {
                 const resetHomePage = NavigationActions.reset({
@@ -82,7 +82,7 @@ export class TransactionDetailComponent extends React.Component {
   doAccept() {
     AppProcessor.doAcceptTransferBitmark(this.state.transferOffer, { indicator: true, }).then(data => {
       if (data) {
-        Alert.alert('Acceptance Submitted', 'Your signature for the transfer request has been successfully submitted to the Bitmark network.', [{
+        Alert.alert('Signature Submitted', 'Your signature of receipt has been successfully submitted to the Bitmark network.', [{
           text: 'OK',
           onPress: () => {
             const resetHomePage = NavigationActions.reset({
@@ -112,7 +112,7 @@ export class TransactionDetailComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
-          <Text style={defaultStyle.headerTitle}>TRANSFER REQUEST</Text>
+          <Text style={defaultStyle.headerTitle}>SIGN FOR BITMARK</Text>
           <TouchableOpacity style={defaultStyle.headerRight}></TouchableOpacity>
         </View>)}
         content={(<View style={transactionDetailStyle.body}>
@@ -123,9 +123,9 @@ export class TransactionDetailComponent extends React.Component {
                 <Text style={transactionDetailStyle.transferOfferSenderFix}>[</Text>
                 <Text style={transactionDetailStyle.transferOfferSenderName} numberOfLines={1}>{this.state.transferOffer.from.substring(0, 12)}...</Text>
                 <Text style={transactionDetailStyle.transferOfferSenderFix}>] </Text>
-                has transferred the property
+                has sent the property
                 <Text style={transactionDetailStyle.transferOfferAssetName}> {this.state.transferOffer.asset.name} </Text>
-                to you. Please sign for receipt to accept the property transfer.
+                to you. Please sign to accept the bitmark for the property.
               </Text>
               <View style={transactionDetailStyle.externalArea}>
                 <View style={transactionDetailStyle.externalAreaRow}>

@@ -83,7 +83,7 @@ const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPubl
 };
 
 const doTransferBitmark = async ({ bitmark, receiver }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to send the bitmark transfer request.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to send the bitmark.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -91,7 +91,7 @@ const doTransferBitmark = async ({ bitmark, receiver }) => {
 };
 
 const doAcceptTransferBitmark = async ({ transferOffer, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to accept the bitmark transfer request.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to receive the bitmark.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -99,7 +99,7 @@ const doAcceptTransferBitmark = async ({ transferOffer, processingInfo }) => {
 };
 
 const doAcceptAllTransfers = async ({ transferOffers, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to accept the bitmark transfer request.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to receive the bitmarks.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -108,7 +108,7 @@ const doAcceptAllTransfers = async ({ transferOffers, processingInfo }) => {
 
 
 const doCancelTransferBitmark = async ({ transferOfferId }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to cancel the bitmark transfer request.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to cancel the bitmark send request.');
   if (!touchFaceIdSession) {
     return null;
   }
