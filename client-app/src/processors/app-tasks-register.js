@@ -75,7 +75,7 @@ const doLogout = async () => {
 };
 
 const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch ID for "Bitmark" Authorize bitmark issuance.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark issuance.');
   if (!touchFaceIdSession) {
     return null;
   }

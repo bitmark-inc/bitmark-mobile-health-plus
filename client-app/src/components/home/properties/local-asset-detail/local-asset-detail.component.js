@@ -199,7 +199,7 @@ export class LocalAssetDetailComponent extends React.Component {
                 </View>
               }
 
-              <Text style={assetDetailStyle.bitmarkLabel}>BITMARKS ({this.state.bitmarks.length})</Text>
+              <Text style={assetDetailStyle.bitmarkLabel}>YOUR PROPERTY BITMARKS ({this.state.bitmarks.length})</Text>
               <View style={assetDetailStyle.bitmarksArea}>
                 <View style={assetDetailStyle.bitmarksHeader}>
                   <Text style={[assetDetailStyle.bitmarksHeaderLabel, { marginLeft: convertWidth(4) }]}>NO.</Text>
