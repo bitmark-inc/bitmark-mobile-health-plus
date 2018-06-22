@@ -143,7 +143,7 @@ class BuildDigitalAssetComponent extends React.Component {
               }}
                 style={newAccountStyle.introductionLinkButton}
               >
-                <Text style={[newAccountStyle.introductionLink]}>LEARN MORE AT BITMARK.COM</Text>
+                <Text style={[newAccountStyle.introductionLink]}>LEARN MORE AT BITMARK.COM »</Text>
               </TouchableOpacity>
             </View>
             <View style={newAccountStyle.introductionImageArea}>

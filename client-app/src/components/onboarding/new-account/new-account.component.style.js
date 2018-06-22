@@ -65,7 +65,7 @@ export default StyleSheet.create({
   },
   introductionLink: {
     fontFamily: 'Avenir light',
-    fontWeight: '300',
+    fontWeight: '900',
     color: '#0060F2',
     fontSize: 14,
   },
@@ -100,7 +100,6 @@ export default StyleSheet.create({
     color: '#0060F2',
     fontSize: 17,
     fontWeight: '300',
-    textDecorationLine: 'underline',
     lineHeight: 22,
   },
 
