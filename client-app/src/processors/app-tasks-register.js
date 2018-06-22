@@ -125,7 +125,7 @@ const doRejectTransferBitmark = async ({ transferOffer, processingInfo }) => {
 
 
 const doActiveBitmarkHealthData = async ({ activeBitmarkHealthDataAt }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to start bitmarking health data.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark health data.');
   if (!touchFaceIdSession) {
     return null;
   }
