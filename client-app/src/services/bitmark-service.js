@@ -59,10 +59,9 @@ const doGetBitmarks = async (bitmarkAccountNumber) => {
     asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
     for (let bitmark of asset.bitmarks) {
       let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
-      bitmark.displayStatus = transferOffer ? 'transferring' : bitmark.status;
       bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
       asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
-      asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
+      asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
     }
   }
   localAssets = localAssets.sort((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset);
@@ -135,21 +134,31 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
     asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
     for (let bitmark of asset.bitmarks) {
       let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
+      console.log('transferOffer =============:', transferOffer);
+
+      let oldData = bitmark.transferOfferId;
       bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
-      bitmark.displayStatus = transferOffer ? 'transferring' : bitmark.status;
+      hasChanging = hasChanging || oldData !== bitmark.transferOfferId;
+
+      oldData = asset.maxBitmarkOffset;
       asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
-      asset.totalPending += (bitmark.displayStatus === 'pending') ? 1 : 0;
+      hasChanging = hasChanging || oldData !== asset.maxBitmarkOffset;
+
+      oldData = asset.totalPending;
+      asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
+      hasChanging = hasChanging || oldData !== asset.totalPending;
     }
   }
 
   if (hasChanging) {
     localAssets = localAssets.sort((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset);
-    return {
-      localAssets,
-      lastOffset,
-      outgoingTransferOffers,
-    };
   }
+  return {
+    hasChanging,
+    localAssets,
+    lastOffset,
+    outgoingTransferOffers,
+  };
 };
 
 const doCheckFileToIssue = async (filePath) => {
@@ -243,7 +252,6 @@ const doGetTrackingBitmarks = async (bitmarkAccountNumber) => {
     }
     bitmark.lastHistory = oldStatus.lastHistory;
 
-    bitmark.displayStatus = bitmark.status;
     trackingBitmarks.push(bitmark);
   }
   return trackingBitmarks;

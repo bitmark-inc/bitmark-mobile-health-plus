@@ -87,17 +87,12 @@ const recheckLocalAssets = (localAssets, donationInformation) => {
   if (donationInformation && donationInformation.completedTasks) {
     for (let asset of localAssets) {
       for (let bitmark of asset.bitmarks) {
-        let isDonating = donationInformation.completedTasks.findIndex(item => (item.taskType !== donationInformation.commonTaskIds.bitmark_health_data && item.bitmarkId === bitmark.id));
-        bitmark.displayStatus = isDonating >= 0 ? 'donating' : bitmark.displayStatus;
+        let isDonatedBitmark = donationInformation.completedTasks.findIndex(item => (item.taskType !== donationInformation.commonTaskIds.bitmark_health_data && item.bitmarkId === bitmark.id)) >= 0;
+        console.log('isDonatedBitmark :', isDonatedBitmark);
+        bitmark.isDonatedBitmark = isDonatedBitmark;
       }
     }
   }
-  localAssets = localAssets.filter(asset => {
-    if (asset.bitmarks && asset.bitmarks.length === 1 && asset.bitmarks[0].displayStatus === 'donating') {
-      return false;
-    }
-    return true;
-  });
   return localAssets;
 };
 
@@ -227,13 +222,13 @@ const runGetLocalBitmarksInBackground = (donationInformation) => {
       let outgoingTransferOffers;
       while (canContinue) {
         let data = await BitmarkService.doGet100Bitmarks(userInformation.bitmarkAccountNumber, oldLocalAssets, lastOffset, outgoingTransferOffers);
-        canContinue = !!data;
-        if (data) {
+        canContinue = data.hasChanging;
+        oldLocalAssets = data.localAssets;
+        oldLocalAssets = recheckLocalAssets(oldLocalAssets, donationInformation);
+        await doCheckNewBitmarks(oldLocalAssets);
+        if (data.hasChanging) {
           outgoingTransferOffers = data.outgoingTransferOffers;
-          oldLocalAssets = data.localAssets;
           lastOffset = data.lastOffset;
-          oldLocalAssets = recheckLocalAssets(oldLocalAssets, donationInformation);
-          await doCheckNewBitmarks(oldLocalAssets);
         }
       }
     }
