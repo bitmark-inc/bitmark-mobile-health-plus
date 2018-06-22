@@ -1,5 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
-import moment, { version } from 'moment';
+import moment from 'moment';
 
 import {
   EventEmitterService,

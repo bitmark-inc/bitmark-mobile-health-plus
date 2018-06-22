@@ -118,7 +118,7 @@ class BuildDigitalAssetComponent extends React.Component {
     super(props)
   }
 
-  componentWillReceiveProps(nexProps) {
+  UNSAFE_componentWillReceiveProps(nexProps) {
     if (nexProps.screenProps && nexProps.screenProps.index === 2 && this.player2) {
       this.player2.seek(0);
     }
