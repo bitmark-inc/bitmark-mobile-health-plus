@@ -209,7 +209,7 @@ const doGetAssetTextContent = (assetId) => {
 };
 
 const doGetAssetTextContentType = (assetId) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     fetch(config.preview_asset_url + `/${assetId}`, {
       method: 'HEAD'
     }).then((response) => {

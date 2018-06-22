@@ -59,6 +59,7 @@ export class IftttActiveComponent extends React.Component {
       AppProcessor.doCreateSignatureData('Please sign to connect your IFTTT account.', true).then(data => {
         // this.setState({ processing: false });
         if (!data) {
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
           return;
         }
         this.signed = true;
