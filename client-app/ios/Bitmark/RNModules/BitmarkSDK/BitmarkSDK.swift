@@ -355,6 +355,39 @@ class BitmarkSDK: NSObject {
       callback([false])
     }
   }
+  
+  @objc(createSessionData:::)
+  func createSessionData(_ sessionId: String, _ encryptionKey: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+      let sessionData = try account.createSessionData(encryptionKey: encryptionKey)
+      callback([true, sessionData])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
+  
+  @objc(issueRecord:::)
+  func issueRecord(_ sessionId: String, _ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+    do {
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+      let fingerprint = input["fingerprint"] as! String
+      let propertyName = input["property_name"] as! String
+      let metadata = input["metadata"] as! [String: String]
+      let quantity = input["quantity"] as! Int
+      
+      let result = try account.issueBitmarks(fingerprint: fingerprint, propertyName: propertyName, propertyMetadata: metadata, quantity: quantity)
+      let issues = result.0
+      let issueIds = issues.map {$0.txId! }
+      callback([true, issueIds])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
 }
 
 extension BitmarkSDK {
