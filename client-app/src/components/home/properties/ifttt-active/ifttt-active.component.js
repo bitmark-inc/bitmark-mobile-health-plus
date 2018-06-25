@@ -64,6 +64,8 @@ export class IftttActiveComponent extends React.Component {
         }
         this.signed = true;
         this.webViewRef.postMessage(JSON.stringify(data));
+
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
         this.setState({ processing: false });
