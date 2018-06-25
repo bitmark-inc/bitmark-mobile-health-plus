@@ -65,7 +65,6 @@ export class IftttActiveComponent extends React.Component {
         this.signed = true;
         this.webViewRef.postMessage(JSON.stringify(data));
 
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
         this.setState({ processing: false });
@@ -92,6 +91,11 @@ export class IftttActiveComponent extends React.Component {
         }).catch(error => {
           console.log('doReloadIFTTTInformation : ', error);
         });
+      }
+    } else {
+      if (currentUrl === (config.ifttt_bitmark_service_settings_url) && this.signed) {
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+        this.setState({ processing: false });
       }
     }
   }
