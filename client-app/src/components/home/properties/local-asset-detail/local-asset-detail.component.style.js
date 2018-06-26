@@ -139,7 +139,6 @@ export default StyleSheet.create({
     fontWeight: '900',
     marginLeft: convertWidth(19),
     marginTop: 27,
-    height: 25,
   },
   bitmarksArea: {
 
@@ -149,8 +148,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     width: convertWidth(337),
     marginLeft: convertWidth(19),
-    height: 18,
     marginTop: 18,
+    marginBottom: 9,
   },
   bitmarksHeaderLabel: {
     fontFamily: 'Andale Mono',
@@ -167,7 +166,7 @@ export default StyleSheet.create({
   bitmarksRow: {
     flexDirection: 'row',
     width: convertWidth(340),
-    paddingLeft: convertWidth(23),
+    paddingLeft: convertWidth(21),
     height: 36,
     paddingTop: 10,
     paddingBottom: 10,
@@ -183,19 +182,19 @@ export default StyleSheet.create({
     fontSize: 13,
     width: convertWidth(117),
     paddingLeft: convertWidth(4),
+    paddingRight: convertWidth(19),
   },
   bitmarksRowNoPending: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
-    minWidth: convertWidth(117),
+    width: convertWidth(94),
     color: '#CCCCCC',
     paddingLeft: convertWidth(4),
   },
   bitmarkViewButton: {
-    height: 36,
-    width: convertWidth(94),
+    width: convertWidth(102),
+    marginLeft: convertWidth(2),
     paddingLeft: convertWidth(4),
-    marginLeft: 2,
   },
   bitmarkViewButtonText: {
     fontFamily: 'Andale Mono',

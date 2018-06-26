@@ -275,6 +275,11 @@ export class AssetsComponent extends React.Component {
                   </View>} */}
 
                   <View style={assetsStyle.assetInfoArea}>
+                    <Text style={[assetsStyle.assetCreatedAt, {
+                      color: (item.created_at && item.totalPending === 0) ? 'black' : '#999999'
+                    }]}>
+                      {(item.created_at && item.totalPending === 0) ? moment(item.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase() : 'REGISTERING...'}
+                    </Text>
                     <Text style={[assetsStyle.assetName, { color: item.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
                       <Text style={[assetsStyle.assetCreator, { color: item.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>

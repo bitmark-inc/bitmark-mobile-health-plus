@@ -153,8 +153,7 @@ export default StyleSheet.create({
     lineHeight: 16,
     fontWeight: '900',
     marginLeft: convertWidth(19),
-    marginTop: 34,
-    height: 25,
+    marginTop: 19,
   },
   provenancesArea: {
   },
@@ -163,9 +162,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5F5F5',
     width: convertWidth(337),
-    height: 18,
     marginLeft: convertWidth(19),
-    marginTop: 18,
+    marginTop: 19,
+    marginBottom: 9,
   },
   provenancesHeaderLabelTimestamp: {
     fontFamily: 'Andale Mono',

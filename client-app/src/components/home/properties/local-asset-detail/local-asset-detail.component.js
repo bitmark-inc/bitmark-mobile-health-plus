@@ -209,7 +209,7 @@ export class LocalAssetDetailComponent extends React.Component {
               <Text style={assetDetailStyle.bitmarkLabel}>YOUR PROPERTY BITMARKS ({this.state.bitmarks.length})</Text>
               <View style={assetDetailStyle.bitmarksArea}>
                 <View style={assetDetailStyle.bitmarksHeader}>
-                  <Text style={[assetDetailStyle.bitmarksHeaderLabel, { marginLeft: convertWidth(4) }]}>BITMARK ID</Text>
+                  <Text style={[assetDetailStyle.bitmarksHeaderLabel]}>BITMARK ID</Text>
                   <Text style={[assetDetailStyle.bitmarksHeaderLabel, { width: convertWidth(218) }]}>ACTION</Text>
                 </View>
                 <View style={assetDetailStyle.bitmarkListArea}>
@@ -236,7 +236,7 @@ export class LocalAssetDetailComponent extends React.Component {
                       if (item.bitmark.status === 'pending') {
                         return (<View style={[assetDetailStyle.bitmarksRow]} >
                           {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
-                          <Text style={assetDetailStyle.bitmarksRowNoPending}>{item.bitmark.id}</Text>
+                          <Text style={assetDetailStyle.bitmarksRowNoPending} numberOfLines={1}>{item.bitmark.id}</Text>
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                             this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                           }}>
@@ -247,7 +247,7 @@ export class LocalAssetDetailComponent extends React.Component {
 
                       return (<View style={[assetDetailStyle.bitmarksRow]} >
                         {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
-                        <Text style={assetDetailStyle.bitmarksRowNo}>{item.bitmark.id}</Text>
+                        <Text style={assetDetailStyle.bitmarksRowNo} numberOfLines={1}>{item.bitmark.id}</Text>
                         <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                         }}>
