@@ -1,9 +1,11 @@
-import React from "react";
-import {Text, View, TouchableOpacity, Image} from "react-native";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Text, View, TouchableOpacity, Image } from "react-native";
 import defaultStyles from "../../../../../../../commons/styles";
 import assetTypeHelpStyle from "./asset-type-help.component.style";
 import applicationDetailStyle from "../../../../../account/application-detail/application-detail.component.style";
-import {BitmarkComponent} from "../../../../../../../commons/components/bitmark";
+import { BitmarkComponent } from "../../../../../../../commons/components/bitmark";
+import { config } from "../../../../../../../configs";
 
 export class AssetTypeHelpComponent extends React.Component {
   constructor(props) {
@@ -22,7 +24,7 @@ export class AssetTypeHelpComponent extends React.Component {
           <View style={assetTypeHelpStyle.content}>
             {/*Title*/}
             <Text style={assetTypeHelpStyle.title}>WHAT IS ASSET TYPE?</Text>
-            
+
             {/*Description*/}
             <Text style={assetTypeHelpStyle.text}>
               Assets are private by default, so that only current bitmark holders can access the assets. You may also select to make an asset public, which means that anyone can access the asset, regardless of whether they are currently an owner. Note that
@@ -34,13 +36,13 @@ export class AssetTypeHelpComponent extends React.Component {
 
             <TouchableOpacity style={assetTypeHelpStyle.learnMore} onPress={() => {
               this.props.navigation.navigate('BitmarkWebView', {
-                title: 'Bitmark Blockchain', sourceUrl: 'https://bitmark.com/resources/blockchain',
+                title: 'Bitmark Blockchain', sourceUrl: config.bitmark_web_site + '/resources/blockchain?env=app',
                 isFullScreen: true
               })
             }}>
               <Text style={assetTypeHelpStyle.learnMoreText}>LEARN MORE »</Text>
             </TouchableOpacity>
-          </View>
+          </ View>
         )}>
       </BitmarkComponent>
     )
@@ -48,4 +50,11 @@ export class AssetTypeHelpComponent extends React.Component {
 }
 
 AssetTypeHelpComponent.propTypes = {
+};
+
+AssetTypeHelpComponent.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+    goBack: PropTypes.func,
+  }),
 };

@@ -62,6 +62,7 @@ export class ApplicationDetailComponent extends React.Component {
         }
       });
     };
+
     return (
       <View style={applicationDetailStyle.body}>
         <View style={applicationDetailStyle.header}>
@@ -75,7 +76,7 @@ export class ApplicationDetailComponent extends React.Component {
           <View style={applicationDetailStyle.topArea}>
             <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => {
               this.props.navigation.navigate('BitmarkWebView', {
-                title: 'Terms of Service', sourceUrl: 'https://bitmark.com/term',
+                title: 'Terms of Service', sourceUrl: config.bitmark_web_site + '/term?env=app',
                 hideBottomController: true,
               })
             }}>
@@ -84,7 +85,7 @@ export class ApplicationDetailComponent extends React.Component {
             <View style={applicationDetailStyle.lineSetting}></View>
             <TouchableOpacity style={applicationDetailStyle.rowSetting} onPress={() => {
               this.props.navigation.navigate('BitmarkWebView', {
-                title: 'Privacy Policy', sourceUrl: 'https://bitmark.com/privacy',
+                title: 'Privacy Policy', sourceUrl: config.bitmark_web_site + '/privacy?env=app',
                 hideBottomController: true,
               })
             }}>
@@ -112,7 +113,7 @@ export class ApplicationDetailComponent extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </View >
     );
   }
 }

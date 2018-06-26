@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
 import {
   View, Text, TouchableOpacity, ScrollView, FlatList, Image, ActivityIndicator,
   Dimensions,
@@ -14,6 +15,7 @@ import { EventEmitterService } from '../../../services';
 import defaultStyle from './../../../commons/styles';
 import { convertWidth } from '../../../utils';
 import { config } from '../../../configs';
+import { BottomTabsComponent } from '../bottom-tabs/bottom-tabs.component';
 
 const SubTabs = {
   required: 'ACTIONS REQUIRED',
@@ -163,11 +165,26 @@ export class TransactionsComponent extends React.Component {
       }
     } else if (item.type === ActionTypes.ifttt) {
       AppProcessor.doIssueIftttData(item, {
-        indicator: true, title: 'Submitting your request to the network for confirmation…', message: ''
+        indicator: true, title: '', message: 'Sending your transaction to the Bitmark network...'
       }).then(result => {
         if (result) {
           DataProcessor.doReloadUserData();
-          Alert.alert('Success!', 'Your property rights have been registered.');
+          Alert.alert('Success!', 'Your property rights have been registered.', [{
+            text: 'OK',
+            onPress: () => {
+              const resetHomePage = NavigationActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: 'User', params: {
+                      displayedTab: { mainTab: BottomTabsComponent.MainTabs.properties },
+                    }
+                  }),
+                ]
+              });
+              this.props.screenProps.homeNavigation.dispatch(resetHomePage);
+            }
+          }]);
         }
       }).catch(error => {
         console.log('doStudyTask error:', error);

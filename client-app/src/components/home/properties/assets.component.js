@@ -316,12 +316,20 @@ export class AssetsComponent extends React.Component {
                 }} >
                   {!item.isViewed && <View style={[assetsStyle.newItem, { top: 22 }]}></View>}
                   <Text style={assetsStyle.trackingRowAssetName}>{item.asset.name}</Text>
-                  <Text style={assetsStyle.trackingRowUpdated}>
+                  <Text style={[assetsStyle.trackingRowUpdated, {
+                    color: item.status === 'pending' ? '#999999' : '#0060F2'
+                  }]}>
                     {item.status === 'pending' ? 'PENDING...' : ('UPDATED: ' + moment(item.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}
                   </Text>
-                  <Text style={assetsStyle.trackingRowCurrentOwner}>CURRENT OWNER: {item.owner === DataProcessor.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
-                    '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'
-                  )}</Text>
+                  <View style={assetsStyle.trackingRowCurrentOwner}>
+                    <Text style={[assetsStyle.trackingRowCurrentOwnerText, {
+                      color: item.status === 'pending' ? '#999999' : '#0060F2'
+                    }]}>CURRENT OWNER: {item.owner === DataProcessor.getUserInformation().bitmarkAccountNumber ? ' YOU' : (
+                      '[' + item.owner.substring(0, 4) + '...' + item.owner.substring(item.owner.length - 4, item.owner.length) + ']'
+                    )}
+                    </Text>
+                    {item.status === 'pending' && <Image style={assetsStyle.assetQuantityPendingIcon} source={require('./../../../../assets/imgs/pending-status.png')} />}
+                  </View>
                 </TouchableOpacity>)
               }}
             />}
