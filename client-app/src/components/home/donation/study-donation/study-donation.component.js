@@ -48,7 +48,7 @@ export class StudyDonationComponent extends React.Component {
               </Text>
               <TouchableOpacity style={donationStyles.bitmarkButton} onPress={() => {
                 AppProcessor.doDonateHealthData(this.state.study, this.state.list, {
-                  indicator: true, title: 'Transferring your encrypted data to the researcher...', message: ''
+                  indicator: true, title: '', message: 'Sending your encrypted data to the researcher...'
                 }).then((result) => {
                   if (result) {
                     DataProcessor.doReloadUserData();
