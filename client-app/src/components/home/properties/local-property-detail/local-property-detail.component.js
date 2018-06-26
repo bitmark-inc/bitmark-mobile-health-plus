@@ -159,7 +159,7 @@ export class LocalPropertyDetailComponent extends React.Component {
         content={(<TouchableWithoutFeedback onPress={() => this.setState({ displayTopButton: false })}><View style={propertyDetailStyle.body}>
           {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
             {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber && <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.displayStatus !== 'confirmed'} onPress={this.downloadAsset}>
-              <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
+              <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2', }]}>DOWNLOAD ASSET</Text>
             </TouchableOpacity>}
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
               Clipboard.setString(this.state.bitmark.id);
@@ -179,7 +179,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               </TouchableOpacity>
             }
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={this.changeTrackingBitmark}>
-              <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK'}</Text>
+              <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK BITMARK'}</Text>
             </TouchableOpacity>
 
           </View>}

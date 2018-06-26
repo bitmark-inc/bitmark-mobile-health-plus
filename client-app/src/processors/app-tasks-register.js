@@ -191,7 +191,7 @@ const doDownloadStudyConsent = async ({ study }) => {
 };
 
 const doDownloadBitmark = async ({ bitmark, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to download property.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to download asset.');
   if (!touchFaceIdSession) {
     return null;
   }
