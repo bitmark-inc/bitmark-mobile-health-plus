@@ -159,14 +159,14 @@ const doStudyTask = async ({ study, taskType }) => {
   if (!result) {
     return null;
   }
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to complete task.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your data donation for this task.');
   if (!touchFaceIdSession) {
     return null;
   }
   return await processing(DataProcessor.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
 };
 const doCompletedStudyTask = async ({ study, taskType, result }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to complete task.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your data donation for this task.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -199,7 +199,7 @@ const doDownloadBitmark = async ({ bitmark, processingData }) => {
 };
 
 const doTrackingBitmark = async ({ asset, bitmark }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to tracking property.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to track this bitmark');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -207,7 +207,7 @@ const doTrackingBitmark = async ({ asset, bitmark }) => {
 };
 
 const doStopTrackingBitmark = async ({ bitmark }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to stop tracking property.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to stop tracking this bitmark.');
   if (!touchFaceIdSession) {
     return null;
   }

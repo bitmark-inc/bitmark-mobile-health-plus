@@ -248,13 +248,18 @@ export default StyleSheet.create({
   },
   trackingRowCurrentOwner: {
     marginTop: 12,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+  },
+  trackingRowCurrentOwnerText: {
     fontFamily: 'Andale Mono',
     fontSize: 14,
     lineHeight: 16,
     color: '#0060F2',
-    width: '100%',
   },
-
 
   globalArea: {
     flex: 1,

@@ -125,7 +125,7 @@ export class LocalPropertyDetailComponent extends React.Component {
         }
       }]);
     } else {
-      Alert.alert('Stop Tracking', 'By stop tracking a bitmark, the bitmark will be removed from the tracked list, are you sure you want to do it?', [{
+      Alert.alert('Stop Tracking', 'If you stop tracking a bitmark, the bitmark will be removed from the tracked list, are you sure you want to do it?', [{
         text: 'Cancel', style: 'cancel',
       }, {
         text: 'YES',
