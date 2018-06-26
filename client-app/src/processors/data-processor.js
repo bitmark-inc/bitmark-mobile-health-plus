@@ -231,6 +231,9 @@ const runGetLocalBitmarksInBackground = (donationInformation) => {
           lastOffset = data.lastOffset;
         }
       }
+      let localAsset = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
+      localAsset = recheckLocalAssets(localAsset, donationInformation);
+      await doCheckNewBitmarks(localAsset);
     }
 
     doGetAllBitmarks().then(() => {
