@@ -83,8 +83,7 @@ export default StyleSheet.create({
     width: convertWidth(337),
   },
   assetCreatorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     marginBottom: 10,
     marginLeft: convertWidth(19),
     width: convertWidth(336),

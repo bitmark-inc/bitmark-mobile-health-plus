@@ -17,6 +17,7 @@ import { EventEmitterService } from '../../../../services';
 import { config } from './../../../../configs';
 import { BitmarkModel } from "../../../../models";
 import { convertWidth } from '../../../../utils';
+import moment from 'moment';
 
 let ComponentName = 'LocalAssetDetailComponent';
 export class LocalAssetDetailComponent extends React.Component {
@@ -165,10 +166,8 @@ export class LocalAssetDetailComponent extends React.Component {
 
               <Text style={[assetDetailStyle.assetName, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} >{this.state.asset.name}</Text>
               <View style={assetDetailStyle.assetCreatorRow}>
-                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>ISSUED BY </Text>
-                <Text style={[assetDetailStyle.assetCreateAt, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
-                  {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
-                </Text>
+                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{this.state.asset.created_at ? ('REGISTERED ON ' + moment(this.state.asset.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase()) : 'REGISTERING...'}</Text>
+                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}</Text>
               </View>
 
               {this.state.metadata && this.state.metadata.length > 0 && <View style={assetDetailStyle.metadataArea}>
