@@ -454,7 +454,68 @@ const doConfirmWebAccount = async (bitmarkAccount, code, timestamp, signature) =
       resolve(data);
     }).catch(reject);
   });
-}
+};
+
+const doGetAssetInfoOfDecentralizedIssuance = (bitmarkAccount, timestamp, signature, token) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = `${config.web_app_server_url}/s/api/mobile/decentralized-issuances/${token}`;
+    fetch(bitmarkUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: bitmarkAccount,
+        timestamp,
+        signature,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`getAssetInfoOfDecentralizedIssuance error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doSubmitSessionData = (bitmarkAccount, timestamp, signature, token, sessionData, requestValidationData) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = `${config.web_app_server_url}/s/api/mobile/decentralized-issuances`;
+    fetch(bitmarkUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: bitmarkAccount,
+        timestamp,
+        signature,
+      },
+      body: JSON.stringify({
+        token,
+        session_data: sessionData,
+        request_validation: requestValidationData
+      })
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`getAssetInfoOfDecentralizedIssuance error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
 
 let BitmarkModel = {
   doGetAssetInformation,
@@ -478,6 +539,8 @@ let BitmarkModel = {
   doStopTrackingBitmark,
   doGetAllTrackingBitmark,
   doConfirmWebAccount,
+  doGetAssetInfoOfDecentralizedIssuance,
+  doSubmitSessionData,
 };
 
 export { BitmarkModel };

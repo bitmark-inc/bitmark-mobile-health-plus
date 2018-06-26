@@ -113,6 +113,30 @@ const BitmarkSDK = {
     });
   },
 
+  createSessionData: (sessionId, encryptionKey) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.createSessionData(sessionId, encryptionKey, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
+        } else {
+          reject(newError(result, 'Can not create session data!'));
+        }
+      });
+    });
+  },
+
+  issueRecord: (sessionId, fingerprint, property_name, metadata, quantity) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.issueRecord(sessionId, { fingerprint, property_name, metadata, quantity }, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
+        } else {
+          reject(newError(result, 'Can not issue bitmark!'));
+        }
+      });
+    });
+  },
+
   issueFile: (sessionId, filePath, propertyName, metadata, quantity, isPublicAsset) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.issueFile(sessionId, {

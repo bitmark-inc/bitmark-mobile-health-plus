@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { merge } from 'lodash';
-import { BitmarkModel, CommonModel } from "../models";
+import { BitmarkModel, CommonModel, BitmarkSDK } from "../models";
 import { TransactionService } from '.';
 
 // ================================================================================================
@@ -270,6 +270,26 @@ const doConfirmWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, tok
   return await BitmarkModel.doConfirmWebAccount(bitmarkAccountNumber, token, signatureData.timestamp, signatureData.signature);
 };
 
+const doDecentralizedIssuance = async (touchFaceIdSession, bitmarkAccountNumber, token, encryptionKey) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let issuanceData = await BitmarkModel.doGetAssetInfoOfDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token);
+
+  let sessionData = await BitmarkSDK.createSessionData(touchFaceIdSession, encryptionKey);
+
+  let timestamp = moment().toDate().getTime();
+  let requestMessage = `${issuanceData.asset_info.asset_id}|${bitmarkAccountNumber}|${timestamp}`;
+  let results = await BitmarkSDK.rickySignMessage([requestMessage], touchFaceIdSession);
+
+  signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await BitmarkModel.doSubmitSessionData(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, sessionData, {
+    timestamp,
+    signature: results[0],
+    requester: bitmarkAccountNumber,
+  });
+
+  await BitmarkSDK.issueRecord(touchFaceIdSession, issuanceData.asset_info.fingerprint, issuanceData.asset_info.name, issuanceData.asset_info.metadata, issuanceData.quantity);
+};
+
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
@@ -282,6 +302,7 @@ let BitmarkService = {
   doGetTrackingBitmarks,
   doGetProvenance,
   doConfirmWebAccount,
+  doDecentralizedIssuance,
 };
 
 export { BitmarkService };
