@@ -133,7 +133,7 @@ const doActiveBitmarkHealthData = async ({ activeBitmarkHealthDataAt }) => {
 };
 
 const doInactiveBitmarkHealthData = async () => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to remove bitmark health data.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to remove bitmark health data.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -141,14 +141,14 @@ const doInactiveBitmarkHealthData = async () => {
 };
 
 const doJoinStudy = async ({ studyId }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to join study.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to join study.');
   if (!touchFaceIdSession) {
     return null;
   }
   return await processing(DataProcessor.doJoinStudy(touchFaceIdSession, studyId));
 };
 const doLeaveStudy = async ({ studyId }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to opt out study.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to opt out study.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -191,7 +191,7 @@ const doDownloadStudyConsent = async ({ study }) => {
 };
 
 const doDownloadBitmark = async ({ bitmark, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is required to download property.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to download property.');
   if (!touchFaceIdSession) {
     return null;
   }
@@ -214,7 +214,7 @@ const doStopTrackingBitmark = async ({ bitmark }) => {
   return await processing(DataProcessor.doStopTrackingBitmark(touchFaceIdSession, bitmark));
 }
 const doRevokeIftttToken = async () => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Touch/Face ID or a passcode is revoke access to your IFTTT.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to revoke access to your IFTTT.');
   if (!touchFaceIdSession) {
     return null;
   }
