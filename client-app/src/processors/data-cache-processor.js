@@ -51,10 +51,10 @@ const getTransactionScreenData = () => {
 };
 
 const setTransactionScreenData = ({ totalTasks, totalActionRequired, actionRequired, totalCompleted, completed }) => {
-  cacheData.transactionsScreen.totalTasks = totalTasks ? totalTasks : cacheData.transactionsScreen.totalTasks;
-  cacheData.transactionsScreen.totalActionRequired = totalActionRequired ? totalActionRequired : cacheData.transactionsScreen.totalActionRequired;
+  cacheData.transactionsScreen.totalTasks = (totalTasks != undefined) ? totalTasks : cacheData.transactionsScreen.totalTasks;
+  cacheData.transactionsScreen.totalActionRequired = (totalActionRequired != undefined) ? totalActionRequired : cacheData.transactionsScreen.totalActionRequired;
   cacheData.transactionsScreen.actionRequired = actionRequired ? actionRequired : cacheData.transactionsScreen.actionRequired;
-  cacheData.transactionsScreen.totalCompleted = totalCompleted ? totalCompleted : cacheData.transactionsScreen.totalCompleted;
+  cacheData.transactionsScreen.totalCompleted = (totalCompleted != undefined) ? totalCompleted : cacheData.transactionsScreen.totalCompleted;
   cacheData.transactionsScreen.completed = completed ? completed : cacheData.transactionsScreen.completed;
 };
 
@@ -65,11 +65,11 @@ const getPropertiesScreenData = () => {
 
 const setPropertiesScreen = ({ localAssets, totalAssets, existNewAsset, totalBitmarks, trackingBitmarks, totalTrackingBitmarks, existNewTrackingBitmark }) => {
   cacheData.propertiesScreen.localAssets = localAssets ? localAssets : cacheData.propertiesScreen.localAssets;
-  cacheData.propertiesScreen.totalAssets = totalAssets ? totalAssets : cacheData.propertiesScreen.totalAssets;
+  cacheData.propertiesScreen.totalAssets = (totalAssets != undefined) ? totalAssets : cacheData.propertiesScreen.totalAssets;
   cacheData.propertiesScreen.existNewAsset = existNewAsset ? existNewAsset : cacheData.propertiesScreen.existNewAsset;
-  cacheData.propertiesScreen.totalBitmarks = totalBitmarks ? totalBitmarks : cacheData.propertiesScreen.totalBitmarks;
+  cacheData.propertiesScreen.totalBitmarks = (totalBitmarks != undefined) ? totalBitmarks : cacheData.propertiesScreen.totalBitmarks;
   cacheData.propertiesScreen.trackingBitmarks = trackingBitmarks ? trackingBitmarks : cacheData.propertiesScreen.trackingBitmarks;
-  cacheData.propertiesScreen.totalTrackingBitmarks = totalTrackingBitmarks ? totalTrackingBitmarks : cacheData.propertiesScreen.totalTrackingBitmarks;
+  cacheData.propertiesScreen.totalTrackingBitmarks = (totalTrackingBitmarks != undefined) ? totalTrackingBitmarks : cacheData.propertiesScreen.totalTrackingBitmarks;
   cacheData.propertiesScreen.existNewTrackingBitmark = existNewTrackingBitmark ? existNewTrackingBitmark : cacheData.propertiesScreen.existNewTrackingBitmark;
 }
 
