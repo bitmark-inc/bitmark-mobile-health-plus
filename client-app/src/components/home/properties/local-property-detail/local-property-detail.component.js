@@ -179,7 +179,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               </TouchableOpacity>
             }
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={this.changeTrackingBitmark}>
-              <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK'}</Text>
+              <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK BITMARK'}</Text>
             </TouchableOpacity>
 
           </View>}
