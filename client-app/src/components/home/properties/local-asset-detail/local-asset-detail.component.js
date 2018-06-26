@@ -88,13 +88,14 @@ export class LocalAssetDetailComponent extends React.Component {
   }
 
   cancelTransferring(bitmark) {
-    // let title = 'Cancel Send Request';
-    // let message = 'Are you sure you want to cancel this request?';
-    // if (bitmark.isDonatedBitmark) {
-    //   title = 'Cancel Send Request';
-    // }
+    let title = 'Cancel Send Request';
+    let message = 'Are you sure you want to cancel this request?';
+    if (bitmark.isDonatedBitmark) {
+      title = 'Cancel Donation';
+      message = 'Are you sure you want to cancel this data donation?';
+    }
 
-    Alert.alert('Cancel Send Request', 'Are you sure you want to cancel this request?', [{
+    Alert.alert(title, message, [{
       text: 'Cancel', style: 'cancel',
     }, {
       text: 'Yes',
@@ -177,7 +178,7 @@ export class LocalAssetDetailComponent extends React.Component {
                   data={this.state.metadata || []}
                   renderItem={({ item }) => {
                     return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
-                      <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{item.label}:</Text>
+                      <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.label.toUpperCase()}:</Text>
                       <Text style={[assetDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
                     </View>);
                   }}
@@ -208,8 +209,8 @@ export class LocalAssetDetailComponent extends React.Component {
               <Text style={assetDetailStyle.bitmarkLabel}>YOUR PROPERTY BITMARKS ({this.state.bitmarks.length})</Text>
               <View style={assetDetailStyle.bitmarksArea}>
                 <View style={assetDetailStyle.bitmarksHeader}>
-                  <Text style={[assetDetailStyle.bitmarksHeaderLabel, { marginLeft: convertWidth(4) }]}>NO.</Text>
-                  <Text style={assetDetailStyle.bitmarksHeaderLabel}>ACTION</Text>
+                  <Text style={[assetDetailStyle.bitmarksHeaderLabel, { marginLeft: convertWidth(4) }]}>BITMARK ID</Text>
+                  <Text style={[assetDetailStyle.bitmarksHeaderLabel, { width: convertWidth(218) }]}>ACTION</Text>
                 </View>
                 <View style={assetDetailStyle.bitmarkListArea}>
                   <FlatList
@@ -220,7 +221,7 @@ export class LocalAssetDetailComponent extends React.Component {
                       if (item.bitmark.transferOfferId) {
                         return (<View style={[assetDetailStyle.bitmarksRow]} >
                           {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
-                          <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                          <Text style={assetDetailStyle.bitmarksRowNo} numberOfLines={1}>{item.bitmark.id}</Text>
 
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} disabled={true}>
                             <Text style={[assetDetailStyle.bitmarkViewButtonText, { color: '#999999', }]}>{item.bitmark.isDonatedBitmark ? 'DONATING…' : 'SENDING…'}</Text>
@@ -235,7 +236,7 @@ export class LocalAssetDetailComponent extends React.Component {
                       if (item.bitmark.status === 'pending') {
                         return (<View style={[assetDetailStyle.bitmarksRow]} >
                           {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
-                          <Text style={assetDetailStyle.bitmarksRowNoPending}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                          <Text style={assetDetailStyle.bitmarksRowNoPending}>{item.bitmark.id}</Text>
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                             this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                           }}>
@@ -246,7 +247,7 @@ export class LocalAssetDetailComponent extends React.Component {
 
                       return (<View style={[assetDetailStyle.bitmarksRow]} >
                         {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
-                        <Text style={assetDetailStyle.bitmarksRowNo}>{(item.key + 1)}/{this.state.bitmarks.length}</Text>
+                        <Text style={assetDetailStyle.bitmarksRowNo}>{item.bitmark.id}</Text>
                         <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                         }}>
