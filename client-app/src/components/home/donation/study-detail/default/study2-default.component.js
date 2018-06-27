@@ -48,7 +48,6 @@ export class Study2DefaultComponent extends React.Component {
             <Text style={styles.infoAreaTitle}>Participant Requirements</Text>
             <View style={styles.infoAreaListItem} >
               <Text style={styles.infoAreaItem}>•	 18 and older</Text>
-              <Text style={styles.infoAreaItem}>•	 Berkeley student</Text>
             </View>
           </View>
 
