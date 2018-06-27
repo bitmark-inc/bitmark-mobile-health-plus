@@ -66,11 +66,11 @@ const getPropertiesScreenData = () => {
 const setPropertiesScreen = ({ localAssets, totalAssets, existNewAsset, totalBitmarks, trackingBitmarks, totalTrackingBitmarks, existNewTrackingBitmark }) => {
   cacheData.propertiesScreen.localAssets = localAssets ? localAssets : cacheData.propertiesScreen.localAssets;
   cacheData.propertiesScreen.totalAssets = (totalAssets != undefined) ? totalAssets : cacheData.propertiesScreen.totalAssets;
-  cacheData.propertiesScreen.existNewAsset = existNewAsset ? existNewAsset : cacheData.propertiesScreen.existNewAsset;
+  cacheData.propertiesScreen.existNewAsset = (existNewAsset != undefined) ? existNewAsset : cacheData.propertiesScreen.existNewAsset;
   cacheData.propertiesScreen.totalBitmarks = (totalBitmarks != undefined) ? totalBitmarks : cacheData.propertiesScreen.totalBitmarks;
   cacheData.propertiesScreen.trackingBitmarks = trackingBitmarks ? trackingBitmarks : cacheData.propertiesScreen.trackingBitmarks;
   cacheData.propertiesScreen.totalTrackingBitmarks = (totalTrackingBitmarks != undefined) ? totalTrackingBitmarks : cacheData.propertiesScreen.totalTrackingBitmarks;
-  cacheData.propertiesScreen.existNewTrackingBitmark = existNewTrackingBitmark ? existNewTrackingBitmark : cacheData.propertiesScreen.existNewTrackingBitmark;
+  cacheData.propertiesScreen.existNewTrackingBitmark = (existNewTrackingBitmark != undefined) ? existNewTrackingBitmark : cacheData.propertiesScreen.existNewTrackingBitmark;
 }
 
 const DataCacheProcessor = {
