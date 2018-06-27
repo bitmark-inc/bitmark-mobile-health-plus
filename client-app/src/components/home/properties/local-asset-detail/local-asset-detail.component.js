@@ -254,11 +254,11 @@ export class LocalAssetDetailComponent extends React.Component {
                         }}>
                           <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
                         </TouchableOpacity>
-                        {/* {config.network !== config.NETWORKS.livenet && <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
+                        <TouchableOpacity style={[assetDetailStyle.bitmarkTransferButton]} onPress={() => {
                           this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: item.bitmark, asset: this.state.asset });
                         }}>
                           <Text style={[assetDetailStyle.bitmarkTransferButtonText]}>SEND</Text>
-                        </TouchableOpacity>} */}
+                        </TouchableOpacity>
                       </View>);
                     }}
                   />

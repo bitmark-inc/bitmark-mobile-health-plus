@@ -169,7 +169,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={propertyDetailStyle.topButtonText}>COPY BITMARK ID</Text>
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
-            {/* {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber &&
+            {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber &&
               <TouchableOpacity style={propertyDetailStyle.topButton}
                 disabled={this.state.bitmark.displayStatus !== 'confirmed'}
                 onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
@@ -177,7 +177,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                   color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
                 }]}>SEND BITMARK</Text>
               </TouchableOpacity>
-            } */}
+            }
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={this.changeTrackingBitmark}>
               <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK BITMARK'}</Text>
             </TouchableOpacity>
