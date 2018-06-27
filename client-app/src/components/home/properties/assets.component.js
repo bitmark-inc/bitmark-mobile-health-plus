@@ -283,7 +283,7 @@ export class AssetsComponent extends React.Component {
                     <Text style={[assetsStyle.assetName, { color: item.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
                       <Text style={[assetsStyle.assetCreator, { color: item.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
-                        ISSUER: {'[' + item.registrant.substring(0, 4) + '...' + item.registrant.substring(item.registrant.length - 4, item.registrant.length) + ']'}
+                        {'[' + item.registrant.substring(0, 4) + '...' + item.registrant.substring(item.registrant.length - 4, item.registrant.length) + ']'}
                       </Text>
                     </View>
                     <View style={assetsStyle.assetQuantityArea}>

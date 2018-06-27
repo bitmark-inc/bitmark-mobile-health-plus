@@ -95,9 +95,13 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
       lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
       bitmark.bitmark_id = bitmark.id;
       bitmark.isViewed = false;
+      let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
+      let newAsset = data.assets.find(asset => asset.id === bitmark.asset_id);
+      if (oldAsset && newAsset && !oldAsset.created_at) {
+        oldAsset.created_at = newAsset.created_at;
+      }
       if (bitmark.owner === bitmarkAccountNumber) {
         hasChanging = true;
-        let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
         if (oldAsset) {
           let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => ob.id === bitmark.id);
           if (oldBitmarkIndex >= 0) {
@@ -107,7 +111,6 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
           }
           oldAsset.isViewed = false;
         } else {
-          let newAsset = data.assets.find(asset => asset.id === bitmark.asset_id);
           newAsset.bitmarks = [bitmark];
           newAsset.isViewed = false;
           localAssets.push(newAsset);
