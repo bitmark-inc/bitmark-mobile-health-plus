@@ -211,7 +211,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                   extraData={this.state}
                   data={this.state.metadata || []}
                   renderItem={({ item }) => {
-                    return (<View style={[propertyDetailStyle.metadataItem, { marginBottom: item.key === this.state.provenance.length ? 0 : 15 }]}>
+                    return (<View style={[propertyDetailStyle.metadataItem, { marginBottom: item.key === this.state.metadata.length ? 0 : 15 }]}>
                       <Text style={[propertyDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.label.toUpperCase()}:</Text>
                       <Text style={[propertyDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
                     </View>);
