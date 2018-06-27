@@ -7,6 +7,7 @@ import {
   Share,
   Alert,
 } from 'react-native';
+import Hyperlink from 'react-native-hyperlink';
 
 import { BitmarkComponent } from './../../../../commons/components';
 
@@ -167,7 +168,19 @@ export class LocalAssetDetailComponent extends React.Component {
               <Text style={[assetDetailStyle.assetName, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} >{this.state.asset.name}</Text>
               <View style={assetDetailStyle.assetCreatorRow}>
                 <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{this.state.asset.created_at ? ('REGISTERED ON ' + moment(this.state.asset.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase()) : 'REGISTERING...'}</Text>
-                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}</Text>
+                <Hyperlink
+                  onPress={(url) => {
+                    this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl: url, isFullScreen: true, });
+                  }}
+                  linkStyle={{ color: '#0060F2' }}
+                  linkText={url => {
+                    if (url === `${config.registry_server_url}/account/${this.state.asset.registrant}`) {
+                      return `[${this.state.asset.registrant.substring(0, 4)}...${this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length)}]`;
+                    }
+                    return '';
+                  }}>
+                  <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>BY {`${config.registry_server_url}/account/${this.state.asset.registrant}`}</Text>
+                </Hyperlink>
               </View>
 
               {this.state.metadata && this.state.metadata.length > 0 && <View style={assetDetailStyle.metadataArea}>

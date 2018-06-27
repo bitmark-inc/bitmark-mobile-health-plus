@@ -7,6 +7,7 @@ import {
   Share,
   Alert,
 } from 'react-native';
+import Hyperlink from 'react-native-hyperlink';
 
 import { BitmarkComponent } from './../../../../commons/components';
 import { convertWidth } from './../../../../utils';
@@ -187,9 +188,22 @@ export class LocalPropertyDetailComponent extends React.Component {
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
               <View style={propertyDetailStyle.bottomImageBar}></View>
               <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
-              <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>
-                ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}{'\n'}BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
-              </Text>
+
+              <Hyperlink
+                onPress={(url) => {
+                  this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl: url, isFullScreen: true, });
+                }}
+                linkStyle={{ color: '#0060F2' }}
+                linkText={url => {
+                  if (url === `${config.registry_server_url}/account/${this.state.bitmark.issuer}`) {
+                    return `[${this.state.bitmark.issuer.substring(0, 4)}...${this.state.bitmark.issuer.substring(this.state.bitmark.issuer.length - 4, this.state.bitmark.issuer.length)}]`;
+                  }
+                  return '';
+                }}>
+                <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>
+                  ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}{'\n'}BY {`${config.registry_server_url}/account/${this.state.bitmark.issuer}`}
+                </Text>
+              </Hyperlink>
 
               {this.state.metadata && this.state.metadata.length > 0 && <View style={propertyDetailStyle.metadataArea}>
                 <FlatList
