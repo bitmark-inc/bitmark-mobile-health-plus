@@ -165,7 +165,7 @@ export class LocalAssetDetailComponent extends React.Component {
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
               <View style={assetDetailStyle.bottomImageBar}></View>
 
-              <Text style={[assetDetailStyle.assetName, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]} >{this.state.asset.name}</Text>
+              <Text style={[assetDetailStyle.assetName]} >{this.state.asset.name}</Text>
               <View style={assetDetailStyle.assetCreatorRow}>
                 <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{this.state.asset.created_at ? ('REGISTERED ON ' + moment(this.state.asset.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase()) : 'REGISTERING...'}</Text>
                 <Hyperlink
@@ -248,11 +248,14 @@ export class LocalAssetDetailComponent extends React.Component {
                       if (item.bitmark.status === 'pending') {
                         return (<View style={[assetDetailStyle.bitmarksRow]} >
                           {!item.bitmark.isViewed && <View style={assetDetailStyle.bitmarkNotView}></View>}
-                          <Text style={assetDetailStyle.bitmarksRowNoPending} numberOfLines={1}>{item.bitmark.id}</Text>
+                          <Text style={assetDetailStyle.bitmarksRowNo} numberOfLines={1}>{item.bitmark.id}</Text>
                           <TouchableOpacity style={assetDetailStyle.bitmarkViewButton} onPress={() => {
                             this.props.navigation.navigate('LocalPropertyDetail', { asset: this.state.asset, bitmark: item.bitmark });
                           }}>
-                            <Text style={[assetDetailStyle.bitmarkViewButtonText]}>PENDING…</Text>
+                            <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton}>
+                            <Text style={[assetDetailStyle.bitmarkTransferButtonText, { color: '#999999' }]}>PENDING…</Text>
                           </TouchableOpacity>
                         </View>);
                       }

@@ -187,9 +187,9 @@ export class LocalPropertyDetailComponent extends React.Component {
           <ScrollView style={propertyDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
               <View style={propertyDetailStyle.bottomImageBar}></View>
-              <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
+              <Text style={[propertyDetailStyle.assetName]}>{this.state.asset.name}</Text>
 
-              <Hyperlink
+              {this.state.bitmark.status !== 'pending' && <Hyperlink
                 onPress={(url) => {
                   this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl: url, isFullScreen: true, });
                 }}
@@ -200,10 +200,14 @@ export class LocalPropertyDetailComponent extends React.Component {
                   }
                   return '';
                 }}>
-                <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>
-                  ISSUED {this.state.bitmark.status === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}{'\n'}BY {`${config.registry_server_url}/account/${this.state.bitmark.issuer}`}
+                <Text style={[propertyDetailStyle.assetCreateAt]}>
+                  ISSUED ON {moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase()}{'\n'}BY {`${config.registry_server_url}/account/${this.state.bitmark.issuer}`}
                 </Text>
-              </Hyperlink>
+              </Hyperlink>}
+
+              {this.state.bitmark.status === 'pending' && <Text style={[propertyDetailStyle.assetCreateAt, { color: '#999999' }]}>
+                PENDING....
+              </Text>}
 
               {this.state.metadata && this.state.metadata.length > 0 && <View style={propertyDetailStyle.metadataArea}>
                 <FlatList
@@ -212,8 +216,8 @@ export class LocalPropertyDetailComponent extends React.Component {
                   data={this.state.metadata || []}
                   renderItem={({ item }) => {
                     return (<View style={[propertyDetailStyle.metadataItem, { marginBottom: item.key === this.state.metadata.length ? 0 : 15 }]}>
-                      <Text style={[propertyDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.label.toUpperCase()}:</Text>
-                      <Text style={[propertyDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
+                      <Text style={[propertyDetailStyle.metadataItemLabel, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{item.label.toUpperCase()}:</Text>
+                      <Text style={[propertyDetailStyle.metadataItemValue, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{item.value}</Text>
                     </View>);
                   }}
                 />
@@ -241,7 +245,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               }
 
 
-              <Text style={[propertyDetailStyle.provenanceLabel, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>PROVENANCE</Text>
+              <Text style={[propertyDetailStyle.provenanceLabel]}>PROVENANCE</Text>
               <View style={propertyDetailStyle.provenancesArea}>
                 <View style={propertyDetailStyle.provenancesHeader}>
                   <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
