@@ -170,7 +170,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={propertyDetailStyle.topButtonText}>COPY BITMARK ID</Text>
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
-            {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber && !this.stat.bitmark.transferOfferId &&
+            {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber && !this.state.bitmark.transferOfferId &&
               <TouchableOpacity style={propertyDetailStyle.topButton}
                 disabled={this.state.bitmark.status !== 'confirmed'}
                 onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
