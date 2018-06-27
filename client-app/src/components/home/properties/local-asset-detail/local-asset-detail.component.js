@@ -170,7 +170,7 @@ export class LocalAssetDetailComponent extends React.Component {
                   extraData={this.state}
                   data={this.state.metadata || []}
                   renderItem={({ item }) => {
-                    return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.length ? 0 : 15 }]}>
+                    return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.metadata.length ? 0 : 15 }]}>
                       <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{item.label}:</Text>
                       <Text style={[assetDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
                     </View>);
