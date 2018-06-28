@@ -288,13 +288,15 @@ const doDecentralizedIssuance = async (touchFaceIdSession, bitmarkAccountNumber,
       requester: bitmarkAccountNumber,
     });
 
-    await BitmarkSDK.issueRecord(touchFaceIdSession, issuanceData.asset_info.fingerprint, issuanceData.asset_info.name, issuanceData.asset_info.metadata, issuanceData.quantity);
+    let result = await BitmarkSDK.issueRecord(touchFaceIdSession, issuanceData.asset_info.fingerprint, issuanceData.asset_info.name, issuanceData.asset_info.metadata, issuanceData.quantity);
 
     signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
     await BitmarkModel.doUpdateStatusForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'success');
+    return result;
   } catch (error) {
     console.log('doDecentralizedIssuance error:', error);
     await BitmarkModel.doUpdateStatusForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'failed');
+    throw error;
   }
 
 };

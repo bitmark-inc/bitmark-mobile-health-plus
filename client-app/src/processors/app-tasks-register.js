@@ -244,6 +244,14 @@ const doSignInOnWebApp = async ({ token }) => {
   return await processing(DataProcessor.doSignInOnWebApp(touchFaceIdSession, token));
 };
 
+const doDecentralizedIssuance = async ({ token, encryptionKey }) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark issuance.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  return await processing(DataProcessor.doDecentralizedIssuance(touchFaceIdSession, token, encryptionKey));
+};
+
 
 // ================================================================================================
 // ================================================================================================
@@ -274,6 +282,7 @@ let AppTasks = {
   doIssueIftttData,
   doMigrateWebAccount,
   doSignInOnWebApp,
+  doDecentralizedIssuance,
 };
 
 let registeredTasks = {};
