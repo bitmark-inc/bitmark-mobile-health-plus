@@ -31,6 +31,7 @@ export class LocalPropertyDetailComponent extends React.Component {
     this.doGetScreenData = this.doGetScreenData.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
 
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
@@ -87,6 +88,19 @@ export class LocalPropertyDetailComponent extends React.Component {
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
+  }
+
+  handerChangeLocalBitmarks() {
+    DataProcessor.doGetLocalBitmarkInformation(this.state.bitmark, this.state.asset.id).then(data => {
+      if (data && data.bitmark && data.asset) {
+        this.setState({
+          bitmark: data.bitmark,
+          asset: data.asset,
+        });
+        this.doGetScreenData(data.bitmark);
+      }
+    });
   }
 
   handerChangeTrackingBitmarks() {
