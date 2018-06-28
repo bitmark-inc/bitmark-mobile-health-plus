@@ -484,7 +484,39 @@ const doGetAssetInfoOfDecentralizedIssuance = (bitmarkAccount, timestamp, signat
   });
 };
 
-const doSubmitSessionData = (bitmarkAccount, timestamp, signature, token, sessionData, requestValidationData) => {
+const doUpdateStatusForDecentralizedIssuance = (bitmarkAccount, timestamp, signature, token, status) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = `${config.web_app_server_url}/s/api/mobile/decentralized-issuances`;
+    fetch(bitmarkUrl, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: bitmarkAccount,
+        timestamp,
+        signature,
+      },
+      body: JSON.stringify({
+        token,
+        status,
+      })
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode < 400) {
+        return response.json();
+      }
+      return response.text();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`updateStatusForDecentralizedIssuance error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doSubmitSessionDataForDecentralizedIssuance = (bitmarkAccount, timestamp, signature, token, sessionData, requestValidationData) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = `${config.web_app_server_url}/s/api/mobile/decentralized-issuances`;
@@ -540,7 +572,8 @@ let BitmarkModel = {
   doGetAllTrackingBitmark,
   doConfirmWebAccount,
   doGetAssetInfoOfDecentralizedIssuance,
-  doSubmitSessionData,
+  doUpdateStatusForDecentralizedIssuance,
+  doSubmitSessionDataForDecentralizedIssuance,
 };
 
 export { BitmarkModel };

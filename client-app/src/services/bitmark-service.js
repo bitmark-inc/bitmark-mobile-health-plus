@@ -274,20 +274,29 @@ const doDecentralizedIssuance = async (touchFaceIdSession, bitmarkAccountNumber,
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   let issuanceData = await BitmarkModel.doGetAssetInfoOfDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token);
 
-  let sessionData = await BitmarkSDK.createSessionData(touchFaceIdSession, encryptionKey);
+  try {
+    let sessionData = await BitmarkSDK.createSessionData(touchFaceIdSession, encryptionKey);
 
-  let timestamp = moment().toDate().getTime();
-  let requestMessage = `${issuanceData.asset_info.asset_id}|${bitmarkAccountNumber}|${timestamp}`;
-  let results = await BitmarkSDK.rickySignMessage([requestMessage], touchFaceIdSession);
+    let timestamp = moment().toDate().getTime();
+    let requestMessage = `${issuanceData.asset_info.asset_id}|${bitmarkAccountNumber}|${timestamp}`;
+    let results = await BitmarkSDK.rickySignMessage([requestMessage], touchFaceIdSession);
 
-  signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  await BitmarkModel.doSubmitSessionData(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, sessionData, {
-    timestamp,
-    signature: results[0],
-    requester: bitmarkAccountNumber,
-  });
+    signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+    await BitmarkModel.doSubmitSessionDataForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, sessionData, {
+      timestamp,
+      signature: results[0],
+      requester: bitmarkAccountNumber,
+    });
 
-  await BitmarkSDK.issueRecord(touchFaceIdSession, issuanceData.asset_info.fingerprint, issuanceData.asset_info.name, issuanceData.asset_info.metadata, issuanceData.quantity);
+    await BitmarkSDK.issueRecord(touchFaceIdSession, issuanceData.asset_info.fingerprint, issuanceData.asset_info.name, issuanceData.asset_info.metadata, issuanceData.quantity);
+
+    signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+    await BitmarkModel.doUpdateStatusForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'success');
+  } catch (error) {
+    console.log('doDecentralizedIssuance error:', error);
+    await BitmarkModel.doUpdateStatusForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'failed');
+  }
+
 };
 
 // ================================================================================================
