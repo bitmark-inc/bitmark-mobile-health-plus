@@ -92,9 +92,11 @@ export class LocalAssetDetailComponent extends React.Component {
   cancelTransferring(bitmark) {
     let title = 'Cancel Send Request';
     let message = 'Are you sure you want to cancel this request?';
+    let faceTouchMessage;
     if (bitmark.isDonatedBitmark) {
       title = 'Cancel Donation';
       message = 'Are you sure you want to cancel this data donation?';
+      faceTouchMessage = 'Please sign to cancel donation.';
     }
 
     Alert.alert(title, message, [{
@@ -102,7 +104,7 @@ export class LocalAssetDetailComponent extends React.Component {
     }, {
       text: 'Yes',
       onPress: () => {
-        AppProcessor.doCancelTransferBitmark(bitmark.transferOfferId).then((result) => {
+        AppProcessor.doCancelTransferBitmark(bitmark.transferOfferId, faceTouchMessage).then((result) => {
           if (result) {
             EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
           }

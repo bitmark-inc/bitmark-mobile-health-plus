@@ -107,8 +107,8 @@ const doAcceptAllTransfers = async ({ transferOffers, processingInfo }) => {
 };
 
 
-const doCancelTransferBitmark = async ({ transferOfferId }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to cancel the bitmark send request.');
+const doCancelTransferBitmark = async ({ transferOfferId, faceTouchMessage }) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(faceTouchMessage || 'Please sign to cancel the bitmark send request.');
   if (!touchFaceIdSession) {
     return null;
   }
