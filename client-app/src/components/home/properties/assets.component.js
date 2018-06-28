@@ -265,31 +265,22 @@ export class AssetsComponent extends React.Component {
                 }} >
                   {!item.isViewed && <View style={[assetsStyle.newItem, { top: 22 }]}></View>}
 
-                  {/* {item.totalPending === 0 && <View style={assetsStyle.assetBitmarkTitle}>
-                    <Text style={[assetsStyle.assetBitmarksNumber, { color: '#0060F2' }]}>{item.bitmarks.length}</Text>
-                    <Image style={assetsStyle.assetBitmarksDetail} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
-                    <Image style={[assetsStyle.assetBitmarksDetail, { marginRight: 7 }]} source={require('./../../../../assets/imgs/next-icon-blue.png')} />
-                  </View>}
-                  {item.totalPending > 0 && <View style={assetsStyle.assetBitmarkTitle}>
-                    <Text style={assetsStyle.assetBitmarkPending}>PENDING... ({item.totalPending + '/' + item.bitmarks.length})</Text>
-                  </View>} */}
-
                   <View style={assetsStyle.assetInfoArea}>
                     <Text style={[assetsStyle.assetCreatedAt, {
-                      color: (item.created_at && item.totalPending === 0) ? 'black' : '#999999'
+                      color: item.created_at ? 'black' : '#999999'
                     }]}>
-                      {(item.created_at && item.totalPending === 0) ? moment(item.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase() : 'REGISTERING...'}
+                      {item.created_at ? moment(item.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase() : 'REGISTERING...'}
                     </Text>
-                    <Text style={[assetsStyle.assetName, { color: item.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>{item.name}</Text>
+                    <Text style={[assetsStyle.assetName, { color: item.created_at ? 'black' : '#999999' }]} numberOfLines={1}>{item.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>
-                      <Text style={[assetsStyle.assetCreator, { color: item.totalPending > 0 ? '#999999' : 'black' }]} numberOfLines={1}>
-                        {'[' + item.registrant.substring(0, 4) + '...' + item.registrant.substring(item.registrant.length - 4, item.registrant.length) + ']'}
+                      <Text style={[assetsStyle.assetCreator, { color: item.created_at ? 'black' : '#999999' }]} numberOfLines={1}>
+                        {item.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber ? 'YOU' : '[' + item.registrant.substring(0, 4) + '...' + item.registrant.substring(item.registrant.length - 4, item.registrant.length) + ']'}
                       </Text>
                     </View>
                     <View style={assetsStyle.assetQuantityArea}>
-                      {item.totalPending === 0 && <Text style={assetsStyle.assetQuantity}>QUANTITY: {item.bitmarks.length}</Text>}
-                      {item.totalPending > 0 && <Text style={assetsStyle.assetQuantityPending}>QUANTITY: {item.totalPending + '/' + item.bitmarks.length} PENDING...</Text>}
-                      {item.totalPending > 0 && <Image style={assetsStyle.assetQuantityPendingIcon} source={require('./../../../../assets/imgs/pending-status.png')} />}
+                      {item.created_at && <Text style={assetsStyle.assetQuantity}>QUANTITY: {item.bitmarks.length}</Text>}
+                      {!item.created_at && <Text style={assetsStyle.assetQuantityPending}>QUANTITY: {item.bitmarks.length}</Text>}
+                      {!item.created_at && <Image style={assetsStyle.assetQuantityPendingIcon} source={require('./../../../../assets/imgs/pending-status.png')} />}
                     </View>
                   </View>
                 </TouchableOpacity>)

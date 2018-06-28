@@ -187,15 +187,20 @@ export class LocalPropertyDetailComponent extends React.Component {
           <ScrollView style={propertyDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
               <View style={propertyDetailStyle.bottomImageBar}></View>
-              <Text style={[propertyDetailStyle.assetName]}>{this.state.asset.name}</Text>
+              <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
 
               {this.state.bitmark.status !== 'pending' && <Hyperlink
                 onPress={(url) => {
-                  this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl: url, isFullScreen: true, });
+                  if (this.state.bitmark.status === 'confirmed') {
+                    this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl: url, isFullScreen: true, });
+                  }
                 }}
-                linkStyle={{ color: '#0060F2' }}
+                linkStyle={{ color: this.state.bitmark.status === 'pending' ? '#999999' : '#0060F2' }}
                 linkText={url => {
                   if (url === `${config.registry_server_url}/account/${this.state.bitmark.issuer}`) {
+                    if (this.state.bitmark.issuer === DataProcessor.getUserInformation().bitmarkAccountNumber) {
+                      return 'YOU';
+                    }
                     return `[${this.state.bitmark.issuer.substring(0, 4)}...${this.state.bitmark.issuer.substring(this.state.bitmark.issuer.length - 4, this.state.bitmark.issuer.length)}]`;
                   }
                   return '';
@@ -257,7 +262,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                     extraData={this.state}
                     data={this.state.provenance || []}
                     renderItem={({ item }) => {
-                      return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
+                      return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)} disabled={item.status === 'pending'}>
                         {this.state.isTracking && !this.state.provenanceViewed[item.tx_id] && !item.isViewed && <View style={propertyDetailStyle.provenancesNotView}></View>}
                         <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: item.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
                           {item.status === 'pending' ? 'PENDING…' : item.created_at.toUpperCase()}
@@ -275,7 +280,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               </View>
             </TouchableOpacity>
           </ScrollView>
-        </View></TouchableWithoutFeedback>)}
+        </View></ TouchableWithoutFeedback>)}
       />
     );
   }

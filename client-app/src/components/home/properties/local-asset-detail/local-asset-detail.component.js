@@ -167,21 +167,28 @@ export class LocalAssetDetailComponent extends React.Component {
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
               <View style={assetDetailStyle.bottomImageBar}></View>
 
-              <Text style={[assetDetailStyle.assetName]} >{this.state.asset.name}</Text>
+              <Text style={[assetDetailStyle.assetName, { color: this.state.asset.created_at ? 'black' : '#999999' }]} >{this.state.asset.name}</Text>
               <View style={assetDetailStyle.assetCreatorRow}>
-                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{this.state.asset.created_at ? ('REGISTERED ON ' + moment(this.state.asset.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase()) : 'REGISTERING...'}</Text>
+                <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.created_at ? 'black' : '#999999' }]}>
+                  {this.state.asset.created_at ? ('REGISTERED ON ' + moment(this.state.asset.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase()) : 'REGISTERING...'}
+                </Text>
                 <Hyperlink
                   onPress={(url) => {
-                    this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl: url, isFullScreen: true, });
+                    if (this.state.asset.created_at) {
+                      this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl: url, isFullScreen: true, });
+                    }
                   }}
-                  linkStyle={{ color: '#0060F2' }}
+                  linkStyle={{ color: this.state.asset.created_at ? '#0060F2' : '#999999' }}
                   linkText={url => {
                     if (url === `${config.registry_server_url}/account/${this.state.asset.registrant}`) {
+                      if (this.state.asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber) {
+                        return 'YOU';
+                      }
                       return `[${this.state.asset.registrant.substring(0, 4)}...${this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length)}]`;
                     }
                     return '';
                   }}>
-                  <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>BY {`${config.registry_server_url}/account/${this.state.asset.registrant}`}</Text>
+                  <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.created_at ? 'black' : '#999999' }]}>BY {`${config.registry_server_url}/account/${this.state.asset.registrant}`}</Text>
                 </Hyperlink>
               </View>
 
@@ -192,8 +199,8 @@ export class LocalAssetDetailComponent extends React.Component {
                   data={this.state.metadata || []}
                   renderItem={({ item }) => {
                     return (<View style={[assetDetailStyle.metadataItem, { marginBottom: item.key === this.state.metadata.length ? 0 : 15 }]}>
-                      <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.label.toUpperCase()}:</Text>
-                      <Text style={[assetDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
+                      <Text style={[assetDetailStyle.metadataItemLabel, { color: this.state.asset.created_at ? 'black' : '#999999' }]}>{item.label.toUpperCase()}:</Text>
+                      <Text style={[assetDetailStyle.metadataItemValue, { color: this.state.asset.created_at ? 'black' : '#999999' }]}>{item.value}</Text>
                     </View>);
                   }}
                 />
@@ -256,7 +263,7 @@ export class LocalAssetDetailComponent extends React.Component {
                           }}>
                             <Text style={[assetDetailStyle.bitmarkViewButtonText]}>VIEW DETAILS</Text>
                           </TouchableOpacity>
-                          <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton}>
+                          <TouchableOpacity style={assetDetailStyle.bitmarkTransferButton} disabled={true}>
                             <Text style={[assetDetailStyle.bitmarkTransferButtonText, { color: '#999999' }]}>PENDING…</Text>
                           </TouchableOpacity>
                         </View>);

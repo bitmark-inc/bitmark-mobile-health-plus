@@ -88,7 +88,6 @@ const recheckLocalAssets = (localAssets, donationInformation) => {
     for (let asset of localAssets) {
       for (let bitmark of asset.bitmarks) {
         let isDonatedBitmark = donationInformation.completedTasks.findIndex(item => (item.taskType !== donationInformation.commonTaskIds.bitmark_health_data && item.bitmarkId === bitmark.id)) >= 0;
-        console.log('isDonatedBitmark :', isDonatedBitmark);
         bitmark.isDonatedBitmark = isDonatedBitmark;
       }
     }
