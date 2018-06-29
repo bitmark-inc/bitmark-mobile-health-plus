@@ -28,6 +28,7 @@ export class LocalPropertyDetailComponent extends React.Component {
     this.clickOnProvenance = this.clickOnProvenance.bind(this);
     this.changeTrackingBitmark = this.changeTrackingBitmark.bind(this);
     this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
+    this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
     this.doGetScreenData = this.doGetScreenData.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, null, ComponentName);
@@ -92,8 +93,9 @@ export class LocalPropertyDetailComponent extends React.Component {
   }
 
   handerChangeLocalBitmarks() {
-    DataProcessor.doGetLocalBitmarkInformation(this.state.bitmark, this.state.asset.id).then(data => {
-      if (data && data.bitmark && data.asset) {
+    DataProcessor.doGetLocalBitmarkInformation(this.state.bitmark.id, this.state.asset.id).then(data => {
+      if (data && data.bitmark && data.asset &&
+        (JSON.stringify(this.state.bitmark) !== JSON.stringify(data.bitmark) || JSON.stringify(this.state.asset) !== JSON.stringify(data.asset))) {
         this.setState({
           bitmark: data.bitmark,
           asset: data.asset,
