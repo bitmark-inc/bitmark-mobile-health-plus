@@ -273,12 +273,10 @@ const doConfirmWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, tok
 const doDecentralizedIssuance = async (touchFaceIdSession, bitmarkAccountNumber, token, encryptionKey) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   let issuanceData = await BitmarkModel.doGetAssetInfoOfDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token);
-
   try {
     let sessionData = await BitmarkSDK.createSessionData(touchFaceIdSession, encryptionKey);
-
     let timestamp = moment().toDate().getTime();
-    let requestMessage = `${issuanceData.asset_info.asset_id}|${bitmarkAccountNumber}|${timestamp}`;
+    let requestMessage = `uploadAsset|${issuanceData.asset_info.asset_id}|${bitmarkAccountNumber}|${timestamp}`;
     let results = await BitmarkSDK.rickySignMessage([requestMessage], touchFaceIdSession);
 
     signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);

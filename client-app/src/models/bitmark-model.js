@@ -509,7 +509,7 @@ const doUpdateStatusForDecentralizedIssuance = (bitmarkAccount, timestamp, signa
       return response.text();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error(`updateStatusForDecentralizedIssuance error :` + JSON.stringify(data)));
+        return reject(new Error(`doUpdateStatusForDecentralizedIssuance error :` + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
@@ -542,7 +542,7 @@ const doSubmitSessionDataForDecentralizedIssuance = (bitmarkAccount, timestamp, 
       return response.text();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error(`getAssetInfoOfDecentralizedIssuance error :` + JSON.stringify(data)));
+        return reject(new Error(`doSubmitSessionDataForDecentralizedIssuance error :` + JSON.stringify(data)));
       }
       resolve(data);
     }).catch(reject);
