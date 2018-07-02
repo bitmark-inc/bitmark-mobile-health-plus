@@ -303,7 +303,14 @@ const doDecentralizedTransfer = async (touchFaceIdSession, bitmarkAccountNumber,
   let info = await BitmarkModel.doGetInfoInfoOfDecentralizedTransfer(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token);
   let bitmarkId = info.bitmark_id;
   let receiver = info.receiver;
-  return await BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmarkId, receiver);
+  try {
+    let result = await BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmarkId, receiver);
+    await BitmarkModel.doUpdateStatusForDecentralizedTransfer(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'success');
+    return result;
+  } catch (error) {
+    await BitmarkModel.doUpdateStatusForDecentralizedTransfer(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'failed');
+    throw error;
+  }
 };
 
 // ================================================================================================
