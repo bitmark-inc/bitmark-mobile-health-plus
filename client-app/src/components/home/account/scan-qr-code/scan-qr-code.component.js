@@ -15,10 +15,15 @@ import { EventEmitterService } from '../../../../services';
 export class ScanQRCodeComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.scanned = false;
   }
 
   onBarCodeRead(scanData) {
     this.cameraRef.stopPreview();
+    if (this.scanned) {
+      return;
+    }
+    this.scanned = true;
     let qrCode = scanData.data;
 
     let tempArrays = qrCode.split('|');
