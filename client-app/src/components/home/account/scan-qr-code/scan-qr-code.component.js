@@ -9,7 +9,7 @@ import componentStyle from './scan-qr-code.component.style';
 
 import defaultStyles from '../../../../commons/styles';
 import moment from 'moment';
-import { AppProcessor } from '../../../../processors';
+import { AppProcessor, DataProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
 
 export class ScanQRCodeComponent extends React.Component {
@@ -49,6 +49,7 @@ export class ScanQRCodeComponent extends React.Component {
 
       AppProcessor.doDecentralizedIssuance(token, encryptionKey).then(result => {
         if (result) {
+          DataProcessor.doReloadLocalBitmarks();
           Alert.alert('Success!', 'Your property rights have been registered.', [{
             text: 'OK',
             onPress: this.props.navigation.goBack
@@ -79,6 +80,7 @@ export class ScanQRCodeComponent extends React.Component {
 
       AppProcessor.doDecentralizedTransfer(token).then(result => {
         if (result) {
+          DataProcessor.doReloadLocalBitmarks();
           Alert.alert('Success!', 'Your property rights have been transferred.', [{
             text: 'OK',
             onPress: this.props.navigation.goBack
