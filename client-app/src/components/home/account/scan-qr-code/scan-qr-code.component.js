@@ -53,7 +53,7 @@ export class ScanQRCodeComponent extends React.Component {
         console.log('doDecentralizedIssuance error:', error);
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: this.props.navigation.goBack });
       });
-    } if (tempArrays.length === 3 && tempArrays[0] === 't') {
+    } else if (tempArrays.length === 3 && tempArrays[0] === 't') {
       let token = tempArrays[1];
       let timestamp = parseInt(tempArrays[2], 0);
       if (!timestamp || isNaN(timestamp)) {
