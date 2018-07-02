@@ -223,6 +223,10 @@ const doDecentralizedIssuance = async (token, encryptionKey) => {
   return executeTask('doDecentralizedIssuance', { token, encryptionKey });
 };
 
+const doDecentralizedTransfer = async (token, encryptionKey) => {
+  return executeTask('doDecentralizedTransfer', { token, encryptionKey });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -264,6 +268,7 @@ let AppProcessor = {
   doSignInOnWebApp,
   doGetAllTransfersOffers,
   doDecentralizedIssuance,
+  doDecentralizedTransfer,
 
   doStartBackgroundProcess,
 }

@@ -296,7 +296,14 @@ const doDecentralizedIssuance = async (touchFaceIdSession, bitmarkAccountNumber,
     await BitmarkModel.doUpdateStatusForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'failed');
     throw error;
   }
+};
 
+const doDecentralizedTransfer = async (touchFaceIdSession, bitmarkAccountNumber, token) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let info = await BitmarkModel.doGetInfoInfoOfDecentralizedTransfer(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token);
+  let bitmarkId = info.bitmark_id;
+  let receiver = info.receiver;
+  return await BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmarkId, receiver);
 };
 
 // ================================================================================================
@@ -312,6 +319,7 @@ let BitmarkService = {
   doGetProvenance,
   doConfirmWebAccount,
   doDecentralizedIssuance,
+  doDecentralizedTransfer,
 };
 
 export { BitmarkService };

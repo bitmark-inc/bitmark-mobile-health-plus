@@ -22,7 +22,7 @@ export class ScanQRCodeComponent extends React.Component {
     let qrCode = scanData.data;
 
     let tempArrays = qrCode.split('|');
-    if (tempArrays[0] === 'i') {
+    if (tempArrays.length === 4 && tempArrays[0] === 'i') {
       let token = tempArrays[1];
       let timestamp = parseInt(tempArrays[2], 0);
       let encryptionKey = tempArrays[3];
@@ -53,7 +53,36 @@ export class ScanQRCodeComponent extends React.Component {
         console.log('doDecentralizedIssuance error:', error);
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: this.props.navigation.goBack });
       });
+    } if (tempArrays.length === 3 && tempArrays[0] === 't') {
+      let token = tempArrays[1];
+      let timestamp = parseInt(tempArrays[2], 0);
+      if (!timestamp || isNaN(timestamp)) {
+        Alert.alert('', 'QR-code is invalid!', ''[{
+          text: 'OK',
+          onPress: this.props.navigation.goBack
+        }]);
+        return;
+      }
+      let expiredTime = timestamp + 5 * 60 * 1000;
+      if (expiredTime < moment().toDate().getTime()) {
+        Alert.alert('', 'QR-code is expired!', ''[{
+          text: 'OK',
+          onPress: this.props.navigation.goBack
+        }]);
+        return;
+      }
 
+      AppProcessor.doDecentralizedTransfer(token).then(result => {
+        if (result) {
+          Alert.alert('Success!', 'Your property rights have been transferred.', [{
+            text: 'OK',
+            onPress: this.props.navigation.goBack
+          }]);
+        }
+      }).catch(error => {
+        console.log('doDecentralizedTransfer error:', error);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: this.props.navigation.goBack });
+      });
     } else {
       Alert.alert('', 'QR-code is invalid!', ''[{
         text: 'OK',

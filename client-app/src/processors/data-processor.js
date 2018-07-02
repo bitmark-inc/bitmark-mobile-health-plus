@@ -407,6 +407,7 @@ const doOpenApp = async () => {
     configNotification();
 
     await checkAppNeedResetLocalData();
+    // await UserModel.resetUserLocalData();
 
     let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
     let trackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
@@ -806,6 +807,15 @@ const doGenerateTransactionActionRequiredData = async () => {
 
   EventEmitterService.emit(EventEmitterService.events.CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA, { actionRequired, donationInformation });
   console.log('actionRequired :', actionRequired);
+  let temps = [];
+  actionRequired.forEach(item => {
+    if (item.transferOffer) {
+      if (!item.transferOffer.record.link || !item.transferOffer.record.owner || !item.transferOffer.record.signature) {
+        temps.push(item.transferOffer.id);
+      }
+    }
+  });
+  console.log('temps :', temps);
 };
 
 const doGenerateTransactionHistoryData = async () => {
@@ -938,8 +948,15 @@ const doGetTransactionScreenHistories = async (length) => {
 
 const doDecentralizedIssuance = async (touchFaceIdSession, token, encryptionKey) => {
   let result = await BitmarkService.doDecentralizedIssuance(touchFaceIdSession, userInformation.bitmarkAccountNumber, token, encryptionKey);
-  // let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
-  // await runGetLocalBitmarksInBackground(donationInformation);
+  let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
+  await runGetLocalBitmarksInBackground(donationInformation);
+  return result;
+};
+
+const doDecentralizedTransfer = async (touchFaceIdSession, token, ) => {
+  let result = await BitmarkService.doDecentralizedTransfer(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
+  let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
+  await runGetLocalBitmarksInBackground(donationInformation);
   return result;
 };
 
@@ -979,6 +996,7 @@ const DataProcessor = {
   doMigrateWebAccount,
   doSignInOnWebApp,
   doDecentralizedIssuance,
+  doDecentralizedTransfer,
 
   doGetLocalBitmarks,
   doGetTrackingBitmarks,
