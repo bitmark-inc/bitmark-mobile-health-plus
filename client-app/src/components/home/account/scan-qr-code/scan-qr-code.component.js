@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
 import {
   Text, View, TouchableOpacity, Image,
   Alert,
@@ -11,12 +12,29 @@ import defaultStyles from '../../../../commons/styles';
 import moment from 'moment';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
+import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
 
 export class ScanQRCodeComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.backToPropertiesScreen = this.backToPropertiesScreen.bind(this);
     this.scanned = false;
   }
+
+  backToPropertiesScreen = () => {
+    const resetHomePage = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({
+          routeName: 'User', params: {
+            displayedTab: { mainTab: BottomTabsComponent.MainTabs.properties },
+            needReloadData: true,
+          }
+        }),
+      ]
+    });
+    this.props.screenProps.homeNavigation.dispatch(resetHomePage);
+  };
 
   onBarCodeRead(scanData) {
     this.cameraRef.stopPreview();
@@ -52,7 +70,7 @@ export class ScanQRCodeComponent extends React.Component {
           DataProcessor.doReloadLocalBitmarks();
           Alert.alert('Success!', 'Your property rights have been registered.', [{
             text: 'OK',
-            onPress: this.props.navigation.goBack
+            onPress: this.backToPropertiesScreen
           }]);
         }
       }).catch(error => {
@@ -83,7 +101,7 @@ export class ScanQRCodeComponent extends React.Component {
           DataProcessor.doReloadLocalBitmarks();
           Alert.alert('Success!', 'Your property rights have been transferred.', [{
             text: 'OK',
-            onPress: this.props.navigation.goBack
+            onPress: this.backToPropertiesScreen
           }]);
         }
       }).catch(error => {
@@ -118,5 +136,10 @@ ScanQRCodeComponent.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     goBack: PropTypes.func,
-  })
+  }),
+  screenProps: PropTypes.shape({
+    homeNavigation: PropTypes.shape({
+      dispatch: PropTypes.func,
+    }),
+  }),
 };
