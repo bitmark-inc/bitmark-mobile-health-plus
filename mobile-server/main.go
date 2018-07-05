@@ -76,7 +76,7 @@ func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, b
 	nc.Add("transfer-offer", c.External.MessageChannel, twosigsHandler)
 
 	blockchainHandler := blockchain.New(pushStore, bitmarkStore, pushAPIClient, gatewayClient)
-	nc.Add("blockchain", c.External.MessageChannel, blockchainHandler)
+	nc.Add("new-block", c.External.MessageChannel, blockchainHandler)
 
 	nc.Connect(c.External.MessageQueue.Server)
 
