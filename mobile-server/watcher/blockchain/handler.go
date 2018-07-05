@@ -142,7 +142,7 @@ func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitma
 		return err
 	}
 
-	receiverPushMessage := fmt.Sprintf(messages[EventTransferConfirmedSender], asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner))
+	receiverPushMessage := fmt.Sprintf(messages[EventTransferConfirmedReceiver], asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner))
 
 	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
 		Account: transfer.Owner,
