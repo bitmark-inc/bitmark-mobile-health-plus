@@ -11,6 +11,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/pushnotification"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
+	"github.com/bitmark-inc/mobile-app/mobile-server/util"
 	"github.com/nsqio/go-nsq"
 	memcache "github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
@@ -57,8 +58,9 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 
 	// get bitmarkid
 	bitmarkIDs := make([]string, 0)
-	for _, bitmark := range data.Transfers {
-		bitmarkIDs = append(bitmarkIDs, bitmark.BitmarkID)
+	for _, transfer := range data.Transfers {
+		bitmarkIDs = append(bitmarkIDs, transfer.BitmarkID)
+		h.processTransferConfirmation(transfer)
 	}
 
 	ctx := context.Background()
@@ -101,6 +103,57 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 				Silent:  true,
 			}, h.pushStore, h.pushAPIClient)
 		}
+	}
+
+	return nil
+}
+
+func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitmarkInfo) error {
+	if transfer.TxPreviousID == nil {
+		log.Warn("Found a transfer with empty previous tx:", transfer.TxID)
+		return nil
+	}
+
+	pushData := &map[string]interface{}{
+		"tx_id":      transfer.TxID,
+		"bitmark_id": transfer.BitmarkID,
+	}
+
+	var asset gateway.Asset
+
+	previousTx, err := h.gatewayClient.GetTxInfo(context.Background(), *transfer.TxPreviousID)
+	if err != nil {
+		return nil
+	}
+
+	asset = previousTx.Asset
+
+	senderPushMessage := fmt.Sprintf(messages[EventTransferConfirmedSender], previousTx.Asset.Name, util.ShortenAccountNumber(transfer.Owner))
+
+	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
+		Account: previousTx.Tx.Owner,
+		Title:   "",
+		Message: senderPushMessage,
+		Data:    pushData,
+		Source:  "gateway",
+		Pinned:  false,
+		Silent:  true,
+	}, h.pushStore, h.pushAPIClient); err != nil {
+		return err
+	}
+
+	receiverPushMessage := fmt.Sprintf(messages[EventTransferConfirmedSender], asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner))
+
+	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
+		Account: transfer.Owner,
+		Title:   "",
+		Message: receiverPushMessage,
+		Data:    pushData,
+		Source:  "gateway",
+		Pinned:  false,
+		Silent:  true,
+	}, h.pushStore, h.pushAPIClient); err != nil {
+		return err
 	}
 
 	return nil
