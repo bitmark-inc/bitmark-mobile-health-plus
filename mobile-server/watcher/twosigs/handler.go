@@ -3,6 +3,7 @@ package twosigs
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
@@ -76,6 +77,31 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 	// For p2p transfers
 	switch event {
 	case EventTransferRequest:
+		// TODO: consider removing this code
+		offerID := data["id"].(string)
+		log.Debugf("Offer id = %s", offerID)
+		transferOffer, err := h.gatewayClient.GetOfferIdInfo(context.Background(), offerID)
+		if err != nil {
+			log.Error("error when getting transfer offer:", err)
+			return err
+		}
+		if transferOffer == nil {
+			log.Info("transfer offer nil, skipping ...")
+			return nil
+		}
+		log.Debugf("Transfer offer = %+v", transferOffer)
+		bitmarkInfo, err := h.gatewayClient.GetBitmarkInfo(context.Background(), transferOffer.BitmarkId)
+		if err != nil {
+			log.Error("error when getting bitmark info:", err)
+			return err
+		}
+
+		if bitmarkInfo.Bitmark.Status != "confirmed" {
+			log.Infof("Transfer offer with id: %s, bitmark id = %s is not confirmed. Backoff for 10 seconds.", offerID, bitmarkInfo)
+			message.Requeue(10 * time.Second)
+			return nil
+		}
+
 		return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
 			Account: to,
 			Title:   "",
