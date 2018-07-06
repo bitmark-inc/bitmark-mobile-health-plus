@@ -122,14 +122,7 @@ export class TransactionsComponent extends React.Component {
   }
 
   reloadData() {
-    AppProcessor.doReloadUserData().then(() => {
-      return DataProcessor.doGenerateTransactionScreenData();
-    }).then(({ actionRequired, completed, donationInformation }) => {
-      this.setState({
-        actionRequired, completed, donationInformation,
-        appLoadingData: DataProcessor.isAppLoadingData(),
-      });
-    }).catch((error) => {
+    AppProcessor.doReloadUserData().catch((error) => {
       console.log('doReloadUserData error :', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
     });
