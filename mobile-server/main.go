@@ -61,7 +61,7 @@ func openDb(host string, port uint16, dbname, user, passwd string) (*pgx.ConnPoo
 func initializeLog() {
 	log.SetFormatter(&log.TextFormatter{})
 	log.SetOutput(os.Stdout)
-	log.SetLevel(log.DebugLevel)
+	log.SetLevel(log.InfoLevel)
 }
 
 func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *watcher.NotifyClient {
@@ -76,7 +76,7 @@ func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, b
 	nc.Add("transfer-offer", c.External.MessageChannel, twosigsHandler)
 
 	blockchainHandler := blockchain.New(pushStore, bitmarkStore, pushAPIClient, gatewayClient)
-	nc.Add("blockchain", c.External.MessageChannel, blockchainHandler)
+	nc.Add("new-block", c.External.MessageChannel, blockchainHandler)
 
 	nc.Connect(c.External.MessageQueue.Server)
 

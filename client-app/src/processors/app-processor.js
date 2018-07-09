@@ -155,8 +155,8 @@ const doAcceptAllTransfers = async (transferOffers, processingInfo) => {
   return executeTask('doAcceptAllTransfers', { transferOffers, processingInfo });
 };
 
-const doCancelTransferBitmark = async (transferOfferId) => {
-  return executeTask('doCancelTransferBitmark', { transferOfferId });
+const doCancelTransferBitmark = async (transferOfferId, faceTouchMessage) => {
+  return executeTask('doCancelTransferBitmark', { transferOfferId, faceTouchMessage });
 };
 
 const doRejectTransferBitmark = async (transferOffer, processingInfo) => {

@@ -51,13 +51,27 @@ type Bitmark struct {
 	Status      string    `json:"status"`
 }
 
+type Asset struct {
+	ID       string            `json:"id"`
+	Name     string            `json:"name"`
+	Metadata map[string]string `json:"metadata"`
+}
+
 type BitmarkInfo struct {
 	Bitmark Bitmark `json:"bitmark"`
-	Asset   struct {
-		ID       string            `json:"id"`
-		Name     string            `json:"name"`
-		Metadata map[string]string `json:"metadata"`
-	} `json:"asset"`
+	Asset   Asset   `json:"asset"`
+}
+
+type Tx struct {
+	ID        string `json:"id"`
+	Owner     string `json:"owner"`
+	Status    string `json:"status"`
+	BitmarkID string `json:"bitmark_id"`
+}
+
+type TxInfo struct {
+	Tx    Bitmark `json:"tx"`
+	Asset Asset   `json:"asset"`
 }
 
 func (c *Client) GetOfferIdInfo(ctx context.Context, offerID string) (*TransferOffer, error) {
@@ -96,4 +110,21 @@ func (c *Client) GetBitmarkInfo(ctx context.Context, bitmarkID string) (*Bitmark
 	}
 
 	return &bitmarkInfo, nil
+}
+
+func (c *Client) GetTxInfo(ctx context.Context, txID string) (*TxInfo, error) {
+	txInfoURL := c.url + "/v1/txs/" + txID + "?asset=true"
+	response, err := ctxhttp.Get(ctx, c.client, txInfoURL)
+	if err != nil {
+		return nil, err
+	}
+
+	var txInfo TxInfo
+
+	decoder := json.NewDecoder(response.Body)
+	if err := decoder.Decode(&txInfo); err != nil {
+		return nil, err
+	}
+
+	return &txInfo, nil
 }

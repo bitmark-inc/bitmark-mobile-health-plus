@@ -83,8 +83,7 @@ export default StyleSheet.create({
     width: convertWidth(337),
   },
   assetCreatorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     marginBottom: 10,
     marginLeft: convertWidth(19),
     width: convertWidth(336),
@@ -120,8 +119,7 @@ export default StyleSheet.create({
   metadataItemLabel: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
-    fontWeight: '900',
-    color: '#0060F2',
+    color: 'black',
     width: convertWidth(117),
     marginTop: 1,
   },
@@ -140,7 +138,6 @@ export default StyleSheet.create({
     fontWeight: '900',
     marginLeft: convertWidth(19),
     marginTop: 27,
-    height: 25,
   },
   bitmarksArea: {
 
@@ -148,17 +145,19 @@ export default StyleSheet.create({
   bitmarksHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: convertWidth(340),
+    width: convertWidth(337),
     marginLeft: convertWidth(19),
-    height: 18,
-    backgroundColor: '#F5F5F5',
     marginTop: 18,
+    marginBottom: 9,
   },
   bitmarksHeaderLabel: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 15,
-    minWidth: convertWidth(59),
+    width: convertWidth(117),
+    backgroundColor: '#F5F5F5',
+    marginLeft: 2,
+    paddingLeft: convertWidth(4),
   },
   bitmarkListArea: {
     flexDirection: 'row',
@@ -166,7 +165,7 @@ export default StyleSheet.create({
   bitmarksRow: {
     flexDirection: 'row',
     width: convertWidth(340),
-    paddingLeft: convertWidth(23),
+    paddingLeft: convertWidth(21),
     height: 36,
     paddingTop: 10,
     paddingBottom: 10,
@@ -180,17 +179,21 @@ export default StyleSheet.create({
   bitmarksRowNo: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
-    minWidth: convertWidth(59),
+    width: convertWidth(117),
+    paddingLeft: convertWidth(4),
+    paddingRight: convertWidth(19),
   },
   bitmarksRowNoPending: {
     fontFamily: 'Andale Mono',
     fontSize: 13,
-    minWidth: convertWidth(59),
+    width: convertWidth(94),
     color: '#CCCCCC',
+    paddingLeft: convertWidth(4),
   },
   bitmarkViewButton: {
-    height: 36,
-    width: convertWidth(120),
+    width: convertWidth(102),
+    marginLeft: convertWidth(2),
+    paddingLeft: convertWidth(4),
   },
   bitmarkViewButtonText: {
     fontFamily: 'Andale Mono',
@@ -199,7 +202,7 @@ export default StyleSheet.create({
   },
   bitmarkTransferButton: {
     height: 25,
-    marginLeft: convertWidth(15),
+    marginLeft: convertWidth(27),
   },
   bitmarkTransferButtonText: {
     fontFamily: 'Andale Mono',
@@ -207,19 +210,10 @@ export default StyleSheet.create({
     lineHeight: 16,
     color: '#0060F2'
   },
-  bitmarkPending: {
-    fontFamily: 'Avenir Black',
-    fontSize: 14,
-    lineHeight: 16,
-    fontWeight: '900',
-    color: '#CCCCCC',
-    fontStyle: 'italic'
-  },
 
   assetPreview: {
     marginLeft: convertWidth(19),
     marginRight: convertWidth(19),
     height: 125
   }
-
 });

@@ -1,4 +1,4 @@
-FROM golang:latest as build-server
+FROM golang:alpine as build-server
 
 WORKDIR /go/src/github.com/bitmark-inc/mobile-app/mobile-server
 
@@ -8,7 +8,7 @@ RUN go install github.com/bitmark-inc/mobile-app/mobile-server
 
 # --
 
-FROM bitmark/go-env
+FROM alpine
 
 COPY --from=build-server /go/bin/mobile-server /usr/bin/mobile-server
 

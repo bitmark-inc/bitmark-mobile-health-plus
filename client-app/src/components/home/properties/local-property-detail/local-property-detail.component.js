@@ -7,6 +7,7 @@ import {
   Share,
   Alert,
 } from 'react-native';
+import Hyperlink from 'react-native-hyperlink';
 
 import { BitmarkComponent } from './../../../../commons/components';
 import { convertWidth } from './../../../../utils';
@@ -27,9 +28,11 @@ export class LocalPropertyDetailComponent extends React.Component {
     this.clickOnProvenance = this.clickOnProvenance.bind(this);
     this.changeTrackingBitmark = this.changeTrackingBitmark.bind(this);
     this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
+    this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
     this.doGetScreenData = this.doGetScreenData.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
 
     let asset = this.props.navigation.state.params.asset;
     let bitmark = this.props.navigation.state.params.bitmark;
@@ -86,6 +89,20 @@ export class LocalPropertyDetailComponent extends React.Component {
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
+  }
+
+  handerChangeLocalBitmarks() {
+    DataProcessor.doGetLocalBitmarkInformation(this.state.bitmark.id, this.state.asset.id).then(data => {
+      if (data && data.bitmark && data.asset &&
+        (JSON.stringify(this.state.bitmark) !== JSON.stringify(data.bitmark) || JSON.stringify(this.state.asset) !== JSON.stringify(data.asset))) {
+        this.setState({
+          bitmark: data.bitmark,
+          asset: data.asset,
+        });
+        this.doGetScreenData(data.bitmark);
+      }
+    });
   }
 
   handerChangeTrackingBitmarks() {
@@ -125,7 +142,7 @@ export class LocalPropertyDetailComponent extends React.Component {
         }
       }]);
     } else {
-      Alert.alert('Stop Tracking', 'By stop tracking a bitmark, the bitmark will be removed from the tracked list, are you sure you want to do it?', [{
+      Alert.alert('Stop Tracking', 'If you stop tracking a bitmark, the bitmark will be removed from the tracked list, are you sure you want to do it?', [{
         text: 'Cancel', style: 'cancel',
       }, {
         text: 'YES',
@@ -158,8 +175,8 @@ export class LocalPropertyDetailComponent extends React.Component {
         </View></TouchableWithoutFeedback>)}
         content={(<TouchableWithoutFeedback onPress={() => this.setState({ displayTopButton: false })}><View style={propertyDetailStyle.body}>
           {this.state.displayTopButton && <View style={propertyDetailStyle.topButtonsArea}>
-            {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber && <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.displayStatus !== 'confirmed'} onPress={this.downloadAsset}>
-              <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
+            {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber && <TouchableOpacity style={propertyDetailStyle.downloadAssetButton} disabled={this.state.bitmark.status !== 'confirmed'} onPress={this.downloadAsset}>
+              <Text style={[propertyDetailStyle.downloadAssetButtonText, { color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#A4B5CD', }]}>DOWNLOAD ASSET</Text>
             </TouchableOpacity>}
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={() => {
               Clipboard.setString(this.state.bitmark.id);
@@ -169,27 +186,49 @@ export class LocalPropertyDetailComponent extends React.Component {
               <Text style={propertyDetailStyle.topButtonText}>COPY BITMARK ID</Text>
               {this.state.copied && <Text style={propertyDetailStyle.copiedAssetIddButtonText}>Copied to clipboard!</Text>}
             </TouchableOpacity>
-            {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber &&
+            {this.state.bitmark.owner === DataProcessor.getUserInformation().bitmarkAccountNumber && !this.state.bitmark.transferOfferId &&
               <TouchableOpacity style={propertyDetailStyle.topButton}
-                disabled={this.state.bitmark.displayStatus !== 'confirmed'}
+                disabled={this.state.bitmark.status !== 'confirmed'}
                 onPress={() => this.props.navigation.navigate('LocalPropertyTransfer', { bitmark: this.state.bitmark, asset: this.state.asset })}>
                 <Text style={[propertyDetailStyle.topButtonText, {
-                  color: this.state.bitmark.displayStatus === 'confirmed' ? '#0060F2' : '#C2C2C2'
+                  color: this.state.bitmark.status === 'confirmed' ? '#0060F2' : '#C2C2C2'
                 }]}>SEND BITMARK</Text>
               </TouchableOpacity>
             }
             <TouchableOpacity style={propertyDetailStyle.topButton} onPress={this.changeTrackingBitmark}>
-              <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK'}</Text>
+              <Text style={[propertyDetailStyle.topButtonText]}>{this.state.isTracking ? 'STOP TRACKING' : 'TRACK BITMARK'}</Text>
             </TouchableOpacity>
 
           </View>}
           <ScrollView style={propertyDetailStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={() => this.setState({ displayTopButton: false })}>
               <View style={propertyDetailStyle.bottomImageBar}></View>
-              <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
-              <Text style={[propertyDetailStyle.assetCreateAt, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>
-                ISSUED {this.state.bitmark.displayStatus === 'pending' ? '' : ('ON ' + moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase())}{'\n'}BY {'[' + this.state.asset.registrant.substring(0, 4) + '...' + this.state.asset.registrant.substring(this.state.asset.registrant.length - 4, this.state.asset.registrant.length) + ']'}
-              </Text>
+              <Text style={[propertyDetailStyle.assetName, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{this.state.asset.name}</Text>
+
+              {this.state.bitmark.status !== 'pending' && <Hyperlink
+                onPress={(url) => {
+                  if (this.state.bitmark.status === 'confirmed') {
+                    this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl: url, isFullScreen: true, });
+                  }
+                }}
+                linkStyle={{ color: this.state.bitmark.status === 'pending' ? '#999999' : '#0060F2' }}
+                linkText={url => {
+                  if (url === `${config.registry_server_url}/account/${this.state.bitmark.issuer}`) {
+                    if (this.state.bitmark.issuer === DataProcessor.getUserInformation().bitmarkAccountNumber) {
+                      return 'YOU';
+                    }
+                    return `[${this.state.bitmark.issuer.substring(0, 4)}...${this.state.bitmark.issuer.substring(this.state.bitmark.issuer.length - 4, this.state.bitmark.issuer.length)}]`;
+                  }
+                  return '';
+                }}>
+                <Text style={[propertyDetailStyle.assetCreateAt]}>
+                  ISSUED ON {moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase()}{'\n'}BY {`${config.registry_server_url}/account/${this.state.bitmark.issuer}`}
+                </Text>
+              </Hyperlink>}
+
+              {this.state.bitmark.status === 'pending' && <Text style={[propertyDetailStyle.assetCreateAt, { color: '#999999' }]}>
+                PENDING....
+              </Text>}
 
               {this.state.metadata && this.state.metadata.length > 0 && <View style={propertyDetailStyle.metadataArea}>
                 <FlatList
@@ -197,9 +236,9 @@ export class LocalPropertyDetailComponent extends React.Component {
                   extraData={this.state}
                   data={this.state.metadata || []}
                   renderItem={({ item }) => {
-                    return (<View style={[propertyDetailStyle.metadataItem, { marginBottom: item.key === this.state.provenance.length ? 0 : 15 }]}>
-                      <Text style={[propertyDetailStyle.metadataItemLabel, { color: this.state.asset.totalPending > 0 ? '#999999' : '#0060F2' }]}>{item.label}:</Text>
-                      <Text style={[propertyDetailStyle.metadataItemValue, { color: this.state.asset.totalPending > 0 ? '#999999' : 'black' }]}>{item.value}</Text>
+                    return (<View style={[propertyDetailStyle.metadataItem, { marginBottom: item.key === this.state.metadata.length ? 0 : 15 }]}>
+                      <Text style={[propertyDetailStyle.metadataItemLabel, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{item.label.toUpperCase()}:</Text>
+                      <Text style={[propertyDetailStyle.metadataItemValue, { color: this.state.bitmark.status === 'pending' ? '#999999' : 'black' }]}>{item.value}</Text>
                     </View>);
                   }}
                 />
@@ -227,7 +266,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               }
 
 
-              <Text style={[propertyDetailStyle.provenanceLabel, { color: this.state.bitmark.displayStatus === 'pending' ? '#999999' : 'black' }]}>PROVENANCE</Text>
+              <Text style={[propertyDetailStyle.provenanceLabel]}>PROVENANCE</Text>
               <View style={propertyDetailStyle.provenancesArea}>
                 <View style={propertyDetailStyle.provenancesHeader}>
                   <Text style={propertyDetailStyle.provenancesHeaderLabelTimestamp}>TIMESTAMP</Text>
@@ -239,7 +278,7 @@ export class LocalPropertyDetailComponent extends React.Component {
                     extraData={this.state}
                     data={this.state.provenance || []}
                     renderItem={({ item }) => {
-                      return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)}>
+                      return (<TouchableOpacity style={propertyDetailStyle.provenancesRow} onPress={() => this.clickOnProvenance(item)} disabled={item.status === 'pending'}>
                         {this.state.isTracking && !this.state.provenanceViewed[item.tx_id] && !item.isViewed && <View style={propertyDetailStyle.provenancesNotView}></View>}
                         <Text style={[propertyDetailStyle.provenancesRowTimestamp, { color: item.status === 'pending' ? '#999999' : '#0060F2' }]} numberOfLines={1}>
                           {item.status === 'pending' ? 'PENDING…' : item.created_at.toUpperCase()}
@@ -257,7 +296,7 @@ export class LocalPropertyDetailComponent extends React.Component {
               </View>
             </TouchableOpacity>
           </ScrollView>
-        </View></TouchableWithoutFeedback>)}
+        </View></ TouchableWithoutFeedback>)}
       />
     );
   }

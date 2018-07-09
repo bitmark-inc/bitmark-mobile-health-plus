@@ -138,8 +138,8 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     paddingLeft: convertWidth(28),
     paddingRight: convertWidth(19),
-    paddingTop: 22,
-    paddingBottom: 22,
+    paddingTop: 18,
+    paddingBottom: 18,
   },
   assetImage: {
     width: 62,
@@ -150,12 +150,19 @@ export default StyleSheet.create({
     flexDirection: 'column',
     width: '100%',
   },
+  assetCreatedAt: {
+    fontFamily: 'Andale Mono',
+    fontSize: 13,
+    lineHeight: 16,
+    width: '100%',
+  },
   assetName: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 14,
     lineHeight: 16,
     width: '100%',
+    marginTop: 10,
   },
   assetCreatorRow: {
     flexDirection: 'row',
@@ -248,13 +255,18 @@ export default StyleSheet.create({
   },
   trackingRowCurrentOwner: {
     marginTop: 12,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+  },
+  trackingRowCurrentOwnerText: {
     fontFamily: 'Andale Mono',
     fontSize: 14,
     lineHeight: 16,
     color: '#0060F2',
-    width: '100%',
   },
-
 
   globalArea: {
     flex: 1,

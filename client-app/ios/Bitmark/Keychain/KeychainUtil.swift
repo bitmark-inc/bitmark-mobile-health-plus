@@ -51,7 +51,7 @@ struct KeychainUtil {
   }
   
   static func saveCore(_ core: Data) throws {
-    return try getKeychain(reason: "Bitmark app would like to write your account to keychain").set(core, key: bitmarkSeedCoreKey)
+    return try getKeychain(reason: "Touch/Face ID or a passcode is required to authorize your transactions.").set(core, key: bitmarkSeedCoreKey)
   }
   
   static func getCore(reason: String) throws -> Data? {
