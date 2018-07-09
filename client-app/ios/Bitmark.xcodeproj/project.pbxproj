@@ -2922,7 +2922,7 @@
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Bitmark dev-Info.plist";
+				INFOPLIST_FILE = "Bitmark dev-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2961,7 +2961,7 @@
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Bitmark dev-Info.plist";
+				INFOPLIST_FILE = "Bitmark dev-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
