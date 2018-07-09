@@ -78,7 +78,7 @@ export default StyleSheet.create({
     paddingRight: 16,
   },
   infoAreaItem: {
-    width: 337,
+    width: convertWidth(337),
     fontSize: 15,
     lineHeight: 21,
     fontWeight: '300',
