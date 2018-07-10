@@ -87,7 +87,7 @@ export class AccountDetailComponent extends React.Component {
       text: 'Yes',
       onPress: () => {
         AppProcessor.doInactiveBitmarkHealthData().then().catch(error => {
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
           console.log('doInactiveBitmarkHealthData error :', error);
         });
       }
@@ -107,7 +107,7 @@ export class AccountDetailComponent extends React.Component {
             this.props.navigation.goBack();
           }
         }).catch(error => {
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
           console.log('doInactiveBitmarkHealthData error :', error);
         });
       }

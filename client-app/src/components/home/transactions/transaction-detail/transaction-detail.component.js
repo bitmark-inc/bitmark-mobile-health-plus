@@ -41,7 +41,7 @@ export class TransactionDetailComponent extends React.Component {
       this.setState({ transactionData })
     }).catch(error => {
       console.log('TransactionDetailComponent doGetTransactionDetail error :', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
     });
   }
 

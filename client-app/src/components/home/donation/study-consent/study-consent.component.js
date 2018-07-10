@@ -30,7 +30,7 @@ export class StudyConsentComponent extends React.Component {
         shareConsent(filePath);
       }).catch(error => {
         console.log('doDownloadStudyConsent error:', error);
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
       });
     };
     return (

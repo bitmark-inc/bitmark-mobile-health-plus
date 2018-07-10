@@ -126,7 +126,7 @@ export class TransactionsComponent extends React.Component {
   reloadData() {
     AppProcessor.doReloadUserData().catch((error) => {
       console.log('doReloadUserData error :', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
     });
   }
 
@@ -153,7 +153,7 @@ export class TransactionsComponent extends React.Component {
           }
         }).catch(error => {
           console.log('doStudyTask error:', error);
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
         });
       }
     } else if (item.type === ActionTypes.ifttt) {
@@ -181,7 +181,7 @@ export class TransactionsComponent extends React.Component {
         }
       }).catch(error => {
         console.log('doStudyTask error:', error);
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
       });
     }
   }
@@ -219,7 +219,7 @@ export class TransactionsComponent extends React.Component {
       }]);
     }).catch(error => {
       console.log('doGetAllTransfersOffers error:', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
     });
   }
 

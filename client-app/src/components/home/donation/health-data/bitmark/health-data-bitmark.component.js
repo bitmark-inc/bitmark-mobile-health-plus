@@ -66,7 +66,7 @@ export class HealthDataBitmarkComponent extends React.Component {
               }
             }).catch(error => {
               console.log('doBitmarkHealthData error:', error);
-              EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+              EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
             })
           }}>
             <Text style={bitmarkHealthStyles.bitmarkButtonText}>ISSUE</Text>

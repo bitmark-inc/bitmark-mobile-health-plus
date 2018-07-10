@@ -79,7 +79,8 @@ export class StudySettingComponent extends React.Component {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
         onClose: () => {
           this.props.navigation.goBack();
-        }
+        },
+        error
       });
     });
   }

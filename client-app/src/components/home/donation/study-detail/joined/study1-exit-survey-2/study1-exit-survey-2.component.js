@@ -41,7 +41,7 @@ export class Study1ExitSurvey2Component extends React.Component {
       }
     }).catch(error => {
       console.log('doCompletedStudyTask study1_exit_survey_2 error:', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
     });
   }
 

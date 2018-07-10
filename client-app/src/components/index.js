@@ -26,7 +26,16 @@ import { HomeComponent } from './../components/home';
 import { OnBoardingComponent } from './onboarding';
 import { EventEmitterService } from './../services';
 import { AppProcessor, DataProcessor } from '../processors';
-import { CommonModel } from '../models';
+import { CommonModel, UserModel } from '../models';
+import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-exception-handler";
+import RNExitApp from 'react-native-exit-app';
+import Mailer from "react-native-mail";
+import { FileUtil } from "../utils";
+
+const CRASH_LOG_FILE_NAME = 'crash_log.txt';
+const CRASH_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + CRASH_LOG_FILE_NAME;
+const ERROR_LOG_FILE_NAME = 'error_log.txt';
+const ERROR_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + ERROR_LOG_FILE_NAME;
 
 class MainComponent extends Component {
   constructor(props) {
@@ -92,6 +101,10 @@ class MainComponent extends Component {
     NetInfo.isConnected.fetch().then().done(() => {
       NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
     });
+
+    // Handle Crashes
+    this.checkAndShowCrashLog();
+    this.registerCrashHandler();
   }
   componentWillUnmount() {
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
@@ -114,17 +127,124 @@ class MainComponent extends Component {
 
   }
 
-  handerProcessErrorEvent(processError) {
-    let title = 'We’re sorry!';
-    let message = 'Something went wrong.\nPlease try again later.';
-    if (processError && (processError.title || processError.message)) {
-      title = processError.title;
-      message = processError.message;
+  registerCrashHandler() {
+    // Handle JS error
+    const jsErrorHandler = async (error, isFatal) => {
+      if (error && isFatal) {
+        let userInformation = await UserModel.doGetCurrentUser();
+        let crashLog = `${error.name} : ${error.message}\r\n${error.stack ? error.stack : ''}`;
+        crashLog = `${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${crashLog}`;
+
+        console.log('Unexpected JS error:', crashLog);
+
+        await FileUtil.create(CRASH_LOG_FILE_PATH, crashLog);
+        RNExitApp.exitApp();
+      }
+    };
+    setJSExceptionHandler(jsErrorHandler, true);
+
+    // Handle native code error
+    setNativeExceptionHandler(async (exceptionString) => {
+      let userInformation = await UserModel.doGetCurrentUser();
+      let crashLog = `${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${exceptionString}`;
+      console.log('Unexpected Native Code error:', crashLog);
+
+      await FileUtil.create(CRASH_LOG_FILE_PATH, crashLog);
+    });
+  }
+
+  async checkAndShowCrashLog() {
+    //let crashLog = await CommonModel.doGetLocalData(CommonModel.KEYS.CRASH_LOG);
+    let hasCrashLog = await FileUtil.exists(CRASH_LOG_FILE_PATH);
+
+    if (hasCrashLog) {
+      let title = 'Crash Report';
+      let message = 'The app has detected unreported crash.\nWould you like to send a report to the developer?';
+
+      Alert.alert(title, message, [{
+        text: 'Cancel',
+        style: 'cancel',
+        onPress: () => {
+          FileUtil.removeSafe(CRASH_LOG_FILE_PATH);
+        }
+      }, {
+        text: 'Send',
+        onPress: () => {
+          this.sendReport(CRASH_LOG_FILE_PATH, CRASH_LOG_FILE_NAME);
+        }
+      }]);
     }
+  }
+
+  sendReport(logFilePath, attachmentName) {
+    Mailer.mail({
+      subject: (attachmentName == CRASH_LOG_FILE_NAME) ? 'Crash report' : 'Error report',
+      recipients: ['support@bitmark.com'],
+      body: `App version: ${DataProcessor.getApplicationVersion()} (${DataProcessor.getApplicationBuildNumber()})`,
+      attachment: {
+        path: logFilePath,
+        type: 'doc',
+        name: attachmentName,
+      }
+    }, (error) => {
+      if (error) {
+        Alert.alert('Error', 'Could not send mail.');
+      }
+
+      // Remove crash/error log file
+      FileUtil.removeSafe(logFilePath);
+    });
+  }
+
+  handerProcessErrorEvent(processError) {
+    if (processError && (processError.title || processError.message)) {
+      this.handleDefaultJSError(processError);
+    } else {
+      this.handleUnexpectedJSError(processError);
+    }
+  }
+
+  handleDefaultJSError(processError) {
+    let title = processError.title;
+    let message = processError.message;
+
     Alert.alert(title, message, [{
       text: 'OK',
       style: 'cancel',
       onPress: () => {
+        if (processError && processError.onClose) {
+          processError.onClose();
+        }
+      }
+    }]);
+  }
+
+  handleUnexpectedJSError(processError) {
+    let title = 'Error';
+    let message = 'The app has detected unreported error.\nWould you like to send a report to the developer?';
+
+    Alert.alert(title, message, [{
+      text: 'Cancel',
+      style: 'cancel',
+      onPress: () => {
+        if (processError && processError.onClose) {
+          processError.onClose();
+        }
+      }
+    }, {
+      text: 'Send',
+      onPress: async () => {
+        // Write error to log file
+        let error = processError.error || new Error('There was an error');
+        let userInformation = await UserModel.doGetCurrentUser();
+        let errorLog = `${error.name} : ${error.message}\r\n${error.stack ? error.stack : ''}`;
+        errorLog = `${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${errorLog}`;
+
+        console.log('Handled JS error:', errorLog);
+
+        await FileUtil.create(ERROR_LOG_FILE_PATH, errorLog);
+        this.sendReport(ERROR_LOG_FILE_PATH, ERROR_LOG_FILE_NAME);
+
         if (processError && processError.onClose) {
           processError.onClose();
         }

@@ -58,7 +58,8 @@ export class LocalPropertyTransferComponent extends React.Component {
         }
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
-          onClose: this.props.navigation.goBack
+          onClose: this.props.navigation.goBack,
+          error
         });
         console.log('transfer bitmark error :', error);
       });
