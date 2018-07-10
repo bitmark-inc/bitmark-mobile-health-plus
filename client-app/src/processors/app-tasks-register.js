@@ -253,7 +253,7 @@ const doDecentralizedIssuance = async ({ token, encryptionKey }) => {
 };
 
 const doDecentralizedTransfer = async ({ token }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark issuance.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to send the bitmark.');
   if (!touchFaceIdSession) {
     return null;
   }
