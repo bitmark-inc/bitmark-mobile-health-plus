@@ -14,7 +14,7 @@
 #import <React/RCTRootView.h>
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
-#import <ReactNativeExceptionHandler/ReactNativeExceptionHandler.h>
+#import "ReactNativeExceptionHandler.h"
 
 #ifdef HOCKEYAPP
   @import HockeySDK;
