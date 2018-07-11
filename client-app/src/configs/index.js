@@ -84,12 +84,12 @@ export { config, ios, android };
 
 
 // testnet
-// code-push release-react Bitmark ios --pre "Bitmark dev" --mandatory true  --sourcemapOutput "sourcemap/main.jsbundle_1.1.1.map"
-// code-push release-react Bitmark ios --pre "Bitmark dev" -m --description "update code" --sourcemapOutput "sourcemap/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
+// code-push release-react Bitmark ios --pre "Bitmark dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map"
+// code-push release-react Bitmark ios --pre "Bitmark dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
 
 // livetnet
-// code-push release-react Bitmark ios -d Production --mandatory true --sourcemapOutput "sourcemap/main.jsbundle_1.1.1.map"
-// code-push release-react Bitmark ios -d Production -m --description "update code" --sourcemapOutput "sourcemap/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
+// code-push release-react Bitmark ios -d Production --mandatory true --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map"
+// code-push release-react Bitmark ios -d Production -m --description "update code" --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
 
 
 // react-native run-ios --device "Bitmark’s iPhone" --scheme 'Bitmark dev'

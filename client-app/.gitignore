@@ -5,6 +5,7 @@
 
 # dependencies
 /node_modules
+/source-map-tool/node_modules
 
 # misc
 .env.local
@@ -21,7 +22,7 @@ yarn-error.log*
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
 ## Build generated
-build/
+build/ª
 DerivedData/
 
 ## Various settings
@@ -34,7 +35,7 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 xcuserdata/
-
+ªªª
 ## Other
 *.moved-aside
 *.xccheckout
