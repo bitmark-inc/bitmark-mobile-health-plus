@@ -178,7 +178,7 @@ class MainComponent extends Component {
 
   sendReport(logFilePath, attachmentName) {
     Mailer.mail({
-      subject: (attachmentName == CRASH_LOG_FILE_NAME) ? 'Crash report' : 'Error report',
+      subject: (attachmentName == CRASH_LOG_FILE_NAME) ? 'Crash Report' : 'Error Report',
       recipients: ['support@bitmark.com'],
       body: `App version: ${DataProcessor.getApplicationVersion()} (${DataProcessor.getApplicationBuildNumber()})`,
       attachment: {
