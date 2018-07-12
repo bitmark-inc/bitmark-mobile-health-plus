@@ -48,6 +48,12 @@ internal extension API {
         let result = try urlSession.synchronousDataTask(with: request)
         return (result.response?.suggestedFilename, result.data)
     }
+    
+    internal func createSessionData(key: Data, fromAccount account: Account) throws -> SessionData {
+        return try SessionData.createSessionData(account: account,
+                                          sessionKey: key,
+                                          forRecipient: account.encryptionKey.publicKey)
+    }
 }
 
 fileprivate extension API {
