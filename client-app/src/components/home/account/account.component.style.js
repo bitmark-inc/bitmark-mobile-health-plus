@@ -21,6 +21,12 @@ export default StyleSheet.create({
     height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
     width: '100%',
   },
+  cameraIcon: {
+    width: 21,
+    height: 20,
+    resizeMode: 'contain',
+    marginLeft: convertWidth(19),
+  },
   bitmarkAccountHelpIcon: {
     width: 20,
     height: 20,

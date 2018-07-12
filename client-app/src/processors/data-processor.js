@@ -404,6 +404,7 @@ const doOpenApp = async () => {
     configNotification();
 
     await checkAppNeedResetLocalData();
+    // await UserModel.resetUserLocalData();
 
     let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
     let trackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
@@ -933,6 +934,20 @@ const doGetTransactionScreenHistories = async (length) => {
   }
 };
 
+const doDecentralizedIssuance = async (touchFaceIdSession, token, encryptionKey) => {
+  let result = await BitmarkService.doDecentralizedIssuance(touchFaceIdSession, userInformation.bitmarkAccountNumber, token, encryptionKey);
+  // let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
+  // await runGetLocalBitmarksInBackground(donationInformation);
+  return result;
+};
+
+const doDecentralizedTransfer = async (touchFaceIdSession, token, ) => {
+  let result = await BitmarkService.doDecentralizedTransfer(touchFaceIdSession, userInformation.bitmarkAccountNumber, token);
+  // let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
+  // await runGetLocalBitmarksInBackground(donationInformation);
+  return result;
+};
+
 const DataProcessor = {
   doOpenApp,
   doLogin,
@@ -968,6 +983,8 @@ const DataProcessor = {
   doTransferBitmark,
   doMigrateWebAccount,
   doSignInOnWebApp,
+  doDecentralizedIssuance,
+  doDecentralizedTransfer,
 
   doGetLocalBitmarks,
   doGetTrackingBitmarks,

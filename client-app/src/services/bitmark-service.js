@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { merge } from 'lodash';
-import { BitmarkModel, CommonModel } from "../models";
+import { BitmarkModel, CommonModel, BitmarkSDK } from "../models";
 import { TransactionService } from '.';
 
 // ================================================================================================
@@ -280,6 +280,49 @@ const doConfirmWebAccount = async (touchFaceIdSession, bitmarkAccountNumber, tok
   return await BitmarkModel.doConfirmWebAccount(bitmarkAccountNumber, token, signatureData.timestamp, signatureData.signature);
 };
 
+const doDecentralizedIssuance = async (touchFaceIdSession, bitmarkAccountNumber, token, encryptionKey) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let issuanceData = await BitmarkModel.doGetAssetInfoOfDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token);
+  try {
+    let sessionData = await BitmarkSDK.createSessionData(touchFaceIdSession, encryptionKey);
+    let timestamp = moment().toDate().getTime();
+    let requestMessage = `uploadAsset|${issuanceData.asset_info.asset_id}|${bitmarkAccountNumber}|${timestamp}`;
+    let results = await BitmarkSDK.rickySignMessage([requestMessage], touchFaceIdSession);
+
+    signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+    await BitmarkModel.doSubmitSessionDataForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, sessionData, {
+      timestamp,
+      signature: results[0],
+      requester: bitmarkAccountNumber,
+    });
+
+    let result = await BitmarkSDK.issueRecord(touchFaceIdSession, issuanceData.asset_info.fingerprint, issuanceData.asset_info.name, issuanceData.asset_info.metadata, issuanceData.quantity);
+
+    signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+    await BitmarkModel.doUpdateStatusForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'success');
+    return result;
+  } catch (error) {
+    console.log('doDecentralizedIssuance error:', error);
+    await BitmarkModel.doUpdateStatusForDecentralizedIssuance(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'failed');
+    throw error;
+  }
+};
+
+const doDecentralizedTransfer = async (touchFaceIdSession, bitmarkAccountNumber, token) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let info = await BitmarkModel.doGetInfoInfoOfDecentralizedTransfer(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token);
+  let bitmarkId = info.bitmark_id;
+  let receiver = info.receiver;
+  try {
+    let result = await BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmarkId, receiver);
+    await BitmarkModel.doUpdateStatusForDecentralizedTransfer(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'success');
+    return result;
+  } catch (error) {
+    await BitmarkModel.doUpdateStatusForDecentralizedTransfer(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, token, 'failed');
+    throw error;
+  }
+};
+
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
@@ -292,6 +335,8 @@ let BitmarkService = {
   doGetTrackingBitmarks,
   doGetProvenance,
   doConfirmWebAccount,
+  doDecentralizedIssuance,
+  doDecentralizedTransfer,
 };
 
 export { BitmarkService };

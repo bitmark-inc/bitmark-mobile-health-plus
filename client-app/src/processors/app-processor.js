@@ -219,6 +219,13 @@ const doSignInOnWebApp = async (token) => {
   return executeTask('doSignInOnWebApp', { token });
 };
 
+const doDecentralizedIssuance = async (token, encryptionKey) => {
+  return executeTask('doDecentralizedIssuance', { token, encryptionKey });
+};
+
+const doDecentralizedTransfer = async (token, encryptionKey) => {
+  return executeTask('doDecentralizedTransfer', { token, encryptionKey });
+};
 
 // ================================================================================================
 // ================================================================================================
@@ -260,6 +267,8 @@ let AppProcessor = {
   doMigrateWebAccount,
   doSignInOnWebApp,
   doGetAllTransfersOffers,
+  doDecentralizedIssuance,
+  doDecentralizedTransfer,
 
   doStartBackgroundProcess,
 }

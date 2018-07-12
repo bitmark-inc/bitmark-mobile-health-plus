@@ -118,7 +118,9 @@ export class AccountDetailComponent extends React.Component {
     return (
       <View style={accountStyle.body}>
         <View style={accountStyle.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
+          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.navigate('ScanQRCode')}>
+            <Image style={accountStyle.cameraIcon} source={require('./../../../../assets/imgs/camera.png')} />
+          </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>ACCOUNT</Text>
           <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
             this.props.navigation.navigate('ApplicationDetail');

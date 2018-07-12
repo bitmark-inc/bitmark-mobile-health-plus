@@ -58,6 +58,37 @@ public extension Account {
         return (issues, asset)
     }
     
+    public func issueBitmarks(fingerprint: String,
+                              propertyName name: String,
+                              propertyMetadata metadata: [String: String]? = nil,
+                              quantity: Int = 1) throws -> ([Issue], Asset) {
+        var asset = Asset()
+        try asset.set(name: name)
+        try asset.set(fingerPrint: fingerprint)
+        if let metadata = metadata {
+            try asset.set(metadata: metadata)
+        }
+        try asset.sign(withPrivateKey: self.authKey)
+        
+        var issues = [Issue]()
+        for _ in 0..<quantity {
+            var issue = Issue()
+            issue.set(nonce: UInt64(arc4random()))
+            issue.set(asset: asset)
+            try issue.sign(privateKey: self.authKey)
+            issues.append(issue)
+        }
+        
+        let network = self.authKey.network
+        let api = API(network: network)
+        let issueSuccess = try api.issue(withIssues: issues, assets: [asset])
+        if !issueSuccess {
+            throw("Fail to issue bitmark")
+        }
+        
+        return (issues, asset)
+    }
+    
     public func transferBitmark(bitmarkId: String,
                                 toAccount recipient: String) throws -> Bool {
         
@@ -300,6 +331,16 @@ public extension Account {
         let api = API(network: network)
         
         return try api.transfer(withData: countersign)
+    }
+    
+    public func createSessionData(encryptionKey: String)throws -> [String: String] {
+        let network = self.authKey.network
+        let api = API(network: network)
+        
+        let key = encryptionKey.hexDecodedData
+        
+        let sessionData = try api.createSessionData(key: key, fromAccount: self)
+        return sessionData.serialize()
     }
 }
 

@@ -7,6 +7,7 @@ import { AccountDetailComponent } from './account.component';
 import { AccountRecoveryComponent } from './account-recovery';
 import { ApplicationDetailComponent } from './application-detail';
 import { WebAccountMigrateComponent, WebAccountSignInComponent } from './web-account';
+import { ScanQRCodeComponent } from './scan-qr-code/scan-qr-code.component'
 
 
 let AccountComponent = StackNavigator({
@@ -16,7 +17,7 @@ let AccountComponent = StackNavigator({
   BitmarkWebView: { screen: BitmarkWebViewComponent, },
   WebAccountMigrate: { screen: WebAccountMigrateComponent, },
   WebAccountSignIn: { screen: WebAccountSignInComponent, },
-
+  ScanQRCode: { screen: ScanQRCodeComponent, },
 }, {
     headerMode: 'none',
     navigationOptions: {
