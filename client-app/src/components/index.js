@@ -220,7 +220,7 @@ class MainComponent extends Component {
   }
 
   handleUnexpectedJSError(processError) {
-    let title = 'Error';
+    let title = 'Error Report';
     let message = 'The app has detected unreported error.\nWould you like to send a report to the developer?';
 
     Alert.alert(title, message, [{
