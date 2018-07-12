@@ -75,7 +75,7 @@ export class ScanQRCodeComponent extends React.Component {
         }
       }).catch(error => {
         console.log('doDecentralizedIssuance error:', error);
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: this.props.navigation.goBack });
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: this.props.navigation.goBack, error });
       });
     } else if (tempArrays.length === 3 && tempArrays[0] === 't') {
       let token = tempArrays[1];
@@ -106,7 +106,7 @@ export class ScanQRCodeComponent extends React.Component {
         }
       }).catch(error => {
         console.log('doDecentralizedTransfer error:', error);
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: this.props.navigation.goBack });
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: this.props.navigation.goBack, error });
       });
     } else {
       Alert.alert('', 'QR-code is invalid!', ''[{
