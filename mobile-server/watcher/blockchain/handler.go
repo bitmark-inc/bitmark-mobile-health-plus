@@ -114,12 +114,6 @@ func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitma
 		return nil
 	}
 
-	pushData := &map[string]interface{}{
-		"tx_id":      transfer.TxID,
-		"bitmark_id": transfer.BitmarkID,
-		"name":       "transfer_completed",
-	}
-
 	var asset gateway.Asset
 
 	previousTx, err := h.gatewayClient.GetTxInfo(context.Background(), *transfer.TxPreviousID)
@@ -130,29 +124,35 @@ func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitma
 	asset = previousTx.Asset
 
 	senderPushMessage := fmt.Sprintf(messages[EventTransferConfirmedSender], previousTx.Asset.Name, util.ShortenAccountNumber(transfer.Owner))
-
 	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
 		Account: previousTx.Tx.Owner,
 		Title:   "",
 		Message: senderPushMessage,
-		Data:    pushData,
-		Source:  "gateway",
-		Pinned:  false,
-		Silent:  true,
+		Data: &map[string]interface{}{
+			"tx_id":      transfer.TxID,
+			"bitmark_id": transfer.BitmarkID,
+			"name":       "transfer_completed",
+		},
+		Source: "gateway",
+		Pinned: false,
+		Silent: true,
 	}, h.pushStore, h.pushAPIClient); err != nil {
 		return err
 	}
 
 	receiverPushMessage := fmt.Sprintf(messages[EventTransferConfirmedReceiver], asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner))
-
 	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
 		Account: transfer.Owner,
 		Title:   "",
 		Message: receiverPushMessage,
-		Data:    pushData,
-		Source:  "gateway",
-		Pinned:  false,
-		Silent:  true,
+		Data: &map[string]interface{}{
+			"tx_id":      transfer.TxID,
+			"bitmark_id": transfer.BitmarkID,
+			"name":       "transfer_item_received",
+		},
+		Source: "gateway",
+		Pinned: false,
+		Silent: true,
 	}, h.pushStore, h.pushAPIClient); err != nil {
 		return err
 	}
