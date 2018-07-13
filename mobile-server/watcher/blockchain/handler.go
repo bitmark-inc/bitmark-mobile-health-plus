@@ -117,6 +117,7 @@ func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitma
 	pushData := &map[string]interface{}{
 		"tx_id":      transfer.TxID,
 		"bitmark_id": transfer.BitmarkID,
+		"name":       "transfer_completed",
 	}
 
 	var asset gateway.Asset
