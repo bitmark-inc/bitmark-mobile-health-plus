@@ -118,6 +118,24 @@ export class UserComponent extends React.Component {
         ]
       });
       this.props.navigation.dispatch(resetHomePage);
+    } else if (data.name === 'transfer_item_received' && data.bitmark_id) {
+      DataProcessor.doReloadLocalBitmarks().then(() => {
+        return DataProcessor.doGetLocalBitmarkInformation(data.bitmark_id);
+      }).then(bitmarkInformation => {
+        const resetHomePage = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.properties }, }
+            }),
+            NavigationActions.navigate({
+              routeName: 'LocalPropertyDetail',
+              params: { asset: bitmarkInformation.asset, bitmark: bitmarkInformation.bitmark }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
+      });
     } else if (data.name === 'transfer_failed') {
       DataProcessor.doGetLocalBitmarkInformation(data.bitmark_id).then(bitmarkInformation => {
         const resetHomePage = NavigationActions.reset({
