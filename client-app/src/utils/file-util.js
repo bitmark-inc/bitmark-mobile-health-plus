@@ -52,5 +52,8 @@ const FileUtil = {
     return unzip(inputPath, outputPath);
   },
 
+  exists: async (filePath) => {
+    return RNFS.exists(filePath);
+  }
 };
 export { FileUtil };

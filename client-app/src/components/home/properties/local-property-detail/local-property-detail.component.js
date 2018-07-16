@@ -136,7 +136,7 @@ export class LocalPropertyDetailComponent extends React.Component {
         text: 'YES',
         onPress: () => {
           AppProcessor.doTrackingBitmark(this.state.asset, this.state.bitmark).catch(error => {
-            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
             console.log('doTrackingBitmark error :', error);
           });
         }
@@ -148,7 +148,7 @@ export class LocalPropertyDetailComponent extends React.Component {
         text: 'YES',
         onPress: () => {
           AppProcessor.doStopTrackingBitmark(this.state.bitmark).catch(error => {
-            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
             console.log('doTrackingBitmark error :', error);
           });
         }

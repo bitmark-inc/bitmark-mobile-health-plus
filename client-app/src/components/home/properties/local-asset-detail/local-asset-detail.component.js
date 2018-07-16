@@ -115,7 +115,8 @@ export class LocalAssetDetailComponent extends React.Component {
               AppProcessor.doReloadUserData().catch(error => {
                 console.log('AppProcessor.doReloadUserData error', error);
               });
-            }
+            },
+            error
           });
         });
       }

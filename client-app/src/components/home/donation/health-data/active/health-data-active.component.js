@@ -33,7 +33,7 @@ export class HealthDataActiveComponent extends React.Component {
         }
       }).catch(error => {
         console.log('doActiveBitmarkHealthData error :', error);
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
       });
     }).catch(error => {
       console.log('doRequirePermission error :', error);
