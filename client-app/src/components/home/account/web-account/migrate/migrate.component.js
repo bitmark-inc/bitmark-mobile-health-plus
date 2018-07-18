@@ -37,6 +37,7 @@ export class WebAccountMigrateComponent extends React.Component {
       userInformation: DataProcessor.getUserInformation(),
       token: '',
     };
+    this.scanned = false;
   }
 
   goBack() {
@@ -47,8 +48,19 @@ export class WebAccountMigrateComponent extends React.Component {
     }
   }
   onBarCodeRead(scanData) {
-    console.log('scanData :', scanData);
-    this.setState({ step: STEPS.confirm, token: scanData.data });
+    if (this.scanned) {
+      return;
+    }
+    this.scanned = true;
+    let tempArray = scanData.data.split('|');
+    if (tempArray && tempArray.length === 2 && tempArray[0] === 'qr_account_migration') {
+      this.setState({ step: STEPS.confirm, token: scanData.data });
+    } else {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+        message: 'QR-code is invalid! ',
+        onClose: this.props.navigation.goBack
+      });
+    }
   }
 
   onConfirmMigration() {

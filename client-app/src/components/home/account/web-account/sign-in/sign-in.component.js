@@ -18,19 +18,32 @@ export class WebAccountSignInComponent extends React.Component {
     this.state = {
       userInformation: DataProcessor.getUserInformation(),
     };
+    this.scanned = false;
   }
 
   onBarCodeRead(scanData) {
     this.cameraRef.stopPreview();
-    AppProcessor.doSignInOnWebApp(scanData.data).then((result) => {
-      if (result) {
+    if (this.scanned) {
+      return;
+    }
+    this.scanned = true;
+    let tempArray = scanData.data.split('|');
+    if (tempArray && tempArray.length === 2 && tempArray[0] === 'mobile_login') {
+      AppProcessor.doSignInOnWebApp(scanData.data).then((result) => {
+        if (result) {
+          this.props.navigation.goBack();
+        }
+      }).catch(error => {
+        console.log('doSignInOnWebApp error:', error);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { message: 'Cannot sign in this Bitmark account. Please try again later.' });
         this.props.navigation.goBack();
-      }
-    }).catch(error => {
-      console.log('doSignInOnWebApp error:', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { message: 'Cannot sign in this Bitmark account. Please try again later.' });
-      this.props.navigation.goBack();
-    });
+      });
+    } else {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+        message: 'QR-code is invalid! ',
+        onClose: this.props.navigation.goBack
+      });
+    }
   }
 
   render() {
