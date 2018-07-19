@@ -193,6 +193,9 @@ export class TransactionsComponent extends React.Component {
     } else if (item.title === 'SEND' && item.type === 'DONATION' && item.previousId) {
       let sourceUrl = config.registry_server_url + `/transaction/${item.txid}?env=app`;
       this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
+    } else if ((item.title === 'CANCELLED BY YOU' || item.title === 'REJECTED BY RESEARCHER') && item.type === 'DONATION') {
+      let sourceUrl = config.registry_server_url + `/bitmark/${item.txid}?env=app`;
+      this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
     } else if (item.title === 'ISSUANCE') {
       let sourceUrl = config.registry_server_url + `/issuance/${item.blockNumber}/${item.assetId}/${DataProcessor.getUserInformation().bitmarkAccountNumber}?env=app`;
       this.props.screenProps.homeNavigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });

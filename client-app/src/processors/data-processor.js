@@ -838,7 +838,6 @@ const doGenerateTransactionHistoryData = async () => {
           if (transferOffers.outgoingTransferOffers) {
             outgoingTransferOffer = transferOffers.outgoingTransferOffers.find(ot => ot.bitmark_id === item.txid);
           }
-          console.log('outgoingTransferOffer :', outgoingTransferOffer);
           if (!outgoingTransferOffer || outgoingTransferOffer.status === 'cancelled') {
             title = 'CANCELLED BY YOU';
             status = 'canceled';
