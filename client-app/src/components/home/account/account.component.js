@@ -87,7 +87,7 @@ export class AccountDetailComponent extends React.Component {
       text: 'Yes',
       onPress: () => {
         AppProcessor.doInactiveBitmarkHealthData().then().catch(error => {
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
           console.log('doInactiveBitmarkHealthData error :', error);
         });
       }
@@ -107,7 +107,7 @@ export class AccountDetailComponent extends React.Component {
             this.props.navigation.goBack();
           }
         }).catch(error => {
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
           console.log('doInactiveBitmarkHealthData error :', error);
         });
       }
@@ -202,13 +202,13 @@ export class AccountDetailComponent extends React.Component {
                 <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device »'.toUpperCase()} </Text>
               </TouchableOpacity>
 
-              {config.network !== config.NETWORKS.livenet && <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountMigrate') }}>
+              <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountMigrate') }}>
                 <Text style={accountStyle.accountRemoveButtonText}>{'MIGRATE WEB ACCOUNT »'.toUpperCase()} </Text>
-              </TouchableOpacity>}
+              </TouchableOpacity>
 
-              {config.network !== config.NETWORKS.livenet && <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountSignIn') }}>
+              <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('WebAccountSignIn') }}>
                 <Text style={accountStyle.accountRemoveButtonText}>{'SIGN IN USING MOBILE APP »'.toUpperCase()} </Text>
-              </TouchableOpacity>}
+              </TouchableOpacity>
             </View>}
 
             {this.state.subTab === SubTabs.authorized && <View style={accountStyle.contentSubTab}>
