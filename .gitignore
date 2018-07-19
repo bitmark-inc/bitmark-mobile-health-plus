@@ -2,3 +2,4 @@
 client-app/test
 settings.json
 client-app/src/markets-old
+client-app/source-map-tool/source-map
