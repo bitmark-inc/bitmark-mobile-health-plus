@@ -751,14 +751,16 @@ const doGenerateTransactionActionRequiredData = async () => {
   if (transferOffers.incomingTransferOffers) {
     actionRequired = actionRequired || [];
     (transferOffers.incomingTransferOffers || []).forEach((item) => {
-      actionRequired.push({
-        key: actionRequired.length,
-        transferOffer: item,
-        type: ActionTypes.transfer,
-        typeTitle: 'SIGN TO RECEIVE BITMARK',
-        timestamp: moment(item.created_at),
-      });
-      totalTasks++;
+      if (item.status === 'open') {
+        actionRequired.push({
+          key: actionRequired.length,
+          transferOffer: item,
+          type: ActionTypes.transfer,
+          typeTitle: 'SIGN TO RECEIVE BITMARK',
+          timestamp: moment(item.created_at),
+        });
+        totalTasks++;
+      }
     });
   }
 
