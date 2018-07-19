@@ -28,9 +28,9 @@ const doCheckNewDonationInformation = async (donationInformation, isLoadingAllUs
   }
 };
 
-const doCheckNewActiveIncomingTransferOffers = async (activeIncomingTransferOffers, isLoadingAllUserData) => {
-  if (activeIncomingTransferOffers) {
-    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, activeIncomingTransferOffers);
+const doCheckTransferOffers = async (transferOffers, isLoadingAllUserData) => {
+  if (transferOffers) {
+    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, transferOffers);
     if (!isLoadingAllUserData) {
       await doGenerateTransactionActionRequiredData();
     }
@@ -95,21 +95,21 @@ const recheckLocalAssets = (localAssets, donationInformation) => {
   return localAssets;
 };
 
-let queueGetActiveTransferOffer = [];
-const runGetActiveIncomingTransferOfferInBackground = () => {
+let queueGetTransferOffer = [];
+const runGetTransferOfferInBackground = () => {
   return new Promise((resolve) => {
-    queueGetActiveTransferOffer.push(resolve);
-    if (queueGetActiveTransferOffer.length > 1) {
+    queueGetTransferOffer.push(resolve);
+    if (queueGetTransferOffer.length > 1) {
       return;
     }
-    TransactionService.doGetActiveIncomingTransferOffers(userInformation.bitmarkAccountNumber).then(activeIncomingTransferOffers => {
-      console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground success');
-      queueGetActiveTransferOffer.forEach(queueResolve => queueResolve(activeIncomingTransferOffers));
-      queueGetActiveTransferOffer = [];
+    TransactionService.doGetAllTransferOffers(userInformation.bitmarkAccountNumber).then(transferOffers => {
+      console.log('runOnBackground  runGetTransferOfferInBackground success');
+      queueGetTransferOffer.forEach(queueResolve => queueResolve(transferOffers));
+      queueGetTransferOffer = [];
     }).catch(error => {
-      queueGetActiveTransferOffer.forEach(queueResolve => queueResolve());
-      queueGetActiveTransferOffer = [];
-      console.log('runOnBackground  runGetActiveIncomingTransferOfferInBackground error :', error);
+      queueGetTransferOffer.forEach(queueResolve => queueResolve());
+      queueGetTransferOffer = [];
+      console.log('runOnBackground  runGetTransferOfferInBackground error :', error);
     });
   });
 };
@@ -193,6 +193,8 @@ const runGetTransactionsInBackground = () => {
           await doCheckNewTransactions(oldTransactions);
         }
       }
+      oldTransactions = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS);
+      await doCheckNewTransactions(oldTransactions);
     };
 
     doGetAllTransactions().then(() => {
@@ -208,7 +210,7 @@ const runGetTransactionsInBackground = () => {
 };
 
 let queueGetLocalBitmarks = [];
-const runGetLocalBitmarksInBackground = (donationInformation) => {
+const runGetLocalBitmarksInBackground = (donationInformation, outgoingTransferOffers) => {
   return new Promise((resolve) => {
     queueGetLocalBitmarks.push(resolve);
     if (queueGetLocalBitmarks.length > 1) {
@@ -218,7 +220,6 @@ const runGetLocalBitmarksInBackground = (donationInformation) => {
     let doGetAllBitmarks = async () => {
       let oldLocalAssets, lastOffset;
       let canContinue = true;
-      let outgoingTransferOffers;
       while (canContinue) {
         let data = await BitmarkService.doGet100Bitmarks(userInformation.bitmarkAccountNumber, oldLocalAssets, lastOffset, outgoingTransferOffers);
         canContinue = data.hasChanging;
@@ -226,7 +227,6 @@ const runGetLocalBitmarksInBackground = (donationInformation) => {
         oldLocalAssets = recheckLocalAssets(oldLocalAssets, donationInformation);
         await doCheckNewBitmarks(oldLocalAssets);
         if (data.hasChanging) {
-          outgoingTransferOffers = data.outgoingTransferOffers;
           lastOffset = data.lastOffset;
         }
       }
@@ -258,7 +258,7 @@ const runOnBackground = async () => {
       return new Promise((resolve) => {
         Promise.all([
           runGetTrackingBitmarksInBackground(),
-          runGetActiveIncomingTransferOfferInBackground(),
+          runGetTransferOfferInBackground(),
           runGetDonationInformationInBackground(),
           runGetIFTTTInformationInBackground(),
         ]).then(resolve);
@@ -266,7 +266,7 @@ const runOnBackground = async () => {
     };
     let parallelResults = await runParallel();
     await doCheckNewTrackingBitmarks(parallelResults[0]);
-    await doCheckNewActiveIncomingTransferOffers(parallelResults[1], true);
+    await doCheckTransferOffers(parallelResults[1], true);
     await doCheckNewDonationInformation(parallelResults[2], true);
     await doCheckNewIftttInformation(parallelResults[3], true);
     await doGenerateTransactionActionRequiredData();
@@ -274,7 +274,7 @@ const runOnBackground = async () => {
     let doParallel = () => {
       return new Promise((resolve) => {
         Promise.all([
-          runGetLocalBitmarksInBackground(parallelResults[2]),
+          runGetLocalBitmarksInBackground(parallelResults[2], parallelResults[1].outgoingTransferOffers),
           runGetTransactionsInBackground()
         ]).then(resolve);
       });
@@ -303,10 +303,10 @@ const doReloadTrackingBitmark = async () => {
   return trackingBitmarks;
 };
 
-const doReloadIncomingTransferOffers = async () => {
-  let activeIncomingTransferOffers = await runGetActiveIncomingTransferOfferInBackground();
-  await doCheckNewActiveIncomingTransferOffers(activeIncomingTransferOffers);
-  return activeIncomingTransferOffers;
+const doReloadTransferOffers = async () => {
+  let transferOffers = await runGetTransferOfferInBackground();
+  await doCheckTransferOffers(transferOffers);
+  return transferOffers;
 };
 
 const doReloadLocalBitmarks = async () => {
@@ -589,24 +589,24 @@ const doIssueIftttData = async (touchFaceIdSession, iftttBitmarkFile) => {
 
 const doAcceptTransferBitmark = async (touchFaceIdSession, transferOffer) => {
   await TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer);
-  return await doReloadIncomingTransferOffers();
+  return await doReloadTransferOffers();
 };
 
 const doAcceptAllTransfers = async (touchFaceIdSession, transferOffers) => {
   for (let transferOffer of transferOffers) {
     await TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer);
   }
-  return await doReloadIncomingTransferOffers();
+  return await doReloadTransferOffers();
 };
 
 const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
   await TransactionService.doCancelTransferBitmark(touchFaceIdSession, transferOfferId);
-  return await doReloadIncomingTransferOffers();
+  return await doReloadTransferOffers();
 };
 
 const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer, ) => {
   await TransactionService.doRejectTransferBitmark(touchFaceIdSession, transferOffer);
-  return await doReloadIncomingTransferOffers();
+  return await doReloadTransferOffers();
 };
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
@@ -618,7 +618,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
   let result = await TransactionService.doTransferBitmark(touchFaceIdSession, bitmarkId, receiver);
-  await doReloadIncomingTransferOffers();
+  await doReloadTransferOffers();
   let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
   await runGetLocalBitmarksInBackground(donationInformation);
   return result;
@@ -747,10 +747,10 @@ const ActionTypes = {
 const doGenerateTransactionActionRequiredData = async () => {
   let actionRequired;
   let totalTasks = 0;
-  let activeIncomingTransferOffers = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS)) || [];
-  if (activeIncomingTransferOffers) {
+  let transferOffers = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS)) || {};
+  if (transferOffers.incomingTransferOffers) {
     actionRequired = actionRequired || [];
-    activeIncomingTransferOffers.forEach((item) => {
+    (transferOffers.incomingTransferOffers || []).forEach((item) => {
       actionRequired.push({
         key: actionRequired.length,
         transferOffer: item,
@@ -809,6 +809,8 @@ const doGenerateTransactionActionRequiredData = async () => {
 const doGenerateTransactionHistoryData = async () => {
   let transactions = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || [];
   let donationInformation = await doGetDonationInformation();
+  let transferOffers = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS)) || {};
+  console.log('transferOffers :', transferOffers);
 
   let completed;
   if (transactions) {
@@ -829,8 +831,20 @@ const doGenerateTransactionHistoryData = async () => {
         let donationCompletedTask = (donationInformation.completedTasks || []).find(task => task.bitmarkId === item.txid);
         if (donationCompletedTask && donationCompletedTask.study) {
           title = 'waiting for researcher to accept...'.toUpperCase();
-          type = 'DONATION';
           status = 'waiting';
+          let outgoingTransferOffer;
+          if (transferOffers.outgoingTransferOffers) {
+            outgoingTransferOffer = transferOffers.outgoingTransferOffers.find(ot => ot.bitmark_id === item.txid);
+          }
+          console.log('outgoingTransferOffer :', outgoingTransferOffer);
+          if (!outgoingTransferOffer || outgoingTransferOffer.status === 'cancelled') {
+            title = 'CANCELLED BY YOU';
+            status = 'canceled';
+          } else if (outgoingTransferOffer && outgoingTransferOffer.status === 'rejected') {
+            title = 'REJECTED BY RESEARCHER';
+            status = 'rejected';
+          }
+          type = 'DONATION';
           to = donationCompletedTask.study.researcherAccount;
           researcherName = donationCompletedTask.study.researcherName.substring(0, donationCompletedTask.study.researcherName.indexOf(','));
         }
@@ -957,7 +971,6 @@ const DataProcessor = {
   doReloadLocalBitmarks,
   doReloadDonationInformation,
   doReloadTrackingBitmark,
-  doReloadIncomingTransferOffers,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,

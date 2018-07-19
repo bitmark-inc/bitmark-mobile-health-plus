@@ -1,76 +1,9 @@
 import moment from 'moment';
 import { merge } from 'lodash';
 import { BitmarkModel, CommonModel, BitmarkSDK } from "../models";
-import { TransactionService } from '.';
 
 // ================================================================================================
 // ================================================================================================
-const doGetBitmarks = async (bitmarkAccountNumber) => {
-  let oldLocalAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
-  oldLocalAssets = oldLocalAssets || [];
-  let lastOffset = null;
-  if (oldLocalAssets) {
-    oldLocalAssets.forEach(asset => {
-      asset.bitmarks.forEach(bitmark => {
-        lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
-      });
-    });
-  }
-  let data = await BitmarkModel.doGetAllBitmarks(bitmarkAccountNumber, lastOffset);
-  let localAssets = merge([], oldLocalAssets || []);
-  if (data && data.bitmarks && data.assets) {
-    for (let bitmark of data.bitmarks) {
-      bitmark.bitmark_id = bitmark.id;
-      bitmark.isViewed = false;
-      if (bitmark.owner === bitmarkAccountNumber) {
-        let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
-        if (oldAsset) {
-          let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => ob.id === bitmark.id);
-          if (oldBitmarkIndex >= 0) {
-            oldAsset.bitmarks[oldBitmarkIndex] = bitmark;
-          } else {
-            oldAsset.bitmarks.push(bitmark);
-          }
-          oldAsset.isViewed = false;
-        } else {
-          let newAsset = data.assets.find(asset => asset.id === bitmark.asset_id);
-          newAsset.bitmarks = [bitmark];
-          newAsset.isViewed = false;
-          localAssets.push(newAsset);
-        }
-      } else {
-        let oldAssetIndex = (localAssets).findIndex(asset => asset.id === bitmark.asset_id);
-        if (oldAssetIndex >= 0) {
-          let oldAsset = localAssets[oldAssetIndex];
-          let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => bitmark.id === ob.id);
-          if (oldBitmarkIndex >= 0) {
-            oldAsset.bitmarks.splice(oldBitmarkIndex, 1);
-            if (oldAsset.bitmarks.length === 0) {
-              localAssets.splice(oldAssetIndex, 1);
-            }
-          }
-        }
-      }
-    }
-  }
-  let outgoingTransferOffers = await TransactionService.doGetActiveOutgoingTransferOffers(bitmarkAccountNumber);
-  for (let asset of localAssets) {
-    asset.totalPending = 0;
-    asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
-    for (let bitmark of asset.bitmarks) {
-      let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
-      bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
-      asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
-      asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-    }
-  }
-  localAssets = localAssets.sort((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset);
-  return {
-    localAssets,
-    lastOffset,
-    outgoingTransferOffers,
-  };
-};
 
 const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset, outgoingTransferOffers) => {
   let hasChanging = false;
@@ -131,13 +64,12 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
       }
     }
   }
-  outgoingTransferOffers = outgoingTransferOffers ? outgoingTransferOffers : (await TransactionService.doGetActiveOutgoingTransferOffers(bitmarkAccountNumber));
   for (let asset of localAssets) {
     let oldTotalPending = asset.totalPending;
     asset.totalPending = 0;
     asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
     for (let bitmark of asset.bitmarks) {
-      let transferOffer = outgoingTransferOffers.find(item => item.bitmark_id === bitmark.id);
+      let transferOffer = outgoingTransferOffers.find(item => (item.status === 'open' && item.bitmark_id === bitmark.id));
 
       let oldData = bitmark.transferOfferId;
       bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
@@ -159,7 +91,6 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
     hasChanging,
     localAssets,
     lastOffset,
-    outgoingTransferOffers,
   };
 };
 
@@ -326,7 +257,6 @@ const doDecentralizedTransfer = async (touchFaceIdSession, bitmarkAccountNumber,
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
-  doGetBitmarks,
   doGet100Bitmarks,
   doCheckFileToIssue,
   doCheckMetadata,

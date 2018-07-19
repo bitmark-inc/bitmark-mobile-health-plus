@@ -22,6 +22,28 @@ const doGetTransferOfferDetail = (transferOfferId) => {
   });
 };
 
+const doGetAllTransferOffers = (accountNumber) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = config.api_server_url + `/v2/transfer_offers?requester=${accountNumber}`;
+    fetch(tempURL, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doGetIncomingTransferOffers error :' + JSON.stringify(data)));
+      }
+      resolve(data.offers);
+    }).catch(reject);
+  });
+};
+
 const doGetIncomingTransferOffers = (accountNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -146,6 +168,7 @@ const doCancelTransferOffer = (accountNumber, bitmarkId) => {
 
 let TransferOfferModel = {
   doGetTransferOfferDetail,
+  doGetAllTransferOffers,
   doGetIncomingTransferOffers,
   doGetOutgoingTransferOffers,
   doAcceptTransferOffer,

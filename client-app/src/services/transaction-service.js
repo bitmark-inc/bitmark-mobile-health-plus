@@ -161,38 +161,39 @@ const doGet100Transactions = async (accountNumber, oldTransactions, lastOffset) 
   }
 };
 
-const doGetActiveIncomingTransferOffers = async (accountNumber) => {
-  let activeIncomingTransferOffers = [];
-  let allIncomingTransferOffers = await TransferOfferModel.doGetIncomingTransferOffers(accountNumber);
+const doGetAllTransferOffers = async (accountNumber) => {
+  let offersData = await TransferOfferModel.doGetAllTransferOffers(accountNumber);
+  console.log('offersData :', offersData);
+  let incomingTransferOffers = [];
 
-  let bitmarkIds = [];
-  allIncomingTransferOffers.forEach(incomingTransferOffer => {
-    if (incomingTransferOffer.status === 'open') {
-      bitmarkIds.push(incomingTransferOffer.bitmark_id);
-    }
-  });
-
-  let allData = await BitmarkModel.doGetListBitmarks(bitmarkIds, { includeAsset: true });
-  let bitmarks = allData ? (allData.bitmarks || []) : [];
-  let assets = allData ? (allData.assets || []) : [];
-
-  for (let incomingTransferOffer of allIncomingTransferOffers) {
-    if (incomingTransferOffer.status === 'open') {
-      let bitmark = bitmarks.find(bm => bm.id === incomingTransferOffer.bitmark_id && bm.status === 'confirmed');
-      if (bitmark) {
-        incomingTransferOffer.bitmark = bitmark;
-        incomingTransferOffer.asset = assets.find(a => a.id === incomingTransferOffer.bitmark.asset_id);
-        incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at);
-        activeIncomingTransferOffers.push(incomingTransferOffer);
+  if (offersData.to) {
+    let bitmarkIds = [];
+    offersData.to.forEach(incomingTransferOffer => {
+      if (incomingTransferOffer.status === 'open') {
+        bitmarkIds.push(incomingTransferOffer.bitmark_id);
       }
+    });
+
+    let allData = await BitmarkModel.doGetListBitmarks(bitmarkIds, { includeAsset: true });
+    let bitmarks = allData ? (allData.bitmarks || []) : [];
+    let assets = allData ? (allData.assets || []) : [];
+    for (let incomingTransferOffer of offersData.to) {
+      if (incomingTransferOffer.status === 'open') {
+        let bitmark = bitmarks.find(bm => bm.id === incomingTransferOffer.bitmark_id && bm.status === 'confirmed');
+        if (bitmark) {
+          incomingTransferOffer.bitmark = bitmark;
+          incomingTransferOffer.asset = assets.find(a => a.id === incomingTransferOffer.bitmark.asset_id);
+          incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at);
+        }
+      }
+      incomingTransferOffers.push(incomingTransferOffer);
     }
   }
-  return activeIncomingTransferOffers;
-};
-
-const doGetActiveOutgoingTransferOffers = async (accountNumber) => {
-  let outgoingTransferOffers = await TransferOfferModel.doGetOutgoingTransferOffers(accountNumber);
-  return outgoingTransferOffers.filter(item => item.status === 'open');
+  let outgoingTransferOffers = offersData.from;
+  return {
+    incomingTransferOffers,
+    outgoingTransferOffers,
+  };
 };
 
 const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
@@ -231,8 +232,7 @@ const TransactionService = {
   doGet100Transactions,
   doTransferBitmark,
   doGetTransferOfferDetail,
-  doGetActiveIncomingTransferOffers,
-  doGetActiveOutgoingTransferOffers,
+  doGetAllTransferOffers,
   doAcceptTransferBitmark,
   doRejectTransferBitmark,
   doCancelTransferBitmark,

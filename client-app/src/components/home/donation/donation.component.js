@@ -49,7 +49,6 @@ export class DonationComponent extends React.Component {
           study.key = study.studyId
         });
       }
-      console.log('donationInformation :', donationInformation, studies);
       this.setState({
         donationInformation,
         studies,

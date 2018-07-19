@@ -126,7 +126,7 @@ export class TransactionsComponent extends React.Component {
   reloadData() {
     AppProcessor.doReloadUserData().catch((error) => {
       console.log('doReloadUserData error :', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
@@ -153,7 +153,7 @@ export class TransactionsComponent extends React.Component {
           }
         }).catch(error => {
           console.log('doStudyTask error:', error);
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
         });
       }
     } else if (item.type === ActionTypes.ifttt) {
@@ -181,7 +181,7 @@ export class TransactionsComponent extends React.Component {
         }
       }).catch(error => {
         console.log('doStudyTask error:', error);
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       });
     }
   }
@@ -219,7 +219,7 @@ export class TransactionsComponent extends React.Component {
       }]);
     }).catch(error => {
       console.log('doGetAllTransfersOffers error:', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
@@ -372,12 +372,18 @@ export class TransactionsComponent extends React.Component {
                     <TouchableOpacity style={transactionsStyle.completedTransfer} onPress={() => this.clickToCompleted(item)} disabled={(item.status === 'pending' || item.status === 'waiting')}>
                       <View style={transactionsStyle.completedTransferHeader}>
                         <Text style={[transactionsStyle.completedTransferHeaderTitle, {
-                          color: (item.status === 'pending' || item.status === 'waiting') ? '#999999' : '#0060F2',
-                          width: item.status === 'waiting' ? 'auto' : convertWidth(102)
+                          color: (item.status === 'pending' || item.status === 'waiting')
+                            ? '#999999' : (
+                              (item.status === 'canceled' || item.status === 'rejected') ? '#FF003C' : '#0060F2'
+                            ),
+                          width: (item.status === 'waiting' || item.status === 'canceled' || item.status === 'rejected')
+                            ? 'auto' : convertWidth(102)
                         }]}>{item.title}</Text>
-                        {item.status !== 'waiting' && <Text style={[transactionsStyle.completedTransferHeaderValue, {
-                          color: (item.status === 'pending' || item.status === 'waiting') ? '#999999' : '#0060F2'
-                        }]}>{item.status === 'pending' ? 'PENDING...' : moment(item.timestamp).format('YYYY MMM DD HH:mm:ss').toUpperCase()}</Text>}
+                        {(item.status !== 'waiting' && item.status !== 'rejected' && item.status !== 'canceled') &&
+                          <Text style={[transactionsStyle.completedTransferHeaderValue, {
+                            color: (item.status === 'pending' || item.status === 'waiting') ? '#999999' : '#0060F2'
+                          }]}>{item.status === 'pending' ? 'PENDING...' : moment(item.timestamp).format('YYYY MMM DD HH:mm:ss').toUpperCase()}</Text>
+                        }
                       </View>
                       <View style={transactionsStyle.completedTransferContent}>
                         <View style={transactionsStyle.completedTransferContentRow}>
