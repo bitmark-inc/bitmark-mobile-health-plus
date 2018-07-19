@@ -5,7 +5,7 @@ import { BitmarkModel, CommonModel, BitmarkSDK } from "../models";
 // ================================================================================================
 // ================================================================================================
 
-const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset, outgoingTransferOffers) => {
+const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset) => {
   let hasChanging = false;
   if (!oldLocalAssets) {
     hasChanging = true;
@@ -69,13 +69,7 @@ const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset
     asset.totalPending = 0;
     asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
     for (let bitmark of asset.bitmarks) {
-      let transferOffer = outgoingTransferOffers.find(item => (item.status === 'open' && item.bitmark_id === bitmark.id));
-
-      let oldData = bitmark.transferOfferId;
-      bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
-      hasChanging = hasChanging || (oldData !== bitmark.transferOfferId);
-
-      oldData = asset.maxBitmarkOffset;
+      let oldData = asset.maxBitmarkOffset;
       asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
       hasChanging = hasChanging || (oldData !== asset.maxBitmarkOffset);
 

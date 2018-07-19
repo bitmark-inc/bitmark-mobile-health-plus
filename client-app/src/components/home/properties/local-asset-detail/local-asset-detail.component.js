@@ -104,11 +104,7 @@ export class LocalAssetDetailComponent extends React.Component {
     }, {
       text: 'Yes',
       onPress: () => {
-        AppProcessor.doCancelTransferBitmark(bitmark.transferOfferId, faceTouchMessage).then((result) => {
-          if (result) {
-            EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
-          }
-        }).catch(error => {
+        AppProcessor.doCancelTransferBitmark(bitmark.transferOfferId, faceTouchMessage).catch(error => {
           console.log('cancel transferring bitmark error :', error);
           EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
             onClose: async () => {
