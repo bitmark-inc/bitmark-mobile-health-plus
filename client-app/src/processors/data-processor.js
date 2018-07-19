@@ -853,7 +853,7 @@ const doGenerateTransactionHistoryData = async () => {
           if (transferOffers.outgoingTransferOffers) {
             outgoingTransferOffer = transferOffers.outgoingTransferOffers.find(ot => ot.bitmark_id === item.txid);
           }
-          if (!outgoingTransferOffer || outgoingTransferOffer.status === 'cancelled') {
+          if (outgoingTransferOffer || outgoingTransferOffer.status === 'cancelled') {
             title = 'CANCELLED BY YOU';
             status = 'canceled';
           } else if (outgoingTransferOffer && outgoingTransferOffer.status === 'rejected') {
