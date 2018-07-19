@@ -50,18 +50,18 @@ export class ScanQRCodeComponent extends React.Component {
       let timestamp = parseInt(tempArrays[2], 0);
       let encryptionKey = tempArrays[3];
       if (!timestamp || isNaN(timestamp)) {
-        Alert.alert('', 'QR-code is invalid!', ''[{
-          text: 'OK',
-          onPress: this.props.navigation.goBack
-        }]);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+          message: 'QR code is invalid!',
+          onClose: this.props.navigation.goBack
+        });
         return;
       }
       let expiredTime = timestamp + 5 * 60 * 1000;
       if (expiredTime < moment().toDate().getTime()) {
-        Alert.alert('', 'QR-code is expired!', ''[{
-          text: 'OK',
-          onPress: this.props.navigation.goBack
-        }]);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+          message: 'QR code is expired!',
+          onClose: this.props.navigation.goBack
+        });
         return;
       }
 
@@ -81,18 +81,18 @@ export class ScanQRCodeComponent extends React.Component {
       let token = tempArrays[1];
       let timestamp = parseInt(tempArrays[2], 0);
       if (!timestamp || isNaN(timestamp)) {
-        Alert.alert('', 'QR-code is invalid!', ''[{
-          text: 'OK',
-          onPress: this.props.navigation.goBack
-        }]);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+          message: 'QR code is invalid!',
+          onClose: this.props.navigation.goBack
+        });
         return;
       }
       let expiredTime = timestamp + 5 * 60 * 1000;
       if (expiredTime < moment().toDate().getTime()) {
-        Alert.alert('', 'QR-code is expired!', ''[{
-          text: 'OK',
-          onPress: this.props.navigation.goBack
-        }]);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+          message: 'QR code is expired!',
+          onClose: this.props.navigation.goBack
+        });
         return;
       }
 
@@ -109,10 +109,10 @@ export class ScanQRCodeComponent extends React.Component {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { onClose: this.props.navigation.goBack, error });
       });
     } else {
-      Alert.alert('', 'QR-code is invalid!', ''[{
-        text: 'OK',
-        onPress: this.props.navigation.goBack
-      }]);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+        message: 'QR code is invalid!',
+        onClose: this.props.navigation.goBack
+      });
     }
   }
 

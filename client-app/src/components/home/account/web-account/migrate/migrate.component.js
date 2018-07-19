@@ -57,7 +57,7 @@ export class WebAccountMigrateComponent extends React.Component {
       this.setState({ step: STEPS.confirm, token: scanData.data });
     } else {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
-        message: 'QR-code is invalid! ',
+        message: 'QR code is invalid! ',
         onClose: this.props.navigation.goBack
       });
     }

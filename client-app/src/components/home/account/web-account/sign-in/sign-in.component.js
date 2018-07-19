@@ -40,7 +40,7 @@ export class WebAccountSignInComponent extends React.Component {
       });
     } else {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
-        message: 'QR-code is invalid! ',
+        message: 'QR code is invalid! ',
         onClose: this.props.navigation.goBack
       });
     }
