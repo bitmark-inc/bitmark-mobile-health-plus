@@ -11,7 +11,6 @@ import accountStyle from './account.component.style';
 
 import defaultStyle from './../../../commons/styles';
 import { DataProcessor, AppProcessor } from '../../../processors';
-import { config } from '../../../configs';
 
 const SubTabs = {
   settings: 'SETTINGS',
