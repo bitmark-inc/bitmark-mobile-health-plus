@@ -11,47 +11,41 @@ const InternationalDiabeteRenussionStudy = NativeModules.InternationalDiabeteRen
 const InternationalDiabeteRenussionTask = NativeModules.InternationalDiabeteRenussionTask;
 
 const surveysQuestion = {
-
-  qa1: 'What is the language you would like to use for the app?',
-  qa2: 'What is your biological gender?',
-  qa3: 'What is your date of birth?',
-  qa4: 'What is your height?',
-  qa5: 'What is your weight?',
-  qa6: 'Have you been tested for high insulin, high glucose or diabetes?',
-  qa7: 'What was the result of the diabetes test?',
-  qa8: 'What type of diabetes have you been diagnosed?',
-  qa9: 'What are your working hours? Please select all that applies to you.',
-  qa10: 'Please tell us at what time you usually wake up?',
-  qa11: 'Please tell us at what time you usually go to bed?',
-  qa12: 'Please tell us at what time you usually fall asleep?',
-  qa13: 'Please tell us at what time you usually have your third main meal of the day?',
+  qa1: 'What is your biological gender?',
+  qa2: 'What is your date of birth?',
+  qa3: 'What is your height?',
+  qa4: 'What is your weight?',
+  qa5: 'Have you been tested for high insulin, high glucose or diabetes?',
+  qa6: 'What was the result of the diabetes test?',
+  qa7: 'What type of diabetes have you been diagnosed?',
+  qa8: 'What are your working hours? Please select all that applies to you.',
+  qa9: 'Please tell us at what time you usually wake up?',
+  qa10: 'Please tell us at what time you usually go to bed?',
+  qa11: 'Please tell us at what time you usually fall asleep?',
+  qa12: 'Please tell us at what time you usually have your third main meal of the day?',
 };
 
 const surveysAnswers = {
   qa1: {
-    'opt-1': 'English',
-    'opt-2': 'Spanish (coming soon...)',
-  },
-  qa2: {
     'opt-1': 'Female',
     'opt-2': 'Male',
   },
+  qa2: null,
   qa3: null,
   qa4: null,
-  qa5: null,
-  qa6: {
+  qa5: {
     'opt-1': 'Yes',
     'opt-2': 'No',
   },
-  qa7: {
+  qa6: {
     'opt-1': "None",
     'opt-2': "Prediabetes",
     'opt-3': "Diabetes type 1",
     'opt-4': "Diabetes type 2",
     'opt-5': "Other type of diabetes",
   },
-  qa8: null,
-  qa9: {
+  qa7: null,
+  qa8: {
     'opt-1': "Regular 8 hours",
     'opt-2': "Regular non 8 hours",
     'opt-3': "Morning",
@@ -60,18 +54,18 @@ const surveysAnswers = {
     'opt-6': "Night",
     'opt-7': "Mixed shift",
   },
+  qa9: null,
   qa10: null,
   qa11: null,
   qa12: null,
-  qa13: null,
 };
 
 const checkIntakeAnswer = (answer) => {
-  let answerQA09;
-  if (answer['step-9'] && answer['step-9'].length > 0) {
-    answerQA09 = [];
-    answer['step-9'].forEach(item => {
-      answerQA09.push(surveysAnswers['qa9'][item]);
+  let answerQA08;
+  if (answer['step-8'] && answer['step-8'].length > 0) {
+    answerQA08 = [];
+    answer['step-8'].forEach(item => {
+      answerQA08.push(surveysAnswers['qa8'][item]);
     });
   }
   return [{
@@ -79,28 +73,28 @@ const checkIntakeAnswer = (answer) => {
     answer: surveysAnswers['qa1'][answer['step-1'][0]],
   }, {
     question: surveysQuestion['qa2'],
-    answer: surveysAnswers['qa2'][answer['step-2'][0]],
+    answer: moment(answer['step-2']).format('YYYY-MMM-DD'),
   }, {
     question: surveysQuestion['qa3'],
-    answer: moment(answer['step-3']).format('YYYY-MMM-DD'),
+    answer: answer['step-3'],
   }, {
     question: surveysQuestion['qa4'],
     answer: answer['step-4'],
   }, {
     question: surveysQuestion['qa5'],
-    answer: answer['step-5'],
+    answer: surveysAnswers['qa5'][answer['step-5']],
   }, {
     question: surveysQuestion['qa6'],
-    answer: surveysAnswers['qa6'][answer['step-6']],
+    answer: (answer['step-6'] && answer['step-6'].length > 0) ? surveysAnswers['qa6'][answer['step-6'][0]] : null,
   }, {
     question: surveysQuestion['qa7'],
-    answer: (answer['step-7'] && answer['step-7'].length > 0) ? surveysAnswers['qa7'][answer['step-7'][0]] : null,
+    answer: answer['step-7'],
   }, {
     question: surveysQuestion['qa8'],
-    answer: answer['step-8'],
+    answer: answerQA08,
   }, {
     question: surveysQuestion['qa9'],
-    answer: answerQA09,
+    answer: answer['step-9'],
   }, {
     question: surveysQuestion['qa10'],
     answer: answer['step-10'],
@@ -110,9 +104,6 @@ const checkIntakeAnswer = (answer) => {
   }, {
     question: surveysQuestion['qa12'],
     answer: answer['step-12'],
-  }, {
-    question: surveysQuestion['qa13'],
-    answer: answer['step-13'],
   }];
 };
 
@@ -124,7 +115,6 @@ const doConsentSurvey = (data) => {
 const doIntakeSurvey = () => {
   return new Promise((resolve) => {
     InternationalDiabeteRenussionStudy.showIntakeSurvey((ok, results) => {
-      console.log(results);
       if (ok && results) {
         resolve(checkIntakeAnswer(results));
       } else {
