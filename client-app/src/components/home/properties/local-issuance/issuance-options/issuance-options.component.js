@@ -13,6 +13,7 @@ import { AppProcessor, DataProcessor } from '../../../../../processors';
 import { EventEmitterService } from '../../../../../services';
 import { BottomTabsComponent } from '../../../bottom-tabs/bottom-tabs.component';
 import { FileUtil } from '../../../../../utils';
+import { CommonModel } from '../../../../../models';
 
 let ComponentName = 'IssuanceOptionsComponent';
 export class IssuanceOptionsComponent extends React.Component {
@@ -61,6 +62,11 @@ export class IssuanceOptionsComponent extends React.Component {
   }
 
   onChoosePhotoFile() {
+    // TODO
+    // CommonModel.doTrackEvent({
+    //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+    //   event_name: 'app_user_want_issue_photo',
+    // });
     let options = {
       title: '',
       takePhotoButtonTitle: '',
@@ -71,16 +77,30 @@ export class IssuanceOptionsComponent extends React.Component {
       if (response.error || response.didCancel) {
         return;
       }
-
+      // TODO
+      // CommonModel.doTrackEvent({
+      //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+      //   event_name: 'app_user_choose_photo_for_issuance',
+      // });
       this.prepareToIssue(response);
     });
   }
 
   onChooseFile() {
+    // TODO
+    // CommonModel.doTrackEvent({
+    //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+    //   event_name: 'app_user_want_issue_file',
+    // });
     DocumentPicker.show({
       filetype: [DocumentPickerUtil.allFiles(), "public.data"],
     }, (error, response) => {
       if (error) return;
+      // TODO
+      // CommonModel.doTrackEvent({
+      //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+      //   event_name: 'app_user_choose_file_for_issuance',
+      // });
       this.prepareToIssue(response);
     });
   }
@@ -103,7 +123,7 @@ export class IssuanceOptionsComponent extends React.Component {
       });
     }).catch(error => {
       console.log('onChooseFile error :', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 

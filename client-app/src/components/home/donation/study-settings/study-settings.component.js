@@ -11,7 +11,7 @@ import { StudyThankYouComponent } from './study-thank-you.component';
 import defaultStyle from './../../../../commons/styles';
 import styles from './study-settings.component.style';
 
-import { StudiesModel, AppleHealthKitModel } from '../../../../models';
+import { StudiesModel, AppleHealthKitModel, CommonModel } from '../../../../models';
 import { EventEmitterService } from '../../../../services';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import { BitmarkComponent } from '../../../../commons/components';
@@ -68,9 +68,28 @@ export class StudySettingComponent extends React.Component {
   }
   doJoinStudy() {
     AppleHealthKitModel.initHealthKit(this.state.study.dataTypes).then(() => {
+
+      // TODO
+      // AppleHealthKitModel.getDeterminedHKPermission(this.state.study.dataTypes).then(result => {
+      //   if (result) {
+      //     CommonModel.doTrackEvent({
+      //       account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+      //       event_name: this.state.study === 'study1' ? 'app_donation_user_authorized_health_kit_for_madelena_study' :'app_donation_user_authorized_health_kit_for_victor_study',
+      //     });
+      //   }
+      // }).catch(error => {
+      //   console.log('getDeterminedHKPermission error:', error);
+      // });
+
       return AppProcessor.doJoinStudy(this.state.study.studyId);
     }).then((result) => {
       if (result != null) {
+        // TODO
+        //     CommonModel.doTrackEvent({
+        //       account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+        //       event_name: this.state.study === 'study1' ? 'app_donation_user_joined_madelena_study' :'app_donation_user_joined_victor_study',
+        //     });
+
         DataProcessor.doReloadUserData();
         this.setState({ status: SettingStatus.thank_you, });
       }
@@ -85,6 +104,12 @@ export class StudySettingComponent extends React.Component {
     });
   }
   doFinish() {
+    // TODO
+    // CommonModel.doTrackEvent({
+    //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+    //   event_name: 'app_donation_user_joined_madelena_study',
+    // });
+
     const resetUserPage = NavigationActions.reset({
       index: 0,
       actions: [

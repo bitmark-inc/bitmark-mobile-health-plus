@@ -21,7 +21,14 @@ export class NotificationComponent extends React.Component {
     });
 
     let requestNotification = () => {
-      NotificationService.doRequestNotificationPermissions().then(() => {
+      NotificationService.doRequestNotificationPermissions().then((result) => {
+        if (result) {
+          // TODO 
+          // CommonModel.doTrackEvent({
+          //   account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+          //   event_name: 'app_open',
+          // });
+        }
         this.props.screenProps.rootNavigation.dispatch(resetMainPage);
       }).catch(error => {
         console.log('NotificationComponent requestNotification error:', error);
