@@ -161,72 +161,88 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   introductionStep.title = @"Intake Survey";
   introductionStep.detailText = @"Let's get some basic information about you!";
   
-#pragma mark Step 2 - M5.1
-  ORKTextChoice *step1Option1TextChoice = [ORKTextChoice choiceWithText:@"English" value:@"opt-1"];
-  ORKTextChoice *step1Option2TextChoice = [ORKTextChoice choiceWithText:@"Spanish (coming soon...)" value:@"opt-2"];
-  
-  ORKAnswerFormat *step1AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice textChoices:@[step1Option1TextChoice,
-                                                                                                                                   step1Option2TextChoice]];
-  
-  ORKQuestionStep *step1QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-1" title:@"What is the language you would like to use for the app?" answer:step1AnswerFormat];
-  step1QuestionStep.optional = NO;
+//#pragma mark Step 2 - M5.1
+//  ORKTextChoice *step1Option1TextChoice = [ORKTextChoice choiceWithText:@"English" value:@"opt-1"];
+//  ORKTextChoice *step1Option2TextChoice = [ORKTextChoice choiceWithText:@"Spanish (coming soon...)" value:@"opt-2"];
+//
+//  ORKAnswerFormat *step1AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice textChoices:@[step1Option1TextChoice,
+//                                                                                                                                   step1Option2TextChoice]];
+//
+//  ORKQuestionStep *step1QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-1" title:@"What is the language you would like to use for the app?" answer:step1AnswerFormat];
+//  step1QuestionStep.optional = NO;
   
 #pragma mark Step 1 - M5
-  ORKTextChoice *step2Option1TextChoice = [ORKTextChoice choiceWithText:@"Female" value:@"opt-1"];
-  ORKTextChoice *step2Option2TextChoice = [ORKTextChoice choiceWithText:@"Male" value:@"opt-2"];
+  ORKTextChoice *step1Option1TextChoice = [ORKTextChoice choiceWithText:@"Female" value:@"opt-1"];
+  ORKTextChoice *step1Option2TextChoice = [ORKTextChoice choiceWithText:@"Male" value:@"opt-2"];
   
-  ORKAnswerFormat *step2AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice
-                                                                        textChoices:@[step2Option1TextChoice,
-                                                                                      step2Option2TextChoice]];
+  ORKAnswerFormat *step1AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice
+                                                                        textChoices:@[step1Option1TextChoice,
+                                                                                      step1Option2TextChoice]];
   
-  ORKQuestionStep *step2QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-2" title:@"What is your biological gender?" answer:step2AnswerFormat];
-  step2QuestionStep.optional = NO;
+  ORKQuestionStep *step1QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-1" title:@"What is your biological gender?" answer:step1AnswerFormat];
+  step1QuestionStep.optional = NO;
   
-  ORKAnswerFormat *step3AnswerFormat = [[ORKDateAnswerFormat alloc] initWithStyle:ORKDateAnswerStyleDate
+  ORKAnswerFormat *step2AnswerFormat = [[ORKDateAnswerFormat alloc] initWithStyle:ORKDateAnswerStyleDate
                                                                       defaultDate:nil
                                                                       minimumDate:nil
                                                                       maximumDate:[[NSDate date] dateForNumberOfYearsAgo:18]
                                                                          calendar:nil];
   
-  ORKQuestionStep *step3QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-3" title:@"What is your date of birth?" answer:step3AnswerFormat];
+  ORKQuestionStep *step2QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-2" title:@"What is your date of birth?" answer:step2AnswerFormat];
+  step2QuestionStep.optional = NO;
+  
+  NSUnit *heightUnit = [LocaleUnit heightUnit];
+  ORKNumericAnswerFormat *step3AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:heightUnit.symbol];
+  if (heightUnit == [NSUnitLength centimeters]) {
+    step3AnswerFormat.minimum = @130;
+    step3AnswerFormat.maximum = @260;
+  } else {
+    step3AnswerFormat.minimum = @4;
+    step3AnswerFormat.maximum = @9;
+  }
+
+  ORKQuestionStep *step3QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-3" title:@"What is your height?" answer:step3AnswerFormat];
   step3QuestionStep.optional = NO;
   
-  
-  ORKAnswerFormat *step4AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit heightUnit].symbol];
-  ORKQuestionStep *step4QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-4" title:@"What is your height?" answer:step4AnswerFormat];
+  NSUnit *weightUnit = [LocaleUnit mediumMassUnit];
+  ORKNumericAnswerFormat *step4AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumMassUnit].symbol];
+  if (weightUnit == [NSUnitMass kilograms]) {
+    step4AnswerFormat.minimum = @40;
+    step4AnswerFormat.maximum = @300;
+  } else {
+    step4AnswerFormat.minimum = @88;
+    step4AnswerFormat.maximum = @661;
+  }
+  ORKQuestionStep *step4QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-4" title:@"What is your current weight?" answer:step4AnswerFormat];
   step4QuestionStep.optional = NO;
   
-  ORKAnswerFormat *step5AnswerFormat = [[ORKNumericAnswerFormat alloc] initWithStyle:ORKNumericAnswerStyleDecimal unit:[LocaleUnit mediumMassUnit].symbol];
-  ORKQuestionStep *step5QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-5" title:@"What is your current weight?" answer:step5AnswerFormat];
-  step5QuestionStep.optional = NO;
   
-  
-  ORKTextChoice *step6Option1TextChoice = [ORKTextChoice choiceWithText:@"Yes" value:@"opt-1"];
-  ORKTextChoice *step6Option2TextChoice = [ORKTextChoice choiceWithText:@"No" value:@"opt-2"];
-  ORKAnswerFormat *step6AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice
-                                                                        textChoices:@[step6Option1TextChoice,
-                                                                                      step6Option2TextChoice]];
-  ORKQuestionStep *step6QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-6"
+  ORKTextChoice *step5Option1TextChoice = [ORKTextChoice choiceWithText:@"Yes" value:@"opt-1"];
+  ORKTextChoice *step5Option2TextChoice = [ORKTextChoice choiceWithText:@"No" value:@"opt-2"];
+  ORKAnswerFormat *step5AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice
+                                                                        textChoices:@[step5Option1TextChoice,
+                                                                                      step5Option2TextChoice]];
+  ORKQuestionStep *step5QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-5"
                                                                              title:@"Have you been tested for high insulin, high glucose or diabetes?"
-                                                                            answer:step6AnswerFormat];
+                                                                            answer:step5AnswerFormat];
   
 #pragma mark Step 3 - M5.2
-  ORKTextChoice *step7Option1TextChoice = [ORKTextChoice choiceWithText:@"None" value:@"opt-1"];
-  ORKTextChoice *step7Option2TextChoice = [ORKTextChoice choiceWithText:@"Prediabetes" value:@"opt-2"];
-  ORKTextChoice *step7Option3TextChoice = [ORKTextChoice choiceWithText:@"Diabetes type 1" value:@"opt-3"];
-  ORKTextChoice *step7Option4TextChoice = [ORKTextChoice choiceWithText:@"Diabetes type 2" value:@"opt-4"];
-  ORKTextChoice *step7Option5TextChoice = [ORKTextChoice choiceWithText:@"Other type of diabetes" value:@"opt-5"];
+  ORKTextChoice *step6Option1TextChoice = [ORKTextChoice choiceWithText:@"None" value:@"opt-1"];
+  ORKTextChoice *step6Option2TextChoice = [ORKTextChoice choiceWithText:@"Prediabetes" value:@"opt-2"];
+  ORKTextChoice *step6Option3TextChoice = [ORKTextChoice choiceWithText:@"Diabetes type 1" value:@"opt-3"];
+  ORKTextChoice *step6Option4TextChoice = [ORKTextChoice choiceWithText:@"Diabetes type 2" value:@"opt-4"];
+  ORKTextChoice *step6Option5TextChoice = [ORKTextChoice choiceWithText:@"Other type of diabetes" value:@"opt-5"];
   
-  ORKAnswerFormat *step7AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice
-                                                                        textChoices:@[step7Option1TextChoice,
-                                                                                      step7Option2TextChoice,
-                                                                                      step7Option3TextChoice,
-                                                                                      step7Option4TextChoice,
-                                                                                      step7Option5TextChoice]];
+  ORKAnswerFormat *step6AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice
+                                                                        textChoices:@[step6Option1TextChoice,
+                                                                                      step6Option2TextChoice,
+                                                                                      step6Option3TextChoice,
+                                                                                      step6Option4TextChoice,
+                                                                                      step6Option5TextChoice]];
   
-  ORKQuestionStep *step7QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-7" title:@"What was the result of the diabetes test?" answer:step7AnswerFormat];
+  ORKQuestionStep *step6QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-6" title:@"What was the result of the diabetes test?" answer:step6AnswerFormat];
   
-  ORKQuestionStep *step8QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-8"
+  ORKQuestionStep *step7QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-7"
                                                                              title:@"What type of diabetes have you been diagnosed?"
                                                                             answer:[ORKAnswerFormat textAnswerFormat]];
   
@@ -244,44 +260,44 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
 //                              step9FormItem2];
   
 #pragma mark Step 3 - M5.3
-  ORKTextChoice *step9Option1TextChoice = [ORKTextChoice choiceWithText:@"Regular 8 hours" value:@"opt-1"];
-  ORKTextChoice *step9Option2TextChoice = [ORKTextChoice choiceWithText:@"Regular non 8 hours" value:@"opt-2"];
-  ORKTextChoice *step9Option3TextChoice = [ORKTextChoice choiceWithText:@"Morning" value:@"opt-3"];
-  ORKTextChoice *step9Option4TextChoice = [ORKTextChoice choiceWithText:@"Midday" value:@"opt-4"];
-  ORKTextChoice *step9Option5TextChoice = [ORKTextChoice choiceWithText:@"Evening" value:@"opt-5"];
-  ORKTextChoice *step9Option6TextChoice = [ORKTextChoice choiceWithText:@"Night" value:@"opt-6"];
-  ORKTextChoice *step9Option7TextChoice = [ORKTextChoice choiceWithText:@"Mixed shift" value:@"opt-7"];
+  ORKTextChoice *step8Option1TextChoice = [ORKTextChoice choiceWithText:@"Regular 8 hours" value:@"opt-1"];
+  ORKTextChoice *step8Option2TextChoice = [ORKTextChoice choiceWithText:@"Regular non 8 hours" value:@"opt-2"];
+  ORKTextChoice *step8Option3TextChoice = [ORKTextChoice choiceWithText:@"Morning" value:@"opt-3"];
+  ORKTextChoice *step8Option4TextChoice = [ORKTextChoice choiceWithText:@"Midday" value:@"opt-4"];
+  ORKTextChoice *step8Option5TextChoice = [ORKTextChoice choiceWithText:@"Evening" value:@"opt-5"];
+  ORKTextChoice *step8Option6TextChoice = [ORKTextChoice choiceWithText:@"Night" value:@"opt-6"];
+  ORKTextChoice *step8Option7TextChoice = [ORKTextChoice choiceWithText:@"Mixed shift" value:@"opt-7"];
   
-  ORKAnswerFormat *step9AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleMultipleChoice
-                                                                         textChoices:@[step9Option1TextChoice,
-                                                                                       step9Option2TextChoice,
-                                                                                       step9Option3TextChoice,
-                                                                                       step9Option4TextChoice,
-                                                                                       step9Option5TextChoice,
-                                                                                       step9Option6TextChoice,
-                                                                                       step9Option7TextChoice]];
+  ORKAnswerFormat *step8AnswerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleMultipleChoice
+                                                                         textChoices:@[step8Option1TextChoice,
+                                                                                       step8Option2TextChoice,
+                                                                                       step8Option3TextChoice,
+                                                                                       step8Option4TextChoice,
+                                                                                       step8Option5TextChoice,
+                                                                                       step8Option6TextChoice,
+                                                                                       step8Option7TextChoice]];
   
-  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-9"
+  ORKQuestionStep *step8QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-8"
                                                                              title:@"What are your working hours?\nPlease select all that applies to you."
-                                                                            answer:step9AnswerFormat];
+                                                                            answer:step8AnswerFormat];
   
   NSDateComponents *defaultTime = [NSDateComponents new];
   defaultTime.hour = 0;
   ORKTimeOfDayAnswerFormat *timeOfDayAnswerFormat = [ORKTimeOfDayAnswerFormat timeOfDayAnswerFormatWithDefaultComponents:defaultTime];
   
-  ORKQuestionStep *step10QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-10"
+  ORKQuestionStep *step9QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-9"
                                                                               title:@"Please tell us at what time you usually wake up?"
                                                                              answer:timeOfDayAnswerFormat];
   
-  ORKQuestionStep *step11QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-11"
+  ORKQuestionStep *step10QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-10"
                                                                               title:@"Please tell us at what time you usually go to sleep?"
                                                                              answer:timeOfDayAnswerFormat];
   
-  ORKQuestionStep *step12QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-12"
+  ORKQuestionStep *step11QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-11"
                                                                               title:@"Please tell us at what time you usually have breakfast or first beverage with caloric content?"
                                                                              answer:timeOfDayAnswerFormat];
   
-  ORKQuestionStep *step13QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-13"
+  ORKQuestionStep *step12QuestionStep = [ORKQuestionStep questionStepWithIdentifier:@"step-12"
                                                                               title:@"Please tell us at what time you usually have your last meal of the day?"
                                                                              answer:timeOfDayAnswerFormat];
   
@@ -298,16 +314,15 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                                                                                                step9QuestionStep,
                                                                                                                step10QuestionStep,
                                                                                                                step11QuestionStep,
-                                                                                                               step12QuestionStep,
-                                                                                                               step13QuestionStep]];
+                                                                                                               step12QuestionStep]];
 
   IntakeStep8SkipRule *skipStep8NavigationRule = [IntakeStep8SkipRule new];
   task.shouldReportProgress = YES;
-  [task setSkipNavigationRule:skipStep8NavigationRule forStepIdentifier:@"step-8"];
+  [task setSkipNavigationRule:skipStep8NavigationRule forStepIdentifier:@"step-7"];
   
   IntakeStep7SkipRule *skipStep7NavigationRule = [IntakeStep7SkipRule new];
   task.shouldReportProgress = YES;
-  [task setNavigationRule:skipStep7NavigationRule forTriggerStepIdentifier:@"step-6"];
+  [task setNavigationRule:skipStep7NavigationRule forTriggerStepIdentifier:@"step-5"];
   
   __weak InternationalDiabeteRenussionStudy *wSelf = self;
   dispatch_async(dispatch_get_main_queue(), ^{
