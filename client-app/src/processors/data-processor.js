@@ -40,6 +40,16 @@ const doCheckTransferOffers = async (transferOffers, isLoadingAllUserData) => {
 
 const doCheckNewIftttInformation = async (iftttInformation, isLoadingAllUserData) => {
   if (iftttInformation) {
+
+    let oldIftttInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION);
+    if ((!oldIftttInformation || !oldIftttInformation.connectIFTTT) && (iftttInformation && iftttInformation.connectIFTTT)) {
+      // TODO
+      // await CommonModel.doTrackEvent({
+      //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+      //   event_name: 'app_user_connected_ifttt',
+      // });
+    }
+
     await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, iftttInformation);
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, iftttInformation);
     if (!isLoadingAllUserData) {
@@ -343,7 +353,15 @@ const configNotification = () => {
   };
   const onReceivedNotification = async (notificationData) => {
     if (!notificationData.foreground) {
-      setTimeout(() => {
+      if (!userInformation || !userInformation.bitmarkAccountNumber) {
+        userInformation = await UserModel.doGetCurrentUser();
+      }
+      // TODO 
+      // await CommonModel.doTrackEvent({
+      //   account_number: userInformation.bitmarkAccountNumber,
+      //   event_name: 'app_user_click_notification',
+      // });
+      setTimeout(async () => {
         EventEmitterService.emit(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
       }, 1000);
     }
@@ -398,9 +416,13 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 
-const checkAppNeedResetLocalData = async () => {
+const doGetAppInformation = async () => {
+  return await CommonModel.doGetLocalData(CommonModel.KEYS.APP_INFORMATION);
+};
+
+const checkAppNeedResetLocalData = async (appInfo) => {
   if (config.needResetLocalData) {
-    let appInfo = await CommonModel.doGetLocalData(CommonModel.KEYS.APP_INFORMATION);
+    appInfo = appInfo || (await doGetAppInformation());
     if (!appInfo || appInfo.resetLocalDataAt !== config.needResetLocalData) {
       appInfo = appInfo || {};
       appInfo.resetLocalDataAt = config.needResetLocalData;
@@ -412,11 +434,55 @@ const checkAppNeedResetLocalData = async () => {
 
 const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
+  // TODO 
+  // await CommonModel.doTrackEvent({
+  //   account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+  //   event_name: 'app_open',
+  // });
+
+  let appInfo = await doGetAppInformation();
+  let result = NotificationService.doCheckNotificationPermission();
+  if (!result && (!appInfo.trackEvents || !appInfo.trackEvents.app_user_turn_off_notification)) {
+    // // TODO
+    // appInfo.trackEvents = appInfo.trackEvents || {};
+    // appInfo.trackEvents.app_user_turn_off_notification = true;
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+    // CommonModel.doTrackEvent({
+    //   account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    //   event_name: 'app_user_turn_off_notification',
+    // });
+  }
+
+
+  if (!appInfo.trackEvents || !appInfo.trackEvents.app_download) {
+    // appInfo.trackEvents = appInfo.trackEvents || {};
+    // appInfo.trackEvents.app_download = true;
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+    // TODO add download app event
+    // await CommonModel.doTrackEvent({
+    //   account_number: userInformation.bitmarkAccountNumber,
+    //   event_name: 'app_download',
+    // });
+  }
+
+  if (!appInfo.trackEvents || !appInfo.trackEvents.app_download_location) {
+    // appInfo.trackEvents = appInfo.trackEvents || {};
+    // appInfo.trackEvents.app_download_location = true;
+    // await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+    // TODO 
+    // await CommonModel.doTrackEvent({
+    //   account_number: userInformation.bitmarkAccountNumber,
+    //   event_name: 'app_download_location',
+    // });
+  }
+
+
   if (userInformation && userInformation.bitmarkAccountNumber) {
     configNotification();
+    await checkAppNeedResetLocalData(appInfo);
 
-    await checkAppNeedResetLocalData();
-    // await UserModel.resetUserLocalData();
+
+
 
     let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
     let trackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];

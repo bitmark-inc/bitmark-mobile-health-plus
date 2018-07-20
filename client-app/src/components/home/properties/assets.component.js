@@ -13,6 +13,7 @@ import { EventEmitterService } from '../../../services';
 
 import defaultStyle from './../../../commons/styles';
 import { BitmarkWebViewComponent } from './../../../commons/components';
+import { CommonModel } from '../../../models';
 
 let currentSize = Dimensions.get('window');
 
@@ -138,6 +139,11 @@ export class AssetsComponent extends React.Component {
   }
 
   addProperty() {
+    // TODO
+    // CommonModel.doTrackEvent({
+    //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+    //   event_name: 'app_user_want_issue',
+    // });
     this.props.navigation.navigate('LocalIssuance');
   }
 

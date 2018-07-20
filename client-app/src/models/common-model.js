@@ -172,6 +172,31 @@ const doCreateSignatureData = async (touchFaceId) => {
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
+const doTrackEvent = async (data) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.mobile_server_url + `/api/track-event`;
+    fetch(bitmarkUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error(`doTrackEvent error :` + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+// ================================================================================================
+// ================================================================================================
+// ================================================================================================
 
 let CommonModel = {
   KEYS,
@@ -184,6 +209,8 @@ let CommonModel = {
   doTryCreateSignatureData,
   doTryRickSignMessage,
   setFaceTouchSessionId,
+
+  doTrackEvent,
 }
 
 export {

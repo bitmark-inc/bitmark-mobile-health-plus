@@ -14,8 +14,9 @@ import { BitmarkService } from './../../../../../services';
 
 import localAddPropertyStyle from './issue-file.component.style';
 import defaultStyle from './../../../../../commons/styles';
-import { AppProcessor } from '../../../../../processors';
+import { AppProcessor, DataProcessor } from '../../../../../processors';
 import { iosConstant } from '../../../../../configs/ios/ios.config';
+import { CommonModel } from '../../../../../models';
 
 export class LocalIssueFileComponent extends React.Component {
   constructor(props) {
@@ -79,6 +80,11 @@ export class LocalIssueFileComponent extends React.Component {
   // ==========================================================================================
   onIssueFile() {
     console.log('assetAccessibility :', this.state.assetAccessibility);
+    // TODO
+    // CommonModel.doTrackEvent({
+    //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+    //   event_name: 'app_user_done_issuance',
+    // });
     AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), this.state.assetAccessibility === 'public', {
       indicator: true, title: '', message: 'Sending your transaction to the Bitmark network...'
     }).then((data) => {
