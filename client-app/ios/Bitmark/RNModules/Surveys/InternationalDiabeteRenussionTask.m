@@ -76,7 +76,7 @@ RCT_EXPORT_METHOD(showActiveTask1:(RCTResponseSenderBlock)callback) {
   
   ORKFormStep *latestHbA1cFormStep = [[ORKFormStep alloc] initWithIdentifier:@"step-latestHbA1cValue"];
   latestHbA1cFormStep.title = @"What's your latest value of glycosylated hemoglobin (HbA1c)?";
-  latestHbA1cFormStep.text = @"You only need to use one scale.";
+  latestHbA1cFormStep.text = @"Please only choose one scale to fill in.";
   latestHbA1cFormStep.formItems = @[HbA1cScaleAItem,
                                     HbA1cScaleBItem];
   latestHbA1cFormStep.optional = NO;
