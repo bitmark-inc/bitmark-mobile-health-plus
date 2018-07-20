@@ -22,7 +22,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-    paddingBottom: 70 + ios.constant.blankFooter,
+    paddingBottom: 50 + ios.constant.blankFooter,
   },
   swipeDotButton: {
     backgroundColor: '#C4C4C4',
@@ -36,15 +36,15 @@ export default StyleSheet.create({
   },
   swipePagination: {
     position: 'absolute',
-    bottom: 70 + ios.constant.blankFooter,
+    bottom: 50 + ios.constant.blankFooter,
   },
 
   introductionArea: {
     flexDirection: 'column',
-    height: 290,
+    height: 145,
   },
   introductionTitle: {
-    marginTop: 28,
+    marginTop: 25,
     left: convertWidth(50),
     fontFamily: 'Avenir black',
     color: '#0060F2',
@@ -52,7 +52,7 @@ export default StyleSheet.create({
     fontWeight: '900',
   },
   introductionDescription: {
-    marginTop: 40,
+    marginTop: 30,
     left: convertWidth(50),
     width: convertWidth(275),
     fontFamily: 'Avenir light',
@@ -74,13 +74,24 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  introductionImage: {
-    backgroundColor: 'white',
-    width: convertWidth(320),
-    height: 180 * convertWidth(320) / 320,
+  onBoardingImage: {
+    resizeMode: 'contain',
+    width: convertWidth(230),
+    height: 370 * convertWidth(230) / 230
+  },
+  donationOnBoardingImage: {
+    marginTop: 24,
+    resizeMode: 'contain',
+    width: convertWidth(196),
+    height: 343 * convertWidth(196) / 196
+  },
+  publicAccountNumberOnBoardingImage: {
+    marginTop: 20,
+    resizeMode: 'contain',
+    width: convertWidth(219),
+    height: 298 * convertWidth(219) / 219
   },
   introductionTermPrivacy: {
-    marginTop: 233,
     left: convertWidth(50),
     width: convertWidth(272),
   },
@@ -93,14 +104,14 @@ export default StyleSheet.create({
     fontFamily: 'Avenir light',
     fontSize: 17,
     fontWeight: '300',
-    lineHeight: 22,
+    lineHeight: 19,
   },
   bitmarkTermsPrivacyButtonText: {
     fontFamily: 'Avenir light',
     color: '#0060F2',
     fontSize: 17,
     fontWeight: '300',
-    lineHeight: 22,
+    lineHeight: 19,
   },
 
   skipButtonArea: {

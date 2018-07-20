@@ -19,7 +19,7 @@ export default StyleSheet.create({
   faceTouchIdTitle: {
     fontFamily: 'Avenir black',
     color: '#0060F2',
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: '900',
     marginTop: 103,
     width: convertWidth(275),
