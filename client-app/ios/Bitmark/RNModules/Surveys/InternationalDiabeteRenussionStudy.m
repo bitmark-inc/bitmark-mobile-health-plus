@@ -389,40 +389,39 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
     
     NSArray *callbackResults = [StudyHelper iterateTaskResult:taskViewController.result withDataIteratingBlock:^NSObject *(ORKStepResult *stepResult) {
       if ([stepResult.identifier isEqualToString:@"step-1"] ||
-          [stepResult.identifier isEqualToString:@"step-2"] ||
+          [stepResult.identifier isEqualToString:@"step-5"] ||
           [stepResult.identifier isEqualToString:@"step-6"] ||
-          [stepResult.identifier isEqualToString:@"step-7"] ||
-          [stepResult.identifier isEqualToString:@"step-9"]) {
+          [stepResult.identifier isEqualToString:@"step-8"]) {
         ORKChoiceQuestionResult *r = (ORKChoiceQuestionResult *)stepResult.results.firstObject;
         return r.choiceAnswers;
       }
       
-      else if ([stepResult.identifier isEqualToString:@"step-3"]) {
+      else if ([stepResult.identifier isEqualToString:@"step-2"]) {
         ORKDateQuestionResult *r = (ORKDateQuestionResult *)stepResult.results.firstObject;
         return [r.dateAnswer iso8601String];
       }
       
-      else if ([stepResult.identifier isEqualToString:@"step-4"]) {
+      else if ([stepResult.identifier isEqualToString:@"step-3"]) {
         ORKNumericQuestionResult *r = (ORKNumericQuestionResult *)stepResult.results.firstObject;
         return [LocaleUnit convertToSIWithUnit:[LocaleUnit heightUnit] value:r.numericAnswer.doubleValue];
       }
       
-      else if ([stepResult.identifier isEqualToString:@"step-5"]) {
+      else if ([stepResult.identifier isEqualToString:@"step-4"]) {
         ORKNumericQuestionResult *r = (ORKNumericQuestionResult *)stepResult.results.firstObject;
         return [LocaleUnit convertToSIWithUnit:[LocaleUnit mediumMassUnit] value:r.numericAnswer.doubleValue];
 
       }
 
       
-      else if ([stepResult.identifier isEqualToString:@"step-11"] ||
+      else if ([stepResult.identifier isEqualToString:@"step-10"] ||
+               [stepResult.identifier isEqualToString:@"step-11"] ||
                [stepResult.identifier isEqualToString:@"step-12"] ||
-               [stepResult.identifier isEqualToString:@"step-13"] ||
-               [stepResult.identifier isEqualToString:@"step-10"]) {
+               [stepResult.identifier isEqualToString:@"step-9"]) {
         ORKTimeOfDayQuestionResult *r = (ORKTimeOfDayQuestionResult *)stepResult.results.firstObject;
         return [NSString stringWithFormat:@"%ld:%ld", r.dateComponentsAnswer.hour, r.dateComponentsAnswer.minute];
       }
       
-      else if ([stepResult.identifier isEqualToString:@"step-8"]) {
+      else if ([stepResult.identifier isEqualToString:@"step-7"]) {
         ORKTextQuestionResult *r = (ORKTextQuestionResult *)stepResult.results.firstObject;
         return r.textAnswer;
       }
