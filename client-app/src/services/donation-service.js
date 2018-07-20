@@ -283,7 +283,7 @@ let doPrepareSurveyFile = async (touchFaceIdSession, bitmarkAccountNumber, study
   if ((study.studyId === 'study1' &&
     (taskType === study.taskIds.intake_survey || taskType === study.taskIds.exit_survey_1 || taskType === study.taskIds.exit_survey_2)) ||
     (study.studyId === 'study2' &&
-      (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4))) {
+      (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4 || taskType === study.taskIds.entry_study))) {
     donateData = StudiesModel[study.studyId].generateSurveyAsset(study, bitmarkAccountNumber, tempResult,
       taskType, moment().toDate(), 'ResearchKit', randomString({ length: 8, numeric: true, letters: false, }));
   }
@@ -298,7 +298,7 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
   if ((study.studyId === 'study1' &&
     (taskType === study.taskIds.intake_survey || taskType === study.taskIds.exit_survey_1 || (taskType === study.taskIds.exit_survey_2 && result))) ||
     (study.studyId === 'study2' &&
-      (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4))) {
+      (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4 || (taskType === study.taskIds.entry_study && result)))) {
     let prepareResult = await doPrepareSurveyFile(touchFaceIdSession, bitmarkAccountNumber, study, taskType, result);
 
     let extra = {
@@ -310,7 +310,8 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     await FileUtil.remove(prepareResult.filePath);
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
     return doGetUserInformation(bitmarkAccountNumber);
-  } else if ((study.studyId === 'study2' && taskType === study.taskIds.task3) ||
+  } else if (
+    (study.studyId === 'study2' && (taskType === study.taskIds.task3 || taskType === study.taskIds.entry_study)) ||
     (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2)) {
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
     return doGetUserInformation(bitmarkAccountNumber);
