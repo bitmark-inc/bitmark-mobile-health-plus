@@ -17,16 +17,16 @@
 #import "NSDate+Computing.h"
 #import "LocaleUnit.h"
 
-@interface IntakeStep8SkipRule : ORKSkipStepNavigationRule
+@interface IntakeStep7SkipRule : ORKSkipStepNavigationRule
 
 @end
 
-@implementation IntakeStep8SkipRule
+@implementation IntakeStep7SkipRule
 
 - (BOOL)stepShouldSkipWithTaskResult:(ORKTaskResult *)taskResult {
   ORKStepResult *lastStepResult = (ORKStepResult *)taskResult.results.lastObject;
   
-  if ([lastStepResult.identifier isEqualToString:@"step-7"]) {
+  if ([lastStepResult.identifier isEqualToString:@"step-6"]) {
     ORKChoiceQuestionResult *r = (ORKChoiceQuestionResult *)lastStepResult.results.firstObject;
     if (![(NSString *)r.choiceAnswers.firstObject isEqualToString:@"opt-5"]) {
       return YES;
@@ -39,23 +39,23 @@
 
 @end
 
-@interface IntakeStep7SkipRule : ORKStepNavigationRule
+@interface IntakeStep6SkipRule : ORKStepNavigationRule
 
 @end
 
-@implementation IntakeStep7SkipRule
+@implementation IntakeStep6SkipRule
 
 - (NSString *)identifierForDestinationStepWithTaskResult:(ORKTaskResult *)taskResult {
   ORKStepResult *lastStepResult = (ORKStepResult *)taskResult.results.lastObject;
   
-  if ([lastStepResult.identifier isEqualToString:@"step-6"]) {
+  if ([lastStepResult.identifier isEqualToString:@"step-5"]) {
     ORKChoiceQuestionResult *r = (ORKChoiceQuestionResult *)lastStepResult.results.firstObject;
     if ([(NSString *)r.choiceAnswers.firstObject isEqualToString:@"opt-2"]) {
-      return @"step-9";
+      return @"step-8";
     }
   }
   
-  return @"step-7";
+  return @"step-6";
 }
 
 @end
@@ -316,13 +316,13 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
                                                                                                                step11QuestionStep,
                                                                                                                step12QuestionStep]];
 
-  IntakeStep8SkipRule *skipStep8NavigationRule = [IntakeStep8SkipRule new];
-  task.shouldReportProgress = YES;
-  [task setSkipNavigationRule:skipStep8NavigationRule forStepIdentifier:@"step-7"];
-  
   IntakeStep7SkipRule *skipStep7NavigationRule = [IntakeStep7SkipRule new];
   task.shouldReportProgress = YES;
-  [task setNavigationRule:skipStep7NavigationRule forTriggerStepIdentifier:@"step-5"];
+  [task setSkipNavigationRule:skipStep7NavigationRule forStepIdentifier:@"step-7"];
+  
+  IntakeStep6SkipRule *skipStep6NavigationRule = [IntakeStep6SkipRule new];
+  task.shouldReportProgress = YES;
+  [task setNavigationRule:skipStep6NavigationRule forTriggerStepIdentifier:@"step-5"];
   
   __weak InternationalDiabeteRenussionStudy *wSelf = self;
   dispatch_async(dispatch_get_main_queue(), ^{
