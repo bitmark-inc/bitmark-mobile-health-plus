@@ -53,7 +53,7 @@ if (config.network === NETWORKS.testnet) {
   config.ifttt_invite_url = 'https://ifttt.com/features/redeem?code=9187-5ba0e766190b2d174a5a3708fe2002ae';
   config.ifttt_bitmark_service_url = 'https://ifttt.com/bitmark';
   config.ifttt_bitmark_service_settings_url = "https://ifttt.com/services/bitmark/settings";
-  config.web_app_server_url = "https://account.bitmark.com";
+  config.web_app_server_url = "https://a.bitmark.com";
   config.preview_asset_url = "https://preview.bitmarkaccountassets.com";
   config.bitmark_web_site = 'https://bitmark.com';
 }
