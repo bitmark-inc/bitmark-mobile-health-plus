@@ -758,6 +758,7 @@ const ActionTypes = {
   transfer: 'transfer',
   donation: 'donation',
   ifttt: 'ifttt',
+  test_write_down_recovery_phase: 'test_write_down_recovery_phase',
 };
 const doGenerateTransactionActionRequiredData = async () => {
   let actionRequired;
@@ -812,6 +813,19 @@ const doGenerateTransactionActionRequiredData = async () => {
   }) : actionRequired;
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, actionRequired);
+
+  // Add "Write Down Your Recovery Phrase" action required which was created when creating account if any
+  let testRecoveryPhaseActionRequired = await CommonModel.doGetLocalData(CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED);
+  if (testRecoveryPhaseActionRequired) {
+    actionRequired.unshift({
+      key: actionRequired.length,
+      type: ActionTypes.test_write_down_recovery_phase,
+      typeTitle: 'SECURITY ALERT',
+      timestamp: moment(new Date(testRecoveryPhaseActionRequired.timestamp)),
+    });
+
+    totalTasks += 1;
+  }
 
   DataCacheProcessor.setTransactionScreenData({
     totalTasks,
@@ -978,6 +992,11 @@ const doDecentralizedTransfer = async (touchFaceIdSession, token, ) => {
   return result;
 };
 
+const doRemoveTestRecoveryPhaseActionRequired = async () => {
+  await CommonModel.doRemoveLocalData(CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED);
+  EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
+};
+
 const DataProcessor = {
   doOpenApp,
   doLogin,
@@ -1025,6 +1044,8 @@ const DataProcessor = {
   doGetTransactionScreenActionRequired,
   doGetAllTransfersOffers,
   doGetTransactionScreenHistories,
+
+  doRemoveTestRecoveryPhaseActionRequired,
 
   getApplicationVersion,
   getApplicationBuildNumber,

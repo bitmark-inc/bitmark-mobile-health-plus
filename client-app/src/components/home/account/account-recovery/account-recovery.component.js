@@ -11,6 +11,8 @@ import { AppProcessor } from './../../../../processors';
 import accountRecoveryStyle from './account-recovery.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { convertWidth } from '../../../../utils';
+import {DataProcessor} from "../../../../processors";
+
 let currentUser;
 class RecoveryPhraseComponent extends React.Component {
   constructor(props) {
@@ -94,6 +96,7 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
   }
   render() {
     let isSignOut = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut);
+    let shouldRemoveTestRecoveryPhaseActionRequiredOnDone = (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.shouldRemoveTestRecoveryPhaseActionRequiredOnDone);
     return (
       <View style={accountRecoveryStyle.body}>
         <View style={[accountRecoveryStyle.header]}>
@@ -146,6 +149,9 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
           if (isSignOut) {
             this.props.navigation.navigate('TryRecovery', );
           } else {
+            if (shouldRemoveTestRecoveryPhaseActionRequiredOnDone) {
+              DataProcessor.doRemoveTestRecoveryPhaseActionRequired();
+            }
             this.props.screenProps.accountNavigation.goBack();
           }
         }}>
@@ -348,6 +354,10 @@ class TryRecoveryPhraseComponent extends React.Component {
       if (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.isSignOut) {
         this.props.screenProps.logout();
       } else {
+        if (this.props.screenProps && this.props.screenProps.accountNavigation.state.params.shouldRemoveTestRecoveryPhaseActionRequiredOnDone) {
+          DataProcessor.doRemoveTestRecoveryPhaseActionRequired();
+        }
+
         this.props.screenProps.accountNavigation.goBack();
       }
     } else {

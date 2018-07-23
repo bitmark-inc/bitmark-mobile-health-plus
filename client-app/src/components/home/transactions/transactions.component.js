@@ -26,6 +26,7 @@ const ActionTypes = {
   transfer: 'transfer',
   donation: 'donation',
   ifttt: 'ifttt',
+  test_write_down_recovery_phase: 'test_write_down_recovery_phase'
 };
 
 let currentSize = Dimensions.get('window');
@@ -183,6 +184,15 @@ export class TransactionsComponent extends React.Component {
         console.log('doStudyTask error:', error);
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       });
+    } else if (item.type === ActionTypes.test_write_down_recovery_phase) {
+      EventEmitterService.emit(EventEmitterService.events.NEED_REFRESH_USER_COMPONENT_STATE, {
+        displayedTab: {
+          mainTab: 'Account',
+          subTab: null
+        },
+        goToRecoveryPhase: true,
+        changeMainTab: {mainTab: 'Account'}
+      });
     }
   }
 
@@ -295,8 +305,7 @@ export class TransactionsComponent extends React.Component {
             }
             this.loadingActionRequiredWhenScroll = false;
           }}
-          scrollEventThrottle={1}
-        >
+          scrollEventThrottle={1}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             {this.state.actionRequired && this.state.actionRequired.length === 0 && (!this.state.gettingData && !this.state.appLoadingData) && <View style={transactionsStyle.contentSubTab}>
               <Text style={transactionsStyle.titleNoRequiredTransferOffer}>NO ACTIONS REQUIRED.</Text>
@@ -330,6 +339,14 @@ export class TransactionsComponent extends React.Component {
                     {item.type === ActionTypes.ifttt && <View style={transactionsStyle.iftttTask}>
                       <Text style={transactionsStyle.iftttTitle}>{item.assetInfo.propertyName}</Text>
                       <Text style={transactionsStyle.iftttDescription}>Sign your bitmark issuance for your IFTTT data.</Text>
+                    </View>}
+
+                    {item.type === ActionTypes.test_write_down_recovery_phase && <View style={transactionsStyle.donationTask}>
+                      <Text style={transactionsStyle.donationTaskTitle}>Write Down Your Recovery Phrase</Text>
+                      <View style={transactionsStyle.donationTaskDescriptionArea}>
+                        <Text style={transactionsStyle.donationTaskDescription}>Protect your Bitmark account.</Text>
+                        <Image style={transactionsStyle.donationTaskImportantIcon} source={require('./../../../../assets/imgs/alert.png')} />
+                      </View>
                     </View>}
                   </TouchableOpacity>)
                 }} />

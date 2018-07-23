@@ -21,11 +21,13 @@ import newAccountStyle from './new-account.component.style';
 import { AppProcessor } from '../../../processors';
 import { iosConstant } from '../../../configs/ios/ios.config';
 import { config } from '../../../configs';
+import { CommonModel } from "../../../models";
 
 export class NewAccountComponent extends React.Component {
   constructor(props) {
     super(props);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
+    this.createNewAccount = this.createNewAccount.bind(this);
     this.state = {
       showPagination: true,
       scrollEnabled: true,
@@ -48,6 +50,17 @@ export class NewAccountComponent extends React.Component {
         this['player' + this.state.index].seek(0);
       }
     }
+  }
+
+  async createNewAccount() {
+    let user = await AppProcessor.doCreateNewAccount();
+
+    // Add Test Recovery Phase action required
+    await CommonModel.doSetLocalData(CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED, {
+      timestamp: (new Date()).toISOString()
+    });
+
+    return user;
   }
 
   render() {
@@ -171,7 +184,7 @@ export class NewAccountComponent extends React.Component {
             {/*PUBLIC ACCOUNT NUMBER*/}
             <FullPublicAccountNumberComponent screenProps={{
               newAccountNavigation: this.props.navigation,
-              createBitmarkAccount: AppProcessor.doCreateNewAccount,
+              createBitmarkAccount: this.createNewAccount,
               setShowPagination: (show) => {
                 this.setState({
                   showPagination: show,
