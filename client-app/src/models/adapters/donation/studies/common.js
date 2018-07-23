@@ -53,7 +53,7 @@ let generateHealthKitAsset = (studyInformation, bitmarkAccount, donateData, dona
 let getMetadataOfBitmarkHealthData = (bitmarkAccount, ) => {
   return {
     Creator: '[' + bitmarkAccount.substring(0, 4) + '...' + bitmarkAccount.substring(bitmarkAccount.length - 4, bitmarkAccount.length) + ']',
-    'Created (date)': 'YYYY MMM DD HH:MM:SS',
+    'Created (date)': 'YYYY MMM DD HH:mm:ss',
   };
 };
 

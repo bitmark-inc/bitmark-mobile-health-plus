@@ -167,7 +167,7 @@ export class LocalAssetDetailComponent extends React.Component {
               <Text style={[assetDetailStyle.assetName, { color: this.state.asset.created_at ? 'black' : '#999999' }]} >{this.state.asset.name}</Text>
               <View style={assetDetailStyle.assetCreatorRow}>
                 <Text style={[assetDetailStyle.assetCreatorBound, { color: this.state.asset.created_at ? 'black' : '#999999' }]}>
-                  {this.state.asset.created_at ? ('REGISTERED ON ' + moment(this.state.asset.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase()) : 'REGISTERING...'}
+                  {this.state.asset.created_at ? ('REGISTERED ON ' + moment(this.state.asset.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase()) : 'REGISTERING...'}
                 </Text>
                 <Hyperlink
                   onPress={(url) => {
