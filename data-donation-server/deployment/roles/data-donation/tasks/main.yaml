@@ -1,0 +1,19 @@
+- set_fact:
+    data_donation_secret: "{{ lookup('template', 'data-donation-secret.yaml') }}"
+    data_donation_config: "{{ lookup('template', 'data-donation-config.yaml') }}"
+- name: Switch workspace
+  shell: kubectl config use-context cluster.{{ network_slug }}.bitmark.com
+- name: Add secret
+  shell: echo "{{ data_donation_secret }}" | kubectl apply -f -
+- name: Add config
+  command: kubectl apply -f -
+  args:
+    stdin: '{{ data_donation_config }}'
+- name: Depoloy DB
+  command: kubectl apply -f -
+  args:
+    stdin: "{{ lookup('template', 'data-donation-db.yaml') }}"
+- name: Depoloy data donation
+  shell: kubectl apply -f -
+  args:
+    stdin: "{{ lookup('template', 'data-donation.yaml') }}"

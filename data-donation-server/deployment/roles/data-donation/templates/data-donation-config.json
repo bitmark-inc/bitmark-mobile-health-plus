@@ -1,0 +1,33 @@
+{
+  "app_info_file_path": "/home/datadonation/bitmark/app-info.json",
+  "save_folder": "/home/datadonation/bitmark/save",
+  "log": {
+    "logFolder": "/home/datadonation/bitmark/logs",
+    "name": "bitmark-data-donation.log",
+    "level": "debug",
+    "maxFiles": 100,
+    "maxSize": 1048576,
+    "console": true
+  },
+  "port": 9001,
+  "ip": "",
+  "database": {
+    "user": "bitmark_data_donation",
+    "password": "{{ secure_config.data_donation.db_password }}",
+    "host": "data-donation-db.default.svc.cluster.local",
+    "port": 5432,
+    "database": "bitmark"
+  },
+  "server_url": "{{ data_donation.domain_name }}",
+  "notification_server_url": "{{ data_donation.notification_server }}",
+  "api_server_url": "{{ data_donation.core_api_server }}",
+  "studies": {
+    "study1": {
+      "researcher_account": "{{ data_donation.researcher_account_1 }}"
+    },
+    "study2": {
+      "researcher_account": "{{ data_donation.researcher_account_2 }}"
+    }
+  },
+  "network": "{{ bitmark_network }}"
+}
