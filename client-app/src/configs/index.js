@@ -34,8 +34,7 @@ let config = {
 
 if (config.network === NETWORKS.testnet) {
   config.trade_server_url = 'https://trade.test.bitmark.com';
-  // config.donation_server_url = 'https://data-donation.test.bitmark.com';
-  config.donation_server_url = 'http://192.168.0.202:9001';
+  config.donation_server_url = 'https://data-donation.test.bitmark.com';
   config.mobile_server_url = 'https://bm.test.bitmark.com';
   config.ifttt_server_url = 'https://when.test.bitmark.com:8090';
   config.ifttt_invite_url = 'https://ifttt.com/features/redeem?code=10518-3f2950b543e7a5a2dc307de0c05775e4';
