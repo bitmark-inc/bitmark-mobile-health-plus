@@ -113,7 +113,7 @@ export class Study2EntryInterviewComponent extends React.Component {
                   </Text>
                   <TextInput style={styles.emailInput}
                     placeholder="Email"
-                    placeholderTextColor="#0060F2"
+                    placeholderTextColor="#C1C1C1"
                     autoCapitalize="none"
                     keyboardType="email-address"
                     onChangeText={(email) => this.setState({ email, emailError: '' })}
