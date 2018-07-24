@@ -806,7 +806,7 @@ const doGenerateTransactionActionRequiredData = async () => {
   actionRequired = actionRequired ? actionRequired.sort((a, b) => {
     if (a.important) { return -1; }
     if (b.important) { return 1; }
-    if (!a.timestamp) return 1;
+    if (!a.timestamp) return -1;
     if (!b.timestamp) return 1;
     return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
   }) : actionRequired;
@@ -908,7 +908,7 @@ const doGenerateTransactionHistoryData = async () => {
   }
   completed = completed ? completed.sort((a, b) => {
     if (!a || !a.timestamp) return -1;
-    if (!b || !b.timestamp) return -1;
+    if (!b || !b.timestamp) return 1;
     return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
   }) : completed;
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY, completed);
