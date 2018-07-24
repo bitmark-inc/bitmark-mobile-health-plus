@@ -12,6 +12,29 @@ router = require('./routes')(router);
 // ============================================================================================================================
 // ============================================================================================================================
 // ============================================================================================================================
+
+router.get('/api/health', async (req, res) => {
+  const database = global.server.database;
+  const config = global.server.config;
+  try {
+    let query = database.squel.select().from('pg_catalog.pg_user')
+      .where('usename = ?', config.database.user)
+      .toParam();
+    let returnedData = await database.executeQuery(query);
+    if (returnedData && returnedData.rows && returnedData.rows.length > 0) {
+      res.status(200);
+      res.send({ ok: true });
+    } else {
+      res.status(500);
+      res.send({ ok: false });
+    }
+  } catch (error) {
+    console.log('error :', error);
+    res.status(500);
+    res.send({ ok: false });
+  }
+});
+
 router.use('/status', (req, res) => {
   logger.info('get status api: ');
   res.send({ status: 'OK' });
