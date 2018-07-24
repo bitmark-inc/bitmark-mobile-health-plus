@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx"
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
@@ -14,6 +15,9 @@ import (
 type Server struct {
 	router *gin.Engine
 	server *http.Server
+
+	// DB instance
+	dbConn *pgx.ConnPool
 
 	// Stores
 	pushStore    pushstore.PushStore
@@ -47,6 +51,8 @@ func (s *Server) Run(addr string) error {
 		notifications.GET("", s.NotificationList)
 	}
 
+	api.GET("/healthz", s.HealthCheck)
+
 	srv := &http.Server{
 		Addr:    addr,
 		Handler: s.router,
@@ -61,12 +67,35 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore) *Server {
+func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool) *Server {
 	r := gin.New()
 
 	return &Server{
 		router:       r,
 		pushStore:    pushStore,
 		bitmarkStore: bitmarkStore,
+		dbConn:       dbConn,
 	}
+}
+
+func (s *Server) HealthCheck(c *gin.Context) {
+	conn, err := s.dbConn.Acquire()
+	if err != nil {
+		c.AbortWithStatusJSON(500, gin.H{
+			"error": "Failed to connect to db.",
+		})
+		return
+	}
+	defer conn.Close()
+
+	if err = conn.Ping(c); err != nil {
+		c.AbortWithStatusJSON(500, gin.H{
+			"error": "Failed to connect to db.",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"status": "ok",
+	})
 }

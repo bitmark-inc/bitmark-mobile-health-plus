@@ -117,7 +117,7 @@ func main() {
 
 	nc := initializeWatcher(conf, pushStore, bitmarkStore, pushClient, gatewayClient)
 
-	mobileAPIServer := server.New(pushStore, bitmarkStore)
+	mobileAPIServer := server.New(pushStore, bitmarkStore, dbConn)
 	internalAPIServer := internalapi.New(pushStore, bitmarkStore, pushClient)
 
 	c := make(chan os.Signal, 2)
