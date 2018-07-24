@@ -52,6 +52,16 @@
   revision = "ef8a98b0bbce4a65b5aa4c368430a80ddc533168"
 
 [[projects]]
+  name = "github.com/influxdata/influxdb"
+  packages = [
+    "client/v2",
+    "models",
+    "pkg/escape"
+  ]
+  revision = "62ab18a0f43ee342b84debaaae5486b8b2d8682c"
+  version = "v1.6.0"
+
+[[projects]]
   name = "github.com/jackc/pgx"
   packages = [
     ".",
@@ -175,6 +185,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "05298c019cbd0e07048d8f4f06c5d758b4774038935515d5cb3db194a10fc9e5"
+  inputs-digest = "93d135243e1d526d8b6e708fcd4bb0cf1a8a74d7e65dc41013af5d832405286a"
   solver-name = "gps-cdcl"
   solver-version = 1
