@@ -93,7 +93,7 @@ func (s *Server) HealthCheck(c *gin.Context) {
 		})
 		return
 	}
-	defer conn.Close()
+	defer s.dbConn.Release(conn)
 
 	ctx, cancel := context.WithTimeout(c, 2*time.Second)
 	defer cancel()
