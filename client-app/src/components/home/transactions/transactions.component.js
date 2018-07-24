@@ -147,6 +147,8 @@ export class TransactionsComponent extends React.Component {
         this.props.screenProps.homeNavigation.navigate('StudyDonation', { study: item.study, list: item.list });
       } else if (item.study && item.study.studyId === 'study1' && item.study.taskIds && item.taskType === item.study.taskIds.exit_survey_2) {
         this.props.screenProps.homeNavigation.navigate('Study1ExitSurvey2', { study: item.study });
+      } else if (item.study && item.study.studyId === 'study2' && item.study.taskIds && item.taskType === item.study.taskIds.entry_study) {
+        this.props.screenProps.homeNavigation.navigate('Study2EntryInterview', { study: item.study });
       } else if (item.study && item.study.taskIds && item.taskType) {
         AppProcessor.doStudyTask(item.study, item.taskType).then(result => {
           if (result) {

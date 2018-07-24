@@ -1,0 +1,310 @@
+bitmark-data-donation (0.59-1) xenial; urgency=medium
+
+  * Sprint 26
+
+ -- bachlx <bachlx@bitmark.com>  TUE, 28 Nov 2017 11:00:00 +0000
+bitmark-data-donation (0.58-1) xenial; urgency=medium
+
+  * fix bug force sign out
+
+ -- bachlx <bachlx@bitmark.com>  FRI, 10 Nov 2017 15:00:00 +0000
+bitmark-data-donation (0.57-1) xenial; urgency=medium
+
+  * add log check result verify token
+
+ -- bachlx <bachlx@bitmark.com>  FRI, 10 Nov 2017 14:00:00 +0000
+bitmark-data-donation (0.56-1) xenial; urgency=medium
+
+  * add log to check bug force sign out in testnet 
+
+ -- bachlx <bachlx@bitmark.com>  FRI, 10 Nov 2017 10:00:00 +0000
+bitmark-data-donation (0.55-1) xenial; urgency=medium
+
+  * add log check invalid token when upload in livenet
+
+ -- Jim Yeh <jim@bitmark.com>  Thu, 9 Nov 2017 17:00:00 +0000
+
+bitmark-data-donation (0.54-1) xenial; urgency=medium
+
+  * add log check invalid token when upload in livenet
+ -- bachlx <bachlx@bitmark.com>  TUE, 31 Oct 2017 17:00:00 +0000
+bitmark-data-donation (0.53-1) xenial; urgency=medium
+
+  * Hot fix missing code.
+ -- bachlx <bachlx@bitmark.com>  TUE, 31 Oct 2017 08:30:00 +0000
+bitmark-data-donation (0.52-1) xenial; urgency=medium
+
+  * Update data types
+ -- bachlx <bachlx@bitmark.com>  FRI, 27 Oct 2017 12:00:00 +0000
+bitmark-data-donation (0.51-1) xenial; urgency=medium
+
+  * Hot fix donation function
+ -- bachlx <bachlx@bitmark.com>  FRI, 27 Oct 2017 12:00:00 +0000
+bitmark-data-donation (0.50-1) xenial; urgency=medium
+
+  * Change name of data type and comment data type make crash app
+ -- bachlx <bachlx@bitmark.com>  THU, 26 Oct 2017 18:00:00 +0000
+bitmark-data-donation (0.50-1) xenial; urgency=medium
+
+  * Change name of data type
+ -- bachlx <bachlx@bitmark.com>  THU, 26 Oct 2017 16:00:00 +0000
+bitmark-data-donation (0.49-1) xenial; urgency=medium
+
+  * sprint 24
+ -- bachlx <bachlx@bitmark.com>  THU, 26 Oct 2017 14:00:00 +0000
+bitmark-data-donation (0.48-1) xenial; urgency=medium
+
+  * add function for tester to change time for testing
+ -- bachlx <bachlx@bitmark.com>  MON, 23 Oct 2017 14:00:00 +0000
+bitmark-data-donation (0.47-1) xenial; urgency=medium
+
+  * add function for tester to change time for testing
+ -- bachlx <bachlx@bitmark.com>  MON, 23 Oct 2017 14:00:00 +0000
+bitmark-data-donation (0.46-1) xenial; urgency=medium
+
+  * fix send notification for victor study
+ -- bachlx <bachlx@bitmark.com>  FRI, 20 Oct 2017 14:00:00 +0000
+bitmark-data-donation (0.45-1) xenial; urgency=medium
+
+  * fix update timezone
+ -- bachlx <bachlx@bitmark.com>  FRI, 20 Oct 2017 10:00:00 +0000
+bitmark-data-donation (0.44-1) xenial; urgency=medium
+
+  * fix notification time
+ -- bachlx <bachlx@bitmark.com>  THU, 19 Oct 2017 17:00:00 +0000
+bitmark-data-donation (0.43-1) xenial; urgency=medium
+
+  * fix notification bitmark health data
+ -- bachlx <bachlx@bitmark.com>  TUE, 17 Oct 2017 17:30:00 +0000
+bitmark-data-donation (0.42-1) xenial; urgency=medium
+
+  * sprint 23
+ -- bachlx <bachlx@bitmark.com>  TUE, 17 Oct 2017 12:30:00 +0000
+bitmark-data-donation (0.41-1) xenial; urgency=medium
+
+  * update study consent 
+ -- bachlx <bachlx@bitmark.com>  FRI, 6 Oct 2017 09:30:00 +0000
+bitmark-data-donation (0.40-1) xenial; urgency=medium
+
+  * update notification donation study2
+ -- bachlx <bachlx@bitmark.com>  FRI, 6 Oct 2017 09:30:00 +0000
+bitmark-data-donation (0.39-1) xenial; urgency=medium
+
+  * update notification donation base on joined time
+ -- bachlx <bachlx@bitmark.com>  WED, 4 Oct 2017 17:30:00 +0000
+bitmark-data-donation (0.38-1) xenial; urgency=medium
+
+  * update notification task3
+ -- bachlx <bachlx@bitmark.com>  WED, 4 Oct 2017 17:30:00 +0000
+bitmark-data-donation (0.37-1) xenial; urgency=medium
+
+  * update notification message
+ -- bachlx <bachlx@bitmark.com>  WED, 4 Oct 2017 08:30:00 +0000
+bitmark-data-donation (0.36-1) xenial; urgency=medium
+
+  * update notification target screen
+ -- bachlx <bachlx@bitmark.com>  WED, 4 Oct 2017 08:30:00 +0000
+bitmark-data-donation (0.35-1) xenial; urgency=medium
+
+  * update notification target screen
+ -- bachlx <bachlx@bitmark.com>  TUE, 3 Oct 2017 17:00:00 +0000
+bitmark-data-donation (0.34-1) xenial; urgency=medium
+
+  * update notification fo study2
+ -- bachlx <bachlx@bitmark.com>  MON, 2 Oct 2017 17:00:00 +0000
+bitmark-data-donation (0.33-1) xenial; urgency=medium
+
+  * Fix bug calculation task for study2, fix order for list studies.
+ -- bachlx <bachlx@bitmark.com>  MON, 2 Oct 2017 10:30:00 +0000
+bitmark-data-donation (0.32-1) xenial; urgency=medium
+
+  * hot fix and add api to stop progress in background
+ -- bachlx <bachlx@bitmark.com>  MON, 2 Oct 2017 10:30:00 +0000
+bitmark-data-donation (0.31-1) xenial; urgency=medium
+
+  * hot fix bug for reverting wrong file.
+ -- bachlx <bachlx@bitmark.com>  MON, 2 Oct 2017 10:00:00 +0000
+bitmark-data-donation (0.30-1) xenial; urgency=medium
+
+  * Add file missing
+ -- bachlx <bachlx@bitmark.com>  FRI, 29 Sep 2017 17:00:00 +0000
+bitmark-data-donation (0.29-1) xenial; urgency=medium
+
+  * Hot fix send notification after transferred
+ -- bachlx <bachlx@bitmark.com>  FRI, 29 Sep 2017 12:00:00 +0000
+bitmark-data-donation (0.28-1) xenial; urgency=medium
+
+  * Sprint 22
+ -- bachlx <bachlx@bitmark.com>  FRI, 29 Sep 2017 12:00:00 +0000
+ bitmark-data-donation (0.27-1) xenial; urgency=medium
+
+  * Update check time send notification for study2
+ -- bachlx <bachlx@bitmark.com>  MON, 25 Sep 2017 09:00:00 +0000
+bitmark-data-donation (0.26-1) xenial; urgency=medium
+
+  * Update check time send notification
+ -- bachlx <bachlx@bitmark.com>  WED, 20 Sep 2017 08:30:00 +0000
+bitmark-data-donation (0.25-1) xenial; urgency=medium
+
+  * Update notification for donation task
+ -- bachlx <bachlx@bitmark.com>  TUE, 19 Sep 2017 12:50:00 +0000
+bitmark-data-donation (0.24-1) xenial; urgency=medium
+
+  * update notification in special case
+ -- bachlx <bachlx@bitmark.com>  TUE, 19 Sep 2017 8:40:52 +0000
+bitmark-data-donation (0.23-1) xenial; urgency=medium
+
+  * update script update sql
+ -- bachlx <bachlx@bitmark.com>  MON, 18 Sep 2017 17:40:52 +0000
+bitmark-data-donation (0.22-1) xenial; urgency=medium
+
+  * update for sprint 21
+ -- bachlx <bachlx@bitmark.com>  MON, 18 Sep 2017 17:40:52 +0000
+bitmark-data-donation (0.21-1) xenial; urgency=medium
+
+  * revert interval check donation for testnet
+ -- bachlx <bachlx@bitmark.com>  SAT, 15 Sep 2017 05:40:52 +0000
+bitmark-data-donation (0.20-1) xenial; urgency=medium
+
+  * hard config interval check donation for testnet
+ -- bachlx <bachlx@bitmark.com>  SAT, 15 Sep 2017 05:40:52 +0000
+bitmark-data-donation (0.19-1) xenial; urgency=medium
+
+  * Update notification donate success for victory
+ -- bachlx <bachlx@bitmark.com>  FRI, 15 Sep 2017 16:40:52 +0000
+bitmark-data-donation (0.18-1) xenial; urgency=medium
+
+  * Update notification production true
+ -- bachlx <bachlx@bitmark.com>  FRI, 15 Sep 2017 16:40:52 +0000
+bitmark-data-donation (0.17-1) xenial; urgency=medium
+
+  * Update first donation for version 1.1
+ -- bachlx <bachlx@bitmark.com>  FRI, 15 Sep 2017 11:30:52 +0000
+bitmark-data-donation (0.16-1) xenial; urgency=medium
+
+  * change code to send notification donation for testnet
+ -- bachlx <bachlx@bitmark.com>  Mon, 11 Sep 2017 11:30:52 +0000
+bitmark-data-donation (0.15-1) xenial; urgency=medium
+
+  * Update config for topic when sen notification in testnet
+ -- bachlx <bachlx@bitmark.com>  Wed, 06 Sep 2017 08:30:52 +0000
+bitmark-data-donation (0.14-1) xenial; urgency=medium
+
+  * Update last time donated if it greater current value
+ -- bachlx <bachlx@bitmark.com>  Wed, 06 Sep 2017 08:30:52 +0000
+bitmark-data-donation (0.13-1) xenial; urgency=medium
+
+  * Update last time donated
+ -- bachlx <bachlx@bitmark.com>  Wed, 06 Sep 2017 08:30:52 +0000
+bitmark-data-donation (0.12-1) xenial; urgency=medium
+
+  * Update queue transfer
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 17:30:52 +0000
+bitmark-data-donation (0.11-1) xenial; urgency=medium
+
+  * Update the checking token for issuance many property
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 13:30:52 +0000
+bitmark-data-donation (0.10-1) xenial; urgency=medium
+
+  * Update change log
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 13:30:52 +0000
+bitmark-data-donation (0.9-7) xenial; urgency=medium
+
+  * Hot fix issue 
+
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 13:30:52 +0000
+bitmark-data-donation (0.9-6) xenial; urgency=medium
+
+  * Update logger for check signature
+
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 12:30:52 +0000
+bitmark-data-donation (0.9-5) xenial; urgency=medium
+
+  * Update log for check invalid signature
+
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 11:30:52 +0000
+bitmark-data-donation (0.9-4) xenial; urgency=medium
+
+  * Update log for check invalid signature
+
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 11:30:52 +0000
+bitmark-data-donation (0.9-3) xenial; urgency=medium
+
+  * Fix change for livenet
+
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 11:03:52 +0000
+bitmark-data-donation (0.9-2) xenial; urgency=medium
+
+  * Fix bug overwrite donated time when issue surveys data.
+
+ -- bachlx <bachlx@bitmark.com>  Tue, 05 Sep 2017 10:13:52 +0000
+bitmark-data-donation (0.9-1) xenial; urgency=medium
+
+  * Sprint 20
+
+ -- Jim <jim@bitmark.com>  Mon, 04 Sep 2017 18:13:52 +0000
+
+bitmark-data-donation (0.8-1) xenial; urgency=medium
+
+  * Update case error when can not connect data base
+
+ -- Bin Le <bachlx@bitmark.com>  Thu, 17 Aug 2017 13:00:00 +0000
+bitmark-data-donation (0.7-1) xenial; urgency=medium
+
+  * update build script for push notification
+
+ -- Bin Le <bachlx@bitmark.com>  Thu, 17 Aug 2017 11:00:00 +0000
+bitmark-data-donation (0.6-1) xenial; urgency=medium
+
+  * Update server for app version 1.0
+
+ -- Bin Le <bachlx@bitmark.com>  Wed, 16 Aug 2017 12:00:00 +0000
+bitmark-data-donation (0.5-1) xenial; urgency=medium
+
+  * update log and surveys
+
+ -- Bin Le <bachlx@bitmark.com>  Thu, 10 Aug 2017 17:00:00 +0000
+bitmark-data-donation (0.4-1) xenial; urgency=medium
+
+  * update signature and cert path for notification in iOS.
+
+ -- Bin Le <bachlx@bitmark.com>  Wed, 09 Aug 2017 17:00:00 +0000
+bitmark-data-donation (0.3-1) xenial; urgency=medium
+
+  * update build command in package.json
+
+ -- Bin Le <bachlx@bitmark.com>  Wed, 09 Aug 2017 15:00:00 +0000
+bitmark-data-donation (0.2-1) xenial; urgency=medium
+
+  * package.json updates require a program version change
+    since they are not pare of debian directory
+
+ -- Christopher Hall <hsw@bitmark.com>  Wed, 09 Aug 2017 04:24:30 +0000
+bitmark-data-donation (0.1-4) xenial; urgency=medium
+
+  * update build command in package.json
+
+ -- Bin Le <bachlx@bitmark.com>  Wed, 09 Aug 2017 10:00:00 +0000
+bitmark-data-donation (0.1-4) xenial; urgency=medium
+
+  * node_modules was not installed
+
+ -- Christopher Hall <hsw@bitmark.com>  Wed, 09 Aug 2017 01:48:43 +0000
+
+bitmark-data-donation (0.1-3) xenial; urgency=medium
+
+  * fix missing '\' in rules
+
+ -- Christopher Hall <hsw@bitmark.com>  Tue, 08 Aug 2017 06:41:25 +0000
+
+bitmark-data-donation (0.1-2) xenial; urgency=medium
+
+  * fix the share installation section of rules
+
+ -- Christopher Hall <hsw@bitmark.com>  Tue, 08 Aug 2017 06:08:15 +0000
+
+bitmark-data-donation (0.1-1) xenial; urgency=medium
+
+  * Initial release
+
+ -- Christopher Hall <hsw@bitmark.com>  Tue, 08 Aug 2017 03:27:00 +0000

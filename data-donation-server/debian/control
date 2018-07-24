@@ -1,0 +1,21 @@
+Source: bitmark-data-donation
+Section: non-free/net
+Priority: optional
+Maintainer: Bitmark Developers <developers@bitmark.com>
+Uploaders: Bitmark Developers <developers@bitmark.com>
+Build-Depends: debhelper (>=9),
+               dh-systemd,
+               autoconf, automake, libtool, pkgconf,
+               nodejs (>=7.0)
+Standards-Version: 3.9.6
+Homepage: https://bitmark.com
+Vcs-Git: git@github.com:bitmark-inc/bitmark.git
+#Vcs-Browser: http://anonscm.debian.org/cgit/server-control/server-control.git
+
+Package: bitmark-data-donation
+Architecture: linux-any
+Depends: ${misc:Depends}, ${shlibs:Depends},
+         nodejs (>=7.0)
+Recommends:
+Description: Bitmark Facebook Bot Server
+ This is a proprietary server for the Bitmark Client GUI
