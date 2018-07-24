@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper'
 import {
-  View, Text, TouchableOpacity, ScrollView, TextInput,
+  View, Text, TouchableOpacity, ScrollView, TextInput, Image,
 } from 'react-native';
 
 import defaultStyle from '../../../../../../commons/styles';
@@ -97,7 +97,9 @@ export class Study2EntryInterviewComponent extends React.Component {
             backgroundColor={'white'}
             ref={(ref) => this.fullRef = ref}
             header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
-              <TouchableOpacity style={defaultStyle.headerLeft} />
+              <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.swiper.scrollBy(-1)} >
+                <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../../assets/imgs/header_blue_icon.png')} />
+              </TouchableOpacity>
               <Text style={defaultStyle.headerTitle}>Step 2 of 2</Text>
               <TouchableOpacity style={defaultStyle.headerRight} onPress={() => { this.props.navigation.goBack() }}>
                 <Text style={defaultStyle.headerRightText}>Cancel</Text>
