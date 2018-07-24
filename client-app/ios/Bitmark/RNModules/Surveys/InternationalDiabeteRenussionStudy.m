@@ -183,7 +183,7 @@ RCT_EXPORT_METHOD(showIntakeSurvey:(RCTResponseSenderBlock)callback) {
   step1QuestionStep.optional = NO;
   
   ORKAnswerFormat *step2AnswerFormat = [[ORKDateAnswerFormat alloc] initWithStyle:ORKDateAnswerStyleDate
-                                                                      defaultDate:nil
+                                                                      defaultDate:[[NSDate date] dateForNumberOfYearsAgo:18]
                                                                       minimumDate:nil
                                                                       maximumDate:[[NSDate date] dateForNumberOfYearsAgo:18]
                                                                          calendar:nil];
