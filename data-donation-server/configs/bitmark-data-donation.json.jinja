@@ -1,0 +1,33 @@
+{
+  "app_info_file_path": "/var/lib/bitmark-data-donation/application/info.json",
+  "save_folder": "/var/lib/bitmark-data-donation/save",
+  "log": {
+    "logFolder": "/var/lib/bitmark-data-donation/logs",
+    "name": "bitmark-data-donation.log",
+    "level": "debug",
+    "maxFiles": 100,
+    "maxSize": 1048576,
+    "console": true
+  },
+  "port": 9001,
+  "ip": "127.0.0.1",
+  "database": {
+    "user": "bitmark_data_donation",
+    "password": "{{ secure_config.postgresql.datadonation.password }}",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "database": "bitmark"
+  },
+  "server_url": "{{ donation_server_url }}",
+  "notification_server_url": "{{ notification_server_url }}",
+  "api_server_url":"{{api_server_url}}",
+
+{% if check_touch_id_time %}
+  "check_touch_id_time": {{ check_touch_id_time }},
+{% endif %}
+{% if check_donation_time %}
+  "check_donation_time": {{ check_donation_time }},
+{% endif %}
+  "network": "{{ bitmark_network }}"
+}
+

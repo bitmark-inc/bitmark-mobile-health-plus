@@ -21,6 +21,7 @@ import {
   HealthDataSourceComponent,
   HealthDataBitmarkComponent,
   Study1ExitSurvey2Component,
+  Study2EntryInterviewComponent,
 } from './donation';
 
 
@@ -31,7 +32,7 @@ let HomeComponent = StackNavigator({
   LocalPropertyDetail: { screen: LocalPropertyDetailComponent, },
   LocalPropertyTransfer: { screen: LocalPropertyTransferComponent, },
   LocalIssueFile: { screen: LocalIssueFileComponent, },
-  AssetTypeHelp: { screen: AssetTypeHelpComponent},
+  AssetTypeHelp: { screen: AssetTypeHelpComponent },
   LocalIssueFileEditLabel: { screen: LocalIssueFileEditLabelComponent, },
 
   TransactionDetail: { screen: TransactionDetailComponent, },
@@ -43,6 +44,7 @@ let HomeComponent = StackNavigator({
   StudyConsent: { screen: StudyConsentComponent, },
   HealthDataSource: { screen: HealthDataSourceComponent, },
   Study1ExitSurvey2: { screen: Study1ExitSurvey2Component, },
+  Study2EntryInterview: { screen: Study2EntryInterviewComponent, },
   IftttActive: { screen: IftttActiveComponent, },
 
 }, {

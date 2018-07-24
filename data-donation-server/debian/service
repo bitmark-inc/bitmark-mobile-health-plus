@@ -1,0 +1,31 @@
+[Unit]
+Description=Bitmark internal server: bitmark-data-donation
+After=network.target
+
+[Service]
+Type=simple
+Restart=on-failure
+
+User=bitmark-data-donation
+Group=bitmark-data-donation
+
+PIDFile=/run/bitmark-data-donation.pid
+
+StandardOutput=journal
+StandardError=journal
+
+Environment=BITMARK_CONFIGURATION=/etc/bitmark-data-donation.json
+PassEnvironment=BITMARK_CONFIGURATION
+
+WorkingDirectory=/var/lib/bitmark-data-donation
+
+# run as root
+ExecStartPre=/bin/mkdir -p /run/bitmark-data-donation
+ExecStartPre=/bin/chown bitmark-data-donation:bitmark-data-donation /run/bitmark-data-donation
+
+# run as user
+PermissionsStartOnly=true
+ExecStart=/usr/bin/node index.js
+
+[Install]
+WantedBy=multi-user.target
