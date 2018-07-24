@@ -73,7 +73,7 @@ export class Study2EntryInterviewComponent extends React.Component {
                     <Text style={{ fontWeight: '500' }}>
                       Would you like to share your personal experience with us over an interview?{'\n\n'}
                     </Text>
-                    You will be asked to provide your email address once clicking the“I’m interested” button.{'\n\n'}
+                    You will be asked to provide your email address once clicking the “I’m interested” button.{'\n\n'}
                     If you prefer not to share your email, you can still participate in the study, but we will not be able to contact you for the interview.{'\n\n'}
                     No matter which way you choose, we will treat your data with privacy, confidentiality and encryption.
                   </Text>
@@ -112,7 +112,7 @@ export class Study2EntryInterviewComponent extends React.Component {
                     Please enter the email where we can best reach you.
                   </Text>
                   <TextInput style={styles.emailInput}
-                    placeholder="Email"
+                    placeholder="EMAIL"
                     placeholderTextColor="#C1C1C1"
                     autoCapitalize="none"
                     keyboardType="email-address"
