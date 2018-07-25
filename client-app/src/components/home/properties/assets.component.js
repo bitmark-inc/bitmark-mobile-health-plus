@@ -275,7 +275,7 @@ export class AssetsComponent extends React.Component {
                     <Text style={[assetsStyle.assetCreatedAt, {
                       color: item.created_at ? 'black' : '#999999'
                     }]}>
-                      {item.created_at ? moment(item.created_at).format('YYYY MMM DD HH:MM:SS').toUpperCase() : 'REGISTERING...'}
+                      {item.created_at ? moment(item.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase() : 'REGISTERING...'}
                     </Text>
                     <Text style={[assetsStyle.assetName, { color: item.created_at ? 'black' : '#999999' }]} numberOfLines={1}>{item.name}</Text>
                     <View style={assetsStyle.assetCreatorRow}>

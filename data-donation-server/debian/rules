@@ -1,0 +1,91 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# this is stripped/added as appropriate
+PROGRAM_PREFIX = bitmark-
+PROGRAM_NAME = bitmark-data-donation
+
+# initialise lists
+INSTALL_LIST =
+INSTALL_SUBDIR =
+
+# list of program files and subdirectories to install to var/lib/<program>
+#INSTALL_LIST += README.md
+#INSTALL_LIST += client
+#INSTALL_LIST += server
+INSTALL_LIST += node_modules
+
+# list of subdirectories to install their contents to var/lib/<program>
+# i.e. copy <dir>/* to the destination
+INSTALL_SUBDIR += dist
+
+
+# the source contains these sub directories
+# containing npm cache and the XDG contains bower's cache
+NPM_CACHE = npm_cache
+XDG_CONFIG_HOME = xdg_config
+
+override_dh_auto_build:
+	# currently this is pre-built
+
+
+override_dh_auto_install:
+	echo "DEBUG_src: ${SRC_DIR}/${SRC_NAME}"
+
+	etc_dir="debian/tmp/etc" ; \
+	bin_dir="debian/tmp/bin" ; \
+	share_dir="debian/tmp/share" ; \
+	lib_dir="debian/tmp/lib" ; \
+	mkdir -p "$${etc_dir}" "$${bin_dir}" "$${share_dir}" "$${lib_dir}"; \
+	dst="$${lib_dir}/${PROGRAM_NAME}" ; \
+	mkdir -p "$${dst}" ; \
+	for src in ${INSTALL_LIST} ; \
+	do \
+	  printf '==> installation of: %s  to: %s\n' "$${src}" "$${dst}" ; \
+	  if [ -d "$${src}" ] ; \
+	  then \
+	    cp -pR "$${src}" "$${dst}/" ; \
+	  else \
+	    cp -p "$${src}" "$${dst}/" ; \
+	  fi ; \
+	done ; \
+	for src in ${INSTALL_SUBDIR} ; \
+	do \
+	  printf '==> installation of: %s/*  to: %s\n' "$${src}" "$${dst}" ; \
+	  if [ -d "$${src}" ] ; \
+	  then \
+	    cp -pR "$${src}/." "$${dst}/" ; \
+	  else \
+	    printf 'error: not a directory: %s\n' "$${src}" ; \
+	    exit 1 ; \
+	  fi ; \
+	done ; \
+	share=share ; \
+	dst="$${share_dir}/${PROGRAM_NAME}" ; \
+	mkdir -p "$${dst}" ; \
+	printf '==> installation of: %s/  to: %s\n' "$${share}" "$${dst}" ; \
+	if [ -d "$${share}" ] ; \
+	then \
+	  cp -pR "$${share}/" "$${dst}" ; \
+	else \
+	  printf 'warn: not a directory: %s\n' "$${share}" ; \
+	fi
+
+override_dh_strip:
+	# no stripping
+
+
+override_dh_auto_test:
+
+
+override_dh_installinit:
+	#dh_installinit --name=docker --no-restart-on-upgrade
+
+
+# override_dh_auto_clean:
+# 	dh_auto_clean
+# 	# additional rm here
+
+# default rules
+%:
+	dh $@ --with=systemd

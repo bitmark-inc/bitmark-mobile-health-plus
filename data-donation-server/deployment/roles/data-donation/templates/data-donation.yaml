@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "{{ aws_ssl_arn }}"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+  name: data-donation
+  labels:
+    app: data-donation
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    nodePort: 30092
+    targetPort: 9001
+  selector:
+    app: data-donation
+  type: LoadBalancer
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: data-donation
+  labels:
+    app: data-donation
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: data-donation
+    spec:
+      containers:
+        - name: data-donation
+          image: 083397868157.dkr.ecr.ap-northeast-1.amazonaws.com/data-donation:0.1-7e5eff952
+          env:
+            - name: BITMARK_CONFIGURATION
+              value: /.config/data-donation/data-donation.json
+          ports:
+            - name: data-donation
+              containerPort: 9001
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 9001
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          command:
+            - node
+            - /app/index.js
+          resources:
+            requests:
+              cpu: 0.125
+              memory: 256Mi
+          volumeMounts:
+            - name: data-donation-config
+              mountPath: /.config/data-donation
+      volumes:
+      - name: data-donation-config
+        secret:
+          secretName: data-donation-config
+          items:
+            - key: data-donation.json
+              path: data-donation.json

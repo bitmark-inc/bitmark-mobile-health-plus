@@ -1,0 +1,72 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: data-donation-db-pvc
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: bitmark-db-store
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-donation-db
+  labels:
+    app: data-donation-db
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: data-donation-db
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: data-donation-db
+  labels:
+    app: data-donation-db
+spec:
+  template:
+    metadata:
+      labels:
+        app: data-donation-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:10.3-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: data-donation-keys
+              key: pg_password
+        ports:
+        - name: postgres
+          containerPort: 5432
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/postgresql/data
+          subPath: pgdata
+        resources:
+          requests:
+            cpu: 0.25
+            memory: 256Mi
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command: ["psql", "postgres", "postgres", "-q", "-c", "select 1"]
+          initialDelaySeconds: 5
+          periodSeconds: 2
+          timeoutSeconds: 1
+      volumes:
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: data-donation-db-pvc

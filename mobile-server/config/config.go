@@ -26,6 +26,11 @@ type Configuration struct {
 		DBName   string `hcl:"dbname"`
 		SSLMode  string `hcl:"sslmode"`
 	} `hcl:"db"`
+	Influx struct {
+		Addr     string `hcl:"addr"`
+		Username string `hcl:"username"`
+		Password string `hcl:"password"`
+	} `hcl:"influx"`
 	PushClients map[string]PushServerInfo `hcl:"push-notification"`
 	External    struct {
 		CoreAPIServer string `hcl:"coreAPIServer"`

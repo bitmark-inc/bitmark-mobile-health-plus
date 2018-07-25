@@ -484,7 +484,7 @@ const doGetAssetInfoOfDecentralizedIssuance = (bitmarkAccount, timestamp, signat
   });
 };
 
-const doUpdateStatusForDecentralizedIssuance = (bitmarkAccount, timestamp, signature, token, status) => {
+const doUpdateStatusForDecentralizedIssuance = (bitmarkAccount, timestamp, signature, token, status, bitmark_ids) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = `${config.web_app_server_url}/s/api/mobile/decentralized-issuances`;
@@ -500,6 +500,7 @@ const doUpdateStatusForDecentralizedIssuance = (bitmarkAccount, timestamp, signa
       body: JSON.stringify({
         token,
         status,
+        bitmark_ids
       })
     }).then((response) => {
       statusCode = response.status;

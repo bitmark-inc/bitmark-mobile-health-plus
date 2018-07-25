@@ -1,0 +1,11 @@
+network_slug: test
+bitmark_network: testnet
+aws_ssl_arn: arn:aws:acm:ap-northeast-1:083397868157:certificate/8358a64e-28f8-4f05-ae1d-2da26714268d
+
+data_donation:
+  domain_name: https://data-donation.test.bitmark.com
+  core_api_server: https://api.test.bitmark.com
+  trade_url: https://trade.test.bitmark.com
+  notification_server: http://gorush.default.svc.cluster.local
+  researcher_account_1: eXs95fgZXwxVmMRQTsH4Qysk9joYag6D3VpM2ec2Lon27mVCeq
+  researcher_account_2: fEqJBHUDuBDLqfJt6tKieu2jhR76k6rTuo38ZWCYPciT1KuRwu
