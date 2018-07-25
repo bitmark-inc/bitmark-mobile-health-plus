@@ -80,15 +80,15 @@ export class LocalIssueFileComponent extends React.Component {
   // ==========================================================================================
   onIssueFile() {
     console.log('assetAccessibility :', this.state.assetAccessibility);
-    // TODO
-    CommonModel.doTrackEvent({
-      event_name: 'app_user_done_issuance',
-      account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-    });
+
     AppProcessor.doIssueFile(this.state.filePath, this.state.assetName, this.state.metadataList, parseInt(this.state.quantity), this.state.assetAccessibility === 'public', {
       indicator: true, title: '', message: 'Sending your transaction to the Bitmark network...'
     }).then((data) => {
       if (data) {
+        CommonModel.doTrackEvent({
+          event_name: 'app_user_done_issuance',
+          account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+        });
         // Remove temp asset file
         FileUtil.removeSafe(this.state.filePath);
         Alert.alert('Success!', 'Your property rights have been registered.', [{
