@@ -47,7 +47,7 @@ const doCheckNewIftttInformation = async (iftttInformation, isLoadingAllUserData
       // TODO
       await CommonModel.doTrackEvent({
         event_name: 'app_user_connected_ifttt',
-        account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
       });
     }
 
@@ -359,7 +359,7 @@ const configNotification = () => {
       }
       await CommonModel.doTrackEvent({
         event_name: 'app_user_click_notification',
-        account_number: userInformation.bitmarkAccountNumber,
+        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
       });
       setTimeout(async () => {
         EventEmitterService.emit(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
@@ -466,7 +466,7 @@ const doOpenApp = async () => {
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
     await CommonModel.doTrackEvent({
       event_name: 'app_download',
-      account_number: userInformation.bitmarkAccountNumber,
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
     });
   }
   if (!appInfo.trackEvents || !appInfo.trackEvents.app_download_location) {
@@ -483,7 +483,7 @@ const doOpenApp = async () => {
       await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
       await CommonModel.doTrackEvent({
         event_name: 'app_download_location',
-        account_number: userInformation.bitmarkAccountNumber,
+        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
         position: JSON.stringify(locationDetail.position),
         city: locationDetail.locality,
         country: locationDetail.country,
