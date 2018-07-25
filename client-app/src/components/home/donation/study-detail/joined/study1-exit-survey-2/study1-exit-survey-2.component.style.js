@@ -121,7 +121,7 @@ export default StyleSheet.create({
     borderColor: '#0060F2',
   },
   interestedButtonText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: 'Avenir Black',
     fontSize: 18,
     fontWeight: '900',
     textAlign: 'center',
@@ -139,7 +139,7 @@ export default StyleSheet.create({
     borderColor: '#A4B5CD',
   },
   optOutButtonText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: 'Avenir Black',
     fontSize: 18,
     fontWeight: '900',
     textAlign: 'center',
