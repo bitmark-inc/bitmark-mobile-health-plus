@@ -62,7 +62,6 @@ export class IssuanceOptionsComponent extends React.Component {
   }
 
   onChoosePhotoFile() {
-    // TODO
     CommonModel.doTrackEvent({
       event_name: 'app_user_want_issue_photo',
       account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
@@ -77,9 +76,8 @@ export class IssuanceOptionsComponent extends React.Component {
       if (response.error || response.didCancel) {
         return;
       }
-      // TODO
       CommonModel.doTrackEvent({
-        event_name: 'app_user_choose_photo_for_issuance',
+        event_name: 'app_user_chosen_photo_for_issuance',
         account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
       });
       this.prepareToIssue(response);
@@ -87,7 +85,6 @@ export class IssuanceOptionsComponent extends React.Component {
   }
 
   onChooseFile() {
-    // TODO
     CommonModel.doTrackEvent({
       event_name: 'app_user_want_issue_file',
       account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
@@ -96,10 +93,11 @@ export class IssuanceOptionsComponent extends React.Component {
     DocumentPicker.show({
       filetype: [DocumentPickerUtil.allFiles(), "public.data"],
     }, (error, response) => {
-      if (error) return;
-      // TODO
+      if (error) {
+        return;
+      }
       CommonModel.doTrackEvent({
-        event_name: 'app_user_choose_file_for_issuance',
+        event_name: 'app_user_chosen_file_for_issuance',
         account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
       });
       this.prepareToIssue(response);

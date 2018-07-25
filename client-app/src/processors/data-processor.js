@@ -356,7 +356,6 @@ const configNotification = () => {
       if (!userInformation || !userInformation.bitmarkAccountNumber) {
         userInformation = await UserModel.doGetCurrentUser();
       }
-      // TODO 
       await CommonModel.doTrackEvent({
         event_name: 'app_user_click_notification',
         account_number: userInformation.bitmarkAccountNumber,
@@ -435,7 +434,6 @@ const checkAppNeedResetLocalData = async (appInfo) => {
 
 const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
-  // TODO 
   await CommonModel.doTrackEvent({
     event_name: 'app_open',
     account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
@@ -443,14 +441,12 @@ const doOpenApp = async () => {
 
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
-  console.log('appInfo ', appInfo);
 
-  if (appInfo.trackEvents && appInfo.trackEvents.app_user_requested_notification) {
+  if (appInfo.trackEvents && appInfo.trackEvents.app_user_allow_notification) {
     let result = await NotificationService.doCheckNotificationPermission();
 
     if (result && !result.alert && !result.badge && !result.sound &&
       (!appInfo.trackEvents || !appInfo.trackEvents.app_user_turn_off_notification)) {
-      // // TODO
       appInfo.trackEvents = appInfo.trackEvents || {};
       appInfo.trackEvents.app_user_turn_off_notification = true;
       await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
@@ -462,7 +458,6 @@ const doOpenApp = async () => {
   }
 
   if (!appInfo.trackEvents || !appInfo.trackEvents.app_download) {
-    // TODO add download app event
     let appInfo = await doGetAppInformation();
     appInfo = appInfo || {};
     appInfo.trackEvents = appInfo.trackEvents || {};
@@ -473,7 +468,6 @@ const doOpenApp = async () => {
       account_number: userInformation.bitmarkAccountNumber,
     });
   }
-  appInfo.trackEvents.app_download_location = false;
   if (!appInfo.trackEvents || !appInfo.trackEvents.app_download_location) {
     navigator.geolocation.requestAuthorization();
     navigator.geolocation.getCurrentPosition(async (result) => {
@@ -1069,14 +1063,13 @@ const doDecentralizedTransfer = async (touchFaceIdSession, token, ) => {
 };
 
 const doMarkRequestedNotification = async (result) => {
-  console.log('doMarkRequestedNotification result :', result);
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
   if (result && result.alert && result.badge && result.sound &&
-    (!appInfo.trackEvents || !appInfo.trackEvents.app_user_requested_notification)) {
+    (!appInfo.trackEvents || !appInfo.trackEvents.app_user_allow_notification)) {
     appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents.app_user_requested_notification = true;
+    appInfo.trackEvents.app_user_allow_notification = true;
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 
     userInformation = userInformation || (await UserModel.doTryGetCurrentUser());

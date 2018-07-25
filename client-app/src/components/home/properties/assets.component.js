@@ -139,7 +139,6 @@ export class AssetsComponent extends React.Component {
   }
 
   addProperty() {
-    // TODO
     CommonModel.doTrackEvent({
       event_name: 'app_user_want_issue',
       account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
