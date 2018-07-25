@@ -160,26 +160,34 @@ const doCreateSignatureData = async (touchFaceId) => {
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
-const doTrackEvent = async (data) => {
-  return new Promise((resolve, reject) => {
+const doTrackEvent = async (tags, fields) => {
+  fields = fields || {};
+  fields.hit = 1;
+  return new Promise((resolve) => {
     let statusCode;
-    let bitmarkUrl = config.mobile_server_url + `/api/track-event`;
+    let bitmarkUrl = config.mobile_server_url + `/api/metrics`;
     fetch(bitmarkUrl, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        metrics: [{
+          tags, fields,
+        }]
+      })
     }).then((response) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return reject(new Error(`doTrackEvent error :` + JSON.stringify(data)));
+        console.log('doTrackEvent error :', data);
       }
       resolve(data);
-    }).catch(reject);
+    }).catch((error) => {
+      console.log('doTrackEvent error :', error);
+    });
   });
 };
 // ================================================================================================
