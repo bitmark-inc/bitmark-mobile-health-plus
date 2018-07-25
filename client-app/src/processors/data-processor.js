@@ -14,6 +14,7 @@ import { DonationService } from '../services/donation-service';
 import { FileUtil } from '../utils';
 import { DataCacheProcessor } from './data-cache-processor';
 import { config } from '../configs';
+const helper = require('../utils/helper');
 
 let userInformation = {};
 let isLoadingData = false;
@@ -842,6 +843,7 @@ const ActionTypes = {
   transfer: 'transfer',
   donation: 'donation',
   ifttt: 'ifttt',
+  test_write_down_recovery_phase: 'test_write_down_recovery_phase',
 };
 const doGenerateTransactionActionRequiredData = async () => {
   let actionRequired;
@@ -896,6 +898,19 @@ const doGenerateTransactionActionRequiredData = async () => {
   }) : actionRequired;
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, actionRequired);
+
+  // Add "Write Down Your Recovery Phrase" action required which was created when creating account if any
+  let testRecoveryPhaseActionRequired = await helper.getTestWriteRecoveryPhaseActionRequired();
+  if (testRecoveryPhaseActionRequired) {
+    actionRequired.unshift({
+      key: actionRequired.length,
+      type: ActionTypes.test_write_down_recovery_phase,
+      typeTitle: 'SECURITY ALERT',
+      timestamp: moment(new Date(testRecoveryPhaseActionRequired.timestamp)),
+    });
+
+    totalTasks += 1;
+  }
 
   DataCacheProcessor.setTransactionScreenData({
     totalTasks,
@@ -1080,6 +1095,13 @@ const doMarkRequestedNotification = async (result) => {
     });
   }
 }
+const doRemoveTestRecoveryPhaseActionRequiredIfAny = async () => {
+  let testWriteRecoveryPhaseActionRequired = helper.getTestWriteRecoveryPhaseActionRequired();
+  if (testWriteRecoveryPhaseActionRequired) {
+    await helper.removeTestWriteRecoveryPhaseActionRequired();
+    EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
+  }
+};
 
 const DataProcessor = {
   doOpenApp,
@@ -1130,6 +1152,7 @@ const DataProcessor = {
   doGetTransactionScreenHistories,
 
   doMarkRequestedNotification,
+  doRemoveTestRecoveryPhaseActionRequiredIfAny,
 
   getApplicationVersion,
   getApplicationBuildNumber,

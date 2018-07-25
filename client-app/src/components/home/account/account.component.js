@@ -52,6 +52,11 @@ export class AccountDetailComponent extends React.Component {
       this.setState({ donationInformation, iftttInformation, gettingData: false });
     }
     doGetScreenData();
+
+    if (this.props.screenProps.goToRecoveryPhase) {
+      this.props.navigation.navigate('AccountRecovery', { isSignOut: false });
+      this.props.screenProps.removeGoingToRecoveryPhase();
+    }
   }
 
   componentDidMount() {

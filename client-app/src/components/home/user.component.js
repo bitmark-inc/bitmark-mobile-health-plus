@@ -27,9 +27,11 @@ export class UserComponent extends React.Component {
     this.reloadUserData = this.reloadUserData.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
+    this.refreshComponent = this.refreshComponent.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, null, ComponentName);
     EventEmitterService.remove(EventEmitterService.events.NEED_RELOAD_USER_DATA, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.NEED_REFRESH_USER_COMPONENT_STATE, null, ComponentName);
 
     let subTab;
     let mainTab = MainTabs.properties;
@@ -56,6 +58,14 @@ export class UserComponent extends React.Component {
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
     EventEmitterService.on(EventEmitterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.NEED_REFRESH_USER_COMPONENT_STATE, this.refreshComponent, ComponentName);
+  }
+
+  refreshComponent(newState) {
+    this.setState(newState);
+    if (newState.changeMainTab) {
+      EventEmitterService.emit(EventEmitterService.events.CHANGE_MAIN_TAB, newState.changeMainTab.mainTab);
+    }
   }
 
   reloadUserData() {
@@ -310,6 +320,8 @@ export class UserComponent extends React.Component {
             subTab: this.state.displayedTab.subTab,
             logout: this.logout,
             needReloadData: this.needReloadData,
+            goToRecoveryPhase: this.state.goToRecoveryPhase,
+            removeGoingToRecoveryPhase: () => this.setState({goToRecoveryPhase: false}),
             donReloadData: () => this.needReloadData = false,
           }} />}
         </View>)}

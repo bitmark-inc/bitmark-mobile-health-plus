@@ -17,14 +17,16 @@ const KEYS = {
   USER_DATA_TRANSACTIONS: 'user-data:transactions',
   USER_DATA_TRANSFER_OFFERS: 'user-data:transfer-offers',
 
-  // data can be change 
+  // data can be change
   USER_DATA_TRANSACTIONS_ACTION_REQUIRED: 'user-data:transaction-action-required',
   USER_DATA_TRANSACTIONS_HISTORY: 'user-data:transaction-history',
+
+  TEST_RECOVERY_PHASE_ACTION_REQUIRED: 'test-recovery-phase-action-required'
 };
 
 // ================================================================================================
 // ================================================================================================
-// private 
+// private
 const doRichSignMessage = (messages, sessionId) => {
   return new Promise((resolve) => {
     BitmarkSDK.rickySignMessage(messages, sessionId).then(resolve).catch(() => resolve());
@@ -55,9 +57,19 @@ const doGetLocalData = (localDataKey) => {
       try {
         localData = JSON.parse(data);
       } catch (error) {
-        // 
+        //
       }
       resolve(localData);
+    });
+  });
+};
+const doRemoveLocalData = (localDataKey) => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.removeItem(localDataKey, (error) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve();
     });
   });
 };
@@ -199,6 +211,7 @@ let CommonModel = {
   doCheckPasscodeAndFaceTouchId,
   doSetLocalData,
   doGetLocalData,
+  doRemoveLocalData,
   doStartFaceTouchSessionId,
   doCreateSignatureData,
   doTryCreateSignatureData,

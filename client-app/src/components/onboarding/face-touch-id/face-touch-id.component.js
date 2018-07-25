@@ -66,10 +66,10 @@ export class FaceTouchIdComponent extends React.Component {
         content={(<View style={[faceTouchIdStyle.body]}>
           <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>
             TOUCH/FACE ID & PASSCODE
-            </Text>
+          </Text>
           <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>
-            Touch/Face ID or a passcode is required to authorize your transactions.
-            </Text>
+            Turn on Touch/Face ID or a passcode to sign transactions from this device.
+          </Text>
           <View style={faceTouchIdStyle.passcodeRemindImages}>
             <Image style={[faceTouchIdStyle.touchIdImage]} source={require('../../../../assets/imgs/touch-id.png')} />
             <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />

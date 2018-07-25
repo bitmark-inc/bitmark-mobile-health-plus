@@ -24,12 +24,14 @@ export class BottomTabsComponent extends React.Component {
     this.handerChangeActiveIncomingTransferOffer = this.handerChangeActiveIncomingTransferOffer.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
     this.handerChangeTrackingBitmarks = this.handerChangeTrackingBitmarks.bind(this);
+    this.handleChangeMainTab = this.handleChangeMainTab.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA, null, ComponentName);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_MAIN_TAB, null, ComponentName);
 
 
     this.state = {
@@ -60,6 +62,7 @@ export class BottomTabsComponent extends React.Component {
     EventEmitterService.on(EventEmitterService.events.CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA, this.handerChangeActiveIncomingTransferOffer, ComponentName);
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_TRACKING_BITMARKS, this.handerChangeTrackingBitmarks, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_MAIN_TAB, this.handleChangeMainTab, ComponentName);
   }
 
   handerChangeActiveIncomingTransferOffer() {
@@ -84,6 +87,9 @@ export class BottomTabsComponent extends React.Component {
     }).catch(error => {
       console.log('handerChangeTrackingBitmarks error:', error);
     });
+  }
+  handleChangeMainTab(mainTab) {
+    this.setState({ mainTab });
   }
 
   switchMainTab(mainTab) {

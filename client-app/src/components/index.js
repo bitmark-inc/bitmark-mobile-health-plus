@@ -141,7 +141,7 @@ class MainComponent extends Component {
         RNExitApp.exitApp();
       }
     };
-    setJSExceptionHandler(jsErrorHandler, true);
+    setJSExceptionHandler(jsErrorHandler, false);
 
     // Handle native code error
     setNativeExceptionHandler(async (exceptionString) => {

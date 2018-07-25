@@ -21,189 +21,13 @@ import newAccountStyle from './new-account.component.style';
 import { AppProcessor } from '../../../processors';
 import { iosConstant } from '../../../configs/ios/ios.config';
 import { config } from '../../../configs';
-
-class PropertyPrivateYourDataComponent extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <BitmarkComponent
-        backgroundColor='white'
-        ref={(ref) => this.fullRef = ref}
-        header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
-        contentInScroll={true}
-        content={(
-          <View style={newAccountStyle.swipePage}>
-            <View style={newAccountStyle.introductionArea}>
-              <Text style={[newAccountStyle.introductionTitle,]}>
-                {'Property IS Privacy'.toUpperCase()}
-              </Text>
-              <Text style={[newAccountStyle.introductionDescription,]}>
-                <Text style={[newAccountStyle.introductionDescription,]}>
-                  Bitmark gives you the power of privacy over your digital property. No third parties will have access to your data, including us. You choose who has access to your property.
-                  </Text>
-              </Text>
-              <View style={newAccountStyle.introductionTermPrivacy}
-
-              >
-                <Hyperlink
-                  onPress={(url) => {
-                    if (url === (config.bitmark_web_site + '/privacy')) {
-                      this.props.navigation.navigate('BitmarkWebView', { title: 'Privacy Policy', sourceUrl: config.bitmark_web_site + '/privacy?env=app', isFullScreen: true, });
-                      this.props.screenProps.setShowPagination(false);
-                    } else if (url === (config.bitmark_web_site + '/term')) {
-                      this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl: config.bitmark_web_site + '/term?env=app', isFullScreen: true, });
-                      this.props.screenProps.setShowPagination(false);
-                    }
-
-                  }}
-                  linkStyle={newAccountStyle.bitmarkTermsPrivacyButtonText}
-                  linkText={url => {
-                    if (url === (config.bitmark_web_site + '/term')) {
-                      return 'Terms of Service';
-                    } else if (url === (config.bitmark_web_site + '/privacy')) {
-                      return 'Privacy Policy';
-                    }
-                    return '';
-                  }}>
-                  <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark {config.bitmark_web_site + '/term'} and {config.bitmark_web_site + '/privacy'}</Text>
-                </Hyperlink>
-              </View>
-            </View>
-          </ View>
-        )}
-        footerHeight={45 + iosConstant.blankFooter / 2}
-        footer={(<View style={newAccountStyle.letDoItButtonArea}>
-          <TouchableOpacity style={[newAccountStyle.letDoItButton]} onPress={() => {
-            this.props.screenProps.newAccountNavigation.navigate('FaceTouchId', { doContinue: this.props.screenProps.createBitmarkAccount });
-          }}>
-            <Text style={[newAccountStyle.letDoItButtonText]}>LET’S DO IT!</Text>
-          </TouchableOpacity>
-        </View>
-        )}
-      />
-    );
-  }
-}
-PropertyPrivateYourDataComponent.propTypes = {
-  screenProps: PropTypes.shape({
-    newAccountNavigation: PropTypes.shape({
-      navigate: PropTypes.func,
-    }),
-    createBitmarkAccount: PropTypes.func,
-    setShowPagination: PropTypes.func,
-  }),
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        justCreatedBitmarkAccount: PropTypes.bool,
-      })
-    })
-  })
-};
-
-let FullPropertyPrivateYourDataComponent = StackNavigator({
-  DonateYourData: { screen: PropertyPrivateYourDataComponent, },
-  BitmarkWebView: { screen: BitmarkWebViewComponent, },
-}, {
-    headerMode: 'none',
-    mode: 'modal',
-    navigationOptions: {
-      gesturesEnabled: false,
-    },
-    cardStyle: {
-      shadowOpacity: 0,
-    }
-  }
-);
-
-
-class BuildDigitalAssetComponent extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  UNSAFE_componentWillReceiveProps(nexProps) {
-    if (nexProps.screenProps && nexProps.screenProps.index === 2 && this.player2) {
-      this.player2.seek(0);
-    }
-  }
-  render() {
-    return (
-      <BitmarkComponent
-        backgroundColor='white'
-        ref={(ref) => this.fullRef = ref}
-        header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
-        contentInScroll={true}
-        content={(
-          <View style={newAccountStyle.swipePage}>
-            <View style={newAccountStyle.introductionArea}>
-              <Text style={[newAccountStyle.introductionTitle]}>
-                {'BUILD A DIGITAL ESTATE'.toUpperCase()}
-              </Text>
-              <Text style={[newAccountStyle.introductionDescription,]}>You can bitmark any type of data to build your digital estate: photos, music, videos, location data, documents, etc. If it’s digital, it can be bitmarked.</Text>
-              <TouchableOpacity onPress={() => {
-                this.props.screenProps.setShowPagination(false);
-                this.props.navigation.navigate('BitmarkWebView', { title: 'Bitmark', sourceUrl: config.bitmark_web_site + '?env=app', isFullScreen: true, })
-              }}
-                style={newAccountStyle.introductionLinkButton}
-              >
-                <Text style={[newAccountStyle.introductionLink]}>LEARN MORE AT BITMARK.COM »</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={newAccountStyle.introductionImageArea}>
-              <Video
-                ref={(ref) => { this.player2 = ref }}
-                rate={this.props.screenProps.index === 2 ? 1 : 0}
-                source={require('./../../../../assets/videos/Digital-Estate.mp4')}
-                resizeMode="contain"
-                style={newAccountStyle.introductionImage}
-                muted={true}
-              />
-            </View>
-          </View>
-        )}
-      />
-    );
-  }
-}
-
-BuildDigitalAssetComponent.propTypes = {
-  screenProps: PropTypes.shape({
-    setShowPagination: PropTypes.func,
-    index: PropTypes.number,
-  }),
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        justCreatedBitmarkAccount: PropTypes.bool,
-      })
-    })
-  })
-};
-
-let FullBuildDigitalAssetComponent = StackNavigator({
-  BuildDigitalAsset: { screen: BuildDigitalAssetComponent, },
-  BitmarkWebView: { screen: BitmarkWebViewComponent, },
-}, {
-    headerMode: 'none',
-    mode: 'modal',
-    navigationOptions: {
-      gesturesEnabled: false,
-    },
-    cardStyle: {
-      shadowOpacity: 0,
-    }
-  }
-);
+const helper = require('../../../utils/helper');
 
 export class NewAccountComponent extends React.Component {
   constructor(props) {
     super(props);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
+    this.createNewAccount = this.createNewAccount.bind(this);
     this.state = {
       showPagination: true,
       scrollEnabled: true,
@@ -228,6 +52,13 @@ export class NewAccountComponent extends React.Component {
     }
   }
 
+  async createNewAccount() {
+    let user = await AppProcessor.doCreateNewAccount();
+    await helper.addTestWriteRecoveryPhaseActionRequired(user);
+
+    return user;
+  }
+
   render() {
     return (
       <View style={newAccountStyle.body}>
@@ -247,12 +78,11 @@ export class NewAccountComponent extends React.Component {
                 this['player' + index].seek(0);
               }
             }}
-            // width={'100%'}
-            // height={'100%'}
             dot={
               <View style={newAccountStyle.swipeDotButton} />
             }>
 
+            {/*REGISTER ASSETS*/}
             <BitmarkComponent
               backgroundColor='white'
               ref={(ref) => this.fullRef = ref}
@@ -268,25 +98,20 @@ export class NewAccountComponent extends React.Component {
               content={(
                 <View style={newAccountStyle.swipePage}>
                   <View style={newAccountStyle.introductionArea}>
-                    <Text style={[newAccountStyle.introductionTitle]}>OWN YOUR DATA</Text>
-                    <Text style={[newAccountStyle.introductionDescription,]}>
-                      Your personal data is a valuable asset. Bitmark is a set of tools that allows you to record property rights for your digital assets and to later transfer those property rights.
+                    <Text style={[newAccountStyle.introductionTitle]}>REGISTER ASSETS</Text>
+                    <Text style={[newAccountStyle.introductionDescription]}>
+                      Register your assets and protect your property rights using the + button.
                     </Text>
                   </View>
+
                   <View style={newAccountStyle.introductionImageArea}>
-                    <Video
-                      ref={(ref) => { this.player0 = ref }}
-                      rate={this.state.index === 0 ? 1 : 0}
-                      source={require('./../../../../assets/videos/Own-Your-Data.mp4')}
-                      resizeMode="contain"
-                      style={newAccountStyle.introductionImage}
-                      muted={true}
-                    />
+                    <Image style={newAccountStyle.onBoardingImage} source={require('../../../../assets/imgs/register-assets.png')} />
                   </View>
                 </View>
               )}
             />
 
+            {/*MANAGE YOUR PROPERTY*/}
             <BitmarkComponent
               backgroundColor='white'
               ref={(ref) => this.fullRef = ref}
@@ -295,40 +120,67 @@ export class NewAccountComponent extends React.Component {
               content={(
                 <View style={newAccountStyle.swipePage}>
                   <View style={newAccountStyle.introductionArea}>
-                    <Text style={[newAccountStyle.introductionTitle]}>{'REGISTER PROPERTY RIGHTS'.toUpperCase()}</Text>
-                    <Text style={[newAccountStyle.introductionDescription,]}>
-                      Property rights are registered through a process known as “bitmarking“. The Bitmark blockchain records these rights and their availability (or lack thereof).
-                  </Text>
+                    <Text style={[newAccountStyle.introductionTitle]}>MANAGE YOUR PROPERTY</Text>
+                    <Text style={[newAccountStyle.introductionDescription]}>
+                      Use the settings button to track, send, and download assets for your bitmarks.
+                    </Text>
                   </View>
+
                   <View style={newAccountStyle.introductionImageArea}>
-                    <Video
-                      ref={(ref) => { this.player1 = ref }}
-                      rate={this.state.index === 1 ? 1 : 0}
-                      source={require('./../../../../assets/videos/Verify-Ownership-2.mp4')}
-                      resizeMode="contain"
-                      style={newAccountStyle.introductionImage}
-                      muted={true}
-                    />
+                    <Image style={newAccountStyle.onBoardingImage} source={require('../../../../assets/imgs/manage-your-property.png')} />
                   </View>
                 </View>
               )}
             />
 
-            <FullBuildDigitalAssetComponent ref={(ref) => { this.player2 = ref }}
-              screenProps={{
-                index: this.state.index,
-                setShowPagination: (show) => {
-                  this.setState({
-                    showPagination: show,
-                    scrollEnabled: show,
-                  })
-                },
-                isFullScreen: true
-              }}
+            {/*DONATE HEALTH DATA*/}
+            <BitmarkComponent
+              backgroundColor='white'
+              ref={(ref) => this.fullRef = ref}
+              header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
+              contentInScroll={true}
+              content={(
+                <View style={newAccountStyle.swipePage}>
+                  <View style={newAccountStyle.introductionArea}>
+                    <Text style={[newAccountStyle.introductionTitle]}>DONATE HEALTH DATA</Text>
+                    <Text style={[newAccountStyle.introductionDescription]}>
+                      Browse data donation studies and begin donating your data in the Donations tab.
+                    </Text>
+                  </View>
+
+                  <View style={newAccountStyle.introductionImageArea}>
+                    <Image style={newAccountStyle.donationOnBoardingImage} source={require('../../../../assets/imgs/donate-health-data.png')} />
+                  </View>
+                </View>
+              )}
             />
-            <FullPropertyPrivateYourDataComponent screenProps={{
+
+            {/*ACTIONS AND HISTORY*/}
+            <BitmarkComponent
+              backgroundColor='white'
+              ref={(ref) => this.fullRef = ref}
+              header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
+              contentInScroll={true}
+              content={(
+                <View style={newAccountStyle.swipePage}>
+                  <View style={newAccountStyle.introductionArea}>
+                    <Text style={[newAccountStyle.introductionTitle]}>ACTIONS AND HISTORY</Text>
+                    <Text style={[newAccountStyle.introductionDescription]}>
+                      Check the Transactions tab for pending actions and activity history.
+                    </Text>
+                  </View>
+
+                  <View style={newAccountStyle.introductionImageArea}>
+                    <Image style={newAccountStyle.donationOnBoardingImage} source={require('../../../../assets/imgs/actions-and-history.png')} />
+                  </View>
+                </View>
+              )}
+            />
+
+            {/*PUBLIC ACCOUNT NUMBER*/}
+            <FullPublicAccountNumberComponent screenProps={{
               newAccountNavigation: this.props.navigation,
-              createBitmarkAccount: AppProcessor.doCreateNewAccount,
+              createBitmarkAccount: this.createNewAccount,
               setShowPagination: (show) => {
                 this.setState({
                   showPagination: show,
@@ -340,8 +192,8 @@ export class NewAccountComponent extends React.Component {
           </Swiper>
 
           {this.state.index === 0 && <View style={[newAccountStyle.skipButtonArea]}>
-            <TouchableOpacity style={[newAccountStyle.skipButton]} onPress={() => { this.swiper.scrollBy(3) }}>
-              <Text style={[newAccountStyle.skipButtonText, { color: '#0060F2', fontSize: 14, fontWeight: '400' }]}>SKIP</Text>
+            <TouchableOpacity style={[newAccountStyle.skipButton]} onPress={() => { this.swiper.scrollBy(4) }}>
+              <Text style={[newAccountStyle.skipButtonText, { color: '#0060F2', fontSize: 14, fontWeight: '900' }]}>SKIP</Text>
             </TouchableOpacity>
           </View>}
         </View>
@@ -364,3 +216,99 @@ NewAccountComponent.propTypes = {
     })
   })
 };
+
+class PublicAccountNumberComponent extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <BitmarkComponent
+        backgroundColor='white'
+        ref={(ref) => this.fullRef = ref}
+        header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}></View>)}
+        contentInScroll={true}
+        content={(
+          <View style={newAccountStyle.swipePage}>
+            <View style={newAccountStyle.introductionArea}>
+              <Text style={[newAccountStyle.introductionTitle,]}>PUBLIC ACCOUNT NUMBER</Text>
+              <Text style={[newAccountStyle.introductionDescription]}>
+                Visit the Account tab to see how your account is recorded on the Bitmark blockchain.
+              </Text>
+            </View>
+
+            <View style={newAccountStyle.introductionImageArea}>
+              <Image style={newAccountStyle.publicAccountNumberOnBoardingImage} source={require('../../../../assets/imgs/public-account-number.png')} />
+            </View>
+
+            <View style={newAccountStyle.introductionTermPrivacy}>
+              <Hyperlink
+                onPress={(url) => {
+                  if (url === (config.bitmark_web_site + '/privacy')) {
+                    this.props.navigation.navigate('BitmarkWebView', { title: 'Privacy Policy', sourceUrl: config.bitmark_web_site + '/privacy?env=app', isFullScreen: true, });
+                    this.props.screenProps.setShowPagination(false);
+                  } else if (url === (config.bitmark_web_site + '/term')) {
+                    this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl: config.bitmark_web_site + '/term?env=app', isFullScreen: true, });
+                    this.props.screenProps.setShowPagination(false);
+                  }
+                }}
+                linkStyle={newAccountStyle.bitmarkTermsPrivacyButtonText}
+                linkText={url => {
+                  if (url === (config.bitmark_web_site + '/term')) {
+                    return 'Terms of Service';
+                  } else if (url === (config.bitmark_web_site + '/privacy')) {
+                    return 'Privacy Policy';
+                  }
+                  return '';
+                }}>
+                <Text style={newAccountStyle.bitmarkTermsPrivacyText}>By continuing, you agree to the Bitmark {config.bitmark_web_site + '/term'} and {config.bitmark_web_site + '/privacy'}</Text>
+              </Hyperlink>
+            </View>
+          </ View>
+        )}
+        footerHeight={45 + iosConstant.blankFooter / 2}
+        footer={(<View style={newAccountStyle.letDoItButtonArea}>
+            <TouchableOpacity style={[newAccountStyle.letDoItButton]} onPress={() => {
+              this.props.screenProps.newAccountNavigation.navigate('FaceTouchId', { doContinue: this.props.screenProps.createBitmarkAccount });
+            }}>
+              <Text style={[newAccountStyle.letDoItButtonText]}>LET’S DO IT!</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+    );
+  }
+}
+
+PublicAccountNumberComponent.propTypes = {
+  screenProps: PropTypes.shape({
+    newAccountNavigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }),
+    createBitmarkAccount: PropTypes.func,
+    setShowPagination: PropTypes.func,
+  }),
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        justCreatedBitmarkAccount: PropTypes.bool,
+      })
+    })
+  })
+};
+
+var FullPublicAccountNumberComponent = StackNavigator({
+    PublicAccountNumber: { screen: PublicAccountNumberComponent },
+    BitmarkWebView: { screen: BitmarkWebViewComponent },
+  }, {
+    headerMode: 'none',
+    mode: 'modal',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
+    cardStyle: {
+      shadowOpacity: 0,
+    }
+  }
+);
