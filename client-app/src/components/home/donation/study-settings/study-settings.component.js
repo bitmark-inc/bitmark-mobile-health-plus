@@ -70,26 +70,21 @@ export class StudySettingComponent extends React.Component {
     AppleHealthKitModel.initHealthKit(this.state.study.dataTypes).then(() => {
 
       // TODO
-      // AppleHealthKitModel.getDeterminedHKPermission(this.state.study.dataTypes).then(result => {
-      //   if (result) {
-      //     CommonModel.doTrackEvent({
-      //       account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-      //       event_name: this.state.study === 'study1' ? 'app_donation_user_authorized_health_kit_for_madelena_study' :'app_donation_user_authorized_health_kit_for_victor_study',
-      //     });
-      //   }
-      // }).catch(error => {
-      //   console.log('getDeterminedHKPermission error:', error);
-      // });
-
+      AppleHealthKitModel.getDeterminedHKPermission(this.state.study.dataTypes).then(result => {
+        console.log('getDeterminedHKPermission result :', result, result && result.permissions && result.permissions.read && result.permissions.read.length > 0);
+        if (result && result.permissions && result.permissions.read && result.permissions.read.length > 0) {
+          CommonModel.doTrackEvent({
+            event_name: this.state.study === 'study1' ?
+              'app_donation_user_authorized_health_kit_for_madelena_study' : 'app_donation_user_authorized_health_kit_for_victor_study',
+            account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+          });
+        }
+      }).catch(error => {
+        console.log('getDeterminedHKPermission error:', error);
+      });
       return AppProcessor.doJoinStudy(this.state.study.studyId);
     }).then((result) => {
       if (result != null) {
-        // TODO
-        //     CommonModel.doTrackEvent({
-        //       account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-        //       event_name: this.state.study === 'study1' ? 'app_donation_user_joined_madelena_study' :'app_donation_user_joined_victor_study',
-        //     });
-
         DataProcessor.doReloadUserData();
         this.setState({ status: SettingStatus.thank_you, });
       }
@@ -105,11 +100,10 @@ export class StudySettingComponent extends React.Component {
   }
   doFinish() {
     // TODO
-    // CommonModel.doTrackEvent({
-    //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-    //   event_name: 'app_donation_user_joined_madelena_study',
-    // });
-
+    CommonModel.doTrackEvent({
+      event_name: this.state.study === 'study1' ? 'app_donation_user_joined_madelena_study' : 'app_donation_user_joined_victor_study',
+      account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+    });
     const resetUserPage = NavigationActions.reset({
       index: 0,
       actions: [

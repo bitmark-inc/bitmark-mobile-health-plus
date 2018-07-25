@@ -63,10 +63,10 @@ export class IssuanceOptionsComponent extends React.Component {
 
   onChoosePhotoFile() {
     // TODO
-    // CommonModel.doTrackEvent({
-    //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-    //   event_name: 'app_user_want_issue_photo',
-    // });
+    CommonModel.doTrackEvent({
+      event_name: 'app_user_want_issue_photo',
+      account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+    });
     let options = {
       title: '',
       takePhotoButtonTitle: '',
@@ -78,29 +78,30 @@ export class IssuanceOptionsComponent extends React.Component {
         return;
       }
       // TODO
-      // CommonModel.doTrackEvent({
-      //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-      //   event_name: 'app_user_choose_photo_for_issuance',
-      // });
+      CommonModel.doTrackEvent({
+        event_name: 'app_user_choose_photo_for_issuance',
+        account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+      });
       this.prepareToIssue(response);
     });
   }
 
   onChooseFile() {
     // TODO
-    // CommonModel.doTrackEvent({
-    //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-    //   event_name: 'app_user_want_issue_file',
-    // });
+    CommonModel.doTrackEvent({
+      event_name: 'app_user_want_issue_file',
+      account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+
+    });
     DocumentPicker.show({
       filetype: [DocumentPickerUtil.allFiles(), "public.data"],
     }, (error, response) => {
       if (error) return;
       // TODO
-      // CommonModel.doTrackEvent({
-      //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-      //   event_name: 'app_user_choose_file_for_issuance',
-      // });
+      CommonModel.doTrackEvent({
+        event_name: 'app_user_choose_file_for_issuance',
+        account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+      });
       this.prepareToIssue(response);
     });
   }

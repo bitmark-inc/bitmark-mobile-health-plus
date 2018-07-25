@@ -260,6 +260,9 @@
 		F1D09CF620770778008B16EE /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CC020770726008B16EE /* libCodePush.a */; };
 		F1D09CF8207707BF008B16EE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CF7207707BF008B16EE /* libz.tbd */; };
 		F1D09CF9207707CB008B16EE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CF7207707BF008B16EE /* libz.tbd */; };
+		F1DBAC2E210867380012F160 /* libRNGeocoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DBAC29210867170012F160 /* libRNGeocoder.a */; };
+		F1DBAC2F210867430012F160 /* libRNGeocoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DBAC29210867170012F160 /* libRNGeocoder.a */; };
+		F1DBAC302108674D0012F160 /* libRNGeocoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DBAC29210867170012F160 /* libRNGeocoder.a */; };
 		F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
 		F1F6E2E220B6BF6000CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
 		F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
@@ -665,6 +668,13 @@
 			remoteGlobalIDString = F886647B1F4ADB500036D01B;
 			remoteInfo = "CodePush-tvOS";
 		};
+		F1DBAC28210867170012F160 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1DBABEF210867170012F160 /* RNGeocoder.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF8FCF941BFFB184000FCD37;
+			remoteInfo = RNGeocoder;
+		};
 		F1F6E2D620B6BF4000CECD53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */;
@@ -829,6 +839,7 @@
 		F18C03B8204929BC00FA36E4 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		F1D09CBA20770725008B16EE /* CodePush.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
 		F1D09CF7207707BF008B16EE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		F1DBABEF210867170012F160 /* RNGeocoder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGeocoder.xcodeproj; path = "../node_modules/react-native-geocoder/ios/RNGeocoder.xcodeproj"; sourceTree = "<group>"; };
 		F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCookieManagerIOS.xcodeproj; path = "../node_modules/react-native-cookies/ios/RNCookieManagerIOS.xcodeproj"; sourceTree = "<group>"; };
 		FD055631D7E5490F8244DCED /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -847,6 +858,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1DBAC2E210867380012F160 /* libRNGeocoder.a in Frameworks */,
 				0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */,
 				0E25DDFC20F470EB00635A33 /* libReactNativeExceptionHandler.a in Frameworks */,
 				F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
@@ -885,6 +897,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1DBAC2F210867430012F160 /* libRNGeocoder.a in Frameworks */,
 				0E25DE3720F4715C00635A33 /* libRNExitApp.a in Frameworks */,
 				0E25DE3620F4715400635A33 /* libReactNativeExceptionHandler.a in Frameworks */,
 				F1F6E2E220B6BF6000CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
@@ -923,6 +936,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1DBAC302108674D0012F160 /* libRNGeocoder.a in Frameworks */,
 				0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */,
 				0E7B97DE20EF56170064EEEC /* libReactNativeExceptionHandler.a in Frameworks */,
 				F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
@@ -1376,6 +1390,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F1DBABEF210867170012F160 /* RNGeocoder.xcodeproj */,
 				0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */,
 				0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */,
 				F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */,
@@ -1516,6 +1531,14 @@
 			children = (
 				F1D09CC020770726008B16EE /* libCodePush.a */,
 				F1D09CC220770726008B16EE /* libCodePush.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1DBABF0210867170012F160 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1DBAC29210867170012F160 /* libRNGeocoder.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1780,6 +1803,10 @@
 				{
 					ProductGroup = 58FC1DF5201B14CB00F60AF9 /* Products */;
 					ProjectRef = A2D3611775A644B7B648A041 /* RNFS.xcodeproj */;
+				},
+				{
+					ProductGroup = F1DBABF0210867170012F160 /* Products */;
+					ProjectRef = F1DBABEF210867170012F160 /* RNGeocoder.xcodeproj */;
 				},
 				{
 					ProductGroup = F15F68B0203D70DE00A5A582 /* Products */;
@@ -2195,6 +2222,13 @@
 			fileType = archive.ar;
 			path = libCodePush.a;
 			remoteRef = F1D09CC120770726008B16EE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F1DBAC29210867170012F160 /* libRNGeocoder.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGeocoder.a;
+			remoteRef = F1DBAC28210867170012F160 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */ = {

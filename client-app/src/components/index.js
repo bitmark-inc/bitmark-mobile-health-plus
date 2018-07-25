@@ -323,7 +323,9 @@ class MainComponent extends Component {
           }
         });
       }
-    });
+    }).catch(error => {
+      console.log('doOpenApp error:', error);
+    })
   }
 
   render() {

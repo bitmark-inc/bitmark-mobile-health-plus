@@ -1,3 +1,4 @@
+import Geocoder from 'react-native-geocoder';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 
@@ -44,10 +45,10 @@ const doCheckNewIftttInformation = async (iftttInformation, isLoadingAllUserData
     let oldIftttInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION);
     if ((!oldIftttInformation || !oldIftttInformation.connectIFTTT) && (iftttInformation && iftttInformation.connectIFTTT)) {
       // TODO
-      // await CommonModel.doTrackEvent({
-      //   account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
-      //   event_name: 'app_user_connected_ifttt',
-      // });
+      await CommonModel.doTrackEvent({
+        event_name: 'app_user_connected_ifttt',
+        account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
+      });
     }
 
     await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION, iftttInformation);
@@ -357,10 +358,10 @@ const configNotification = () => {
         userInformation = await UserModel.doGetCurrentUser();
       }
       // TODO 
-      // await CommonModel.doTrackEvent({
-      //   account_number: userInformation.bitmarkAccountNumber,
-      //   event_name: 'app_user_click_notification',
-      // });
+      await CommonModel.doTrackEvent({
+        event_name: 'app_user_click_notification',
+        account_number: userInformation.bitmarkAccountNumber,
+      });
       setTimeout(async () => {
         EventEmitterService.emit(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
       }, 1000);
@@ -390,7 +391,8 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   await doReloadUserData();
   startInterval();
   if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
-    await NotificationService.doCheckNotificationPermission();
+    let result = await NotificationService.doCheckNotificationPermission();
+    await doMarkRequestedNotification(result);
   }
   return userInformation;
 };
@@ -435,54 +437,76 @@ const checkAppNeedResetLocalData = async (appInfo) => {
 const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
   // TODO 
-  // await CommonModel.doTrackEvent({
-  //   account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-  //   event_name: 'app_open',
-  // });
+  await CommonModel.doTrackEvent({
+    event_name: 'app_open',
+    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+  });
 
   let appInfo = await doGetAppInformation();
-  let result = NotificationService.doCheckNotificationPermission();
-  if (!result && (!appInfo.trackEvents || !appInfo.trackEvents.app_user_turn_off_notification)) {
-    // // TODO
-    // appInfo.trackEvents = appInfo.trackEvents || {};
-    // appInfo.trackEvents.app_user_turn_off_notification = true;
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    // CommonModel.doTrackEvent({
-    //   account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    //   event_name: 'app_user_turn_off_notification',
-    // });
-  }
+  appInfo = appInfo || {};
+  console.log('appInfo ', appInfo);
 
+  if (appInfo.trackEvents && appInfo.trackEvents.app_user_requested_notification) {
+    let result = await NotificationService.doCheckNotificationPermission();
+
+    if (result && !result.alert && !result.badge && !result.sound &&
+      (!appInfo.trackEvents || !appInfo.trackEvents.app_user_turn_off_notification)) {
+      // // TODO
+      appInfo.trackEvents = appInfo.trackEvents || {};
+      appInfo.trackEvents.app_user_turn_off_notification = true;
+      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+      await CommonModel.doTrackEvent({
+        event_name: 'app_user_turn_off_notification',
+        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+      });
+    }
+  }
 
   if (!appInfo.trackEvents || !appInfo.trackEvents.app_download) {
-    // appInfo.trackEvents = appInfo.trackEvents || {};
-    // appInfo.trackEvents.app_download = true;
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
     // TODO add download app event
-    // await CommonModel.doTrackEvent({
-    //   account_number: userInformation.bitmarkAccountNumber,
-    //   event_name: 'app_download',
-    // });
+    let appInfo = await doGetAppInformation();
+    appInfo = appInfo || {};
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents.app_download = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+    await CommonModel.doTrackEvent({
+      event_name: 'app_download',
+      account_number: userInformation.bitmarkAccountNumber,
+    });
   }
-
+  appInfo.trackEvents.app_download_location = false;
   if (!appInfo.trackEvents || !appInfo.trackEvents.app_download_location) {
-    // appInfo.trackEvents = appInfo.trackEvents || {};
-    // appInfo.trackEvents.app_download_location = true;
-    // await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    // TODO 
-    // await CommonModel.doTrackEvent({
-    //   account_number: userInformation.bitmarkAccountNumber,
-    //   event_name: 'app_download_location',
-    // });
-  }
+    navigator.geolocation.requestAuthorization();
+    navigator.geolocation.getCurrentPosition(async (result) => {
+      appInfo = appInfo || {};
+      appInfo.trackEvents = appInfo.trackEvents || {};
+      appInfo.trackEvents.app_download_location = true;
 
+      let position = { lat: result.coords.latitude, lng: result.coords.longitude };
+      let locationDetail = await Geocoder.geocodePosition(position);
+      locationDetail = locationDetail ? locationDetail[0] : {};
+
+      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+      await CommonModel.doTrackEvent({
+        event_name: 'app_download_location',
+        account_number: userInformation.bitmarkAccountNumber,
+        position: JSON.stringify(locationDetail.position),
+        city: locationDetail.locality,
+        country: locationDetail.country,
+        countryCode: locationDetail.countryCode,
+        adminArea: locationDetail.adminArea,
+        subAdminArea: locationDetail.subAdminArea,
+      });
+    }, error => {
+      console.log('getCurrentPosition error', error);
+    }, {
+        timeout: 2000,
+      });
+  }
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     configNotification();
     await checkAppNeedResetLocalData(appInfo);
-
-
-
 
     let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
     let trackingBitmarks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS)) || [];
@@ -1066,6 +1090,25 @@ const doRemoveTestRecoveryPhaseActionRequiredIfAny = async () => {
     EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
   }
 };
+const doMarkRequestedNotification = async (result) => {
+  console.log('doMarkRequestedNotification result :', result);
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+
+  if (result && result.alert && result.badge && result.sound &&
+    (!appInfo.trackEvents || !appInfo.trackEvents.app_user_requested_notification)) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents.app_user_requested_notification = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    userInformation = userInformation || (await UserModel.doTryGetCurrentUser());
+    console.log('userInformation :', userInformation);
+    await CommonModel.doTrackEvent({
+      event_name: 'app_user_allow_notification',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
+}
 
 const DataProcessor = {
   doOpenApp,
@@ -1116,6 +1159,7 @@ const DataProcessor = {
   doGetTransactionScreenHistories,
 
   doRemoveTestRecoveryPhaseActionRequiredIfAny,
+  doMarkRequestedNotification,
 
   getApplicationVersion,
   getApplicationBuildNumber,
