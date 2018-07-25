@@ -21,6 +21,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher"
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher/twosigs"
+	influx "github.com/influxdata/influxdb/client/v2"
 	nsq "github.com/nsqio/go-nsq"
 
 	"github.com/jackc/pgx"
@@ -96,6 +97,13 @@ func main() {
 		log.Panic("can not open config file", err)
 	}
 
+	// Open influx db
+	influxDBClient, err := influx.NewHTTPClient(influx.HTTPConfig{
+		Addr:     conf.Influx.Addr,
+		Username: conf.Influx.Username,
+		Password: conf.Influx.Password,
+	})
+
 	dbConn, err := openDb(conf.DB.Host, uint16(conf.DB.Port), conf.DB.DBName, conf.DB.Username, conf.DB.Password)
 	if err != nil {
 		log.Panic("cannot connect to db", err)
@@ -117,7 +125,7 @@ func main() {
 
 	nc := initializeWatcher(conf, pushStore, bitmarkStore, pushClient, gatewayClient)
 
-	mobileAPIServer := server.New(pushStore, bitmarkStore, dbConn)
+	mobileAPIServer := server.New(pushStore, bitmarkStore, dbConn, influxDBClient)
 	internalAPIServer := internalapi.New(pushStore, bitmarkStore, pushClient)
 
 	c := make(chan os.Signal, 2)
@@ -145,6 +153,9 @@ func main() {
 		log.Info("Disconnect postgres")
 		dbConn.Close()
 
+		log.Info("Disconnect influxdb")
+		influxDBClient.Close()
+
 		os.Exit(1)
 	}()
 
@@ -163,5 +174,4 @@ func main() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-
 }

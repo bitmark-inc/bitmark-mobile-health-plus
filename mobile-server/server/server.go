@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	influx "github.com/influxdata/influxdb/client/v2"
 	"github.com/jackc/pgx"
 	log "github.com/sirupsen/logrus"
 
@@ -19,7 +20,8 @@ type Server struct {
 	server *http.Server
 
 	// DB instance
-	dbConn *pgx.ConnPool
+	dbConn         *pgx.ConnPool
+	influxDBClient influx.Client
 
 	// Stores
 	pushStore    pushstore.PushStore
@@ -53,6 +55,8 @@ func (s *Server) Run(addr string) error {
 		notifications.GET("", s.NotificationList)
 	}
 
+	api.POST("/metrics", s.AddMetrics)
+
 	api.GET("/healthz", s.HealthCheck)
 
 	srv := &http.Server{
@@ -69,14 +73,15 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool) *Server {
+func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, influxClient influx.Client) *Server {
 	r := gin.New()
 
 	return &Server{
-		router:       r,
-		pushStore:    pushStore,
-		bitmarkStore: bitmarkStore,
-		dbConn:       dbConn,
+		router:         r,
+		pushStore:      pushStore,
+		bitmarkStore:   bitmarkStore,
+		dbConn:         dbConn,
+		influxDBClient: influxClient,
 	}
 }
 
@@ -88,7 +93,7 @@ func (s *Server) HealthCheck(c *gin.Context) {
 		})
 		return
 	}
-	defer conn.Close()
+	defer s.dbConn.Release(conn)
 
 	ctx, cancel := context.WithTimeout(c, 2*time.Second)
 	defer cancel()
