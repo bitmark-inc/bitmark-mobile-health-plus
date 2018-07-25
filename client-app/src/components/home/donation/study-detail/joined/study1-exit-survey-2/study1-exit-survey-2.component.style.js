@@ -1,5 +1,6 @@
 import { StyleSheet, } from 'react-native';
 import { convertWidth } from '../../../../../../utils';
+import { iosConstant } from '../../../../../../configs/ios/ios.config';
 
 export default StyleSheet.create({
   body: {
@@ -102,12 +103,16 @@ export default StyleSheet.create({
   },
 
   bottomButtons: {
-    height: 45,
+    height: 45 + iosConstant.blankFooter,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
     flexDirection: 'row',
     alignItems: 'center',
   },
   interestedButton: {
-    height: 45,
+    height: 45 + iosConstant.blankFooter,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
     width: convertWidth(186),
     flexDirection: 'column',
     justifyContent: 'center',
@@ -118,12 +123,14 @@ export default StyleSheet.create({
   interestedButtonText: {
     fontFamily: 'Avenir Heavy',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '900',
     textAlign: 'center',
     color: '#0060F2',
   },
   optOutButton: {
-    height: 45,
+    height: 45 + iosConstant.blankFooter,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
     width: convertWidth(186),
     flexDirection: 'column',
     justifyContent: 'center',
@@ -134,7 +141,7 @@ export default StyleSheet.create({
   optOutButtonText: {
     fontFamily: 'Avenir Heavy',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '900',
     textAlign: 'center',
     color: '#A4B5CD',
   },

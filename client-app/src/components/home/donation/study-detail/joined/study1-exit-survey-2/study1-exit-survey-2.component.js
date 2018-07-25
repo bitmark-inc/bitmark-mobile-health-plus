@@ -11,6 +11,7 @@ import styles from './study1-exit-survey-2.component.style';
 import { BitmarkComponent } from '../../../../../../commons/components';
 import { AppProcessor, DataProcessor } from '../../../../../../processors';
 import { EventEmitterService } from '../../../../../../services';
+import { iosConstant } from '../../../../../../configs/ios/ios.config';
 
 export class Study1ExitSurvey2Component extends React.Component {
   constructor(props) {
@@ -87,7 +88,7 @@ export class Study1ExitSurvey2Component extends React.Component {
                 </View>
               </ScrollView>
             )}
-            footerHeight={45}
+            footerHeight={45 + iosConstant.blankFooter}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={styles.optOutButton} onPress={this.doOptOut}>
                 <Text style={styles.optOutButtonText}>OPT OUT</Text>
@@ -130,10 +131,10 @@ export class Study1ExitSurvey2Component extends React.Component {
                 </View>
               </ScrollView>
             )}
-            footerHeight={45}
+            footerHeight={45 + iosConstant.blankFooter}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={[styles.interestedButton, { width: '100%' }]} onPress={this.doSubmit}>
-                <Text style={styles.interestedButtonText}>Submit</Text>
+                <Text style={styles.interestedButtonText}>SUBMIT</Text>
               </TouchableOpacity>
             </View>)}
           />
@@ -156,10 +157,10 @@ export class Study1ExitSurvey2Component extends React.Component {
                 </View>
               </ScrollView>
             )}
-            footerHeight={45}
+            footerHeight={45 + iosConstant.blankFooter}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={[styles.interestedButton, { width: '100%', backgroundColor: '#0060F2' }]} onPress={() => { this.props.navigation.goBack() }}>
-                <Text style={[styles.interestedButtonText, { color: 'white' }]}>Done</Text>
+                <Text style={[styles.interestedButtonText, { color: 'white' }]}>DONE</Text>
               </TouchableOpacity>
             </View>)}
           />

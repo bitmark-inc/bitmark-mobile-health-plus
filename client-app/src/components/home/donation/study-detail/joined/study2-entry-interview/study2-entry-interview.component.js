@@ -11,6 +11,7 @@ import styles from './study2-entry-interview.component.style';
 import { BitmarkComponent } from '../../../../../../commons/components';
 import { AppProcessor, DataProcessor } from '../../../../../../processors';
 import { EventEmitterService } from '../../../../../../services';
+import { iosConstant } from '../../../../../../configs/ios/ios.config';
 
 export class Study2EntryInterviewComponent extends React.Component {
   constructor(props) {
@@ -81,7 +82,7 @@ export class Study2EntryInterviewComponent extends React.Component {
               </ScrollView>
             )}
 
-            footerHeight={45}
+            footerHeight={45 + iosConstant.blankFooter}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={styles.leftButton} onPress={this.doCompletedTask}>
                 <Text style={styles.leftButtonText}>{'No, thanks'.toUpperCase()}</Text>
@@ -126,10 +127,10 @@ export class Study2EntryInterviewComponent extends React.Component {
                 </View>
               </ScrollView>
             )}
-            footerHeight={45}
+            footerHeight={45 + iosConstant.blankFooter}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={styles.submitButton} onPress={this.doSubmit}>
-                <Text style={styles.submitButtonText}>Submit</Text>
+                <Text style={styles.submitButtonText}>SUBMIT</Text>
               </TouchableOpacity>
             </View>)}
           />

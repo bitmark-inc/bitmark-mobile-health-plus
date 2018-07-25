@@ -1,5 +1,6 @@
 import { StyleSheet, } from 'react-native';
 import { convertWidth } from '../../../../../../utils';
+import { iosConstant } from '../../../../../../configs/ios/ios.config';
 
 export default StyleSheet.create({
   body: {
@@ -100,44 +101,48 @@ export default StyleSheet.create({
   },
 
   bottomButtons: {
-    height: 45,
+    height: 45 + iosConstant.blankFooter,
     flexDirection: 'row',
     alignItems: 'center',
   },
   leftButton: {
-    height: 45,
+    height: 45 + iosConstant.blankFooter,
     width: convertWidth(187.5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     borderTopWidth: 3,
     borderTopColor: '#A4B5CD',
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   leftButtonText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: 'Avenir Black',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '900',
     textAlign: 'center',
     color: '#A4B5CD',
   },
   rightButton: {
-    height: 45,
+    height: 45 + iosConstant.blankFooter,
     width: convertWidth(187.5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     borderTopWidth: 3,
     borderTopColor: '#0060F2',
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   rightButtonText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: 'Avenir Black',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '900',
     textAlign: 'center',
     color: '#0060F2',
   },
   submitButton: {
-    height: 45,
+    height: 45 + iosConstant.blankFooter,
     width: convertWidth(375),
     flexDirection: 'column',
     justifyContent: 'center',
@@ -146,11 +151,13 @@ export default StyleSheet.create({
     borderTopColor: '#0060F2',
   },
   submitButtonText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: 'Avenir Black',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '900',
     textAlign: 'center',
     color: '#0060F2',
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
 
 });
