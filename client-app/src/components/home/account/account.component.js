@@ -54,7 +54,7 @@ export class AccountDetailComponent extends React.Component {
     doGetScreenData();
 
     if (this.props.screenProps.goToRecoveryPhase) {
-      this.props.navigation.navigate('AccountRecovery', { isSignOut: false, shouldRemoveTestRecoveryPhaseActionRequiredOnDone: true });
+      this.props.navigation.navigate('AccountRecovery', { isSignOut: false });
       this.props.screenProps.removeGoingToRecoveryPhase();
     }
   }

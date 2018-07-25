@@ -21,7 +21,7 @@ import newAccountStyle from './new-account.component.style';
 import { AppProcessor } from '../../../processors';
 import { iosConstant } from '../../../configs/ios/ios.config';
 import { config } from '../../../configs';
-import { CommonModel } from "../../../models";
+const helper = require('../../../utils/helper');
 
 export class NewAccountComponent extends React.Component {
   constructor(props) {
@@ -54,11 +54,7 @@ export class NewAccountComponent extends React.Component {
 
   async createNewAccount() {
     let user = await AppProcessor.doCreateNewAccount();
-
-    // Add Test Recovery Phase action required
-    await CommonModel.doSetLocalData(CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED, {
-      timestamp: (new Date()).toISOString()
-    });
+    await helper.addTestWriteRecoveryPhaseActionRequired(user);
 
     return user;
   }

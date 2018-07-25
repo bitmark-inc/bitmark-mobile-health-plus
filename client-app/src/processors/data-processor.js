@@ -13,6 +13,7 @@ import { DonationService } from '../services/donation-service';
 import { FileUtil } from '../utils';
 import { DataCacheProcessor } from './data-cache-processor';
 import { config } from '../configs';
+const helper = require('../utils/helper');
 
 let userInformation = {};
 let isLoadingData = false;
@@ -815,7 +816,7 @@ const doGenerateTransactionActionRequiredData = async () => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, actionRequired);
 
   // Add "Write Down Your Recovery Phrase" action required which was created when creating account if any
-  let testRecoveryPhaseActionRequired = await CommonModel.doGetLocalData(CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED);
+  let testRecoveryPhaseActionRequired = await helper.getTestWriteRecoveryPhaseActionRequired();
   if (testRecoveryPhaseActionRequired) {
     actionRequired.unshift({
       key: actionRequired.length,
@@ -992,9 +993,12 @@ const doDecentralizedTransfer = async (touchFaceIdSession, token, ) => {
   return result;
 };
 
-const doRemoveTestRecoveryPhaseActionRequired = async () => {
-  await CommonModel.doRemoveLocalData(CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED);
-  EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
+const doRemoveTestRecoveryPhaseActionRequiredIfAny = async () => {
+  let testWriteRecoveryPhaseActionRequired = helper.getTestWriteRecoveryPhaseActionRequired();
+  if (testWriteRecoveryPhaseActionRequired) {
+    await helper.removeTestWriteRecoveryPhaseActionRequired();
+    EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
+  }
 };
 
 const DataProcessor = {
@@ -1045,7 +1049,7 @@ const DataProcessor = {
   doGetAllTransfersOffers,
   doGetTransactionScreenHistories,
 
-  doRemoveTestRecoveryPhaseActionRequired,
+  doRemoveTestRecoveryPhaseActionRequiredIfAny,
 
   getApplicationVersion,
   getApplicationBuildNumber,
