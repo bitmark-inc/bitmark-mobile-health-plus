@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { convertWidth } from '../../../utils';
+import { convertWidth, calculateAdditionalHeight } from '../../../utils';
 import { ios } from '../../../configs';
 import { iosConstant } from '../../../configs/ios/ios.config';
 
@@ -92,6 +92,7 @@ export default StyleSheet.create({
     height: 298 * convertWidth(219) / 219
   },
   introductionTermPrivacy: {
+    marginTop: calculateAdditionalHeight(667, 30, true),
     left: convertWidth(50),
     width: convertWidth(272),
   },
