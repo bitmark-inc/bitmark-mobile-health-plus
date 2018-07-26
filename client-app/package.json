@@ -22,7 +22,6 @@
     "react-native-exception-handler": "^2.8.9",
     "react-native-exit-app": "^1.0.0",
     "react-native-fs": "^2.9.7",
-    "react-native-geocoder": "^0.5.0",
     "react-native-hyperlink": "0.0.14",
     "react-native-image-picker": "^0.26.7",
     "react-native-keep-awake": "^3.0.1",

@@ -1,4 +1,3 @@
-import Geocoder from 'react-native-geocoder';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 
@@ -469,34 +468,6 @@ const doOpenApp = async () => {
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
     });
   }
-  if (!appInfo.trackEvents || !appInfo.trackEvents.app_download_location) {
-    navigator.geolocation.requestAuthorization();
-    navigator.geolocation.getCurrentPosition(async (result) => {
-      appInfo = appInfo || {};
-      appInfo.trackEvents = appInfo.trackEvents || {};
-      appInfo.trackEvents.app_download_location = true;
-
-      let position = { lat: result.coords.latitude, lng: result.coords.longitude };
-      let locationDetail = await Geocoder.geocodePosition(position);
-      locationDetail = locationDetail ? locationDetail[0] : {};
-
-      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-      await CommonModel.doTrackEvent({
-        event_name: 'app_download_location',
-        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-        position: JSON.stringify(locationDetail.position),
-        city: locationDetail.locality,
-        country: locationDetail.country,
-        countryCode: locationDetail.countryCode,
-        adminArea: locationDetail.adminArea,
-        subAdminArea: locationDetail.subAdminArea,
-      });
-    }, error => {
-      console.log('getCurrentPosition error', error);
-    }, {
-        timeout: 2000,
-      });
-  }
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     configNotification();
@@ -926,7 +897,6 @@ const doGenerateTransactionHistoryData = async () => {
   let transactions = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS)) || [];
   let donationInformation = await doGetDonationInformation();
   let transferOffers = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS)) || {};
-  console.log('transferOffers :', transferOffers);
 
   let completed;
   if (transactions) {
