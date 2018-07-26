@@ -23,6 +23,9 @@ let PreCheckResults = {
 // madelena livenet
 // let testWords = ["absent", "ostrich", "injury", "pill", "episode", "permit", "endless", "happy", "thing", "devote", "robust", "earth", "punch", "robot", "jelly", "demand", "topple", "diamond", "climb", "turn", "reveal", "suspect", "fat", "assault",];
 
+// victor testnet
+// let testWords = ["access", "say", "write", "artwork", "broom", "wife", "patch", "skill", "snack", "cabin", "best", "target", "night", "notable", "appear", "life", "blame", "enter", "glide", "vocal", "chuckle", "biology", "spy", "inspire",];
+
 // let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 // let testWords = ["accuse", "angry", "thing", "alone", "day", "guitar", "gown", "possible", "rotate", "erupt", "teach", "myth", "final", "rule", "conduct", "term", "mom", "soldier", "prepare", "bench", "hurt", "banana", "joy", "asset",];
 export class SignInComponent extends React.Component {
