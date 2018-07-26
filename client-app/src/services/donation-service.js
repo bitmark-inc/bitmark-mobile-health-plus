@@ -211,7 +211,6 @@ const doLeaveStudy = async (touchFaceIdSession, bitmarkAccountNumber, studyId) =
     return null;
   }
   let donationInformation = await DonationModel.doLeaveStudy(bitmarkAccountNumber, studyId, signatureData.timestamp, signatureData.signature);
-  // TODO
   await CommonModel.doTrackEvent({
     event_name: studyId === 'study1' ? 'app_donation_user_leaved_madelena_study' : 'app_donation_user_leaved_victor_study',
     account_number: bitmarkAccountNumber,
@@ -315,7 +314,6 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     await FileUtil.remove(prepareResult.filePath);
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
 
-    // TODO
     await CommonModel.doTrackEvent({
       event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
       account_number: bitmarkAccountNumber,
@@ -338,7 +336,6 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     (study.studyId === 'study2' && (taskType === study.taskIds.task3 || taskType === study.taskIds.entry_study)) ||
     (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2)) {
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
-    // TODO
     await CommonModel.doTrackEvent({
       event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
       account_number: bitmarkAccountNumber,
@@ -370,7 +367,6 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount, extra);
     await FileUtil.remove(filePath);
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment(dateRange.endDate).toDate(), study.studyId, bitmarkId);
-    // TODO
     await CommonModel.doTrackEvent({
       event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
       account_number: bitmarkAccountNumber,
