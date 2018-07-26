@@ -74,7 +74,7 @@ export class StudySettingComponent extends React.Component {
         console.log('getDeterminedHKPermission result :', result, result && result.permissions && result.permissions.read && result.permissions.read.length > 0);
         if (result && result.permissions && result.permissions.read && result.permissions.read.length > 0) {
           CommonModel.doTrackEvent({
-            event_name: this.state.study === 'study1' ?
+            event_name: this.state.study.studyId === 'study1' ?
               'app_donation_user_authorized_health_kit_for_madelena_study' : 'app_donation_user_authorized_health_kit_for_victor_study',
             account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
           });
@@ -101,7 +101,7 @@ export class StudySettingComponent extends React.Component {
   doFinish() {
     // TODO
     CommonModel.doTrackEvent({
-      event_name: this.state.study === 'study1' ? 'app_donation_user_joined_madelena_study' : 'app_donation_user_joined_victor_study',
+      event_name: this.state.study.studyId === 'study1' ? 'app_donation_user_joined_madelena_study' : 'app_donation_user_joined_victor_study',
       account_number: DataProcessor.getUserInformation().bitmarkAccountNumber,
     });
     const resetUserPage = NavigationActions.reset({
