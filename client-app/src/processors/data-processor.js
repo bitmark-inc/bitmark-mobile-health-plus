@@ -43,7 +43,6 @@ const doCheckNewIftttInformation = async (iftttInformation, isLoadingAllUserData
 
     let oldIftttInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_IFTTT_INFORMATION);
     if ((!oldIftttInformation || !oldIftttInformation.connectIFTTT) && (iftttInformation && iftttInformation.connectIFTTT)) {
-      // TODO
       await CommonModel.doTrackEvent({
         event_name: 'app_user_connected_ifttt',
         account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
