@@ -184,9 +184,9 @@ const doGetAllTransferOffers = async (accountNumber) => {
           incomingTransferOffer.bitmark = bitmark;
           incomingTransferOffer.asset = assets.find(a => a.id === incomingTransferOffer.bitmark.asset_id);
           incomingTransferOffer.created_at = moment(incomingTransferOffer.created_at);
+          incomingTransferOffers.push(incomingTransferOffer);
         }
       }
-      incomingTransferOffers.push(incomingTransferOffer);
     }
   }
   let outgoingTransferOffers = offersData.from;

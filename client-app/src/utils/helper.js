@@ -7,6 +7,18 @@ const convertWidth = (width) => {
   return width * currentSize.width / widthDesign;
 };
 
+const calculateAdditionalHeight = (minHeight, additionalValue, forceApply) => {
+  let result = 0;
+  if (currentSize.height > minHeight) {
+    if (currentSize.height - minHeight >= additionalValue) {
+      result = additionalValue;
+    } else if (forceApply) {
+      result = currentSize.height - minHeight;
+    }
+  }
+  return result;
+};
+
 const sortList = (list, compare) => {
   for (let index = 0; index < list.length; index++) {
     for (let tempIndex = index + 1; tempIndex < list.length; tempIndex++) {
@@ -62,4 +74,4 @@ const removeTestWriteRecoveryPhaseActionRequired = async () => {
 };
 
 
-export { convertWidth, sortList, runPromiseWithoutError, compareVersion, addTestWriteRecoveryPhaseActionRequired, getTestWriteRecoveryPhaseActionRequired, removeTestWriteRecoveryPhaseActionRequired };
+export { convertWidth, calculateAdditionalHeight, sortList, runPromiseWithoutError, compareVersion, addTestWriteRecoveryPhaseActionRequired, getTestWriteRecoveryPhaseActionRequired, removeTestWriteRecoveryPhaseActionRequired };
