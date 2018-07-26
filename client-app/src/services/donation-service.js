@@ -317,7 +317,7 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
 
     // TODO
     await CommonModel.doTrackEvent({
-      event_name: study.study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
+      event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
       account_number: bitmarkAccountNumber,
     });
 
@@ -340,7 +340,7 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
     // TODO
     await CommonModel.doTrackEvent({
-      event_name: study.study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
+      event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
       account_number: bitmarkAccountNumber,
     });
     return doGetUserInformation(bitmarkAccountNumber);
@@ -372,7 +372,7 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment(dateRange.endDate).toDate(), study.studyId, bitmarkId);
     // TODO
     await CommonModel.doTrackEvent({
-      event_name: study.study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
+      event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
       account_number: bitmarkAccountNumber,
     });
   }

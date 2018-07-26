@@ -1095,7 +1095,6 @@ const doMarkRequestedNotification = async (result) => {
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 
     userInformation = userInformation || (await UserModel.doTryGetCurrentUser());
-    console.log('userInformation :', userInformation);
     await CommonModel.doTrackEvent({
       event_name: 'app_user_allow_notification',
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
