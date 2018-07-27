@@ -103,6 +103,9 @@ func main() {
 		Username: conf.Influx.Username,
 		Password: conf.Influx.Password,
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	dbConn, err := openDb(conf.DB.Host, uint16(conf.DB.Port), conf.DB.DBName, conf.DB.Username, conf.DB.Password)
 	if err != nil {

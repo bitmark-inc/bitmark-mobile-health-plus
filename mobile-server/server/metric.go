@@ -36,7 +36,10 @@ func (s *Server) AddMetrics(c *gin.Context) {
 	for _, metric := range req.Metrics {
 		pt, err := influx.NewPoint("mobile-events", metric.Tags, metric.Fields, time.Now())
 		if err != nil {
-			panic(err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "cannot create new influx records",
+			})
+			return
 		}
 		bp.AddPoint(pt)
 	}
