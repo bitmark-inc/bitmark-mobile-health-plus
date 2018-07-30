@@ -1070,23 +1070,6 @@ const doRemoveTestRecoveryPhaseActionRequiredIfAny = async () => {
     EventEmitterService.emit(EventEmitterService.events.NEED_RELOAD_USER_DATA);
   }
 };
-const doMarkRequestedNotification = async (result) => {
-  let appInfo = await doGetAppInformation();
-  appInfo = appInfo || {};
-
-  if (result && result.alert && result.badge && result.sound &&
-    (!appInfo.trackEvents || !appInfo.trackEvents.app_user_allow_notification)) {
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents.app_user_allow_notification = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-
-    userInformation = userInformation || (await UserModel.doTryGetCurrentUser());
-    await CommonModel.doTrackEvent({
-      event_name: 'app_user_allow_notification',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
-}
 
 const DataProcessor = {
   doOpenApp,
@@ -1138,7 +1121,6 @@ const DataProcessor = {
 
   doMarkRequestedNotification,
   doRemoveTestRecoveryPhaseActionRequiredIfAny,
-  doMarkRequestedNotification,
 
   getApplicationVersion,
   getApplicationBuildNumber,
