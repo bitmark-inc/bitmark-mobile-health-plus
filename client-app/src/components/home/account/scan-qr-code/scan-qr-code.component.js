@@ -65,8 +65,15 @@ export class ScanQRCodeComponent extends React.Component {
         return;
       }
 
-      AppProcessor.doDecentralizedIssuance(token, encryptionKey).then(result => {
+      AppProcessor.doDecentralizedIssuance(token, encryptionKey, expiredTime).then(result => {
         if (result) {
+          if (result instanceof Error) {
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+              message: result.message,
+              onClose: this.props.navigation.goBack
+            });
+            return;
+          }
           DataProcessor.doReloadLocalBitmarks();
           Alert.alert('Success!', 'Your property rights have been registered.', [{
             text: 'OK',
@@ -96,8 +103,15 @@ export class ScanQRCodeComponent extends React.Component {
         return;
       }
 
-      AppProcessor.doDecentralizedTransfer(token).then(result => {
+      AppProcessor.doDecentralizedTransfer(token, expiredTime).then(result => {
         if (result) {
+          if (result instanceof Error) {
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
+              message: result.message,
+              onClose: this.props.navigation.goBack
+            });
+            return;
+          }
           DataProcessor.doReloadLocalBitmarks();
           Alert.alert('Success!', 'Your property rights have been transferred.', [{
             text: 'OK',

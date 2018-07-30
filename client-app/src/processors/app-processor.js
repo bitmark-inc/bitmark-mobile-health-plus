@@ -219,12 +219,12 @@ const doSignInOnWebApp = async (token) => {
   return executeTask('doSignInOnWebApp', { token });
 };
 
-const doDecentralizedIssuance = async (token, encryptionKey) => {
-  return executeTask('doDecentralizedIssuance', { token, encryptionKey });
+const doDecentralizedIssuance = async (token, encryptionKey, expiredTime) => {
+  return executeTask('doDecentralizedIssuance', { token, encryptionKey, expiredTime });
 };
 
-const doDecentralizedTransfer = async (token, encryptionKey) => {
-  return executeTask('doDecentralizedTransfer', { token, encryptionKey });
+const doDecentralizedTransfer = async (token, expiredTime) => {
+  return executeTask('doDecentralizedTransfer', { token, expiredTime });
 };
 
 // ================================================================================================

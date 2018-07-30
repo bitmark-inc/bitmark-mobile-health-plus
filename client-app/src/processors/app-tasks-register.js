@@ -244,18 +244,24 @@ const doSignInOnWebApp = async ({ token }) => {
   return await processing(DataProcessor.doSignInOnWebApp(touchFaceIdSession, token));
 };
 
-const doDecentralizedIssuance = async ({ token, encryptionKey }) => {
+const doDecentralizedIssuance = async ({ token, encryptionKey, expiredTime }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark issuance.');
   if (!touchFaceIdSession) {
     return null;
   }
+  if (expiredTime < moment().toDate().getTime()) {
+    return new Error('QR code is expired!');
+  }
   return await processing(DataProcessor.doDecentralizedIssuance(touchFaceIdSession, token, encryptionKey));
 };
 
-const doDecentralizedTransfer = async ({ token }) => {
+const doDecentralizedTransfer = async ({ token, expiredTime }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to send the bitmark.');
   if (!touchFaceIdSession) {
     return null;
+  }
+  if (expiredTime < moment().toDate().getTime()) {
+    return new Error('QR code is expired!');
   }
   return await processing(DataProcessor.doDecentralizedTransfer(touchFaceIdSession, token));
 };
