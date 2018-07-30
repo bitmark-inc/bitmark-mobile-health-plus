@@ -1046,6 +1046,23 @@ const doDecentralizedTransfer = async (touchFaceIdSession, token, ) => {
   return result;
 };
 
+const doMarkRequestedNotification = async (result) => {
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+
+  if (result && result.alert && result.badge && result.sound &&
+    (!appInfo.trackEvents || !appInfo.trackEvents.app_user_allow_notification)) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents.app_user_allow_notification = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    userInformation = userInformation || (await UserModel.doTryGetCurrentUser());
+    await CommonModel.doTrackEvent({
+      event_name: 'app_user_allow_notification',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
+}
 const doRemoveTestRecoveryPhaseActionRequiredIfAny = async () => {
   let testWriteRecoveryPhaseActionRequired = helper.getTestWriteRecoveryPhaseActionRequired();
   if (testWriteRecoveryPhaseActionRequired) {
@@ -1119,6 +1136,7 @@ const DataProcessor = {
   doGetAllTransfersOffers,
   doGetTransactionScreenHistories,
 
+  doMarkRequestedNotification,
   doRemoveTestRecoveryPhaseActionRequiredIfAny,
   doMarkRequestedNotification,
 
