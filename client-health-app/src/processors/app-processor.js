@@ -118,9 +118,6 @@ const doRequirePermission = async () => {
   }
 };
 
-const doGetAllTransfersOffers = async () => {
-  return await processing(DataProcessor.doGetAllTransfersOffers());
-};
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return DataProcessor.doStartBackgroundProcess(justCreatedBitmarkAccount);
   // return await processing(DataProcessor.doStartBackgroundProcess(justCreatedBitmarkAccount));
@@ -226,7 +223,6 @@ let AppProcessor = {
   doDownloadBitmark,
   doReloadUserData,
   doReloadDonationInformation,
-  doGetAllTransfersOffers,
 
   doStartBackgroundProcess,
 }

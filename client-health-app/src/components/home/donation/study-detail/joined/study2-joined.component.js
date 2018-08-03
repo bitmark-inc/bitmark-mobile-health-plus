@@ -23,6 +23,7 @@ export class Study2JoinedComponent extends React.Component {
         <View style={styles.contentCenter}>
           <View style={styles.cardArea}>
             <StudyCardComponent style={styles.studyCard}
+              researcherImage={require('./../../../../../../assets/imgs/victor.png')}
               title={this.state.study.title}
               joined={!!this.state.study.joinedDate}
               description={this.state.study.description}

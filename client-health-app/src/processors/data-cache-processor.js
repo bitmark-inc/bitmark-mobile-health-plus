@@ -1,12 +1,8 @@
 let cacheData = {
-  transactionsScreen: {
+  donationTasks: {
     totalTasks: 0,
-    totalActionRequired: 0,
-    actionRequired: [],
-
-    totalCompleted: 0,
-    completedLength: 20,
-    completed: [],
+    totalDonationTasks: 0,
+    donationTasks: [],
   },
   propertiesScreen: {
     localAssets: [],
@@ -19,14 +15,10 @@ let cacheData = {
 
 let resetCacheData = () => {
   cacheData = {
-    transactionsScreen: {
+    donationTasks: {
       totalTasks: 0,
-      totalActionRequired: 0,
-      actionRequired: [],
-
-      totalCompleted: 0,
-      completedLength: 20,
-      completed: [],
+      totalDonationTasks: 0,
+      donationTasks: [],
     },
     propertiesScreen: {
       localAssets: [],
@@ -39,16 +31,14 @@ let resetCacheData = () => {
 };
 
 
-const getTransactionScreenData = () => {
-  return cacheData.transactionsScreen;
+const getDonationTasks = () => {
+  return cacheData.donationTasks;
 };
 
-const setTransactionScreenData = ({ totalTasks, totalActionRequired, actionRequired, totalCompleted, completed }) => {
-  cacheData.transactionsScreen.totalTasks = (totalTasks != undefined) ? totalTasks : cacheData.transactionsScreen.totalTasks;
-  cacheData.transactionsScreen.totalActionRequired = (totalActionRequired != undefined) ? totalActionRequired : cacheData.transactionsScreen.totalActionRequired;
-  cacheData.transactionsScreen.actionRequired = actionRequired ? actionRequired : cacheData.transactionsScreen.actionRequired;
-  cacheData.transactionsScreen.totalCompleted = (totalCompleted != undefined) ? totalCompleted : cacheData.transactionsScreen.totalCompleted;
-  cacheData.transactionsScreen.completed = completed ? completed : cacheData.transactionsScreen.completed;
+const setDonationsTasks = ({ totalTasks, totalDonationTasks, donationTasks }) => {
+  cacheData.donationTasks.totalTasks = (totalTasks != undefined) ? totalTasks : cacheData.donationTasks.totalTasks;
+  cacheData.donationTasks.totalDonationTasks = (totalDonationTasks != undefined) ? totalDonationTasks : cacheData.donationTasks.totalDonationTasks;
+  cacheData.donationTasks.donationTasks = donationTasks ? donationTasks : cacheData.donationTasks.donationTasks;
 };
 
 
@@ -66,8 +56,8 @@ const setPropertiesScreen = ({ localAssets, totalAssets, existNewAsset, totalBit
 const DataCacheProcessor = {
   resetCacheData,
 
-  getTransactionScreenData,
-  setTransactionScreenData,
+  getDonationTasks,
+  setDonationsTasks,
 
   getPropertiesScreenData,
   setPropertiesScreen,

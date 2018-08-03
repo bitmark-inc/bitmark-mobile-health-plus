@@ -211,10 +211,6 @@ const doLeaveStudy = async (touchFaceIdSession, bitmarkAccountNumber, studyId) =
     return null;
   }
   let donationInformation = await DonationModel.doLeaveStudy(bitmarkAccountNumber, studyId, signatureData.timestamp, signatureData.signature);
-  await CommonModel.doTrackEvent({
-    event_name: studyId === 'study1' ? 'app_donation_user_leaved_madelena_study' : 'app_donation_user_leaved_victor_study',
-    account_number: bitmarkAccountNumber,
-  });
   return await doLoadDonationTask(donationInformation);
 };
 
@@ -314,32 +310,11 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     await FileUtil.remove(prepareResult.filePath);
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
 
-    await CommonModel.doTrackEvent({
-      event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
-      account_number: bitmarkAccountNumber,
-    });
-
-    if (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2) {
-      await CommonModel.doTrackEvent({
-        event_name: 'app_donation_user_send_email_when_exit_madelena_study',
-        account_number: bitmarkAccountNumber,
-      });
-    }
-    if (study.studyId === 'study2' && taskType === study.taskIds.entry_study) {
-      await CommonModel.doTrackEvent({
-        event_name: 'app_donation_user_send_email_when_entry_victor_study',
-        account_number: bitmarkAccountNumber,
-      });
-    }
     return doGetUserInformation(bitmarkAccountNumber);
   } else if (
     (study.studyId === 'study2' && (taskType === study.taskIds.task3 || taskType === study.taskIds.entry_study)) ||
     (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2)) {
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
-    await CommonModel.doTrackEvent({
-      event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
-      account_number: bitmarkAccountNumber,
-    });
     return doGetUserInformation(bitmarkAccountNumber);
   }
   throw new Error('Can not detect task and study');
@@ -367,10 +342,6 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount, extra);
     await FileUtil.remove(filePath);
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment(dateRange.endDate).toDate(), study.studyId, bitmarkId);
-    await CommonModel.doTrackEvent({
-      event_name: study.studyId === 'study1' ? 'app_donation_user_donated_bitmark_for_madelena_study' : 'app_donation_user_donated_bitmark_for_victor_study',
-      account_number: bitmarkAccountNumber,
-    });
   }
   return doGetUserInformation(bitmarkAccountNumber);
 };

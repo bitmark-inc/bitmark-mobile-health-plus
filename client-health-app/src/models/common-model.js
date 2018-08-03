@@ -16,7 +16,7 @@ const KEYS = {
   USER_DATA_TRANSFER_OFFERS: 'user-data:transfer-offers',
 
   // data can be change
-  USER_DATA_TRANSACTIONS_ACTION_REQUIRED: 'user-data:transaction-action-required',
+  USER_DATA_DONATION_TASK: 'user-data:transaction-action-required',
   USER_DATA_TRANSACTIONS_HISTORY: 'user-data:transaction-history',
 
   TEST_RECOVERY_PHASE_ACTION_REQUIRED: 'test-recovery-phase-action-required'
@@ -170,39 +170,6 @@ const doCreateSignatureData = async (touchFaceId) => {
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
-const doTrackEvent = (tags, fields) => {
-  fields = fields || {};
-  fields.hit = 1;
-  return new Promise((resolve) => {
-    let statusCode;
-    let bitmarkUrl = config.mobile_server_url + `/api/metrics`;
-    fetch(bitmarkUrl, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        metrics: [{
-          tags, fields,
-        }]
-      })
-    }).then((response) => {
-      statusCode = response.status;
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        console.log('doTrackEvent error :', data);
-      }
-      resolve(data);
-    }).catch((error) => {
-      console.log('doTrackEvent error :', error);
-    });
-  });
-};
-// ================================================================================================
-// ================================================================================================
-// ================================================================================================
 
 let CommonModel = {
   KEYS,
@@ -215,8 +182,6 @@ let CommonModel = {
   doTryCreateSignatureData,
   doTryRickSignMessage,
   setFaceTouchSessionId,
-
-  doTrackEvent,
 }
 
 export {

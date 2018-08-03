@@ -12,6 +12,7 @@ import { AppProcessor } from '../../processors';
 import { EventEmitterService } from '../../services';
 import { DonationService } from '../../services/donation-service';
 import { BitmarkComponent } from '../../commons/components';
+import { DonationComponent } from './donation';
 
 const MainTabs = BottomTabsComponent.MainTabs;
 
@@ -201,7 +202,12 @@ export class UserComponent extends React.Component {
 
         )}
         content={(<View style={{ flex: 1 }}>
-
+          {this.state.displayedTab.mainTab === MainTabs.Donate && <DonationComponent screenProps={{
+            homeNavigation: this.props.navigation,
+            subTab: this.state.displayedTab.subTab,
+            needReloadData: this.needReloadData,
+            donReloadData: () => this.needReloadData = false,
+          }} />}
         </View>)}
         footer={(<BottomTabsComponent mainTab={this.state.displayedTab.mainTab} switchMainTab={this.switchMainTab} homeNavigation={this.props.navigation} />)}
       />

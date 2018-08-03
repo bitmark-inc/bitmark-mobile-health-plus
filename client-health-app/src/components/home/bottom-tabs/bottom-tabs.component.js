@@ -19,13 +19,12 @@ export class BottomTabsComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handerChangeActiveIncomingTransferOffer = this.handerChangeActiveIncomingTransferOffer.bind(this);
+    this.handerChangeDonationTasks = this.handerChangeDonationTasks.bind(this);
     this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
     this.handleChangeMainTab = this.handleChangeMainTab.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
 
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA, null, ComponentName);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_DONATION_TASK, null, ComponentName);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_MAIN_TAB, null, ComponentName);
 
@@ -44,17 +43,17 @@ export class BottomTabsComponent extends React.Component {
   }
 
   componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA, this.handerChangeActiveIncomingTransferOffer, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_DONATION_TASK, this.handerChangeDonationTasks, ComponentName);
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
     EventEmitterService.on(EventEmitterService.events.CHANGE_MAIN_TAB, this.handleChangeMainTab, ComponentName);
   }
 
-  handerChangeActiveIncomingTransferOffer() {
-    DataProcessor.doGetTransactionScreenActionRequired(1).then(({ totalTasks }) => {
+  handerChangeDonationTasks() {
+    DataProcessor.doGetDonationTasks(1).then(({ totalTasks }) => {
       this.setState({ totalTasks });
       NotificationService.setApplicationIconBadgeNumber(totalTasks || 0);
     }).catch(error => {
-      console.log('doGetTransactionScreenActionRequired error:', error);
+      console.log('doGetDonationTasks error:', error);
     });
   }
 

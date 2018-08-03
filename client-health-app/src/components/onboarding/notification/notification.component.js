@@ -9,7 +9,7 @@ import notificationStyle from './notification.component.style';
 import { NotificationService } from '../../../services';
 import { iosConstant } from '../../../configs/ios/ios.config';
 import { BitmarkComponent } from '../../../commons/components';
-import { DataProcessor } from '../../../processors';
+// import { DataProcessor } from '../../../processors';
 
 export class NotificationComponent extends React.Component {
   constructor(props) {
@@ -22,9 +22,8 @@ export class NotificationComponent extends React.Component {
     });
 
     let requestNotification = () => {
-      NotificationService.doRequestNotificationPermissions().then((result) => {
+      NotificationService.doRequestNotificationPermissions().then(() => {
         this.props.screenProps.rootNavigation.dispatch(resetMainPage);
-        return DataProcessor.doMarkRequestedNotification(result);
       }).catch(error => {
         console.log('NotificationComponent requestNotification error:', error);
       });

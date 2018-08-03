@@ -11,7 +11,6 @@ import { AppProcessor } from './../../../../processors';
 import accountRecoveryStyle from './account-recovery.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { convertWidth } from '../../../../utils';
-import {DataProcessor} from "../../../../processors";
 
 let currentUser;
 class RecoveryPhraseComponent extends React.Component {
@@ -148,7 +147,6 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
           if (isSignOut) {
             this.props.navigation.navigate('TryRecovery', );
           } else {
-            DataProcessor.doRemoveTestRecoveryPhaseActionRequiredIfAny();
             this.props.screenProps.accountNavigation.goBack();
           }
         }}>
@@ -353,7 +351,6 @@ class TryRecoveryPhraseComponent extends React.Component {
       } else {
         this.props.screenProps.accountNavigation.goBack();
       }
-      DataProcessor.doRemoveTestRecoveryPhaseActionRequiredIfAny();
     } else {
       let smallerList = this.state.smallerList;
       smallerList.forEach(item => {

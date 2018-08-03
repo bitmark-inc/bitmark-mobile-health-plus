@@ -330,6 +330,7 @@ class MainComponent extends Component {
 
   render() {
     let DisplayedComponent = LoadingComponent;
+    console.log('this.state.user :', this.state.user);
     if (this.state.user) {
       DisplayedComponent = this.state.user.bitmarkAccountNumber ? HomeComponent : OnBoardingComponent;
     }

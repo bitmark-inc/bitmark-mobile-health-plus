@@ -16,8 +16,7 @@ let EventEmitterService = {
     CHANGE_USER_DATA_LOCAL_BITMARKS: 'change-user-data:local-bitmarks',
     CHANGE_USER_DATA_DONATION_INFORMATION: 'change-user-data:donation-information',
 
-    CHANGE_TRANSACTION_SCREEN_ACTION_REQUIRED_DATA: 'change-transaction-screen-action-required-data',
-    CHANGE_TRANSACTION_SCREEN_HISTORIES_DATA: 'change-transaction-screen-histories-data',
+    CHANGE_DONATION_TASK: 'change-donation-tasks',
 
     NEED_REFRESH_USER_COMPONENT_STATE: 'need-refresh-user-component-state',
     CHANGE_MAIN_TAB: 'change-main-tab',

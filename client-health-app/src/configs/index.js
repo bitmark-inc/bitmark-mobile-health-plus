@@ -19,30 +19,23 @@ let config = {
   appLink: 'https://itunes.apple.com/us/app/bitmark/id1213686437?ls=1&mt=8',
   api_server_url: 'https://api.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
-  trade_server_url: 'https://trade.devel.bitmark.com',
   donation_server_url: 'http://192.168.0.202:9001',
   mobile_server_url: 'https://bm.devel.bitmark.com',
-  web_app_server_url: 'http://192.168.0.109:8900',
   preview_asset_url: 'https://preview.test.bitmarkaccountassets.com',
   bitmark_web_site: 'https://website.test.bitmark.com',
   needResetLocalData: 1531973005311,
 };
 
 if (config.network === NETWORKS.testnet) {
-  config.trade_server_url = 'https://trade.test.bitmark.com';
   config.donation_server_url = 'https://data-donation.test.bitmark.com';
   config.mobile_server_url = 'https://bm.test.bitmark.com';
-  // config.web_app_server_url = "https://webapp.test.bitmark.com";
-  config.web_app_server_url = "http://192.168.0.202:8900";
   config.preview_asset_url = "https://preview.test.bitmarkaccountassets.com";
 } else if (config.network === NETWORKS.livenet) {
   config.bitmark_network = NETWORKS.livenet;
   config.api_server_url = 'https://api.bitmark.com';
   config.registry_server_url = 'https://registry.bitmark.com';
-  config.trade_server_url = 'https://trade.bitmark.com';
   config.mobile_server_url = 'https://bm.bitmark.com';
   config.donation_server_url = 'https://data-donation.bitmark.com';
-  config.web_app_server_url = "https://a.bitmark.com";
   config.preview_asset_url = "https://preview.bitmarkaccountassets.com";
   config.bitmark_web_site = 'https://bitmark.com';
 }

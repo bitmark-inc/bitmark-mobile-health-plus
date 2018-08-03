@@ -1,5 +1,4 @@
 import { Dimensions } from 'react-native';
-import { CommonModel, UserModel } from "../models";
 let currentSize = Dimensions.get('window');
 let widthDesign = 375;
 
@@ -57,21 +56,6 @@ const compareVersion = (version1, version2) => {
   return 0;
 };
 
-const addTestWriteRecoveryPhaseActionRequired = async (user) => {
-  await CommonModel.doSetLocalData(`${CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED}-${user.bitmarkAccountNumber}`, {
-    timestamp: (new Date()).toISOString()
-  });
-};
-
-const getTestWriteRecoveryPhaseActionRequired = async () => {
-  let user = await UserModel.doGetCurrentUser();
-  return CommonModel.doGetLocalData(`${CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED}-${user.bitmarkAccountNumber}`);
-};
-
-const removeTestWriteRecoveryPhaseActionRequired = async () => {
-  let user = await UserModel.doGetCurrentUser();
-  await CommonModel.doRemoveLocalData(`${CommonModel.KEYS.TEST_RECOVERY_PHASE_ACTION_REQUIRED}-${user.bitmarkAccountNumber}`);
-};
 
 
-export { convertWidth, calculateAdditionalHeight, sortList, runPromiseWithoutError, compareVersion, addTestWriteRecoveryPhaseActionRequired, getTestWriteRecoveryPhaseActionRequired, removeTestWriteRecoveryPhaseActionRequired };
+export { convertWidth, calculateAdditionalHeight, sortList, runPromiseWithoutError, compareVersion };

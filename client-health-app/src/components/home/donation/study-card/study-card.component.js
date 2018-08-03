@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, ImageBackground,
+  Text, View, ImageBackground, Image,
 } from 'react-native';
 
 import cardStyles from './study-card.component.style';
@@ -14,7 +14,7 @@ export class StudyCardComponent extends React.Component {
     };
   }
   // ==========================================================================================
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       duration: nextProps.duration,
     });
@@ -25,6 +25,10 @@ export class StudyCardComponent extends React.Component {
       <View style={[cardStyles.body, this.props.style]}>
         <View style={cardStyles.scale}>
           <ImageBackground style={cardStyles.cardBackground} source={require('./../../../../../assets/imgs//card-berkeley.png')}>
+            <Image style={cardStyles.researcherImage} source={this.props.researcherImage} />
+            {this.props.displayStatus && <View style={[cardStyles.studyStatus, { opacity: this.props.joined ? 0.8 : 1 }]}>
+              <Text style={cardStyles.studyStatusText}>{this.props.joined ? 'JOINED' : 'JOIN'}</Text>
+            </View>}
             <Text style={cardStyles.title}>
               {this.props.title}
             </Text>
@@ -51,6 +55,8 @@ export class StudyCardComponent extends React.Component {
 }
 
 StudyCardComponent.propTypes = {
+  researcherImage: PropTypes.object,
+  displayStatus: PropTypes.bool,
   duration: PropTypes.string,
   title: PropTypes.string,
   description: PropTypes.string,
