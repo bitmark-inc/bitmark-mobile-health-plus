@@ -1,11 +1,12 @@
 package gateway
 
 import (
+	"bytes"
 	"context"
+	"fmt"
+	"golang.org/x/net/context/ctxhttp"
 	"net/http"
 	"time"
-
-	"golang.org/x/net/context/ctxhttp"
 
 	"github.com/json-iterator/go"
 
@@ -127,4 +128,31 @@ func (c *Client) GetTxInfo(ctx context.Context, txID string) (*TxInfo, error) {
 	}
 
 	return &txInfo, nil
+}
+
+func (c *Client) RegisterAccount(ctx context.Context, account string) error {
+	u := c.url + "/v2/identity/accounts"
+
+	buf := &bytes.Buffer{}
+	enc := json.NewEncoder(buf)
+	err := enc.Encode(map[string]string{
+		"account": account,
+		"app":     "mobile",
+	})
+	if err != nil {
+		return err
+	}
+
+	response, err := ctxhttp.Post(ctx, c.client, u, "application/json", buf)
+	if err != nil {
+		return err
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode != 200 {
+		return fmt.Errorf("fail to register an account: %s", account)
+	}
+
+	return nil
 }
