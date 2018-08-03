@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Bitmark</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.3.8</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.bitmark.bitmarkios</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bitmark</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>103</string>
+	<key>CodePushDeploymentKey</key>
+	<string>ZcZy_ZeCnqCYnzaFGb4ZmljBQHJc5247aad0-6cc3-4dd7-b247-c76a433163da</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to use your camera</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Touch/Face ID or a passcode is required to authorize your transactions.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your health data</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to your health data</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Bitmark app would like to access your location for metric purpose.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>
+	<key>NSMotionUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+	<key>ResearchKit-Font-Bold</key>
+	<string>Avenir-Black</string>
+	<key>ResearchKit-Font-Light</key>
+	<string>Avenir-Light</string>
+	<key>ResearchKit-Font-Medium</key>
+	<string>Avenir-Medium</string>
+	<key>ResearchKit-Font-Normal</key>
+	<string>Avenir</string>
+	<key>ResearchKit-Font-Thin</key>
+	<string>Avenir-Light</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AndaleMono.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+</dict>
+</plist>

@@ -1,0 +1,1 @@
+export * from './bitmark-indicator.component.js';

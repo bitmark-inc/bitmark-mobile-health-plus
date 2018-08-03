@@ -1,0 +1,45 @@
+platform :ios, '10.0'
+
+def pods
+    # Pods for Bitmark
+    
+    pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
+    pod 'KeychainAccess'
+    pod 'ResearchKit', :git => 'https://github.com/bitmark-inc/ResearchKit.git'
+    
+end
+
+target 'Bitmark' do
+  use_frameworks!
+
+  pods
+
+  target 'BitmarkTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+target 'Bitmark beta' do
+    use_frameworks!
+    
+    pods
+    pod 'HockeySDK'
+    
+end
+
+target 'Bitmark dev' do
+    use_frameworks!
+    
+    pods
+    pod 'HockeySDK'
+    
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+          config.build_settings['SWIFT_VERSION'] = '4.1'      end
+  end
+end
