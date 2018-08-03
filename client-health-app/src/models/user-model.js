@@ -34,7 +34,7 @@ const resetUserLocalData = async () => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRACKING_BITMARKS, []);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, {});
 
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_ACTION_REQUIRED, []);
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK, []);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS_HISTORY, []);
 }
 
