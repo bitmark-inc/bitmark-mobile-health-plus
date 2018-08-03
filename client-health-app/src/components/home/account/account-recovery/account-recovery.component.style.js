@@ -15,7 +15,7 @@ export default StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#EDF0F4',
     height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
     width: '100%',
   },

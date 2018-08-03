@@ -191,6 +191,7 @@ export class UserComponent extends React.Component {
   render() {
     return (
       <BitmarkComponent
+        backgroundColor={'#EDF0F4'}
         header={(
           <View style={defaultStyle.header}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.navigate('Account')}>

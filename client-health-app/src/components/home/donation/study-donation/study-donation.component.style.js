@@ -9,14 +9,14 @@ let constant = Platform.select({ ios: ios.constant, android: android.constant })
 export default StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#EDF0F4',
   },
   header: {
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#EDF0F4',
     height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
     width: '100%',
   },
@@ -74,7 +74,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     borderTopColor: '#0060F2',
     borderTopWidth: 3,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#EDF0F4',
   },
   bitmarkButtonText: {
     fontFamily: 'Avenir black',

@@ -15,7 +15,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#EDF0F4',
   },
 
   bottomTabArea: {
@@ -29,7 +29,7 @@ export default StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     paddingBottom: constant.blankFooter,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#EDF0F4',
   },
 
   bottomTabButton: {

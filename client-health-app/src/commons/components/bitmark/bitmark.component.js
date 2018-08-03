@@ -177,7 +177,7 @@ export class BitmarkComponent extends React.Component {
       top: 0,
       width: currentSize.width,
       height: currentSize.height,
-      backgroundColor: "#F5F5F5",
+      backgroundColor: "#EDF0F4",
       // borderWidth: 4, borderColor: 'red',
       zIndex: 0,
     };

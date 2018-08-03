@@ -201,10 +201,10 @@ export class SignInComponent extends React.Component {
   render() {
     return (
       <BitmarkComponent
-        backgroundColor={'#F5F5F5'}
+        backgroundColor={'#EDF0F4'}
         ref={(ref) => this.fullRef = ref}
         header={(<TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-          <View style={[defaultStyles.header, { backgroundColor: '#F5F5F5' }]}>
+          <View style={[defaultStyles.header, { backgroundColor: '#EDF0F4' }]}>
             <StatusBar hidden={false} />
             <TouchableOpacity style={[defaultStyles.headerLeft, { width: 50 }]} onPress={() => { this.props.navigation.goBack() }}>
               <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />

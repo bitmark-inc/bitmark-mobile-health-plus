@@ -55,7 +55,7 @@ export class StudyCardComponent extends React.Component {
 }
 
 StudyCardComponent.propTypes = {
-  researcherImage: PropTypes.object,
+  researcherImage: PropTypes.any,
   displayStatus: PropTypes.bool,
   duration: PropTypes.string,
   title: PropTypes.string,

@@ -234,6 +234,7 @@ export class DonationComponent extends React.Component {
               </View>
             </TouchableOpacity>
           </View>
+          {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
         {this.state.subTab === SubTabs.studies && <ScrollView style={donationStyle.contentScroll}>
@@ -248,7 +249,7 @@ export class DonationComponent extends React.Component {
                     return (<TouchableOpacity style={donationStyle.studyCard} onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item })}>
                       <StudyCardComponent
                         researcherImage={item.studyId === 'study1' ? require('./../../../../assets/imgs/madelena.png') :
-                          (item.studyId === 'study2' ? require('./../../../../assets/imgs/victor.png') : null)}
+                          (item.studyId === 'study2' ? require('./../../../../assets/imgs/victor.png') : '')}
                         displayStatus={true}
                         title={item.title}
                         joined={!!item.joinedDate}
@@ -261,6 +262,7 @@ export class DonationComponent extends React.Component {
               </View>
             </TouchableOpacity>
           </View>
+          {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
 
@@ -269,11 +271,8 @@ export class DonationComponent extends React.Component {
           <View style={donationStyle.content}>
 
           </View>
+          {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
-
-        {(this.state.appLoadingData || this.state.gettingData) && <View style={donationStyle.content}>
-          <ActivityIndicator size="large" style={{ marginTop: 46, }} />
-        </View>}
 
       </View>
     );
