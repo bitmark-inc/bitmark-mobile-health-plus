@@ -14,12 +14,9 @@
 		00E356F31AD99517003FC87E /* BitmarkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BitmarkTests.m */; };
 		0E25DDFC20F470EB00635A33 /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
 		0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
-		0E25DE3620F4715400635A33 /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
-		0E25DE3720F4715C00635A33 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		0E4065AB2091E23B005E1CBD /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
 		0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		0E617E4F20A2FAE4007A3A24 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
-		0E617E8420A2FB23007A3A24 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
 		0E7B97DE20EF56170064EEEC /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -32,126 +29,53 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		32B57ECB1D8A5A50E3D15BD3 /* Pods_BitmarkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */; };
 		35DA40877A245055444173D2 /* Pods_Bitmark_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D400D54DA2A09662699E58CF /* Pods_Bitmark_dev.framework */; };
-		580AD88E2046893B000EEB1F /* TouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9510D20202AF70050A9D4 /* TouchID.m */; };
-		580AD88F2046893B000EEB1F /* BitmarkSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FC1E55201B21CC00F60AF9 /* BitmarkSDK.swift */; };
-		580AD8902046893B000EEB1F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		580AD8912046893B000EEB1F /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
-		580AD8922046893B000EEB1F /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
-		580AD8932046893B000EEB1F /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
-		580AD8942046893B000EEB1F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		580AD8962046893B000EEB1F /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15F68DE203D70DE00A5A582 /* libRNImagePicker.a */; };
-		580AD8972046893B000EEB1F /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 584009A920243AA700550ADB /* libRCTCamera.a */; };
-		580AD8982046893B000EEB1F /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
-		580AD8992046893B000EEB1F /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		580AD89A2046893B000EEB1F /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		580AD89B2046893B000EEB1F /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
-		580AD89D2046893B000EEB1F /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
-		580AD89E2046893B000EEB1F /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
-		580AD89F2046893B000EEB1F /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
-		580AD8A02046893B000EEB1F /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
-		580AD8A12046893B000EEB1F /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		580AD8A22046893B000EEB1F /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
-		580AD8A32046893B000EEB1F /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
-		580AD8A42046893B000EEB1F /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68EEEE1542C435DA913552D /* libRNFS.a */; };
-		580AD8A52046893B000EEB1F /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 295B8983183E4140AD6083BB /* libRNMail.a */; };
-		580AD8A62046893B000EEB1F /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B46290362EA64E3A93EE362E /* libRCTVideo.a */; };
-		580AD8A92046893B000EEB1F /* AndaleMono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F150CA152023230B00C8FC17 /* AndaleMono.ttf */; };
-		580AD8AA2046893B000EEB1F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		580AD8AB2046893B000EEB1F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		580C4BE22099978D00AAEEE0 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580C4BE12099978D00AAEEE0 /* CloudKit.framework */; };
-		580C4C172099979200AAEEE0 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580C4BE12099978D00AAEEE0 /* CloudKit.framework */; };
 		584009D020243ABA00550ADB /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 584009A920243AA700550ADB /* libRCTCamera.a */; };
 		58400A98202C013C00550ADB /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
 		58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
-		58557E6C2062042100402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
 		588FE23D205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */; };
-		588FE23E205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */; };
 		588FE23F205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E8205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m */; };
-		588FE240205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E8205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m */; };
 		588FE241205FB45500937D78 /* RCTAppleHealthKit+Methods_Nutrition.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EA205FB45500937D78 /* RCTAppleHealthKit+Methods_Nutrition.m */; };
-		588FE242205FB45500937D78 /* RCTAppleHealthKit+Methods_Nutrition.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EA205FB45500937D78 /* RCTAppleHealthKit+Methods_Nutrition.m */; };
 		588FE243205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EB205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m */; };
-		588FE244205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EB205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m */; };
 		588FE245205FB45500937D78 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EC205FB45500937D78 /* RCTAppleHealthKit+Methods_Sleep.m */; };
-		588FE246205FB45500937D78 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EC205FB45500937D78 /* RCTAppleHealthKit+Methods_Sleep.m */; };
 		588FE247205FB45500937D78 /* RCTAppleHealthKit+Methods_Characteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1ED205FB45500937D78 /* RCTAppleHealthKit+Methods_Characteristic.m */; };
-		588FE248205FB45500937D78 /* RCTAppleHealthKit+Methods_Characteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1ED205FB45500937D78 /* RCTAppleHealthKit+Methods_Characteristic.m */; };
 		588FE249205FB45500937D78 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F0205FB45500937D78 /* RCTAppleHealthKit+Methods_Vitals.m */; };
-		588FE24A205FB45500937D78 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F0205FB45500937D78 /* RCTAppleHealthKit+Methods_Vitals.m */; };
 		588FE24B205FB45500937D78 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F2205FB45500937D78 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m */; };
-		588FE24C205FB45500937D78 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F2205FB45500937D78 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m */; };
 		588FE24D205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F6205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m */; };
-		588FE24E205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F6205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m */; };
 		588FE24F205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F7205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m */; };
-		588FE250205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F7205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m */; };
 		588FE251205FB45500937D78 /* RCTAppleHealthKit+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FB205FB45500937D78 /* RCTAppleHealthKit+Utils.m */; };
-		588FE252205FB45500937D78 /* RCTAppleHealthKit+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FB205FB45500937D78 /* RCTAppleHealthKit+Utils.m */; };
 		588FE253205FB45500937D78 /* RCTAppleHealthKit+TypesAndPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FD205FB45500937D78 /* RCTAppleHealthKit+TypesAndPermissions.m */; };
-		588FE254205FB45500937D78 /* RCTAppleHealthKit+TypesAndPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FD205FB45500937D78 /* RCTAppleHealthKit+TypesAndPermissions.m */; };
 		588FE255205FB45500937D78 /* RCTAppleHealthKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FE205FB45500937D78 /* RCTAppleHealthKit.m */; };
-		588FE256205FB45500937D78 /* RCTAppleHealthKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FE205FB45500937D78 /* RCTAppleHealthKit.m */; };
 		588FE257205FB45500937D78 /* RCTAppleHealthKit+Queries.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE201205FB45500937D78 /* RCTAppleHealthKit+Queries.m */; };
-		588FE258205FB45500937D78 /* RCTAppleHealthKit+Queries.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE201205FB45500937D78 /* RCTAppleHealthKit+Queries.m */; };
 		588FE259205FB45500937D78 /* HKDevice+Exporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE202205FB45500937D78 /* HKDevice+Exporting.m */; };
-		588FE25A205FB45500937D78 /* HKDevice+Exporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE202205FB45500937D78 /* HKDevice+Exporting.m */; };
 		588FE25B205FB45500937D78 /* HKSourceRevision+Exporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE204205FB45500937D78 /* HKSourceRevision+Exporting.m */; };
-		588FE25C205FB45500937D78 /* HKSourceRevision+Exporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE204205FB45500937D78 /* HKSourceRevision+Exporting.m */; };
 		588FE25D205FB45500937D78 /* InternationalDiabeteRenussionStudy.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE237205FB45500937D78 /* InternationalDiabeteRenussionStudy.m */; };
-		588FE25E205FB45500937D78 /* InternationalDiabeteRenussionStudy.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE237205FB45500937D78 /* InternationalDiabeteRenussionStudy.m */; };
 		588FE25F205FB45500937D78 /* InternationalDiabeteRenussionTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE23B205FB45500937D78 /* InternationalDiabeteRenussionTask.m */; };
-		588FE260205FB45500937D78 /* InternationalDiabeteRenussionTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE23B205FB45500937D78 /* InternationalDiabeteRenussionTask.m */; };
 		588FE261205FB45500937D78 /* WomenHealthStudy.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE23C205FB45500937D78 /* WomenHealthStudy.m */; };
-		588FE262205FB45500937D78 /* WomenHealthStudy.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE23C205FB45500937D78 /* WomenHealthStudy.m */; };
 		588FE26E205FB71000937D78 /* NSDate+Computing.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE268205FB71000937D78 /* NSDate+Computing.m */; };
-		588FE26F205FB71000937D78 /* NSDate+Computing.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE268205FB71000937D78 /* NSDate+Computing.m */; };
 		588FE270205FB71000937D78 /* NSDate+Converting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE269205FB71000937D78 /* NSDate+Converting.m */; };
-		588FE271205FB71000937D78 /* NSDate+Converting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE269205FB71000937D78 /* NSDate+Converting.m */; };
 		588FE272205FB71000937D78 /* LocaleUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26A205FB71000937D78 /* LocaleUnit.m */; };
-		588FE273205FB71000937D78 /* LocaleUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26A205FB71000937D78 /* LocaleUnit.m */; };
 		588FE274205FB71000937D78 /* NSString+IdentitiesRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26B205FB71000937D78 /* NSString+IdentitiesRemove.m */; };
-		588FE275205FB71000937D78 /* NSString+IdentitiesRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26B205FB71000937D78 /* NSString+IdentitiesRemove.m */; };
 		588FE276205FB71000937D78 /* PhotoExporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26D205FB71000937D78 /* PhotoExporting.m */; };
-		588FE277205FB71000937D78 /* PhotoExporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26D205FB71000937D78 /* PhotoExporting.m */; };
 		588FE29F205FB76900937D78 /* ORKImagePickerStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 588FE27A205FB76900937D78 /* ORKImagePickerStepViewController.xib */; };
-		588FE2A0205FB76900937D78 /* ORKImagePickerStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 588FE27A205FB76900937D78 /* ORKImagePickerStepViewController.xib */; };
 		588FE2A1205FB76900937D78 /* ORKImagePickerStepResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27B205FB76900937D78 /* ORKImagePickerStepResult.m */; };
-		588FE2A2205FB76900937D78 /* ORKImagePickerStepResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27B205FB76900937D78 /* ORKImagePickerStepResult.m */; };
 		588FE2A3205FB76900937D78 /* ORKImagePickerStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27C205FB76900937D78 /* ORKImagePickerStep.m */; };
-		588FE2A4205FB76900937D78 /* ORKImagePickerStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27C205FB76900937D78 /* ORKImagePickerStep.m */; };
 		588FE2A5205FB76900937D78 /* ORKImagePickerStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27D205FB76900937D78 /* ORKImagePickerStepViewController.m */; };
-		588FE2A6205FB76900937D78 /* ORKImagePickerStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27D205FB76900937D78 /* ORKImagePickerStepViewController.m */; };
 		588FE2A7205FB76900937D78 /* GMImagePicker.strings in Resources */ = {isa = PBXBuildFile; fileRef = 588FE282205FB76900937D78 /* GMImagePicker.strings */; };
-		588FE2A8205FB76900937D78 /* GMImagePicker.strings in Resources */ = {isa = PBXBuildFile; fileRef = 588FE282205FB76900937D78 /* GMImagePicker.strings */; };
 		588FE2A9205FB76900937D78 /* GMSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28C205FB76900937D78 /* GMSelected@2x.png */; };
-		588FE2AA205FB76900937D78 /* GMSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28C205FB76900937D78 /* GMSelected@2x.png */; };
 		588FE2AB205FB76900937D78 /* GMEmptyFolder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28D205FB76900937D78 /* GMEmptyFolder@2x.png */; };
-		588FE2AC205FB76900937D78 /* GMEmptyFolder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28D205FB76900937D78 /* GMEmptyFolder@2x.png */; };
 		588FE2AD205FB76900937D78 /* GMVideoIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28E205FB76900937D78 /* GMVideoIcon@2x.png */; };
-		588FE2AE205FB76900937D78 /* GMVideoIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28E205FB76900937D78 /* GMVideoIcon@2x.png */; };
 		588FE2AF205FB76900937D78 /* GMImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE290205FB76900937D78 /* GMImagePickerController.m */; };
-		588FE2B0205FB76900937D78 /* GMImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE290205FB76900937D78 /* GMImagePickerController.m */; };
 		588FE2B1205FB76900937D78 /* GMGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE291205FB76900937D78 /* GMGridViewController.m */; };
-		588FE2B2205FB76900937D78 /* GMGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE291205FB76900937D78 /* GMGridViewController.m */; };
 		588FE2B3205FB76900937D78 /* GMVideoIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE292205FB76900937D78 /* GMVideoIcon.png */; };
-		588FE2B4205FB76900937D78 /* GMVideoIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE292205FB76900937D78 /* GMVideoIcon.png */; };
 		588FE2B5205FB76900937D78 /* GMAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE293205FB76900937D78 /* GMAlbumsViewController.m */; };
-		588FE2B6205FB76900937D78 /* GMAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE293205FB76900937D78 /* GMAlbumsViewController.m */; };
 		588FE2B7205FB76900937D78 /* GMEmptyFolder@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE294205FB76900937D78 /* GMEmptyFolder@1x.png */; };
-		588FE2B8205FB76900937D78 /* GMEmptyFolder@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE294205FB76900937D78 /* GMEmptyFolder@1x.png */; };
 		588FE2B9205FB76900937D78 /* GMAlbumsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE295205FB76900937D78 /* GMAlbumsViewCell.m */; };
-		588FE2BA205FB76900937D78 /* GMAlbumsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE295205FB76900937D78 /* GMAlbumsViewCell.m */; };
 		588FE2BB205FB76900937D78 /* GMSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE297205FB76900937D78 /* GMSelected.png */; };
-		588FE2BC205FB76900937D78 /* GMSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE297205FB76900937D78 /* GMSelected.png */; };
 		588FE2BD205FB76900937D78 /* GMGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE299205FB76900937D78 /* GMGridViewCell.m */; };
-		588FE2BE205FB76900937D78 /* GMGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE299205FB76900937D78 /* GMGridViewCell.m */; };
 		588FE2BF205FB76900937D78 /* GMImagePicker.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 588FE29B205FB76900937D78 /* GMImagePicker.podspec */; };
-		588FE2C0205FB76900937D78 /* GMImagePicker.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 588FE29B205FB76900937D78 /* GMImagePicker.podspec */; };
 		588FE2C1205FB76900937D78 /* ORKImagePickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE29D205FB76900937D78 /* ORKImagePickerCollectionViewCell.m */; };
-		588FE2C2205FB76900937D78 /* ORKImagePickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE29D205FB76900937D78 /* ORKImagePickerCollectionViewCell.m */; };
 		588FE2C8205FB78B00937D78 /* StudyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE2C4205FB78B00937D78 /* StudyHelper.m */; };
-		588FE2C9205FB78B00937D78 /* StudyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE2C4205FB78B00937D78 /* StudyHelper.m */; };
 		588FE2CA205FB78B00937D78 /* StudyTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE2C7205FB78B00937D78 /* StudyTheme.m */; };
-		588FE2CB205FB78B00937D78 /* StudyTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE2C7205FB78B00937D78 /* StudyTheme.m */; };
 		58908A7B20A18A5A00C0064A /* RCTAppleHealthKit+TypesAndPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FD205FB45500937D78 /* RCTAppleHealthKit+TypesAndPermissions.m */; };
 		58908A7C20A18A5A00C0064A /* RCTAppleHealthKit+Methods_Results.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F7205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m */; };
 		58908A7D20A18A5A00C0064A /* RCTAppleHealthKit+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FB205FB45500937D78 /* RCTAppleHealthKit+Utils.m */; };
@@ -213,7 +137,6 @@
 		58908AB720A18A5A00C0064A /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		58908AB820A18A5A00C0064A /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		58908AB920A18A5A00C0064A /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
-		58908ABA20A18A5A00C0064A /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580C4BE12099978D00AAEEE0 /* CloudKit.framework */; };
 		58908ABB20A18A5A00C0064A /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68EEEE1542C435DA913552D /* libRNFS.a */; };
 		58908ABC20A18A5A00C0064A /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 295B8983183E4140AD6083BB /* libRNMail.a */; };
 		58908ABD20A18A5A00C0064A /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B46290362EA64E3A93EE362E /* libRCTVideo.a */; };
@@ -232,33 +155,25 @@
 		58908ACB20A18A5A00C0064A /* GMEmptyFolder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28D205FB76900937D78 /* GMEmptyFolder@2x.png */; };
 		589626E9201B28380026C4A5 /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
 		58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
-		58B4A9ED20B6C8A5000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		58C9513920202AF80050A9D4 /* TouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9510D20202AF70050A9D4 /* TouchID.m */; };
 		58CB4892201EC63A0058B364 /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
 		58FC1E56201B21CC00F60AF9 /* BitmarkSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FC1E55201B21CC00F60AF9 /* BitmarkSDK.swift */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		6D467D3E31F1686412B5B30E /* Pods_Bitmark.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64DCCF0E838787F5DD5E77AE /* Pods_Bitmark.framework */; };
 		72A0ED28C921482083D1D737 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68EEEE1542C435DA913552D /* libRNFS.a */; };
-		8237A7FC85B4FADC630F20BE /* Pods_Bitmark_beta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5F6B1D2FFF2E6605394A96 /* Pods_Bitmark_beta.framework */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		A75355ACD4CF4A668E3CF8D3 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B46290362EA64E3A93EE362E /* libRCTVideo.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B7856E9B0E4B4CF3BA90EB21 /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 295B8983183E4140AD6083BB /* libRNMail.a */; };
 		F150CA412023230B00C8FC17 /* AndaleMono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F150CA152023230B00C8FC17 /* AndaleMono.ttf */; };
 		F15C1D112063B9D4002DDF98 /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15C1D102063B9B6002DDF98 /* libRNZipArchive.a */; };
-		F15C1D122063B9EA002DDF98 /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15C1D102063B9B6002DDF98 /* libRNZipArchive.a */; };
 		F15F68E1203D70EC00A5A582 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15F68DE203D70DE00A5A582 /* libRNImagePicker.a */; };
 		F179A25020AF9775002D5539 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		F18C03B62049096100FA36E4 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F18C03932049095000FA36E4 /* libRCTPushNotification.a */; };
-		F18C03B72049096E00FA36E4 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F18C03932049095000FA36E4 /* libRCTPushNotification.a */; };
-		F18C03C2204929E200FA36E4 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F18C03BE204929BC00FA36E4 /* libRNDeviceInfo.a */; };
 		F18C03C3204929FB00FA36E4 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F18C03BE204929BC00FA36E4 /* libRNDeviceInfo.a */; };
 		F1D09CF520770768008B16EE /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CC020770726008B16EE /* libCodePush.a */; };
-		F1D09CF620770778008B16EE /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CC020770726008B16EE /* libCodePush.a */; };
 		F1D09CF8207707BF008B16EE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CF7207707BF008B16EE /* libz.tbd */; };
-		F1D09CF9207707CB008B16EE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CF7207707BF008B16EE /* libz.tbd */; };
 		F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
-		F1F6E2E220B6BF6000CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
 		F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
 /* End PBXBuildFile section */
 
@@ -698,9 +613,7 @@
 		295B8983183E4140AD6083BB /* libRNMail.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNMail.a; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		579C1381393E59B3042E29F2 /* Pods-Bitmark.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.release.xcconfig"; sourceTree = "<group>"; };
-		580AD8B22046893B000EEB1F /* Bitmark beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bitmark beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		580AD8B32046893B000EEB1F /* Bitmark copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Bitmark copy-Info.plist"; path = "/Users/anhnguyen/Documents/go/src/github.com/bitmark-inc/mobile-app/client-health-app/ios/Bitmark copy-Info.plist"; sourceTree = "<absolute>"; };
-		580C4BE12099978D00AAEEE0 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		5840099F20243AA700550ADB /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		58557E6A2062041C00402734 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
@@ -790,7 +703,7 @@
 		588FE2C5205FB78B00937D78 /* StudyTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudyTheme.h; sourceTree = "<group>"; };
 		588FE2C6205FB78B00937D78 /* StudyHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudyHelper.h; sourceTree = "<group>"; };
 		588FE2C7205FB78B00937D78 /* StudyTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudyTheme.m; sourceTree = "<group>"; };
-		58908AD220A18A5A00C0064A /* Bitmark dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bitmark dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		58908AD220A18A5A00C0064A /* Bitmark Health dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bitmark Health dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		58908AD320A18A5A00C0064A /* Bitmark dev-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Bitmark dev-Info.plist"; path = "/Users/anhnguyen/Documents/go/src/github.com/bitmark-inc/mobile-app/client-health-app/ios/Bitmark dev-Info.plist"; sourceTree = "<absolute>"; };
 		589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkSDKBridge.m; sourceTree = "<group>"; };
 		58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "Bitmark-beta.entitlements"; path = "Bitmark/Bitmark-beta.entitlements"; sourceTree = "<group>"; };
@@ -869,48 +782,10 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				580C4BE22099978D00AAEEE0 /* CloudKit.framework in Frameworks */,
 				72A0ED28C921482083D1D737 /* libRNFS.a in Frameworks */,
 				B7856E9B0E4B4CF3BA90EB21 /* libRNMail.a in Frameworks */,
 				A75355ACD4CF4A668E3CF8D3 /* libRCTVideo.a in Frameworks */,
 				6D467D3E31F1686412B5B30E /* Pods_Bitmark.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		580AD8952046893B000EEB1F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0E25DE3720F4715C00635A33 /* libRNExitApp.a in Frameworks */,
-				0E25DE3620F4715400635A33 /* libReactNativeExceptionHandler.a in Frameworks */,
-				F1F6E2E220B6BF6000CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
-				58B4A9ED20B6C8A5000FF769 /* libKCKeepAwake.a in Frameworks */,
-				0E617E8420A2FB23007A3A24 /* libRNDocumentPicker.a in Frameworks */,
-				F1D09CF9207707CB008B16EE /* libz.tbd in Frameworks */,
-				F1D09CF620770778008B16EE /* libCodePush.a in Frameworks */,
-				F15C1D122063B9EA002DDF98 /* libRNZipArchive.a in Frameworks */,
-				F18C03C2204929E200FA36E4 /* libRNDeviceInfo.a in Frameworks */,
-				F18C03B72049096E00FA36E4 /* libRCTPushNotification.a in Frameworks */,
-				580AD8962046893B000EEB1F /* libRNImagePicker.a in Frameworks */,
-				580AD8972046893B000EEB1F /* libRCTCamera.a in Frameworks */,
-				580AD8982046893B000EEB1F /* libRCTBlob.a in Frameworks */,
-				580AD8992046893B000EEB1F /* libRCTAnimation.a in Frameworks */,
-				580AD89A2046893B000EEB1F /* libReact.a in Frameworks */,
-				580AD8992046893B000EEB1F /* libRCTAnimation.a in Frameworks */,
-				580AD89B2046893B000EEB1F /* libRCTActionSheet.a in Frameworks */,
-				580AD89D2046893B000EEB1F /* libRCTImage.a in Frameworks */,
-				580AD89E2046893B000EEB1F /* libRCTLinking.a in Frameworks */,
-				580AD89F2046893B000EEB1F /* libRCTNetwork.a in Frameworks */,
-				58557E6C2062042100402734 /* HealthKit.framework in Frameworks */,
-				580AD8A02046893B000EEB1F /* libRCTSettings.a in Frameworks */,
-				580AD8A12046893B000EEB1F /* libRCTText.a in Frameworks */,
-				580AD8A22046893B000EEB1F /* libRCTVibration.a in Frameworks */,
-				580AD8A32046893B000EEB1F /* libRCTWebSocket.a in Frameworks */,
-				580C4C172099979200AAEEE0 /* CloudKit.framework in Frameworks */,
-				580AD8A42046893B000EEB1F /* libRNFS.a in Frameworks */,
-				580AD8A52046893B000EEB1F /* libRNMail.a in Frameworks */,
-				580AD8A62046893B000EEB1F /* libRCTVideo.a in Frameworks */,
-				8237A7FC85B4FADC630F20BE /* Pods_Bitmark_beta.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -943,7 +818,6 @@
 				58908AB720A18A5A00C0064A /* libRCTText.a in Frameworks */,
 				58908AB820A18A5A00C0064A /* libRCTVibration.a in Frameworks */,
 				58908AB920A18A5A00C0064A /* libRCTWebSocket.a in Frameworks */,
-				58908ABA20A18A5A00C0064A /* CloudKit.framework in Frameworks */,
 				58908ABB20A18A5A00C0064A /* libRNFS.a in Frameworks */,
 				58908ABC20A18A5A00C0064A /* libRNMail.a in Frameworks */,
 				58908ABD20A18A5A00C0064A /* libRCTVideo.a in Frameworks */,
@@ -1105,7 +979,6 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				580C4BE12099978D00AAEEE0 /* CloudKit.framework */,
 				F1D09CF7207707BF008B16EE /* libz.tbd */,
 				58557E6A2062041C00402734 /* HealthKit.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
@@ -1433,8 +1306,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* Bitmark.app */,
 				00E356EE1AD99517003FC87E /* BitmarkTests.xctest */,
-				580AD8B22046893B000EEB1F /* Bitmark beta.app */,
-				58908AD220A18A5A00C0064A /* Bitmark dev.app */,
+				58908AD220A18A5A00C0064A /* Bitmark Health dev.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1546,9 +1418,9 @@
 			productReference = 00E356EE1AD99517003FC87E /* BitmarkTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* Bitmark */ = {
+		13B07F861A680F5B00A75B9A /* Bitmark Health */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Bitmark" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Bitmark Health" */;
 			buildPhases = (
 				521CEE845EEDD5CD3230D01F /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -1562,35 +1434,14 @@
 			);
 			dependencies = (
 			);
-			name = Bitmark;
+			name = "Bitmark Health";
 			productName = "Hello World";
 			productReference = 13B07F961A680F5B00A75B9A /* Bitmark.app */;
 			productType = "com.apple.product-type.application";
 		};
-		580AD88B2046893B000EEB1F /* Bitmark beta */ = {
+		58908A7820A18A5A00C0064A /* Bitmark Health dev */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 580AD8AF2046893B000EEB1F /* Build configuration list for PBXNativeTarget "Bitmark beta" */;
-			buildPhases = (
-				9BE7C6FE0972E38EB5874A93 /* [CP] Check Pods Manifest.lock */,
-				580AD88D2046893B000EEB1F /* Sources */,
-				580AD8952046893B000EEB1F /* Frameworks */,
-				580AD8A82046893B000EEB1F /* Resources */,
-				580AD8AC2046893B000EEB1F /* Bundle React Native code and images */,
-				C3B4F18D8FD77D3DD7D9CC83 /* [CP] Embed Pods Frameworks */,
-				D9FD23B13E16395BF60BBF42 /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Bitmark beta";
-			productName = "Hello World";
-			productReference = 580AD8B22046893B000EEB1F /* Bitmark beta.app */;
-			productType = "com.apple.product-type.application";
-		};
-		58908A7820A18A5A00C0064A /* Bitmark dev */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 58908ACF20A18A5A00C0064A /* Build configuration list for PBXNativeTarget "Bitmark dev" */;
+			buildConfigurationList = 58908ACF20A18A5A00C0064A /* Build configuration list for PBXNativeTarget "Bitmark Health dev" */;
 			buildPhases = (
 				58908A7920A18A5A00C0064A /* [CP] Check Pods Manifest.lock */,
 				58908A7A20A18A5A00C0064A /* Sources */,
@@ -1604,9 +1455,9 @@
 			);
 			dependencies = (
 			);
-			name = "Bitmark dev";
+			name = "Bitmark Health dev";
 			productName = "Hello World";
-			productReference = 58908AD220A18A5A00C0064A /* Bitmark dev.app */;
+			productReference = 58908AD220A18A5A00C0064A /* Bitmark Health dev.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1625,24 +1476,6 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = Z5CE7A3A7N;
 						LastSwiftMigration = 0920;
-						ProvisioningStyle = Manual;
-						SystemCapabilities = {
-							com.apple.HealthKit = {
-								enabled = 1;
-							};
-							com.apple.Keychain = {
-								enabled = 1;
-							};
-							com.apple.Push = {
-								enabled = 1;
-							};
-							com.apple.iCloud = {
-								enabled = 1;
-							};
-						};
-					};
-					580AD88B2046893B000EEB1F = {
-						DevelopmentTeam = A52M7AQ8B2;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.HealthKit = {
@@ -1790,9 +1623,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* Bitmark */,
-				580AD88B2046893B000EEB1F /* Bitmark beta */,
-				58908A7820A18A5A00C0064A /* Bitmark dev */,
+				13B07F861A680F5B00A75B9A /* Bitmark Health */,
+				58908A7820A18A5A00C0064A /* Bitmark Health dev */,
 				00E356ED1AD99517003FC87E /* BitmarkTests */,
 			);
 		};
@@ -2227,25 +2059,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		580AD8A82046893B000EEB1F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				580AD8A92046893B000EEB1F /* AndaleMono.ttf in Resources */,
-				588FE2A8205FB76900937D78 /* GMImagePicker.strings in Resources */,
-				588FE2C0205FB76900937D78 /* GMImagePicker.podspec in Resources */,
-				588FE2B4205FB76900937D78 /* GMVideoIcon.png in Resources */,
-				588FE2A0205FB76900937D78 /* ORKImagePickerStepViewController.xib in Resources */,
-				588FE2BC205FB76900937D78 /* GMSelected.png in Resources */,
-				588FE2AE205FB76900937D78 /* GMVideoIcon@2x.png in Resources */,
-				588FE2B8205FB76900937D78 /* GMEmptyFolder@1x.png in Resources */,
-				580AD8AA2046893B000EEB1F /* Images.xcassets in Resources */,
-				580AD8AB2046893B000EEB1F /* LaunchScreen.xib in Resources */,
-				588FE2AA205FB76900937D78 /* GMSelected@2x.png in Resources */,
-				588FE2AC205FB76900937D78 /* GMEmptyFolder@2x.png in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58908ABF20A18A5A00C0064A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2314,20 +2127,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		580AD8AC2046893B000EEB1F /* Bundle React Native code and images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native code and images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
 		58908A7920A18A5A00C0064A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2469,72 +2268,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkTests/Pods-BitmarkTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9BE7C6FE0972E38EB5874A93 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Bitmark beta-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C3B4F18D8FD77D3DD7D9CC83 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark beta/Pods-Bitmark beta-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
-				"${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework",
-				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
-				"${BUILT_PRODUCTS_DIR}/ResearchKit/ResearchKit.framework",
-				"${BUILT_PRODUCTS_DIR}/SipHash/SipHash.framework",
-				"${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BigInt.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BitmarkSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ResearchKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SipHash.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TweetNacl.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark beta/Pods-Bitmark beta-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D9FD23B13E16395BF60BBF42 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark beta/Pods-Bitmark beta-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark beta/Pods-Bitmark beta-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		FB242BC11C4777CE29CD187B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2613,55 +2346,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		580AD88D2046893B000EEB1F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				588FE254205FB45500937D78 /* RCTAppleHealthKit+TypesAndPermissions.m in Sources */,
-				588FE250205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m in Sources */,
-				588FE252205FB45500937D78 /* RCTAppleHealthKit+Utils.m in Sources */,
-				588FE273205FB71000937D78 /* LocaleUnit.m in Sources */,
-				588FE260205FB45500937D78 /* InternationalDiabeteRenussionTask.m in Sources */,
-				588FE25A205FB45500937D78 /* HKDevice+Exporting.m in Sources */,
-				588FE23E205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */,
-				588FE2CB205FB78B00937D78 /* StudyTheme.m in Sources */,
-				588FE2B0205FB76900937D78 /* GMImagePickerController.m in Sources */,
-				588FE277205FB71000937D78 /* PhotoExporting.m in Sources */,
-				588FE24C205FB45500937D78 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m in Sources */,
-				588FE2A6205FB76900937D78 /* ORKImagePickerStepViewController.m in Sources */,
-				588FE2C9205FB78B00937D78 /* StudyHelper.m in Sources */,
-				588FE2BE205FB76900937D78 /* GMGridViewCell.m in Sources */,
-				588FE26F205FB71000937D78 /* NSDate+Computing.m in Sources */,
-				588FE275205FB71000937D78 /* NSString+IdentitiesRemove.m in Sources */,
-				588FE242205FB45500937D78 /* RCTAppleHealthKit+Methods_Nutrition.m in Sources */,
-				580AD88E2046893B000EEB1F /* TouchID.m in Sources */,
-				588FE258205FB45500937D78 /* RCTAppleHealthKit+Queries.m in Sources */,
-				588FE2BA205FB76900937D78 /* GMAlbumsViewCell.m in Sources */,
-				588FE240205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m in Sources */,
-				588FE246205FB45500937D78 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */,
-				588FE262205FB45500937D78 /* WomenHealthStudy.m in Sources */,
-				588FE24A205FB45500937D78 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */,
-				588FE271205FB71000937D78 /* NSDate+Converting.m in Sources */,
-				588FE25E205FB45500937D78 /* InternationalDiabeteRenussionStudy.m in Sources */,
-				580AD88F2046893B000EEB1F /* BitmarkSDK.swift in Sources */,
-				588FE248205FB45500937D78 /* RCTAppleHealthKit+Methods_Characteristic.m in Sources */,
-				580AD8902046893B000EEB1F /* AppDelegate.m in Sources */,
-				580AD8912046893B000EEB1F /* BitmarkSDKBridge.m in Sources */,
-				588FE2B6205FB76900937D78 /* GMAlbumsViewController.m in Sources */,
-				588FE2C2205FB76900937D78 /* ORKImagePickerCollectionViewCell.m in Sources */,
-				580AD8922046893B000EEB1F /* KeychainUtil.swift in Sources */,
-				588FE256205FB45500937D78 /* RCTAppleHealthKit.m in Sources */,
-				588FE25C205FB45500937D78 /* HKSourceRevision+Exporting.m in Sources */,
-				580AD8932046893B000EEB1F /* AccountSession.swift in Sources */,
-				588FE244205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m in Sources */,
-				588FE2A4205FB76900937D78 /* ORKImagePickerStep.m in Sources */,
-				588FE2A2205FB76900937D78 /* ORKImagePickerStepResult.m in Sources */,
-				588FE24E205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m in Sources */,
-				588FE2B2205FB76900937D78 /* GMGridViewController.m in Sources */,
-				580AD8942046893B000EEB1F /* main.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58908A7A20A18A5A00C0064A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2716,7 +2400,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* Bitmark */;
+			target = 13B07F861A680F5B00A75B9A /* Bitmark Health */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -2821,6 +2505,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Bitmark/Bitmark.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -2839,10 +2524,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.health;
 				PRODUCT_NAME = Bitmark;
-				PROVISIONING_PROFILE = "29d1fce9-a905-4f4f-a0fb-b9ca37de04e8";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Development";
+				PROVISIONING_PROFILE = "267c58f3-499b-4ef8-a8e5-067f4d711266";
+				PROVISIONING_PROFILE_SPECIFIER = "Bitmark Health Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2875,90 +2560,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.health;
 				PRODUCT_NAME = Bitmark;
-				PROVISIONING_PROFILE = "8a122110-9e95-4cb6-b87c-4345a1ccb2a1";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Distribution";
-				SWIFT_VERSION = 4.0;
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Release;
-		};
-		580AD8B02046893B000EEB1F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 736D5408270648A18B3C4012 /* Pods-Bitmark beta.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-beta";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-beta.entitlements";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = A52M7AQ8B2;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"COCOAPODS=1",
-					"HOCKEYAPP=1",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
-					"$(SRCROOT)/../node_modules/react-native-video/ios",
-					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
-				);
-				INFOPLIST_FILE = "Bitmark copy-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios.inhouse;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5e01b840-59df-43fd-8d2f-d423d97f3801";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Inhouse Development";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Debug;
-		};
-		580AD8B12046893B000EEB1F /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B699513BD0B90FD6246B88A0 /* Pods-Bitmark beta.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-beta";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-beta.entitlements";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A52M7AQ8B2;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"COCOAPODS=1",
-					"HOCKEYAPP=1",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
-					"$(SRCROOT)/../node_modules/react-native-video/ios",
-					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
-				);
-				INFOPLIST_FILE = "Bitmark copy-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios.inhouse;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "fb590399-0626-4590-9f26-922fe39f0146";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Inhouse";
+				PROVISIONING_PROFILE = "af7eafe1-9dc2-4bc8-bfca-b9ca809c10ed";
+				PROVISIONING_PROFILE_SPECIFIER = "Bitmark Health Distribution";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2996,10 +2601,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios.development;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.health.inhouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0eb04629-7358-4418-98a6-93a8913f75b7";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark DEV development";
+				PROVISIONING_PROFILE = "924855fc-ed78-4698-89df-12aa921c910e";
+				PROVISIONING_PROFILE_SPECIFIER = "Bitmark Health Inhouse Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3037,10 +2642,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.bitmarkios.development;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.health.inhouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b1efacbd-64e2-463e-849e-3d983c722066";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark DEV inhouse";
+				PROVISIONING_PROFILE = "269a2bbe-5373-4bf2-8426-5c82e0e470bf";
+				PROVISIONING_PROFILE_SPECIFIER = "Bitmark Health Inhouse";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -3136,7 +2741,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Bitmark" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Bitmark Health" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -3145,16 +2750,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		580AD8AF2046893B000EEB1F /* Build configuration list for PBXNativeTarget "Bitmark beta" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				580AD8B02046893B000EEB1F /* Debug */,
-				580AD8B12046893B000EEB1F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		58908ACF20A18A5A00C0064A /* Build configuration list for PBXNativeTarget "Bitmark dev" */ = {
+		58908ACF20A18A5A00C0064A /* Build configuration list for PBXNativeTarget "Bitmark Health dev" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58908AD020A18A5A00C0064A /* Debug */,

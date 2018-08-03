@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "58908A7820A18A5A00C0064A"
-               BuildableName = "Bitmark dev.app"
-               BlueprintName = "Bitmark dev"
+               BuildableName = "Bitmark Health dev.app"
+               BlueprintName = "Bitmark Health dev"
                ReferencedContainer = "container:Bitmark.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,8 +47,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58908A7820A18A5A00C0064A"
-            BuildableName = "Bitmark dev.app"
-            BlueprintName = "Bitmark dev"
+            BuildableName = "Bitmark Health dev.app"
+            BlueprintName = "Bitmark Health dev"
             ReferencedContainer = "container:Bitmark.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -70,8 +70,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58908A7820A18A5A00C0064A"
-            BuildableName = "Bitmark dev.app"
-            BlueprintName = "Bitmark dev"
+            BuildableName = "Bitmark Health dev.app"
+            BlueprintName = "Bitmark Health dev"
             ReferencedContainer = "container:Bitmark.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -89,8 +89,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "58908A7820A18A5A00C0064A"
-            BuildableName = "Bitmark dev.app"
-            BlueprintName = "Bitmark dev"
+            BuildableName = "Bitmark Health dev.app"
+            BlueprintName = "Bitmark Health dev"
             ReferencedContainer = "container:Bitmark.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
