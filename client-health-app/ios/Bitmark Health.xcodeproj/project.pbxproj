@@ -29,6 +29,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		32B57ECB1D8A5A50E3D15BD3 /* Pods_BitmarkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */; };
 		35DA40877A245055444173D2 /* Pods_Bitmark_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D400D54DA2A09662699E58CF /* Pods_Bitmark_dev.framework */; };
+		3A4F621A85FF730D4339B6BA /* Pods_Bitmark_Health.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3870475D49F78C674AED76A2 /* Pods_Bitmark_Health.framework */; };
 		584009D020243ABA00550ADB /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 584009A920243AA700550ADB /* libRCTCamera.a */; };
 		58400A98202C013C00550ADB /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
 		58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
@@ -162,6 +163,7 @@
 		6D467D3E31F1686412B5B30E /* Pods_Bitmark.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64DCCF0E838787F5DD5E77AE /* Pods_Bitmark.framework */; };
 		72A0ED28C921482083D1D737 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68EEEE1542C435DA913552D /* libRNFS.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		8AA2171EAFB2980703609AB6 /* Pods_Bitmark_Health_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7F2135F8D7C72B6A5D9E94 /* Pods_Bitmark_Health_dev.framework */; };
 		A75355ACD4CF4A668E3CF8D3 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B46290362EA64E3A93EE362E /* libRCTVideo.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B7856E9B0E4B4CF3BA90EB21 /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 295B8983183E4140AD6083BB /* libRNMail.a */; };
@@ -596,12 +598,14 @@
 		00E356EE1AD99517003FC87E /* BitmarkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitmarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* BitmarkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkTests.m; sourceTree = "<group>"; };
+		0608A1F05B4B9F77FB79F85B /* Pods-Bitmark Health.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark Health.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark Health/Pods-Bitmark Health.debug.xcconfig"; sourceTree = "<group>"; };
+		0DA8C747B18543E175C7CCBD /* Pods-Bitmark Health dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark Health dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark Health dev/Pods-Bitmark Health dev.release.xcconfig"; sourceTree = "<group>"; };
 		0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNExitApp.xcodeproj; path = "../node_modules/react-native-exit-app/ios/RNExitApp.xcodeproj"; sourceTree = "<group>"; };
 		0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeExceptionHandler.xcodeproj; path = "../node_modules/react-native-exception-handler/ios/ReactNativeExceptionHandler.xcodeproj"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* Bitmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bitmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Bitmark Health.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bitmark Health.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Bitmark/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Bitmark/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -610,8 +614,11 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Bitmark/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1F5F6B1D2FFF2E6605394A96 /* Pods_Bitmark_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitmark_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		229BF42C09678394DFEA8212 /* Pods-Bitmark Health.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark Health.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark Health/Pods-Bitmark Health.release.xcconfig"; sourceTree = "<group>"; };
+		23F232B75ADECF9A18820B70 /* Pods-Bitmark Health dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark Health dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark Health dev/Pods-Bitmark Health dev.debug.xcconfig"; sourceTree = "<group>"; };
 		295B8983183E4140AD6083BB /* libRNMail.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNMail.a; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3870475D49F78C674AED76A2 /* Pods_Bitmark_Health.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitmark_Health.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		579C1381393E59B3042E29F2 /* Pods-Bitmark.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.release.xcconfig"; sourceTree = "<group>"; };
 		580AD8B32046893B000EEB1F /* Bitmark copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Bitmark copy-Info.plist"; path = "/Users/anhnguyen/Documents/go/src/github.com/bitmark-inc/mobile-app/client-health-app/ios/Bitmark copy-Info.plist"; sourceTree = "<absolute>"; };
 		5840099F20243AA700550ADB /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
@@ -704,7 +711,6 @@
 		588FE2C6205FB78B00937D78 /* StudyHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudyHelper.h; sourceTree = "<group>"; };
 		588FE2C7205FB78B00937D78 /* StudyTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudyTheme.m; sourceTree = "<group>"; };
 		58908AD220A18A5A00C0064A /* Bitmark Health dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bitmark Health dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		58908AD320A18A5A00C0064A /* Bitmark dev-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Bitmark dev-Info.plist"; path = "/Users/anhnguyen/Documents/go/src/github.com/bitmark-inc/mobile-app/client-health-app/ios/Bitmark dev-Info.plist"; sourceTree = "<absolute>"; };
 		589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkSDKBridge.m; sourceTree = "<group>"; };
 		58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "Bitmark-beta.entitlements"; path = "Bitmark/Bitmark-beta.entitlements"; sourceTree = "<group>"; };
 		58C9510C20202AF70050A9D4 /* TouchID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchID.h; sourceTree = "<group>"; };
@@ -723,6 +729,7 @@
 		8AFB9A7952839B858BFD9FBE /* Pods-BitmarkTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkTests/Pods-BitmarkTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A2D3611775A644B7B648A041 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		AF7F2135F8D7C72B6A5D9E94 /* Pods_Bitmark_Health_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitmark_Health_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4296E8568A7CE81E4D31BF4 /* Pods-Bitmark.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.debug.xcconfig"; sourceTree = "<group>"; };
 		B46290362EA64E3A93EE362E /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
 		B699513BD0B90FD6246B88A0 /* Pods-Bitmark beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark beta.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark beta/Pods-Bitmark beta.release.xcconfig"; sourceTree = "<group>"; };
@@ -786,6 +793,7 @@
 				B7856E9B0E4B4CF3BA90EB21 /* libRNMail.a in Frameworks */,
 				A75355ACD4CF4A668E3CF8D3 /* libRCTVideo.a in Frameworks */,
 				6D467D3E31F1686412B5B30E /* Pods_Bitmark.framework in Frameworks */,
+				3A4F621A85FF730D4339B6BA /* Pods_Bitmark_Health.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -823,6 +831,7 @@
 				58908ABD20A18A5A00C0064A /* libRCTVideo.a in Frameworks */,
 				58908ABE20A18A5A00C0064A /* Pods_Bitmark_beta.framework in Frameworks */,
 				35DA40877A245055444173D2 /* Pods_Bitmark_dev.framework in Frameworks */,
+				8AA2171EAFB2980703609AB6 /* Pods_Bitmark_Health_dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -986,6 +995,8 @@
 				7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */,
 				1F5F6B1D2FFF2E6605394A96 /* Pods_Bitmark_beta.framework */,
 				D400D54DA2A09662699E58CF /* Pods_Bitmark_dev.framework */,
+				3870475D49F78C674AED76A2 /* Pods_Bitmark_Health.framework */,
+				AF7F2135F8D7C72B6A5D9E94 /* Pods_Bitmark_Health_dev.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1294,7 +1305,6 @@
 				587A2FF0201B039B00A1410E /* Recovered References */,
 				A2C210A26EB189DCB44154A9 /* Pods */,
 				580AD8B32046893B000EEB1F /* Bitmark copy-Info.plist */,
-				58908AD320A18A5A00C0064A /* Bitmark dev-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1304,7 +1314,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* Bitmark.app */,
+				13B07F961A680F5B00A75B9A /* Bitmark Health.app */,
 				00E356EE1AD99517003FC87E /* BitmarkTests.xctest */,
 				58908AD220A18A5A00C0064A /* Bitmark Health dev.app */,
 			);
@@ -1322,6 +1332,10 @@
 				B699513BD0B90FD6246B88A0 /* Pods-Bitmark beta.release.xcconfig */,
 				7006CB495F6551DC0B00B8E8 /* Pods-Bitmark dev.debug.xcconfig */,
 				DDDF52A44890C0CADB5CC2CF /* Pods-Bitmark dev.release.xcconfig */,
+				0608A1F05B4B9F77FB79F85B /* Pods-Bitmark Health.debug.xcconfig */,
+				229BF42C09678394DFEA8212 /* Pods-Bitmark Health.release.xcconfig */,
+				23F232B75ADECF9A18820B70 /* Pods-Bitmark Health dev.debug.xcconfig */,
+				0DA8C747B18543E175C7CCBD /* Pods-Bitmark Health dev.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1436,7 +1450,7 @@
 			);
 			name = "Bitmark Health";
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* Bitmark.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Bitmark Health.app */;
 			productType = "com.apple.product-type.application";
 		};
 		58908A7820A18A5A00C0064A /* Bitmark Health dev */ = {
@@ -1498,7 +1512,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Bitmark" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Bitmark Health" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -2107,7 +2121,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark Health/Pods-Bitmark Health-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		521CEE845EEDD5CD3230D01F /* [CP] Check Pods Manifest.lock */ = {
@@ -2121,7 +2135,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Bitmark-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Bitmark Health-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2139,7 +2153,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Bitmark dev-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Bitmark Health dev-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2166,7 +2180,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark dev/Pods-Bitmark dev-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark Health dev/Pods-Bitmark Health dev-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
 				"${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
@@ -2187,7 +2201,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark dev/Pods-Bitmark dev-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark Health dev/Pods-Bitmark Health dev-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		58908ACE20A18A5A00C0064A /* [CP] Copy Pods Resources */ = {
@@ -2196,7 +2210,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark dev/Pods-Bitmark dev-resources.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark Health dev/Pods-Bitmark Health dev-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -2205,7 +2219,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark dev/Pods-Bitmark dev-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark Health dev/Pods-Bitmark Health dev-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8FD9F25D4DFFAF8EC22A7654 /* [CP] Embed Pods Frameworks */ = {
@@ -2229,7 +2243,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark Health/Pods-Bitmark Health-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
 				"${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
@@ -2250,7 +2264,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitmark Health/Pods-Bitmark Health-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9B8CB3D29FDC30AA3D976AD0 /* [CP] Copy Pods Resources */ = {
@@ -2463,7 +2477,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bitmark.app/Bitmark";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bitmark Health.app/Bitmark Health";
 			};
 			name = Debug;
 		};
@@ -2494,13 +2508,13 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bitmark.app/Bitmark";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bitmark Health.app/Bitmark Health";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B4296E8568A7CE81E4D31BF4 /* Pods-Bitmark.debug.xcconfig */;
+			baseConfigurationReference = 0608A1F05B4B9F77FB79F85B /* Pods-Bitmark Health.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -2525,7 +2539,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.health;
-				PRODUCT_NAME = Bitmark;
+				PRODUCT_NAME = "Bitmark Health";
 				PROVISIONING_PROFILE = "267c58f3-499b-4ef8-a8e5-067f4d711266";
 				PROVISIONING_PROFILE_SPECIFIER = "Bitmark Health Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2536,7 +2550,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 579C1381393E59B3042E29F2 /* Pods-Bitmark.release.xcconfig */;
+			baseConfigurationReference = 229BF42C09678394DFEA8212 /* Pods-Bitmark Health.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -2561,7 +2575,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.health;
-				PRODUCT_NAME = Bitmark;
+				PRODUCT_NAME = "Bitmark Health";
 				PROVISIONING_PROFILE = "af7eafe1-9dc2-4bc8-bfca-b9ca809c10ed";
 				PROVISIONING_PROFILE_SPECIFIER = "Bitmark Health Distribution";
 				SWIFT_VERSION = 4.0;
@@ -2571,7 +2585,7 @@
 		};
 		58908AD020A18A5A00C0064A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7006CB495F6551DC0B00B8E8 /* Pods-Bitmark dev.debug.xcconfig */;
+			baseConfigurationReference = 23F232B75ADECF9A18820B70 /* Pods-Bitmark Health dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ENABLE_MODULES = YES;
@@ -2594,7 +2608,7 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
 					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
-				INFOPLIST_FILE = "Bitmark dev-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Bitmark copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2613,7 +2627,7 @@
 		};
 		58908AD120A18A5A00C0064A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DDDF52A44890C0CADB5CC2CF /* Pods-Bitmark dev.release.xcconfig */;
+			baseConfigurationReference = 0DA8C747B18543E175C7CCBD /* Pods-Bitmark Health dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ENABLE_MODULES = YES;
@@ -2635,7 +2649,7 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
 					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
-				INFOPLIST_FILE = "Bitmark dev-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Bitmark copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2759,7 +2773,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Bitmark" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Bitmark Health" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

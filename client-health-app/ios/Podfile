@@ -9,7 +9,7 @@ def pods
     
 end
 
-target 'Bitmark' do
+target 'Bitmark Health' do
   use_frameworks!
 
   pods
@@ -21,15 +21,7 @@ target 'Bitmark' do
 
 end
 
-target 'Bitmark beta' do
-    use_frameworks!
-    
-    pods
-    pod 'HockeySDK'
-    
-end
-
-target 'Bitmark dev' do
+target 'Bitmark Health dev' do
     use_frameworks!
     
     pods
