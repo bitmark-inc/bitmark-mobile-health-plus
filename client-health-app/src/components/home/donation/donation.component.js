@@ -91,9 +91,13 @@ export class DonationComponent extends React.Component {
       console.log('getUserBitmark error :', error);
     });
   }
-  handerDonationInformationChange(donationInformation) {
+  async handerDonationInformationChange(donationInformation) {
     let studies = (donationInformation.otherStudies || []).concat(donationInformation.joinedStudies || []);
     studies = studies.sort((a, b) => (a.studyId < b.studyId ? -1 : (a.studyId > b.studyId ? 1 : 0)));
+
+    let { donationTasks } = await DataProcessor.doGetDonationTasks(this.state.lengthDisplayDonationTasks);
+    this.setState({ donationTasks, lengthDisplayDonationTasks: donationTasks.length });
+
     this.setState({ donationInformation, studies });
   }
 
@@ -141,6 +145,7 @@ export class DonationComponent extends React.Component {
             backgroundColor: '#0060F2',
             borderLeftWidth: 1, borderTopLeftRadius: 3, borderBottomLeftRadius: 3, borderColor: '#0060F2',
           }]}>
+            {(this.state.donationTasks && this.state.donationTasks > 0) && <View style={donationStyle.todoHightLight}></View>}
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
                 <Text style={donationStyle.subTabButtonText}>{SubTabs.todo}</Text>
@@ -148,6 +153,7 @@ export class DonationComponent extends React.Component {
             </View>
           </TouchableOpacity>}
           {this.state.subTab !== SubTabs.todo && <TouchableOpacity style={[donationStyle.subTabButton]} onPress={() => this.switchSubTab(SubTabs.todo)}>
+            {(this.state.donationTasks && this.state.donationTasks > 0) && <View style={donationStyle.todoHightLight}></View>}
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
                 <Text style={[donationStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.todo}</Text>
@@ -211,7 +217,7 @@ export class DonationComponent extends React.Component {
           scrollEventThrottle={1}>
           <View style={donationStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              <View style={donationStyle.content}>
+              {(this.state.donationTasks && this.state.donationTasks.length > 0) && <View style={donationStyle.content}>
                 <FlatList
                   extraData={this.state}
                   data={this.state.donationTasks}
@@ -231,7 +237,11 @@ export class DonationComponent extends React.Component {
                     </TouchableOpacity>)
                   }}
                 />
-              </View>
+              </View>}
+              {(!this.state.donationTasks || this.state.donationTasks.length === 0) && <View style={donationStyle.content}>
+                <Text style={donationStyle.todoEmptyTitle}>WELCOME!</Text>
+                <Text style={donationStyle.todoEmptyDescription}>When you join studies, you will be asked to authorize access to specific data here. </Text>
+              </View>}
             </TouchableOpacity>
           </View>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}

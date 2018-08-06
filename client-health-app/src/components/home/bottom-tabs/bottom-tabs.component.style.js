@@ -41,8 +41,8 @@ export default StyleSheet.create({
     paddingTop: 5,
   },
   bottomTabButtonIcon: {
-    width: 75,
-    height: 28,
+    width: 23,
+    height: 19,
     resizeMode: 'contain'
   },
   bottomTabButtonText: {
@@ -52,6 +52,7 @@ export default StyleSheet.create({
     lineHeight: 12,
     height: 14,
     color: '#0060F2',
+    marginTop: 3,
   },
 
   haveNewBitmark: {
@@ -74,13 +75,13 @@ export default StyleSheet.create({
   transactionNumber: {
     backgroundColor: '#FF003C',
     position: 'absolute',
-    borderRadius: 7,
+    borderRadius: 4,
     borderColor: '#FF003C',
     borderWidth: 1,
     top: 4,
     left: 49,
-    width: 14,
-    height: 14,
+    width: 8,
+    height: 8,
     flexDirection: 'column',
     alignItems: "center",
     alignContent: 'center',

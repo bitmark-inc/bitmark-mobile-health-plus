@@ -100,9 +100,8 @@ export class BottomTabsComponent extends React.Component {
           }]}>{MainTabs.Timeline}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.Donate)}>
+        <TouchableOpacity style={[userStyle.bottomTabButton, { marginLeft: 70 }]} onPress={() => this.switchMainTab(MainTabs.Donate)}>
           {this.state.totalTasks > 0 && <View style={userStyle.transactionNumber}>
-            <Text style={userStyle.transactionNumberText}>{this.state.totalTasks < 100 ? this.state.totalTasks : 99}</Text>
           </View>}
           <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.Donate
             ? require('./../../../../assets/imgs/donate-icon-enable.png')

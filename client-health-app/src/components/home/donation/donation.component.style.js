@@ -46,6 +46,18 @@ export default StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
+  todoHightLight: {
+    position: 'absolute',
+    top: 1,
+    right: 1,
+    zIndex: 1,
+    width: 8,
+    height: 8,
+    borderWidth: 1,
+    borderColor: 'red',
+    borderRadius: 4,
+    backgroundColor: 'red',
+  },
   subTabButtonTextArea: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -58,6 +70,7 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     textAlign: 'center',
+    color: 'white',
   },
   activeSubTabBar: {
     height: 4,
@@ -76,7 +89,21 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
-
+  todoEmptyTitle: {
+    width: convertWidth(337),
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 17,
+    color: '#0060F2',
+  },
+  todoEmptyDescription: {
+    marginTop: 30,
+    width: convertWidth(337),
+    fontFamily: 'Avenir Black',
+    fontWeight: '300',
+    fontSize: 17,
+    color: '#0060F2',
+  },
   donationTaskItem: {
     width: convertWidth(336),
     height: 118,
