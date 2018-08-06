@@ -1,10 +1,10 @@
 {
-  "name": "Bitmark",
+  "name": "Bitmark-Health",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "ios-test": "react-native run-ios --scheme 'Bitmark dev'",
+    "ios-test": "react-native run-ios --scheme 'Bitmark Health dev'",
     "ios-live": "react-native run-ios",
     "test": "jest"
   },

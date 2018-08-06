@@ -9,7 +9,7 @@ import {
 } from './src';
 
 let ApplicationComponent = BitmarkAppComponent;
-if (DeviceInfo.getBundleId() === 'com.bitmark.bitmarkios' || DeviceInfo.getBundleId() === 'com.bitmark.bitmarkios.development') {
+if (DeviceInfo.getBundleId() === 'com.bitmark.health' || DeviceInfo.getBundleId() === 'com.bitmark.health.development') {
   ApplicationComponent = CodePushMainAppComponent;
 }
 export default ApplicationComponent;
