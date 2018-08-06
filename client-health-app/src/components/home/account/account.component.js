@@ -4,15 +4,17 @@ import {
   View, Text, TouchableOpacity, ScrollView, Image,
   Clipboard,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
 import { EventEmitterService } from "./../../../services";
-import accountStyle from './account.component.style';
+import style from './account.component.style';
 
 import defaultStyle from './../../../commons/styles';
 import { DataProcessor, AppProcessor } from '../../../processors';
 import { BitmarkComponent } from '../../../commons/components';
+import {config} from "./../../../configs";
 
 let ComponentName = 'AccountDetailComponent';
 export class AccountDetailComponent extends React.Component {
@@ -21,10 +23,10 @@ export class AccountDetailComponent extends React.Component {
     this.logout = this.logout.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
-    this.inactiveBitmarkHealthData = this.inactiveBitmarkHealthData.bind(this);
     this.handerLoadingData = this.handerLoadingData.bind(this);
     this.revokeIFTTT = this.revokeIFTTT.bind(this);
     this.handerChangeIftttInformation = this.handerChangeIftttInformation.bind(this);
+    this.doGetScreenData = this.doGetScreenData.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_IFTTT_INFORMATION, null, ComponentName);
@@ -36,19 +38,25 @@ export class AccountDetailComponent extends React.Component {
       accountNumberCopyText: '',
       notificationUUIDCopyText: 'COPY',
       userInfo: DataProcessor.getUserInformation(),
-      appLoadingData: DataProcessor.isAppLoadingData(),
-      gettingData: true,
+      appLoadingData: DataProcessor.isAppLoadingData()
     };
-    let doGetScreenData = async () => {
-      // let donationInformation = await DataProcessor.doGetDonationInformation();
-      this.setState({
-        // donationInformation,
-        gettingData: false
-      });
-    }
-    doGetScreenData();
+    this.doGetScreenData();
     console.log('this.props :', this.props);
   }
+
+  async doGetScreenData() {
+    this.setState({
+      donationInformation: null,
+      gettingData: true
+    });
+
+    let donationInformation = await DataProcessor.doGetDonationInformation();
+
+    this.setState({
+      donationInformation,
+      gettingData: false
+    });
+  };
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_INFO, this.handerChangeUserInfo, ComponentName);
@@ -68,25 +76,6 @@ export class AccountDetailComponent extends React.Component {
   }
   handerLoadingData() {
     this.setState({ appLoadingData: DataProcessor.isAppLoadingData() });
-  }
-
-  switchSubTab(subTab) {
-    this.setState({ subTab, });
-  }
-
-  inactiveBitmarkHealthData() {
-    Alert.alert('Are you sure you want to revoke access to your HealthKit data?', '', [{
-      text: 'Cancel',
-      style: 'cancel',
-    }, {
-      text: 'Yes',
-      onPress: () => {
-        AppProcessor.doInactiveBitmarkHealthData().then().catch(error => {
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-          console.log('doInactiveBitmarkHealthData error :', error);
-        });
-      }
-    }]);
   }
 
   revokeIFTTT() {
@@ -124,41 +113,110 @@ export class AccountDetailComponent extends React.Component {
   render() {
     return (
       <BitmarkComponent
-
         content={(
-          <View style={accountStyle.body}>
-            <View style={accountStyle.header}>
+          <View style={style.body}>
+            <View style={style.header}>
               <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
                 <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../assets/imgs/close-blue-icon.png')} />
               </TouchableOpacity>
               <Text style={defaultStyle.headerTitle}>ACCOUNT SETTINGS</Text>
               <TouchableOpacity style={defaultStyle.headerRight} />
             </View>
-            <ScrollView style={[accountStyle.scrollSubTabArea]}>
-              <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-                <View style={accountStyle.contentSubTab}>
-                  <Text style={accountStyle.accountNumberLabel}>{'YOUR Bitmark Account Number'.toUpperCase()}</Text>
 
-                  <TouchableOpacity style={accountStyle.accountNumberArea} onPress={() => {
-                    Clipboard.setString(this.state.userInfo.bitmarkAccountNumber);
-                    this.setState({ accountNumberCopyText: 'Copied to clipboard!' });
-                    setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
-                  }}>
-                    <Text style={accountStyle.accountNumberValue}>{this.state.userInfo.bitmarkAccountNumber}</Text>
-                  </TouchableOpacity>
-                  <View style={accountStyle.accountNumberBar}>
-                    <Text style={accountStyle.accountNumberCopyButtonText}>{this.state.accountNumberCopyText}</Text>
+            <ScrollView style={[style.scrollSubTabArea]}>
+              <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+                <View style={style.contentSubTab}>
+
+                  {/*YOUR BITMARK ACCOUNT NUMBER*/}
+                  <View>
+                    <View style={[defaultStyle.itemHeaderContainer, defaultStyle.sectionContainer]}>
+                      <Text style={defaultStyle.headerText}>YOUR BITMARK ACCOUNT NUMBER</Text>
+                    </View>
+
+                    <TouchableOpacity style={[defaultStyle.itemContainer]} onPress={() => {
+                      Clipboard.setString(this.state.userInfo.bitmarkAccountNumber);
+                      this.setState({ accountNumberCopyText: 'Copied to clipboard!' });
+                      setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
+                    }}>
+                      <Text style={style.accountNumberValue}>{this.state.userInfo.bitmarkAccountNumber}</Text>
+                    </TouchableOpacity>
+                    <Text style={style.accountNumberCopyButtonText}>{this.state.accountNumberCopyText}</Text>
                   </View>
 
-                  <Text style={accountStyle.accountMessage}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.</Text>
+                  <View>
+                    <Text style={style.accountMessage}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.</Text>
+                  </View>
 
-                  <TouchableOpacity style={accountStyle.accountWriteDownButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: false }) }}>
-                    <Text style={accountStyle.accountWriteDownButtonText}>{'WRITE DOWN RECOVERY PHRASE »'.toUpperCase()} </Text>
-                  </TouchableOpacity>
-                  {/* <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.logout}> */}
-                  <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}>
-                    <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device »'.toUpperCase()} </Text>
-                  </TouchableOpacity>
+                  {/*SECURITY*/}
+                  <View>
+                    <View style={[defaultStyle.itemHeaderContainer, defaultStyle.sectionContainer]}>
+                      <Text style={defaultStyle.headerText}>SECURITY</Text>
+                    </View>
+
+                    {/*Write Down Recovery Phrase*/}
+                    <TouchableOpacity style={[defaultStyle.itemNoBorderContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: false }) }}>
+                      <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-write-down.png')} />
+                      <View style={[defaultStyle.itemBottomBorderContainer]}>
+                        <Text style={defaultStyle.text}>Write Down Recovery Phrase</Text>
+                        <Text style={defaultStyle.textAlignRight}>
+                          <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+
+                    {/*Remove Access*/}
+                    {/* <TouchableOpacity onPress={this.logout}><Text style={defaultStyle.text}>Remove Access</Text></TouchableOpacity> */}
+                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}>
+                      <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-remove.png')} />
+                      <Text style={defaultStyle.text}>Remove Access</Text>
+                      <Text style={defaultStyle.textAlignRight}>
+                        <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  {/*AUTHORIZED APP*/}
+                  <View>
+                    <View style={[defaultStyle.itemHeaderContainer, defaultStyle.sectionContainer]}>
+                      <Text style={defaultStyle.headerText}>AUTHORIZED APP</Text>
+                    </View>
+                  {this.state.donationInformation && this.state.donationInformation.activeBitmarkHealthDataAt &&
+                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
+                      this.props.navigation.navigate('Health', {removeHealthAuthCallBack: this.doGetScreenData})
+                    }}>
+                      <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon_health.png')}/>
+                      <Text style={defaultStyle.text}>iOS Health</Text>
+                      <Text style={defaultStyle.textAlignRight}>
+                        <Text style={defaultStyle.text}>Authorized   </Text>
+                        <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')}/>
+                      </Text>
+                    </TouchableOpacity>
+                  }
+                  {this.state.gettingData && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
+                  </View>
+
+                  {/*ABOUT BITMARK HEALTH*/}
+                  <View>
+                    <View style={[defaultStyle.itemHeaderContainer, defaultStyle.sectionContainer]}>
+                      <Text style={defaultStyle.headerText}>ABOUT BITMARK HEALTH</Text>
+                    </View>
+
+                    {/*Version*/}
+                    <View style={[defaultStyle.itemNoBorderContainer, style.itemContainer]}>
+                      <View style={[defaultStyle.itemBottomBorderContainer]}>
+                        <Text style={defaultStyle.text}>Version</Text>
+                        <Text style={defaultStyle.textAlignRight}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== 'livenet' ? '-' + config.network : '')})</Text>
+                      </View>
+                    </View>
+
+                    {/*Support*/}
+                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('Support') }}>
+                      <Text style={defaultStyle.text}>Support</Text>
+                      <Text style={defaultStyle.textAlignRight}>
+                        <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
 
               </TouchableOpacity>

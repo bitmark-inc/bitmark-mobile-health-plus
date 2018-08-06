@@ -82,25 +82,8 @@ export default StyleSheet.create({
   contentSubTab: {
     width: '100%',
     flexDirection: 'column',
-    paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19),
   },
 
-  //settings
-  accountNumberLabel: {
-    fontFamily: 'Avenir Light',
-    fontSize: 14,
-    marginTop: 27,
-  },
-
-  accountNumberArea: {
-    marginTop: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: convertWidth(337),
-    minHeight: 30,
-  },
   accountNumberValue: {
     fontFamily: 'Andale Mono',
     fontWeight: '900',
@@ -108,131 +91,26 @@ export default StyleSheet.create({
     width: convertWidth(337),
     color: '#0060F2',
   },
-  accountNumberBar: {
-    marginTop: 5,
-    borderTopWidth: 1,
-    borderTopColor: '#0060F2',
-    height: 20,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
   accountNumberCopyButtonText: {
     fontFamily: 'Avenir',
     fontWeight: '700',
     fontStyle: 'italic',
     fontSize: 8,
     color: '#0060F2',
+    textAlign: 'right'
   },
   accountMessage: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
     fontSize: 15,
-    marginTop: 9,
-    width: convertWidth(337),
-  },
-  accountWriteDownButton: {
-    marginTop: 21,
-    paddingTop: 4,
-    paddingBottom: 4,
-  },
-  accountWriteDownButtonText: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 14,
-    color: '#0060F2',
-  },
-  accountRemoveButton: {
-    marginTop: 2,
-    paddingTop: 4,
-    paddingBottom: 4,
-  },
-  accountRemoveButtonText: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 14,
-    color: '#0060F2',
-  },
-
-  accountDataSourceLabel: {
-    marginTop: 17,
-    fontFamily: 'Avenir black',
-    fontSize: 16,
-    fontWeight: '900',
-  },
-  dataSourcesArea: {
-    marginTop: 17,
-    width: '100%',
-    flexDirection: 'column',
-    marginBottom: 20,
-  },
-  dataSourcesMessage: {
-    fontFamily: 'Avenir black',
-    fontSize: 14,
-    fontWeight: '300'
-  },
-
-  noAuthorizedMessage: {
-    fontFamily: 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 17,
-    marginTop: 16,
-  },
-  authorizedItem: {
-    marginTop: 13,
-    flexDirection: 'column',
-  },
-  authorizedItemTitle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#A4B5CD',
-  },
-  authorizedItemTitleText: {
-    fontFamily: 'Avenir Light',
-    fontSize: 14,
-    fontWeight: '900',
-  },
-  authorizedItemRemoveButton: {
-    padding: 4,
-  },
-  authorizedItemRemoveButtonText: {
-    fontFamily: 'Avenir Light',
-    fontWeight: '900',
-    fontSize: 14,
-    color: '#0060F2',
-  },
-  authorizedItemDescription: {
-    flexDirection: 'row',
-    marginTop: 17,
-  },
-  authorizedItemDescriptionIcon: {
-    width: 58,
-    height: 58,
-    resizeMode: 'contain',
-  },
-  authorizedItemDescriptionDetail: {
-    flexDirection: 'column',
-    paddingLeft: convertWidth(22),
-    width: convertWidth(257),
-  },
-  authorizedViewButton: {
     marginTop: 5,
-    paddingTop: 4,
-    paddingBottom: 4,
+    marginBottom: 10,
+    width: convertWidth(337),
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19)
   },
-  authorizedViewButtonText: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 14,
-    color: '#0060F2',
-  },
-  authorizedItemDescriptionText: {
-    width: convertWidth(257),
-    fontFamily: 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 15,
-  },
-
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
 });

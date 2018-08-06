@@ -51,5 +51,71 @@ export default StyleSheet.create({
     color: '#0060F2',
     marginRight: 19,
     textAlign: 'right',
+  },
+  itemHeaderContainer: {
+    height: 32,
+    width: '100%',
+    borderColor: "#D8D8D8",
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19)
+  },
+  itemContainer: {
+    height: 50,
+    width: '100%',
+    borderColor: "#D8D8D8",
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19)
+  },
+  itemNoBorderContainer: {
+    height: 50,
+    width: '100%',
+    justifyContent: 'center',
+    paddingLeft: convertWidth(19)
+  },
+  itemBottomBorderContainer: {
+    flexDirection: 'row',
+    borderColor: "#D8D8D8",
+    borderBottomWidth: 1,
+    flexGrow: 5,
+    height: '100%',
+    alignItems: 'center',
+    paddingRight: convertWidth(19)
+  },
+  iconBase: {
+    width: 26,
+    height: 26,
+    resizeMode: 'contain',
+    marginRight: 13,
+  },
+  iconArrowRight: {
+    width: 8,
+    height: 14,
+    resizeMode: 'contain'
+  },
+  textAlignRight: {
+    flex: 1,
+    textAlign: 'right'
+  },
+  text: {
+    fontFamily: 'Avenir Light',
+    fontSize: 16,
+    lineHeight: 18,
+    fontWeight: '300',
+    textAlign: 'left',
+  },
+  headerText: {
+    fontFamily: 'Avenir Light',
+    fontSize: 14,
+    lineHeight: 16,
+    textAlign: 'left',
+    fontWeight: '300',
+    color: '#6D6D72'
+  },
+  sectionContainer: {
+    marginTop: 20,
   }
 });

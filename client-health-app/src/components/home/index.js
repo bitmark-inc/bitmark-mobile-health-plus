@@ -2,7 +2,7 @@ import { StackNavigator, } from 'react-navigation';
 
 import { UserComponent } from './user.component';
 import { BitmarkWebViewComponent } from './../../commons/components';
-import { AccountDetailComponent, AccountRecoveryComponent, ApplicationDetailComponent } from './account';
+import { AccountDetailComponent, AccountRecoveryComponent, ApplicationDetailComponent, HealthComponent, SupportComponent } from './account';
 
 import {
   StudySettingComponent, StudyDetailComponent, StudyDonationComponent,
@@ -18,6 +18,8 @@ let HomeComponent = StackNavigator({
   Account: { screen: AccountDetailComponent, },
   AccountRecovery: { screen: AccountRecoveryComponent, },
   ApplicationDetail: { screen: ApplicationDetailComponent, },
+  Health: { screen: HealthComponent },
+  Support: { screen: SupportComponent },
   StudyDetail: { screen: StudyDetailComponent, },
   StudyConsent: { screen: StudyConsentComponent, },
   StudySetting: { screen: StudySettingComponent, },
