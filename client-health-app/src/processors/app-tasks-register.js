@@ -82,48 +82,6 @@ const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPubl
   return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset), processingInfo);
 };
 
-const doTransferBitmark = async ({ bitmark, receiver }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to send the bitmark.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await processing(DataProcessor.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver));
-};
-
-const doAcceptTransferBitmark = async ({ transferOffer, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to receive the bitmark.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await submitting(DataProcessor.doAcceptTransferBitmark(touchFaceIdSession, transferOffer), processingInfo);
-};
-
-const doAcceptAllTransfers = async ({ transferOffers, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to receive the bitmarks.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await submitting(DataProcessor.doAcceptAllTransfers(touchFaceIdSession, transferOffers), processingInfo);
-};
-
-
-const doCancelTransferBitmark = async ({ transferOfferId, faceTouchMessage }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(faceTouchMessage || 'Please sign to cancel the bitmark send request.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await processing(DataProcessor.doCancelTransferBitmark(touchFaceIdSession, transferOfferId));
-};
-
-const doRejectTransferBitmark = async ({ transferOffer, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to reject the bitmark transfer request.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return await submitting(DataProcessor.doRejectTransferBitmark(touchFaceIdSession, transferOffer), processingInfo);
-};
-
-
 const doActiveBitmarkHealthData = async ({ activeBitmarkHealthDataAt }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark health data.');
   if (!touchFaceIdSession) {
@@ -207,11 +165,6 @@ let AppTasks = {
   doLogin,
   doLogout,
   doIssueFile,
-  doTransferBitmark,
-  doAcceptTransferBitmark,
-  doRejectTransferBitmark,
-  doAcceptAllTransfers,
-  doCancelTransferBitmark,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
   doJoinStudy,

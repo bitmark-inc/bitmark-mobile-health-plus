@@ -107,9 +107,6 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
 const doReloadUserData = async () => {
   return await DataProcessor.doReloadUserData();
 };
-const doReloadDonationInformation = async () => {
-  return await DataProcessor.doReloadDonationInformation();
-};
 
 const doRequirePermission = async () => {
   let donationInformation = await DataProcessor.doGetDonationInformation();
@@ -135,26 +132,6 @@ const doLogout = async () => {
 
 const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo) => {
   return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
-};
-
-const doTransferBitmark = async (bitmark, receiver) => {
-  return executeTask('doTransferBitmark', { bitmark, receiver });
-};
-
-const doAcceptTransferBitmark = async (transferOffer, processingInfo) => {
-  return executeTask('doAcceptTransferBitmark', { transferOffer, processingInfo });
-};
-
-const doAcceptAllTransfers = async (transferOffers, processingInfo) => {
-  return executeTask('doAcceptAllTransfers', { transferOffers, processingInfo });
-};
-
-const doCancelTransferBitmark = async (transferOfferId, faceTouchMessage) => {
-  return executeTask('doCancelTransferBitmark', { transferOfferId, faceTouchMessage });
-};
-
-const doRejectTransferBitmark = async (transferOffer, processingInfo) => {
-  return executeTask('doRejectTransferBitmark', { transferOffer, processingInfo });
 };
 
 const doActiveBitmarkHealthData = async (activeBitmarkHealthDataAt) => {
@@ -205,11 +182,6 @@ let AppProcessor = {
   doCheckFileToIssue,
   doIssueFile,
   doGetTransferOfferDetail,
-  doTransferBitmark,
-  doAcceptTransferBitmark,
-  doRejectTransferBitmark,
-  doAcceptAllTransfers,
-  doCancelTransferBitmark,
   doRequirePermission,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
@@ -222,8 +194,6 @@ let AppProcessor = {
   doDownloadStudyConsent,
   doDownloadBitmark,
   doReloadUserData,
-  doReloadDonationInformation,
-
   doStartBackgroundProcess,
 }
 

@@ -10,16 +10,10 @@ const KEYS = {
   USER_INFORMATION: 'bitmark-app',
 
   //original data
-  USER_DATA_LOCAL_BITMARKS: 'user-data:local-bitmarks',
   USER_DATA_DONATION_INFORMATION: 'user-data:donation-information',
-  USER_DATA_TRANSACTIONS: 'user-data:transactions',
-  USER_DATA_TRANSFER_OFFERS: 'user-data:transfer-offers',
 
   // data can be change
   USER_DATA_DONATION_TASK: 'user-data:transaction-action-required',
-  USER_DATA_TRANSACTIONS_HISTORY: 'user-data:transaction-history',
-
-  TEST_RECOVERY_PHASE_ACTION_REQUIRED: 'test-recovery-phase-action-required'
 };
 
 // ================================================================================================

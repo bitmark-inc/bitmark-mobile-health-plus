@@ -21,14 +21,10 @@ export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
     this.logout = this.logout.bind(this);
-    this.reloadUserData = this.reloadUserData.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
-    this.refreshComponent = this.refreshComponent.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, null, ComponentName);
-    EventEmitterService.remove(EventEmitterService.events.NEED_RELOAD_USER_DATA, null, ComponentName);
-    EventEmitterService.remove(EventEmitterService.events.NEED_REFRESH_USER_COMPONENT_STATE, null, ComponentName);
 
     let subTab;
     let mainTab = MainTabs.Timeline;
@@ -54,19 +50,6 @@ export class UserComponent extends React.Component {
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, this.handerReceivedNotification, ComponentName);
-    EventEmitterService.on(EventEmitterService.events.NEED_RELOAD_USER_DATA, this.reloadUserData, ComponentName);
-    EventEmitterService.on(EventEmitterService.events.NEED_REFRESH_USER_COMPONENT_STATE, this.refreshComponent, ComponentName);
-  }
-
-  refreshComponent(newState) {
-    this.setState(newState);
-    if (newState.changeMainTab) {
-      EventEmitterService.emit(EventEmitterService.events.CHANGE_MAIN_TAB, newState.changeMainTab.mainTab);
-    }
-  }
-
-  reloadUserData() {
-    AppProcessor.doReloadUserData();
   }
 
   switchMainTab(mainTab) {
@@ -78,7 +61,7 @@ export class UserComponent extends React.Component {
     console.log('UserComponent handerReceivedNotification data :', data);
     if (data.event === 'DONATE_DATA' && data.studyData && data.studyData.studyId && data.studyData.taskType) {
       if (data.studyData.taskType === 'donations') {
-        AppProcessor.doReloadDonationInformation().then((donationInformation) => {
+        AppProcessor.doReloadUserData().then((donationInformation) => {
           let studyTask = (donationInformation.todoTasks || []).find(task => (task.study && task.study.studyId === data.studyData.studyId && task.taskType === data.studyData.taskType));
           if (studyTask && studyTask.taskType === studyTask.study.taskIds.donations) {
             // const resetHomePage = NavigationActions.reset({
@@ -118,7 +101,7 @@ export class UserComponent extends React.Component {
         // this.props.navigation.dispatch(resetHomePage);
       }
     } else if (data.event === 'STUDY_DETAIL') {
-      AppProcessor.doReloadDonationInformation().then((donationInformation) => {
+      AppProcessor.doReloadUserData().then((donationInformation) => {
         let study = DonationService.getStudy(donationInformation, data.studyId);
         if (study) {
           // const resetHomePage = NavigationActions.reset({
@@ -138,7 +121,7 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification STUDY_DETAIL error :', error);
       });
     } else if (data.event === 'BITMARK_DATA') {
-      AppProcessor.doReloadDonationInformation().then((donationInformation) => {
+      AppProcessor.doReloadUserData().then((donationInformation) => {
         let bitmarkHealthDataTask = (donationInformation.todoTasks || []).find(task => task.taskType === donationInformation.commonTaskIds.bitmark_health_data);
         if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
           // const resetHomePage = NavigationActions.reset({

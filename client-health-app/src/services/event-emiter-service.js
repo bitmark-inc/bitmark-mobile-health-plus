@@ -11,15 +11,10 @@ let EventEmitterService = {
     APP_RECEIVED_NOTIFICATION: 'app-received-notification',
     APP_TASK: 'app-task:',
 
-    NEED_RELOAD_USER_DATA: 'need-reload-user-data',
     CHANGE_USER_INFO: 'change-user-info',
-    CHANGE_USER_DATA_LOCAL_BITMARKS: 'change-user-data:local-bitmarks',
     CHANGE_USER_DATA_DONATION_INFORMATION: 'change-user-data:donation-information',
 
     CHANGE_DONATION_TASK: 'change-donation-tasks',
-
-    NEED_REFRESH_USER_COMPONENT_STATE: 'need-refresh-user-component-state',
-    CHANGE_MAIN_TAB: 'change-main-tab',
   },
   on: (eventName, func, extra) => {
     if (extra && (!EventEmitterService.event_extra[eventName] || !EventEmitterService.event_extra[eventName][extra])) {

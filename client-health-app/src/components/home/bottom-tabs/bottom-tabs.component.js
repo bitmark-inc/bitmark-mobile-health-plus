@@ -20,14 +20,9 @@ export class BottomTabsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.handerChangeDonationTasks = this.handerChangeDonationTasks.bind(this);
-    this.handerChangeLocalBitmarks = this.handerChangeLocalBitmarks.bind(this);
-    this.handleChangeMainTab = this.handleChangeMainTab.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.CHANGE_DONATION_TASK, null, ComponentName);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, null, ComponentName);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_MAIN_TAB, null, ComponentName);
-
 
     this.state = {
       existNewAsset: false,
@@ -44,8 +39,6 @@ export class BottomTabsComponent extends React.Component {
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.CHANGE_DONATION_TASK, this.handerChangeDonationTasks, ComponentName);
-    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, this.handerChangeLocalBitmarks, ComponentName);
-    EventEmitterService.on(EventEmitterService.events.CHANGE_MAIN_TAB, this.handleChangeMainTab, ComponentName);
   }
 
   handerChangeDonationTasks() {
@@ -55,17 +48,6 @@ export class BottomTabsComponent extends React.Component {
     }).catch(error => {
       console.log('doGetDonationTasks error:', error);
     });
-  }
-
-  handerChangeLocalBitmarks() {
-    DataProcessor.doGetLocalBitmarks(1).then(({ existNewAsset }) => {
-      this.setState({ existNewAsset });
-    }).catch(error => {
-      console.log('doGetLocalBitmarks error:', error);
-    });
-  }
-  handleChangeMainTab(mainTab) {
-    this.setState({ mainTab });
   }
 
   switchMainTab(mainTab) {

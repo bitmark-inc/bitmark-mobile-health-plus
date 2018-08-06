@@ -401,6 +401,7 @@ const DonationService = {
   doBitmarkHealthData,
   doDownloadStudyConsent,
   getStudy,
+  doCompleteTask,
 };
 
 export { DonationService };

@@ -4,7 +4,6 @@ import moment from 'moment';
 import {
   EventEmitterService,
   NotificationService,
-  TransactionService,
   BitmarkService,
   AccountService,
 } from "../services";
@@ -25,76 +24,7 @@ const doCheckNewDonationInformation = async (donationInformation, isLoadingAllUs
     }
   }
 };
-
-const doCheckTransferOffers = async (transferOffers, isLoadingAllUserData) => {
-  if (transferOffers) {
-    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS, transferOffers);
-    if (!isLoadingAllUserData) {
-      await doGenerateDonationTask();
-    }
-  }
-};
-
-
-const doCheckNewTransactions = async (transactions) => {
-  if (transactions) {
-    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS, transactions);
-  }
-};
-const doCheckNewBitmarks = async (localAssets) => {
-  if (localAssets) {
-    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS, localAssets);
-
-    let totalBitmarks = 0;
-    localAssets.forEach(asset => totalBitmarks += asset.bitmarks.length);
-    DataCacheProcessor.setPropertiesScreen({
-      localAssets: localAssets.slice(0, DataCacheProcessor.cacheLength),
-      totalAssets: localAssets.length,
-      existNewAsset: localAssets.findIndex(asset => !asset.isViewed) >= 0,
-      totalBitmarks
-    });
-
-    EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_LOCAL_BITMARKS, localAssets);
-  }
-};
 // ================================================================================================================================================
-
-const recheckLocalAssets = (localAssets, donationInformation, outgoingTransferOffers) => {
-  for (let asset of localAssets) {
-    asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
-    for (let bitmark of asset.bitmarks) {
-      let transferOffer = (outgoingTransferOffers || []).find(item => (item.status === 'open' && item.bitmark_id === bitmark.id));
-      bitmark.transferOfferId = transferOffer ? transferOffer.id : null;
-
-      if (donationInformation && donationInformation.completedTasks) {
-        let isDonatedBitmark = donationInformation.completedTasks.findIndex(item => (item.taskType !== donationInformation.commonTaskIds.bitmark_health_data && item.bitmarkId === bitmark.id)) >= 0;
-        bitmark.isDonatedBitmark = isDonatedBitmark;
-      }
-    }
-  }
-  return localAssets;
-};
-
-let queueGetTransferOffer = [];
-const runGetTransferOfferInBackground = () => {
-  return new Promise((resolve) => {
-    queueGetTransferOffer.push(resolve);
-    if (queueGetTransferOffer.length > 1) {
-      return;
-    }
-    TransactionService.doGetAllTransferOffers(userInformation.bitmarkAccountNumber).then(transferOffers => {
-      console.log('runOnBackground  runGetTransferOfferInBackground success');
-      queueGetTransferOffer.forEach(queueResolve => queueResolve(transferOffers));
-      queueGetTransferOffer = [];
-    }).catch(error => {
-      queueGetTransferOffer.forEach(queueResolve => queueResolve());
-      queueGetTransferOffer = [];
-      console.log('runOnBackground  runGetTransferOfferInBackground error :', error);
-    });
-  });
-};
-
-
 let queueGetDonationInformation = [];
 const runGetDonationInformationInBackground = () => {
   return new Promise((resolve) => {
@@ -116,87 +46,6 @@ const runGetDonationInformationInBackground = () => {
 
 // ================================================================================================================================================
 // special process
-let queueGetTransactions = [];
-const runGetTransactionsInBackground = () => {
-  return new Promise((resolve) => {
-    queueGetTransactions.push(resolve);
-    if (queueGetTransactions.length > 1) {
-      return;
-    }
-
-    let doGetAllTransactions = async () => {
-      let oldTransactions, lastOffset;
-      let canContinue = true;
-      while (canContinue) {
-        let data = await TransactionService.doGet100Transactions(userInformation.bitmarkAccountNumber, oldTransactions, lastOffset);
-        canContinue = !!data;
-        if (data) {
-          oldTransactions = data.transactions;
-          lastOffset = data.lastOffset;
-          await doCheckNewTransactions(oldTransactions);
-        }
-      }
-      oldTransactions = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS);
-      await doCheckNewTransactions(oldTransactions);
-    };
-
-    doGetAllTransactions().then(() => {
-      console.log('runOnBackground  runGetTransactionsInBackground success');
-      queueGetTransactions.forEach(queueResolve => queueResolve());
-      queueGetTransactions = [];
-    }).catch(error => {
-      queueGetTransactions.forEach(queueResolve => queueResolve());
-      queueGetTransactions = [];
-      console.log('runOnBackground  runGetTransactionsInBackground error :', error);
-    });
-  });
-};
-
-let queueGetLocalBitmarks = [];
-const runGetLocalBitmarksInBackground = (donationInformation, outgoingTransferOffers) => {
-  return new Promise((resolve) => {
-    queueGetLocalBitmarks.push(resolve);
-    if (queueGetLocalBitmarks.length > 1) {
-      return;
-    }
-
-    let doGetAllBitmarks = async () => {
-      if (!donationInformation) {
-        donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
-      }
-      if (!outgoingTransferOffers) {
-        let transferOffers = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSFER_OFFERS)) || {};
-        outgoingTransferOffers = transferOffers.outgoingTransferOffers || [];
-      }
-      let oldLocalAssets, lastOffset;
-      let canContinue = true;
-      while (canContinue) {
-        let data = await BitmarkService.doGet100Bitmarks(userInformation.bitmarkAccountNumber, oldLocalAssets, lastOffset);
-        canContinue = data.hasChanging;
-        oldLocalAssets = data.localAssets;
-        oldLocalAssets = recheckLocalAssets(oldLocalAssets, donationInformation, outgoingTransferOffers);
-        await doCheckNewBitmarks(oldLocalAssets);
-        if (data.hasChanging) {
-          lastOffset = data.lastOffset;
-        }
-      }
-      let localAsset = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
-      localAsset = recheckLocalAssets(localAsset, donationInformation, outgoingTransferOffers);
-      await doCheckNewBitmarks(localAsset);
-    }
-
-    doGetAllBitmarks().then(() => {
-      queueGetLocalBitmarks.forEach(queueResolve => queueResolve());
-      queueGetLocalBitmarks = [];
-      console.log('runOnBackground  runGetLocalBitmarksInBackground success');
-    }).catch(error => {
-      console.log('runOnBackground  runGetLocalBitmarksInBackground error :', error);
-      queueGetLocalBitmarks.forEach(queueResolve => queueResolve());
-      queueGetLocalBitmarks = [];
-    });
-  });
-};
-
 const runOnBackground = async () => {
   let userInfo = await UserModel.doTryGetCurrentUser();
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
@@ -204,28 +53,9 @@ const runOnBackground = async () => {
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);
   }
   if (userInformation && userInformation.bitmarkAccountNumber) {
-    let runParallel = () => {
-      return new Promise((resolve) => {
-        Promise.all([
-          runGetTransferOfferInBackground(),
-          runGetDonationInformationInBackground(),
-        ]).then(resolve);
-      });
-    };
-    let parallelResults = await runParallel();
-    await doCheckTransferOffers(parallelResults[0], true);
-    await doCheckNewDonationInformation(parallelResults[1], true);
+    let donationInformation = await runGetDonationInformationInBackground();
+    await doCheckNewDonationInformation(donationInformation, true);
     await doGenerateDonationTask();
-
-    let doParallel = () => {
-      return new Promise((resolve) => {
-        Promise.all([
-          runGetLocalBitmarksInBackground(parallelResults[2], parallelResults[1].outgoingTransferOffers),
-          runGetTransactionsInBackground()
-        ]).then(resolve);
-      });
-    }
-    await doParallel();
   }
   console.log('runOnBackground done ====================================');
 };
@@ -236,23 +66,6 @@ const doReloadUserData = async () => {
   await runOnBackground();
   isLoadingData = false;
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
-};
-
-const doReloadDonationInformation = async () => {
-  let donationInformation = await runGetDonationInformationInBackground();
-  await doCheckNewDonationInformation(donationInformation);
-  return donationInformation;
-};
-
-const doReloadTransferOffers = async () => {
-  let transferOffers = await runGetTransferOfferInBackground();
-  await doCheckTransferOffers(transferOffers);
-  return transferOffers;
-};
-
-const doReloadLocalBitmarks = async () => {
-  let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
-  return await runGetLocalBitmarksInBackground(donationInformation);
 };
 
 const configNotification = () => {
@@ -355,18 +168,6 @@ const doOpenApp = async () => {
     configNotification();
     await checkAppNeedResetLocalData(appInfo);
 
-    let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
-
-    let totalBitmarks = 0;
-    localAssets.forEach(asset => totalBitmarks += asset.bitmarks.length);
-
-    DataCacheProcessor.setPropertiesScreen({
-      localAssets: localAssets.slice(0, DataCacheProcessor.cacheLength),
-      totalAssets: localAssets.length,
-      existNewAsset: localAssets.findIndex(asset => !asset.isViewed) >= 0,
-      totalBitmarks,
-    });
-
     let donationTasks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK)) || [];
     let totalTasks = 0;
     donationTasks.forEach(item => totalTasks += (item.number ? item.number : 1));
@@ -431,65 +232,15 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
   return filePath;
 };
 
-const doAcceptTransferBitmark = async (touchFaceIdSession, transferOffer) => {
-  await TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer);
-  return await doReloadTransferOffers();
-};
-
-const doAcceptAllTransfers = async (touchFaceIdSession, transferOffers) => {
-  for (let transferOffer of transferOffers) {
-    await TransactionService.doAcceptTransferBitmark(touchFaceIdSession, transferOffer);
-  }
-  return await doReloadTransferOffers();
-};
-
-const doCancelTransferBitmark = async (touchFaceIdSession, transferOfferId) => {
-  await TransactionService.doCancelTransferBitmark(touchFaceIdSession, transferOfferId);
-  let result = await doReloadTransferOffers();
-  let oldTransactions = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TRANSACTIONS);
-  await doCheckNewTransactions(oldTransactions);
-  await runGetLocalBitmarksInBackground();
-  return result;
-};
-
-const doRejectTransferBitmark = async (touchFaceIdSession, transferOffer, ) => {
-  await TransactionService.doRejectTransferBitmark(touchFaceIdSession, transferOffer);
-  return await doReloadTransferOffers();
-};
-
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
+const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset, forHealthData) => {
   let result = await BitmarkService.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset);
-  let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
-  await runGetLocalBitmarksInBackground(donationInformation);
-  return result;
-};
-
-const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
-  let result = await TransactionService.doTransferBitmark(touchFaceIdSession, bitmarkId, receiver);
-  await doReloadTransferOffers();
-  let donationInformation = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION)) || {};
-  await runGetLocalBitmarksInBackground(donationInformation);
-  return result;
-};
-
-const doGetLocalBitmarks = async (length) => {
-  let localAssets;
-  let propertiesScreenDataInCache = DataCacheProcessor.getPropertiesScreenData();
-
-  if (length !== undefined && length <= propertiesScreenDataInCache.localAssets.length) {
-    localAssets = propertiesScreenDataInCache.localAssets;
-  } else {
-    let allLocalAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
-    localAssets = length ? allLocalAssets.slice(0, length) : allLocalAssets;
+  if (forHealthData) {
+    let donationInformation = await doGetDonationInformation();
+    await DonationService.doCompleteTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, donationInformation.commonTaskIds.bitmark_health_issuance, moment().toDate(), result[0]);
   }
-  return {
-    localAssets,
-    totalAssets: propertiesScreenDataInCache.totalAssets,
-    totalBitmarks: propertiesScreenDataInCache.totalBitmarks,
-    existNewAsset: propertiesScreenDataInCache.existNewAsset,
-  };
+  await doReloadUserData();
+  return result;
 };
-
 
 const getUserInformation = () => {
   return userInformation;
@@ -501,24 +252,6 @@ const getApplicationVersion = () => {
 
 const getApplicationBuildNumber = () => {
   return DeviceInfo.getBuildNumber();
-};
-
-const doGetLocalBitmarkInformation = async (bitmarkId, assetId) => {
-  let localAssets = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS)) || [];
-  let bitmark;
-  let asset;
-  if (assetId) {
-    asset = localAssets.find(localAsset => localAsset.id === assetId);
-    if (bitmarkId) {
-      bitmark = (asset ? asset.bitmarks : []).find(localBitmark => localBitmark.id === bitmarkId);
-    }
-  } else if (bitmarkId) {
-    asset = localAssets.find(localAsset => {
-      bitmark = localAsset.bitmarks.find(localBitmark => localBitmark.id === bitmarkId);
-      return !!bitmark;
-    });
-  }
-  return { bitmark, asset };
 };
 
 const doGetDonationInformation = () => {
@@ -576,7 +309,6 @@ const doGenerateDonationTask = async () => {
   console.log('donationTasks :', donationTasks);
 };
 
-
 const doGetDonationTasks = async (length) => {
   let donationTasks;
   let transactionsScreenDataInCache = DataCacheProcessor.getDonationTasks();
@@ -600,8 +332,6 @@ const DataProcessor = {
   doLogout,
   doStartBackgroundProcess,
   doReloadUserData,
-  doReloadLocalBitmarks,
-  doReloadDonationInformation,
 
   doDeactiveApplication,
   doActiveBitmarkHealthData,
@@ -612,15 +342,8 @@ const DataProcessor = {
   doDonateHealthData,
   doBitmarkHealthData,
   doDownloadBitmark,
-  doAcceptTransferBitmark,
-  doAcceptAllTransfers,
-  doCancelTransferBitmark,
-  doRejectTransferBitmark,
   doIssueFile,
-  doTransferBitmark,
 
-  doGetLocalBitmarks,
-  doGetLocalBitmarkInformation,
   doGetDonationInformation,
 
   doGetDonationTasks,

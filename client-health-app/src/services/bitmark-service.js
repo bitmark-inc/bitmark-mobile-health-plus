@@ -1,92 +1,8 @@
 import moment from 'moment';
-import { merge } from 'lodash';
-import { BitmarkModel, CommonModel } from "../models";
+import { BitmarkModel } from "../models";
 
 // ================================================================================================
 // ================================================================================================
-
-const doGet100Bitmarks = async (bitmarkAccountNumber, oldLocalAssets, lastOffset) => {
-  let hasChanging = false;
-  if (!oldLocalAssets) {
-    hasChanging = true;
-    oldLocalAssets = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_LOCAL_BITMARKS);
-  }
-  oldLocalAssets = oldLocalAssets || [];
-  if (!lastOffset) {
-    oldLocalAssets.forEach(asset => {
-      asset.bitmarks.forEach(bitmark => {
-        lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
-      });
-    });
-  }
-  let data = await BitmarkModel.doGet100Bitmarks(bitmarkAccountNumber, lastOffset);
-  let localAssets = merge([], oldLocalAssets || []);
-
-  if (data && data.bitmarks && data.assets) {
-    hasChanging = data.bitmarks.length >= 100;
-    for (let bitmark of data.bitmarks) {
-      lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
-      bitmark.bitmark_id = bitmark.id;
-      bitmark.isViewed = false;
-      let oldAsset = (localAssets).find(asset => asset.id === bitmark.asset_id);
-      let newAsset = data.assets.find(asset => asset.id === bitmark.asset_id);
-      if (oldAsset && newAsset && !oldAsset.created_at) {
-        oldAsset.created_at = newAsset.created_at;
-      }
-      if (bitmark.owner === bitmarkAccountNumber) {
-        hasChanging = true;
-        if (oldAsset) {
-          let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => ob.id === bitmark.id);
-          if (oldBitmarkIndex >= 0) {
-            oldAsset.bitmarks[oldBitmarkIndex] = bitmark;
-          } else {
-            oldAsset.bitmarks.push(bitmark);
-          }
-          oldAsset.isViewed = false;
-        } else {
-          newAsset.bitmarks = [bitmark];
-          newAsset.isViewed = false;
-          localAssets.push(newAsset);
-        }
-      } else {
-        let oldAssetIndex = (localAssets).findIndex(asset => asset.id === bitmark.asset_id);
-        if (oldAssetIndex >= 0) {
-          let oldAsset = localAssets[oldAssetIndex];
-          let oldBitmarkIndex = oldAsset.bitmarks.findIndex(ob => bitmark.id === ob.id);
-          if (oldBitmarkIndex >= 0) {
-            hasChanging = true;
-            oldAsset.bitmarks.splice(oldBitmarkIndex, 1);
-            if (oldAsset.bitmarks.length === 0) {
-              localAssets.splice(oldAssetIndex, 1);
-            }
-          }
-        }
-      }
-    }
-  }
-  for (let asset of localAssets) {
-    let oldTotalPending = asset.totalPending;
-    asset.totalPending = 0;
-    asset.bitmarks = asset.bitmarks.sort((a, b) => b.offset - a.offset);
-    for (let bitmark of asset.bitmarks) {
-      let oldData = asset.maxBitmarkOffset;
-      asset.maxBitmarkOffset = asset.maxBitmarkOffset ? Math.max(asset.maxBitmarkOffset, bitmark.offset) : bitmark.offset;
-      hasChanging = hasChanging || (oldData !== asset.maxBitmarkOffset);
-
-      asset.totalPending += (bitmark.status === 'pending') ? 1 : 0;
-    }
-    hasChanging = hasChanging || (oldTotalPending !== asset.totalPending);
-  }
-
-  if (hasChanging) {
-    localAssets = localAssets.sort((a, b) => b.maxBitmarkOffset - a.maxBitmarkOffset);
-  }
-  return {
-    hasChanging,
-    localAssets,
-    lastOffset,
-  };
-};
 
 const doCheckFileToIssue = async (filePath) => {
   let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
@@ -145,7 +61,6 @@ const doGetBitmarkInformation = async (bitmarkId) => {
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
-  doGet100Bitmarks,
   doCheckFileToIssue,
   doCheckMetadata,
   doIssueFile,
