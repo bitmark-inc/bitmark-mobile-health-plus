@@ -22,13 +22,13 @@ export class AssetImageContentComponent extends React.Component {
   }
   doGetScreenData(bitmarkId) {
 
-    // AppProcessor.doDownloadBitmark(bitmarkId).then(filePath => {
-    //   console.log('doDownloadBitmark :', filePath);
-    //   this.setState({ filePath });
-    // }).catch(error => {
-    //   console.log('doDownloadBitmark  error :', error);
-    //   this.props.navigation.goBack();
-    // });
+    AppProcessor.doDownloadBitmark(bitmarkId).then(filePath => {
+      console.log('doDownloadBitmark :', filePath);
+      this.setState({ filePath });
+    }).catch(error => {
+      console.log('doDownloadBitmark  error :', error);
+      this.props.navigation.goBack();
+    });
   }
 
 

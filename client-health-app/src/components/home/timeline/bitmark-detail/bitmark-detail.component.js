@@ -59,7 +59,7 @@ export class BitmarkDetailComponent extends React.Component {
             <View style={propertyDetailStyle.imageArea}>
               <Image style={propertyDetailStyle.assetIcon} source={require('./../../../../../assets/imgs/asset-icon.png')} />
               {this.state.bitmark.status === 'pending' && <Text style={propertyDetailStyle.bitmarkPending}>Registering ownership...</Text>}
-              {his.state.bitmark.status === 'confirmed' && this.state.contentType === 'image' && <TouchableOpacity style={propertyDetailStyle.bitmarkConfirmed} onPress={() => {
+              {this.state.bitmark.status === 'confirmed' && this.state.contentType === 'image' && <TouchableOpacity style={propertyDetailStyle.bitmarkConfirmed} onPress={() => {
                 this.props.navigation.navigate('AssetImageContent', { bitmarkId: this.state.bitmarkId });
               }}>
                 <Text style={propertyDetailStyle.bitmarkConfirmedText}>Click to review your health data</Text>
