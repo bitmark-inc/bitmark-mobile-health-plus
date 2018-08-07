@@ -46,24 +46,23 @@ export class TimelineComponent extends React.Component {
           })
         });
 
-        tempData.push({
-          time: moment(donationInformation.createdAt).format('YYYY MMM DD'), title: 'Your Bitmark account was created.',
+        tempData = [{
+          time: donationInformation.createdAt, title: 'Your Bitmark account was created.',
           lineWidth: 2,
-        });
-
-        tempData = tempData.sort((a, b) => {
+        }].concat(tempData.sort((a, b) => {
           return moment(a.time).toDate().getTime() - moment(b.time).toDate().getTime();
-        });
+        }));
 
         let currentYear = 0;
         for (let item of tempData) {
           if (moment(item.time).toDate().getFullYear() > currentYear) {
             currentYear = moment(item.time).toDate().getFullYear();
-            item.time = moment(donationInformation.createdAt).format('YYYY MMM DD HH:mm:ss');
+            item.time = moment(donationInformation.createdAt).format('YYYY MMM DD HH:mm');
           } else {
-            item.time = moment(donationInformation.createdAt).format('MMM DD HH:mm:ss');
+            item.time = moment(donationInformation.createdAt).format('MMM DD HH:mm');
           }
         }
+
         data = data.concat(tempData.reverse());
       }
       console.log('doGetScreenData data :', data);
