@@ -52,7 +52,6 @@ export class DonationComponent extends React.Component {
     const doGetScreenData = async () => {
       let donationInformation = await DataProcessor.doGetDonationInformation();
       let { donationTasks, totalDonationTasks } = await DataProcessor.doGetDonationTasks(0);
-      console.log('doGetScreenData :', donationInformation, donationTasks);
       let studies = (donationInformation.otherStudies || []).concat(donationInformation.joinedStudies || []);
       studies = studies.sort((a, b) => (a.studyId < b.studyId ? -1 : (a.studyId > b.studyId ? 1 : 0)));
       this.setState({
@@ -126,11 +125,7 @@ export class DonationComponent extends React.Component {
     } else if (item.study && item.study.studyId === 'study2' && item.study.taskIds && item.taskType === item.study.taskIds.entry_study) {
       this.props.screenProps.homeNavigation.navigate('Study2EntryInterview', { study: item.study });
     } else if (item.study && item.study.taskIds && item.taskType) {
-      AppProcessor.doStudyTask(item.study, item.taskType).then(result => {
-        if (result) {
-          DataProcessor.doReloadUserData();
-        }
-      }).catch(error => {
+      AppProcessor.doStudyTask(item.study, item.taskType).catch(error => {
         console.log('doStudyTask error:', error);
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       });
@@ -238,7 +233,8 @@ export class DonationComponent extends React.Component {
                   }}
                 />
               </View>}
-              {(!this.state.donationTasks || this.state.donationTasks.length === 0) && <View style={donationStyle.content}>
+              {(!this.state.donationTasks || this.state.donationTasks.length === 0) && <View style={[donationStyle.content, { alignItems: 'center' }]}>
+                <Image style={donationStyle.welcomeIcon} source={require('./../../../../assets/imgs/todo-welcome-icon.png')} />
                 <Text style={donationStyle.todoEmptyTitle}>WELCOME!</Text>
                 <Text style={donationStyle.todoEmptyDescription}>When you join studies, you will be asked to authorize access to specific data here. </Text>
               </View>}
@@ -247,7 +243,7 @@ export class DonationComponent extends React.Component {
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
-        {this.state.subTab === SubTabs.studies && <ScrollView style={donationStyle.contentScroll}>
+        {this.state.subTab === SubTabs.studies && <ScrollView style={[donationStyle.contentScroll, { backgroundColor: '#EDF0F4' }]}>
           <View style={donationStyle.content}>
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
               <View style={donationStyle.content}>
@@ -282,13 +278,13 @@ export class DonationComponent extends React.Component {
                 <FlatList
                   keyExtractor={(item) => item.id}
                   extraData={this.state}
-                  data={this.state.donationInformation ? this.state.donationInformation.news : []}
-                  // data={[{
-                  //   title: 'Great news! Your health data has reached me safe and sound! ',
-                  //   description: 'Please keep an eye on study updates and remember that the study would not have been possible without you!',
-                  //   publisher: 'Madelena Ng, Doctoral Candidate',
-                  //   createdAt: moment().toDate().toISOString()
-                  // }]}
+                  // data={this.state.donationInformation ? this.state.donationInformation.news : []}
+                  data={[{
+                    title: 'Great news! Your health data has reached me safe and sound! ',
+                    description: 'Please keep an eye on study updates and remember that the study would not have been possible without you!',
+                    publisher: 'Madelena Ng, Doctoral Candidate',
+                    createdAt: moment().toDate().toISOString()
+                  }]}
                   renderItem={({ item }) => {
                     return (<TouchableOpacity style={donationStyle.newRecord} disabled={true}>
                       <View style={donationStyle.newRecordImageArea}>

@@ -75,7 +75,7 @@ const configNotification = () => {
     if (!userInformation || !userInformation.bitmarkAccountNumber) {
       userInformation = await UserModel.doGetCurrentUser();
     }
-    if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
+    if (userInformation.notificationUUID !== notificationUUID) {
       NotificationService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
         userInformation.notificationUUID = notificationUUID;
         return UserModel.doUpdateUserInfo(userInformation);

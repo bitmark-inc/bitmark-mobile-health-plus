@@ -30,6 +30,10 @@ export default StyleSheet.create({
     paddingRight: 5,
     paddingBottom: constant.blankFooter,
     backgroundColor: '#EDF0F4',
+    shadowColor: 'black',
+    shadowOffset: { width: 4, height: 0 },
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
   },
 
   bottomTabButton: {

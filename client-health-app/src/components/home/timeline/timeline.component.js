@@ -7,12 +7,15 @@ import {
 import moment from 'moment';
 import timelineStyle from './timeline.component.style';
 import { DataProcessor } from '../../../processors';
+import { EventEmitterService } from '../../../services';
 
 
-// let ComponentName = 'TimelineComponent';
+let ComponentName = 'TimelineComponent';
 export class TimelineComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
 
     this.state = {
       data: [
@@ -21,7 +24,6 @@ export class TimelineComponent extends React.Component {
         },
       ],
       appLoadingData: DataProcessor.isAppLoadingData(),
-      gettingData: true,
       donationInformation: null,
     };
 
@@ -68,7 +70,6 @@ export class TimelineComponent extends React.Component {
       this.setState({
         data,
         donationInformation,
-        gettingData: false,
       });
     };
     doGetScreenData();
@@ -76,10 +77,54 @@ export class TimelineComponent extends React.Component {
   }
   // ==========================================================================================
   componentDidMount() {
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+  }
 
+  handerDonationInformationChange(donationInformation) {
+    let data = [{
+      time: '', title: 'You health data will be extracted each week...', lineColor: '#999999',
+      lineWidth: 2,
+    },
+    ];
+    if (donationInformation) {
+      let tempData = [];
+      (donationInformation.timelines || []).forEach(item => {
+        tempData.push({
+          time: item.completedAt,
+          taskType: item.taskType,
+          title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+            (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+          startDate: item.startDate,
+          endDate: item.endDate,
+          bitmarkId: item.bitmarkId,
+        })
+      });
+
+      tempData = [{
+        time: donationInformation.createdAt, title: 'Your Bitmark account was created.',
+      }].concat(tempData.sort((a, b) => {
+        return moment(a.time).toDate().getTime() - moment(b.time).toDate().getTime();
+      }));
+
+      let currentYear = 0;
+      for (let item of tempData) {
+        if (moment(item.time).toDate().getFullYear() > currentYear) {
+          currentYear = moment(item.time).toDate().getFullYear();
+          item.time = moment(donationInformation.createdAt).format('YYYY MMM DD HH:mm');
+        } else {
+          item.time = moment(donationInformation.createdAt).format('MMM DD HH:mm');
+        }
+      }
+
+      data = data.concat(tempData.reverse());
+    }
+    console.log('doGetScreenData data :', data);
+    this.setState({
+      data,
+      donationInformation,
+    });
   }
   // ==========================================================================================
-
 
   render() {
     return (

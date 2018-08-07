@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 
-import { ios } from '../../../configs';
 import { convertWidth } from '../../../utils';
 
 export default StyleSheet.create({
@@ -9,16 +8,6 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: '#EDF0F4',
-  },
-
-  header: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#EDF0F4',
-    height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
-    width: '100%',
   },
   subTabArea: {
     width: convertWidth(339),
@@ -30,6 +19,7 @@ export default StyleSheet.create({
     borderRadius: 5,
     borderColor: '#0060F2',
     marginTop: 26,
+    marginBottom: 13,
   },
   subTabButton: {
     width: '33.33%',
@@ -79,35 +69,42 @@ export default StyleSheet.create({
     width: '100%',
     flexDirection: 'column',
     alignContent: 'center',
-    backgroundColor: '#EDF0F4',
+    backgroundColor: 'white',
+    flex: 1,
   },
   content: {
-    marginTop: 13,
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
   },
+  welcomeIcon: {
+    marginTop: 81,
+    width: 219,
+    height: 219,
+    resizeMode: 'contain',
+  },
   todoEmptyTitle: {
-    width: convertWidth(337),
+    width: convertWidth(375),
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 17,
     color: '#0060F2',
+    textAlign: 'center',
+    marginTop: 32,
   },
   todoEmptyDescription: {
     marginTop: 30,
-    width: convertWidth(337),
+    width: convertWidth(375),
     fontFamily: 'Avenir Black',
     fontWeight: '300',
     fontSize: 17,
-    color: '#0060F2',
+    textAlign: 'center',
   },
   donationTaskItem: {
-    width: convertWidth(336),
+    width: convertWidth(375),
     height: 118,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#C1C1C1',
     backgroundColor: 'white',
     flexDirection: 'row',
     marginBottom: 10,
@@ -115,12 +112,12 @@ export default StyleSheet.create({
 
   donationTaskItemLeftArea: {
     flexDirection: 'column',
-    paddingLeft: 12,
-    paddingRight: 14,
+    paddingLeft: convertWidth(18),
+    paddingRight: convertWidth(17),
   },
   researcherImage: {
-    width: 29,
-    height: 29,
+    width: 55,
+    height: 55,
     resizeMode: 'contain',
     marginTop: 11,
   },
@@ -129,6 +126,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     paddingTop: 15,
     paddingBottom: 19,
+    width: convertWidth(265),
   },
 
   donationTaskItemType: {
@@ -142,6 +140,7 @@ export default StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontSize: 13,
     fontWeight: '800',
+    width: convertWidth(265),
   },
   donationTaskItemDescription: {
     fontFamily: 'Avenir Black',
@@ -166,10 +165,12 @@ export default StyleSheet.create({
 
   newRecord: {
     flexDirection: 'row',
+    marginTop: 18,
   },
 
   newRecordImageArea: {
     paddingLeft: convertWidth(19),
+    width: convertWidth(19) + 32,
   },
   newRecordImageIcon: {
     width: 32,
