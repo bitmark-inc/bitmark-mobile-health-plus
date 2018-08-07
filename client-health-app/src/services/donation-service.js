@@ -111,17 +111,17 @@ const doLoadDonationTask = async (donationInformation) => {
 
   let todoTasks = [];
   let totalTodoTask = 0;
-  let bitmarkHealthDataTask = donationInformation.bitmarkHealthDataTask;
-  if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
-    todoTasks.push({
-      title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
-      description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
-      taskType: donationInformation.commonTaskIds.bitmark_health_data,
-      number: bitmarkHealthDataTask.list.length,
-      list: bitmarkHealthDataTask.list,
-    });
-    totalTodoTask += bitmarkHealthDataTask.list.length;
-  }
+  // let bitmarkHealthDataTask = donationInformation.bitmarkHealthDataTask;
+  // if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
+  //   todoTasks.push({
+  //     title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
+  //     description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
+  //     taskType: donationInformation.commonTaskIds.bitmark_health_data,
+  //     number: bitmarkHealthDataTask.list.length,
+  //     list: bitmarkHealthDataTask.list,
+  //   });
+  //   totalTodoTask += bitmarkHealthDataTask.list.length;
+  // }
   if (donationInformation.joinedStudies && donationInformation.joinedStudies.length > 0) {
     donationInformation.joinedStudies.forEach(study => {
       if (study.tasks) {
