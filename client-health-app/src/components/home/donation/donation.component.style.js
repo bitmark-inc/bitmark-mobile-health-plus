@@ -164,14 +164,31 @@ export default StyleSheet.create({
     paddingBottom: 2,
   },
 
+  newRecord: {
+    flexDirection: 'row',
+  },
+
+  newRecordImageArea: {
+    paddingLeft: convertWidth(19),
+  },
+  newRecordImageIcon: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain',
+  },
+
+  newRecordContentArea: {
+    marginLeft: convertWidth(12),
+  },
   newTitle: {
-    width: convertWidth(343),
+    width: convertWidth(248),
     fontFamily: 'Avenir Black',
     fontSize: 14,
     fontWeight: '900',
   },
   newDescription: {
-    width: convertWidth(343),
+    marginTop: 5,
+    width: convertWidth(248),
     fontFamily: 'Avenir Light',
     fontSize: 13,
     fontWeight: '300',
@@ -179,6 +196,7 @@ export default StyleSheet.create({
   newFooter: {
     flexDirection: 'row',
     width: convertWidth(343),
+    marginTop: 14,
   },
   newOwner: {
     fontFamily: 'Avenir Heavy',

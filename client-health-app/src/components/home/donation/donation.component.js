@@ -283,13 +283,24 @@ export class DonationComponent extends React.Component {
                   keyExtractor={(item) => item.id}
                   extraData={this.state}
                   data={this.state.donationInformation ? this.state.donationInformation.news : []}
+                  // data={[{
+                  //   title: 'Great news! Your health data has reached me safe and sound! ',
+                  //   description: 'Please keep an eye on study updates and remember that the study would not have been possible without you!',
+                  //   publisher: 'Madelena Ng, Doctoral Candidate',
+                  //   createdAt: moment().toDate().toISOString()
+                  // }]}
                   renderItem={({ item }) => {
                     return (<TouchableOpacity style={donationStyle.newRecord} disabled={true}>
-                      <Text style={donationStyle.newTitle}>{item.title}</Text>
-                      <Text style={donationStyle.newDescription}>{item.description}</Text>
-                      <View style={donationStyle.newFooter}>
-                        <Text style={donationStyle.newOwner} numberOfLines={1} >{item.owner}</Text>
-                        <Text style={donationStyle.newCreatedAt} numberOfLines={1}>{item.createdAt}</Text>
+                      <View style={donationStyle.newRecordImageArea}>
+                        {item.researcherImageUrl && <Image style={donationStyle.newRecordImageIcon} source={{ uri: item.researcherImageUrl }} />}
+                      </View>
+                      <View style={donationStyle.newRecordContentArea}>
+                        <Text style={donationStyle.newTitle}>{item.title}</Text>
+                        <Text style={donationStyle.newDescription}>{item.description}</Text>
+                        <View style={donationStyle.newFooter}>
+                          <Text style={donationStyle.newOwner} numberOfLines={1} >{item.publisher}</Text>
+                          <Text style={donationStyle.newCreatedAt} numberOfLines={1}>{moment(item.createdAt).format('YYYY MMM DD')}</Text>
+                        </View>
                       </View>
                     </TouchableOpacity>)
                   }}
