@@ -44,6 +44,16 @@ CREATE TABLE IF NOT EXISTS data_donation.user_joined_study (
   PRIMARY KEY(bitmark_account, study_id)  
 );
 
+CREATE TABLE IF NOT EXISTS data_donation.news (
+  id SERIAL,
+  publisher TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT, 
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), 
+  researcher_image_url TEXT NOT NULL,
+  PRIMARY KEY(id)  
+);
+
 GRANT CONNECT ON DATABASE mobile TO bitmark_data_donation;
 GRANT USAGE ON SCHEMA data_donation TO bitmark_data_donation;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA data_donation TO bitmark_data_donation;

@@ -1,8 +1,9 @@
 const _ = require('lodash');
 const moment = require('moment');
 const helper = require('./../../utils/helper');
-
+const newModel = require('./../../models/new-model');
 const studyCommonService = require('./common');
+
 const SUNDAY = 7;
 const SATURDAY = 6;
 const study1Service = require('./study1');
@@ -23,6 +24,7 @@ const commonTasks = {
 
 const commonTaskIds = {
   bitmark_health_data: 'bitmark_health_data',
+  bitmark_health_issuance: 'bitmark_health_issuance',
 };
 
 let allDataTypes = [
@@ -234,7 +236,59 @@ let getAllActiveStudyInformation = () => {
   return results;
 };
 
-const getFullUserInformation = (userInformation, joinedStudies, timezone) => {
+const getTimeline = (userInformation, timezone) => {
+  let timelines = [];
+
+  if (userInformation.completedTasks && userInformation.completedTasks.length > 0) {
+    timelines = userInformation.completedTasks.filter(completedTask => (completedTask.taskType === commonTaskIds.bitmark_health_data || completedTask.taskType === commonTaskIds.bitmark_health_issuance));
+  }
+
+
+  if (userInformation.activeBitmarkHealthDataAt) {
+    let lastTimeBitmarkHealthData = studyCommonService.getMomentLocalTime(userInformation.activeBitmarkHealthDataAt || new Date(), timezone);
+
+    let startDate = studyCommonService.getPreviousDayInLocalTime(lastTimeBitmarkHealthData, timezone, SUNDAY);
+    startDate = studyCommonService.getBeginDayInLocalTime(startDate, timezone);
+    let endDate = studyCommonService.getMomentLocalTime(lastTimeBitmarkHealthData, timezone);
+    endDate.second(endDate.second() - 1);
+
+    let completedTask = timelines.find(ct => moment(ct.completedAt).toDate().getDate() === endDate.toDate().getDate());
+    if (!completedTask) {
+      timelines.push({
+        bitmarkAccount: userInformation.bitmarkAccount,
+        taskType: commonTaskIds.bitmark_health_data,
+        startDate: startDate.toDate(),
+        endDate: endDate.toDate(),
+        completedAt: endDate.toDate(),
+      });
+    }
+    startDate = studyCommonService.getMomentLocalTime(lastTimeBitmarkHealthData, timezone);
+    endDate = studyCommonService.getNextDayInLocalTime(startDate, timezone, SATURDAY);
+    endDate = studyCommonService.getEndDayInLocalTime(endDate);
+
+    let currentDate = studyCommonService.getMomentLocalTime(new Date(), timezone);
+    while (endDate.toDate() <= currentDate.toDate()) {
+      let completedTask = timelines.find(ct => moment(ct.completedAt).toDate().getDate() === endDate.toDate().getDate());
+      if (!completedTask) {
+        timelines.push({
+          bitmarkAccount: userInformation.bitmarkAccount,
+          taskType: commonTaskIds.bitmark_health_data,
+          startDate: startDate.toDate(),
+          endDate: endDate.toDate(),
+          completedAt: endDate.toDate(),
+        });
+      }
+      startDate = studyCommonService.getNextDayInLocalTime(endDate, timezone);
+      startDate = studyCommonService.getBeginDayInLocalTime(startDate);
+      endDate = studyCommonService.getNextDayInLocalTime(startDate, timezone, SATURDAY);
+      endDate = studyCommonService.getEndDayInLocalTime(endDate);
+    }
+  }
+
+  return timelines;
+};
+
+const getFullUserInformation = async (userInformation, joinedStudies, timezone) => {
   let mapJoinedStudies = {};
   let otherStudies = [];
   if (!timezone) {
@@ -303,6 +357,9 @@ const getFullUserInformation = (userInformation, joinedStudies, timezone) => {
       list: list,
     };
   }
+
+  userInformation.timelines = getTimeline(userInformation, timezone);
+  userInformation.news = await newModel.doGetAllNewsInformation();
   userInformation.commonTaskIds = commonTaskIds;
   userInformation.commonTasks = commonTasks;
   return userInformation;
