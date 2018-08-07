@@ -70,19 +70,20 @@ export class WelcomeComponent extends React.Component {
             contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
-                <View style={welcomeComponentStyle.introductionArea}>
-                  <Text style={[welcomeComponentStyle.introductionTitle]}>{'Own your HEALTH DATA'.toUpperCase()}</Text>
-                  <Text style={[welcomeComponentStyle.introductionDescription]}>
-                    You are the sole owner of your data.{'\n\n'}
-                    Bitmark is a safe, easy way to aggregate health data from your devices, as well as traditional medical sources.
-                    </Text>
-                </View>
-
                 <View style={welcomeComponentStyle.introductionImageArea}>
                   <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/card-berkeley.png')} />
                 </View>
+                <View style={welcomeComponentStyle.introductionArea}>
+                  <Text style={[welcomeComponentStyle.introductionTitle]}>{'Create Property Around Your Health Data'.toUpperCase()}</Text>
+                  <Text style={[welcomeComponentStyle.introductionDescription]}>
+                    Bitmark Health protects the rights to your health data by registering it on a global public registry so that no other party can legally access it without your explicit permission.
+                    </Text>
+                </View>
               </View>
-            )} />
+            )}
+            footerHeight={115 + ios.constant.blankFooter}
+            footer={(<View />)}
+          />
 
           <BitmarkComponent
             backgroundColor='white'
@@ -90,19 +91,20 @@ export class WelcomeComponent extends React.Component {
             contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
-                <View style={welcomeComponentStyle.introductionArea}>
-                  <Text style={[welcomeComponentStyle.introductionTitle]}>CONTROL ACCESS</Text>
-                  <Text style={[welcomeComponentStyle.introductionDescription]}>
-                    Your health data is an asset that will grow more valuable over time.{'\n\n'}
-                    Bitmark allows you to set rules for sharing and exchanging your data using  blockchain technology.
-                    </Text>
-                </View>
-
                 <View style={welcomeComponentStyle.introductionImageArea}>
                   <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/card-berkeley.png')} />
                 </View>
+                <View style={welcomeComponentStyle.introductionArea}>
+                  <Text style={[welcomeComponentStyle.introductionTitle]}>{'Registration is Private and Secure'.toUpperCase()}</Text>
+                  <Text style={[welcomeComponentStyle.introductionDescription]}>
+                    Registration is anonymous and your identity is completely protected. Only you hold the keys to link your identity to these records; Bitmark cannot view your encrypted data.
+                    </Text>
+                </View>
               </View>
-            )} />
+            )}
+            footerHeight={115 + ios.constant.blankFooter}
+            footer={(<View />)}
+          />
 
           <BitmarkComponent
             backgroundColor='white'
@@ -110,19 +112,20 @@ export class WelcomeComponent extends React.Component {
             contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
-                <View style={welcomeComponentStyle.introductionArea}>
-                  <Text style={[welcomeComponentStyle.introductionTitle]}>HELP RESEARCH</Text>
-                  <Text style={[welcomeComponentStyle.introductionDescription]}>
-                    Your health data can be shared with researchers, to the benefit of the society.{'\n\n'}
-                    Bitmark protects your privacy and shows you how your data is used.
-                    </Text>
-                </View>
-
                 <View style={welcomeComponentStyle.introductionImageArea}>
                   <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/card-berkeley.png')} />
                 </View>
+                <View style={welcomeComponentStyle.introductionArea}>
+                  <Text style={[welcomeComponentStyle.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>
+                  <Text style={[welcomeComponentStyle.introductionDescription]}>
+                    Once health data is registered as your property, you will be able to donate, sell, or transfer it to another party (family member, university researcher, etc.) at your complete discretion.
+                    </Text>
+                </View>
               </View>
-            )} />
+            )}
+            footerHeight={115 + ios.constant.blankFooter}
+            footer={(<View />)}
+          />
         </Swiper>
 
         <View style={[welcomeComponentStyle.welcomeButtonArea]}>

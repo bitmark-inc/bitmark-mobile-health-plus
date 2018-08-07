@@ -42,38 +42,40 @@ export default StyleSheet.create({
 
   introductionArea: {
     flexDirection: 'column',
+    alignItems: 'center',
     minHeight: 275,
     width: '100%',
-    marginTop: 60,
+    marginTop: 32,
   },
   introductionTitle: {
     marginTop: 25,
-    marginLeft: convertWidth(50),
     fontFamily: 'Avenir black',
     color: '#0060F2',
     fontSize: 17,
     fontWeight: '900',
+    width: convertWidth(275),
+    textAlign: 'center',
   },
   introductionDescription: {
-    marginTop: 30,
-    marginLeft: convertWidth(50),
+    marginTop: 65,
     width: convertWidth(275),
     fontFamily: 'Avenir light',
     fontWeight: '300',
-    fontSize: 17,
+    fontSize: 16,
+    textAlign: 'center',
   },
 
   introductionImageArea: {
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 100,
   },
   onBoardingImage: {
     borderWidth: 1,
     resizeMode: 'contain',
-    width: convertWidth(236),
-    height: 129 * convertWidth(236) / 236
+    width: convertWidth(216),
+    height: 226 * convertWidth(216) / 216
   },
 
   welcomeButtonArea: {
