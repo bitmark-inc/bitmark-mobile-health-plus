@@ -7,9 +7,10 @@ import { AccountDetailComponent, AccountRecoveryComponent, ApplicationDetailComp
 import {
   StudySettingComponent, StudyDetailComponent, StudyDonationComponent,
   Study1ExitSurvey2Component, Study2EntryInterviewComponent,
-  StudyConsentComponent, HealthDataSourceComponent
-
+  StudyConsentComponent, HealthDataSourceComponent, HealthDataBitmarkComponent,
 } from './donation';
+
+import { BitmarkDetailComponent, AssetImageContentComponent } from './timeline';
 
 
 let HomeComponent = StackNavigator({
@@ -25,6 +26,10 @@ let HomeComponent = StackNavigator({
   Study1ExitSurvey2: { screen: Study1ExitSurvey2Component, },
   Study2EntryInterview: { screen: Study2EntryInterviewComponent, },
   HealthDataSource: { screen: HealthDataSourceComponent, },
+  HealthDataBitmark: { screen: HealthDataBitmarkComponent, },
+  BitmarkDetail: { screen: BitmarkDetailComponent, },
+  AssetImageContent: { screen: AssetImageContentComponent, },
+
 }, {
     headerMode: 'none',
     navigationOptions: {

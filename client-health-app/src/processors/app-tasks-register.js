@@ -1,8 +1,8 @@
 import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 
-import { CommonModel, AccountModel, FaceTouchId, } from './../models';
-import { EventEmitterService, } from './../services'
+import { CommonModel, AccountModel, FaceTouchId, BitmarkModel, } from './../models';
+import { EventEmitterService, BitmarkService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { ios } from '../configs';
 import { DonationService } from '../services/donation-service';
@@ -148,12 +148,18 @@ const doDownloadStudyConsent = async ({ study }) => {
   return await processing(DonationService.doDownloadStudyConsent(study));
 };
 
-const doDownloadBitmark = async ({ bitmark, processingData }) => {
+const doDownloadBitmark = async ({ bitmarkId }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to download asset.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await submitting(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmark), processingData);
+  return await processing(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkId));
+};
+
+const doGetBitmarkInformation = async ({ bitmarkId }) => {
+  let { asset, bitmark } = await processing(BitmarkService.doGetBitmarkInformation(bitmarkId));
+  let contentType = await BitmarkModel.doGetAssetTextContentType(asset.id);
+  return { asset, bitmark, contentType };
 };
 
 
@@ -175,6 +181,7 @@ let AppTasks = {
   doBitmarkHealthData,
   doDownloadStudyConsent,
   doDownloadBitmark,
+  doGetBitmarkInformation,
 };
 
 let registeredTasks = {};

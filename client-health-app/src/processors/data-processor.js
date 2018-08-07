@@ -57,8 +57,8 @@ const runOnBackground = async () => {
     let donationInformation = await runGetDonationInformationInBackground();
     await doCheckNewDonationInformation(donationInformation, true);
     await doGenerateDonationTask();
+    console.log('runOnBackground done ====================================', donationInformation);
   }
-  console.log('runOnBackground done ====================================');
 };
 
 const doReloadUserData = async () => {
@@ -227,8 +227,8 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   return donationInformation;
 };
 
-const doDownloadBitmark = async (touchFaceIdSession, bitmark) => {
-  let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmark.id);
+const doDownloadBitmark = async (touchFaceIdSession, bitmarkId) => {
+  let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
   filePath = filePath.replace('file://', '');
   return filePath;
 };

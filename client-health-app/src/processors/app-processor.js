@@ -168,6 +168,10 @@ const doDownloadBitmark = async (bitmark, processingData) => {
   return executeTask('doDownloadBitmark', { bitmark, processingData });
 };
 
+const doGetBitmarkInformation = async (bitmarkId) => {
+  return executeTask('doGetBitmarkInformation', { bitmarkId });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -192,6 +196,8 @@ let AppProcessor = {
   doDonateHealthData,
   doBitmarkHealthData,
   doDownloadStudyConsent,
+
+  doGetBitmarkInformation,
   doDownloadBitmark,
   doReloadUserData,
   doStartBackgroundProcess,

@@ -18,7 +18,6 @@ export class TimelineComponent extends React.Component {
       data: [
         {
           time: '', title: 'You health data will be extracted each week...',
-          lineWidth: 2
         },
       ],
       appLoadingData: DataProcessor.isAppLoadingData(),
@@ -41,14 +40,14 @@ export class TimelineComponent extends React.Component {
             taskType: item.taskType,
             title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
               (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
-
-            lineWidth: 2,
+            startDate: item.startDate,
+            endDate: item.endDate,
+            bitmarkId: item.bitmarkId,
           })
         });
 
         tempData = [{
           time: donationInformation.createdAt, title: 'Your Bitmark account was created.',
-          lineWidth: 2,
         }].concat(tempData.sort((a, b) => {
           return moment(a.time).toDate().getTime() - moment(b.time).toDate().getTime();
         }));
@@ -102,7 +101,21 @@ export class TimelineComponent extends React.Component {
                 </View>
 
 
-                <TouchableOpacity style={timelineStyle.rowDataDetail}>
+                <TouchableOpacity
+                  style={[timelineStyle.rowDataDetail, {
+                    paddingBottom: ((index === this.state.data.length - 2) ? 91 : 26)
+                  }]}
+                  onPress={() => {
+                    if (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data && !item.bitmarkId) {
+                      this.props.screenProps.homeNavigation.navigate('HealthDataBitmark', {
+                        startDate: item.startDate,
+                        endDate: item.endDate,
+                      });
+                    } else if (item.bitmarkId) {
+                      this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.bitmarkId });
+                    }
+                  }}
+                >
                   <View style={[timelineStyle.rowDataContent, { backgroundColor: 'white' }]}>
                     <View style={timelineStyle.rowDataMainContent}>
                       <Image style={timelineStyle.rowDataIcon}
@@ -120,24 +133,24 @@ export class TimelineComponent extends React.Component {
               </View>);
             }
 
-            let lineStyle = {
-              borderColor: item.time ? '#0060F2' : '#999999',
-            };
             return (<View style={timelineStyle.rowData}>
               <View style={[timelineStyle.rowDataTime]}>
                 <Text style={timelineStyle.rowDataTimeText}>{item.time}</Text>
               </View>
 
               <View style={timelineStyle.rowDataLineArea}>
-                {(index !== (this.state.data.length - 1)) && <View style={[timelineStyle.rowDataLine, lineStyle]}></View>}
+                {(index !== (this.state.data.length - 1)) && <View style={[timelineStyle.rowDataLine, { borderColor: item.time ? '#0060F2' : '#999999', }]}></View>}
                 <View style={[timelineStyle.rowDataDot, { borderColor: item.time ? '#0060F2' : '#999999' }]}></View>
               </View>
 
-              <TouchableOpacity style={[timelineStyle.rowDataDetail, { marginTop: -15, }]}>
+              <View style={[timelineStyle.rowDataDetail, {
+                marginTop: -15,
+                paddingBottom: (index === 0 ? 40 : 26)
+              }]}>
                 <View style={[timelineStyle.rowDataContent]}>
                   <Text style={[timelineStyle.rowDataTitle, { color: '#999999' }]}>{item.title}</Text>
                 </View>
-              </TouchableOpacity>
+              </View>
             </View>);
 
           }}

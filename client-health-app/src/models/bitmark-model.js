@@ -250,6 +250,7 @@ const doGetBitmarkInformation = (bitmarkId) => {
     let statusCode;
     let bitmarkUrl = config.api_server_url +
       `/v1/bitmarks/${bitmarkId}?asset=true&pending=true&provenance=true`;
+    console.log('bitmarkUrl :', bitmarkUrl);
     fetch(bitmarkUrl, {
       method: 'GET',
       headers: {
