@@ -275,6 +275,31 @@ export class DonationComponent extends React.Component {
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
+        {this.state.subTab === SubTabs.news && <ScrollView style={donationStyle.contentScroll}>
+          <View style={donationStyle.content}>
+            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+              <View style={donationStyle.content}>
+                <FlatList
+                  keyExtractor={(item) => item.id}
+                  extraData={this.state}
+                  data={this.state.donationInformation ? this.state.donationInformation.news : []}
+                  renderItem={({ item }) => {
+                    return (<TouchableOpacity style={donationStyle.newRecord} disabled={true}>
+                      <Text style={donationStyle.newTitle}>{item.title}</Text>
+                      <Text style={donationStyle.newDescription}>{item.description}</Text>
+                      <View style={donationStyle.newFooter}>
+                        <Text style={donationStyle.newOwner} numberOfLines={1} >{item.owner}</Text>
+                        <Text style={donationStyle.newCreatedAt} numberOfLines={1}>{item.createdAt}</Text>
+                      </View>
+                    </TouchableOpacity>)
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
+        </ScrollView>}
+
 
 
         {this.state.subTab === SubTabs.news && <ScrollView style={donationStyle.contentScroll}>

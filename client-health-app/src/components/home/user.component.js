@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, TouchableOpacity, Text, Image,
 } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+
 import defaultStyle from './../../commons/styles';
 import userStyle from './user.component.style';
 
@@ -13,6 +13,7 @@ import { EventEmitterService } from '../../services';
 import { DonationService } from '../../services/donation-service';
 import { BitmarkComponent } from '../../commons/components';
 import { DonationComponent } from './donation';
+import { TimelineComponent } from './timeline';
 
 const MainTabs = BottomTabsComponent.MainTabs;
 
@@ -20,7 +21,6 @@ let ComponentName = 'UserComponent';
 export class UserComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.logout = this.logout.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
     this.handerReceivedNotification = this.handerReceivedNotification.bind(this);
 
@@ -159,18 +159,6 @@ export class UserComponent extends React.Component {
     }
   }
 
-  logout() {
-    AppProcessor.doLogout().then(() => {
-      const resetMainPage = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Main' })]
-      });
-      this.props.screenProps.rootNavigation.dispatch(resetMainPage);
-    }).catch((error) => {
-      console.log('log out error :', error);
-    });
-  }
-
   render() {
     return (
       <BitmarkComponent
@@ -187,6 +175,13 @@ export class UserComponent extends React.Component {
         )}
         content={(<View style={{ flex: 1 }}>
           {this.state.displayedTab.mainTab === MainTabs.Donate && <DonationComponent screenProps={{
+            homeNavigation: this.props.navigation,
+            subTab: this.state.displayedTab.subTab,
+            needReloadData: this.needReloadData,
+            donReloadData: () => this.needReloadData = false,
+          }} />}
+
+          {this.state.displayedTab.mainTab === MainTabs.Timeline && <TimelineComponent screenProps={{
             homeNavigation: this.props.navigation,
             subTab: this.state.displayedTab.subTab,
             needReloadData: this.needReloadData,

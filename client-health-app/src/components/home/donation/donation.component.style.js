@@ -1,9 +1,7 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { ios } from '../../../configs';
 import { convertWidth } from '../../../utils';
-let currentSize = Dimensions.get('window');
-let scale = currentSize.width / 375;
 
 export default StyleSheet.create({
   body: {
@@ -165,40 +163,35 @@ export default StyleSheet.create({
     shadowOpacity: 0.2,
     paddingBottom: 2,
   },
-  noCardTitle: {
-    marginTop: 39,
-    marginLeft: 19,
+
+  newTitle: {
+    width: convertWidth(343),
     fontFamily: 'Avenir Black',
-    fontSize: 17,
+    fontSize: 14,
     fontWeight: '900',
-    color: '#0060F2',
   },
-  contactButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: 130,
-    height: 28 * scale,
-    paddingTop: 5,
-  },
-  contactButtonText: {
+  newDescription: {
+    width: convertWidth(343),
     fontFamily: 'Avenir Light',
-    fontSize: 16 * scale,
-    textAlign: 'left',
-    color: '#0060F2',
-    marginTop: 2,
-  },
-  noCardMessage: {
-    fontFamily: 'Avenir Light',
-    fontSize: 17 * scale,
-    textAlign: 'left',
+    fontSize: 13,
     fontWeight: '300',
-    color: '#828282',
-    width: convertWidth(337),
-    marginLeft: 19,
-    marginTop: 21,
   },
-
-
-
+  newFooter: {
+    flexDirection: 'row',
+    width: convertWidth(343),
+  },
+  newOwner: {
+    fontFamily: 'Avenir Heavy',
+    fontSize: 9,
+    fontWeight: '900',
+    width: convertWidth(157),
+  },
+  newCreatedAt: {
+    fontFamily: 'Avenir Medium',
+    fontSize: 9,
+    fontWeight: '300',
+    color: '#999999',
+    width: convertWidth(52),
+  },
 
 });

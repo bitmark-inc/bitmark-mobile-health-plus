@@ -5,6 +5,7 @@ import {
   Clipboard,
   Alert,
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 
 import { EventEmitterService } from "./../../../services";
 import accountStyle from './account.component.style';
@@ -13,14 +14,11 @@ import defaultStyle from './../../../commons/styles';
 import { DataProcessor, AppProcessor } from '../../../processors';
 import { BitmarkComponent } from '../../../commons/components';
 
-const SubTabs = {
-  settings: 'SETTINGS',
-  authorized: 'AUTHORIZED',
-}
 let ComponentName = 'AccountDetailComponent';
 export class AccountDetailComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.logout = this.logout.bind(this);
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     this.handerChangeUserInfo = this.handerChangeUserInfo.bind(this);
     this.inactiveBitmarkHealthData = this.inactiveBitmarkHealthData.bind(this);
@@ -33,12 +31,8 @@ export class AccountDetailComponent extends React.Component {
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_INFO, null, ComponentName);
     EventEmitterService.remove(EventEmitterService.events.APP_LOADING_DATA, null, ComponentName);
 
-    let subTab = (this.props.screenProps.subTab &&
-      (this.props.screenProps.subTab === SubTabs.settings || this.props.screenProps.subTab === SubTabs.authorized))
-      ? this.props.screenProps.subTab : SubTabs.settings;
 
     this.state = {
-      subTab,
       accountNumberCopyText: '',
       notificationUUIDCopyText: 'COPY',
       userInfo: DataProcessor.getUserInformation(),
@@ -115,6 +109,18 @@ export class AccountDetailComponent extends React.Component {
     }]);
   }
 
+  logout() {
+    AppProcessor.doLogout().then(() => {
+      const resetMainPage = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Main' })]
+      });
+      this.props.screenProps.rootNavigation.dispatch(resetMainPage);
+    }).catch((error) => {
+      console.log('log out error :', error);
+    });
+  }
+
   render() {
     return (
       <BitmarkComponent
@@ -149,8 +155,8 @@ export class AccountDetailComponent extends React.Component {
                   <TouchableOpacity style={accountStyle.accountWriteDownButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: false }) }}>
                     <Text style={accountStyle.accountWriteDownButtonText}>{'WRITE DOWN RECOVERY PHRASE »'.toUpperCase()} </Text>
                   </TouchableOpacity>
-                  {/* <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.props.screenProps.logout}> */}
-                  <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}>
+                  <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={this.logout}>
+                    {/* <TouchableOpacity style={accountStyle.accountRemoveButton} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true }) }}> */}
                     <Text style={accountStyle.accountRemoveButtonText}>{'Remove access from this device »'.toUpperCase()} </Text>
                   </TouchableOpacity>
                 </View>
@@ -170,11 +176,9 @@ AccountDetailComponent.propTypes = {
     goBack: PropTypes.func,
   }),
   screenProps: PropTypes.shape({
-    logout: PropTypes.func,
-    subTab: PropTypes.string,
-    homeNavigation: PropTypes.shape({
+    rootNavigation: PropTypes.shape({
       navigate: PropTypes.func,
-      goBack: PropTypes.func,
-    }),
+      dispatch: PropTypes.func,
+    })
   }),
 }

@@ -48,6 +48,7 @@ const runGetDonationInformationInBackground = () => {
 // special process
 const runOnBackground = async () => {
   let userInfo = await UserModel.doTryGetCurrentUser();
+  console.log('userInfo :', userInfo);
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
     userInformation = userInfo;
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);
@@ -267,35 +268,28 @@ const doGetDonationInformation = () => {
 // ======================================================================================================================================================================================
 // ======================================================================================================================================================================================
 // ======================================================================================================================================================================================
-const ActionTypes = {
-  transfer: 'transfer',
-  donation: 'donation',
-  test_write_down_recovery_phase: 'test_write_down_recovery_phase',
-};
 const doGenerateDonationTask = async () => {
-  let donationTasks;
+  let donationTasks = [];
   let totalTasks = 0;
-
   let donationInformation = await doGetDonationInformation();
+
   if (donationInformation && donationInformation.todoTasks) {
-    donationTasks = donationTasks || [];
     (donationInformation.todoTasks || []).forEach(item => {
       item.key = donationTasks.length;
-      item.type = ActionTypes.donation;
       item.typeTitle = 'DONATION Request';
       item.timestamp = (item.list && item.list.length > 0) ? item.list[0].endDate : (item.study ? item.study.joinedDate : null);
       donationTasks.push(item);
       totalTasks += item.number;
     });
   }
-
-  donationTasks = donationTasks ? donationTasks.sort((a, b) => {
+  donationTasks = donationTasks.sort((a, b) => {
     if (a.important) { return -1; }
     if (b.important) { return 1; }
     if (!a.timestamp) return -1;
     if (!b.timestamp) return 1;
     return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
-  }) : donationTasks;
+  });
+
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK, donationTasks);
 
