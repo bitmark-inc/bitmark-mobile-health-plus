@@ -2,7 +2,7 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 import { registerTasks } from './app-tasks-register';
 
-import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel } from './../models';
+import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel, DonationModel } from './../models';
 import { AccountService, BitmarkService, EventEmitterService, TransactionService } from './../services'
 import { DataProcessor } from './data-processor';
 import { ios } from '../configs';
@@ -108,10 +108,11 @@ const doReloadUserData = async () => {
   return await DataProcessor.doReloadUserData();
 };
 
-const doRequirePermission = async () => {
-  let donationInformation = await DataProcessor.doGetDonationInformation();
-  if (donationInformation) {
-    await AppleHealthKitModel.initHealthKit(donationInformation.allDataTypes);
+const doRequireHealthKitPermission = async () => {
+  let allDataTypes = await DonationModel.doGetAllDataTypes();
+  console.log('allDataTypes :', allDataTypes);
+  if (allDataTypes) {
+    await AppleHealthKitModel.initHealthKit(allDataTypes);
   }
 };
 
@@ -186,7 +187,7 @@ let AppProcessor = {
   doCheckFileToIssue,
   doIssueFile,
   doGetTransferOfferDetail,
-  doRequirePermission,
+  doRequireHealthKitPermission,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
   doJoinStudy,

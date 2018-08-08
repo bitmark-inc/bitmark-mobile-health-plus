@@ -8,6 +8,8 @@ import {
 import getStartStyles from './get-start.component.style';
 import { iosConstant } from '../../../configs/ios/ios.config';
 import { BitmarkComponent } from '../../../commons/components';
+import { AppProcessor } from '../../../processors';
+import { EventEmitterService } from '../../../services';
 
 export class GetStartComponent extends React.Component {
   constructor(props) {
@@ -18,8 +20,12 @@ export class GetStartComponent extends React.Component {
   render() {
 
     let requestHealthKitPermission = () => {
-      //TODO
-      this.props.navigation.navigate('FaceTouchId', { passPhrase24Words: this.state.passPhrase24Words });
+      AppProcessor.doRequireHealthKitPermission().then(() => {
+        this.props.navigation.navigate('FaceTouchId', { passPhrase24Words: this.state.passPhrase24Words });
+      }).catch(error => {
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+        console.log('doRequireHealthKitPermission error :', error);
+      });
     }
     return (
       <BitmarkComponent

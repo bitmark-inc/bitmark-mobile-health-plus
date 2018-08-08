@@ -10,6 +10,7 @@ module.exports = (router) => {
   router.post('/s/api/leave-study', apis.leaveStudy);
 
   router.post('/s/api/complete-task', apis.completedTask);
+  router.get('/s/api/all-data-types', apis.getAllHealthKitDataTypes);
 
   if (config.network !== 'livenet') {
     router.get('/s/api/test/get-user-info', apis.testGetUserInfo);

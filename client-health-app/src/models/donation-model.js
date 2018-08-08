@@ -175,6 +175,28 @@ const doCompleteTask = (bitmark_account, timestamp, signature, task_type, comple
   });
 };
 
+const doGetAllDataTypes = () => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.donation_server_url + `/s/api/all-data-types`;
+    fetch(bitmarkUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doGetAllDataTypes error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+}
+
 let DonationModel = {
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
@@ -182,7 +204,7 @@ let DonationModel = {
   doCompleteTask,
   doJoinStudy,
   doLeaveStudy,
-
+  doGetAllDataTypes,
 };
 
 export { DonationModel };

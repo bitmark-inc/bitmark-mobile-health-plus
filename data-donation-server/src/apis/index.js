@@ -324,6 +324,10 @@ const testUpdateCompletedTasks = async (req, res) => {
   }
 };
 
+const getAllHealthKitDataTypes = (req, res) => {
+  res.send(userService.allDataTypes);
+};
+
 module.exports = {
   getUserInformation,
   activeBHD,
@@ -335,4 +339,5 @@ module.exports = {
   testGetUserInfo,
   testUpdateCompletedTasks,
   testUpdateJoinedStudy,
+  getAllHealthKitDataTypes,
 };
