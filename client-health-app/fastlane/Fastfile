@@ -11,19 +11,21 @@
 
 default_platform(:ios)
 
+reset_git_repo(
+  force: true,
+  skip_clean: true
+)
 git_pull
-Dir.chdir("..") do
-  sh "npm install"
-end
+sh "npm install"
 
 platform :ios do
   desc "Push a new beta build to Hockeyapp"
   lane :beta do
     version_number = latest_hockey_build_number(
-      api_token: "ea44d63ef04b42d8898c686a5744346c"
+      api_token: "52c1ab658c4a4fd0b22a2ed6dbe80132"
     ).to_i
     increment_build_number(
-      xcodeproj: "Bitmark.xcodeproj",
+      xcodeproj: "ios/Bitmark Health.xcodeproj",
       build_number: (version_number + 1).to_i
     )
     cert
@@ -33,20 +35,20 @@ platform :ios do
     )
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
-      workspace: "Bitmark.xcworkspace", 
-      scheme: "Bitmark",
+      workspace: "ios/Bitmark.xcworkspace", 
+      scheme: "Bitmark Health",
       include_bitcode: false
     )
     hockey(
-      api_token: "ea44d63ef04b42d8898c686a5744346c"
+      api_token: "52c1ab658c4a4fd0b22a2ed6dbe80132"
     )
   end
   lane :enterprise do
     version_number = latest_hockey_build_number(
-      api_token: "58599adb15fb45e588c850af7b79a432"
+      api_token: "52c1ab658c4a4fd0b22a2ed6dbe80132"
     ).to_i
     increment_build_number(
-      xcodeproj: "Bitmark.xcodeproj",
+      xcodeproj: "ios/Bitmark Health.xcodeproj",
       build_number: (version_number + 1).to_i
     )
     cert
@@ -55,34 +57,12 @@ platform :ios do
     )
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
-      workspace: "Bitmark.xcworkspace", 
-      scheme: "Bitmark beta",
+      workspace: "ios/Bitmark Health.xcworkspace", 
+      scheme: "Bitmark Health dev",
       include_bitcode: false
     )
     hockey(
-      api_token: "58599adb15fb45e588c850af7b79a432"
-      )
-  end
-  lane :development do
-    version_number = latest_hockey_build_number(
-      api_token: "b6fb005cafb04a33a812013c13384480"
-    ).to_i
-    increment_build_number(
-      xcodeproj: "Bitmark.xcodeproj",
-      build_number: (version_number + 1).to_i
-    )
-    cert
-    sigh(
-      force: false
-    )
-    build_app(
-      export_options: {iCloudContainerEnvironment: 'Production'},
-      workspace: "Bitmark.xcworkspace", 
-      scheme: "Bitmark dev",
-      include_bitcode: false
-    )
-    hockey(
-      api_token: "b6fb005cafb04a33a812013c13384480"
+      api_token: "52c1ab658c4a4fd0b22a2ed6dbe80132"
       )
   end
 end
