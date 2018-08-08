@@ -2606,7 +2606,7 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
 					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Bitmark copy-Info.plist";
+				INFOPLIST_FILE = "Bitmark copy-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
