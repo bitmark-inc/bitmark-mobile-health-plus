@@ -6,11 +6,11 @@ import {
 
 import { NavigationActions } from 'react-navigation';
 import style from './capture-asset-preview.component.style';
-import {BitmarkComponent} from "../../../../commons/components/";
+import { BitmarkComponent } from "../../../../commons/components/";
 import defaultStyle from "../../../../commons/styles";
-import {AppProcessor} from "../../../../processors";
-import {EventEmitterService} from "../../../../services";
-import {FileUtil} from "../../../../utils";
+import { AppProcessor } from "../../../../processors";
+import { EventEmitterService } from "../../../../services";
+import { FileUtil } from "../../../../utils";
 
 
 export class CaptureAssetPreviewComponent extends React.Component {
@@ -18,7 +18,7 @@ export class CaptureAssetPreviewComponent extends React.Component {
     super(props);
     let filePath = this.props.navigation.state.params.filePath;
     let timestamp = this.props.navigation.state.params.timestamp;
-    this.state = {filePath, timestamp};
+    this.state = { filePath, timestamp };
   }
 
   componentDidMount() {
@@ -34,13 +34,13 @@ export class CaptureAssetPreviewComponent extends React.Component {
       } else {
         // Do issue
         let metadataList = [];
-        metadataList.push({label: 'source', value: 'Bitmark Health'});
-        metadataList.push({label: 'save_time', value: new Date(this.state.timestamp).toISOString()});
+        metadataList.push({ label: 'source', value: 'Bitmark Health' });
+        metadataList.push({ label: 'save_time', value: new Date(this.state.timestamp).toISOString() });
         this.issueAsset(filePath, metadataList);
       }
     }).catch(error => {
       console.log('Check file error :', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
@@ -75,7 +75,8 @@ export class CaptureAssetPreviewComponent extends React.Component {
   render() {
     return (
       <BitmarkComponent
-        header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
+        backgroundColor='#E5E5E5'
+        header={(<View style={[defaultStyle.header, { backgroundColor: '#E5E5E5' }]}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
@@ -86,14 +87,14 @@ export class CaptureAssetPreviewComponent extends React.Component {
         content={(
           <View style={[style.body]}>
             <View style={style.previewContainer}>
-              <Image style={style.previewImage} source={{uri: 'file://' + this.state.filePath}} />
+              <Image style={style.previewImage} source={{ uri: 'file://' + this.state.filePath }} />
             </View>
             <TouchableOpacity style={style.bottomButton} onPress={() => this.checkAndIssueAsset()}>
               <Text style={style.buttonText}>USE IMAGE</Text>
             </TouchableOpacity>
           </View>
         )}
-    />
+      />
     );
   }
 }
