@@ -39,7 +39,7 @@ class WebViewComponent extends React.Component {
   }
 
   render() {
-    let isFullScreen
+    let isFullScreen;
     if (this.props.screenProps) {
       isFullScreen = this.props.screenProps.isFullScreen;
     }
@@ -47,7 +47,15 @@ class WebViewComponent extends React.Component {
       isFullScreen = this.props.navigation.state.params.isFullScreen;
     }
 
-    let title
+    let showDoneButton;
+    if (this.props.screenProps) {
+      showDoneButton = this.props.screenProps.showDoneButton;
+    }
+    if (this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) {
+      showDoneButton = this.props.navigation.state.params.showDoneButton;
+    }
+
+    let title;
     if (this.props.screenProps) {
       title = this.props.screenProps.title;
     }
@@ -55,7 +63,7 @@ class WebViewComponent extends React.Component {
       title = this.props.navigation.state.params.title;
     }
 
-    let sourceUrl
+    let sourceUrl;
     if (this.props.screenProps) {
       sourceUrl = this.props.screenProps.sourceUrl;
     }
@@ -80,16 +88,31 @@ class WebViewComponent extends React.Component {
     }
     return (<View style={termsStyles.body}>
       {!!title && <View style={termsStyles.header}>
-        <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => {
-          if (this.props.screenProps && this.props.screenProps.setShowPagination) {
-            this.props.screenProps.setShowPagination(true);
-          }
-          this.props.navigation.goBack()
-        }}>
-          <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
-        </TouchableOpacity>
+        {!showDoneButton ? (
+          // Go Back Arrow
+          <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => {
+            if (this.props.screenProps && this.props.screenProps.setShowPagination) {
+              this.props.screenProps.setShowPagination(true);
+            }
+            this.props.navigation.goBack()
+          }}>
+            <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={defaultStyles.headerLeft}/>
+        )}
+
+        {/*Header Text*/}
         <Text style={defaultStyles.headerTitle}>{title.toUpperCase()}</Text>
-        <TouchableOpacity style={defaultStyles.headerRight} />
+
+        {showDoneButton ? (
+          // Done Button
+          <TouchableOpacity style={defaultStyles.headerRight} onPress={() => this.props.navigation.goBack()}>
+            <Text style={defaultStyles.headerRightText}>Done</Text>
+          </TouchableOpacity>
+          ) : (
+          <TouchableOpacity style={defaultStyles.headerRight} />
+        )}
       </View>}
       <View style={termsStyles.main}>
         <WebView
@@ -149,13 +172,14 @@ export class BitmarkWebViewComponent extends React.Component {
     super(props);
   }
   render() {
-    let isFullScreen
+    let isFullScreen;
     if (this.props.screenProps) {
       isFullScreen = this.props.screenProps.isFullScreen;
     }
     if (this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) {
       isFullScreen = this.props.navigation.state.params.isFullScreen;
     }
+
     if (isFullScreen) {
       return (
         <BitmarkComponent
@@ -182,6 +206,7 @@ BitmarkWebViewComponent.propTypes = {
         sourceUrl: PropTypes.string,
         title: PropTypes.string,
         isFullScreen: PropTypes.bool,
+        showDoneButton: PropTypes.bool,
       })
     })
   }),

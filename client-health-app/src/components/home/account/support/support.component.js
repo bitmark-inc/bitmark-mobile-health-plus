@@ -38,7 +38,8 @@ export class SupportComponent extends React.Component {
                 this.props.navigation.navigate('BitmarkWebView', {
                   title: 'Terms of Service', sourceUrl: config.bitmark_web_site + '/term?env=app',
                   hideBottomController: true,
-                  isFullScreen: true
+                  isFullScreen: true,
+                  showDoneButton: true
                 })
               }}>
                 <Text style={defaultStyle.text}>Terms of Service</Text>
@@ -50,7 +51,8 @@ export class SupportComponent extends React.Component {
                 this.props.navigation.navigate('BitmarkWebView', {
                   title: 'Privacy Policy', sourceUrl: config.bitmark_web_site + '/privacy?env=app',
                   hideBottomController: true,
-                  isFullScreen: true
+                  isFullScreen: true,
+                  showDoneButton: true
                 })
               }}>
                 <Text style={defaultStyle.text}>Privacy Policy</Text>
