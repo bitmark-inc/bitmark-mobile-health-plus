@@ -13,7 +13,8 @@ const {
   AppState,
   NetInfo,
   // PushNotificationIOS,
-  View,
+  StyleSheet,
+  View, Text, TouchableOpacity,
 } = ReactNative;
 
 import {
@@ -21,6 +22,7 @@ import {
   DefaultIndicatorComponent,
   BitmarkIndicatorComponent,
   BitmarkInternetOffComponent,
+  BitmarkDialogComponent,
 } from './../commons/components';
 import { HomeComponent } from './../components/home';
 import { OnBoardingComponent } from './onboarding';
@@ -30,7 +32,7 @@ import { CommonModel, UserModel } from '../models';
 import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-exception-handler";
 import RNExitApp from 'react-native-exit-app';
 import Mailer from "react-native-mail";
-import { FileUtil } from "../utils";
+import { FileUtil, convertWidth } from "../utils";
 
 const CRASH_LOG_FILE_NAME = 'crash_log.txt';
 const CRASH_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + CRASH_LOG_FILE_NAME;
@@ -48,6 +50,7 @@ class MainComponent extends Component {
     this.handleNetworkChange = this.handleNetworkChange.bind(this);
     this.handerProcessErrorEvent = this.handerProcessErrorEvent.bind(this);
     this.doTryConnectInternet = this.doTryConnectInternet.bind(this);
+    this.displayEmptyDataSource = this.displayEmptyDataSource.bind(this);
 
     this.doOpenApp = this.doOpenApp.bind(this);
 
@@ -57,6 +60,7 @@ class MainComponent extends Component {
       submitting: null,
       justCreatedBitmarkAccount: false,
       networkStatus: true,
+      emptyDataSource: false,
     };
     this.appState = AppState.currentState;
 
@@ -96,6 +100,9 @@ class MainComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
+
+    EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
+
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.addEventListener('change', this.handleAppStateChange);
     NetInfo.isConnected.fetch().then().done(() => {
@@ -110,6 +117,7 @@ class MainComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
+    EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
     Linking.addEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
@@ -125,6 +133,9 @@ class MainComponent extends Component {
       KeepAwake.deactivate();
     }
 
+  }
+  displayEmptyDataSource() {
+    this.setState({ emptyDataSource: true });
   }
 
   registerCrashHandler() {
@@ -341,17 +352,58 @@ class MainComponent extends Component {
         {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}
         {!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message) && <BitmarkIndicatorComponent
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
-        <View style={{
-          flex: 1,
-        }}><DisplayedComponent screenProps={{
-          rootNavigation: this.props.navigation,
-        }}>
-          </DisplayedComponent>
+        <View style={{ flex: 1, }}>
+          {this.state.emptyDataSource && <BitmarkDialogComponent dialogStyle={mainStyle.emptyDataSourceDialog}>
+            <View style={mainStyle.emptyDataSourceDialogContent}>
+              <Text style={mainStyle.emptyDataSourceTitle}>Bitmark Health cannot access your HealthKit data.</Text>
+              <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data from within the Apple Health App.\n\nGo to Health App -> Sources.'}</Text>
+              <TouchableOpacity style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
+                <Text style={mainStyle.emptyDataSourceOKButtonText}>OK, I’ve ALLOWED access!</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={mainStyle.emptyDataSourceLaterButton} onPress={() => this.setState({ emptyDataSource: false })}>
+                <Text style={mainStyle.emptyDataSourceLaterButtonText}>I will do it later.</Text>
+              </TouchableOpacity>
+            </View>
+          </BitmarkDialogComponent>}
+          <DisplayedComponent screenProps={{ rootNavigation: this.props.navigation, }} />
         </View>
       </View>
     )
   }
 }
+
+let mainStyle = StyleSheet.create({
+  emptyDataSourceDialog: {
+    width: convertWidth(308), borderRadius: 5,
+  },
+  emptyDataSourceDialogContent: {
+    paddingTop: 40, paddingBottom: 40, width: convertWidth(308), flexDirection: 'column', alignItems: 'center'
+  },
+  emptyDataSourceTitle: {
+    width: convertWidth(256),
+    fontFamily: 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
+  },
+  emptyDataSourceDescription: {
+    width: convertWidth(256),
+    marginTop: 20,
+    fontFamily: 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
+  },
+  emptyDataSourceOKButton: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    width: convertWidth(277), minHeight: 52, marginTop: 50,
+    borderRadius: 30, borderWidth: 1, borderColor: '#0060F2', backgroundColor: '#0060F2',
+  },
+  emptyDataSourceOKButtonText: {
+    fontFamily: 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
+  },
+  emptyDataSourceLaterButton: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    width: convertWidth(277), minHeight: 52, marginTop: 10,
+  },
+  emptyDataSourceLaterButtonText: {
+    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '300', color: '#0060F2',
+  },
+});
 
 MainComponent.propTypes = {
   navigation: PropTypes.shape({

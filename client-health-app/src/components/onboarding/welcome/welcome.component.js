@@ -71,7 +71,7 @@ export class WelcomeComponent extends React.Component {
             content={(
               <View style={welcomeComponentStyle.swipePage}>
                 <View style={welcomeComponentStyle.introductionImageArea}>
-                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/card-berkeley.png')} />
+                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome1.png')} />
                 </View>
                 <View style={welcomeComponentStyle.introductionArea}>
                   <Text style={[welcomeComponentStyle.introductionTitle]}>{'Create Property Around Your Health Data'.toUpperCase()}</Text>
@@ -92,7 +92,7 @@ export class WelcomeComponent extends React.Component {
             content={(
               <View style={welcomeComponentStyle.swipePage}>
                 <View style={welcomeComponentStyle.introductionImageArea}>
-                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/card-berkeley.png')} />
+                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome2.png')} />
                 </View>
                 <View style={welcomeComponentStyle.introductionArea}>
                   <Text style={[welcomeComponentStyle.introductionTitle]}>{'Registration is Private and Secure'.toUpperCase()}</Text>
@@ -113,7 +113,7 @@ export class WelcomeComponent extends React.Component {
             content={(
               <View style={welcomeComponentStyle.swipePage}>
                 <View style={welcomeComponentStyle.introductionImageArea}>
-                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/card-berkeley.png')} />
+                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome3.png')} />
                 </View>
                 <View style={welcomeComponentStyle.introductionArea}>
                   <Text style={[welcomeComponentStyle.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>

@@ -58,15 +58,17 @@ const runOnBackground = async () => {
     await doCheckNewDonationInformation(donationInformation, true);
     await doGenerateDonationTask();
     console.log('runOnBackground done ====================================', donationInformation);
+    return donationInformation;
   }
 };
 
 const doReloadUserData = async () => {
   isLoadingData = true;
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
-  await runOnBackground();
+  let donationInformation = await runOnBackground();
   isLoadingData = false;
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
+  return donationInformation;
 };
 
 const configNotification = () => {
@@ -115,7 +117,17 @@ const stopInterval = () => {
 // ================================================================================================================================================
 // ================================================================================================================================================
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
-  await doReloadUserData();
+  let donationInformation = await doReloadUserData();
+  if (justCreatedBitmarkAccount && donationInformation) {
+    let countActive = 0;
+    donationInformation.dataSourceStatuses.forEach(item => {
+      countActive += (item.status === 'Active') ? 1 : 0;
+    });
+    if (countActive === 0) {
+      EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
+    }
+  }
+
   startInterval();
   if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
     await NotificationService.doCheckNotificationPermission();

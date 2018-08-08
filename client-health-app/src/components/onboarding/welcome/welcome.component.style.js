@@ -72,7 +72,6 @@ export default StyleSheet.create({
     marginTop: 100,
   },
   onBoardingImage: {
-    borderWidth: 1,
     resizeMode: 'contain',
     width: convertWidth(216),
     height: 226 * convertWidth(216) / 216
