@@ -9,7 +9,7 @@ import moment from 'moment';
 import timelineStyle from './timeline.component.style';
 import { DataProcessor } from '../../../processors';
 import { EventEmitterService } from '../../../services';
-import {FileUtil} from "../../../utils";
+import { FileUtil } from "../../../utils";
 
 
 let ComponentName = 'TimelineComponent';
@@ -142,12 +142,12 @@ export class TimelineComponent extends React.Component {
       }
 
       if (response.error == 'Photo library permissions not granted') {
-        this.props.screenProps.homeNavigation.navigate('CaptureAssetPermissionRequest', {type: 'photos'});
+        this.props.screenProps.homeNavigation.navigate('CaptureAssetPermissionRequest', { type: 'photos' });
         return;
       }
 
       if (response.error == 'Camera permissions not granted') {
-        this.props.screenProps.homeNavigation.navigate('CaptureAssetPermissionRequest', {type: 'camera'});
+        this.props.screenProps.homeNavigation.navigate('CaptureAssetPermissionRequest', { type: 'camera' });
         return;
       }
 
@@ -160,13 +160,13 @@ export class TimelineComponent extends React.Component {
     filePath = decodeURIComponent(filePath);
 
     // Move file from "tmp" folder to "cache" folder
-    let fileName = response.fileName ? response.fileName: response.uri.substring(response.uri.lastIndexOf('/') + 1);
+    let fileName = response.fileName ? response.fileName : response.uri.substring(response.uri.lastIndexOf('/') + 1);
     let timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
     let destPath = FileUtil.CacheDirectory + '/' + fileName;
     await FileUtil.moveFileSafe(filePath, destPath);
     filePath = destPath;
 
-    this.props.screenProps.homeNavigation.navigate('CaptureAssetPreview', {filePath, timestamp});
+    this.props.screenProps.homeNavigation.navigate('CaptureAssetPreview', { filePath, timestamp });
   }
 
   render() {
@@ -191,7 +191,7 @@ export class TimelineComponent extends React.Component {
 
                 <TouchableOpacity
                   style={[timelineStyle.rowDataDetail, {
-                    paddingBottom: ((index === this.state.data.length - 2) ? 91 : 26)
+                    paddingBottom: ((index === this.state.data.length - 2) ? 91 : 52)
                   }]}
                   onPress={() => {
                     if (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data && !item.bitmarkId) {
@@ -208,11 +208,11 @@ export class TimelineComponent extends React.Component {
                     <View style={timelineStyle.rowDataMainContent}>
                       <Image style={timelineStyle.rowDataIcon}
                         source={item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data ?
-                          require('./../../../../assets/imgs/icon_health.png') : null} />
-                      {/* (rowData.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_issuance ? require() : null)} /> */}
+                          require('./../../../../assets/imgs/icon_health.png') :
+                          (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_issuance ? require('./../../../../assets/imgs/capture-asset-icon.png') : null)} />
                       <Text style={timelineStyle.rowDataTitle}>{item.title}</Text>
                     </View>
-                    {!item.bitmarkId && <View style={timelineStyle.rowDataFooterContent}>
+                    {(!item.bitmarkId && item.taskType !== this.state.donationInformation.commonTaskIds.bitmark_health_issuance) && <View style={timelineStyle.rowDataFooterContent}>
                       <Text style={timelineStyle.rowDataSignButton}>SIGN</Text>
                     </View>}
                   </View>

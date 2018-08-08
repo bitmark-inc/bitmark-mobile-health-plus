@@ -165,8 +165,8 @@ const doDownloadStudyConsent = async (study) => {
   return executeTask('doDownloadStudyConsent', { study });
 };
 
-const doDownloadBitmark = async (bitmark, processingData) => {
-  return executeTask('doDownloadBitmark', { bitmark, processingData });
+const doDownloadBitmark = async (bitmarkId, processingData) => {
+  return executeTask('doDownloadBitmark', { bitmarkId, processingData });
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {

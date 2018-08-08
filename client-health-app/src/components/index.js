@@ -358,7 +358,7 @@ class MainComponent extends Component {
               <Text style={mainStyle.emptyDataSourceTitle}>Bitmark Health cannot access your HealthKit data.</Text>
               <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data from within the Apple Health App.\n\nGo to Health App -> Sources.'}</Text>
               <TouchableOpacity style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
-                <Text style={mainStyle.emptyDataSourceOKButtonText}>OK, I’ve ALLOWED access!</Text>
+                <Text style={mainStyle.emptyDataSourceOKButtonText}>{'OK, I’ve ALLOWED access!'.toUpperCase()}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={mainStyle.emptyDataSourceLaterButton} onPress={() => this.setState({ emptyDataSource: false })}>
                 <Text style={mainStyle.emptyDataSourceLaterButtonText}>I will do it later.</Text>

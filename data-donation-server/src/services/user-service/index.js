@@ -252,7 +252,7 @@ const getTimeline = (userInformation, timezone) => {
     let endDate = studyCommonService.getMomentLocalTime(lastTimeBitmarkHealthData, timezone);
     endDate.second(endDate.second() - 1);
 
-    let completedTask = timelines.find(ct => moment(ct.completedAt).toDate().getDate() === endDate.toDate().getDate());
+    let completedTask = timelines.find(ct => (ct.taskType === commonTaskIds.bitmark_health_data && moment(ct.completedAt).toDate().getTime() === endDate.toDate().getTime()));
     if (!completedTask) {
       timelines.push({
         bitmarkAccount: userInformation.bitmarkAccount,
@@ -268,7 +268,7 @@ const getTimeline = (userInformation, timezone) => {
 
     let currentDate = studyCommonService.getMomentLocalTime(new Date(), timezone);
     while (endDate.toDate() <= currentDate.toDate()) {
-      let completedTask = timelines.find(ct => moment(ct.completedAt).toDate().getDate() === endDate.toDate().getDate());
+      let completedTask = timelines.find(ct => (ct.taskType === commonTaskIds.bitmark_health_data && moment(ct.completedAt).toDate().getTime() === endDate.toDate().getTime()));
       if (!completedTask) {
         timelines.push({
           bitmarkAccount: userInformation.bitmarkAccount,

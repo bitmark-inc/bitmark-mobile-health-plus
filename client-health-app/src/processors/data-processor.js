@@ -249,7 +249,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
   let result = await BitmarkService.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset);
   if (forHealthData) {
     let donationInformation = await doGetDonationInformation();
-    await DonationService.doCompleteTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, donationInformation.commonTaskIds.bitmark_health_issuance, moment().toDate(), result[0]);
+    await DonationService.doCompleteTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, donationInformation.commonTaskIds.bitmark_health_issuance, moment().toDate(), null, result[0]);
   }
   await doReloadUserData();
   return result;
