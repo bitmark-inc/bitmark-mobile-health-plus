@@ -28,7 +28,7 @@ let config = {
 
 if (config.network === NETWORKS.testnet) {
   config.donation_server_url = 'https://data-donation.test.bitmark.com';
-  config.donation_server_url = 'http://192.168.0.202:9001';
+  // config.donation_server_url = 'http://192.168.0.202:9001';
   config.mobile_server_url = 'https://bm.test.bitmark.com';
   config.preview_asset_url = "https://preview.test.bitmarkaccountassets.com";
 } else if (config.network === NETWORKS.livenet) {
