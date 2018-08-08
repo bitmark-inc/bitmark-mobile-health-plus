@@ -5,6 +5,7 @@ import { SignInComponent } from './sign-in';
 import { FaceTouchIdComponent } from './face-touch-id';
 import { NotificationComponent } from './notification';
 import { GetStartComponent } from './get-start';
+import { BitmarkWebViewComponent } from '../../commons/components';
 
 
 let OnBoardingComponent = StackNavigator({
@@ -13,6 +14,7 @@ let OnBoardingComponent = StackNavigator({
   Notification: { screen: NotificationComponent, },
   FaceTouchId: { screen: FaceTouchIdComponent, },
   GetStart: { screen: GetStartComponent, },
+  BitmarkWebView: { screen: BitmarkWebViewComponent, },
 }, {
     headerMode: 'none',
     navigationOptions: {

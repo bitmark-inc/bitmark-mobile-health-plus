@@ -9,7 +9,7 @@ import {
 import Swiper from 'react-native-swiper';
 
 import welcomeComponentStyle from './welcome.component.style';
-import { ios } from './../../../configs';
+import { ios, config } from './../../../configs';
 import { BitmarkComponent } from '../../../commons/components';
 
 export class WelcomeComponent extends React.Component {
@@ -22,7 +22,8 @@ export class WelcomeComponent extends React.Component {
     Alert.alert('Accept Terms', 'By creating an account, you agree to the Bitmark Health Terms of Service and Privacy Policy.', [{
       text: 'Read Terms',
       onPress: () => {
-        // TODO
+        let sourceUrl = config.bitmark_web_site + `/term?env=app`;
+        this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl, isFullScreen: true });
       }
     }, {
       text: 'Cancel',
