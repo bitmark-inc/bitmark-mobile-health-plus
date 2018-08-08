@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, TouchableOpacity, Text, Image,
 } from 'react-native';
-
+import { NavigationActions } from 'react-navigation';
 import defaultStyle from './../../commons/styles';
 import userStyle from './user.component.style';
 
@@ -64,82 +64,73 @@ export class UserComponent extends React.Component {
         AppProcessor.doReloadUserData().then((donationInformation) => {
           let studyTask = (donationInformation.todoTasks || []).find(task => (task.study && task.study.studyId === data.studyData.studyId && task.taskType === data.studyData.taskType));
           if (studyTask && studyTask.taskType === studyTask.study.taskIds.donations) {
-            // const resetHomePage = NavigationActions.reset({
-            //   index: 1,
-            //   actions: [
-            //     NavigationActions.navigate({
-            //       routeName: 'User', params: {
-            //         displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
-            //         needReloadData: true,
-            //       }
-            //     }),
-            //     NavigationActions.navigate({
-            //       routeName: 'StudyDonation', params: {
-            //         study: studyTask.study,
-            //         list: studyTask.list,
-            //       }
-            //     }),
-            //   ]
-            // });
-            // this.props.navigation.dispatch(resetHomePage);
+            const resetHomePage = NavigationActions.reset({
+              index: 1,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: 'User', params: {
+                    displayedTab: { mainTab: MainTabs.Donate, subTab: 'To-do' },
+                    needReloadData: true,
+                  }
+                }),
+                NavigationActions.navigate({
+                  routeName: 'StudyDonation', params: {
+                    study: studyTask.study,
+                    list: studyTask.list,
+                  }
+                }),
+              ]
+            });
+            this.props.navigation.dispatch(resetHomePage);
           }
         }).catch(error => {
           console.log('handerReceivedNotification BITMARK_DATA error :', error);
         });
       } else {
-        // const resetHomePage = NavigationActions.reset({
-        //   index: 0,
-        //   actions: [
-        //     NavigationActions.navigate({
-        //       routeName: 'User', params: {
-        //         displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
-        //         needReloadData: true,
-        //       }
-        //     }),
-        //   ]
-        // });
-        // this.props.navigation.dispatch(resetHomePage);
+        const resetHomePage = NavigationActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: {
+                displayedTab: { mainTab: MainTabs.Donate, subTab: 'To-do' },
+                needReloadData: true,
+              }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
       }
     } else if (data.event === 'STUDY_DETAIL') {
       AppProcessor.doReloadUserData().then((donationInformation) => {
         let study = DonationService.getStudy(donationInformation, data.studyId);
         if (study) {
-          // const resetHomePage = NavigationActions.reset({
-          //   index: 1,
-          //   actions: [
-          //     NavigationActions.navigate({
-          //       routeName: 'User', params: { displayedTab: { mainTab: MainTabs.donation, subTab: 'BROWSER' } }
-          //     }),
-          //     NavigationActions.navigate({
-          //       routeName: 'StudyDetail', params: { study }
-          //     }),
-          //   ]
-          // });
-          // this.props.navigation.dispatch(resetHomePage);
+          const resetHomePage = NavigationActions.reset({
+            index: 1,
+            actions: [
+              NavigationActions.navigate({
+                routeName: 'User', params: { displayedTab: { mainTab: MainTabs.Donate, subTab: 'Studies' } }
+              }),
+              NavigationActions.navigate({
+                routeName: 'StudyDetail', params: { study }
+              }),
+            ]
+          });
+          this.props.navigation.dispatch(resetHomePage);
         }
       }).catch(error => {
         console.log('handerReceivedNotification STUDY_DETAIL error :', error);
       });
     } else if (data.event === 'BITMARK_DATA') {
-      AppProcessor.doReloadUserData().then((donationInformation) => {
-        let bitmarkHealthDataTask = (donationInformation.todoTasks || []).find(task => task.taskType === donationInformation.commonTaskIds.bitmark_health_data);
-        if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
-          // const resetHomePage = NavigationActions.reset({
-          //   index: 1,
-          //   actions: [
-          //     NavigationActions.navigate({
-          //       routeName: 'User', params: {
-          //         displayedTab: { mainTab: MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
-          //         needReloadData: true,
-          //       }
-          //     }),
-          //     NavigationActions.navigate({
-          //       routeName: 'HealthDataBitmark', params: { list: bitmarkHealthDataTask.list, }
-          //     }),
-          //   ]
-          // });
-          // this.props.navigation.dispatch(resetHomePage);
-        }
+      AppProcessor.doReloadUserData().then(() => {
+        const resetHomePage = NavigationActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'User', params: { displayedTab: { mainTab: MainTabs.Timeline } }
+            }),
+          ]
+        });
+        this.props.navigation.dispatch(resetHomePage);
       }).catch(error => {
         console.log('handerReceivedNotification BITMARK_DATA error :', error);
       });

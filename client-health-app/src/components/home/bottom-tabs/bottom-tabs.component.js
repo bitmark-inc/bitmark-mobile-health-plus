@@ -56,17 +56,6 @@ export class BottomTabsComponent extends React.Component {
     }
     this.props.switchMainTab(mainTab);
     this.setState({ mainTab });
-    // const resetHomePage = NavigationActions.reset({
-    //   index: 0,
-    //   actions: [
-    //     NavigationActions.navigate({
-    //       routeName: 'User', params: {
-    //         displayedTab: { mainTab }
-    //       }
-    //     }),
-    //   ]
-    // });
-    // this.props.homeNavigation.dispatch(resetHomePage);
   }
 
   render() {
