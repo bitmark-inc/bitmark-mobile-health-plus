@@ -49,7 +49,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use your camera</string>
+	<string>Save a document or file into your Health data. (Your asset will be encrypted.)</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Touch/Face ID or a passcode is required to authorize your transactions.</string>
 	<key>NSHealthShareUsageDescription</key>
@@ -63,7 +63,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
+	<string>Save a document or file into your Health data. (Your asset will be encrypted.)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
 	<key>ResearchKit-Font-Bold</key>
