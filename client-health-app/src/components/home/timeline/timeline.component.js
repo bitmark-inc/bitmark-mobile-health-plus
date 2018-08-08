@@ -4,10 +4,12 @@ import {
   View, Image, Text, TouchableOpacity, FlatList,
 } from 'react-native';
 
+import ImagePicker from 'react-native-image-picker';
 import moment from 'moment';
 import timelineStyle from './timeline.component.style';
 import { DataProcessor } from '../../../processors';
 import { EventEmitterService } from '../../../services';
+import {FileUtil} from "../../../utils";
 
 
 let ComponentName = 'TimelineComponent';
@@ -126,6 +128,47 @@ export class TimelineComponent extends React.Component {
   }
   // ==========================================================================================
 
+  captureAsset() {
+    let options = {
+      title: 'Capture asset',
+      quality: 0.7
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response:', response);
+
+      if (response.didCancel) {
+        return;
+      }
+
+      if (response.error == 'Photo library permissions not granted') {
+        this.props.screenProps.homeNavigation.navigate('CaptureAssetPermissionRequest', {type: 'photos'});
+        return;
+      }
+
+      if (response.error == 'Camera permissions not granted') {
+        this.props.screenProps.homeNavigation.navigate('CaptureAssetPermissionRequest', {type: 'camera'});
+        return;
+      }
+
+      this.showPreviewAsset(response);
+    });
+  }
+
+  async showPreviewAsset(response) {
+    let filePath = response.uri.replace('file://', '');
+    filePath = decodeURIComponent(filePath);
+
+    // Move file from "tmp" folder to "cache" folder
+    let fileName = response.fileName ? response.fileName: response.uri.substring(response.uri.lastIndexOf('/') + 1);
+    let timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
+    let destPath = FileUtil.CacheDirectory + '/' + fileName;
+    await FileUtil.moveFileSafe(filePath, destPath);
+    filePath = destPath;
+
+    this.props.screenProps.homeNavigation.navigate('CaptureAssetPreview', {filePath, timestamp});
+  }
+
   render() {
     return (
       <View style={timelineStyle.body}>
@@ -200,6 +243,10 @@ export class TimelineComponent extends React.Component {
 
           }}
         />
+
+        <TouchableOpacity style={timelineStyle.addIconContainer} onPress={this.captureAsset.bind(this)}>
+          <Image style={timelineStyle.addIcon} source={require('./../../../../assets/imgs/icon-add.png')} />
+        </TouchableOpacity>
       </View>
     );
   }

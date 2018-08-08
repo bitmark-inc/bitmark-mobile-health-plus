@@ -9,6 +9,18 @@ export default StyleSheet.create({
     paddingTop: 40,
   },
 
+  addIconContainer: {
+    position: 'absolute',
+    bottom: 25,
+    right: 19,
+  },
+
+  addIcon: {
+    width: 44,
+    height: 44,
+    resizeMode: 'contain'
+  },
+
   rowData: {
     flexDirection: 'row',
     width: convertWidth(375),
