@@ -56,23 +56,23 @@ export { config, ios, android };
 // ┌────────────┬──────────────────────────────────────────────────────────────────┐
 // │ Name       │ Deployment Key                                                   │
 // ├────────────┼──────────────────────────────────────────────────────────────────┤
-// │ Production │ ZcZy_ZeCnqCYnzaFGb4ZmljBQHJc5247aad0-6cc3-4dd7-b247-c76a433163da │
+// │ Production │ l6x1zspaECZPMjvSJ3Fw3TTeYiG85247aad0-6cc3-4dd7-b247-c76a433163da │
 // ├────────────┼──────────────────────────────────────────────────────────────────┤
-// │ Staging    │ H0VznPOIIkUc31GdXzWi5vSAifvk5247aad0-6cc3-4dd7-b247-c76a433163da │
+// │ Staging    │ DEz_j2LLFeBsXcYaTsKtSpk0kgYa5247aad0-6cc3-4dd7-b247-c76a433163da │
 // └────────────┴──────────────────────────────────────────────────────────────────┘
 // document
 // https://microsoft.github.io/code-push/docs/cli.html#link-6
 
-// code-push app add Bitmark ios react-native
+// code-push app add BitmarkHealth ios react-native
 
 
 // testnet
-// code-push release-react Bitmark Health ios --pre "Bitmark Health dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map"
-// code-push release-react Bitmark Health ios --pre "Bitmark Health dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
+// code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map"
+// code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
 
 // livetnet
-// code-push release-react Bitmark Health ios -d Production --mandatory true --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map"
-// code-push release-react Bitmark Health ios -d Production -m --description "update code" --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
+// code-push release-react 'BitmarkHealth' ios -d Production --mandatory true --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map"
+// code-push release-react 'BitmarkHealth' ios -d Production -m --description "update code" --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
 
 
 // react-native run-ios --device "Bitmark’s iPhone" --scheme 'Bitmark Health dev'
