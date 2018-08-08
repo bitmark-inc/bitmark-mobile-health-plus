@@ -100,10 +100,21 @@ export class CaptureAssetPreviewComponent extends React.Component {
 }
 
 CaptureAssetPreviewComponent.propTypes = {
+  navigation: PropTypes.shape({
+    goBack: PropTypes.func,
+    dispatch: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        filePath: PropTypes.string,
+        timestamp: PropTypes.any,
+      })
+    })
+  }),
   screenProps: PropTypes.shape({
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,
       goBack: PropTypes.func,
+      dispatch: PropTypes.func,
     }),
     filePath: PropTypes.string,
     timestamp: PropTypes.string
