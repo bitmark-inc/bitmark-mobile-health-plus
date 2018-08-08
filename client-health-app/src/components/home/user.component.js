@@ -135,18 +135,15 @@ export class UserComponent extends React.Component {
         console.log('handerReceivedNotification BITMARK_DATA error :', error);
       });
     } else if (data.event === 'DONATION_SUCCESS') {
-      // const resetHomePage = NavigationActions.reset({
-      //   index: 0,
-      //   actions: [
-      //     NavigationActions.navigate({
-      //       routeName: 'User', params: {
-      //         displayedTab: { mainTab: MainTabs.transaction, subTab: 'HISTORY' },
-      //         needReloadData: true,
-      //       }
-      //     }),
-      //   ]
-      // });
-      // this.props.navigation.dispatch(resetHomePage);
+      const resetHomePage = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: 'User', params: { displayedTab: { mainTab: MainTabs.Donate, subTab: 'Studies' } }
+          }),
+        ]
+      });
+      this.props.navigation.dispatch(resetHomePage);
     }
   }
 
