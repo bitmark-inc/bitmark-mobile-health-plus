@@ -77,6 +77,10 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  contentSubTab: {
+    width: '100%',
+    flexDirection: 'column',
+  },
   welcomeIcon: {
     marginTop: 81,
     width: 219,

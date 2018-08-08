@@ -15,6 +15,7 @@ let EventEmitterService = {
     CHANGE_USER_DATA_DONATION_INFORMATION: 'change-user-data:donation-information',
 
     CHANGE_DONATION_TASK: 'change-donation-tasks',
+    CHANGE_TIMELINES: 'change-timelines',
 
     CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY: 'check-data-source-health-kit-empty',
   },

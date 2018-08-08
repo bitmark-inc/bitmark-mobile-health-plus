@@ -20,15 +20,18 @@ export class BottomTabsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.handerChangeDonationTasks = this.handerChangeDonationTasks.bind(this);
+    this.handerChangeTimelines = this.handerChangeTimelines.bind(this);
     this.switchMainTab = this.switchMainTab.bind(this);
 
     EventEmitterService.remove(EventEmitterService.events.CHANGE_DONATION_TASK, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_TIMELINES, null, ComponentName);
 
     this.state = {
       existNewAsset: false,
       totalTasks: 0,
       componentMounting: 0,
       mainTab: props.mainTab,
+      remainTimelines: 0,
     };
 
     const doGetScreenData = async () => {
@@ -39,15 +42,15 @@ export class BottomTabsComponent extends React.Component {
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.CHANGE_DONATION_TASK, this.handerChangeDonationTasks, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_TIMELINES, this.handerChangeTimelines, ComponentName);
   }
 
-  handerChangeDonationTasks() {
-    DataProcessor.doGetDonationTasks(1).then(({ totalTasks }) => {
-      this.setState({ totalTasks });
-      NotificationService.setApplicationIconBadgeNumber(totalTasks || 0);
-    }).catch(error => {
-      console.log('doGetDonationTasks error:', error);
-    });
+  handerChangeDonationTasks(totalTasks) {
+    this.setState({ totalTasks });
+  }
+
+  handerChangeTimelines({ remainTimelines }) {
+    this.setState({ remainTimelines });
   }
 
   switchMainTab(mainTab) {
@@ -62,7 +65,7 @@ export class BottomTabsComponent extends React.Component {
     return (
       <View style={userStyle.bottomTabArea}>
         <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.Timeline)}>
-          {(this.state.existNewAsset || this.state.existNewTracking) && <View style={userStyle.haveNewBitmark} />}
+          {this.state.remainTimelines > 0 && <View style={userStyle.haveNewBitmark} />}
           <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.Timeline
             ? require('./../../../../assets/imgs/timeline-icon-enable.png')
             : require('./../../../../assets/imgs/timeline-icon-disable.png')} />

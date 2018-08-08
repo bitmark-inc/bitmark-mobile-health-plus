@@ -94,15 +94,23 @@ export class DonationComponent extends React.Component {
     let studies = (donationInformation.otherStudies || []).concat(donationInformation.joinedStudies || []);
     studies = studies.sort((a, b) => (a.studyId < b.studyId ? -1 : (a.studyId > b.studyId ? 1 : 0)));
 
-    let { donationTasks } = await DataProcessor.doGetDonationTasks(this.state.lengthDisplayDonationTasks);
-    this.setState({ donationTasks, lengthDisplayDonationTasks: donationTasks.length });
-
-    this.setState({ donationInformation, studies });
+    let { donationTasks, totalDonationTasks } = await DataProcessor.doGetDonationTasks(this.state.lengthDisplayDonationTasks);
+    this.setState({
+      donationTasks,
+      lengthDisplayDonationTasks: donationTasks.length,
+      totalDonationTasks,
+      donationInformation,
+      studies
+    });
   }
 
   async handerChangeDonationTasks() {
-    let { donationTasks } = await DataProcessor.doGetDonationTasks(this.state.lengthDisplayDonationTasks);
-    this.setState({ donationTasks, lengthDisplayDonationTasks: donationTasks.length });
+    let { donationTasks, totalDonationTasks } = await DataProcessor.doGetDonationTasks(this.state.lengthDisplayDonationTasks);
+    this.setState({
+      donationTasks,
+      lengthDisplayDonationTasks: donationTasks.length,
+      totalDonationTasks
+    });
   }
 
   switchSubTab(subTab) {

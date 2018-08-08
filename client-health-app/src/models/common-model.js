@@ -13,7 +13,8 @@ const KEYS = {
   USER_DATA_DONATION_INFORMATION: 'user-data:donation-information',
 
   // data can be change
-  USER_DATA_DONATION_TASK: 'user-data:transaction-action-required',
+  USER_DATA_DONATION_TASK: 'user-data:donation-tasks',
+  USER_DATA_TIMELINES: 'user-data:timelines',
 };
 
 // ================================================================================================

@@ -8,7 +8,21 @@ export default StyleSheet.create({
     backgroundColor: '#EDF0F4',
     paddingTop: 40,
   },
-
+  contentScroll: {
+    width: '100%',
+    flexDirection: 'column',
+    alignContent: 'center',
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  contentSubTab: {
+    width: '100%',
+    flexDirection: 'column',
+  },
   addIconContainer: {
     position: 'absolute',
     bottom: 25,

@@ -20,7 +20,7 @@ const doCheckNewDonationInformation = async (donationInformation, isLoadingAllUs
     await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, donationInformation);
     if (!isLoadingAllUserData) {
-      await doGenerateDonationTask();
+      await doGenerateDisplayedData();
     }
   }
 };
@@ -56,7 +56,7 @@ const runOnBackground = async () => {
   if (userInformation && userInformation.bitmarkAccountNumber) {
     let donationInformation = await runGetDonationInformationInBackground();
     await doCheckNewDonationInformation(donationInformation, true);
-    await doGenerateDonationTask();
+    await doGenerateDisplayedData();
     console.log('runOnBackground done ====================================', donationInformation);
     return donationInformation;
   }
@@ -184,7 +184,7 @@ const doOpenApp = async () => {
     let donationTasks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK)) || [];
     let totalTasks = 0;
     donationTasks.forEach(item => totalTasks += (item.number ? item.number : 1));
-    DataCacheProcessor.setDonationsTasks({
+    DataCacheProcessor.setDonationTasks({
       totalTasks,
       totalDonationTasks: donationTasks.length,
       donationTasks: donationTasks.slice(0, DataCacheProcessor.cacheLength),
@@ -280,7 +280,7 @@ const doGetDonationInformation = () => {
 // ======================================================================================================================================================================================
 // ======================================================================================================================================================================================
 // ======================================================================================================================================================================================
-const doGenerateDonationTask = async () => {
+const doGenerateDisplayedData = async () => {
   let donationTasks = [];
   let totalTasks = 0;
   let donationInformation = await doGetDonationInformation();
@@ -305,29 +305,240 @@ const doGenerateDonationTask = async () => {
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK, donationTasks);
 
-  DataCacheProcessor.setDonationsTasks({
+  DataCacheProcessor.setDonationTasks({
     totalTasks,
     totalDonationTasks: donationTasks.length,
     donationTasks: donationTasks.slice(0, DataCacheProcessor.cacheLength),
   });
 
-  EventEmitterService.emit(EventEmitterService.events.CHANGE_DONATION_TASK, { donationTasks, donationInformation });
+  EventEmitterService.emit(EventEmitterService.events.CHANGE_DONATION_TASK, { totalTasks, donationTasks, donationInformation });
   console.log('donationTasks :', donationTasks);
+
+
+  let timelines = [{
+    time: '', title: 'You health data will be extracted each week...', lineColor: '#999999',
+    lineWidth: 2,
+  }];
+  let remainTimelines = 0;
+  if (donationInformation) {
+    let tempTimelines = [];
+
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+    (donationInformation.timelines || []).forEach(item => {
+      tempTimelines.push({
+        time: item.completedAt,
+        taskType: item.taskType,
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 'Own your weekly health data' :
+          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
+        startDate: item.startDate,
+        endDate: item.endDate,
+        bitmarkId: item.bitmarkId,
+      });
+      remainTimelines += item.bitmarkId ? 0 : 1;
+    });
+
+    tempTimelines = [{
+      time: donationInformation.createdAt, title: 'Your Bitmark account was created.',
+    }].concat(tempTimelines.sort((a, b) => {
+      return moment(a.time).toDate().getTime() - moment(b.time).toDate().getTime();
+    }));
+
+    let currentYear = 0;
+    for (let item of tempTimelines) {
+      if (moment(item.time).toDate().getFullYear() > currentYear) {
+        currentYear = moment(item.time).toDate().getFullYear();
+        item.time = moment(donationInformation.createdAt).format('YYYY MMM DD HH:mm');
+      } else {
+        item.time = moment(donationInformation.createdAt).format('MMM DD HH:mm');
+      }
+    }
+    timelines = timelines.concat(tempTimelines.reverse());
+  }
+
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TIMELINES, timelines);
+
+  DataCacheProcessor.setTimelines({
+    remainTimelines,
+    totalTimelines: timelines.length,
+    timelines: timelines.slice(0, DataCacheProcessor.cacheLength),
+  });
+
+  EventEmitterService.emit(EventEmitterService.events.CHANGE_TIMELINES, { remainTimelines, timelines, donationInformation });
+  console.log('timelines :', timelines);
 };
 
 const doGetDonationTasks = async (length) => {
   let donationTasks;
-  let transactionsScreenDataInCache = DataCacheProcessor.getDonationTasks();
-  if (length !== undefined && length <= transactionsScreenDataInCache.donationTasks.length) {
-    donationTasks = transactionsScreenDataInCache.donationTasks;
+  let cacheData = DataCacheProcessor.getDonationTasks();
+  if (length !== undefined && length <= cacheData.donationTasks.length) {
+    donationTasks = cacheData.donationTasks;
   } else {
     let allDonationTasks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK)) || [];
     donationTasks = (length && length < allDonationTasks.length) ? allDonationTasks.slice(0, length) : allDonationTasks;
   }
   return {
     donationTasks,
-    totalTasks: transactionsScreenDataInCache.totalTasks,
-    totalDonationTasks: transactionsScreenDataInCache.totalDonationTasks,
+    totalTasks: cacheData.totalTasks,
+    totalDonationTasks: cacheData.totalDonationTasks,
+  }
+};
+
+const doGetTimelines = async (length) => {
+  let timelines;
+  let cacheData = DataCacheProcessor.getTimelines();
+  if (length !== undefined && length <= cacheData.timelines.length) {
+    timelines = cacheData.timelines;
+  } else {
+    let allTimelines = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TIMELINES)) || [];
+    timelines = (length && length < allTimelines.length) ? allTimelines.slice(0, length) : allTimelines;
+  }
+  return {
+    timelines,
+    totalTimelines: cacheData.totalTimelines,
+    remainTimelines: cacheData.remainTimelines,
   }
 };
 
@@ -353,6 +564,7 @@ const DataProcessor = {
   doGetDonationInformation,
 
   doGetDonationTasks,
+  doGetTimelines,
 
   getApplicationVersion,
   getApplicationBuildNumber,
