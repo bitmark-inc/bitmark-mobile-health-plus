@@ -200,7 +200,7 @@ export class TimelineComponent extends React.Component {
                         endDate: item.endDate,
                       });
                     } else if (item.bitmarkId) {
-                      this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.bitmarkId });
+                      this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.bitmarkId, taskType: item.taskType });
                     }
                   }}
                 >

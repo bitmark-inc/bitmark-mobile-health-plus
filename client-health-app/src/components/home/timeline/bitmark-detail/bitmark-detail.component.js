@@ -18,14 +18,17 @@ export class BitmarkDetailComponent extends React.Component {
     super(props);
 
     let bitmarkId = this.props.navigation.state.params.bitmarkId;
+    let taskType = this.props.navigation.state.params.taskType;
     this.doGetScreenData(bitmarkId);
     this.state = {
       loading: true,
       bitmarkId,
+      taskType,
     }
   }
   doGetScreenData(bitmarkId) {
-    AppProcessor.doGetBitmarkInformation(bitmarkId).then(({ asset, bitmark }) => {
+    AppProcessor.doGetBitmarkInformation(bitmarkId).then(({ asset, bitmark, donationInformation }) => {
+      console.log('doGetBitmarkInformation :', asset, bitmark);
       let metadata = [];
       for (let label in asset.metadata) {
         metadata.push({ label, value: asset.metadata[label] });
@@ -34,6 +37,7 @@ export class BitmarkDetailComponent extends React.Component {
         loading: false,
         metadata,
         asset, bitmark,
+        donationInformation,
       });
     }).catch(error => {
       console.log('doGetBitmarkInformation error :', error);
@@ -59,11 +63,13 @@ export class BitmarkDetailComponent extends React.Component {
             <View style={propertyDetailStyle.imageArea}>
               <Image style={propertyDetailStyle.assetIcon} source={require('./../../../../../assets/imgs/asset-icon.png')} />
               {this.state.bitmark.status === 'pending' && <Text style={propertyDetailStyle.bitmarkPending}>Registering ownership...</Text>}
-              {this.state.bitmark.status === 'confirmed' && <TouchableOpacity style={propertyDetailStyle.bitmarkConfirmed} onPress={() => {
-                this.props.navigation.navigate('AssetImageContent', { bitmarkId: this.state.bitmarkId });
-              }}>
-                <Text style={propertyDetailStyle.bitmarkConfirmedText}>Click to review your health data</Text>
-              </TouchableOpacity>}
+              {this.state.bitmark.status === 'confirmed' && this.state.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_issuance &&
+                <TouchableOpacity style={propertyDetailStyle.bitmarkConfirmed} onPress={() => {
+                  this.props.navigation.navigate('AssetImageContent', { bitmarkId: this.state.bitmarkId });
+                }}>
+                  <Text style={propertyDetailStyle.bitmarkConfirmedText}>Click to review your health data</Text>
+                </TouchableOpacity>
+              }
             </View>
             <View style={propertyDetailStyle.informationArea}>
               <View style={propertyDetailStyle.informationRow}>
@@ -125,6 +131,7 @@ BitmarkDetailComponent.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         bitmarkId: PropTypes.string,
+        taskType: PropTypes.string,
       }),
     }),
   }),

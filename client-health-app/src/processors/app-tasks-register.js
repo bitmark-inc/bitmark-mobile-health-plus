@@ -157,9 +157,9 @@ const doDownloadBitmark = async ({ bitmarkId }) => {
 };
 
 const doGetBitmarkInformation = async ({ bitmarkId }) => {
+  let donationInformation = await DataProcessor.doGetDonationInformation();
   let { asset, bitmark } = await processing(BitmarkService.doGetBitmarkInformation(bitmarkId));
-  let contentType = await BitmarkModel.doGetAssetTextContentType(asset.id);
-  return { asset, bitmark, contentType };
+  return { asset, bitmark, donationInformation };
 };
 
 
