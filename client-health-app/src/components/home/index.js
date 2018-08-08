@@ -10,8 +10,7 @@ import {
   StudyConsentComponent, HealthDataSourceComponent, HealthDataBitmarkComponent,
 } from './donation';
 
-import { BitmarkDetailComponent, AssetImageContentComponent } from './timeline';
-
+import { BitmarkDetailComponent, AssetImageContentComponent, CaptureAssetPermissionRequestComponent, CaptureAssetPreviewComponent } from './timeline';
 
 let HomeComponent = StackNavigator({
   User: { screen: UserComponent, },
@@ -29,7 +28,8 @@ let HomeComponent = StackNavigator({
   HealthDataBitmark: { screen: HealthDataBitmarkComponent, },
   BitmarkDetail: { screen: BitmarkDetailComponent, },
   AssetImageContent: { screen: AssetImageContentComponent, },
-
+  CaptureAssetPermissionRequest: { screen: CaptureAssetPermissionRequestComponent },
+  CaptureAssetPreview: { screen: CaptureAssetPreviewComponent },
 }, {
     headerMode: 'none',
     navigationOptions: {

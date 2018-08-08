@@ -245,7 +245,7 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmarkId) => {
   return filePath;
 };
 
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset, forHealthData) => {
+const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset, forHealthData = true) => {
   let result = await BitmarkService.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset);
   if (forHealthData) {
     let donationInformation = await doGetDonationInformation();
