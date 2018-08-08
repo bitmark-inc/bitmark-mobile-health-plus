@@ -21,10 +21,10 @@ export class BitmarkDetailComponent extends React.Component {
     this.doGetScreenData(bitmarkId);
     this.state = {
       loading: true,
+      bitmarkId,
     }
   }
   doGetScreenData(bitmarkId) {
-
     AppProcessor.doGetBitmarkInformation(bitmarkId).then(({ asset, bitmark }) => {
       let metadata = [];
       for (let label in asset.metadata) {
