@@ -59,6 +59,11 @@ func (s *Server) Run(addr string) error {
 
 	api.POST("/metrics", s.AddMetrics)
 
+	eventsGroup := api.Group("/events")
+	{
+		eventsGroup.POST("/register-account", s.AddRegisterAccountEvent)
+	}
+
 	api.GET("/healthz", s.HealthCheck)
 
 	srv := &http.Server{

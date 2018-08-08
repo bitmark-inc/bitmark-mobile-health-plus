@@ -53,3 +53,30 @@ func (s *Server) AddMetrics(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
+
+func (s *Server) AddRegisterAccountEvent(c *gin.Context) {
+	var req struct {
+		Account string `json:"account"`
+	}
+
+	if err := c.BindJSON(&req); err != nil {
+		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	if len(req.Account) == 0 {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": "account empty",
+		})
+		return
+	}
+
+	if err := s.gatewayClient.RegisterAccount(c, req.Account); err != nil {
+		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+}

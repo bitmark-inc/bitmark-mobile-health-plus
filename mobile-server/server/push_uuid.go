@@ -28,10 +28,6 @@ func (s *Server) AddPushToken(c *gin.Context) {
 		return
 	}
 
-	if err := s.gatewayClient.RegisterAccount(c, account); err != nil {
-		c.Error(err)
-	}
-
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
 
