@@ -1080,7 +1080,7 @@ const doRemoveTestRecoveryPhaseActionRequiredIfAny = async () => {
 
 const DataProcessor = {
   doOpenApp,
-  doCreateAccount
+  doCreateAccount,
   doLogin,
   doLogout,
   doStartBackgroundProcess,
