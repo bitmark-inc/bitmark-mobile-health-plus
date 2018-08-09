@@ -218,100 +218,88 @@ export class DonationComponent extends React.Component {
             this.loadingDonationTasksWhenScroll = false;
           }}
           scrollEventThrottle={1}>
-          <View style={donationStyle.content}>
-            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              {(this.state.donationTasks && this.state.donationTasks.length > 0) && <View style={donationStyle.content}>
-                <FlatList
-                  extraData={this.state}
-                  data={this.state.donationTasks}
-                  renderItem={({ item }) => {
-                    console.log('item :', item);
-                    return (<TouchableOpacity style={donationStyle.donationTaskItem} onPress={() => this.clickOnDonationTask(item)}>
-                      <View style={donationStyle.donationTaskItemLeftArea}>
-                        <Image style={donationStyle.researcherImage} source={(item.study && item.study.studyId === 'study1') ? require('./../../../../assets/imgs/madelena.png') :
-                          ((item.study && item.study.studyId === 'study2') ? require('./../../../../assets/imgs/victor.png') : null)} />
-                      </View>
-                      <View style={donationStyle.donationTaskItemRightArea}>
-                        <Text style={donationStyle.donationTaskItemType}>{item.typeTitle.toUpperCase() + (item.number > 1 ? ` (${item.number})` : ``)}</Text>
-                        <Text style={donationStyle.donationTaskItemTitle}>{item.title}</Text>
-                        <Text style={donationStyle.donationTaskItemDescription}>{item.description}</Text>
-                        <Text style={donationStyle.donationTaskItemTime}>{moment(item.timestamp).format('HH:mm dddd, MMM DD, YYYY')}</Text>
-                      </View>
-                    </TouchableOpacity>)
-                  }}
-                />
-              </View>}
-              {(!this.state.donationTasks || this.state.donationTasks.length === 0) && <View style={[donationStyle.content, { alignItems: 'center' }]}>
-                <Image style={donationStyle.welcomeIcon} source={require('./../../../../assets/imgs/todo-welcome-icon.png')} />
-                <Text style={donationStyle.todoEmptyTitle}>WELCOME!</Text>
-                <Text style={donationStyle.todoEmptyDescription}>When you join studies, you will be asked to authorize access to specific data here. </Text>
-              </View>}
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            {(this.state.donationTasks && this.state.donationTasks.length > 0) && <View style={donationStyle.content}>
+              <FlatList
+                extraData={this.state}
+                data={this.state.donationTasks}
+                renderItem={({ item }) => {
+                  console.log('item :', item);
+                  return (<TouchableOpacity style={donationStyle.donationTaskItem} onPress={() => this.clickOnDonationTask(item)}>
+                    <View style={donationStyle.donationTaskItemLeftArea}>
+                      <Image style={donationStyle.researcherImage} source={(item.study && item.study.studyId === 'study1') ? require('./../../../../assets/imgs/madelena.png') :
+                        ((item.study && item.study.studyId === 'study2') ? require('./../../../../assets/imgs/victor.png') : null)} />
+                    </View>
+                    <View style={donationStyle.donationTaskItemRightArea}>
+                      <Text style={donationStyle.donationTaskItemType}>{item.typeTitle.toUpperCase() + (item.number > 1 ? ` (${item.number})` : ``)}</Text>
+                      <Text style={donationStyle.donationTaskItemTitle}>{item.title}</Text>
+                      <Text style={donationStyle.donationTaskItemDescription}>{item.description}</Text>
+                      <Text style={donationStyle.donationTaskItemTime}>{moment(item.timestamp).format('HH:mm dddd, MMM DD, YYYY')}</Text>
+                    </View>
+                  </TouchableOpacity>)
+                }}
+              />
+            </View>}
+            {(!this.state.donationTasks || this.state.donationTasks.length === 0) && <View style={[donationStyle.content, { alignItems: 'center' }]}>
+              <Image style={donationStyle.welcomeIcon} source={require('./../../../../assets/imgs/todo-welcome-icon.png')} />
+              <Text style={donationStyle.todoEmptyTitle}>WELCOME!</Text>
+              <Text style={donationStyle.todoEmptyDescription}>When you join studies, you will be asked to authorize access to specific data here. </Text>
+            </View>}
+          </TouchableOpacity>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
         {this.state.subTab === SubTabs.studies && <ScrollView style={[donationStyle.contentScroll, { backgroundColor: '#EDF0F4' }]}>
-          <View style={donationStyle.content}>
-            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              <View style={donationStyle.content}>
-                <FlatList
-                  keyExtractor={(item) => item.studyId}
-                  extraData={this.state}
-                  data={this.state.studies}
-                  renderItem={({ item }) => {
-                    return (<TouchableOpacity style={donationStyle.studyCard} onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item })}>
-                      <StudyCardComponent
-                        researcherImage={item.studyId === 'study1' ? require('./../../../../assets/imgs/madelena.png') :
-                          (item.studyId === 'study2' ? require('./../../../../assets/imgs/victor.png') : '')}
-                        displayStatus={true}
-                        title={item.title}
-                        joined={!!item.joinedDate}
-                        description={item.description}
-                        interval={item.interval}
-                        duration={item.duration || item.durationText} />
-                    </TouchableOpacity>)
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            <View style={donationStyle.content}>
+              <FlatList
+                keyExtractor={(item) => item.studyId}
+                extraData={this.state}
+                data={this.state.studies}
+                renderItem={({ item }) => {
+                  return (<TouchableOpacity style={donationStyle.studyCard} onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item })}>
+                    <StudyCardComponent
+                      researcherImage={item.studyId === 'study1' ? require('./../../../../assets/imgs/madelena.png') :
+                        (item.studyId === 'study2' ? require('./../../../../assets/imgs/victor.png') : '')}
+                      displayStatus={true}
+                      title={item.title}
+                      joined={!!item.joinedDate}
+                      description={item.description}
+                      interval={item.interval}
+                      duration={item.duration || item.durationText} />
+                  </TouchableOpacity>)
+                }}
+              />
+            </View>
+          </TouchableOpacity>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
         {this.state.subTab === SubTabs.news && <ScrollView style={donationStyle.contentScroll}>
-          <View style={donationStyle.content}>
-            <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
-              <View style={donationStyle.content}>
-                <FlatList
-                  keyExtractor={(item) => item.id}
-                  extraData={this.state}
-                  // data={this.state.donationInformation ? this.state.donationInformation.news : []}
-                  data={[{
-                    title: 'Great news! Your health data has reached me safe and sound! ',
-                    description: 'Please keep an eye on study updates and remember that the study would not have been possible without you!',
-                    publisher: 'Madelena Ng, Doctoral Candidate',
-                    createdAt: moment().toDate().toISOString()
-                  }]}
-                  renderItem={({ item }) => {
-                    return (<TouchableOpacity style={donationStyle.newRecord} disabled={true}>
-                      <View style={donationStyle.newRecordImageArea}>
-                        {item.researcherImageUrl && <Image style={donationStyle.newRecordImageIcon} source={{ uri: item.researcherImageUrl }} />}
+          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+            <View style={donationStyle.content}>
+              <FlatList
+                keyExtractor={(item) => item.id}
+                extraData={this.state}
+                data={this.state.donationInformation ? this.state.donationInformation.news : []}
+                renderItem={({ item }) => {
+                  return (<TouchableOpacity style={donationStyle.newRecord} disabled={true}>
+                    <View style={donationStyle.newRecordImageArea}>
+                      {item.researcherImageUrl && <Image style={donationStyle.newRecordImageIcon} source={{ uri: item.researcherImageUrl }} />}
+                    </View>
+                    <View style={donationStyle.newRecordContentArea}>
+                      <Text style={donationStyle.newTitle}>{item.title}</Text>
+                      <Text style={donationStyle.newDescription}>{item.description}</Text>
+                      <View style={donationStyle.newFooter}>
+                        <Text style={donationStyle.newOwner} numberOfLines={1} >{item.publisher}</Text>
+                        <Text style={donationStyle.newCreatedAt} numberOfLines={1}>{moment(item.createdAt).format('YYYY MMM DD')}</Text>
                       </View>
-                      <View style={donationStyle.newRecordContentArea}>
-                        <Text style={donationStyle.newTitle}>{item.title}</Text>
-                        <Text style={donationStyle.newDescription}>{item.description}</Text>
-                        <View style={donationStyle.newFooter}>
-                          <Text style={donationStyle.newOwner} numberOfLines={1} >{item.publisher}</Text>
-                          <Text style={donationStyle.newCreatedAt} numberOfLines={1}>{moment(item.createdAt).format('YYYY MMM DD')}</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>)
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
+                    </View>
+                  </TouchableOpacity>)
+                }}
+              />
+            </View>
+          </TouchableOpacity>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 

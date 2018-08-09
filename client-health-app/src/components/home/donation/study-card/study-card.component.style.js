@@ -10,8 +10,8 @@ export default StyleSheet.create({
     height: 170 * scale,
   },
   scale: {
-    width: 375,
-    height: 170,
+    width: 375 * scale,
+    height: 170 * scale,
     transform: [
       { scaleX: scale },
       { scaleY: scale },
