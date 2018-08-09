@@ -97,11 +97,10 @@ export default StyleSheet.create({
   },
   rowDataMainContent: {
     flexDirection: 'row',
-    paddingTop: 10,
-    paddingBottom: 10,
   },
   rowDataTitle: {
     marginLeft: convertWidth(8),
+    width: convertWidth(229),
     fontFamily: 'Avenir Medium',
     fontSize: 16,
     fontWeight: '600',
