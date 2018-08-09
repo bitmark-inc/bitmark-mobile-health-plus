@@ -364,7 +364,7 @@ const doGenerateDisplayedData = async () => {
     for (let item of tempTimelines) {
       if (moment(item.time).toDate().getFullYear() > currentYear) {
         currentYear = moment(item.time).toDate().getFullYear();
-        item.time = moment(donationInformation.createdAt).format('YYYY MMM DD HH:mm');
+        item.time = moment(donationInformation.createdAt).format('YYYY MMM DD');
       } else {
         item.time = moment(donationInformation.createdAt).format('MMM DD HH:mm');
       }
