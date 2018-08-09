@@ -70,7 +70,7 @@ const doCreateNewAccount = async () => {
     return null;
   }
   CommonModel.setFaceTouchSessionId(touchFaceIdSession);
-  return await processing(AccountService.doGetCurrentAccount(touchFaceIdSession));
+  return await processing(DataProcessor.doCreateAccount(touchFaceIdSession));
 };
 
 const doGetCurrentAccount = async (touchFaceIdMessage) => {
