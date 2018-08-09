@@ -153,7 +153,6 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
               if (isSignOut) {
                 this.props.navigation.navigate('TryRecovery', );
               } else {
-                DataProcessor.doRemoveTestRecoveryPhaseActionRequiredIfAny();
                 this.props.screenProps.accountNavigation.goBack();
               }
             }}>
@@ -360,7 +359,6 @@ class TryRecoveryPhraseComponent extends React.Component {
       } else {
         this.props.screenProps.accountNavigation.goBack();
       }
-      DataProcessor.doRemoveTestRecoveryPhaseActionRequiredIfAny();
     } else {
       let smallerList = this.state.smallerList;
       smallerList.forEach(item => {
@@ -547,7 +545,7 @@ export class AccountRecoveryComponent extends React.Component {
     return (<View style={accountRecoveryStyle.body}>
       <AccountRecoveryDetailComponent screenProps={{
         accountNavigation: this.props.navigation,
-        logout: this.props.screenProps.logout,
+        logout: this.props.navigation.state.params.logout,
       }} />
     </View>);
   }
