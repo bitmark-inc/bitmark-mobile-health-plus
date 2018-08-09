@@ -9,15 +9,6 @@ import cardStyles from './study-card.component.style';
 export class StudyCardComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      duration: this.props.duration,
-    };
-  }
-  // ==========================================================================================
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({
-      duration: nextProps.duration,
-    });
   }
   // ==========================================================================================
   render() {
@@ -45,7 +36,7 @@ export class StudyCardComponent extends React.Component {
               {this.props.joined ? 'YOUR DURATION OF STUDY' : 'DURATION OF STUDY'}
             </Text>
             <Text style={cardStyles.durationValue}>
-              {this.state.duration}
+              {this.props.duration}
             </Text>
           </ImageBackground>
         </View>
