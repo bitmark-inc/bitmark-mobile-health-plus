@@ -336,7 +336,7 @@ const doGenerateDisplayedData = async () => {
       tempTimelines.push({
         time: item.completedAt,
         taskType: item.taskType,
-        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? (item.bitmarkId ? 'Weekly health data' : 'Register your weekly health data') :
+        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? (item.bitmarkId ? 'Weekly health data' : `Register your ${item.isFirst ? 'first ' : ''}weekly health data`) :
           (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
         startDate: item.startDate,
         endDate: item.endDate,

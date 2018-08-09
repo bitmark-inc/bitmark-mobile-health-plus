@@ -260,6 +260,7 @@ const getTimeline = (userInformation, timezone) => {
         startDate: startDate.toDate(),
         endDate: endDate.toDate(),
         completedAt: endDate.toDate(),
+        isFirst: true,
       });
     }
     startDate = studyCommonService.getMomentLocalTime(lastTimeBitmarkHealthData, timezone);
