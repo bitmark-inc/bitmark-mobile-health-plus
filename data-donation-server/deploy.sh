@@ -7,4 +7,4 @@ docker build -t 083397868157.dkr.ecr.ap-northeast-1.amazonaws.com/data-donation:
 aws ecr get-login --no-include-email | sh
 docker push 083397868157.dkr.ecr.ap-northeast-1.amazonaws.com/data-donation:0.1-$COMMIT
 
-kubectl set image deployment/data-donation data-donation=083397868157.dkr.ecr.ap-northeast-1.amazonaws.com/data-donation:0.1-$COMMIT
+kubectl -n mobile set image deployment/data-donation data-donation=083397868157.dkr.ecr.ap-northeast-1.amazonaws.com/data-donation:0.1-$COMMIT
