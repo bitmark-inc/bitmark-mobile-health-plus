@@ -60,6 +60,7 @@ func (s *Server) Run(addr string) error {
 	api.POST("/metrics", s.AddMetrics)
 
 	eventsGroup := api.Group("/events")
+	eventsGroup.Use(authenticate())
 	{
 		eventsGroup.POST("/register-account", s.AddRegisterAccountEvent)
 	}
