@@ -133,12 +133,14 @@ export class TimelineComponent extends React.Component {
                 if (item.taskType) {
                   return (<View style={timelineStyle.rowData}>
                     <View style={timelineStyle.rowDataTime}>
-                      <Text style={timelineStyle.rowDataTimeText}>{item.time + ' ' + index}</Text>
+                      <Text style={timelineStyle.rowDataTimeText}>{item.time}</Text>
                     </View>
 
                     <View style={timelineStyle.rowDataLineArea}>
                       <View style={timelineStyle.rowDataLine}></View>
-                      <View style={timelineStyle.rowDataDot}></View>
+                      <View style={[timelineStyle.rowDataDot, {
+                        backgroundColor: item.bitmarkId ? '#0060F2' : 'white',
+                      }]}></View>
                     </View>
 
 
@@ -181,7 +183,10 @@ export class TimelineComponent extends React.Component {
 
                   <View style={timelineStyle.rowDataLineArea}>
                     {(index !== (this.state.timelines.length - 1)) && <View style={[timelineStyle.rowDataLine, { borderColor: item.time ? '#0060F2' : '#999999', }]}></View>}
-                    <View style={[timelineStyle.rowDataDot, { borderColor: item.time ? '#0060F2' : '#999999' }]}></View>
+                    <View style={[timelineStyle.rowDataDot, {
+                      borderColor: item.time ? '#0060F2' : '#999999',
+                      backgroundColor: item.time ? '#0060F2' : '#999999',
+                    }]}></View>
                   </View>
 
                   <View style={[timelineStyle.rowDataDetail, {
