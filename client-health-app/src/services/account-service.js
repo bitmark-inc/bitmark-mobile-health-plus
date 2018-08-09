@@ -1,14 +1,11 @@
-import { AccountModel, CommonModel, BitmarkSDK, UserModel, DonationModel } from './../models';
+import { AccountModel, CommonModel, BitmarkSDK, UserModel } from './../models';
 import { config } from '../configs';
-import moment from 'moment';
 
 // ================================================================================================\
 const doGetCurrentAccount = async (touchFaceIdSession) => {
   let userInfo = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
   let userInformation = { bitmarkAccountNumber: userInfo.bitmarkAccountNumber };
 
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  await DonationModel.doActiveBitmarkHealthData(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, moment().toDate());
   await UserModel.doUpdateUserInfo(userInformation);
   return userInformation;
 }

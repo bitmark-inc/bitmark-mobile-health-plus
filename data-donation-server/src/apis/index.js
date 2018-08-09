@@ -77,7 +77,9 @@ const activeBHD = async (req, res) => {
       let { oldUserInformation } = await userModel.doSaveUserInformation(userInfo);
       timezone = oldUserInformation ? oldUserInformation.timezone : timezone;
     }
-    await userModel.doUpdateBitmarkHealthData(bitmarkAccount, activeBitmarkHealthDataAt);
+    if (!userInformation.activeBitmarkHealthDataAt) {
+      await userModel.doUpdateBitmarkHealthData(bitmarkAccount, activeBitmarkHealthDataAt);
+    }
     userInformation = await getFullUserInformation(bitmarkAccount, timezone);
     res.send(userInformation);
   } catch (error) {

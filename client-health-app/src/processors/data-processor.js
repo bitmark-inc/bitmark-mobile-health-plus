@@ -7,7 +7,7 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel, BitmarkModel } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel, BitmarkModel, DonationModel } from '../models';
 import { DonationService } from '../services/donation-service';
 import { DataCacheProcessor } from './data-cache-processor';
 import { config } from '../configs';
@@ -139,11 +139,20 @@ const doCreateAccount = async (touchFaceIdSession) => {
   let userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   await NotificationModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+
+  signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let donationInformation = await DonationModel.doActiveBitmarkHealthData(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, moment().toDate());
+  await doCheckNewDonationInformation(donationInformation, true);
+  await doGenerateDisplayedData();
   return userInformation;
 };
 
 const doLogin = async (touchFaceIdSession) => {
   userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let donationInformation = await DonationModel.doActiveBitmarkHealthData(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, moment().toDate());
+  await doCheckNewDonationInformation(donationInformation, true);
+  await doGenerateDisplayedData();
   return userInformation;
 };
 
@@ -323,8 +332,7 @@ const doGenerateDisplayedData = async () => {
 
 
   let timelines = [{
-    time: '', title: 'You health data will be bitmarked each week...', lineColor: '#999999',
-    lineWidth: 2,
+    time: '', title: 'You health data will be bitmarked each week...',
   }];
   let remainTimelines = 0;
 

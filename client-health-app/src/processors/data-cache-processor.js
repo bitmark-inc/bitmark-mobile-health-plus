@@ -19,12 +19,11 @@ let resetCacheData = () => {
       totalDonationTasks: 0,
       donationTasks: [],
     },
-    propertiesScreen: {
-      localAssets: [],
-      totalAssets: 0,
-      existNewAsset: false,
-      totalBitmarks: 0,
-    },
+    timelinesData: {
+      timelines: [],
+      totalTimelines: 0,
+      remainTimelines: 0,
+    }
   };
   return cacheData;
 };
