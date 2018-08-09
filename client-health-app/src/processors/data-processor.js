@@ -355,7 +355,9 @@ const doGenerateDisplayedData = async () => {
     }
 
     tempTimelines = [{
-      time: donationInformation.createdAt, title: 'Your Bitmark account was created.',
+      time: moment(donationInformation.createdAt).format('YYYY MMM DD'),
+      formated: true,
+      title: 'Your Bitmark account was created.',
     }].concat(tempTimelines.sort((a, b) => {
       return moment(a.time).toDate().getTime() - moment(b.time).toDate().getTime();
     }));
@@ -364,9 +366,9 @@ const doGenerateDisplayedData = async () => {
     for (let item of tempTimelines) {
       if (moment(item.time).toDate().getFullYear() > currentYear) {
         currentYear = moment(item.time).toDate().getFullYear();
-        item.time = moment(donationInformation.createdAt).format('YYYY MMM DD');
+        item.time = item.formated ? item.time : moment(item.time).format('YYYY MMM DD HH:mm');
       } else {
-        item.time = moment(donationInformation.createdAt).format('MMM DD HH:mm');
+        item.time = item.formated ? item.time : moment(item.time).format('MMM DD HH:mm');
       }
 
       if (item.bitmarkId) {
