@@ -138,7 +138,7 @@ const doDonateHealthData = async ({ study, list, processingData }) => {
   return await submitting(DataProcessor.doDonateHealthData(touchFaceIdSession, study, list), processingData);
 };
 const doBitmarkHealthData = async ({ list, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Please sign your bitmark issuance for your health data.`);
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Your fingerprint signature is required.`);
   if (!touchFaceIdSession) {
     return null;
   }

@@ -344,11 +344,15 @@ const doGenerateDisplayedData = async () => {
       });
       remainTimelines += item.bitmarkId ? 0 : 1;
       if (item.bitmarkId) {
-        bitmarkIds.push(bitmarkIds);
+        bitmarkIds.push(item.bitmarkId);
       }
     });
 
-    let bitmarks = await BitmarkModel.doGetListBitmarks(bitmarkIds);
+    let bitmarks = [];
+
+    if (bitmarkIds && bitmarkIds.length > 0) {
+      bitmarks = (await BitmarkModel.doGetListBitmarks(bitmarkIds)).bitmarks;
+    }
 
     tempTimelines = [{
       time: donationInformation.createdAt, title: 'Your Bitmark account was created.',

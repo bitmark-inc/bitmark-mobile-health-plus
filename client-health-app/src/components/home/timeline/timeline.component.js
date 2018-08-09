@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Image, Text, TouchableOpacity, FlatList, ScrollView,
+  Alert,
   Dimensions,
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
 import timelineStyle from './timeline.component.style';
-import { DataProcessor } from '../../../processors';
+import { DataProcessor, AppProcessor } from '../../../processors';
 import { EventEmitterService } from '../../../services';
 import { FileUtil } from "../../../utils";
 
@@ -150,10 +151,16 @@ export class TimelineComponent extends React.Component {
                       }]}
                       onPress={() => {
                         if (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data && !item.bitmarkId) {
-                          this.props.screenProps.homeNavigation.navigate('HealthDataBitmark', {
+
+                          AppProcessor.doBitmarkHealthData([{
                             startDate: item.startDate,
                             endDate: item.endDate,
-                          });
+                          }], {
+                              indicator: true, title: 'Encrypting and protecting your health data...', message: ''
+                            }).catch(error => {
+                              console.log('doBitmarkHealthData error:', error);
+                              EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+                            });
                         } else if (item.bitmarkId) {
                           this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.bitmarkId, taskType: item.taskType });
                         }
