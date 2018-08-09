@@ -170,6 +170,10 @@ export class TimelineComponent extends React.Component {
                         {(!item.bitmarkId && item.taskType !== this.state.donationInformation.commonTaskIds.bitmark_health_issuance) && <View style={timelineStyle.rowDataFooterContent}>
                           <Text style={timelineStyle.rowDataSignButton}>SIGN</Text>
                         </View>}
+
+                        {(item.bitmarkId && item.status !== 'confirmed') && <View style={[timelineStyle.rowDataFooterContent, { marginTop: 0 }]}>
+                          <Text style={timelineStyle.rowDataFooterStatus}>Registering ownership...</Text>
+                        </View>}
                       </View>
 
                     </TouchableOpacity>

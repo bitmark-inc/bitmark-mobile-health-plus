@@ -7,7 +7,7 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel, BitmarkModel } from '../models';
 import { DonationService } from '../services/donation-service';
 import { DataCacheProcessor } from './data-cache-processor';
 import { config } from '../configs';
@@ -323,11 +323,13 @@ const doGenerateDisplayedData = async () => {
 
 
   let timelines = [{
-    time: '', title: 'You health data will be extracted each week...', lineColor: '#999999',
+    time: '', title: 'You health data will be bitmarked each week...', lineColor: '#999999',
     lineWidth: 2,
   }];
   let remainTimelines = 0;
+
   if (donationInformation) {
+    let bitmarkIds = [];
     let tempTimelines = [];
 
     (donationInformation.timelines || []).forEach(item => {
@@ -341,7 +343,12 @@ const doGenerateDisplayedData = async () => {
         bitmarkId: item.bitmarkId,
       });
       remainTimelines += item.bitmarkId ? 0 : 1;
+      if (item.bitmarkId) {
+        bitmarkIds.push(bitmarkIds);
+      }
     });
+
+    let bitmarks = await BitmarkModel.doGetListBitmarks(bitmarkIds);
 
     tempTimelines = [{
       time: donationInformation.createdAt, title: 'Your Bitmark account was created.',
@@ -356,6 +363,11 @@ const doGenerateDisplayedData = async () => {
         item.time = moment(donationInformation.createdAt).format('YYYY MMM DD HH:mm');
       } else {
         item.time = moment(donationInformation.createdAt).format('MMM DD HH:mm');
+      }
+
+      if (item.bitmarkId) {
+        let bitmark = bitmarks.find(bm => bm.id === item.bitmarkId);
+        item.status = bitmark.status;
       }
     }
     timelines = timelines.concat(tempTimelines.reverse());
