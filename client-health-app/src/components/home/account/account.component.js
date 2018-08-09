@@ -165,8 +165,8 @@ export class AccountDetailComponent extends React.Component {
                     </TouchableOpacity>
 
                     {/*Remove Access*/}
-                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}>
-                      {/* <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true, logout: this.logout }) }}> */}
+                    {/* <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}> */}
+                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true, logout: this.logout }) }}>
                       <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-remove.png')} />
                       <Text style={defaultStyle.text}>Remove Access</Text>
                       <Text style={defaultStyle.textAlignRight}>
