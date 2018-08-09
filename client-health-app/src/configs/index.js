@@ -67,12 +67,12 @@ export { config, ios, android };
 
 
 // testnet
-// code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map"
-// code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
+// code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.0.map"
+// code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.0.0.map" [--targetBinaryVersion "~1.0.0"]
 
 // livetnet
-// code-push release-react 'BitmarkHealth' ios -d Production --mandatory true --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map"
-// code-push release-react 'BitmarkHealth' ios -d Production -m --description "update code" --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
+// code-push release-react 'BitmarkHealth' ios -d Production --mandatory true --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.0.0.map"
+// code-push release-react 'BitmarkHealth' ios -d Production -m --description "update code" --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.0.0.map" [--targetBinaryVersion "~1.0.0"]
 
 
 // react-native run-ios --device "Bitmark’s iPhone" --scheme 'Bitmark Health dev'
