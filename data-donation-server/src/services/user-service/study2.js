@@ -228,6 +228,7 @@ const getFullJoinedInformation = (joinedStudyInformation, timezone) => {
         number: 1,
         list: [{
           startDate: startDate.toDate(),
+          endDate: beginCurrentTimeInLocal,
           timezone: timezone,
         }]
       };
@@ -274,6 +275,7 @@ const getFullJoinedInformation = (joinedStudyInformation, timezone) => {
         list: [{
           startDate: startDate.toDate(),
           timezone: timezone,
+          endDate: beginCurrentTimeInLocal,
         }]
       };
       totalTasks += 1;
