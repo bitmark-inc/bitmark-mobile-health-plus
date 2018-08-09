@@ -33,11 +33,13 @@ export class NotificationComponent extends React.Component {
         backgroundColor='white'
         contentInScroll={true}
         content={(<View style={[notificationStyle.body]}>
-          <Text style={[notificationStyle.notificationTitle]}>NOTIFICATIONS</Text>
-          <Text style={[notificationStyle.notificationDescription,]}>
-            Receive notifications when actions require your authorization.
-          </Text>
-          <Image style={[notificationStyle.notificationImage]} source={require('../../../../assets/imgs/notification.png')} />
+          <View style={notificationStyle.swipePageContent}>
+            <View style={notificationStyle.swipePageMainContent}>
+              <Image style={[notificationStyle.notificationImage]} source={require('../../../../assets/imgs/notification.png')} />
+              <Text style={[notificationStyle.notificationTitle]}>NOTIFICATIONS</Text>
+              <Text style={[notificationStyle.notificationDescription,]}>Receive notifications when actions require your authorization.</Text>
+            </View>
+          </View>
         </View>)}
 
         footerHeight={90 + iosConstant.blankFooter / 2}

@@ -33,14 +33,16 @@ export class GetStartComponent extends React.Component {
         contentInScroll={true}
         content={(<View style={[getStartStyles.body]}>
           <StatusBar hidden={false} />
-          <Text style={[getStartStyles.getStartTitle]}>GET STARTED NOW</Text>
-          <Text style={[getStartStyles.getStartDescription,]}>
-            To register ownership of your health data, you must allow Bitmark Health to access specific (or all) categories of data.
-          </Text>
-          <View style={getStartStyles.accessIconArea}>
-            <Image style={getStartStyles.accessIcon} source={require('../../../../assets/imgs/icon_health.png')} />
-            <Image style={getStartStyles.accessIconPlus} source={require('../../../../assets/imgs/+.png')} />
-            <Image style={getStartStyles.accessIcon} source={require('../../../../assets/imgs/bitmark-logo.png')} />
+          <View style={getStartStyles.swipePageContent}>
+            <View style={getStartStyles.swipePageMainContent}>
+              <View style={getStartStyles.accessIconArea}>
+                <Image style={getStartStyles.accessIcon} source={require('../../../../assets/imgs/icon_health.png')} />
+                <Image style={getStartStyles.accessIconPlus} source={require('../../../../assets/imgs/+.png')} />
+                <Image style={getStartStyles.accessIcon} source={require('../../../../assets/imgs/bitmark-logo.png')} />
+              </View>
+              <Text style={[getStartStyles.getStartTitle]}>GET STARTED NOW</Text>
+              <Text style={[getStartStyles.getStartDescription,]}>To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.</Text>
+            </View>
           </View>
         </View>)}
 

@@ -165,8 +165,8 @@ export class AccountDetailComponent extends React.Component {
                     </TouchableOpacity>
 
                     {/*Remove Access*/}
-                    {/* <TouchableOpacity onPress={this.logout}><Text style={defaultStyle.text}>Remove Access</Text></TouchableOpacity> */}
-                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true , logout: this.logout}) }}>
+                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}>
+                      {/* <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true, logout: this.logout }) }}> */}
                       <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-remove.png')} />
                       <Text style={defaultStyle.text}>Remove Access</Text>
                       <Text style={defaultStyle.textAlignRight}>
@@ -180,19 +180,19 @@ export class AccountDetailComponent extends React.Component {
                     <View style={[defaultStyle.itemHeaderContainer, defaultStyle.sectionContainer]}>
                       <Text style={defaultStyle.headerText}>AUTHORIZED APP</Text>
                     </View>
-                  {this.state.donationInformation && this.state.donationInformation.activeBitmarkHealthDataAt &&
-                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
-                      this.props.navigation.navigate('Health', {removeHealthAuthCallBack: this.doGetScreenData})
-                    }}>
-                      <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon_health.png')}/>
-                      <Text style={defaultStyle.text}>iOS Health</Text>
-                      <Text style={defaultStyle.textAlignRight}>
-                        <Text style={defaultStyle.text}>Authorized   </Text>
-                        <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')}/>
-                      </Text>
-                    </TouchableOpacity>
-                  }
-                  {this.state.gettingData && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
+                    {this.state.donationInformation && this.state.donationInformation.activeBitmarkHealthDataAt &&
+                      <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
+                        this.props.navigation.navigate('Health', { removeHealthAuthCallBack: this.doGetScreenData })
+                      }}>
+                        <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon_health.png')} />
+                        <Text style={defaultStyle.text}>iOS Health</Text>
+                        <Text style={defaultStyle.textAlignRight}>
+                          <Text style={defaultStyle.text}>Authorized   </Text>
+                          <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
+                        </Text>
+                      </TouchableOpacity>
+                    }
+                    {this.state.gettingData && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
                   </View>
 
                   {/*ABOUT BITMARK HEALTH*/}

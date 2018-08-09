@@ -1,6 +1,8 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { convertWidth } from '../../../utils';
 import { iosConstant } from '../../../configs/ios/ios.config';
+let currentSize = Dimensions.get('window');
+
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -10,17 +12,30 @@ export default StyleSheet.create({
     paddingRight: convertWidth(50),
     paddingBottom: 90,
   },
+
+  swipePageContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: currentSize.height - (85 + iosConstant.blankFooter / 2),
+  },
+
+  swipePageMainContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   // getStart
   getStartTitle: {
     fontFamily: 'Avenir black',
     color: '#0060F2',
     fontSize: 17,
     fontWeight: '900',
-    marginTop: 83,
+    marginTop: 57,
   },
 
   accessIconArea: {
-    marginTop: 111,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
@@ -40,11 +55,12 @@ export default StyleSheet.create({
   },
 
   getStartDescription: {
-    marginTop: 37,
-    width: convertWidth(275),
+    marginTop: 25,
+    width: convertWidth(296),
     fontFamily: 'Avenir light',
     fontWeight: '300',
-    fontSize: 17,
+    fontSize: 16,
+    textAlign: 'center',
   },
 
   enableButtonArea: {

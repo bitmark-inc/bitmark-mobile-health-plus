@@ -1,5 +1,7 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { convertWidth } from '../../../utils';
+import { iosConstant } from '../../../configs/ios/ios.config';
+let currentSize = Dimensions.get('window');
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -9,28 +11,42 @@ export default StyleSheet.create({
     paddingRight: convertWidth(50),
     paddingBottom: 90,
   },
+
+  swipePageContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: currentSize.height - (85 + iosConstant.blankFooter / 2),
+  },
+
+  swipePageMainContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   // notification
   notificationTitle: {
     fontFamily: 'Avenir black',
     color: '#0060F2',
     fontSize: 20,
     fontWeight: '900',
-    marginTop: 83,
+    marginTop: 25,
+    textAlign: 'center',
   },
 
   notificationImage: {
-    marginTop: 63,
     width: convertWidth(275),
     height: 215 * convertWidth(275) / 275,
     resizeMode: 'contain',
   },
 
   notificationDescription: {
-    marginTop: 37,
+    marginTop: 25,
     width: convertWidth(275),
     fontFamily: 'Avenir light',
     fontWeight: '300',
-    fontSize: 17,
+    fontSize: 16,
+    textAlign: 'center',
   },
 
   enableButtonArea: {

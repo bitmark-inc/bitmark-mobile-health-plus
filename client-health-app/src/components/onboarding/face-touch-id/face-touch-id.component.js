@@ -72,17 +72,16 @@ export class FaceTouchIdComponent extends React.Component {
         backgroundColor='white'
         contentInScroll={true}
         content={(<View style={[faceTouchIdStyle.body]}>
-          <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>
-            TOUCH/FACE ID & PASSCODE
-          </Text>
-          <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>
-            Touch/Face ID or a passcode is required to sign and encrypt your health data.
-          </Text>
-          <View style={faceTouchIdStyle.passcodeRemindImages}>
-            <Image style={[faceTouchIdStyle.touchIdImage]} source={require('../../../../assets/imgs/touch-id.png')} />
-            <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />
+          <View style={faceTouchIdStyle.swipePageContent}>
+            <View style={faceTouchIdStyle.swipePageMainContent}>
+              <View style={faceTouchIdStyle.passcodeRemindImages}>
+                <Image style={[faceTouchIdStyle.touchIdImage]} source={require('../../../../assets/imgs/touch-id.png')} />
+                <Image style={[faceTouchIdStyle.faceIdImage]} source={require('../../../../assets/imgs/face-id.png')} />
+              </View>
+              <Text style={[faceTouchIdStyle.faceTouchIdTitle]}>TOUCH/FACE ID & PASSCODE</Text>
+              <Text style={[faceTouchIdStyle.faceTouchIdDescription,]}>Touch/Face ID or a passcode is required to sign and encrypt your health data.</Text>
+            </View>
           </View>
-
         </View>)}
 
         footerHeight={45 + iosConstant.blankFooter / 2}

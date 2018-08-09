@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { convertWidth } from '../../../utils';
 import { iosConstant } from '../../../configs/ios/ios.config';
+let currentSize = Dimensions.get('window');
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -15,42 +16,56 @@ export default StyleSheet.create({
     paddingRight: 51,
   },
 
+  swipePageContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: currentSize.height - (85 + iosConstant.blankFooter / 2),
+  },
+
+  swipePageMainContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   // notification
   faceTouchIdTitle: {
     fontFamily: 'Avenir black',
     color: '#0060F2',
     fontSize: 17,
     fontWeight: '900',
-    marginTop: 83,
-    width: convertWidth(275),
+    marginTop: 54,
+    width: convertWidth(375),
+    textAlign: 'center',
   },
 
   passcodeRemindImages: {
-    marginTop: 111,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
   },
   touchIdImage: {
-    width: 69,
-    height: 69,
+    width: 90,
+    height: 90,
     resizeMode: 'contain',
   },
   faceIdImage: {
     marginLeft: 30,
-    width: 69,
-    height: 69,
+    width: 90,
+    height: 90,
     resizeMode: 'contain',
   },
 
   faceTouchIdDescription: {
-    marginTop: 80,
-    width: convertWidth(275),
+    marginTop: 29,
+    width: convertWidth(294),
     fontFamily: 'Avenir light',
     fontWeight: '300',
-    fontSize: 17,
+    fontSize: 16,
     lineHeight: 20,
+    textAlign: 'center',
   },
 
   enableButtonArea: {
