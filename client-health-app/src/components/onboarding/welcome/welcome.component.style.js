@@ -1,6 +1,9 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { convertWidth } from './../../../utils';
 import { ios } from '../../../configs';
+
+let currentSize = Dimensions.get('window');
+
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -23,7 +26,7 @@ export default StyleSheet.create({
   },
   swipePagination: {
     position: 'absolute',
-    bottom: 115 + ios.constant.blankFooter,
+    bottom: 107 + ios.constant.blankFooter,
   },
 
   swipePage: {
@@ -32,6 +35,21 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     alignContent: 'center',
+  },
+
+  swipePageContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: currentSize.height - (170 + ios.constant.blankFooter),
+  },
+
+  swipePageMainContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 320,
+    height: 438,
   },
 
   welcomeLogo: {
@@ -43,9 +61,7 @@ export default StyleSheet.create({
   introductionArea: {
     flexDirection: 'column',
     alignItems: 'center',
-    minHeight: 275,
     width: '100%',
-    marginTop: 32,
   },
   introductionTitle: {
     marginTop: 25,
@@ -53,12 +69,12 @@ export default StyleSheet.create({
     color: '#0060F2',
     fontSize: 17,
     fontWeight: '900',
-    width: convertWidth(275),
+    width: 275,
     textAlign: 'center',
   },
   introductionDescription: {
-    marginTop: 65,
-    width: convertWidth(275),
+    marginTop: 15,
+    width: 275,
     fontFamily: 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
@@ -69,12 +85,12 @@ export default StyleSheet.create({
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 15,
   },
   onBoardingImage: {
     resizeMode: 'contain',
-    width: convertWidth(216),
-    height: 226 * convertWidth(216) / 216
+    width: 216,
+    height: 226,
   },
 
   welcomeButtonArea: {

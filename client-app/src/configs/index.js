@@ -84,7 +84,7 @@ export { config, ios, android };
 
 
 // testnet
-// code-push release-react Bitmark ios --pre "Bitmark dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map"
+// code-push release-react Bitmark ios --pre "Bitmark dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.3.8.map"
 // code-push release-react Bitmark ios --pre "Bitmark dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map" [--targetBinaryVersion "~1.1.1"]
 
 // livetnet

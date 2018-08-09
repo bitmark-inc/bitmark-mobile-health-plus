@@ -71,14 +71,18 @@ export class WelcomeComponent extends React.Component {
             contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
-                <View style={welcomeComponentStyle.introductionImageArea}>
-                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome1.png')} />
-                </View>
-                <View style={welcomeComponentStyle.introductionArea}>
-                  <Text style={[welcomeComponentStyle.introductionTitle]}>{'Create Property Around Your Health Data'.toUpperCase()}</Text>
-                  <Text style={[welcomeComponentStyle.introductionDescription]}>
-                    Bitmark Health protects the rights to your health data by registering it on a global public registry so that no other party can legally access it without your explicit permission.
+                <View style={welcomeComponentStyle.swipePageContent}>
+                  <View style={welcomeComponentStyle.swipePageMainContent}>
+                    <View style={welcomeComponentStyle.introductionImageArea}>
+                      <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome1.png')} />
+                    </View>
+                    <View style={welcomeComponentStyle.introductionArea}>
+                      <Text style={[welcomeComponentStyle.introductionTitle]}>{'Create Property Around Your Health Data'.toUpperCase()}</Text>
+                      <Text style={[welcomeComponentStyle.introductionDescription]}>
+                        Bitmark Health protects the rights to your health data by registering it on a global public registry so that no other party can legally access it without your explicit permission.
                     </Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             )}
@@ -92,14 +96,18 @@ export class WelcomeComponent extends React.Component {
             contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
-                <View style={welcomeComponentStyle.introductionImageArea}>
-                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome2.png')} />
-                </View>
-                <View style={welcomeComponentStyle.introductionArea}>
-                  <Text style={[welcomeComponentStyle.introductionTitle]}>{'Registration is Private and Secure'.toUpperCase()}</Text>
-                  <Text style={[welcomeComponentStyle.introductionDescription]}>
-                    Registration is anonymous and your identity is completely protected. Only you hold the keys to link your identity to these records; Bitmark cannot view your encrypted data.
+                <View style={welcomeComponentStyle.swipePageContent}>
+                  <View style={welcomeComponentStyle.swipePageMainContent}>
+                    <View style={welcomeComponentStyle.introductionImageArea}>
+                      <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome2.png')} />
+                    </View>
+                    <View style={welcomeComponentStyle.introductionArea}>
+                      <Text style={[welcomeComponentStyle.introductionTitle]}>{'Registration is Private and Secure'.toUpperCase()}</Text>
+                      <Text style={[welcomeComponentStyle.introductionDescription]}>
+                        Registration is anonymous and your identity is completely protected. Only you hold the keys to link your identity to these records; Bitmark cannot view your encrypted data.
                     </Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             )}
@@ -113,14 +121,18 @@ export class WelcomeComponent extends React.Component {
             contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
-                <View style={welcomeComponentStyle.introductionImageArea}>
-                  <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome3.png')} />
-                </View>
-                <View style={welcomeComponentStyle.introductionArea}>
-                  <Text style={[welcomeComponentStyle.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>
-                  <Text style={[welcomeComponentStyle.introductionDescription]}>
-                    Once health data is registered as your property, you will be able to donate, sell, or transfer it to another party (family member, university researcher, etc.) at your complete discretion.
+                <View style={welcomeComponentStyle.swipePageContent}>
+                  <View style={welcomeComponentStyle.swipePageMainContent}>
+                    <View style={welcomeComponentStyle.introductionImageArea}>
+                      <Image style={welcomeComponentStyle.onBoardingImage} source={require('../../../../assets/imgs/welcome3.png')} />
+                    </View>
+                    <View style={welcomeComponentStyle.introductionArea}>
+                      <Text style={[welcomeComponentStyle.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>
+                      <Text style={[welcomeComponentStyle.introductionDescription]}>
+                        Once health data is registered as your property, you will be able to donate, sell, or transfer it to another party (family member, university researcher, etc.) at your complete discretion.
                     </Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             )}
