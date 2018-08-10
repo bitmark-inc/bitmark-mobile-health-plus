@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	influx "github.com/influxdata/influxdb/client/v2"
+	log "github.com/sirupsen/logrus"
 )
 
 func (s *Server) AddMetrics(c *gin.Context) {
@@ -57,6 +58,7 @@ func (s *Server) AddMetrics(c *gin.Context) {
 func (s *Server) AddRegisterAccountEvent(c *gin.Context) {
 	account := c.GetString("requester")
 
+	log.Info("Register a new account:", account)
 	if err := s.gatewayClient.RegisterAccount(c, account); err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
