@@ -41,7 +41,6 @@ export class AccountDetailComponent extends React.Component {
       appLoadingData: DataProcessor.isAppLoadingData()
     };
     this.doGetScreenData();
-    console.log('this.props :', this.props);
   }
 
   async doGetScreenData() {

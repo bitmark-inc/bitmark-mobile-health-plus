@@ -136,6 +136,8 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 
 const doCreateAccount = async (touchFaceIdSession) => {
   let userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
+  await checkAppNeedResetLocalData();
+
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   await NotificationModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
 
@@ -148,6 +150,8 @@ const doCreateAccount = async (touchFaceIdSession) => {
 
 const doLogin = async (touchFaceIdSession) => {
   userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
+
+  await checkAppNeedResetLocalData();
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   let donationInformation = await DonationModel.doActiveBitmarkHealthData(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, moment().toDate());
   await doCheckNewDonationInformation(donationInformation, true);

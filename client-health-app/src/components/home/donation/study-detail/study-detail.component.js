@@ -52,7 +52,6 @@ export class StudyDetailComponent extends React.Component {
   // ======================================================================================================================================================
   // ======================================================================================================================================================
   doJoinStudy() {
-    console.log('doJoinStudy =====', this.props);
     this.props.navigation.navigate('StudySetting', { study: this.state.study });
   }
   doOutOptStudy() {

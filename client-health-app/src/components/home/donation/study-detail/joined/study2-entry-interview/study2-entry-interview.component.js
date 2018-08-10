@@ -20,7 +20,6 @@ export class Study2EntryInterviewComponent extends React.Component {
     this.doCompletedTask = this.doCompletedTask.bind(this);
     let study = this.props.navigation.state.params.study;
 
-    console.log('study:', study);
     this.state = {
       study,
       email: '',

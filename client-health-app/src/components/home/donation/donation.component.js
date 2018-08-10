@@ -224,7 +224,6 @@ export class DonationComponent extends React.Component {
                 extraData={this.state}
                 data={this.state.donationTasks}
                 renderItem={({ item }) => {
-                  console.log('item :', item);
                   return (<TouchableOpacity style={donationStyle.donationTaskItem} onPress={() => this.clickOnDonationTask(item)}>
                     <View style={donationStyle.donationTaskItemLeftArea}>
                       <Image style={donationStyle.researcherImage} source={(item.study && item.study.studyId === 'study1') ? require('./../../../../assets/imgs/madelena.png') :

@@ -28,7 +28,6 @@ export class BitmarkDetailComponent extends React.Component {
   }
   doGetScreenData(bitmarkId) {
     AppProcessor.doGetBitmarkInformation(bitmarkId).then(({ asset, bitmark, donationInformation }) => {
-      console.log('doGetBitmarkInformation :', asset, bitmark);
       let metadata = [];
       for (let label in asset.metadata) {
         metadata.push({ label, value: asset.metadata[label] });

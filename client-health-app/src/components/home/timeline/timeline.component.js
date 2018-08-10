@@ -69,7 +69,6 @@ export class TimelineComponent extends React.Component {
     };
 
     ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response:', response);
 
       if (response.didCancel) {
         return;
@@ -108,16 +107,12 @@ export class TimelineComponent extends React.Component {
       <View style={timelineStyle.body}>
         <ScrollView style={timelineStyle.contentScroll}
           onScroll={async (scrollEvent) => {
-            console.log('onScroll :', this.loadingTimelinesWhenScroll, this.state.lengthDisplayTimelines, this.state.totalTimelines);
             if (this.loadingTimelinesWhenScroll) {
               return;
             }
-            console.log(scrollEvent.nativeEvent.contentOffset.y);
-            console.log(scrollEvent.nativeEvent.contentSize.height - currentSize.height);
             if (scrollEvent.nativeEvent.contentOffset.y >= (scrollEvent.nativeEvent.contentSize.height - currentSize.height) && (this.state.lengthDisplayTimelines < this.state.totalTimelines)) {
               this.loadingTimelinesWhenScroll = true;
               let lengthDisplayTimelines = Math.min(this.state.totalTimelines, this.state.lengthDisplayTimelines + 20);
-              console.log('lengthDisplayTimelines :', lengthDisplayTimelines);
               let { timelines } = await DataProcessor.doGetTimelines(lengthDisplayTimelines);
               this.setState({ lengthDisplayTimelines: timelines.length, timelines });
             }

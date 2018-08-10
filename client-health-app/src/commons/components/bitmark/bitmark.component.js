@@ -16,7 +16,6 @@ import { ios } from './../../../configs';
 const { StatusBarManager } = NativeModules;
 
 const currentSize = Dimensions.get('window');
-console.log('currentSize :', currentSize);
 
 export class BitmarkComponent extends React.Component {
   constructor(props) {
