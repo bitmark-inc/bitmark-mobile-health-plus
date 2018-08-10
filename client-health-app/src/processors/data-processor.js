@@ -48,7 +48,6 @@ const runGetDonationInformationInBackground = () => {
 // special process
 const runOnBackground = async () => {
   let userInfo = await UserModel.doTryGetCurrentUser();
-  console.log('userInfo :', userInfo);
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
     userInformation = userInfo;
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);

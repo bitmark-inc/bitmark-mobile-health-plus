@@ -90,7 +90,7 @@ export class StudySettingComponent extends React.Component {
       actions: [
         NavigationActions.navigate({
           routeName: 'User', params: {
-            displayedTab: { mainTab: BottomTabsComponent.MainTabs.transaction, subTab: 'ACTIONS REQUIRED' },
+            displayedTab: { mainTab: BottomTabsComponent.MainTabs.Donate, subTab: 'Studies' },
           }
         })
       ]

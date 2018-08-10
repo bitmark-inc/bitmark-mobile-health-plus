@@ -235,7 +235,8 @@ const doStudyTask = async (study, taskType) => {
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task1) {
     return await Study2Model.showActiveTask1();
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task2) {
-    return await Study2Model.showActiveTask2();
+    let oldData = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_STUDY_TASK2);
+    return await Study2Model.showActiveTask2(oldData);
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
     return await Study2Model.showActiveTask3();
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task4) {
@@ -271,14 +272,20 @@ let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
   return assetFilePath;
 };
 
-let doPrepareSurveyFile = async (touchFaceIdSession, bitmarkAccountNumber, study, taskType, result) => {
+let doPrepareSurveyFile = async (touchFaceIdSession, bitmarkAccountNumber, study, taskType, taskResult) => {
   let donateData;
-  let tempResult = result;
+  let tempResult = taskResult;
   let extFiles;
   let filePath;
-  if (study.studyId === 'study2' && taskType === study.taskIds.task4) {
-    tempResult = result.textAnswer;
-    extFiles = result.mediaAnswer;
+  let study2Task2Data;
+  if (study.studyId === 'study2') {
+    if (taskType === study.taskIds.task4) {
+      tempResult = taskResult.textAnswer;
+      extFiles = taskResult.mediaAnswer;
+    } else if (taskType === study.taskIds.task1 || taskType === study.taskIds.task2) {
+      tempResult = taskResult.result;
+      study2Task2Data = taskResult.saveData;
+    }
   }
   if ((study.studyId === 'study1' &&
     (taskType === study.taskIds.intake_survey || taskType === study.taskIds.exit_survey_1 || taskType === study.taskIds.exit_survey_2)) ||
@@ -290,7 +297,7 @@ let doPrepareSurveyFile = async (touchFaceIdSession, bitmarkAccountNumber, study
   if (donateData) {
     filePath = await doCreateFile(study.studyId, bitmarkAccountNumber, donateData.date, donateData.data, donateData.randomId, extFiles);
   }
-  return { filePath, donateData };
+  return { filePath, donateData, study2Task2Data };
 };
 
 
@@ -309,7 +316,9 @@ const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, st
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount, extra);
     await FileUtil.remove(prepareResult.filePath);
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
-
+    if (prepareResult.study2Task2Data) {
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_STUDY_TASK2, prepareResult.study2Task2Data);
+    }
     return doGetUserInformation(bitmarkAccountNumber);
   } else if (
     (study.studyId === 'study2' && (taskType === study.taskIds.task3 || taskType === study.taskIds.entry_study)) ||

@@ -15,6 +15,8 @@ const KEYS = {
   // data can be change
   USER_DATA_DONATION_TASK: 'user-data:donation-tasks',
   USER_DATA_TIMELINES: 'user-data:timelines',
+
+  USER_DATA_DONATION_STUDY_TASK2: 'user-data:donation-study-task2',
 };
 
 // ================================================================================================

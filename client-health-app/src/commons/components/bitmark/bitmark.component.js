@@ -76,7 +76,6 @@ export class BitmarkComponent extends React.Component {
     if (keyboardEvent.easing !== 'keyboard') {
       return;
     }
-    console.log('onKeyboardDidShow :', keyboardEvent);
     let keyboardHeight = keyboardEvent.endCoordinates.height;
     let keyboardY = keyboardEvent.endCoordinates.screenY;
     let contentHeight = this.state.bodyHeight - this.state.headerHeight - this.state.keyboardExternalHeight - keyboardHeight;
