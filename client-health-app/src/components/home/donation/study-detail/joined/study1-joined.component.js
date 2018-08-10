@@ -90,8 +90,8 @@ export class Study1JoinedComponent extends React.Component {
           </View>
         </View>
 
-        <TouchableOpacity style={[styles.leaveButton]} onPress={() => this.props.doOutOptStudy()}>
-          <Text style={styles.leaveButtonText}>LEAVE STUDY</Text>
+        <TouchableOpacity style={[styles.leaveButton]} disabled={this.state.study.duration === 'COMPLETED'} onPress={() => this.props.doOutOptStudy()}>
+          <Text style={styles.leaveButtonText}>{this.state.study.duration === 'COMPLETED' ? 'COMPLETED' : 'LEAVE STUDY'}</Text>
         </TouchableOpacity>
       </View>
     );
