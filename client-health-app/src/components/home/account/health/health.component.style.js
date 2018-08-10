@@ -8,7 +8,7 @@ export default StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EFEFF4',
-    paddingTop: 10,
+    paddingTop: 50,
     paddingBottom: 10 + ios.constant.blankFooter
   },
   textContainer: {
