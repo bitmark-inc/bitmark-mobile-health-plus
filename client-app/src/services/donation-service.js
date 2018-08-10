@@ -371,7 +371,7 @@ const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, stud
     let format = 'YYYY MMM DD HH:mm:ss';
     let extra = {
       app: 'bitmark-data-donation',
-      message: `Your daily data donation for ${moment(dateRange.startDate).format(format)} - ${moment(dateRange.endDate).format(format)} has been securely delivered to the ${study.title}. Thanks for donating!`,
+      message: `Your ${study.studyId === 'study1' ? 'daily' : 'weekly'} data donation for ${moment(dateRange.startDate).format(format)} - ${moment(dateRange.endDate).format(format)} has been securely delivered to the ${study.title}. Thanks for donating!`,
       data: { event: 'DONATION_SUCCESS' }
     };
     let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount, extra);
