@@ -5,7 +5,8 @@ import { iosConstant } from '../../../../configs/ios/ios.config';
 export default StyleSheet.create({
   body: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    backgroundColor: '#EFEFF4'
   },
 
   previewContainer: {

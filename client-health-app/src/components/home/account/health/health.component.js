@@ -8,33 +8,10 @@ import { BitmarkComponent } from '../../../../commons/components';
 
 import defaultStyle from '../../../../commons/styles';
 import style from './health.component.style';
-import {EventEmitterService} from "../../../../services";
-import {AppProcessor} from "../../../../processors";
 
 export class HealthComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.inactiveBitmarkHealthData = this.inactiveBitmarkHealthData.bind(this);
-  }
-
-  inactiveBitmarkHealthData() {
-    Alert.alert('Are you sure you want to revoke access to your HealthKit data?', '', [{
-      text: 'Cancel',
-      style: 'cancel',
-    }, {
-      text: 'Yes',
-      onPress: () => {
-        AppProcessor.doInactiveBitmarkHealthData().then((data) => {
-          if (data) {
-            this.props.navigation.state.params.removeHealthAuthCallBack();
-            this.props.navigation.goBack();
-          }
-        }).catch(error => {
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-          console.log('doInactiveBitmarkHealthData error :', error);
-        });
-      }
-    }]);
   }
 
   render() {
@@ -63,10 +40,6 @@ export class HealthComponent extends React.Component {
               Extract data from the Health app and register property rights. Repeats weekly (Sunday 11AM).
             </Text>
           </View>
-
-          <TouchableOpacity style={defaultStyle.itemContainer} onPress={() => this.inactiveBitmarkHealthData()}>
-            <Text style={defaultStyle.text}>Remove Access</Text>
-          </TouchableOpacity>
         </View >
         )}
       />

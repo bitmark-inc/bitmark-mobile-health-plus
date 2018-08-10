@@ -29,7 +29,7 @@ export class SupportComponent extends React.Component {
 
         content={(<View style={style.body}>
             {/*LEGAL*/}
-            <View style={defaultStyle.itemContainer}>
+            <View style={[defaultStyle.itemContainer, style.headerItem]}>
               <Text style={defaultStyle.headerText}>LEGAL</Text>
             </View>
 
@@ -60,7 +60,7 @@ export class SupportComponent extends React.Component {
             </View>
 
             {/*ABOUT*/}
-            <View style={[defaultStyle.itemContainer, defaultStyle.sectionContainer]}>
+            <View style={[defaultStyle.itemContainer, defaultStyle.sectionContainer, style.headerItem]}>
               <Text style={defaultStyle.headerText}>ABOUT</Text>
             </View>
 
@@ -83,7 +83,7 @@ export class SupportComponent extends React.Component {
             </View>
 
             {/*POWERED BY*/}
-            <View style={[defaultStyle.itemContainer, defaultStyle.sectionContainer]}>
+            <View style={[defaultStyle.itemContainer, defaultStyle.sectionContainer, style.headerItem]}>
               <Text style={defaultStyle.headerText}>POWERED BY</Text>
             </View>
 
@@ -100,14 +100,6 @@ export class SupportComponent extends React.Component {
     Share.share({title: 'Bitmark', message: '', url: config.appLink});
   };
 
-  requestSendFeedback() {
-    Alert.alert('Send Feedback', 'Have a comment or suggestion? We are always making improvements based on community feedback', [{
-      text: 'Cancel', style: 'cancel',
-    }, {
-      text: 'Send', onPress: this.sendFeedback,
-    }]);
-  };
-
   rateApp() {
     Alert.alert('App Store Review', 'Positive App Store ratings and reviews help support Bitmark. How would you rate us?', [{
       text: '5 Stars!',
@@ -116,7 +108,7 @@ export class SupportComponent extends React.Component {
         Linking.openURL(config.appLink)
       }
     }, {
-      text: '4 Stars or less', onPress: this.requestSendFeedback,
+      text: '4 Stars or less', onPress: this.sendFeedback,
     }]);
   };
 

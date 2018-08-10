@@ -10,14 +10,14 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#EFEFF4',
   },
   header: {
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#EDF0F4',
+    backgroundColor: '#F5F5F5',
     height: ios.constant.headerSize.height - ios.constant.headerSize.paddingTop,
     width: '100%',
   },
@@ -36,7 +36,7 @@ export default StyleSheet.create({
   subTabArea: {
     width: '100%',
     height: 39,
-    backgroundColor: 'white',
+    backgroundColor: '#EFEFF4',
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -77,7 +77,7 @@ export default StyleSheet.create({
     width: '100%',
     flexDirection: 'column',
     alignContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: '#EFEFF4'
   },
   contentSubTab: {
     width: '100%',

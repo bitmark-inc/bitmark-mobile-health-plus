@@ -6,8 +6,11 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#EFEFF4',
     paddingTop: 10,
     paddingBottom: 10 + ios.constant.blankFooter
+  },
+  headerItem: {
+    backgroundColor: '#EFEFF4'
   }
 });

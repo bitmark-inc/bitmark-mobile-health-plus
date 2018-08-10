@@ -8,7 +8,7 @@ export default StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#EDF0F4',
+    backgroundColor: '#F5F5F5',
   },
   headerLeft: {
     width: 70,
@@ -64,6 +64,7 @@ export default StyleSheet.create({
   itemContainer: {
     height: 50,
     width: '100%',
+    backgroundColor: 'white',
     borderColor: "#D8D8D8",
     borderBottomWidth: 1,
     justifyContent: 'center',
@@ -74,7 +75,8 @@ export default StyleSheet.create({
     height: 50,
     width: '100%',
     justifyContent: 'center',
-    paddingLeft: convertWidth(19)
+    paddingLeft: convertWidth(19),
+    backgroundColor: 'white'
   },
   itemBottomBorderContainer: {
     flexDirection: 'row',

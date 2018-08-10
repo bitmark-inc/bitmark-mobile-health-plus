@@ -5,7 +5,8 @@ export default StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: 'column',
-    paddingTop: 40
+    paddingTop: 40,
+    backgroundColor: '#EFEFF4'
   },
 
   content: {
