@@ -128,14 +128,13 @@ export class LocalIssueFileComponent extends React.Component {
       }
     }
     let quantityError = '';
-    if (typeof (quantity) === 'string') {
-      quantity = quantity.replace(/[^0-9]/g, '');
-      let quantityNumber = parseInt(quantity);
-      if (isNaN(quantityNumber) || quantityNumber <= 0) {
-        quantityError = 'Create property requires a minimum quantity of 1 bitmark issuance.';
-      } else if (quantityNumber > 100) {
-        quantityError = 'You cannot issue more than 100 bitmarks.';
-      }
+    let quantityNumber = parseInt(quantity);
+    if (quantity !== quantityNumber.toString()) {
+      quantityError = 'Number of bitmarks should be an integer number';
+    } else if (isNaN(quantityNumber) || quantityNumber <= 0) {
+      quantityError = 'Create property requires a minimum quantity of 1 bitmark issuance.';
+    } else if (quantityNumber > 100) {
+      quantityError = 'You cannot issue more than 100 bitmarks.';
     }
     metadataList.forEach(item => {
       item.label = item.label.trim();
