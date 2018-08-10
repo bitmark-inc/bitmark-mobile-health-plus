@@ -57,7 +57,7 @@ const doTryRegisterAccount = (accountNumber, timestamp, signature) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/events/register-account`;
     fetch(tempURL, {
-      method: 'DELETE',
+      method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
