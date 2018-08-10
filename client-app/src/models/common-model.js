@@ -21,7 +21,9 @@ const KEYS = {
   USER_DATA_TRANSACTIONS_ACTION_REQUIRED: 'user-data:transaction-action-required',
   USER_DATA_TRANSACTIONS_HISTORY: 'user-data:transaction-history',
 
-  TEST_RECOVERY_PHASE_ACTION_REQUIRED: 'test-recovery-phase-action-required'
+  TEST_RECOVERY_PHASE_ACTION_REQUIRED: 'test-recovery-phase-action-required',
+
+  USER_DATA_DONATION_STUDY_TASK2: 'user-data:donation-study-task2',
 };
 
 // ================================================================================================

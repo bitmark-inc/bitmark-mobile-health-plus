@@ -10,6 +10,7 @@ import (
 	"github.com/jackc/pgx"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
@@ -22,6 +23,7 @@ type Server struct {
 	// DB instance
 	dbConn         *pgx.ConnPool
 	influxDBClient influx.Client
+	gatewayClient  *gateway.Client
 
 	// Stores
 	pushStore    pushstore.PushStore
@@ -57,6 +59,12 @@ func (s *Server) Run(addr string) error {
 
 	api.POST("/metrics", s.AddMetrics)
 
+	eventsGroup := api.Group("/events")
+	eventsGroup.Use(authenticate())
+	{
+		eventsGroup.POST("/register-account", s.AddRegisterAccountEvent)
+	}
+
 	api.GET("/healthz", s.HealthCheck)
 
 	srv := &http.Server{
@@ -73,7 +81,7 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, influxClient influx.Client) *Server {
+func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, influxClient influx.Client, gatewayClient *gateway.Client) *Server {
 	r := gin.New()
 
 	return &Server{
@@ -82,6 +90,7 @@ func New(pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, 
 		bitmarkStore:   bitmarkStore,
 		dbConn:         dbConn,
 		influxDBClient: influxClient,
+		gatewayClient:  gatewayClient,
 	}
 }
 

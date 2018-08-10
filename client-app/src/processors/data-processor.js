@@ -8,7 +8,7 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK, IftttModel, BitmarkModel } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK, IftttModel, BitmarkModel, NotificationModel } from '../models';
 import { DonationService } from '../services/donation-service';
 import { FileUtil } from '../utils';
 import { DataCacheProcessor } from './data-cache-processor';
@@ -391,6 +391,13 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
     let result = await NotificationService.doCheckNotificationPermission();
     await doMarkRequestedNotification(result);
   }
+  return userInformation;
+};
+
+const doCreateAccount = async (touchFaceIdSession) => {
+  let userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await NotificationModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   return userInformation;
 };
 
@@ -1073,6 +1080,7 @@ const doRemoveTestRecoveryPhaseActionRequiredIfAny = async () => {
 
 const DataProcessor = {
   doOpenApp,
+  doCreateAccount,
   doLogin,
   doLogout,
   doStartBackgroundProcess,

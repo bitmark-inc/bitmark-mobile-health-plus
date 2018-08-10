@@ -52,6 +52,31 @@ const doDeregisterNotificationInfo = (accountNumber, timestamp, signature, token
   });
 };
 
+const doTryRegisterAccount = (accountNumber, timestamp, signature) => {
+  return new Promise((resolve) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/events/register-account`;
+    fetch(tempURL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: accountNumber,
+        timestamp,
+        signature,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return resolve();
+      }
+      resolve(data);
+    }).catch(() => resolve());
+  });
+};
+
 let configure = (onRegister, onNotification) => {
   PushNotification.configure({
     onRegister: onRegister,
@@ -71,6 +96,7 @@ let setApplicationIconBadgeNumber = (number) => {
 let NotificationModel = {
   doRegisterNotificationInfo,
   doDeregisterNotificationInfo,
+  doTryRegisterAccount,
 
   configure,
   doRequestNotificationPermissions,
