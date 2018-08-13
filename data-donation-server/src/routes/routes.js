@@ -17,6 +17,7 @@ module.exports = (router) => {
     router.post('/s/api/test/update-time-joined-study', apis.testUpdateJoinedStudy);
     router.post('/s/api/test/update-completed-tasks', apis.testUpdateCompletedTasks);
     router.post('/s/api/test/insert-new', apis.insertNews);
+    router.post('/s/api/test/update-create-account', apis.testUpdateTimeCreateAccount);
   }
   return router;
 };

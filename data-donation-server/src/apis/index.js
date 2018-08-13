@@ -337,6 +337,23 @@ const testUpdateCompletedTasks = async (req, res) => {
 };
 
 
+const testUpdateTimeCreateAccount = async (req, res) => {
+  console.log('testUpdateTimeCreateAccount api : ', req.body);
+  let bitmarkAccount = req.body.bitmark_account;
+  let createdAt = req.body.created_at;
+
+  try {
+    await userModel.doSaveUserInformation({
+      bitmarkAccount: bitmarkAccount,
+      createdAt: new Date(createdAt),
+    });
+    res.send({ message: 'Update success!' });
+  } catch (error) {
+    console.log('error ', error);
+    helper.responseError(res, error);
+  }
+};
+
 const insertNews = async (req, res) => {
   try {
     console.log('insertNews :', req.body);
@@ -365,10 +382,11 @@ module.exports = {
   joinStudy,
   leaveStudy,
   completedTask,
+  getAllHealthKitDataTypes,
 
   testGetUserInfo,
   testUpdateCompletedTasks,
   testUpdateJoinedStudy,
-  getAllHealthKitDataTypes,
   insertNews,
+  testUpdateTimeCreateAccount,
 };
