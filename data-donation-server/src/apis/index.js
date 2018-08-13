@@ -343,9 +343,11 @@ const testUpdateTimeCreateAccount = async (req, res) => {
   let createdAt = req.body.created_at;
 
   try {
+    createdAt = new Date(createdAt);
     await userModel.doSaveUserInformation({
       bitmarkAccount: bitmarkAccount,
-      createdAt: new Date(createdAt),
+      createdAt,
+      activeBitmarkHealthDataAt: new Date(createdAt.getTime() + 1000),
     });
     res.send({ message: 'Update success!' });
   } catch (error) {
