@@ -301,16 +301,6 @@ export class DonationComponent extends React.Component {
           </TouchableOpacity>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
-
-
-
-        {this.state.subTab === SubTabs.news && <ScrollView style={donationStyle.contentScroll}>
-          <View style={donationStyle.content}>
-
-          </View>
-          {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
-        </ScrollView>}
-
       </View>
     );
   }
