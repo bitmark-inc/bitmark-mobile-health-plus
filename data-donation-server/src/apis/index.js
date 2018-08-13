@@ -5,6 +5,7 @@ const helper = require('./../utils/helper');
 const userModel = require('./../models/user-model');
 const userJoinedStudyModel = require('./../models/user-joined-study-model');
 const completedTasksModel = require('./../models/completed-tasks-model');
+const newModel = require('./../models/new-model');
 
 const userService = require('./../services/user-service');
 
@@ -277,6 +278,14 @@ const completedTask = async (req, res) => {
   }
 };
 
+
+const getAllHealthKitDataTypes = (req, res) => {
+  res.send(userService.allDataTypes);
+};
+
+
+
+
 const testGetUserInfo = async (req, res) => {
   console.log('testGetUserInfo api : ', req.query);
   let bitmarkAccount = req.query.bitmark_account;
@@ -327,8 +336,26 @@ const testUpdateCompletedTasks = async (req, res) => {
   }
 };
 
-const getAllHealthKitDataTypes = (req, res) => {
-  res.send(userService.allDataTypes);
+
+const insertNews = async (req, res) => {
+  try {
+    console.log('insertNews :', req.body);
+    let publisher = req.body.publisher;
+    let title = req.body.title;
+    let description = req.body.description;
+    let researcherImageUrl = req.body.researcher_image_url;
+    await newModel.doInsertNewInformation({
+      publisher,
+      title,
+      description,
+      researcherImageUrl,
+    });
+    res.send({ message: 'Insert success!' });
+  } catch (error) {
+    console.log('error ', error);
+    helper.responseError(res, error);
+  }
+
 };
 
 module.exports = {
@@ -343,4 +370,5 @@ module.exports = {
   testUpdateCompletedTasks,
   testUpdateJoinedStudy,
   getAllHealthKitDataTypes,
+  insertNews,
 };

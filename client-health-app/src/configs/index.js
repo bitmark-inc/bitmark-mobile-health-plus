@@ -19,7 +19,7 @@ let config = {
   appLink: 'https://itunes.apple.com/us/app/bitmark/id1213686437?ls=1&mt=8',
   api_server_url: 'https://api.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
-  donation_server_url: 'http://192.168.0.202:9001',
+  donation_server_url: 'http://192.168.0.101:9001',
   mobile_server_url: 'https://bm.devel.bitmark.com',
   preview_asset_url: 'https://preview.test.bitmarkaccountassets.com',
   bitmark_web_site: 'https://website.test.bitmark.com',
@@ -28,7 +28,7 @@ let config = {
 
 if (config.network === NETWORKS.testnet) {
   config.donation_server_url = 'https://data-donation.test.bitmark.com';
-  // config.donation_server_url = 'http://192.168.0.202:9001';
+  // config.donation_server_url = 'http://192.168.0.101:9001';
   config.mobile_server_url = 'https://bm.test.bitmark.com';
   config.preview_asset_url = "https://preview.test.bitmarkaccountassets.com";
 } else if (config.network === NETWORKS.livenet) {
