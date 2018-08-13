@@ -159,7 +159,7 @@ export class DonationComponent extends React.Component {
             {(this.state.donationTasks && this.state.donationTasks > 0) && <View style={donationStyle.todoHightLight}></View>}
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
-                <Text style={[donationStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.todo}</Text>
+                <Text style={[donationStyle.subTabButtonText, { color: '#0060F2' }]}>{SubTabs.todo}</Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -180,7 +180,7 @@ export class DonationComponent extends React.Component {
           }]} onPress={() => this.switchSubTab(SubTabs.studies)}>
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
-                <Text style={[donationStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.studies}</Text>
+                <Text style={[donationStyle.subTabButtonText, { color: '#0060F2' }]}>{SubTabs.studies}</Text>
               </View>
             </View>
           </TouchableOpacity>}
@@ -198,7 +198,7 @@ export class DonationComponent extends React.Component {
           {this.state.subTab !== SubTabs.news && <TouchableOpacity style={[donationStyle.subTabButton]} onPress={() => this.switchSubTab(SubTabs.news)}>
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
-                <Text style={[donationStyle.subTabButtonText, { color: '#C1C1C1' }]}>{SubTabs.news}</Text>
+                <Text style={[donationStyle.subTabButtonText, { color: '#0060F2' }]}>{SubTabs.news}</Text>
               </View>
             </View>
           </TouchableOpacity>}

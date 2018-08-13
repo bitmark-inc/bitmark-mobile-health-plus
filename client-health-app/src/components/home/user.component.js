@@ -152,7 +152,7 @@ export class UserComponent extends React.Component {
       <BitmarkComponent
         backgroundColor={'#EDF0F4'}
         header={(
-          <View style={defaultStyle.header}>
+          <View style={[defaultStyle.header, { backgroundColor: '#EDF0F4' }]}>
             <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.navigate('Account')}>
               <Image style={userStyle.accountIcon} source={require('./../../../assets/imgs/account-icon.png')} />
             </TouchableOpacity>
