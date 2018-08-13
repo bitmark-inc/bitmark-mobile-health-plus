@@ -65,7 +65,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Save a document or file into your Health data. (Your asset will be encrypted.)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+	<string>Save a document or file into your Health data. (Your asset will be encrypted.)</string>
 	<key>ResearchKit-Font-Bold</key>
 	<string>Avenir-Black</string>
 	<key>ResearchKit-Font-Light</key>
