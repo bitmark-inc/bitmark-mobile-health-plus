@@ -27,16 +27,15 @@ export class BitmarkDetailComponent extends React.Component {
     }
   }
   doGetScreenData(bitmarkId) {
-    AppProcessor.doGetBitmarkInformation(bitmarkId).then(({ asset, bitmark, donationInformation }) => {
-      let metadata = [];
-      for (let label in asset.metadata) {
-        metadata.push({ label, value: asset.metadata[label] });
-      }
+    AppProcessor.doGetBitmarkInformation(bitmarkId).then(({ asset, bitmark }) => {
+      // let metadata = [];
+      // for (let label in asset.created) {
+      //   metadata.push({ label, value: asset.created[label] });
+      // }
       this.setState({
         loading: false,
-        metadata,
+        // metadata,
         asset, bitmark,
-        donationInformation,
       });
     }).catch(error => {
       console.log('doGetBitmarkInformation error :', error);
@@ -53,7 +52,9 @@ export class BitmarkDetailComponent extends React.Component {
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <View style={defaultStyle.headerCenter}>
-            <Text style={defaultStyle.headerTitle}>HEALTH DATA</Text>
+            <Text style={defaultStyle.headerTitle}>
+              {this.state.taskType === 'bitmark_health_issuance' ? 'CAPTURED ASSET' : 'HEALTH DATA'}
+            </Text>
           </View>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>)}
@@ -62,7 +63,7 @@ export class BitmarkDetailComponent extends React.Component {
             <View style={propertyDetailStyle.imageArea}>
               <Image style={propertyDetailStyle.assetIcon} source={require('./../../../../../assets/imgs/asset-icon.png')} />
               {this.state.bitmark.status === 'pending' && <Text style={propertyDetailStyle.bitmarkPending}>Registering ownership...</Text>}
-              {this.state.bitmark.status === 'confirmed' && this.state.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_issuance &&
+              {this.state.bitmark.status === 'confirmed' && this.state.taskType === 'bitmark_health_issuance' &&
                 <TouchableOpacity style={propertyDetailStyle.bitmarkConfirmed} onPress={() => {
                   this.props.navigation.navigate('AssetImageContent', { bitmarkId: this.state.bitmarkId });
                 }}>
@@ -91,7 +92,42 @@ export class BitmarkDetailComponent extends React.Component {
                 </View>
               </View>}
 
-              <FlatList
+              <View style={propertyDetailStyle.informationRow}>
+                <View style={propertyDetailStyle.informationRowContent}>
+                  <Text style={propertyDetailStyle.informationRowLabel}>SOURCE</Text>
+                  <Text style={propertyDetailStyle.informationRowValue}>
+                    {this.state.taskType === 'bitmark_health_data' ? 'health Kit' : 'BITMARK HEALTH'}
+                  </Text>
+                </View>
+                <View style={propertyDetailStyle.informationRowBarArea}>
+                  <View style={propertyDetailStyle.informationRowBarLine} />
+                </View>
+              </View>
+
+              {this.state.taskType === 'bitmark_health_data' &&
+                this.state.asset.metadata['Created'] &&
+                <View style={propertyDetailStyle.informationRow}>
+                  <View style={propertyDetailStyle.informationRowContent}>
+                    <Text style={propertyDetailStyle.informationRowLabel}>TIMESTAMP</Text>
+                    <Text style={propertyDetailStyle.informationRowValue}>
+                      {this.state.asset.metadata['Created']}
+                    </Text>
+                  </View>
+                </View>}
+
+              {this.state.taskType === 'bitmark_health_issuance' &&
+                this.state.asset.metadata['save_time'] &&
+                <View style={propertyDetailStyle.informationRow}>
+                  <View style={propertyDetailStyle.informationRowContent}>
+                    <Text style={propertyDetailStyle.informationRowLabel}>TIMESTAMP</Text>
+                    <Text style={propertyDetailStyle.informationRowValue}>
+                      {moment(this.state.asset.metadata['save_time']).format('YYYY MMM DD HH:mm:ss')}
+                    </Text>
+                  </View>
+                </View>}
+
+
+              {/* <FlatList
                 keyExtractor={(item, index) => index}
                 extraData={this.state}
                 data={this.state.metadata}
@@ -106,7 +142,7 @@ export class BitmarkDetailComponent extends React.Component {
                     </View>
                   </View>)
                 }}
-              />
+              /> */}
             </View>
 
             <TouchableOpacity style={propertyDetailStyle.viewRegistryButton} onPress={() => {
