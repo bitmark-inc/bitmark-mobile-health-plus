@@ -17,5 +17,6 @@ export default StyleSheet.create({
   imageContent: {
     width: convertWidth(375),
     height: 463 * convertWidth(375) / 375,
+    resizeMode: 'contain',
   },
 });

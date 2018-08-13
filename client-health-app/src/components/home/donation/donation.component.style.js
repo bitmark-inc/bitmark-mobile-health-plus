@@ -169,7 +169,11 @@ export default StyleSheet.create({
 
   newRecord: {
     flexDirection: 'row',
+    width: convertWidth(375),
     marginTop: 18,
+    paddingBottom: 19,
+    borderBottomWidth: 1,
+    borderBottomColor: '#C1C1C1',
   },
 
   newRecordImageArea: {
@@ -203,7 +207,8 @@ export default StyleSheet.create({
   },
   newFooter: {
     flexDirection: 'row',
-    width: convertWidth(343),
+    justifyContent: 'space-between',
+    width: convertWidth(278),
     marginTop: 14,
   },
   newOwner: {
