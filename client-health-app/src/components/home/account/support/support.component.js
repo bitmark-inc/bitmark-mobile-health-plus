@@ -114,7 +114,7 @@ export class SupportComponent extends React.Component {
 
   sendFeedback() {
     Mailer.mail({
-      subject: 'Suggestions for Bitmark Data Donation iOS',
+      subject: 'Suggestion for Bitmark Health',
       recipients: ['support@bitmark.com'],
       body: 'App version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
     }, (error) => {
