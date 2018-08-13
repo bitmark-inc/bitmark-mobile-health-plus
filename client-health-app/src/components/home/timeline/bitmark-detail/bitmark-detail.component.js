@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, TouchableOpacity, Image, Text, FlatList,
+  View, TouchableOpacity, Image, Text,
+  //  FlatList,
 } from 'react-native';
 
 import { BitmarkComponent } from './../../../../commons/components';
