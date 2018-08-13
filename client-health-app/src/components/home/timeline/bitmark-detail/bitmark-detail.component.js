@@ -96,7 +96,7 @@ export class BitmarkDetailComponent extends React.Component {
                 <View style={propertyDetailStyle.informationRowContent}>
                   <Text style={propertyDetailStyle.informationRowLabel}>SOURCE</Text>
                   <Text style={propertyDetailStyle.informationRowValue}>
-                    {this.state.taskType === 'bitmark_health_data' ? 'health Kit' : 'BITMARK HEALTH'}
+                    {this.state.taskType === 'bitmark_health_data' ? 'Health Kit' : 'BITMARK HEALTH'}
                   </Text>
                 </View>
                 <View style={propertyDetailStyle.informationRowBarArea}>
