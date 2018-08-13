@@ -53,7 +53,6 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
 
 const doGetBitmarkInformation = async (bitmarkId) => {
   let data = await BitmarkModel.doGetBitmarkInformation(bitmarkId);
-  data.bitmark.created_at = moment(data.bitmark.created_at).format('YYYY MMM DD HH:mm:ss');
   data.bitmark.bitmark_id = data.bitmark.id;
   return data;
 };
