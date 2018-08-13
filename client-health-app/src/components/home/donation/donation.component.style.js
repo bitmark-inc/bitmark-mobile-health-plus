@@ -180,6 +180,9 @@ export default StyleSheet.create({
     width: 32,
     height: 32,
     resizeMode: 'contain',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'white'
   },
 
   newRecordContentArea: {
@@ -193,7 +196,7 @@ export default StyleSheet.create({
   },
   newDescription: {
     marginTop: 5,
-    width: convertWidth(248),
+    width: convertWidth(290),
     fontFamily: 'Avenir Light',
     fontSize: 13,
     fontWeight: '300',
