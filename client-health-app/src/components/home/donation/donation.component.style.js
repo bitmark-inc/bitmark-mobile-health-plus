@@ -203,7 +203,7 @@ export default StyleSheet.create({
     marginTop: 5,
     width: convertWidth(290),
     fontFamily: 'Avenir Light',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '300',
   },
   newFooter: {
@@ -214,16 +214,15 @@ export default StyleSheet.create({
   },
   newOwner: {
     fontFamily: 'Avenir Heavy',
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: '900',
     width: convertWidth(157),
   },
   newCreatedAt: {
     fontFamily: 'Avenir Medium',
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: '300',
     color: '#999999',
-    width: convertWidth(52),
   },
 
 });
