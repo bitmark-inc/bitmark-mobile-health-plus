@@ -19,8 +19,8 @@ export default StyleSheet.create({
   },
   headerLeftIcon: {
     marginLeft: convertWidth(19),
-    width: 10,
-    height: 19,
+    width: 16,
+    height: 16,
     resizeMode: 'contain'
   },
   headerCenter: {
@@ -72,7 +72,7 @@ export default StyleSheet.create({
     paddingRight: convertWidth(19)
   },
   itemNoBorderContainer: {
-    height: 50,
+    height: 44,
     width: '100%',
     justifyContent: 'center',
     paddingLeft: convertWidth(19),
@@ -100,14 +100,15 @@ export default StyleSheet.create({
   },
   textAlignRight: {
     flex: 1,
-    textAlign: 'right'
+    textAlign: 'right',
+    lineHeight: 20
   },
   text: {
     fontFamily: 'Avenir Light',
     fontSize: 16,
-    lineHeight: 18,
+    lineHeight: 44,
     fontWeight: '300',
-    textAlign: 'left',
+    textAlign: 'left'
   },
   headerText: {
     fontFamily: 'Avenir Light',
