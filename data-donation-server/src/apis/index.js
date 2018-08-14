@@ -69,21 +69,22 @@ const activeBHD = async (req, res) => {
   }
   try {
     let userInformation = await userModel.doGetUserInformation(bitmarkAccount);
-    if (!userInformation || (timezone && userInformation.timezone !== timezone)) {
-      let userInfo = {
+    console.log('userInformation:', userInformation);
+    if (!userInformation) {
+      userInformation = {
         bitmarkAccount: bitmarkAccount,
-        timezone,
-        activeBitmarkHealthDataAt,
+        createdAt: new Date(new Date(activeBitmarkHealthDataAt).getTime() - 100),
+        activeBitmarkHealthDataAt: activeBitmarkHealthDataAt,
       };
-      if (!userInformation) {
-        userInfo.createdAt = new Date(new Date(activeBitmarkHealthDataAt).getTime() - 100);
-      }
-      let { oldUserInformation } = await userModel.doSaveUserInformation(userInfo);
-      timezone = oldUserInformation ? oldUserInformation.timezone : timezone;
+    }
+    if (timezone) {
+      userInformation.timezone = timezone;
     }
     if (userInformation && !userInformation.activeBitmarkHealthDataAt) {
-      await userModel.doUpdateBitmarkHealthData(bitmarkAccount, activeBitmarkHealthDataAt);
+      userInformation.activeBitmarkHealthDataAt = activeBitmarkHealthDataAt;
     }
+    let { oldUserInformation } = await userModel.doSaveUserInformation(userInformation);
+    timezone = oldUserInformation ? oldUserInformation.timezone : timezone;
     userInformation = await getFullUserInformation(bitmarkAccount, timezone);
     res.send(userInformation);
   } catch (error) {
