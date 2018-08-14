@@ -77,7 +77,9 @@ export default StyleSheet.create({
     width: '100%',
     flexDirection: 'column',
     alignContent: 'center',
-    backgroundColor: '#EFEFF4'
+    backgroundColor: '#EFEFF4',
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   contentSubTab: {
     width: '100%',

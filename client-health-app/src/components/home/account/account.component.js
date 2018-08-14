@@ -112,16 +112,16 @@ export class AccountDetailComponent extends React.Component {
   render() {
     return (
       <BitmarkComponent
+        backgroundColor='#F5F5F5'
+        header={(<View style={style.header}>
+          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+            <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../assets/imgs/close-blue-icon.png')} />
+          </TouchableOpacity>
+          <Text style={defaultStyle.headerTitle}>ACCOUNT SETTINGS</Text>
+          <TouchableOpacity style={defaultStyle.headerRight} />
+        </View>)}
         content={(
           <View style={style.body}>
-            <View style={style.header}>
-              <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
-                <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../assets/imgs/close-blue-icon.png')} />
-              </TouchableOpacity>
-              <Text style={defaultStyle.headerTitle}>ACCOUNT SETTINGS</Text>
-              <TouchableOpacity style={defaultStyle.headerRight} />
-            </View>
-
             <ScrollView style={[style.scrollSubTabArea]}>
               <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
                 <View style={style.contentSubTab}>

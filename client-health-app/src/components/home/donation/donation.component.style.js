@@ -70,7 +70,7 @@ export default StyleSheet.create({
     alignContent: 'center',
     backgroundColor: 'white',
     flex: 1,
-    borderTopWidth: 1,
+    borderTopWidth: 0.5,
     borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   content: {
