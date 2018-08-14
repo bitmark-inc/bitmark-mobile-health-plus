@@ -14,7 +14,6 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignContent: 'center',
     flex: 1,
-    paddingTop: 40,
   },
   content: {
     flex: 1,
@@ -24,6 +23,8 @@ export default StyleSheet.create({
   contentSubTab: {
     width: '100%',
     flexDirection: 'column',
+    paddingTop: 20,
+    paddingBottom: 20,
   },
   addIconContainer: {
     position: 'absolute',
