@@ -341,7 +341,7 @@ const doGenerateDisplayedData = async () => {
 
 
   let timelines = [{
-    time: '', title: 'You health data will be bitmarked each week...',
+    time: '', title: 'Your health data will be bitmarked each week...',
   }];
   let remainTimelines = 0;
 
