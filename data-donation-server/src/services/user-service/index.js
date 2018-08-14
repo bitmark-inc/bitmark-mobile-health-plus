@@ -4,9 +4,9 @@ const helper = require('./../../utils/helper');
 const newModel = require('./../../models/new-model');
 const studyCommonService = require('./common');
 
-const SUNDAY = 2;
-const SATURDAY = 1;
-const timeSendNotification = 10;
+const SUNDAY = 7;
+const SATURDAY = 6;
+const timeSendNotification = 11;
 const study1Service = require('./study1');
 const study2Service = require('./study2');
 
