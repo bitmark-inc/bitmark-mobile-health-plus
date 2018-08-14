@@ -73,7 +73,7 @@ export class BitmarkDetailComponent extends React.Component {
               }
             </View>
             <View style={propertyDetailStyle.informationArea}>
-              <View style={propertyDetailStyle.informationRow}>
+              {this.state.taskType !== 'bitmark_health_issuance' && <View style={propertyDetailStyle.informationRow}>
                 <View style={propertyDetailStyle.informationRowContent}>
                   <Text style={propertyDetailStyle.informationRowLabel}>{'Property name'.toUpperCase()}</Text>
                   <Text style={propertyDetailStyle.informationRowValue}>{this.state.asset.name}</Text>
@@ -81,7 +81,7 @@ export class BitmarkDetailComponent extends React.Component {
                 <View style={propertyDetailStyle.informationRowBarArea}>
                   <View style={propertyDetailStyle.informationRowBarLine} />
                 </View>
-              </View>
+              </View>}
 
               {this.state.bitmark.status === 'confirmed' && <View style={propertyDetailStyle.informationRow}>
                 <View style={propertyDetailStyle.informationRowContent}>
@@ -97,7 +97,7 @@ export class BitmarkDetailComponent extends React.Component {
                 <View style={propertyDetailStyle.informationRowContent}>
                   <Text style={propertyDetailStyle.informationRowLabel}>SOURCE</Text>
                   <Text style={propertyDetailStyle.informationRowValue}>
-                    {this.state.taskType === 'bitmark_health_data' ? 'Health Kit' : 'BITMARK HEALTH'}
+                    {this.state.taskType === 'bitmark_health_data' ? 'HealthKit' : 'BITMARK HEALTH'}
                   </Text>
                 </View>
                 <View style={propertyDetailStyle.informationRowBarArea}>
@@ -109,7 +109,7 @@ export class BitmarkDetailComponent extends React.Component {
                 this.state.asset.metadata['Created'] &&
                 <View style={propertyDetailStyle.informationRow}>
                   <View style={propertyDetailStyle.informationRowContent}>
-                    <Text style={propertyDetailStyle.informationRowLabel}>TIMESTAMP</Text>
+                    <Text style={propertyDetailStyle.informationRowLabel}>SAVED TIME</Text>
                     <Text style={propertyDetailStyle.informationRowValue}>
                       {this.state.asset.metadata['Created']}
                     </Text>
@@ -120,7 +120,7 @@ export class BitmarkDetailComponent extends React.Component {
                 this.state.asset.metadata['save_time'] &&
                 <View style={propertyDetailStyle.informationRow}>
                   <View style={propertyDetailStyle.informationRowContent}>
-                    <Text style={propertyDetailStyle.informationRowLabel}>TIMESTAMP</Text>
+                    <Text style={propertyDetailStyle.informationRowLabel}>SAVED TIME</Text>
                     <Text style={propertyDetailStyle.informationRowValue}>
                       {moment(this.state.asset.metadata['save_time']).format('YYYY MMM DD HH:mm:ss')}
                     </Text>
