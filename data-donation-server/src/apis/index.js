@@ -73,9 +73,11 @@ const activeBHD = async (req, res) => {
       let userInfo = {
         bitmarkAccount: bitmarkAccount,
         timezone,
-        createdAt: new Date(new Date(activeBitmarkHealthDataAt).getTime() - 100),
         activeBitmarkHealthDataAt,
       };
+      if (!userInformation) {
+        userInfo.createdAt = new Date(new Date(activeBitmarkHealthDataAt).getTime() - 100);
+      }
       let { oldUserInformation } = await userModel.doSaveUserInformation(userInfo);
       timezone = oldUserInformation ? oldUserInformation.timezone : timezone;
     }
