@@ -398,7 +398,7 @@ const doSendBitmarkHealthDataNotifications = async (userInformation) => {
   }
   if (sendBitmarkNotification) {
     let title = '';
-    let message = 'Bitmark has converted your health data for this week into digital property. Please sign your bitmark issuance now to claim it.';
+    let message = 'Your health data is ready to sign.';
     await helper.doTryRequestSendNotification(userInformation.bitmarkAccount, title, message, { event: 'BITMARK_DATA' });
   }
 };
