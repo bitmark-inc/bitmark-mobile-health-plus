@@ -26,6 +26,8 @@ export default StyleSheet.create({
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
     backgroundColor: 'white',
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   recoveryPhraseWarningIcon: {
     width: 137,

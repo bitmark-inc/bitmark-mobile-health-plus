@@ -19,6 +19,7 @@ export class SupportComponent extends React.Component {
   render() {
     return (
       <BitmarkComponent
+        backgroundColor='#F5F5F5'
         header={(<View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />

@@ -9,7 +9,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#EFEFF4',
     paddingTop: 50,
-    paddingBottom: 10 + ios.constant.blankFooter
+    paddingBottom: 10 + ios.constant.blankFooter,
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   textContainer: {
     width: "100%",

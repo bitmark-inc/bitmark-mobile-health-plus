@@ -32,6 +32,7 @@ class RecoveryPhraseComponent extends React.Component {
     };
     return (
       <BitmarkComponent
+        backgroundColor='#F5F5F5'
         content={(
           <View style={accountRecoveryStyle.body}>
             <View style={[accountRecoveryStyle.header]}>
