@@ -55,7 +55,6 @@ export default StyleSheet.create({
   subTabButtonText: {
     fontFamily: 'Avenir Black',
     fontSize: 14,
-    lineHeight: 16,
     textAlign: 'center',
     color: 'white',
   },
