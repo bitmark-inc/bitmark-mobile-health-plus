@@ -62,7 +62,7 @@ export default StyleSheet.create({
     paddingRight: convertWidth(19)
   },
   itemContainer: {
-    height: 50,
+    height: 44,
     width: '100%',
     backgroundColor: 'white',
     borderColor: "#D8D8D8",
