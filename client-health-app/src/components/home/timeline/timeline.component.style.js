@@ -6,13 +6,15 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#EDF0F4',
-    paddingTop: 40,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   contentScroll: {
     width: '100%',
     flexDirection: 'column',
     alignContent: 'center',
     flex: 1,
+    paddingTop: 40,
   },
   content: {
     flex: 1,
@@ -56,7 +58,7 @@ export default StyleSheet.create({
 
   rowDataLineArea: {
     marginLeft: convertWidth(10),
-    marginRight: convertWidth(10),
+    marginRight: convertWidth(15),
     flexDirection: 'column',
   },
   rowDataLine: {

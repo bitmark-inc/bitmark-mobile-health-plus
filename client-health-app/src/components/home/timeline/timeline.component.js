@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Image, Text, TouchableOpacity, FlatList, ScrollView,
-  Alert,
   Dimensions,
 } from 'react-native';
 
@@ -10,7 +9,7 @@ import ImagePicker from 'react-native-image-picker';
 import timelineStyle from './timeline.component.style';
 import { DataProcessor, AppProcessor } from '../../../processors';
 import { EventEmitterService } from '../../../services';
-import { FileUtil } from "../../../utils";
+import { FileUtil, convertWidth } from "../../../utils";
 
 let currentSize = Dimensions.get('window');
 let ComponentName = 'TimelineComponent';
@@ -200,7 +199,7 @@ export class TimelineComponent extends React.Component {
                     paddingBottom: (index === 0 ? 40 : 26)
                   }]}>
                     <View style={[timelineStyle.rowDataContent]}>
-                      <Text style={[timelineStyle.rowDataTitle, { color: '#999999' }]}>{item.title}</Text>
+                      <Text style={[timelineStyle.rowDataTitle, { color: '#999999', width: convertWidth(272), }]}>{item.title}</Text>
                     </View>
                   </View>
                 </View>);

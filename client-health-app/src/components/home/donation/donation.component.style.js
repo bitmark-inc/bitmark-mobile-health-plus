@@ -18,8 +18,8 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: '#0060F2',
-    marginTop: 26,
-    marginBottom: 13,
+    marginTop: 20,
+    marginBottom: 20,
   },
   subTabButton: {
     width: '33.33%',
@@ -70,6 +70,8 @@ export default StyleSheet.create({
     alignContent: 'center',
     backgroundColor: 'white',
     flex: 1,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   content: {
     flex: 1,
