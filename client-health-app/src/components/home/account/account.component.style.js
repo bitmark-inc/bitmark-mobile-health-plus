@@ -112,5 +112,14 @@ export default StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  lastItemContainer: {
+    marginBottom: 35
+  },
+  itemAlignRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flex: 1
   }
 });

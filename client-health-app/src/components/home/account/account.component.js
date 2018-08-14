@@ -185,10 +185,10 @@ export class AccountDetailComponent extends React.Component {
                       }}>
                         <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon_health.png')} />
                         <Text style={defaultStyle.text}>iOS Health</Text>
-                        <Text style={defaultStyle.textAlignRight}>
+                        <View style={style.itemAlignRight}>
                           <Text style={defaultStyle.text}>Authorized   </Text>
                           <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
-                        </Text>
+                        </View>
                       </TouchableOpacity>
                     }
                     {this.state.gettingData && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
@@ -209,7 +209,7 @@ export class AccountDetailComponent extends React.Component {
                     </View>
 
                     {/*Support*/}
-                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('Support') }}>
+                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer, style.lastItemContainer]} onPress={() => { this.props.navigation.navigate('Support') }}>
                       <Text style={defaultStyle.text}>Support</Text>
                       <Text style={defaultStyle.textAlignRight}>
                         <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
