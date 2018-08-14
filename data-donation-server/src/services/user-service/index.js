@@ -4,8 +4,9 @@ const helper = require('./../../utils/helper');
 const newModel = require('./../../models/new-model');
 const studyCommonService = require('./common');
 
-const SUNDAY = 7;
-const SATURDAY = 6;
+const SUNDAY = 2;
+const SATURDAY = 1;
+const timeSendNotification = 10;
 const study1Service = require('./study1');
 const study2Service = require('./study2');
 
@@ -382,13 +383,13 @@ const doSendBitmarkHealthDataNotifications = async (userInformation) => {
       }
     });
   }
-  if (userInformation.activeBitmarkHealthDataAt && currentTimeInLocal.hour() === 11 && currentTimeInLocal.day() === SUNDAY) {
+  if (userInformation.activeBitmarkHealthDataAt && currentTimeInLocal.hour() === timeSendNotification && currentTimeInLocal.day() === SUNDAY) {
     if (!lastTimeBitmarkHealthData) {
       sendBitmarkNotification = true;
     } else {
       let lastTimeDonateInLocal = studyCommonService.getMomentLocalTime(lastTimeBitmarkHealthData, timezone);
       let nextTimeSendNotification = studyCommonService.getNextDayInLocalTime(lastTimeDonateInLocal, timezone, SUNDAY);
-      nextTimeSendNotification.hour(11);
+      nextTimeSendNotification.hour(timeSendNotification);
       nextTimeSendNotification.minute(0);
       nextTimeSendNotification.second(0);
       nextTimeSendNotification.millisecond(0);
