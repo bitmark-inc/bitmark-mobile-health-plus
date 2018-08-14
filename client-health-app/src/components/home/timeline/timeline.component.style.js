@@ -58,12 +58,12 @@ export default StyleSheet.create({
   },
 
   rowDataLineArea: {
-    marginLeft: convertWidth(10),
+    marginLeft: convertWidth(12),
     marginRight: convertWidth(15),
     flexDirection: 'column',
   },
   rowDataLine: {
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#0060F2',
     flex: 1,
     position: 'absolute',
@@ -74,7 +74,7 @@ export default StyleSheet.create({
     borderWidth: 3,
     borderRadius: 6,
     position: 'absolute',
-    left: -4,
+    left: -5,
     top: 0,
     width: 12,
     height: 12,
@@ -83,7 +83,7 @@ export default StyleSheet.create({
 
   rowDataDetail: {
     paddingBottom: 26,
-    marginTop: -26,
+    marginTop: -13,
     width: convertWidth(282),
   },
   rowDataContent: {
