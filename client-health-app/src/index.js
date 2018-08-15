@@ -55,9 +55,9 @@ export class MainAppComponent extends React.Component {
 
 let codePushOptions = {
   updateDialog: {
-    title: '"Bitmark"\nNeeds to Be Updated',
-    optionalUpdateMessage: 'The developer of this app needs to update it to improve its compatibility. This will be quick and will not affect any of your data.',
-    mandatoryUpdateMessage: 'The developer of this app needs to update it to improve its compatibility. This will be quick and will not affect any of your data.',
+    title: 'New Version Available',
+    optionalUpdateMessage: 'Please update the app to the new version to continue using. This will be quick and will not affect any of your data.',
+    mandatoryUpdateMessage: 'Please update the app to the new version to continue using. This will be quick and will not affect any of your data.',
     optionalInstallButtonLabel: 'Update',
     mandatoryContinueButtonLabel: 'Update',
     optionalIgnoreButtonLabel: null
