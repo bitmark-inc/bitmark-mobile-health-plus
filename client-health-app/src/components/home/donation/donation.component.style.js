@@ -172,7 +172,7 @@ export default StyleSheet.create({
     width: convertWidth(375),
     marginTop: 18,
     paddingBottom: 19,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.3,
     borderBottomColor: '#C1C1C1',
   },
 

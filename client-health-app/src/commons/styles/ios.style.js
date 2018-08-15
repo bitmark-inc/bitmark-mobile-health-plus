@@ -81,7 +81,7 @@ export default StyleSheet.create({
   itemBottomBorderContainer: {
     flexDirection: 'row',
     borderColor: "#D8D8D8",
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.3,
     flexGrow: 5,
     height: '100%',
     alignItems: 'center',

@@ -109,9 +109,9 @@ export default StyleSheet.create({
     fontSize: 15,
     marginTop: 5,
     marginBottom: 10,
-    width: convertWidth(337),
+    width: convertWidth(375),
     paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19)
+    paddingRight: convertWidth(19),
   },
   itemContainer: {
     flexDirection: 'row',
