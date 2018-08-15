@@ -8,6 +8,7 @@ import {
 import userStyle from './bottom-tabs.component.style';
 import { EventEmitterService, NotificationService } from '../../../services';
 import styles from '../../../commons/styles';
+import { DataProcessor } from '../../../processors';
 
 const MainTabs = {
   Timeline: 'Timeline',
@@ -35,6 +36,9 @@ export class BottomTabsComponent extends React.Component {
     };
 
     const doGetScreenData = async () => {
+      let { totalTasks } = await DataProcessor.doGetDonationTasks(0);
+      let { remainTimelines } = await DataProcessor.doGetTimelines(0);
+      this.setState({ totalTasks, remainTimelines });
       NotificationService.setApplicationIconBadgeNumber(0);
     }
     doGetScreenData();
