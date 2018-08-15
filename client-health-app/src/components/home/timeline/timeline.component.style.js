@@ -6,7 +6,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#EDF0F4',
-    borderTopWidth: 0.5,
+    borderTopWidth: 0.3,
     borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   contentScroll: {

@@ -48,8 +48,8 @@ export default StyleSheet.create({
     width: convertWidth(375),
     marginTop: 40,
     backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: 0.3,
+    borderBottomWidth: 0.3,
     borderColor: '#BCBBC1',
   },
   informationRow: {
@@ -87,7 +87,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
   },
   informationRowBarLine: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.3,
     borderColor: '#BCBBC1',
     width: convertWidth(356),
   },

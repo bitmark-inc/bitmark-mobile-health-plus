@@ -19,8 +19,6 @@ export default StyleSheet.create({
     paddingBottom: 20,
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
-    borderColor: "#D8D8D8",
-    borderBottomWidth: 1,
   },
   text: {
     fontFamily: 'Avenir Light',
@@ -31,6 +29,7 @@ export default StyleSheet.create({
   },
   itemContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderWidth: 0.3,
   }
 });

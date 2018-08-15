@@ -99,7 +99,9 @@ export default StyleSheet.create({
     fontStyle: 'italic',
     fontSize: 8,
     color: '#0060F2',
-    textAlign: 'right'
+    textAlign: 'right',
+    minHeight: 15,
+    marginRight: convertWidth(14),
   },
   accountMessage: {
     fontFamily: 'Avenir Light',

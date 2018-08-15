@@ -56,7 +56,7 @@ export default StyleSheet.create({
     height: 32,
     width: '100%',
     borderColor: "#D8D8D8",
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.3,
     justifyContent: 'center',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19)
@@ -66,7 +66,7 @@ export default StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     borderColor: "#D8D8D8",
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.3,
     justifyContent: 'center',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19)

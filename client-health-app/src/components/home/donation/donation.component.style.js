@@ -69,7 +69,7 @@ export default StyleSheet.create({
     alignContent: 'center',
     backgroundColor: 'white',
     flex: 1,
-    borderTopWidth: 0.5,
+    borderTopWidth: 0.3,
     borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   content: {
@@ -106,8 +106,8 @@ export default StyleSheet.create({
   },
   donationTaskItem: {
     width: convertWidth(375),
-    height: 118,
-    borderBottomWidth: 1,
+    minHeight: 118,
+    borderBottomWidth: 0.3,
     borderBottomColor: '#C1C1C1',
     backgroundColor: 'white',
     flexDirection: 'row',
@@ -120,8 +120,8 @@ export default StyleSheet.create({
     paddingRight: convertWidth(17),
   },
   researcherImage: {
-    width: 55,
-    height: 55,
+    width: convertWidth(40),
+    height: convertWidth(40),
     resizeMode: 'contain',
     marginTop: 11,
   },
@@ -130,7 +130,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     paddingTop: 15,
     paddingBottom: 19,
-    width: convertWidth(265),
+    width: convertWidth(280),
   },
 
   donationTaskItemType: {
@@ -142,13 +142,13 @@ export default StyleSheet.create({
   donationTaskItemTitle: {
     marginTop: 7,
     fontFamily: 'Avenir Light',
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '800',
     width: convertWidth(265),
   },
   donationTaskItemDescription: {
     fontFamily: 'Avenir Black',
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '300',
   },
   donationTaskItemTime: {
@@ -185,7 +185,7 @@ export default StyleSheet.create({
     height: 32,
     resizeMode: 'contain',
     borderRadius: 16,
-    borderWidth: 1,
+    borderWidth: 0.1,
     borderColor: 'white'
   },
 

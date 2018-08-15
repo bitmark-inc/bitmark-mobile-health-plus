@@ -73,16 +73,6 @@ export class BitmarkDetailComponent extends React.Component {
               }
             </View>
             <View style={propertyDetailStyle.informationArea}>
-              {this.state.taskType !== 'bitmark_health_issuance' && <View style={propertyDetailStyle.informationRow}>
-                <View style={propertyDetailStyle.informationRowContent}>
-                  <Text style={propertyDetailStyle.informationRowLabel}>{'Property name'.toUpperCase()}</Text>
-                  <Text style={propertyDetailStyle.informationRowValue}>{this.state.asset.name}</Text>
-                </View>
-                <View style={propertyDetailStyle.informationRowBarArea}>
-                  <View style={propertyDetailStyle.informationRowBarLine} />
-                </View>
-              </View>}
-
               {this.state.bitmark.status === 'confirmed' && <View style={propertyDetailStyle.informationRow}>
                 <View style={propertyDetailStyle.informationRowContent}>
                   <Text style={propertyDetailStyle.informationRowLabel}>{'BITMARK INFO'.toUpperCase()}</Text>

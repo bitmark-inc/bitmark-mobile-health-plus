@@ -248,7 +248,10 @@ export class DonationComponent extends React.Component {
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
-        {this.state.subTab === SubTabs.studies && <ScrollView style={[donationStyle.contentScroll, { backgroundColor: '#EDF0F4' }]}>
+        {this.state.subTab === SubTabs.studies && <ScrollView style={[donationStyle.contentScroll, {
+          backgroundColor: '#EDF0F4',
+          borderTopWidth: 0,
+        }]}>
           <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
             <View style={donationStyle.content}>
               <FlatList
