@@ -94,7 +94,7 @@ export class DonationComponent extends React.Component {
     let studies = (donationInformation.otherStudies || []).concat(donationInformation.joinedStudies || []);
     studies = studies.sort((a, b) => (a.studyId < b.studyId ? -1 : (a.studyId > b.studyId ? 1 : 0)));
 
-    let { donationTasks, totalDonationTasks } = await DataProcessor.doGetDonationTasks(this.state.lengthDisplayDonationTasks);
+    let { donationTasks, totalDonationTasks, } = await DataProcessor.doGetDonationTasks(this.state.lengthDisplayDonationTasks);
     this.setState({
       donationTasks,
       lengthDisplayDonationTasks: donationTasks.length,
@@ -148,7 +148,7 @@ export class DonationComponent extends React.Component {
             backgroundColor: '#0060F2',
             borderLeftWidth: 1, borderTopLeftRadius: 3, borderBottomLeftRadius: 3, borderColor: '#0060F2',
           }]}>
-            {(this.state.donationTasks && this.state.donationTasks > 0) && <View style={donationStyle.todoHightLight}></View>}
+            {(this.state.donationTasks && this.state.donationTasks.length > 0) && <View style={donationStyle.todoHightLight}></View>}
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
                 <Text style={donationStyle.subTabButtonText}>{SubTabs.todo}</Text>
@@ -156,7 +156,7 @@ export class DonationComponent extends React.Component {
             </View>
           </TouchableOpacity>}
           {this.state.subTab !== SubTabs.todo && <TouchableOpacity style={[donationStyle.subTabButton]} onPress={() => this.switchSubTab(SubTabs.todo)}>
-            {(this.state.donationTasks && this.state.donationTasks > 0) && <View style={donationStyle.todoHightLight}></View>}
+            {(this.state.donationTasks && this.state.donationTasks.length > 0) && <View style={donationStyle.todoHightLight}></View>}
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
                 <Text style={[donationStyle.subTabButtonText, { color: '#0060F2' }]}>{SubTabs.todo}</Text>

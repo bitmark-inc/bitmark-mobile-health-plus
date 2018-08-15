@@ -76,26 +76,25 @@ export default StyleSheet.create({
     zIndex: 1,
   },
 
-  transactionNumber: {
+  totalTasksIndicator: {
     backgroundColor: '#FF003C',
     position: 'absolute',
-    borderRadius: 4,
+    borderRadius: 7,
     borderColor: '#FF003C',
     borderWidth: 1,
     top: 4,
     left: 49,
-    width: 8,
-    height: 8,
+    width: 14,
+    height: 14,
     flexDirection: 'column',
     alignItems: "center",
     alignContent: 'center',
     justifyContent: 'center',
     zIndex: 1,
   },
-  transactionNumberText: {
+  totalTasksIndicatorText: {
     fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 8,
+    fontSize: 10,
     color: '#FFFFFF',
     textAlign: 'center',
     width: '100%',
