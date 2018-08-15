@@ -8,12 +8,13 @@ import defaultStyle from './../../commons/styles';
 import userStyle from './user.component.style';
 
 import { BottomTabsComponent } from './bottom-tabs/bottom-tabs.component';
-import { AppProcessor } from '../../processors';
+import { AppProcessor, DataProcessor } from '../../processors';
 import { EventEmitterService } from '../../services';
 import { DonationService } from '../../services/donation-service';
 import { BitmarkComponent } from '../../commons/components';
 import { DonationComponent } from './donation';
 import { TimelineComponent } from './timeline';
+import { CommonModel } from '../../models';
 
 const MainTabs = BottomTabsComponent.MainTabs;
 
@@ -153,7 +154,13 @@ export class UserComponent extends React.Component {
         backgroundColor={'#EDF0F4'}
         header={(
           <View style={[defaultStyle.header, { backgroundColor: '#EDF0F4' }]}>
-            <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.navigate('Account')}>
+            <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => {
+              CommonModel.doTrackEvent({
+                event_name: 'health_user_view_account_screen',
+                account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+              });
+              this.props.navigation.navigate('Account');
+            }}>
               <Image style={userStyle.accountIcon} source={require('./../../../assets/imgs/account-icon.png')} />
             </TouchableOpacity>
             <Text style={defaultStyle.headerTitle}>BITMARK HEALTH</Text>
