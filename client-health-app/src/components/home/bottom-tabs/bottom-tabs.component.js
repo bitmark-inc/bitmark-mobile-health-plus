@@ -65,6 +65,9 @@ export class BottomTabsComponent extends React.Component {
     return (
       <View style={userStyle.bottomTabArea}>
         <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.Timeline)}>
+          {this.state.remainTimelines > 0 && <View style={userStyle.haveNewBitmark} >
+            <Text style={userStyle.totalTasksIndicatorText}>{this.state.remainTimelines > 99 ? 99 : this.state.remainTimelines}</Text>
+          </View>}
           <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.Timeline
             ? require('./../../../../assets/imgs/timeline-icon-enable.png')
             : require('./../../../../assets/imgs/timeline-icon-disable.png')} />
