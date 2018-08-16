@@ -39,6 +39,7 @@ func (nc *NotifyClient) Add(topic, channel string, handler nsq.Handler) error {
 	}
 	config.TlsV1 = true
 	config.TlsConfig = tlsConfig
+	config.MaxAttempts = 30
 
 	q, err := nsq.NewConsumer(topic, channel, config)
 	if err != nil {

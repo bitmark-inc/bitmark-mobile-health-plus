@@ -9,9 +9,10 @@ import { BitmarkComponent } from './../../../../commons/components';
 
 import propertyDetailStyle from './bitmark-detail.component.style';
 import defaultStyle from './../../../../commons/styles';
-import { AppProcessor } from '../../../../processors';
+import { AppProcessor, DataProcessor } from '../../../../processors';
 import moment from 'moment';
 import { config } from '../../../../configs';
+import { CommonModel } from '../../../../models';
 
 // let ComponentName = 'BitmarkDetailComponent';
 export class BitmarkDetailComponent extends React.Component {
@@ -137,6 +138,10 @@ export class BitmarkDetailComponent extends React.Component {
             </View>
 
             <TouchableOpacity style={propertyDetailStyle.viewRegistryButton} onPress={() => {
+              CommonModel.doTrackEvent({
+                event_name: 'health_user_view_health_data_record_on_blockchain',
+                account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+              });
               let sourceUrl = config.registry_server_url + `/bitmark/${this.state.bitmark.id}?env=app`;
               this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
             }}>

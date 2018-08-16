@@ -36,8 +36,8 @@ export default StyleSheet.create({
   },
   todoHightLight: {
     position: 'absolute',
-    top: 1,
-    right: 1,
+    top: 5,
+    right: 5,
     zIndex: 1,
     width: 8,
     height: 8,

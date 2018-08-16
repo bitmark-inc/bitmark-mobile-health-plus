@@ -15,6 +15,7 @@ import defaultStyle from './../../../commons/styles';
 import { DataProcessor, AppProcessor } from '../../../processors';
 import { BitmarkComponent } from '../../../commons/components';
 import { config } from "./../../../configs";
+import { CommonModel } from '../../../models';
 
 let ComponentName = 'AccountDetailComponent';
 export class AccountDetailComponent extends React.Component {
@@ -99,6 +100,10 @@ export class AccountDetailComponent extends React.Component {
 
   logout() {
     AppProcessor.doLogout().then(() => {
+      CommonModel.doTrackEvent({
+        event_name: 'health_user_remove_access_successful',
+        account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+      });
       const resetMainPage = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Main' })]
@@ -153,7 +158,13 @@ export class AccountDetailComponent extends React.Component {
                     </View>
 
                     {/*Write Down Recovery Phrase*/}
-                    <TouchableOpacity style={[defaultStyle.itemNoBorderContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: false }) }}>
+                    <TouchableOpacity style={[defaultStyle.itemNoBorderContainer, style.itemContainer]} onPress={() => {
+                      CommonModel.doTrackEvent({
+                        event_name: 'health_user_writedown_recovery_phrases',
+                        account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+                      });
+                      this.props.navigation.navigate('AccountRecovery', { isSignOut: false });
+                    }}>
                       <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-write-down.png')} />
                       <View style={[defaultStyle.itemBottomBorderContainer]}>
                         <Text style={defaultStyle.text}>Write Down Recovery Phrase</Text>
@@ -165,7 +176,13 @@ export class AccountDetailComponent extends React.Component {
 
                     {/*Remove Access*/}
                     {/* <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}> */}
-                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('AccountRecovery', { isSignOut: true, logout: this.logout }) }}>
+                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
+                      CommonModel.doTrackEvent({
+                        event_name: 'health_user_want_remove_access',
+                        account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+                      });
+                      this.props.navigation.navigate('AccountRecovery', { isSignOut: true, logout: this.logout });
+                    }}>
                       <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-remove.png')} />
                       <Text style={defaultStyle.text}>Remove Access</Text>
                       <Text style={defaultStyle.textAlignRight}>

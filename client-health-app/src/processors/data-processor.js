@@ -90,6 +90,10 @@ const configNotification = () => {
       if (!userInformation || !userInformation.bitmarkAccountNumber) {
         userInformation = await UserModel.doGetCurrentUser();
       }
+      await CommonModel.doTrackEvent({
+        event_name: 'health_user_click_notification',
+        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+      });
       setTimeout(async () => {
         EventEmitterService.emit(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
       }, 1000);
@@ -193,8 +197,41 @@ const checkAppNeedResetLocalData = async (appInfo) => {
 
 const doOpenApp = async () => {
   userInformation = await UserModel.doTryGetCurrentUser();
+
+  await CommonModel.doTrackEvent({
+    event_name: 'health_open',
+    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+  });
+
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
+
+  if (appInfo.trackEvents && appInfo.trackEvents.app_user_allow_notification) {
+    let result = await NotificationService.doCheckNotificationPermission();
+
+    if (result && !result.alert && !result.badge && !result.sound &&
+      (!appInfo.trackEvents || !appInfo.trackEvents.app_user_turn_off_notification)) {
+      appInfo.trackEvents = appInfo.trackEvents || {};
+      appInfo.trackEvents.app_user_turn_off_notification = true;
+      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+      await CommonModel.doTrackEvent({
+        event_name: 'health_user_turn_off_notification',
+        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+      });
+    }
+  }
+
+  if (!appInfo.trackEvents || !appInfo.trackEvents.app_download) {
+    let appInfo = await doGetAppInformation();
+    appInfo = appInfo || {};
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents.app_download = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+    await CommonModel.doTrackEvent({
+      event_name: 'health_download',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     configNotification();
@@ -212,7 +249,7 @@ const doOpenApp = async () => {
     let timelines = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TIMELINES)) || [];
     let totalTimelines = 0;
     let remainTimelines = 0;
-    timelines.forEach(tl => remainTimelines += tl.bitmarkId ? 0 : 1);
+    timelines.forEach(tl => remainTimelines += (tl.taskType && !tl.bitmarkId) ? 1 : 0);
     DataCacheProcessor.setTimelines({ timelines, totalTimelines, remainTimelines });
   }
 
@@ -440,6 +477,24 @@ const doGetTimelines = async (length) => {
   }
 };
 
+const doMarkRequestedNotification = async (result) => {
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+
+  if (result && result.alert && result.badge && result.sound &&
+    (!appInfo.trackEvents || !appInfo.trackEvents.app_user_allow_notification)) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents.app_user_allow_notification = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    userInformation = userInformation || (await UserModel.doTryGetCurrentUser());
+    await CommonModel.doTrackEvent({
+      event_name: 'health_user_allow_notification',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
+}
+
 
 const DataProcessor = {
   doOpenApp,
@@ -469,6 +524,8 @@ const DataProcessor = {
   getApplicationBuildNumber,
   getUserInformation,
   isAppLoadingData: () => isLoadingData,
+
+  doMarkRequestedNotification,
 };
 
 export { DataProcessor };

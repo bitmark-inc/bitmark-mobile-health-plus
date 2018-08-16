@@ -10,6 +10,7 @@ import timelineStyle from './timeline.component.style';
 import { DataProcessor, AppProcessor } from '../../../processors';
 import { EventEmitterService } from '../../../services';
 import { FileUtil, convertWidth } from "../../../utils";
+import { CommonModel } from '../../../models';
 
 let currentSize = Dimensions.get('window');
 let ComponentName = 'TimelineComponent';
@@ -62,6 +63,10 @@ export class TimelineComponent extends React.Component {
   // ==========================================================================================
 
   captureAsset() {
+    CommonModel.doTrackEvent({
+      event_name: 'health_user_want_register_capture_health_data',
+      account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+    });
     let options = {
       title: 'Capture asset',
       quality: 0.7
@@ -146,16 +151,31 @@ export class TimelineComponent extends React.Component {
                       onPress={() => {
                         if (item.taskType === this.state.donationInformation.commonTaskIds.bitmark_health_data && !item.bitmarkId) {
 
-                          AppProcessor.doBitmarkHealthData([{
-                            startDate: item.startDate,
-                            endDate: item.endDate,
-                          }], {
-                              indicator: true, title: 'Encrypting and protecting your health data...', message: ''
-                            }).catch(error => {
-                              console.log('doBitmarkHealthData error:', error);
-                              EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-                            });
+                          AppProcessor.doBitmarkHealthData([{ startDate: item.startDate, endDate: item.endDate, }], {
+                            indicator: true, title: 'Encrypting and protecting your health data...', message: ''
+                          }).then(result => {
+                            if (result) {
+                              CommonModel.doTrackEvent({
+                                event_name: 'health_user_issued_weekly_health_data',
+                                account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+                              });
+                            }
+                          }).catch(error => {
+                            console.log('doBitmarkHealthData error:', error);
+                            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+                          });
                         } else if (item.bitmarkId) {
+                          if (item.taskType === 'bitmark_health_issuance') {
+                            CommonModel.doTrackEvent({
+                              event_name: 'health_user_view_captured_health_data_record',
+                              account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+                            });
+                          } else if (item.taskType === 'bitmark_health_data') {
+                            CommonModel.doTrackEvent({
+                              event_name: 'health_user_view_weekly_health_data_record',
+                              account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+                            });
+                          }
                           this.props.screenProps.homeNavigation.navigate('BitmarkDetail', { bitmarkId: item.bitmarkId, taskType: item.taskType });
                         }
                       }}
