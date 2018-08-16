@@ -8,9 +8,10 @@ import { NavigationActions } from 'react-navigation';
 import style from './capture-asset-preview.component.style';
 import { BitmarkComponent } from "../../../../commons/components/";
 import defaultStyle from "../../../../commons/styles";
-import { AppProcessor } from "../../../../processors";
+import { AppProcessor, DataProcessor } from "../../../../processors";
 import { EventEmitterService } from "../../../../services";
 import { FileUtil } from "../../../../utils";
+import { CommonModel } from '../../../../models';
 
 
 export class CaptureAssetPreviewComponent extends React.Component {
@@ -61,6 +62,10 @@ export class CaptureAssetPreviewComponent extends React.Component {
       indicator: true, title: '', message: 'Encrypting and protecting your health data...'
     }).then((data) => {
       if (data) {
+        CommonModel.doTrackEvent({
+          event_name: 'health_user_issued_capture_health_data',
+          account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
+        });
         // Remove temp asset file
         FileUtil.removeSafe(filePath);
 
