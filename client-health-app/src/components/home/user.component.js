@@ -170,7 +170,7 @@ export class UserComponent extends React.Component {
             <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
               Intercom.displayMessageComposer();
             }}>
-              <Image style={[userStyle.accountIcon, { width: 22, height: 22, marginRight: convertWidth(19) }]} source={require('./../../../assets/imgs/intercom.png')} />
+              <Image style={[userStyle.accountIcon, { width: 26, height: 26, marginRight: convertWidth(19) }]} source={require('./../../../assets/imgs/intercom.png')} />
             </TouchableOpacity>
           </View>
 
