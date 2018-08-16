@@ -19,21 +19,7 @@ export class WelcomeComponent extends React.Component {
   }
 
   createNewAccount() {
-    Alert.alert('Accept Terms', 'By creating an account, you agree to the Bitmark Health Terms of Service and Privacy Policy.', [{
-      text: 'Read Terms',
-      onPress: () => {
-        let sourceUrl = config.bitmark_web_site + `/term?env=app`;
-        this.props.navigation.navigate('BitmarkWebView', { title: 'Terms of Service', sourceUrl, isFullScreen: true });
-      }
-    }, {
-      text: 'Cancel',
-    }, {
-      text: 'Agree',
-      style: 'cancel',
-      onPress: () => {
-        this.props.navigation.navigate('GetStart');
-      }
-    }]);
+    this.props.navigation.navigate('Legal');
   }
 
   render() {

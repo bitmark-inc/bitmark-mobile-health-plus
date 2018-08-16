@@ -6,3 +6,4 @@ export * from './bitmark-error';
 export * from './bitmark-auto-complete';
 export * from './bitmark-internet-off';
 export * from './bitmark';
+export * from './bitmark-legal';

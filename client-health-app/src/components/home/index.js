@@ -1,7 +1,7 @@
 import { StackNavigator, } from 'react-navigation';
 
 import { UserComponent } from './user.component';
-import { BitmarkWebViewComponent } from './../../commons/components';
+import { BitmarkWebViewComponent, BitmarkLegalComponent } from './../../commons/components';
 import { AccountDetailComponent, AccountRecoveryComponent, ApplicationDetailComponent, HealthComponent, SupportComponent } from './account';
 
 import {
@@ -15,6 +15,7 @@ import { BitmarkDetailComponent, AssetImageContentComponent, CaptureAssetPermiss
 let HomeComponent = StackNavigator({
   User: { screen: UserComponent, },
   BitmarkWebView: { screen: BitmarkWebViewComponent, },
+  BitmarkLegal: { screen: BitmarkLegalComponent, },
   Account: { screen: AccountDetailComponent, },
   AccountRecovery: { screen: AccountRecoveryComponent, },
   ApplicationDetail: { screen: ApplicationDetailComponent, },
