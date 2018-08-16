@@ -97,8 +97,8 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 		}
 
 		if bitmarkInfo.Bitmark.Status != "confirmed" {
-			log.Infof("Transfer offer with id: %s, bitmark id = %s is not confirmed. Backoff for 10 seconds.", offerID, bitmarkInfo)
-			message.Requeue(10 * time.Second)
+			log.Infof("Transfer offer with id: %s, bitmark id = %s is not confirmed. Requeue after 10 seconds.", offerID, bitmarkInfo)
+			message.RequeueWithoutBackoff(10 * time.Second)
 			return nil
 		}
 
