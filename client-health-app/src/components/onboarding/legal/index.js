@@ -1,1 +1,1 @@
-export * from './get-start.component';
+export * from './legal.component';
