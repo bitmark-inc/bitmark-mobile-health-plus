@@ -7,6 +7,8 @@ import {
 
 import userStyle from './bottom-tabs.component.style';
 import { EventEmitterService, NotificationService } from '../../../services';
+import styles from '../../../commons/styles';
+import { DataProcessor } from '../../../processors';
 
 const MainTabs = {
   Timeline: 'Timeline',
@@ -34,6 +36,9 @@ export class BottomTabsComponent extends React.Component {
     };
 
     const doGetScreenData = async () => {
+      let { totalTasks } = await DataProcessor.doGetDonationTasks(0);
+      let { remainTimelines } = await DataProcessor.doGetTimelines(0);
+      this.setState({ totalTasks, remainTimelines });
       NotificationService.setApplicationIconBadgeNumber(0);
     }
     doGetScreenData();
@@ -44,7 +49,7 @@ export class BottomTabsComponent extends React.Component {
     EventEmitterService.on(EventEmitterService.events.CHANGE_TIMELINES, this.handerChangeTimelines, ComponentName);
   }
 
-  handerChangeDonationTasks(totalTasks) {
+  handerChangeDonationTasks({ totalTasks }) {
     this.setState({ totalTasks });
   }
 
@@ -64,7 +69,9 @@ export class BottomTabsComponent extends React.Component {
     return (
       <View style={userStyle.bottomTabArea}>
         <TouchableOpacity style={userStyle.bottomTabButton} onPress={() => this.switchMainTab(MainTabs.Timeline)}>
-          {this.state.remainTimelines > 0 && <View style={userStyle.haveNewBitmark} />}
+          {this.state.remainTimelines > 0 && <View style={userStyle.haveNewBitmark} >
+            <Text style={userStyle.totalTasksIndicatorText}>{this.state.remainTimelines > 99 ? 99 : this.state.remainTimelines}</Text>
+          </View>}
           <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.Timeline
             ? require('./../../../../assets/imgs/timeline-icon-enable.png')
             : require('./../../../../assets/imgs/timeline-icon-disable.png')} />
@@ -74,7 +81,8 @@ export class BottomTabsComponent extends React.Component {
         </TouchableOpacity>
 
         <TouchableOpacity style={[userStyle.bottomTabButton, { marginLeft: 70 }]} onPress={() => this.switchMainTab(MainTabs.Donate)}>
-          {this.state.totalTasks > 0 && <View style={userStyle.transactionNumber}>
+          {this.state.totalTasks > 0 && <View style={userStyle.totalTasksIndicator}>
+            <Text style={userStyle.totalTasksIndicatorText}>{this.state.totalTasks > 99 ? 99 : this.state.totalTasks}</Text>
           </View>}
           <Image style={userStyle.bottomTabButtonIcon} source={this.state.mainTab === MainTabs.Donate
             ? require('./../../../../assets/imgs/donate-icon-enable.png')

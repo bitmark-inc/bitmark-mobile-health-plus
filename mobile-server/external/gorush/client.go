@@ -49,9 +49,16 @@ func New(pushClients map[string]config.PushServerInfo) *Client {
 	}
 }
 
-func (c *Client) Send(ctx context.Context, title, message string, receivers map[string]map[string][]string, data *map[string]interface{}, badge int, silent bool) error {
+func (c *Client) Send(ctx context.Context, title, message, source string, receivers map[string]map[string][]string, data *map[string]interface{}, badge int, silent bool) error {
 	var err error
 	for client, payloads := range receivers {
+
+		// FIXME: Think an elegant solution for this
+		if source == "bitmark-data-donation" && len(client) >= 8 && client[:8] == "registry" {
+			log.Info("Source is health data and it's pushing to registry app. Aborting.")
+			return nil
+		}
+
 		notifications := make([]notification, 0)
 		pushserverInfo, ok := c.pushClients[client]
 		if !ok {

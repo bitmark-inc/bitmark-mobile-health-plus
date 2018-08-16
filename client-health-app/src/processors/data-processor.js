@@ -212,7 +212,7 @@ const doOpenApp = async () => {
     let timelines = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TIMELINES)) || [];
     let totalTimelines = 0;
     let remainTimelines = 0;
-    timelines.forEach(tl => remainTimelines += tl.bitmarkId ? 0 : 1);
+    timelines.forEach(tl => remainTimelines += (tl.taskType && !tl.bitmarkId) ? 1 : 0);
     DataCacheProcessor.setTimelines({ timelines, totalTimelines, remainTimelines });
   }
 

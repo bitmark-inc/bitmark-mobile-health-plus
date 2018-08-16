@@ -65,7 +65,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 					Message: message,
 					Data:    &data,
 					Pinned:  false,
-					Source:  "gateway",
+					Source:  "bitmark-data-donation",
 					Silent:  false,
 				}, h.pushStore, h.pushAPIClient)
 			}
