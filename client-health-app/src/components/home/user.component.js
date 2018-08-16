@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {
   View, TouchableOpacity, Text, Image,
 } from 'react-native';
+import Intercom from 'react-native-intercom';
+
 import { NavigationActions } from 'react-navigation';
 import defaultStyle from './../../commons/styles';
 import userStyle from './user.component.style';
@@ -15,6 +17,7 @@ import { BitmarkComponent } from '../../commons/components';
 import { DonationComponent } from './donation';
 import { TimelineComponent } from './timeline';
 import { CommonModel } from '../../models';
+import { convertWidth } from '../../utils';
 
 const MainTabs = BottomTabsComponent.MainTabs;
 
@@ -164,7 +167,11 @@ export class UserComponent extends React.Component {
               <Image style={userStyle.accountIcon} source={require('./../../../assets/imgs/account-icon.png')} />
             </TouchableOpacity>
             <Text style={defaultStyle.headerTitle}>BITMARK HEALTH</Text>
-            <TouchableOpacity style={defaultStyle.headerRight} />
+            <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+              Intercom.displayMessageComposer();
+            }}>
+              <Image style={[userStyle.accountIcon, { width: 22, height: 22, marginRight: convertWidth(19) }]} source={require('./../../../assets/imgs/intercom.png')} />
+            </TouchableOpacity>
           </View>
 
         )}
