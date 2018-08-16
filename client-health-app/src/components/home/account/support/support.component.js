@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Mailer from 'react-native-mail';
-import { BitmarkComponent } from '../../../../commons/components';
+import { BitmarkComponent, BitmarkLegalComponent } from '../../../../commons/components';
 
 import defaultStyle from '../../../../commons/styles';
 import style from './support.component.style';
@@ -36,11 +36,8 @@ export class SupportComponent extends React.Component {
 
           <View style={defaultStyle.itemContainer}>
             <TouchableOpacity onPress={() => {
-              this.props.navigation.navigate('BitmarkWebView', {
-                title: 'Terms of Service', sourceUrl: config.bitmark_web_site + '/term?env=app',
-                hideBottomController: true,
-                isFullScreen: true,
-                showDoneButton: true
+              this.props.navigation.navigate('BitmarkLegal', {
+                displayedContentName: BitmarkLegalComponent.Contents.TermOfService.name,
               })
             }}>
               <Text style={defaultStyle.text}>Terms of Service</Text>
@@ -49,14 +46,29 @@ export class SupportComponent extends React.Component {
 
           <View style={defaultStyle.itemContainer}>
             <TouchableOpacity onPress={() => {
-              this.props.navigation.navigate('BitmarkWebView', {
-                title: 'Privacy Policy', sourceUrl: config.bitmark_web_site + '/privacy?env=app',
-                hideBottomController: true,
-                isFullScreen: true,
-                showDoneButton: true
+              this.props.navigation.navigate('BitmarkLegal', {
+                displayedContentName: BitmarkLegalComponent.Contents.PrivacyPolicy.name,
               })
             }}>
               <Text style={defaultStyle.text}>Privacy Policy</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={defaultStyle.itemContainer}>
+            <TouchableOpacity onPress={() => {
+              this.props.navigation.navigate('BitmarkLegal', {
+                displayedContentName: BitmarkLegalComponent.Contents.GovernancePolicy.name,
+              })
+            }}>
+              <Text style={defaultStyle.text}>Governance</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={defaultStyle.itemContainer}>
+            <TouchableOpacity onPress={() => {
+              this.props.navigation.navigate('BitmarkLegal', {
+                displayedContentName: BitmarkLegalComponent.Contents.DataRetention.name,
+              })
+            }}>
+              <Text style={defaultStyle.text}>Data Retention</Text>
             </TouchableOpacity>
           </View>
 

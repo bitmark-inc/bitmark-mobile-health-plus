@@ -173,6 +173,10 @@ const doGetBitmarkInformation = async (bitmarkId) => {
   return executeTask('doGetBitmarkInformation', { bitmarkId });
 };
 
+const doDownloadAndShareLegal = async (title, message, urlDownload) => {
+  return executeTask('doDownloadAndShareLegal', { title, message, urlDownload });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -202,6 +206,7 @@ let AppProcessor = {
   doDownloadBitmark,
   doReloadUserData,
   doStartBackgroundProcess,
+  doDownloadAndShareLegal,
 }
 
 export {

@@ -1,4 +1,4 @@
-import { Platform, AppRegistry } from 'react-native';
+import { Platform, AppRegistry, Share } from 'react-native';
 import moment from 'moment';
 
 import { CommonModel, AccountModel, FaceTouchId, BitmarkModel, } from './../models';
@@ -6,6 +6,7 @@ import { EventEmitterService, BitmarkService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { ios } from '../configs';
 import { DonationService } from '../services/donation-service';
+import { FileUtil } from '../utils';
 
 // ================================================================================================
 // ================================================================================================
@@ -162,6 +163,14 @@ const doGetBitmarkInformation = async ({ bitmarkId }) => {
   return { asset, bitmark, donationInformation };
 };
 
+const doDownloadAndShareLegal = async ({ title, message, urlDownload }) => {
+  let folderPath = FileUtil.DocumentDirectory + '/legal';
+  let filePath = folderPath + '/' + title + '.pdf';
+  await FileUtil.mkdir(folderPath);
+  await processing(FileUtil.downloadFile(urlDownload, filePath));
+  await Share.share({ title, message, url: filePath });
+};
+
 
 // ================================================================================================
 // ================================================================================================
@@ -182,6 +191,7 @@ let AppTasks = {
   doDownloadStudyConsent,
   doDownloadBitmark,
   doGetBitmarkInformation,
+  doDownloadAndShareLegal,
 };
 
 let registeredTasks = {};
