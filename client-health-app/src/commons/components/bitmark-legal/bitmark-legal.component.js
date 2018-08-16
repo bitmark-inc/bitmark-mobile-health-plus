@@ -16,6 +16,7 @@ import { iosConstant } from '../../../configs/ios/ios.config';
 import { BitmarkComponent } from '../bitmark/bitmark.component';
 import { convertWidth } from '../../../utils';
 import { AppProcessor } from '../../../processors/app-processor';
+import { EventEmitterService } from '../../../services';
 
 const Contents = {
   DataRetention: {
@@ -55,6 +56,7 @@ export class BitmarkLegalComponent extends React.Component {
   shareLegal() {
     AppProcessor.doDownloadAndShareLegal(this.state.displayedContentName, '', this.state.displayedContent.filePathUrl).catch(error => {
       console.log('doDownloadAndShareLegal error:', error);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
