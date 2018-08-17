@@ -10,7 +10,7 @@ const doCheckFileToIssue = async (filePath, bitmarkAccountNumber) => {
     return { asset: assetInfo };
   } else {
     let accessibilityData = await BitmarkModel.doGetAssetAccessibility(assetInfo.id);
-    assetInformation.accessibility = accessibilityData.accessibility;
+    assetInformation.accessibility = accessibilityData ? accessibilityData.accessibility : null;
     let bitmark;
     if (assetInformation.registrant === bitmarkAccountNumber) {
       let bitmarks = await BitmarkModel.doGetBitmarksOfAsset(assetInfo.id, bitmarkAccountNumber);
