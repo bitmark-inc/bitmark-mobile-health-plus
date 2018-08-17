@@ -84,7 +84,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderTopWidth: 1,
+    borderTopWidth: 0.3,
     borderTopColor: '#919191',
     paddingTop: 10,
     paddingBottom: 10,
