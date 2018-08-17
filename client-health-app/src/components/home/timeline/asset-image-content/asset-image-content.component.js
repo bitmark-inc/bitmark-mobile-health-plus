@@ -40,7 +40,7 @@ export class AssetImageContentComponent extends React.Component {
             <Image style={[defaultStyle.headerLeftIcon, { width: 16, height: 16 }]} source={require('./../../../../../assets/imgs/close-icon-white.png')} />
           </TouchableOpacity>
           <View style={defaultStyle.headerCenter}>
-            <Text style={[defaultStyle.headerTitle, { color: 'white' }]}>HEALTH DATA</Text>
+            <Text style={[defaultStyle.headerTitle, { color: 'white' }]}>CAPTURED ASSET</Text>
           </View>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>)}
