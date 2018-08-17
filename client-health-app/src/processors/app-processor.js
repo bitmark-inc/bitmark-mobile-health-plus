@@ -3,7 +3,7 @@ import moment from 'moment';
 import { registerTasks } from './app-tasks-register';
 
 import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel, DonationModel } from './../models';
-import { AccountService, BitmarkService, EventEmitterService, TransactionService } from './../services'
+import { AccountService, EventEmitterService, TransactionService } from './../services'
 import { DataProcessor } from './data-processor';
 import { ios } from '../configs';
 
