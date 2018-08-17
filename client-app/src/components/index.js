@@ -299,6 +299,44 @@ class MainComponent extends Component {
   }
 
   doOpenApp() {
+    // // TODO
+    // AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
+    //   if (!result) {
+    //     Alert.alert('New Version Available', 'You’re using a version of Bitmark or operating system that’s no longer supported. Please update to the newest app version. Thanks!', [{
+    //       text: 'Visit Appstore',
+    //       onPress: Linking.openURL(config.appLink)
+    //     }]);
+    //     return;
+    //   }
+    //   return DataProcessor.doOpenApp();
+    // }).then(user => {
+    //   this.setState({ user });
+    //   if (user && user.bitmarkAccountNumber) {
+    //     CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
+    //       if (ok) {
+    //         AppProcessor.doStartBackgroundProcess(this.state.justCreatedBitmarkAccount);
+    //         setTimeout(() => {
+    //           this.setState({ justCreatedBitmarkAccount: false });
+    //         }, 5000);
+    //       } else {
+    //         if (!this.requiringTouchId) {
+    //           this.requiringTouchId = true;
+    //           Alert.alert('Please enable your Touch ID & Passcode to continue using Bitmark. Settings > Touch ID & Passcode', '', [{
+    //             text: 'ENABLE',
+    //             style: 'cancel',
+    //             onPress: () => {
+    //               Linking.openURL('app-settings:');
+    //               this.requiringTouchId = false;
+    //             }
+    //           }]);
+    //         }
+    //       }
+    //     });
+    //   }
+    // }).catch(error => {
+    //   console.log('doOpenApp error:', error);
+    // });
+
     DataProcessor.doOpenApp().then(user => {
       this.setState({ user });
       if (user && user.bitmarkAccountNumber) {

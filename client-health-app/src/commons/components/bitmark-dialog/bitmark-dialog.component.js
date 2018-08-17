@@ -31,6 +31,6 @@ export class BitmarkDialogComponent extends React.Component {
 BitmarkDialogComponent.propTypes = {
   close: PropTypes.func,
   style: ViewPropTypes.style,
-  dialogStyle: PropTypes.object,
+  dialogStyle: PropTypes.any,
   children: PropTypes.object,
 };

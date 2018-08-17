@@ -477,6 +477,10 @@ const doGetTimelines = async (length) => {
   }
 };
 
+const doCheckFileToIssue = async (filePath) => {
+  return await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
+};
+
 const doMarkRequestedNotification = async (result) => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
@@ -516,6 +520,7 @@ const DataProcessor = {
   doIssueFile,
 
   doGetDonationInformation,
+  doCheckFileToIssue,
 
   doGetDonationTasks,
   doGetTimelines,

@@ -12,6 +12,7 @@ import { AppProcessor, DataProcessor } from "../../../../processors";
 import { EventEmitterService } from "../../../../services";
 import { FileUtil } from "../../../../utils";
 import { CommonModel } from '../../../../models';
+import { config } from '../../../../configs';
 
 
 export class CaptureAssetPreviewComponent extends React.Component {
@@ -28,10 +29,25 @@ export class CaptureAssetPreviewComponent extends React.Component {
 
   checkAndIssueAsset() {
     let filePath = this.state.filePath;
-    AppProcessor.doCheckFileToIssue(filePath).then(asset => {
-      let existingAsset = !!(asset && asset.name);
-      if (existingAsset) {
-        Alert.alert('Error', 'This asset has registered before, please select another asset to register again.');
+    AppProcessor.doCheckFileToIssue(filePath).then(({ asset, bitmark }) => {
+      if (asset && asset.name) {
+        if (asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber) {
+          Alert.alert('', 'You’ve registered this health data before, would you like to view the bitmark detail.', [{
+            text: 'Cancel', style: 'cancel'
+          }, {
+            text: 'Yes',
+            onPress: () => this.props.navigation.navigate('BitmarkDetail', { bitmarkId: bitmark.id, taskType: 'bitmark_health_issuance' })
+          }]);
+        } else {
+          Alert.alert('', 'This data has registered by other accounts before, please select another data to register again. You also can view the public information of the data registration.', [{
+            text: 'Cancel', style: 'cancel'
+          }, {
+            text: 'View',
+            onPress: () => this.props.navigation.navigate('BitmarkWebView', {
+              title: 'REGISTRY', sourceUrl: config.registry_server_url + `/bitmark/${bitmark.id}?env=app`, isFullScreen: true,
+            })
+          }]);
+        }
       } else {
         // Do issue
         let metadataList = [];
@@ -106,6 +122,7 @@ export class CaptureAssetPreviewComponent extends React.Component {
 
 CaptureAssetPreviewComponent.propTypes = {
   navigation: PropTypes.shape({
+    navigate: PropTypes.func,
     goBack: PropTypes.func,
     dispatch: PropTypes.func,
     state: PropTypes.shape({

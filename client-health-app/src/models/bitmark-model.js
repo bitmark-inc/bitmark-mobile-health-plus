@@ -63,6 +63,30 @@ const doGetListBitmarks = async (bitmarkIds, external) => {
   return returnedData;
 };
 
+const doGetBitmarksOfAsset = (assetId, owner) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    fetch(config.api_server_url + `/v1/bitmarks?asset_id=${assetId}&pending=true` + (owner ? `&owner=${owner}` : ''), {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode === 404) {
+        return resolve();
+      }
+      if (statusCode >= 400) {
+        return reject(new Error('getAssetInfo error :' + JSON.stringify(data)));
+      }
+      resolve(data.bitmarks);
+    }).catch(reject);
+  });
+};
+
 const doGetAssetInformation = (assetId) => {
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -270,6 +294,7 @@ const doGetBitmarkInformation = (bitmarkId) => {
 };
 
 let BitmarkModel = {
+  doGetBitmarksOfAsset,
   doGetAssetInformation,
   doPrepareAssetInfo,
   doIssueFile,

@@ -91,7 +91,7 @@ const doGetTransferOfferDetail = async (transferOfferId) => {
 };
 
 const doCheckFileToIssue = async (filePath) => {
-  return await processing(BitmarkService.doCheckFileToIssue(filePath));
+  return await processing(DataProcessor.doCheckFileToIssue(filePath));
 };
 
 const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {

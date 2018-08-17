@@ -1,18 +1,24 @@
-import moment from 'moment';
 import { BitmarkModel } from "../models";
 
 // ================================================================================================
 // ================================================================================================
 
-const doCheckFileToIssue = async (filePath) => {
+const doCheckFileToIssue = async (filePath, bitmarkAccountNumber) => {
   let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
   let assetInformation = await BitmarkModel.doGetAssetInformation(assetInfo.id);
   if (!assetInformation) {
-    return assetInfo;
+    return { asset: assetInfo };
   } else {
     let accessibilityData = await BitmarkModel.doGetAssetAccessibility(assetInfo.id);
     assetInformation.accessibility = accessibilityData.accessibility;
-    return assetInformation;
+    let bitmark;
+    if (assetInformation.registrant === bitmarkAccountNumber) {
+      let bitmarks = await BitmarkModel.doGetBitmarksOfAsset(assetInfo.id, bitmarkAccountNumber);
+      if (bitmarks && bitmarks.length > 0) {
+        bitmark = bitmarks[0];
+      }
+    }
+    return { asset: assetInformation, bitmark };
   }
 };
 
