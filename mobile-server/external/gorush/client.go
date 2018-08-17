@@ -57,6 +57,9 @@ func (c *Client) Send(ctx context.Context, title, message, source string, receiv
 		if source == "bitmark-data-donation" && len(client) >= 8 && client[:8] == "registry" {
 			log.Info("Source is health data and it's pushing to registry app. Aborting.")
 			return nil
+		} else if source == "gateway" && len(client) >= 6 && client[:6] == "health" {
+			log.Info("Source is gateway data and it's pushing to health app. Aborting.")
+			return nil
 		}
 
 		notifications := make([]notification, 0)
