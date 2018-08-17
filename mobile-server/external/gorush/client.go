@@ -56,13 +56,17 @@ func (c *Client) Send(ctx context.Context, title, message, source string, receiv
 		// FIXME: Think an elegant solution for this
 		if source == "bitmark-data-donation" && len(client) >= 8 && client[:8] == "registry" {
 			log.Info("Source is health data and it's pushing to registry app. Aborting.")
-			return nil
+			continue
+		} else if source == "gateway" && len(client) >= 6 && client[:6] == "health" {
+			log.Info("Source is gateway data and it's pushing to health app. Aborting.")
+			continue
 		}
 
 		notifications := make([]notification, 0)
 		pushserverInfo, ok := c.pushClients[client]
 		if !ok {
 			log.Error("Cannot find client matches with: ", client)
+			continue
 		}
 
 		for platform, tokens := range payloads {
