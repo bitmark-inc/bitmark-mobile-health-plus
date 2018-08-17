@@ -70,7 +70,7 @@ export class BitmarkLegalComponent extends React.Component {
           </TouchableOpacity>
           <View style={defaultStyle.headerCenter}>
             {this.state.displayedContentName === Contents.GovernancePolicy.name && <Text style={defaultStyle.headerTitle}>GOVERNANCE POLICY</Text>}
-            {this.state.displayedContentName === Contents.DataRetention.name && <Text style={defaultStyle.headerTitle}>DATA RETENTION</Text>}
+            {this.state.displayedContentName === Contents.DataRetention.name && <Text style={defaultStyle.headerTitle}>KNOW YOUR RIGHTS</Text>}
             {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={defaultStyle.headerTitle}>PRIVACY POLICY</Text>}
             {this.state.displayedContentName === Contents.TermOfService.name && <Text style={defaultStyle.headerTitle}>TERMS OF SERVICE</Text>}
           </View>

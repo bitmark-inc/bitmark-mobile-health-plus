@@ -68,7 +68,7 @@ export class SupportComponent extends React.Component {
                 displayedContentName: BitmarkLegalComponent.Contents.DataRetention.name,
               })
             }}>
-              <Text style={defaultStyle.text}>Data Retention</Text>
+              <Text style={defaultStyle.text}>Know Your Rights</Text>
             </TouchableOpacity>
           </View>
 

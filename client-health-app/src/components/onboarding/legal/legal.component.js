@@ -474,7 +474,7 @@ export class LegalComponent extends React.Component {
             paddingLeft: convertWidth(19),
             paddingRight: convertWidth(19)
           }]} onPress={() => this.displayContent(Contents.DataRetention)}>
-            <Text style={legalStyle.bottomButtonText}>DATA RETENTION</Text>
+            <Text style={legalStyle.bottomButtonText}>KNOW YOUR RIGHTS</Text>
             <Image style={legalStyle.bottomButtonIcon} source={require('./../../../../assets/imgs/next-icon.png')} />
           </TouchableOpacity>}
           {this.state.displayedContentName !== Contents.PrivacyPolicy.name && <TouchableOpacity style={[legalStyle.bottomButton, {
