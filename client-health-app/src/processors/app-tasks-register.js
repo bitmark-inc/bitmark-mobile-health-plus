@@ -149,12 +149,12 @@ const doDownloadStudyConsent = async ({ study }) => {
   return await processing(DonationService.doDownloadStudyConsent(study));
 };
 
-const doDownloadBitmark = async ({ bitmarkId }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to download asset.');
+const doDownloadBitmark = async ({ bitmarkId, processingData }) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return await processing(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkId));
+  return await submitting(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkId), processingData);
 };
 
 const doGetBitmarkInformation = async ({ bitmarkId }) => {

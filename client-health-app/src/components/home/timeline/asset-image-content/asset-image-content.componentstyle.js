@@ -14,9 +14,25 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  imageContent: {
-    width: convertWidth(375),
-    height: 463 * convertWidth(375) / 375,
-    resizeMode: 'contain',
+  imageContainer: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center'
   },
+  imageContent: {
+    height: '60%'
+  },
+  downloadButton: {
+    width: convertWidth(375),
+    height: 45,
+    backgroundColor: '#0060F2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  downloadText: {
+    fontSize: 16,
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    color: '#FFFFFF'
+  }
 });

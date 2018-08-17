@@ -403,9 +403,8 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
 
       assetName: 'HK' + randomId,
       assetMetadata: {
-        Creator: bitmarkAccountNumber,
-        Created: moment(dateRange.endDate).format('YYYY MMM DD HH:mm:ss'),
-        Types: 'Health Kit data'
+        "Source": 'HealthKit',
+        "Saved Time": moment(dateRange.endDate).toISOString()
       },
       taskType,
       randomId,

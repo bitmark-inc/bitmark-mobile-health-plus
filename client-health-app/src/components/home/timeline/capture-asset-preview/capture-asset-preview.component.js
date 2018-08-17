@@ -13,6 +13,7 @@ import { EventEmitterService } from "../../../../services";
 import { FileUtil } from "../../../../utils";
 import { CommonModel } from '../../../../models';
 import { config } from '../../../../configs';
+import randomString from "random-string";
 
 
 export class CaptureAssetPreviewComponent extends React.Component {
@@ -51,8 +52,8 @@ export class CaptureAssetPreviewComponent extends React.Component {
       } else {
         // Do issue
         let metadataList = [];
-        metadataList.push({ label: 'source', value: 'Bitmark Health' });
-        metadataList.push({ label: 'save_time', value: new Date(this.state.timestamp).toISOString() });
+        metadataList.push({ label: 'Source', value: 'Bitmark Health' });
+        metadataList.push({ label: 'Saved Time', value: new Date(this.state.timestamp).toISOString() });
         this.issueAsset(filePath, metadataList);
       }
     }).catch(error => {
@@ -74,7 +75,8 @@ export class CaptureAssetPreviewComponent extends React.Component {
   }
 
   issueAsset(filePath, metadataList) {
-    AppProcessor.doIssueFile(filePath, ' ', metadataList, 1, false, {
+    let assetName = `HA${randomString({length: 8, numeric: true, letters: false,})}`;
+    AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
       indicator: true, title: '', message: 'Encrypting and protecting your health data...'
     }).then((data) => {
       if (data) {

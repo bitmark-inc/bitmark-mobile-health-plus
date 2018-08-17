@@ -7,10 +7,15 @@ export default StyleSheet.create({
     flexDirection: 'column',
     height: '100%',
     width: '100%',
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(0, 0, 0, 0.3)'
   },
   bodyContent: {
     flexDirection: 'column',
     alignItems: 'center',
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
+    paddingTop: 25
   },
 
   imageArea: {
@@ -26,6 +31,11 @@ export default StyleSheet.create({
     height: 112,
     resizeMode: 'contain',
   },
+  eyeIcon: {
+    width: 16,
+    height: 11,
+    resizeMode: 'contain',
+  },
   bitmarkPending: {
     fontWeight: '300',
     fontFamily: 'Avenir Medium',
@@ -34,10 +44,8 @@ export default StyleSheet.create({
     fontStyle: 'italic',
     color: '#A4B5CD',
   },
-  bitmarkConfirmed: {
-    marginTop: 25,
-  },
   bitmarkConfirmedText: {
+    marginTop: 25,
     fontWeight: '300',
     fontFamily: 'Avenir Medium',
     fontSize: 14,
@@ -45,15 +53,12 @@ export default StyleSheet.create({
   },
 
   informationArea: {
-    width: convertWidth(375),
-    marginTop: 40,
     backgroundColor: 'white',
     borderTopWidth: 0.3,
     borderBottomWidth: 0.3,
     borderColor: '#BCBBC1',
   },
   informationRow: {
-    width: convertWidth(375),
     minHeight: 44,
     flexDirection: 'column',
     alignItems: 'center',
@@ -67,9 +72,7 @@ export default StyleSheet.create({
   informationRowLabel: {
     fontWeight: '300',
     fontFamily: 'Avenir Light',
-    fontSize: 16,
-    marginLeft: convertWidth(19),
-    width: convertWidth(150),
+    fontSize: 15,
   },
   informationRowValue: {
     fontWeight: '300',
@@ -77,35 +80,67 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#8E8E93',
     textAlign: 'right',
-    width: convertWidth(180),
     marginRight: convertWidth(19),
+    flex: 1
   },
   informationRowBarArea: {
     marginTop: 10,
     flexDirection: 'row',
-    width: convertWidth(375),
     justifyContent: 'flex-end',
   },
   informationRowBarLine: {
     borderBottomWidth: 0.3,
     borderColor: '#BCBBC1',
-    width: convertWidth(356),
+    width: '100%',
   },
 
   viewRegistryButton: {
-    marginTop: 37,
+    marginTop: 15,
+    height: 44,
     backgroundColor: 'white',
     width: convertWidth(375),
-    height: 44,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
   },
   viewRegistryButtonText: {
     fontWeight: '300',
     fontFamily: 'Avenir Light',
-    fontSize: 16,
+    fontSize: 14,
     color: '#0060F2'
+  },
+  titleArea: {
+    width: '100%',
+    marginBottom: 20,
+  },
+  titleText: {
+    fontSize: 16,
+    fontFamily: 'Avenir Medium'
+  },
+  subTitleArea: {
+    marginTop: 5,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  subTitleText: {
+    fontSize: 14,
+    fontFamily: 'Avenir Light',
+    marginLeft: 5,
+    color: '#999999'
+  },
+  fromSecondRow: {
+    marginTop: 10
+  },
+  textAlignRight: {
+    flex: 1,
+    textAlign: 'right',
+    fontSize: 14,
+    fontWeight: '300',
+    fontFamily: 'Avenir Light'
+  },
+  privateInfoArea: {
+    marginTop: 25
   }
 });

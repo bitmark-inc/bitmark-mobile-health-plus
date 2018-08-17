@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, TouchableOpacity, Image, Text,
-  //  FlatList,
+  View, TouchableOpacity, Image, Text, Share
 } from 'react-native';
 
 import { BitmarkComponent } from './../../../../commons/components';
@@ -12,7 +11,8 @@ import defaultStyle from './../../../../commons/styles';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import moment from 'moment';
 import { config } from '../../../../configs';
-import { CommonModel } from '../../../../models';
+import { CommonModel, UserModel } from '../../../../models';
+import { EventEmitterService } from "../../../../services";
 
 // let ComponentName = 'BitmarkDetailComponent';
 export class BitmarkDetailComponent extends React.Component {
@@ -28,27 +28,40 @@ export class BitmarkDetailComponent extends React.Component {
       taskType,
     }
   }
-  doGetScreenData(bitmarkId) {
+  async doGetScreenData(bitmarkId) {
+    let userInformation = await UserModel.doGetCurrentUser();
+
     AppProcessor.doGetBitmarkInformation(bitmarkId).then(({ asset, bitmark }) => {
-      // let metadata = [];
-      // for (let label in asset.created) {
-      //   metadata.push({ label, value: asset.created[label] });
-      // }
       this.setState({
+        shortAccountNumber: this.populateShortAccountNumber(bitmark.owner),
+        ownerAreYou: bitmark.owner === userInformation.bitmarkAccountNumber,
         loading: false,
-        // metadata,
-        asset, bitmark,
+        asset,
+        bitmark,
       });
     }).catch(error => {
       console.log('doGetBitmarkInformation error :', error);
-      this.props.navigation.goBack();
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
+  downloadAsset(bitmarkId) {
+    AppProcessor.doDownloadBitmark(bitmarkId).then(filePath => {
+      Share.share({ title: this.state.asset.name, message: '', url: filePath });
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { title: "Your bitmark isn't ready to download.\nPlease try again later." });
+      console.log('doDownload asset error :', error);
+    });
+  }
+
+  populateShortAccountNumber(accountNumber) {
+    return `${accountNumber.substring(0, 4)}...${accountNumber.substring(accountNumber.length - 4)}`;
+  }
 
   render() {
     return (
       <BitmarkComponent
+        backgroundColor='#F5F5F5'
         header={(<View style={defaultStyle.header}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
@@ -60,83 +73,67 @@ export class BitmarkDetailComponent extends React.Component {
           </View>
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>)}
+        contentInScroll={true}
         content={(<View style={propertyDetailStyle.body}>
-          {!this.state.loading && <View style={propertyDetailStyle.bodyContent}>
-            <View style={propertyDetailStyle.imageArea}>
-              <Image style={propertyDetailStyle.assetIcon} source={require('./../../../../../assets/imgs/asset-icon.png')} />
-              {this.state.bitmark.status === 'pending' && <Text style={propertyDetailStyle.bitmarkPending}>Registering ownership...</Text>}
-              {this.state.bitmark.status === 'confirmed' && this.state.taskType === 'bitmark_health_issuance' &&
-                <TouchableOpacity style={propertyDetailStyle.bitmarkConfirmed} onPress={() => {
-                  this.props.navigation.navigate('AssetImageContent', { bitmarkId: this.state.bitmarkId });
-                }}>
-                  <Text style={propertyDetailStyle.bitmarkConfirmedText}>Click to review your health data</Text>
-                </TouchableOpacity>
-              }
+        {!this.state.loading &&
+          <View style={propertyDetailStyle.bodyContent}>
+            {/*PUBLIC INFORMATION*/}
+            <View style={propertyDetailStyle.titleArea}>
+              <Text style={propertyDetailStyle.titleText}>PUBLIC INFORMATION</Text>
+              <View style={propertyDetailStyle.subTitleArea}>
+                <Image style={propertyDetailStyle.eyeIcon} source={require('./../../../../../assets/imgs/icon-eye.png')} />
+                <Text style={propertyDetailStyle.subTitleText}>Visible to everyone</Text>
+              </View>
             </View>
-            <View style={propertyDetailStyle.informationArea}>
-              {this.state.bitmark.status === 'confirmed' && <View style={propertyDetailStyle.informationRow}>
-                <View style={propertyDetailStyle.informationRowContent}>
-                  <Text style={propertyDetailStyle.informationRowLabel}>{'BITMARK INFO'.toUpperCase()}</Text>
-                  <Text style={propertyDetailStyle.informationRowValue}>ISSUED ON {moment(this.state.bitmark.created_at).format('YYYY MMM DD')}</Text>
-                </View>
-                <View style={propertyDetailStyle.informationRowBarArea}>
-                  <View style={propertyDetailStyle.informationRowBarLine} />
-                </View>
-              </View>}
 
+            {/*INFO*/}
+            <View style={propertyDetailStyle.informationArea}>
+              {/*ISSUED BY*/}
               <View style={propertyDetailStyle.informationRow}>
                 <View style={propertyDetailStyle.informationRowContent}>
-                  <Text style={propertyDetailStyle.informationRowLabel}>SOURCE</Text>
-                  <Text style={propertyDetailStyle.informationRowValue}>
-                    {this.state.taskType === 'bitmark_health_data' ? 'HealthKit' : 'BITMARK HEALTH'}
-                  </Text>
+                  <Text style={propertyDetailStyle.informationRowLabel}>ISSUED BY</Text>
+                  <Text style={propertyDetailStyle.informationRowValue}>{this.state.shortAccountNumber}</Text>
                 </View>
                 <View style={propertyDetailStyle.informationRowBarArea}>
                   <View style={propertyDetailStyle.informationRowBarLine} />
                 </View>
               </View>
 
-              {this.state.taskType === 'bitmark_health_data' &&
-                this.state.asset.metadata['Created'] &&
-                <View style={propertyDetailStyle.informationRow}>
-                  <View style={propertyDetailStyle.informationRowContent}>
-                    <Text style={propertyDetailStyle.informationRowLabel}>SAVED TIME</Text>
-                    <Text style={propertyDetailStyle.informationRowValue}>
-                      {this.state.asset.metadata['Created']}
-                    </Text>
-                  </View>
-                </View>}
+              {/*ISSUED ON*/}
+              {this.state.bitmark.status === 'confirmed' && <View style={propertyDetailStyle.informationRow}>
+                <View style={propertyDetailStyle.informationRowContent}>
+                  <Text style={propertyDetailStyle.informationRowLabel}>ISSUED ON</Text>
+                  <Text style={propertyDetailStyle.informationRowValue}>{moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss')}</Text>
+                </View>
+                <View style={propertyDetailStyle.informationRowBarArea}>
+                  <View style={propertyDetailStyle.informationRowBarLine} />
+                </View>
+              </View>}
 
-              {this.state.taskType === 'bitmark_health_issuance' &&
-                this.state.asset.metadata['save_time'] &&
-                <View style={propertyDetailStyle.informationRow}>
-                  <View style={propertyDetailStyle.informationRowContent}>
-                    <Text style={propertyDetailStyle.informationRowLabel}>SAVED TIME</Text>
-                    <Text style={propertyDetailStyle.informationRowValue}>
-                      {moment(this.state.asset.metadata['save_time']).format('YYYY MMM DD HH:mm:ss')}
-                    </Text>
-                  </View>
-                </View>}
+              {/*METADATA*/}
+              <View style={propertyDetailStyle.informationRow}>
+                <View style={propertyDetailStyle.informationRowContent}>
+                  <Text style={propertyDetailStyle.informationRowLabel}>METADATA</Text>
+                  <Text style={propertyDetailStyle.informationRowValue}>SOURCE: {this.state.asset.metadata['Source']}</Text>
+                </View>
+                <View style={[propertyDetailStyle.informationRowContent, propertyDetailStyle.fromSecondRow]}>
+                  <Text style={propertyDetailStyle.informationRowValue}>SAVED TIME: {moment(this.state.asset.metadata['Saved Time']).format('YYYY MMM DD HH:mm:ss')}</Text>
+                </View>
+                <View style={propertyDetailStyle.informationRowBarArea}>
+                  <View style={propertyDetailStyle.informationRowBarLine} />
+                </View>
+              </View>
 
-
-              {/* <FlatList
-                keyExtractor={(item, index) => index}
-                extraData={this.state}
-                data={this.state.metadata}
-                renderItem={({ item, index }) => {
-                  return (<View style={propertyDetailStyle.informationRow}>
-                    <View style={propertyDetailStyle.informationRowContent}>
-                      <Text style={propertyDetailStyle.informationRowLabel}>{item.label.toUpperCase()}</Text>
-                      <Text style={propertyDetailStyle.informationRowValue} >{item.value}</Text>
-                    </View>
-                    <View style={propertyDetailStyle.informationRowBarArea}>
-                      {index < (this.state.metadata.length - 1) && <View style={propertyDetailStyle.informationRowBarLine} />}
-                    </View>
-                  </View>)
-                }}
-              /> */}
+              {/*BITMARKS*/}
+              {this.state.bitmark.status === 'confirmed' && <View style={propertyDetailStyle.informationRow}>
+                <View style={propertyDetailStyle.informationRowContent}>
+                  <Text style={propertyDetailStyle.informationRowLabel}>BITMARKS</Text>
+                  <Text style={propertyDetailStyle.informationRowValue}>1</Text>
+                </View>
+              </View>}
             </View>
 
+            {/*VIEW ON BLOCKCHAIN*/}
             <TouchableOpacity style={propertyDetailStyle.viewRegistryButton} onPress={() => {
               CommonModel.doTrackEvent({
                 event_name: 'health_user_view_health_data_record_on_blockchain',
@@ -145,10 +142,39 @@ export class BitmarkDetailComponent extends React.Component {
               let sourceUrl = config.registry_server_url + `/bitmark/${this.state.bitmark.id}?env=app`;
               this.props.navigation.navigate('BitmarkWebView', { title: 'REGISTRY', sourceUrl, isFullScreen: true });
             }}>
-              <Text style={propertyDetailStyle.viewRegistryButtonText}>View registration on Bitmark blockchain</Text>
+              <Text style={propertyDetailStyle.viewRegistryButtonText}>View on Bitmark blockchain</Text>
             </TouchableOpacity>
 
-          </View>}
+            {/*MY PRIVATE HEALTH DATA*/}
+            <View style={[propertyDetailStyle.titleArea, propertyDetailStyle.privateInfoArea]}>
+              <Text style={propertyDetailStyle.titleText}>MY PRIVATE HEALTH DATA</Text>
+              <View style={propertyDetailStyle.subTitleArea}>
+                <Image style={propertyDetailStyle.eyeIcon} source={require('./../../../../../assets/imgs/icon-eye.png')} />
+                <Text style={propertyDetailStyle.subTitleText}>Can be accessed by:</Text>
+                <Text style={propertyDetailStyle.textAlignRight}>{this.state.ownerAreYou ? `You - [${this.state.shortAccountNumber}]` : `[${this.state.shortAccountNumber}]`}</Text>
+              </View>
+            </View>
+
+            <View style={propertyDetailStyle.informationRowBarLine} />
+
+            {/*PREVIEW*/}
+            <TouchableOpacity style={propertyDetailStyle.imageArea} onPress={() => {
+              if (this.state.bitmark.status === 'confirmed') {
+                if (this.state.taskType === 'bitmark_health_issuance') {
+                  this.props.navigation.navigate('AssetImageContent', { bitmarkId: this.state.bitmarkId, assetName: this.state.asset.name });
+                } else {
+                  this.downloadAsset(this.state.bitmarkId);
+                }
+              }
+            }}>
+              <Image style={propertyDetailStyle.assetIcon} source={require('./../../../../../assets/imgs/asset-icon.png')} />
+            {this.state.bitmark.status === 'pending' && <Text style={propertyDetailStyle.bitmarkPending}>Registering ownership...</Text>}
+            {this.state.bitmark.status === 'confirmed' &&
+              <Text style={propertyDetailStyle.bitmarkConfirmedText}>View full private health data</Text>
+            }
+            </TouchableOpacity>
+          </View>
+        }
         </View>)}
       />
     );
