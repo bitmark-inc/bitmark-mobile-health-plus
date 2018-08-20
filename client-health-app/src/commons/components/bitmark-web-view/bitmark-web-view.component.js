@@ -123,7 +123,7 @@ class WebViewComponent extends React.Component {
         />
       </View>
       {!hideBottomController && <View style={[termsStyles.bottomController, {
-        height: (heightButtonController || ios.constant.blankFooter) + (isFullScreen ? ios.constant.blankFooter : 0),
+        height: (heightButtonController || ios.constant.bottomBottomHeight) + (isFullScreen ? ios.constant.blankFooter : 0),
         paddingBottom: (isFullScreen ? ios.constant.blankFooter : 0),
       }]}>
         <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { console.log('source :', this.webViewRef.getWebViewHandle()); this.webViewRef.goBack(); }}>
