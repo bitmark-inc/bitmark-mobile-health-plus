@@ -154,37 +154,37 @@ export class LegalComponent extends React.Component {
             </TouchableOpacity>
             <View style={legalStyle.knowYourRightsRow}>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
-              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47), fontWeight: '800' }]}>RETAIN</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(55), fontWeight: '800' }]}>RETAIN</Text>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35), fontWeight: '800' }]}>SELL</Text>
             </View>
 
             <View style={legalStyle.knowYourRightsRow}>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Email (to map Bitmark accounts)</Text>
-              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(55) }]}>yes</Text>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
             <View style={legalStyle.knowYourRightsRow}>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Log data (when accessing website)	</Text>
-              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(55) }]}>yes</Text>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
             <View style={legalStyle.knowYourRightsRow}>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account number	</Text>
-              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(55) }]}>yes</Text>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
             <View style={legalStyle.knowYourRightsRow}>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account (in case of webapp)</Text>
-              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(55) }]}>yes</Text>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
             <View style={[legalStyle.knowYourRightsRow, { borderBottomWidth: 0 }]}>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Digital assets</Text>
-              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(55) }]}>yes</Text>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
             <Text style={[legalStyle.knowYourRightsRowText, { marginLeft: convertWidth(19) }]}>(with or without client side encryption)	</Text>
