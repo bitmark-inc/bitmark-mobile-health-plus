@@ -1,5 +1,6 @@
 import { StyleSheet, } from 'react-native';
 import { convertWidth } from '../../../../utils';
+import { iosConstant } from '../../../../configs/ios/ios.config';
 
 export default StyleSheet.create({
   body: {
@@ -24,10 +25,12 @@ export default StyleSheet.create({
   },
   downloadButton: {
     width: convertWidth(375),
-    height: 45,
+    height: iosConstant.bottomBottomHeight,
     backgroundColor: '#0060F2',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   downloadText: {
     fontSize: 16,

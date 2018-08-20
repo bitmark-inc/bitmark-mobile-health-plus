@@ -175,14 +175,14 @@ export class AccountDetailComponent extends React.Component {
                     </TouchableOpacity>
 
                     {/*Remove Access*/}
-                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}>
-                      {/* <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
+                    {/* <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}> */}
+                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
                       CommonModel.doTrackEvent({
                         event_name: 'health_user_want_remove_access',
                         account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
                       });
                       this.props.navigation.navigate('AccountRecovery', { isSignOut: true, logout: this.logout });
-                    }}> */}
+                    }}>
                       <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-remove.png')} />
                       <Text style={defaultStyle.text}>Remove Access</Text>
                       <Text style={defaultStyle.textAlignRight}>

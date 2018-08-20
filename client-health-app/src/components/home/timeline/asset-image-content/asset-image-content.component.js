@@ -27,7 +27,7 @@ export class AssetImageContentComponent extends React.Component {
     AppProcessor.doDownloadBitmark(bitmarkId, {
       indicator: true, title: 'Preparing to view...'
     }).then(filePath => {
-      this.setState({filePath});
+      this.setState({ filePath });
     }).catch(error => {
       console.log('doDownloadBitmark  error :', error);
       this.props.navigation.goBack();
@@ -52,18 +52,18 @@ export class AssetImageContentComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>)}
         content={(<View style={style.body}>
-        {this.state.filePath &&
-          <View style={style.bodyContent}>
-            <View style={style.imageContainer}>
-              <Image
-                style={style.imageContent}
-                source={{ uri: this.state.filePath }}
-              />
-            </View>
-            <TouchableOpacity style={style.downloadButton} onPress={() => this.saveAsset(this.state.filePath)}>
-              <Text style={style.downloadText}>DOWNLOAD</Text>
-            </TouchableOpacity>
-          </View>}
+          {this.state.filePath &&
+            <View style={style.bodyContent}>
+              <View style={style.imageContainer}>
+                <Image
+                  style={style.imageContent}
+                  source={{ uri: this.state.filePath }}
+                />
+              </View>
+              <TouchableOpacity style={style.downloadButton} onPress={() => this.saveAsset(this.state.filePath)}>
+                <Text style={style.downloadText}>DOWNLOAD</Text>
+              </TouchableOpacity>
+            </View>}
         </View>)}
       />
     );
@@ -77,6 +77,7 @@ AssetImageContentComponent.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         bitmarkId: PropTypes.string,
+        assetName: PropTypes.string,
       }),
     }),
   }),
