@@ -98,7 +98,7 @@ export class BitmarkLegalComponent extends React.Component {
               </Text>
             </Hyperlink>
 
-            <Text style={loadingStyles.contentSubTitleText}>ABOUT THE PROJECT</Text>
+            <Text style={loadingStyles.contentSubTitleText}>ABOUT BITMARK INC.</Text>
             <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
               <Text style={loadingStyles.contentNormalText}>
                 Bitmark Inc. is a venture-funded private company. Current information regarding our funders is here: https://bitmark.com/company/about. Bitmark Inc. has been to date the main developer of the Bitmark distributed node software project, and we will offer services and products which rely on it, but we don't want to be the only people using it. We think it can be useful to the wider community.{'\n\n'}
