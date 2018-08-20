@@ -141,48 +141,48 @@ export class LegalComponent extends React.Component {
             </Hyperlink>
           </View>}
 
-          {this.state.displayedContentName === Contents.DataRetention.name && <View style={legalStyle.swipePageContent}>
+          {this.state.displayedContentName === Contents.KnowYourRights.name && <View style={legalStyle.swipePageContent}>
             <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
               <Text style={[legalStyle.contentNormalText, { paddingTop: 40, paddingBottom: 40, color: '#0060F2' }]}>
                 Original idea comes from Stacey Higginbotham
               </Text>
             </TouchableOpacity>
-            <View style={legalStyle.dataRetentionRow}>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(47), fontWeight: '800' }]}>RETAIN</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(35), fontWeight: '800' }]}>SELL</Text>
+            <View style={legalStyle.knowYourRightsRow}>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47), fontWeight: '800' }]}>RETAIN</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35), fontWeight: '800' }]}>SELL</Text>
             </View>
 
-            <View style={legalStyle.dataRetentionRow}>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(222) }]}>Email (to map Bitmark accounts)</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={legalStyle.knowYourRightsRow}>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Email (to map Bitmark accounts)</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
-            <View style={legalStyle.dataRetentionRow}>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(222) }]}>Log data (when accessing website)	</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={legalStyle.knowYourRightsRow}>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Log data (when accessing website)	</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
-            <View style={legalStyle.dataRetentionRow}>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(222) }]}>Bitmark account number	</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={legalStyle.knowYourRightsRow}>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account number	</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
-            <View style={legalStyle.dataRetentionRow}>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(222) }]}>Bitmark account (in case of webapp)</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={legalStyle.knowYourRightsRow}>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account (in case of webapp)</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
-            <View style={[legalStyle.dataRetentionRow, { borderBottomWidth: 0 }]}>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(222) }]}>Digital assets</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[legalStyle.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={[legalStyle.knowYourRightsRow, { borderBottomWidth: 0 }]}>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222) }]}>Digital assets</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
-            <Text style={[legalStyle.dataRetentionRowText, { marginLeft: convertWidth(19) }]}>(with or without client side encryption)	</Text>
+            <Text style={[legalStyle.knowYourRightsRowText, { marginLeft: convertWidth(19) }]}>(with or without client side encryption)	</Text>
 
 
           </View>}
@@ -469,11 +469,11 @@ export class LegalComponent extends React.Component {
             <Text style={legalStyle.bottomButtonText}>GOVERNANCE POLICY</Text>
             <Image style={legalStyle.bottomButtonIcon} source={require('./../../../../assets/imgs/next-icon.png')} />
           </TouchableOpacity>}
-          {this.state.displayedContentName !== Contents.DataRetention.name && <TouchableOpacity style={[legalStyle.bottomButton, {
+          {this.state.displayedContentName !== Contents.KnowYourRights.name && <TouchableOpacity style={[legalStyle.bottomButton, {
             justifyContent: 'space-between',
             paddingLeft: convertWidth(19),
             paddingRight: convertWidth(19)
-          }]} onPress={() => this.displayContent(Contents.DataRetention)}>
+          }]} onPress={() => this.displayContent(Contents.KnowYourRights)}>
             <Text style={legalStyle.bottomButtonText}>KNOW YOUR RIGHTS</Text>
             <Image style={legalStyle.bottomButtonIcon} source={require('./../../../../assets/imgs/next-icon.png')} />
           </TouchableOpacity>}

@@ -45,7 +45,7 @@ export default StyleSheet.create({
     marginTop: 5,
   },
 
-  dataRetentionRow: {
+  knowYourRights: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -55,7 +55,7 @@ export default StyleSheet.create({
     borderBottomWidth: 0.3,
     borderBottomColor: '#C1C1C1',
   },
-  dataRetentionRowText: {
+  knowYourRightsText: {
     fontSize: 12,
     fontWeight: '300',
     fontFamily: 'Avenir Light',

@@ -19,8 +19,8 @@ import { AppProcessor } from '../../../processors/app-processor';
 import { EventEmitterService } from '../../../services';
 
 const Contents = {
-  DataRetention: {
-    name: 'data-retention',
+  KnowYourRights: {
+    name: 'know-your-rights',
     filePathUrl: 'https://s3-ap-northeast-1.amazonaws.com/bitmark-mobile-files/retention.pdf'
   },
   PrivacyPolicy: {
@@ -43,8 +43,8 @@ export class BitmarkLegalComponent extends React.Component {
     this.shareLegal = this.shareLegal.bind(this);
     let displayedContentName = (this.props && this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) ? this.props.navigation.state.params.displayedContentName : null;
     let displayedContent = Contents.GovernancePolicy;
-    if (displayedContentName === Contents.DataRetention.name) {
-      displayedContent = Contents.DataRetention;
+    if (displayedContentName === Contents.KnowYourRights.name) {
+      displayedContent = Contents.KnowYourRights;
     } else if (displayedContentName === Contents.PrivacyPolicy.name) {
       displayedContent = Contents.PrivacyPolicy;
     } else if (displayedContentName === Contents.TermOfService.name) {
@@ -70,7 +70,7 @@ export class BitmarkLegalComponent extends React.Component {
           </TouchableOpacity>
           <View style={defaultStyle.headerCenter}>
             {this.state.displayedContentName === Contents.GovernancePolicy.name && <Text style={defaultStyle.headerTitle}>GOVERNANCE POLICY</Text>}
-            {this.state.displayedContentName === Contents.DataRetention.name && <Text style={defaultStyle.headerTitle}>KNOW YOUR RIGHTS</Text>}
+            {this.state.displayedContentName === Contents.KnowYourRights.name && <Text style={defaultStyle.headerTitle}>KNOW YOUR RIGHTS</Text>}
             {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={defaultStyle.headerTitle}>PRIVACY POLICY</Text>}
             {this.state.displayedContentName === Contents.TermOfService.name && <Text style={defaultStyle.headerTitle}>TERMS OF SERVICE</Text>}
           </View>
@@ -159,48 +159,48 @@ export class BitmarkLegalComponent extends React.Component {
             </Hyperlink>
           </View>}
 
-          {this.state.displayedContentName === Contents.DataRetention.name && <View style={loadingStyles.swipePageContent}>
+          {this.state.displayedContentName === Contents.KnowYourRights.name && <View style={loadingStyles.swipePageContent}>
             <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
               <Text style={[loadingStyles.contentNormalText, { paddingTop: 40, paddingBottom: 40, color: '#0060F2' }]}>
                 Original idea comes from Stacey Higginbotham
             </Text>
             </TouchableOpacity>
-            <View style={loadingStyles.dataRetentionRow}>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(47), fontWeight: '800' }]}>RETAIN</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(35), fontWeight: '800' }]}>SELL</Text>
+            <View style={loadingStyles.knowYourRightsRow}>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(47), fontWeight: '800' }]}>RETAIN</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(35), fontWeight: '800' }]}>SELL</Text>
             </View>
 
-            <View style={loadingStyles.dataRetentionRow}>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(222) }]}>Email (to map Bitmark accounts)</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={loadingStyles.knowYourRightsRow}>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(222) }]}>Email (to map Bitmark accounts)</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
-            <View style={loadingStyles.dataRetentionRow}>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(222) }]}>Log data (when accessing website)	</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={loadingStyles.knowYourRightsRow}>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(222) }]}>Log data (when accessing website)	</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
-            <View style={loadingStyles.dataRetentionRow}>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(222) }]}>Bitmark account number	</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={loadingStyles.knowYourRightsRow}>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account number	</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
-            <View style={loadingStyles.dataRetentionRow}>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(222) }]}>Bitmark account (in case of webapp)</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={loadingStyles.knowYourRightsRow}>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account (in case of webapp)</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
 
-            <View style={[loadingStyles.dataRetentionRow, { borderBottomWidth: 0 }]}>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(222) }]}>Digital assets</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(47) }]}>yes</Text>
-              <Text style={[loadingStyles.dataRetentionRowText, { width: convertWidth(35) }]}>no</Text>
+            <View style={[loadingStyles.knowYourRightsRow, { borderBottomWidth: 0 }]}>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(222) }]}>Digital assets</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+              <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
             </View>
-            <Text style={[loadingStyles.dataRetentionRowText, { marginLeft: convertWidth(19) }]}>(with or without client side encryption)	</Text>
+            <Text style={[loadingStyles.knowYourRightsRowText, { marginLeft: convertWidth(19) }]}>(with or without client side encryption)	</Text>
 
 
           </View>}
