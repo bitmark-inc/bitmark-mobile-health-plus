@@ -146,8 +146,9 @@ export class LegalComponent extends React.Component {
           </View>}
 
           {this.state.displayedContentName === Contents.KnowYourRights.name && <View style={legalStyle.swipePageContent}>
+            <Text style={legalStyle.contentTitleText}>KNOW YOUR RIGHTS</Text>
             <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
-              <Text style={[legalStyle.contentNormalText, { paddingTop: 40, paddingBottom: 40, color: '#0060F2' }]}>
+              <Text style={[legalStyle.contentNormalText, { paddingBottom: 20, color: '#0060F2' }]}>
                 Original idea comes from Stacey Higginbotham
               </Text>
             </TouchableOpacity>
