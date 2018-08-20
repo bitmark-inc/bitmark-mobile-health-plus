@@ -1,5 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
-console.log('DeviceInfo.getVersion() :', DeviceInfo.getVersion());
+import Intercom from 'react-native-intercom';
 import moment from 'moment';
 
 import {
@@ -235,6 +235,12 @@ const doOpenApp = async () => {
   }
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
+    Intercom.registerIdentifiedUser({ userId: userInformation.bitmarkAccountNumber }).then(() => {
+      console.log('registerIdentifiedUser success =============================');
+    }).catch(error => {
+      console.log('registerIdentifiedUser error :', error);
+    });
+
     configNotification();
     await checkAppNeedResetLocalData(appInfo);
 

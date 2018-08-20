@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import ReactNative from 'react-native';
 import KeepAwake from "react-native-keep-awake";
-import Intercom from 'react-native-intercom';
-Intercom.registerUnidentifiedUser();
 
 // import PushNotification from 'react-native-push-notification';
 
