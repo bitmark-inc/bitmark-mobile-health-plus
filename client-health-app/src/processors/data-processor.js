@@ -172,6 +172,7 @@ const doLogout = async () => {
   await AccountModel.doLogout();
   await UserModel.doRemoveUserInfo();
   userInformation = {};
+  await Intercom.reset();
   DataCacheProcessor.resetCacheData();
 };
 
