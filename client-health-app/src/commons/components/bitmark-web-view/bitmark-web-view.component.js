@@ -99,8 +99,8 @@ class WebViewComponent extends React.Component {
             <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={defaultStyles.headerLeft}/>
-        )}
+            <TouchableOpacity style={defaultStyles.headerLeft} />
+          )}
 
         {/*Header Text*/}
         <Text style={defaultStyles.headerTitle}>{title.toUpperCase()}</Text>
@@ -110,9 +110,9 @@ class WebViewComponent extends React.Component {
           <TouchableOpacity style={defaultStyles.headerRight} onPress={() => this.props.navigation.goBack()}>
             <Text style={defaultStyles.headerRightText}>Done</Text>
           </TouchableOpacity>
-          ) : (
-          <TouchableOpacity style={defaultStyles.headerRight} />
-        )}
+        ) : (
+            <TouchableOpacity style={defaultStyles.headerRight} />
+          )}
       </View>}
       <View style={termsStyles.main}>
         <WebView
@@ -123,7 +123,7 @@ class WebViewComponent extends React.Component {
         />
       </View>
       {!hideBottomController && <View style={[termsStyles.bottomController, {
-        height: (heightButtonController || 57) + (isFullScreen ? ios.constant.blankFooter : 0),
+        height: (heightButtonController || ios.constant.blankFooter) + (isFullScreen ? ios.constant.blankFooter : 0),
         paddingBottom: (isFullScreen ? ios.constant.blankFooter : 0),
       }]}>
         <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { console.log('source :', this.webViewRef.getWebViewHandle()); this.webViewRef.goBack(); }}>
@@ -151,6 +151,7 @@ WebViewComponent.propTypes = {
     setShowPagination: PropTypes.func,
     heightButtonController: PropTypes.number,
     hideBottomController: PropTypes.bool,
+    showDoneButton: PropTypes.bool,
   }),
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
@@ -162,6 +163,7 @@ WebViewComponent.propTypes = {
         isFullScreen: PropTypes.bool,
         heightButtonController: PropTypes.number,
         hideBottomController: PropTypes.bool,
+        showDoneButton: PropTypes.bool,
       })
     })
   }),

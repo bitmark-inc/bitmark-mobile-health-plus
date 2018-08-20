@@ -1,13 +1,6 @@
-import { StyleSheet, Platform } from 'react-native';
-import {
-  ios,
-  android // TODO
-} from './../../../../../configs';
+import { StyleSheet } from 'react-native';
 import { convertWidth } from '../../../../../utils';
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
+import { iosConstant } from '../../../../../configs/ios/ios.config';
 
 export default StyleSheet.create({
   content: {
@@ -109,9 +102,9 @@ export default StyleSheet.create({
 
   leaveButton: {
     width: '100%',
-    minHeight: 45 + constant.blankFooter / 2,
+    minHeight: iosConstant.bottomBottomHeight,
     paddingTop: 10,
-    paddingBottom: Math.max(10, constant.blankFooter),
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
     backgroundColor: '#FF003C',
   },
   leaveButtonText: {

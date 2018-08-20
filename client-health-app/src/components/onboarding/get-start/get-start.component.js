@@ -30,7 +30,6 @@ export class GetStartComponent extends React.Component {
     return (
       <BitmarkComponent
         backgroundColor='white'
-        contentInScroll={true}
         content={(<View style={[getStartStyles.body]}>
           <StatusBar hidden={false} />
           <View style={getStartStyles.swipePageContent}>
@@ -46,7 +45,7 @@ export class GetStartComponent extends React.Component {
           </View>
         </View>)}
 
-        footerHeight={45 + iosConstant.blankFooter / 2}
+        footerHeight={iosConstant.bottomBottomHeight}
         footer={(<View style={getStartStyles.enableButtonArea}>
           <TouchableOpacity style={[getStartStyles.enableButton]} onPress={requestHealthKitPermission}>
             <Text style={getStartStyles.enableButtonText}>ALLOW ACCESS</Text>

@@ -4,6 +4,7 @@ import {
   ios,
   android //TODO
 } from './../../../../configs';
+import { iosConstant } from '../../../../configs/ios/ios.config';
 let constant = Platform.select({ ios: ios.constant, android: android.constant });
 
 export default StyleSheet.create({
@@ -64,7 +65,7 @@ export default StyleSheet.create({
   bitmarkButton: {
     position: 'absolute',
     bottom: 0,
-    minHeight: 45 + constant.blankFooter / 2,
+    minHeight: iosConstant.bottomBottomHeight,
     paddingTop: 10,
     paddingBottom: Math.max(10, constant.blankFooter),
     width: convertWidth(375),

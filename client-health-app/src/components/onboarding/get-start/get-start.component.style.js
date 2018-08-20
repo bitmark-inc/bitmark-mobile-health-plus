@@ -68,7 +68,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   enableButton: {
-    height: 45 + iosConstant.blankFooter / 2,
+    height: iosConstant.bottomBottomHeight,
     width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',
@@ -76,7 +76,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#0060F2',
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   enableButtonText: {
     fontFamily: 'Avenir black',

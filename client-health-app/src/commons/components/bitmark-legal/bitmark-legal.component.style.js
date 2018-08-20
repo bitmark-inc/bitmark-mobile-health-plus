@@ -92,7 +92,7 @@ export default StyleSheet.create({
     resizeMode: 'contain',
   },
   lastBottomButton: {
-    height: 45 + iosConstant.blankFooter / 2,
+    height: iosConstant.bottomBottomHeight,
     width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',

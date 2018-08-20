@@ -33,7 +33,6 @@ export class NotificationComponent extends React.Component {
     return (
       <BitmarkComponent
         backgroundColor='white'
-        contentInScroll={true}
         content={(<View style={[notificationStyle.body]}>
           <View style={notificationStyle.swipePageContent}>
             <View style={notificationStyle.swipePageMainContent}>
@@ -44,7 +43,7 @@ export class NotificationComponent extends React.Component {
           </View>
         </View>)}
 
-        footerHeight={90 + iosConstant.blankFooter / 2}
+        footerHeight={45 + iosConstant.bottomBottomHeight}
         footer={(<View style={notificationStyle.enableButtonArea}>
           <TouchableOpacity style={[notificationStyle.enableButton]} onPress={requestNotification}>
             <Text style={notificationStyle.enableButtonText}>ENABLE</Text>
@@ -52,7 +51,7 @@ export class NotificationComponent extends React.Component {
           <TouchableOpacity style={[notificationStyle.enableButton, {
             backgroundColor: 'white',
             paddingBottom: Math.max(10, iosConstant.blankFooter),
-            height: 45 + iosConstant.blankFooter / 2
+            height: iosConstant.bottomBottomHeight,
           }]} onPress={() => {
             this.props.screenProps.rootNavigation.dispatch(resetMainPage);
           }}>

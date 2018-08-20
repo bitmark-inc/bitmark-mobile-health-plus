@@ -102,14 +102,14 @@ export default StyleSheet.create({
     resizeMode: 'contain',
   },
   lastBottomButton: {
-    height: 45 + iosConstant.blankFooter / 2,
+    height: iosConstant.bottomBottomHeight,
     width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#F2FAFF',
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   lastBottomButtonText: {
     fontFamily: 'Avenir black',

@@ -84,7 +84,7 @@ export class FaceTouchIdComponent extends React.Component {
           </View>
         </View>)}
 
-        footerHeight={45 + iosConstant.blankFooter / 2}
+        footerHeight={iosConstant.bottomBottomHeight}
         footer={(<View style={faceTouchIdStyle.enableButtonArea}>
           <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
             onPress={() => {

@@ -88,7 +88,7 @@ export class Study1ExitSurvey2Component extends React.Component {
                 </View>
               </ScrollView>
             )}
-            footerHeight={45 + iosConstant.blankFooter}
+            footerHeight={iosConstant.bottomBottomHeight}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={styles.optOutButton} onPress={this.doOptOut}>
                 <Text style={styles.optOutButtonText}>OPT OUT</Text>
@@ -131,7 +131,7 @@ export class Study1ExitSurvey2Component extends React.Component {
                 </View>
               </ScrollView>
             )}
-            footerHeight={45 + iosConstant.blankFooter}
+            footerHeight={iosConstant.bottomBottomHeight}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={[styles.interestedButton, { width: '100%' }]} onPress={this.doSubmit}>
                 <Text style={styles.interestedButtonText}>SUBMIT</Text>
@@ -157,7 +157,7 @@ export class Study1ExitSurvey2Component extends React.Component {
                 </View>
               </ScrollView>
             )}
-            footerHeight={45 + iosConstant.blankFooter}
+            footerHeight={iosConstant.bottomBottomHeight}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={[styles.interestedButton, { width: '100%', backgroundColor: '#0060F2' }]} onPress={() => { this.props.navigation.goBack() }}>
                 <Text style={[styles.interestedButtonText, { color: 'white' }]}>DONE</Text>

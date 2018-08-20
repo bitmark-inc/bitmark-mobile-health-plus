@@ -101,12 +101,12 @@ export default StyleSheet.create({
   },
 
   bottomButtons: {
-    height: 45 + iosConstant.blankFooter,
+    height: iosConstant.bottomBottomHeight,
     flexDirection: 'row',
     alignItems: 'center',
   },
   leftButton: {
-    height: 45 + iosConstant.blankFooter,
+    height: iosConstant.bottomBottomHeight,
     width: convertWidth(187.5),
     flexDirection: 'column',
     justifyContent: 'center',
@@ -124,7 +124,7 @@ export default StyleSheet.create({
     color: '#A4B5CD',
   },
   rightButton: {
-    height: 45 + iosConstant.blankFooter,
+    height: iosConstant.bottomBottomHeight,
     width: convertWidth(187.5),
     flexDirection: 'column',
     justifyContent: 'center',
@@ -142,7 +142,7 @@ export default StyleSheet.create({
     color: '#0060F2',
   },
   submitButton: {
-    height: 45 + iosConstant.blankFooter,
+    height: iosConstant.bottomBottomHeight,
     width: convertWidth(375),
     flexDirection: 'column',
     justifyContent: 'center',

@@ -2,12 +2,12 @@ import { StackNavigator, } from 'react-navigation';
 
 import { UserComponent } from './user.component';
 import { BitmarkWebViewComponent, BitmarkLegalComponent } from './../../commons/components';
-import { AccountDetailComponent, AccountRecoveryComponent, ApplicationDetailComponent, HealthComponent, SupportComponent } from './account';
+import { AccountDetailComponent, AccountRecoveryComponent, HealthComponent, SupportComponent } from './account';
 
 import {
   StudySettingComponent, StudyDetailComponent, StudyDonationComponent,
   Study1ExitSurvey2Component, Study2EntryInterviewComponent,
-  StudyConsentComponent, HealthDataSourceComponent, HealthDataBitmarkComponent,
+  StudyConsentComponent, HealthDataSourceComponent,
 } from './donation';
 
 import { BitmarkDetailComponent, AssetImageContentComponent, CaptureAssetPermissionRequestComponent, CaptureAssetPreviewComponent } from './timeline';
@@ -18,7 +18,6 @@ let HomeComponent = StackNavigator({
   BitmarkLegal: { screen: BitmarkLegalComponent, },
   Account: { screen: AccountDetailComponent, },
   AccountRecovery: { screen: AccountRecoveryComponent, },
-  ApplicationDetail: { screen: ApplicationDetailComponent, },
   Health: { screen: HealthComponent },
   Support: { screen: SupportComponent },
   StudyDetail: { screen: StudyDetailComponent, },
@@ -28,7 +27,6 @@ let HomeComponent = StackNavigator({
   Study1ExitSurvey2: { screen: Study1ExitSurvey2Component, },
   Study2EntryInterview: { screen: Study2EntryInterviewComponent, },
   HealthDataSource: { screen: HealthDataSourceComponent, },
-  HealthDataBitmark: { screen: HealthDataBitmarkComponent, },
   BitmarkDetail: { screen: BitmarkDetailComponent, },
   AssetImageContent: { screen: AssetImageContentComponent, },
   CaptureAssetPermissionRequest: { screen: CaptureAssetPermissionRequestComponent },

@@ -6,12 +6,14 @@ const windowHeight = isIPhoneX ? 812 : 667;
 const blankFooter = isIPhoneX ? 20 : 0;
 const headerHeight = isIPhoneX ? 80 : 71;
 const headerPaddingTop = isIPhoneX ? 35 : 20;
+const bottomBottomHeight = (isIPhoneX ? 50 : 45) + blankFooter / 2;
 
 let iosConstant = {
   subTabSizeHeight: 39,
   bottomTabsHeight: 56,
   blankFooter,
   autoCompleteHeight: 45,
+  bottomBottomHeight,
   defaultWindowSize: {
     width: 375,
     height: windowHeight,

@@ -78,7 +78,7 @@ export default StyleSheet.create({
     bottom: 0,
   },
   enableButton: {
-    height: 45 + iosConstant.blankFooter / 2,
+    height: iosConstant.bottomBottomHeight,
     width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',

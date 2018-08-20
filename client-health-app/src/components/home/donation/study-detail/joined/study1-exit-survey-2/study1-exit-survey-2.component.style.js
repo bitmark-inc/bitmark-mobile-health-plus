@@ -103,14 +103,14 @@ export default StyleSheet.create({
   },
 
   bottomButtons: {
-    height: 45 + iosConstant.blankFooter,
+    height: iosConstant.bottomBottomHeight,
     paddingTop: 10,
     paddingBottom: Math.max(10, iosConstant.blankFooter),
     flexDirection: 'row',
     alignItems: 'center',
   },
   interestedButton: {
-    height: 45 + iosConstant.blankFooter,
+    height: iosConstant.bottomBottomHeight,
     paddingTop: 10,
     paddingBottom: Math.max(10, iosConstant.blankFooter),
     width: convertWidth(186),
@@ -128,7 +128,7 @@ export default StyleSheet.create({
     color: '#0060F2',
   },
   optOutButton: {
-    height: 45 + iosConstant.blankFooter,
+    height: iosConstant.bottomBottomHeight,
     paddingTop: 10,
     paddingBottom: Math.max(10, iosConstant.blankFooter),
     width: convertWidth(186),

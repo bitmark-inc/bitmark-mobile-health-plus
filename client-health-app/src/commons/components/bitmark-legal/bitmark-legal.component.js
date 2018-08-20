@@ -475,7 +475,7 @@ export class BitmarkLegalComponent extends React.Component {
 
         </ View>)}
 
-        footerHeight={45 + iosConstant.blankFooter / 2}
+        footerHeight={iosConstant.bottomBottomHeight}
         footer={(<View style={loadingStyles.bottomButtonArea}>
           <TouchableOpacity style={loadingStyles.lastBottomButton} onPress={this.shareLegal}>
             <Text style={loadingStyles.lastBottomButtonText}>SHARE</Text>

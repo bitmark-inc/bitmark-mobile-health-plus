@@ -41,7 +41,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: currentSize.height - (170 + ios.constant.blankFooter),
+    height: currentSize.height - (115 + ios.constant.blankFooter + ios.constant.headerSize.paddingTop),
   },
 
   swipePageMainContent: {

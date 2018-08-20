@@ -7,6 +7,7 @@ const androidConstant = {
   bottomTabsHeight: 56,
   blankFooter: 0,
   autoCompleteHeight: 42,
+  bottomBottomHeight: 45,
   defaultWindowSize: {
     width: 375,
     height: currentSize.height,

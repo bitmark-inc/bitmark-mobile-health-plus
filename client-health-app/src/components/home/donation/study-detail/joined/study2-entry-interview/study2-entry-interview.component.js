@@ -81,7 +81,7 @@ export class Study2EntryInterviewComponent extends React.Component {
               </ScrollView>
             )}
 
-            footerHeight={45 + iosConstant.blankFooter}
+            footerHeight={iosConstant.bottomBottomHeight}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={styles.leftButton} onPress={this.doCompletedTask}>
                 <Text style={styles.leftButtonText}>{'No, thanks'.toUpperCase()}</Text>
@@ -126,7 +126,7 @@ export class Study2EntryInterviewComponent extends React.Component {
                 </View>
               </ScrollView>
             )}
-            footerHeight={45 + iosConstant.blankFooter}
+            footerHeight={iosConstant.bottomBottomHeight}
             footer={(<View style={styles.bottomButtons}>
               <TouchableOpacity style={styles.submitButton} onPress={this.doSubmit}>
                 <Text style={styles.submitButtonText}>SUBMIT</Text>

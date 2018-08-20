@@ -1,13 +1,7 @@
-import { StyleSheet, Platform } from 'react-native';
-import {
-  ios,
-  android // TODO
-} from './../../../../../configs';
+import { StyleSheet } from 'react-native';
+
 import { convertWidth } from '../../../../../utils';
-let constant = Platform.select({
-  ios: ios.constant,
-  android: android.constant
-});
+import { iosConstant } from '../../../../../configs/ios/ios.config';
 export default StyleSheet.create({
   content: {
     width: '100%',
@@ -110,9 +104,9 @@ export default StyleSheet.create({
     backgroundColor: '#0060F2',
     marginTop: 20,
     width: '100%',
-    height: 45 + constant.blankFooter / 2,
+    height: iosConstant.bottomBottomHeight,
     paddingTop: 10,
-    paddingBottom: Math.max(10, constant.blankFooter),
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   bottomButtonText: {
     fontFamily: 'Avenir black',

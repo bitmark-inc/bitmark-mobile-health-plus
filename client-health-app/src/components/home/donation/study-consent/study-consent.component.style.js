@@ -30,9 +30,9 @@ export default StyleSheet.create({
     width: '100%',
   },
   bottomButton: {
-    minHeight: 45,
-    paddingTop: 11,
-    paddingBottom: Math.max(20, 10 + constant.blankFooter),
+    height: constant.bottomBottomHeight,
+    paddingTop: 10,
+    paddingBottom: Math.max(10, constant.blankFooter),
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

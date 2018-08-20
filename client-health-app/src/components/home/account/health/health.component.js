@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image, Alert
+  View, Text, TouchableOpacity, Image
 } from 'react-native';
 
 import { BitmarkComponent } from '../../../../commons/components';

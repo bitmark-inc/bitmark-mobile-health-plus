@@ -1,4 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
+console.log('DeviceInfo.getVersion() :', DeviceInfo.getVersion());
 import moment from 'moment';
 
 import {

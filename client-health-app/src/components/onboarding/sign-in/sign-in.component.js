@@ -284,7 +284,7 @@ export class SignInComponent extends React.Component {
           </TouchableOpacity>
         </TouchableWithoutFeedback>
         )}
-        footerHeight={45 + iosConstant.blankFooter / 2}
+        footerHeight={iosConstant.bottomBottomHeight}
         footer={(
           <TouchableOpacity style={[signStyle.submitButton, {
             backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'

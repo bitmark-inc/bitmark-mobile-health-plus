@@ -459,7 +459,7 @@ export class LegalComponent extends React.Component {
 
         </ View>)}
 
-        footerHeight={45 * 5 + iosConstant.blankFooter / 2}
+        footerHeight={45 * 4 + iosConstant.bottomBottomHeight}
         footer={(<View style={legalStyle.bottomButtonArea}>
           {this.state.displayedContentName !== Contents.GovernancePolicy.name && <TouchableOpacity style={[legalStyle.bottomButton, {
             justifyContent: 'space-between',

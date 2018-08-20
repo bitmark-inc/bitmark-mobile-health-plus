@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import {
   View, Text, TouchableOpacity, Image,
   StatusBar,
-  Alert,
 } from 'react-native';
 
 import Swiper from 'react-native-swiper';
 
 import welcomeComponentStyle from './welcome.component.style';
-import { ios, config } from './../../../configs';
+import { ios } from './../../../configs';
 import { BitmarkComponent } from '../../../commons/components';
 
 export class WelcomeComponent extends React.Component {
@@ -54,7 +53,6 @@ export class WelcomeComponent extends React.Component {
           <BitmarkComponent
             backgroundColor='white'
             ref={(ref) => this.fullRef = ref}
-            contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
                 <View style={welcomeComponentStyle.swipePageContent}>
@@ -72,14 +70,13 @@ export class WelcomeComponent extends React.Component {
                 </View>
               </View>
             )}
-            footerHeight={115 + ios.constant.blankFooter}
+            footerHeight={120 + ios.constant.blankFooter}
             footer={(<View />)}
           />
 
           <BitmarkComponent
             backgroundColor='white'
             ref={(ref) => this.fullRef = ref}
-            contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
                 <View style={welcomeComponentStyle.swipePageContent}>
@@ -97,14 +94,13 @@ export class WelcomeComponent extends React.Component {
                 </View>
               </View>
             )}
-            footerHeight={115 + ios.constant.blankFooter}
+            footerHeight={120 + ios.constant.blankFooter}
             footer={(<View />)}
           />
 
           <BitmarkComponent
             backgroundColor='white'
             ref={(ref) => this.fullRef = ref}
-            contentInScroll={true}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
                 <View style={welcomeComponentStyle.swipePageContent}>
@@ -122,7 +118,7 @@ export class WelcomeComponent extends React.Component {
                 </View>
               </View>
             )}
-            footerHeight={115 + ios.constant.blankFooter}
+            footerHeight={120 + ios.constant.blankFooter}
             footer={(<View />)}
           />
         </Swiper>
@@ -133,7 +129,7 @@ export class WelcomeComponent extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity style={[welcomeComponentStyle.welcomeButton, {
             backgroundColor: '#F2FAFF',
-            height: 45 + ios.constant.blankFooter / 2,
+            height: ios.constant.bottomBottomHeight,
             paddingBottom: Math.max(10, ios.constant.blankFooter)
           }]} onPress={() => {
             this.props.navigation.navigate('SignIn');

@@ -9,7 +9,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     paddingTop: 10,
-    paddingBottom: 10 + ios.constant.blankFooter
+    paddingBottom: 10 + ios.constant.blankFooter,
   },
   dataSourceMessage: {
     fontFamily: 'Avenir Light',
