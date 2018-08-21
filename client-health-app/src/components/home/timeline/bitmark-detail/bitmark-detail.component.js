@@ -105,7 +105,7 @@ export class BitmarkDetailComponent extends React.Component {
                   <Text style={propertyDetailStyle.informationRowLabel}>ISSUED ON</Text>
                 {this.state.bitmark.status === 'confirmed'
                   ? <Text style={propertyDetailStyle.informationRowValue}>{moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase()}</Text>
-                  : <Text style={propertyDetailStyle.informationRowValue}>REGISTERING</Text>
+                  : <Text style={propertyDetailStyle.informationRowValue}>REGISTERING...</Text>
                 }
                 </View>
                 <View style={propertyDetailStyle.informationRowBarArea}>
