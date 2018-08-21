@@ -45,7 +45,7 @@ export default StyleSheet.create({
     marginTop: 5,
   },
 
-  knowYourRights: {
+  knowYourRightsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -55,13 +55,12 @@ export default StyleSheet.create({
     borderBottomWidth: 0.3,
     borderBottomColor: '#C1C1C1',
   },
-  knowYourRightsText: {
+  knowYourRightsRowText: {
     fontSize: 12,
     fontWeight: '300',
     fontFamily: 'Avenir Light',
     lineHeight: 21,
   },
-
 
 
   bottomButtonArea: {
