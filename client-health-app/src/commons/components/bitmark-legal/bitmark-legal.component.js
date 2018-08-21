@@ -65,8 +65,8 @@ export class BitmarkLegalComponent extends React.Component {
   render() {
     return (
       <BitmarkComponent
-        backgroundColor='white'
-        header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
+        backgroundColor='#F5F5F5'
+        header={(<View style={[defaultStyle.header, { backgroundColor: '#F5F5F5', borderBottomColor: 'rgba(0,0,0,0.3)', borderBottomWidth: 0.3, }]}>
           <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
