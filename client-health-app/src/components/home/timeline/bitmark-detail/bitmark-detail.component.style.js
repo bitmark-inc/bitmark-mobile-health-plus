@@ -8,16 +8,19 @@ export default StyleSheet.create({
     height: '100%',
     width: '100%',
     borderTopWidth: 0.5,
-    borderTopColor: 'rgba(0, 0, 0, 0.3)'
+    borderTopColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: '#FFFFFF'
   },
   bodyContent: {
     flexDirection: 'column',
     alignItems: 'center',
-    paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19),
     paddingTop: 25
   },
-
+  contentContainer: {
+    width: '100%',
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
+  },
   imageArea: {
     backgroundColor: 'white',
     width: '100%',
@@ -95,7 +98,6 @@ export default StyleSheet.create({
   },
 
   viewRegistryButton: {
-    marginTop: 15,
     height: 44,
     backgroundColor: 'white',
     width: convertWidth(375),
@@ -141,5 +143,10 @@ export default StyleSheet.create({
   },
   privateInfoArea: {
     marginTop: 25
+  },
+  separator: {
+    width: '100%',
+    height: 10,
+    backgroundColor: '#EDF0F4'
   }
 });
