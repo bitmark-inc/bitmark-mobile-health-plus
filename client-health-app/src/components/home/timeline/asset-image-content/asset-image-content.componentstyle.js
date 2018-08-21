@@ -22,7 +22,7 @@ export default StyleSheet.create({
   },
   imageContent: {
     height: '60%',
-    resizeMode: 'cover'
+    resizeMode: 'stretch'
   },
   downloadButton: {
     width: convertWidth(375),
