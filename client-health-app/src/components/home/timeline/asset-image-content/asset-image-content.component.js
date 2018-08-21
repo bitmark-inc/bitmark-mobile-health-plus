@@ -25,7 +25,7 @@ export class AssetImageContentComponent extends React.Component {
 
   doGetScreenData(bitmarkId) {
     AppProcessor.doDownloadBitmark(bitmarkId, {
-      indicator: true, title: 'Preparing to view...'
+      indicator: true, title: 'Preparing your data...'
     }).then(filePath => {
       this.setState({ filePath });
     }).catch(error => {

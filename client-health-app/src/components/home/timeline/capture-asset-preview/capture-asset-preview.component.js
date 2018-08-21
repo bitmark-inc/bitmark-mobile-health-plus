@@ -77,7 +77,7 @@ export class CaptureAssetPreviewComponent extends React.Component {
   issueAsset(filePath, metadataList) {
     let assetName = `HA${randomString({length: 8, numeric: true, letters: false,})}`;
     AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
-      indicator: true, title: '', message: 'Encrypting and protecting your health data...'
+      indicator: true, title: 'Encrypting and protecting your health data...', message: ''
     }).then((data) => {
       if (data) {
         CommonModel.doTrackEvent({
