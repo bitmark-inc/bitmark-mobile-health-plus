@@ -15,7 +15,7 @@ export default StyleSheet.create({
 
   previewImage: {
     height: '100%',
-    resizeMode: 'stretch'
+    resizeMode: 'contain'
   },
 
   bottomButton: {

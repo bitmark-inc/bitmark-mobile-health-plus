@@ -65,7 +65,8 @@ export class AssetImageContentComponent extends React.Component {
               <TouchableOpacity style={style.downloadButton} onPress={() => this.saveAsset(this.state.filePath)}>
                 <Text style={style.downloadText}>DOWNLOAD</Text>
               </TouchableOpacity>
-            </View>}
+            </View>
+          }
         </View>)}
       />
     );

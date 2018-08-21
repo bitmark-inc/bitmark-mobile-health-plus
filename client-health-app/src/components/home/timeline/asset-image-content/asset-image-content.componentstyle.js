@@ -21,8 +21,8 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   imageContent: {
-    height: '60%',
-    resizeMode: 'stretch'
+    height: '100%',
+    resizeMode: 'contain'
   },
   downloadButton: {
     width: convertWidth(375),
