@@ -100,15 +100,18 @@ export class BitmarkDetailComponent extends React.Component {
               </View>
 
               {/*ISSUED ON*/}
-              {this.state.bitmark.status === 'confirmed' && <View style={propertyDetailStyle.informationRow}>
+              <View style={propertyDetailStyle.informationRow}>
                 <View style={propertyDetailStyle.informationRowContent}>
                   <Text style={propertyDetailStyle.informationRowLabel}>ISSUED ON</Text>
-                  <Text style={propertyDetailStyle.informationRowValue}>{moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss')}</Text>
+                {this.state.bitmark.status === 'confirmed'
+                  ? <Text style={propertyDetailStyle.informationRowValue}>{moment(this.state.bitmark.created_at).format('YYYY MMM DD HH:mm:ss').toUpperCase()}</Text>
+                  : <Text style={propertyDetailStyle.informationRowValue}>REGISTERING</Text>
+                }
                 </View>
                 <View style={propertyDetailStyle.informationRowBarArea}>
                   <View style={propertyDetailStyle.informationRowBarLine} />
                 </View>
-              </View>}
+              </View>
 
               {/*METADATA*/}
               <View style={propertyDetailStyle.informationRow}>
@@ -117,7 +120,7 @@ export class BitmarkDetailComponent extends React.Component {
                   <Text style={propertyDetailStyle.informationRowValue}>SOURCE: {this.state.asset.metadata['Source']}</Text>
                 </View>
                 <View style={[propertyDetailStyle.informationRowContent, propertyDetailStyle.fromSecondRow]}>
-                  <Text style={propertyDetailStyle.informationRowValue}>SAVED TIME: {moment(this.state.asset.metadata['Saved Time']).format('YYYY MMM DD HH:mm:ss')}</Text>
+                  <Text style={propertyDetailStyle.informationRowValue}>SAVED TIME: {moment(this.state.asset.metadata['Saved Time']).format('YYYY MMM DD HH:mm:ss').toUpperCase()}</Text>
                 </View>
                 <View style={propertyDetailStyle.informationRowBarArea}>
                   <View style={propertyDetailStyle.informationRowBarLine} />
@@ -125,12 +128,12 @@ export class BitmarkDetailComponent extends React.Component {
               </View>
 
               {/*BITMARKS*/}
-              {this.state.bitmark.status === 'confirmed' && <View style={propertyDetailStyle.informationRow}>
+              <View style={propertyDetailStyle.informationRow}>
                 <View style={propertyDetailStyle.informationRowContent}>
                   <Text style={propertyDetailStyle.informationRowLabel}>BITMARKS</Text>
                   <Text style={propertyDetailStyle.informationRowValue}>1</Text>
                 </View>
-              </View>}
+              </View>
             </View>
 
             {/*VIEW ON BLOCKCHAIN*/}

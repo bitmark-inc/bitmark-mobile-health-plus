@@ -106,8 +106,7 @@ export default StyleSheet.create({
     paddingRight: convertWidth(19),
   },
   viewRegistryButtonText: {
-    fontWeight: '300',
-    fontFamily: 'Avenir Light',
+    fontFamily: 'Avenir Medium',
     fontSize: 14,
     color: '#0060F2'
   },
