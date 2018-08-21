@@ -72,7 +72,13 @@ export class LegalComponent extends React.Component {
             <Text style={legalStyle.contentNormalText}>Bitmark Distributed Node Software Project</Text>
 
             <Text style={legalStyle.contentSubTitleText}>ABOUT THE PROJECT</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
+            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => {
+              if (url === 'https://bitmark.com/resources/blockchain') {
+                Linking.openURL('https://bitmark.com/resources');
+              } else {
+                Linking.openURL(url);
+              }
+            }} >
               <Text style={legalStyle.contentNormalText}>
                 We expect you probably got here from bitmark.com. But just in case you didn't, the explanation of the Bitmark project is here:{'\n\n'}
                 https://bitmark.com/resources/faq{'\n'}
@@ -195,13 +201,27 @@ export class LegalComponent extends React.Component {
           {this.state.displayedContentName === Contents.PrivacyPolicy.name && <View style={legalStyle.swipePageContent}>
             <Text style={legalStyle.contentTitleText}>BITMARK INC. PRIVACY POLICY</Text>
             <Text style={legalStyle.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
+            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => {
+              if (url === 'https://bitmark.com/terms') {
+                Linking.openURL('https://bitmark.com/term');
+              } else {
+                Linking.openURL(url);
+              }
+            }} >
               <Text style={legalStyle.contentNormalText}>
                 Bitmark Inc. ("Company") provides this Privacy Policy to inform users of our policies and procedures regarding the collection, use and disclosure of personally identifiable information received from users of website located at the bitmark.com domain and subdomains ("Web Site"), and the downloadable and web-based software application (collectively, the "Application"), and any services provided by Company (together with the Website and the Application, the "Services"). Any terms not defined in this Privacy Policy are defined in the Company Terms of Service, located here: https://bitmark.com/terms.
               </Text>
             </Hyperlink>
 
             <Text style={legalStyle.contentSubTitleText}>WEBSITE INFORMATION COLLECTION AND USE</Text>
+            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
+              <Text style={legalStyle.contentNormalText}>
+                It is not necessary to provide Company with your personally identifiable information to use the Web Site, and Company does not collect personally identifiable information in connection with the operation of the Web Site. If you contact Company by email through the Web Site, Company may keep a record of your contact information and correspondence, and may use your email address, and any information that you provide to Company in your message, to respond to you. Company treats this information as it would treat any other unsolicited business correspondence, and has no obligation to keep this information confidential, nor to take any security measures to protect this information.{'\n\n'}
+                When you visit the Web Site or use the Website to download an Application, Company's servers automatically record information that your browser sends whenever you visit a website ("Log Data"). This Log Data may include information such as your IP address, browser type or the domain from which you are visiting. For most users accessing the Internet from an Internet service provider, the IP address may be different every time you log on. Company uses Log Data to monitor use of the Web Site and the services we offer via the Web Site and for the Web Site's technical administration.
+              </Text>
+            </Hyperlink>
+
+            <Text style={legalStyle.contentSubTitleText}>APPLICATION INFORMATION COLLECTION AND USE</Text>
             <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
               <Text style={legalStyle.contentNormalText}>
                 We collect the following information in connection with your use of the Applications, and use it as described:{'\n\n'}
