@@ -76,7 +76,7 @@ const doLogout = async () => {
 };
 
 const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark issuance.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
   if (!touchFaceIdSession) {
     return null;
   }
