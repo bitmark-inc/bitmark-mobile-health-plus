@@ -110,7 +110,6 @@ const doReloadUserData = async () => {
 
 const doRequireHealthKitPermission = async () => {
   let allDataTypes = await DonationModel.doGetAllDataTypes();
-  console.log('allDataTypes :', allDataTypes);
   if (allDataTypes) {
     await AppleHealthKitModel.initHealthKit(allDataTypes);
   }

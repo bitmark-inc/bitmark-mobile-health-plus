@@ -143,7 +143,7 @@ class MainComponent extends Component {
     const jsErrorHandler = async (error, isFatal) => {
       if (error && isFatal) {
         let userInformation = await UserModel.doGetCurrentUser();
-        let crashLog = `${error.name} : ${error.message}\r\n${error.stack ? error.stack : ''}`;
+        let crashLog = `JS error: ${error.name} : ${error.message}\r\n${error.stack ? error.stack : ''}`;
         crashLog = `${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${crashLog}`;
 
         console.log('Unexpected JS error:', crashLog);
@@ -157,7 +157,7 @@ class MainComponent extends Component {
     // Handle native code error
     setNativeExceptionHandler(async (exceptionString) => {
       let userInformation = await UserModel.doGetCurrentUser();
-      let crashLog = `${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${exceptionString}`;
+      let crashLog = `Native error: ${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${exceptionString}`;
       console.log('Unexpected Native Code error:', crashLog);
 
       await FileUtil.create(CRASH_LOG_FILE_PATH, crashLog);
