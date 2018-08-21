@@ -49,7 +49,6 @@ export default StyleSheet.create({
   },
   bitmarkConfirmedText: {
     marginTop: 25,
-    fontWeight: '300',
     fontFamily: 'Avenir Medium',
     fontSize: 14,
     color: '#0060F2',
@@ -83,7 +82,6 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#8E8E93',
     textAlign: 'right',
-    marginRight: convertWidth(19),
     flex: 1
   },
   informationRowBarArea: {
@@ -100,12 +98,9 @@ export default StyleSheet.create({
   viewRegistryButton: {
     height: 44,
     backgroundColor: 'white',
-    width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19),
+    justifyContent: 'center'
   },
   viewRegistryButtonText: {
     fontFamily: 'Avenir Medium',
