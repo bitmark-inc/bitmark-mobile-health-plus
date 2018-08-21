@@ -113,16 +113,14 @@ export class LegalComponent extends React.Component {
             </Hyperlink>
 
             <Text style={legalStyle.contentSubTitleText}>PRINCIPLES OF OPERATION</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
-              <Text style={legalStyle.contentNormalText}>
-                Bitmark Inc. will maintain the primary code repository for the Bitmark distributed node software project and will retain primary development and maintenance responsibility. We will also retain control of the code commit decisions, at least until a sufficiently strong community has arisen from which to select trusted code committers.{'\n\n'}
-                Bitmark Inc. will also provide one or more community moderators to guide the discussion about the project, again, at least until a sufficiently strong community has arisen from which to select trusted community moderators.{'\n\n'}
-                Bitmark Inc. will provide its reasons for all of its decisions regarding the Bitmark distributed node software project, including the direction it chooses for development, code commit decisions, and community management decisions.{'\n\n'}
-                The primary method of communication among the communities will be one or more mailing lists. This creates an archive of community conversations and allows asynchronous conversations. Our expectations for behavior are here: https://bitmark.com/conduct. Generally speaking, however, we expect our community members to conduct open and honest conversations, <Text style={{ fontWeight: '800', fontStyle: 'italic' }}>while always treating each other with respect and honoring the dignity of each individual participant.</Text>{'\n\n'}
-                We will over time evaluate the community to determine whether we have a sufficient number of active participants to establish additional roles for community members or to establish a more democratic mode of governance.{'\n\n'}
-                Our expectation is that only Bitmark employees speak for the organization for which they work, and even then, only within their scope of authority. All other community members speak only for themselves.
-              </Text>
-            </Hyperlink>
+            <Text style={legalStyle.contentNormalText}>
+              Bitmark Inc. will maintain the primary code repository for the Bitmark distributed node software project and will retain primary development and maintenance responsibility. We will also retain control of the code commit decisions, at least until a sufficiently strong community has arisen from which to select trusted code committers.{'\n\n'}
+              Bitmark Inc. will also provide one or more community moderators to guide the discussion about the project, again, at least until a sufficiently strong community has arisen from which to select trusted community moderators.{'\n\n'}
+              Bitmark Inc. will provide its reasons for all of its decisions regarding the Bitmark distributed node software project, including the direction it chooses for development, code commit decisions, and community management decisions.{'\n\n'}
+              The primary method of communication among the communities will be one or more mailing lists. This creates an archive of community conversations and allows asynchronous conversations. Our expectations for behavior are here: https://bitmark.com/conduct. Generally speaking, however, we expect our community members to conduct open and honest conversations, <Text style={{ fontWeight: '800', fontStyle: 'italic' }}>while always treating each other with respect and honoring the dignity of each individual participant.</Text>{'\n\n'}
+              We will over time evaluate the community to determine whether we have a sufficient number of active participants to establish additional roles for community members or to establish a more democratic mode of governance.{'\n\n'}
+              Our expectation is that only Bitmark employees speak for the organization for which they work, and even then, only within their scope of authority. All other community members speak only for themselves.
+            </Text>
 
             <Text style={legalStyle.contentSubTitleText}>CONTRIBUTIONS</Text>
             <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
