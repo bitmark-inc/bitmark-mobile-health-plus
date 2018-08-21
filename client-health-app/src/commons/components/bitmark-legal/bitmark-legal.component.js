@@ -5,6 +5,7 @@ import {
   StatusBar,
   Linking,
   Alert,
+  Share,
 } from 'react-native';
 import Mailer from 'react-native-mail';
 import Hyperlink from 'react-native-hyperlink';
@@ -31,10 +32,6 @@ const Contents = {
     name: 'term-of-service',
     filePathUrl: 'https://s3-ap-northeast-1.amazonaws.com/bitmark-mobile-files/term.pdf'
   },
-  GovernancePolicy: {
-    name: 'governance-policy',
-    filePathUrl: 'https://s3-ap-northeast-1.amazonaws.com/bitmark-mobile-files/governance.pdf'
-  },
 }
 export class BitmarkLegalComponent extends React.Component {
   static Contents = Contents;
@@ -42,11 +39,9 @@ export class BitmarkLegalComponent extends React.Component {
     super(props);
     this.shareLegal = this.shareLegal.bind(this);
     let displayedContentName = (this.props && this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) ? this.props.navigation.state.params.displayedContentName : null;
-    let displayedContent = Contents.GovernancePolicy;
+    let displayedContent = Contents.PrivacyPolicy;
     if (displayedContentName === Contents.KnowYourRights.name) {
       displayedContent = Contents.KnowYourRights;
-    } else if (displayedContentName === Contents.PrivacyPolicy.name) {
-      displayedContent = Contents.PrivacyPolicy;
     } else if (displayedContentName === Contents.TermOfService.name) {
       displayedContent = Contents.TermOfService;
     }
@@ -54,7 +49,14 @@ export class BitmarkLegalComponent extends React.Component {
   }
 
   shareLegal() {
-    AppProcessor.doDownloadAndShareLegal(this.state.displayedContentName, '', this.state.displayedContent.filePathUrl).catch(error => {
+    AppProcessor.doDownloadAndShareLegal(this.state.displayedContentName, this.state.displayedContent.filePathUrl).then(filePath => {
+      Share.share({ title: this.state.displayedContentName, url: filePath }).then(() => {
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+      }).catch(error => {
+        console.log('Share error:', error);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+      })
+    }).catch(error => {
       console.log('doDownloadAndShareLegal error:', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
@@ -69,7 +71,6 @@ export class BitmarkLegalComponent extends React.Component {
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <View style={defaultStyle.headerCenter}>
-            {this.state.displayedContentName === Contents.GovernancePolicy.name && <Text style={defaultStyle.headerTitle}>GOVERNANCE POLICY</Text>}
             {this.state.displayedContentName === Contents.KnowYourRights.name && <Text style={defaultStyle.headerTitle}>KNOW YOUR RIGHTS</Text>}
             {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={defaultStyle.headerTitle}>PRIVACY POLICY</Text>}
             {this.state.displayedContentName === Contents.TermOfService.name && <Text style={defaultStyle.headerTitle}>TERMS OF SERVICE</Text>}
@@ -80,90 +81,6 @@ export class BitmarkLegalComponent extends React.Component {
         contentInScroll={true}
         content={(<View style={[loadingStyles.body]}>
           <StatusBar hidden={false} />
-
-          {this.state.displayedContentName === Contents.GovernancePolicy.name && <View style={loadingStyles.swipePageContent}>
-            <Text style={loadingStyles.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
-            <Text style={loadingStyles.contentNormalText}>Bitmark Distributed Node Software Project</Text>
-
-            <Text style={loadingStyles.contentSubTitleText}>ABOUT THE PROJECT</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => {
-              if (url === 'https://bitmark.com/resources/blockchain') {
-                Linking.openURL('https://bitmark.com/resources');
-              } else {
-                Linking.openURL(url)
-              }
-            }} >
-              <Text style={loadingStyles.contentNormalText}>
-                We expect you probably got here from bitmark.com. But just in case you didn't, the explanation of the Bitmark project is here:{'\n\n'}
-                https://bitmark.com/resources/faq{'\n'}
-                https://bitmark.com/resources/white-papers{'\n'}
-                https://bitmark.com/resources/blockchain{'\n'}
-                The Bitmark distributed node software project is the means by which the peer-to-peer network implements the Bitmark crypto property system.{'\n\n'}
-                The core values of both Bitmark Inc. and the Bitmark distributed node software project are transparency and trust. The end goal of the Bitmark distributed node software project is to develop a means of establishing transparency and trust in digital property.{'\n\n'}
-                To that end, this document attempts to transparently establish the principles by which Bitmark Inc. provides the Bitmark distributed node to the community and invites community participation, with the hope of establishing trust in that community.{'\n'}
-              </Text>
-            </Hyperlink>
-
-            <Text style={loadingStyles.contentSubTitleText}>ABOUT BITMARK INC.</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
-              <Text style={loadingStyles.contentNormalText}>
-                Bitmark Inc. is a venture-funded private company. Current information regarding our funders is here: https://bitmark.com/company/about. Bitmark Inc. has been to date the main developer of the Bitmark distributed node software project, and we will offer services and products which rely on it, but we don't want to be the only people using it. We think it can be useful to the wider community.{'\n\n'}
-                Just as the larger project of Bitmark Inc. and the Bitmark distributed node software project is a distributed peer-to-peer network for managing and claiming digital property, we'd like the Bitmark distributed node software project to become a community project.
-            </Text>
-            </Hyperlink>
-
-            <Text style={loadingStyles.contentSubTitleText}>WHY NOT A FOUNDATION?</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
-              <Text style={loadingStyles.contentNormalText}>
-                Bitmark Inc. is a small company. We simply don't have the resources to establish and sustain a separate foundation to manage the Bitmark distributed node software project. As we grow, we will continue to evaluate whether, between Bitmark Inc. and the community, there are adequate resources to establish and sustain a separate foundation for the development and maintenance of the Bitmark distributed node software project.
-            </Text>
-            </Hyperlink>
-
-            <Text style={loadingStyles.contentSubTitleText}>WHY THE INTERNET SYSTEMS CONSORTIUM ("ISC") LICENSE?</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
-              <Text style={loadingStyles.contentNormalText}>
-                We chose a permissive license in order to allow the broadest possible set of uses for the Bitmark distributed node software project. It also makes contribution easy – just license your contribution under the ISC License. We may at some point revisit the licensing model based on the actual uses of the Bitmark distributed node software project and community input.
-            </Text>
-            </Hyperlink>
-
-            <Text style={loadingStyles.contentSubTitleText}>PRINCIPLES OF OPERATION</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
-              <Text style={loadingStyles.contentNormalText}>
-                Bitmark Inc. will maintain the primary code repository for the Bitmark distributed node software project and will retain primary development and maintenance responsibility. We will also retain control of the code commit decisions, at least until a sufficiently strong community has arisen from which to select trusted code committers.{'\n\n'}
-                Bitmark Inc. will also provide one or more community moderators to guide the discussion about the project, again, at least until a sufficiently strong community has arisen from which to select trusted community moderators.{'\n\n'}
-                Bitmark Inc. will provide its reasons for all of its decisions regarding the Bitmark distributed node software project, including the direction it chooses for development, code commit decisions, and community management decisions.{'\n\n'}
-                The primary method of communication among the communities will be one or more mailing lists. This creates an archive of community conversations and allows asynchronous conversations. Our expectations for behavior are here: https://bitmark.com/conduct. Generally speaking, however, we expect our community members to conduct open and honest conversations, <Text style={{ fontWeight: '800', fontStyle: 'italic' }}>while always treating each other with respect and honoring the dignity of each individual participant.</Text>{'\n\n'}
-                We will over time evaluate the community to determine whether we have a sufficient number of active participants to establish additional roles for community members or to establish a more democratic mode of governance.{'\n\n'}
-                Our expectation is that only Bitmark employees speak for the organization for which they work, and even then, only within their scope of authority. All other community members speak only for themselves.
-            </Text>
-            </Hyperlink>
-
-            <Text style={loadingStyles.contentSubTitleText}>CONTRIBUTIONS</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
-              <Text style={loadingStyles.contentNormalText}>
-                Please assume that everything you contribute intentionally to the Bitmark distributed node software project is public. This includes emails on public lists, wikis, other online discussions of all sorts, and software or documentation that you post to this website or our revision control repositories. There may be cases where you are invited to share private information for various purposes, and denote that information as such. That information is subject to the privacy policy of Bitmark Inc., located here: https://bitmark.com/privacy. Similarly, other information collected by this website is subject to that privacy policy.{'\n\n'}
-                Although what participants disclose here is public, both community members and Bitmark Inc. are limited by intellectual property law in how the use of community member contributions. <Text style={{ fontWeight: '800', fontStyle: 'italic' }}>Bitmark Inc. only accepts voluntary contributions of software and documentation that are expressly licensed to Bitmark Inc. (or all comers) under the ISC license.</Text>
-              </Text>
-            </Hyperlink>
-
-            <Text style={loadingStyles.contentSubTitleText}>UPDATES TO THIS GOVERNANCE POLICY</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
-              <Text style={loadingStyles.contentNormalText}>
-                Bitmark Inc. may update this Governance Policy from time to time. We will maintain a revision history in our revision control repository.
-            </Text>
-            </Hyperlink>
-
-            <Text style={loadingStyles.contentSubTitleText}>QUESTIONS</Text>
-            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Mailer.mail({ subject: 'Suggestion for Bitmark Health', recipients: [url], }, (error) => {
-              if (error) {
-                Alert.alert('Error', 'Could not send mail.');
-              }
-            })} >
-              <Text style={loadingStyles.contentNormalText}>
-                Questions should be directed to: governance@bitmark.com.
-            </Text>
-            </Hyperlink>
-          </View>}
 
           {this.state.displayedContentName === Contents.KnowYourRights.name && <View style={loadingStyles.swipePageContent}>
             <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>

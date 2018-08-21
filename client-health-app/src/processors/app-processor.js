@@ -173,8 +173,8 @@ const doGetBitmarkInformation = async (bitmarkId) => {
   return executeTask('doGetBitmarkInformation', { bitmarkId });
 };
 
-const doDownloadAndShareLegal = async (title, message, urlDownload) => {
-  return executeTask('doDownloadAndShareLegal', { title, message, urlDownload });
+const doDownloadAndShareLegal = async (title, urlDownload) => {
+  return executeTask('doDownloadAndShareLegal', { title, urlDownload });
 };
 
 // ================================================================================================

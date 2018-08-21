@@ -56,15 +56,6 @@ export class SupportComponent extends React.Component {
           <View style={defaultStyle.itemContainer}>
             <TouchableOpacity onPress={() => {
               this.props.navigation.navigate('BitmarkLegal', {
-                displayedContentName: BitmarkLegalComponent.Contents.GovernancePolicy.name,
-              })
-            }}>
-              <Text style={defaultStyle.text}>Governance</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={defaultStyle.itemContainer}>
-            <TouchableOpacity onPress={() => {
-              this.props.navigation.navigate('BitmarkLegal', {
                 displayedContentName: BitmarkLegalComponent.Contents.KnowYourRights.name,
               })
             }}>

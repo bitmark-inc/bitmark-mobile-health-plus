@@ -1,7 +1,7 @@
-import { Platform, AppRegistry, Share } from 'react-native';
+import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 
-import { CommonModel, AccountModel, FaceTouchId, BitmarkModel, } from './../models';
+import { CommonModel, AccountModel, FaceTouchId, } from './../models';
 import { EventEmitterService, BitmarkService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { ios } from '../configs';
@@ -163,12 +163,13 @@ const doGetBitmarkInformation = async ({ bitmarkId }) => {
   return { asset, bitmark, donationInformation };
 };
 
-const doDownloadAndShareLegal = async ({ title, message, urlDownload }) => {
+const doDownloadAndShareLegal = async ({ title, urlDownload }) => {
   let folderPath = FileUtil.DocumentDirectory + '/legal';
   let filePath = folderPath + '/' + title + '.pdf';
+  console.log('filePath :', filePath);
   await FileUtil.mkdir(folderPath);
   await processing(FileUtil.downloadFile(urlDownload, filePath));
-  await Share.share({ title, message, url: filePath });
+  return filePath;
 };
 
 
