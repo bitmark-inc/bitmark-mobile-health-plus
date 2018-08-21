@@ -112,7 +112,6 @@ AppleHealthKitModel.initHealthKit = (readDataType) => {
     }
     AppleHealthKit.initHealthKit({ permissions: permissions }, (error, response) => {
       if (error) {
-        console.log('error: ', error);
         reject(error);
       } else {
         resolve(response);
