@@ -47,7 +47,9 @@ export class BitmarkDetailComponent extends React.Component {
 
   downloadAsset(bitmarkId) {
     AppProcessor.doDownloadBitmark(bitmarkId).then(filePath => {
-      Share.share({ title: this.state.asset.name, message: '', url: filePath });
+      Share.share({ title: this.state.asset.name, url: filePath })
+        .then((data) => console.log('data:', data))
+        .catch((error) => {console.log('error:', error)});
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { title: "Your bitmark isn't ready to download.\nPlease try again later." });
       console.log('doDownload asset error :', error);
