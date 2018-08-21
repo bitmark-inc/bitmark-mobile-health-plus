@@ -98,7 +98,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#0060F2',
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
   lastBottomButtonText: {
     fontFamily: 'Avenir black',
