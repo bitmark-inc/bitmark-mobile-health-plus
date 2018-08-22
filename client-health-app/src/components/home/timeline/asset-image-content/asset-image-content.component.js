@@ -35,7 +35,9 @@ export class AssetImageContentComponent extends React.Component {
   }
 
   saveAsset(filePath) {
-    Share.share({ title: this.state.assetName, message: '', url: filePath });
+    Share.share({ title: this.state.assetName, url: filePath })
+      .then((data) => console.log('data:', data))
+      .catch((error) => {console.log('error:', error)});
   }
 
   render() {
@@ -63,7 +65,8 @@ export class AssetImageContentComponent extends React.Component {
               <TouchableOpacity style={style.downloadButton} onPress={() => this.saveAsset(this.state.filePath)}>
                 <Text style={style.downloadText}>DOWNLOAD</Text>
               </TouchableOpacity>
-            </View>}
+            </View>
+          }
         </View>)}
       />
     );

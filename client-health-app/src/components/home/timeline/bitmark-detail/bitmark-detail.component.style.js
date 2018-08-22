@@ -8,16 +8,19 @@ export default StyleSheet.create({
     height: '100%',
     width: '100%',
     borderTopWidth: 0.5,
-    borderTopColor: 'rgba(0, 0, 0, 0.3)'
+    borderTopColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: '#FFFFFF'
   },
   bodyContent: {
     flexDirection: 'column',
     alignItems: 'center',
-    paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19),
     paddingTop: 25
   },
-
+  contentContainer: {
+    width: '100%',
+    paddingLeft: convertWidth(19),
+    paddingRight: convertWidth(19),
+  },
   imageArea: {
     backgroundColor: 'white',
     width: '100%',
@@ -46,7 +49,6 @@ export default StyleSheet.create({
   },
   bitmarkConfirmedText: {
     marginTop: 25,
-    fontWeight: '300',
     fontFamily: 'Avenir Medium',
     fontSize: 14,
     color: '#0060F2',
@@ -80,7 +82,6 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#8E8E93',
     textAlign: 'right',
-    marginRight: convertWidth(19),
     flex: 1
   },
   informationRowBarArea: {
@@ -95,15 +96,11 @@ export default StyleSheet.create({
   },
 
   viewRegistryButton: {
-    marginTop: 15,
     height: 44,
     backgroundColor: 'white',
-    width: convertWidth(375),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: convertWidth(19),
-    paddingRight: convertWidth(19),
+    justifyContent: 'center'
   },
   viewRegistryButtonText: {
     fontFamily: 'Avenir Medium',
@@ -141,5 +138,10 @@ export default StyleSheet.create({
   },
   privateInfoArea: {
     marginTop: 25
+  },
+  separator: {
+    width: '100%',
+    height: 10,
+    backgroundColor: '#EDF0F4'
   }
 });
