@@ -34,7 +34,7 @@ export default StyleSheet.create({
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   contentCreatedText: {
     width: convertWidth(375),

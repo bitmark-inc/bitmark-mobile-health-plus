@@ -23,8 +23,9 @@ export default StyleSheet.create({
     fontWeight: '900',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 25,
+    paddingBottom: 10,
+    borderWidth: 1,
   },
   contentCreatedText: {
     width: convertWidth(375),
@@ -43,6 +44,7 @@ export default StyleSheet.create({
     fontWeight: '300',
     fontFamily: 'Avenir Light',
     marginTop: 5,
+    borderWidth: 1,
   },
 
   knowYourRightsRow: {
@@ -61,7 +63,6 @@ export default StyleSheet.create({
     fontFamily: 'Avenir Light',
     lineHeight: 21,
   },
-
 
   bottomButtonArea: {
     flexDirection: 'column',
