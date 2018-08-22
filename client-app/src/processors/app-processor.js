@@ -2,10 +2,11 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 import { registerTasks } from './app-tasks-register';
 
-import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel } from './../models';
+import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel, NotificationModel } from './../models';
 import { AccountService, BitmarkService, EventEmitterService, TransactionService } from './../services'
 import { DataProcessor } from './data-processor';
 import { ios } from '../configs';
+import { compareVersion } from '../utils';
 
 registerTasks();
 // ================================================================================================
@@ -227,6 +228,19 @@ const doDecentralizedTransfer = async (token, expiredTime) => {
   return executeTask('doDecentralizedTransfer', { token, expiredTime });
 };
 
+const doCheckNoLongerSupportVersion = async () => {
+  let data = await NotificationModel.doTryGetAppVersion();
+  if (data && data.version && data.version.minimum_supported_version) {
+    let minimumSupportedVersion = data.version.minimum_supported_version;
+    let currentVersion = DataProcessor.getApplicationVersion();
+    if (compareVersion(minimumSupportedVersion, currentVersion) > 0) {
+      return false;
+    }
+    return true;
+  }
+  return false;
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -271,6 +285,8 @@ let AppProcessor = {
   doDecentralizedTransfer,
 
   doStartBackgroundProcess,
+
+  doCheckNoLongerSupportVersion,
 }
 
 export {

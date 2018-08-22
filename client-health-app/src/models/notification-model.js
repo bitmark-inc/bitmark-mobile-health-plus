@@ -77,6 +77,28 @@ const doTryRegisterAccount = (accountNumber, timestamp, signature) => {
   });
 };
 
+const doTryGetAppVersion = () => {
+  return new Promise((resolve) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/app-versions/health`;
+    fetch(tempURL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return resolve();
+      }
+      resolve(data);
+    }).catch(() => resolve());
+  });
+};
+
 let configure = (onRegister, onNotification) => {
   PushNotification.configure({
     onRegister: onRegister,
@@ -96,6 +118,7 @@ let setApplicationIconBadgeNumber = (number) => {
 let NotificationModel = {
   doRegisterNotificationInfo,
   doDeregisterNotificationInfo,
+  doTryGetAppVersion,
 
   configure,
   doRequestNotificationPermissions,
