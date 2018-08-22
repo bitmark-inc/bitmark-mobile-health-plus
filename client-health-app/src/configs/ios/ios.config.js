@@ -3,14 +3,15 @@ import { Dimensions } from 'react-native';
 const currentSize = Dimensions.get('window');
 const isIPhoneX = (currentSize.height === 812);
 const windowHeight = isIPhoneX ? 812 : 667;
-const blankFooter = isIPhoneX ? 20 : 0;
+const blankFooter = isIPhoneX ? 34 : 0;
 const headerHeight = isIPhoneX ? 80 : 71;
 const headerPaddingTop = isIPhoneX ? 35 : 20;
 const bottomBottomHeight = (isIPhoneX ? 50 : 45) + blankFooter / 2;
+const bottomTabsHeight = isIPhoneX ? 49 : 56;
 
 let iosConstant = {
   subTabSizeHeight: 39,
-  bottomTabsHeight: 56,
+  bottomTabsHeight,
   blankFooter,
   autoCompleteHeight: 45,
   bottomBottomHeight,

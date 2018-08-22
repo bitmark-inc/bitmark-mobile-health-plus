@@ -196,6 +196,13 @@ export class BitmarkLegalComponent extends React.Component {
             <Text style={loadingStyles.contentSubTitleText}>DO NOT TRACK</Text>
             <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
               <Text style={loadingStyles.contentNormalText}>
+                We use only session cookies as described above. We do not use cookies to collect personally identifiable information or track users' online activities over time and across different web sites. For more information regarding Do Not Track mechanisms, see http://allaboutdnt.com.
+              </Text>
+            </Hyperlink>
+
+            <Text style={loadingStyles.contentSubTitleText}>INFORMATION SHARED WITH OTHERS</Text>
+            <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
+              <Text style={loadingStyles.contentNormalText}>
                 We may engage third party service providers to work with us to administer and provide the Services. These third-party service providers have access to information collected through the Services only for the purpose of performing services on our behalf.{'\n'}
                 We may share aggregated information and information about users (but not personally identifiable information) with third parties for industry analysis, targeting advertising or other communications, demographic profiling and other similar purposes.{'\n'}
                 Information collected through the Services including personally identifiable information, is considered to be a business asset. As a result, if we go out of business or enter bankruptcy or if we are acquired as a result of a transaction such as a merger, acquisition or asset sale, the information collected through the Services may be disclosed or transferred to the third-party acquirer in connection with the transaction.{'\n'}
