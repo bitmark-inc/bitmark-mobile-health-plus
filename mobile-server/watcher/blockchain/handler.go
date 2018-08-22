@@ -123,22 +123,23 @@ func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitma
 
 	asset = previousTx.Asset
 
-	senderPushMessage := fmt.Sprintf(messages[EventTransferConfirmedSender], previousTx.Asset.Name, util.ShortenAccountNumber(transfer.Owner))
-	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
-		Account: previousTx.Tx.Owner,
-		Title:   "",
-		Message: senderPushMessage,
-		Data: &map[string]interface{}{
-			"tx_id":      transfer.TxID,
-			"bitmark_id": transfer.BitmarkID,
-			"name":       "transfer_completed",
-		},
-		Source: "gateway",
-		Pinned: false,
-		Silent: true,
-	}, h.pushStore, h.pushAPIClient); err != nil {
-		return err
-	}
+	// TODO: temporary disable this notification, need to re-enable or remove this code.
+	// senderPushMessage := fmt.Sprintf(messages[EventTransferConfirmedSender], previousTx.Asset.Name, util.ShortenAccountNumber(transfer.Owner))
+	// if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
+	// 	Account: previousTx.Tx.Owner,
+	// 	Title:   "",
+	// 	Message: senderPushMessage,
+	// 	Data: &map[string]interface{}{
+	// 		"tx_id":      transfer.TxID,
+	// 		"bitmark_id": transfer.BitmarkID,
+	// 		"name":       "transfer_completed",
+	// 	},
+	// 	Source: "gateway",
+	// 	Pinned: false,
+	// 	Silent: true,
+	// }, h.pushStore, h.pushAPIClient); err != nil {
+	// 	return err
+	// }
 
 	receiverPushMessage := fmt.Sprintf(messages[EventTransferConfirmedReceiver], asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner))
 	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{

@@ -12,6 +12,11 @@ type PushServerInfo struct {
 	Topic string `hcl:"topic"`
 }
 
+type SupportedVersion struct {
+	LatestVersion       string `hcl:"latestVersion" json:"latest_version"`
+	MinSupportedVersion string `hcl:"minSupportedVersion" json:"minimum_supported_version"`
+}
+
 type Configuration struct {
 	Network string `hcl:"network"`
 	Listen  struct {
@@ -47,6 +52,7 @@ type Configuration struct {
 	DataDonation struct {
 		ResearcherAccounts map[string]string `hcl:"researchers"`
 	} `hcl:"data-donation"`
+	SupportedVersion map[string]SupportedVersion `hcl:"supported-version"`
 }
 
 func LoadConfig(configFile string) (*Configuration, error) {
