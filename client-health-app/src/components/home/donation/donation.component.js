@@ -256,7 +256,7 @@ export class DonationComponent extends React.Component {
               <View style={[donationStyle.content, { alignItems: 'center' }]}>
                 <Image style={donationStyle.welcomeIcon} source={require('./../../../../assets/imgs/donation-completed.png')} />
                 <Text style={donationStyle.todoEmptyTitle}>CONGRATULATIONS!</Text>
-                <Text style={donationStyle.todoEmptyDescription}>You’ve completed all the to-dos.</Text>
+                <Text style={donationStyle.todoEmptyDescription}>You have completed all the to-dos for now.</Text>
               </View>}
 
           </TouchableOpacity>
