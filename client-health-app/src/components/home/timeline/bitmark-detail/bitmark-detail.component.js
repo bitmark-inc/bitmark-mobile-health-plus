@@ -158,7 +158,7 @@ export class BitmarkDetailComponent extends React.Component {
               <View style={propertyDetailStyle.contentContainer}>
                 {/*MY PRIVATE HEALTH DATA*/}
                 <View style={[propertyDetailStyle.titleArea, propertyDetailStyle.privateInfoArea]}>
-                  <Text style={propertyDetailStyle.titleText}>MY PRIVATE HEALTH DATA</Text>
+                  <Text style={propertyDetailStyle.titleText}>PRIVATE HEALTH DATA</Text>
                   <View style={propertyDetailStyle.subTitleArea}>
                     <Image style={propertyDetailStyle.eyeIcon} source={require('./../../../../../assets/imgs/icon-eye.png')} />
                     <Text style={propertyDetailStyle.subTitleText}>Can be accessed by:</Text>
@@ -169,21 +169,24 @@ export class BitmarkDetailComponent extends React.Component {
                 <View style={propertyDetailStyle.informationRowBarLine} />
 
                 {/*PREVIEW*/}
+              {this.state.bitmark.status === 'confirmed' &&
                 <TouchableOpacity style={propertyDetailStyle.imageArea} onPress={() => {
-                  if (this.state.bitmark.status === 'confirmed') {
-                    if (this.state.taskType === 'bitmark_health_issuance') {
-                      this.props.navigation.navigate('AssetImageContent', { bitmarkId: this.state.bitmarkId, assetName: this.state.asset.name });
-                    } else {
-                      this.downloadAsset(this.state.bitmarkId);
-                    }
+                  if (this.state.taskType === 'bitmark_health_issuance') {
+                    this.props.navigation.navigate('AssetImageContent', {bitmarkId: this.state.bitmarkId, assetName: this.state.asset.name});
+                  } else {
+                    this.downloadAsset(this.state.bitmarkId);
                   }
                 }}>
-                  <Image style={propertyDetailStyle.assetIcon} source={require('./../../../../../assets/imgs/asset-icon.png')} />
-                  {this.state.bitmark.status === 'pending' && <Text style={propertyDetailStyle.bitmarkPending}>Registering ownership...</Text>}
-                  {this.state.bitmark.status === 'confirmed' &&
+                  <Image style={propertyDetailStyle.assetIcon} source={require('./../../../../../assets/imgs/asset-icon.png')}/>
                   <Text style={propertyDetailStyle.bitmarkConfirmedText}>View full private health data</Text>
-                  }
                 </TouchableOpacity>
+              }
+              {this.state.bitmark.status === 'pending' &&
+                <View style={propertyDetailStyle.imageArea}>
+                  <Image style={propertyDetailStyle.assetIcon} source={require('./../../../../../assets/imgs/asset-icon.png')} opacity={0.5}/>
+                  <Text style={propertyDetailStyle.bitmarkPending}>Registering ownership...</Text>
+                </View>
+              }
               </View>
             </View>
           }
