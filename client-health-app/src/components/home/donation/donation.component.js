@@ -54,6 +54,7 @@ export class DonationComponent extends React.Component {
       let { donationTasks, totalDonationTasks } = await DataProcessor.doGetDonationTasks(0);
       let studies = (donationInformation.otherStudies || []).concat(donationInformation.joinedStudies || []);
       studies = studies.sort((a, b) => (a.studyId < b.studyId ? -1 : (a.studyId > b.studyId ? 1 : 0)));
+      console.log('doGetScreenData :', DataProcessor.isAppLoadingData());
       this.setState({
         donationInformation,
         donationTasks,
@@ -61,6 +62,7 @@ export class DonationComponent extends React.Component {
         totalDonationTasks,
         studies,
         gettingData: false,
+        appLoadingData: DataProcessor.isAppLoadingData(),
       });
     };
     doGetScreenData();
@@ -80,6 +82,7 @@ export class DonationComponent extends React.Component {
   // ==========================================================================================
 
   handerLoadingData() {
+    console.log('handerLoadingData DataProcessor.isAppLoadingData()  :', DataProcessor.isAppLoadingData());
     this.setState({ appLoadingData: DataProcessor.isAppLoadingData() });
   }
 
@@ -239,11 +242,23 @@ export class DonationComponent extends React.Component {
                 }}
               />
             </View>}
-            {(!this.state.donationTasks || this.state.donationTasks.length === 0) && <View style={[donationStyle.content, { alignItems: 'center' }]}>
-              <Image style={donationStyle.welcomeIcon} source={require('./../../../../assets/imgs/todo-welcome-icon.png')} />
-              <Text style={donationStyle.todoEmptyTitle}>WELCOME!</Text>
-              <Text style={donationStyle.todoEmptyDescription}>When you join studies, you will be asked to authorize access to specific data here. </Text>
-            </View>}
+            {(!this.state.donationTasks || this.state.donationTasks.length === 0) &&
+              (this.state.donationInformation && (!this.state.donationInformation.joinedStudies || this.state.donationInformation.joinedStudies.length === 0)) &&
+              <View style={[donationStyle.content, { alignItems: 'center' }]}>
+                <Image style={donationStyle.welcomeIcon} source={require('./../../../../assets/imgs/todo-welcome-icon.png')} />
+                <Text style={donationStyle.todoEmptyTitle}>WELCOME!</Text>
+                <Text style={donationStyle.todoEmptyDescription}>When you join studies, you will be asked to authorize access to specific data here. </Text>
+              </View>}
+
+
+            {(!this.state.donationTasks || this.state.donationTasks.length === 0) &&
+              (this.state.donationInformation && this.state.donationInformation.joinedStudies && this.state.donationInformation.joinedStudies.length > 0) &&
+              <View style={[donationStyle.content, { alignItems: 'center' }]}>
+                <Image style={donationStyle.welcomeIcon} source={require('./../../../../assets/imgs/donation-completed.png')} />
+                <Text style={donationStyle.todoEmptyTitle}>CONGRATULATIONS!</Text>
+                <Text style={donationStyle.todoEmptyDescription}>You’ve completed all the to-dos.</Text>
+              </View>}
+
           </TouchableOpacity>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
