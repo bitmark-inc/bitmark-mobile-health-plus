@@ -8,13 +8,13 @@ import {
   Linking
 } from 'react-native';
 
-import Mailer from 'react-native-mail';
+// import Mailer from 'react-native-mail';
 import { BitmarkComponent, BitmarkLegalComponent } from '../../../../commons/components';
 
 import defaultStyle from '../../../../commons/styles';
 import style from './support.component.style';
 import { config } from "../../../../configs";
-import { DataProcessor } from "../../../../processors";
+// import { DataProcessor } from "../../../../processors";
 
 export class SupportComponent extends React.Component {
   render() {

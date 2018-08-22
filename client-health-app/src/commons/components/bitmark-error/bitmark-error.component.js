@@ -15,7 +15,7 @@ export class BitmarkErrorComponent extends React.Component {
       title: this.props.title,
     };
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       message: nextProps.message,
       title: nextProps.title,

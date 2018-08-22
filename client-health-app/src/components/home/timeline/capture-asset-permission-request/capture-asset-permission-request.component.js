@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 
 import style from './capture-asset-permission-request.component.style';
-import {BitmarkComponent} from "../../../../commons/components/";
+import { BitmarkComponent } from "../../../../commons/components/";
 import defaultStyle from "../../../../commons/styles";
 
 
@@ -14,7 +14,7 @@ export class CaptureAssetPermissionRequestComponent extends React.Component {
     super(props);
     let type = this.props.navigation.state.params.type;
 
-    this.state = {type};
+    this.state = { type };
   }
 
   componentDidMount() {
@@ -55,6 +55,14 @@ export class CaptureAssetPermissionRequestComponent extends React.Component {
 }
 
 CaptureAssetPermissionRequestComponent.propTypes = {
+  navigation: PropTypes.shape({
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        type: PropTypes.string,
+      }),
+    }),
+    goBack: PropTypes.func,
+  }),
   screenProps: PropTypes.shape({
     homeNavigation: PropTypes.shape({
       navigate: PropTypes.func,

@@ -7,7 +7,6 @@ import {
 
 import userStyle from './bottom-tabs.component.style';
 import { EventEmitterService, NotificationService } from '../../../services';
-import styles from '../../../commons/styles';
 import { DataProcessor } from '../../../processors';
 
 const MainTabs = {

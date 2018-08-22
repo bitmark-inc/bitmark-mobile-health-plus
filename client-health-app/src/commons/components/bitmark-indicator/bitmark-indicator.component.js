@@ -16,7 +16,7 @@ export class BitmarkIndicatorComponent extends React.Component {
       title: this.props.title,
     };
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       indicator: nextProps.indicator,
       message: nextProps.message,

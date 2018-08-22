@@ -10,7 +10,6 @@ import { AppProcessor } from './../../../../processors';
 import { BitmarkComponent } from './../../../../commons/components';
 import accountRecoveryStyle from './account-recovery.component.style';
 import defaultStyle from './../../../../commons/styles';
-import { convertWidth } from '../../../../utils';
 import { iosConstant } from '../../../../configs/ios/ios.config';
 
 let currentUser;
@@ -105,11 +104,11 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
         content={(
           <View style={accountRecoveryStyle.body}>
             <View style={[accountRecoveryStyle.header]}>
-              <TouchableOpacity style={[defaultStyle.headerLeft, { width: 40 }]} onPress={() => { this.props.navigation.goBack() }}>
+              <TouchableOpacity style={[defaultStyle.headerLeft]} onPress={() => { this.props.navigation.goBack() }}>
                 <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
               </TouchableOpacity>
-              <Text style={[defaultStyle.headerTitle, { maxHeight: convertWidth(375) - 80 }]}>{(isSignOut ? 'Write Down Recovery Phrase' : 'Recovery Phrase').toUpperCase()}</Text>
-              <TouchableOpacity style={[defaultStyle.headerRight, { width: 40 }]} />
+              <Text style={[defaultStyle.headerTitle]}>{'Recovery Phrase'.toUpperCase()}</Text>
+              <TouchableOpacity style={[defaultStyle.headerRight]} />
             </View>
             <ScrollView style={accountRecoveryStyle.recoveryPhraseContent}>
               {!isSignOut && <Text style={accountRecoveryStyle.writeRecoveryPhraseContentMessage}>Please write down your recovery phrase in the exact sequence below:</Text>}
@@ -557,7 +556,13 @@ export class AccountRecoveryComponent extends React.Component {
 }
 
 AccountRecoveryComponent.propTypes = {
-  navigation: PropTypes.shape({}),
+  navigation: PropTypes.shape({
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        logout: PropTypes.func
+      }),
+    }),
+  }),
   screenProps: PropTypes.shape({
     logout: PropTypes.func,
   }),

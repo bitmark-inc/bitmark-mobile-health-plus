@@ -42,7 +42,7 @@ export default StyleSheet.create({
     width: 103,
     height: 30,
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: 5,
     borderColor: 'white',
     backgroundColor: 'white',
     flexDirection: 'row',

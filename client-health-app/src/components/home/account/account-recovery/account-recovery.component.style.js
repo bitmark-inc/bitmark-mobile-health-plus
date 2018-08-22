@@ -73,14 +73,12 @@ export default StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'white',
     width: '100%',
-    height: 283,
     flexDirection: 'row',
   },
   writeRecoveryPhraseContentHalfList: {
     flexDirection: 'column',
     paddingTop: 17,
     paddingBottom: 17,
-    height: 283,
   },
   writeRecoveryPhraseContentTestButtonText: {
     fontFamily: 'Avenir Light',
@@ -91,11 +89,11 @@ export default StyleSheet.create({
   },
   recoveryPhraseSet: {
     flexDirection: 'row',
-    height: 21,
+    alignItems: 'center',
   },
   recoveryPhraseIndex: {
     fontFamily: 'Avenir Light',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '300',
     color: '#D4D4D4',
     width: convertWidth(39),
@@ -103,7 +101,7 @@ export default StyleSheet.create({
   },
   recoveryPhraseWord: {
     fontFamily: 'Avenir Light',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '300',
     color: '#0060F2',
     width: convertWidth(108),
