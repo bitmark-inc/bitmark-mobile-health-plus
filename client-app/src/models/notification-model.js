@@ -82,7 +82,7 @@ const doTryGetAppVersion = () => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/app-versions/bitmark`;
     fetch(tempURL, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
