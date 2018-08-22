@@ -40,7 +40,7 @@ export class CaptureAssetPreviewComponent extends React.Component {
             onPress: () => this.props.navigation.navigate('BitmarkDetail', { bitmarkId: bitmark.id, taskType: 'bitmark_health_issuance' })
           }]);
         } else {
-          Alert.alert('', 'This data has registered by other accounts before, please select another data to register again. You also can view the public information of the data registration.', [{
+          Alert.alert('', 'This data has registered by another account before, please select another data to register again. You also can view the public information of the data registration.', [{
             text: 'Cancel', style: 'cancel'
           }, {
             text: 'View',
@@ -75,7 +75,7 @@ export class CaptureAssetPreviewComponent extends React.Component {
   }
 
   issueAsset(filePath, metadataList) {
-    let assetName = `HA${randomString({length: 8, numeric: true, letters: false,})}`;
+    let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
     AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
       indicator: true, title: 'Encrypting and protecting your health data...', message: ''
     }).then((data) => {
