@@ -78,7 +78,7 @@ export class BitmarkLegalComponent extends React.Component {
           <TouchableOpacity style={defaultStyle.headerRight} />
         </View>)}
 
-        contentInScroll={true}
+        contentInScroll={this.state.displayedContentName !== Contents.KnowYourRights.name}
         content={(<View style={[loadingStyles.body]}>
           <StatusBar hidden={false} />
 
