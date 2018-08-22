@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Intercom from 'react-native-intercom';
 import {
   View, Text, TouchableOpacity, Image,
   Share,
@@ -125,15 +126,16 @@ export class SupportComponent extends React.Component {
   }
 
   sendFeedback() {
-    Mailer.mail({
-      subject: 'Suggestion for Bitmark Health',
-      recipients: ['support@bitmark.com'],
-      body: 'App version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
-    }, (error) => {
-      if (error) {
-        Alert.alert('Error', 'Could not send mail. Please send a mail to support@bitmark.com');
-      }
-    });
+    Intercom.displayConversationsList();
+    // Mailer.mail({
+    //   subject: 'Suggestion for Bitmark Health',
+    //   recipients: ['support@bitmark.com'],
+    //   body: 'App version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
+    // }, (error) => {
+    //   if (error) {
+    //     Alert.alert('Error', 'Could not send mail. Please send a mail to support@bitmark.com');
+    //   }
+    // });
   }
 }
 
