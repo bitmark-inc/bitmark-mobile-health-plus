@@ -126,7 +126,7 @@ export class SupportComponent extends React.Component {
   }
 
   sendFeedback() {
-    Intercom.displayConversationsList();
+    Intercom.displayMessageComposer();
     // Mailer.mail({
     //   subject: 'Suggestion for Bitmark Health',
     //   recipients: ['support@bitmark.com'],

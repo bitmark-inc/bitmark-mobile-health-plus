@@ -168,7 +168,7 @@ export class UserComponent extends React.Component {
             </TouchableOpacity>
             <Text style={defaultStyle.headerTitle}>BITMARK HEALTH</Text>
             <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
-              Intercom.displayConversationsList();
+              Intercom.displayMessageComposer();
             }}>
               <Image style={[userStyle.accountIcon, { width: 26, height: 26, marginRight: convertWidth(19) }]} source={require('./../../../assets/imgs/intercom.png')} />
             </TouchableOpacity>
