@@ -150,6 +150,10 @@ const doCreateAccount = async (touchFaceIdSession) => {
   let donationInformation = await DonationModel.doActiveBitmarkHealthData(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, moment().toDate());
   await doCheckNewDonationInformation(donationInformation, true);
   await doGenerateDisplayedData();
+  await CommonModel.doTrackEvent({
+    event_name: 'health_create_new_account',
+    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+  });
   return userInformation;
 };
 
@@ -242,6 +246,28 @@ const doOpenApp = async () => {
       console.log('registerIdentifiedUser error :', error);
     });
 
+    if (!appInfo.lastTimeOpen) {
+      let appInfo = await doGetAppInformation();
+      appInfo.lastTimeOpen = moment().toDate().getTime();
+      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+      console.log('set first time open app');
+    } else if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_open_app_two_time_in_a_week) {
+
+      let firstTime = moment(appInfo.lastTimeOpen);
+      let currentTime = moment();
+      let diff = currentTime.diff(firstTime, 'week');
+      if (diff === 0) {
+        console.log('open app two times in week!');
+        appInfo.trackEvents = appInfo.trackEvents || {};
+        appInfo.trackEvents.health_user_open_app_two_time_in_a_week = true;
+        await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+        await CommonModel.doTrackEvent({
+          event_name: 'health_user_open_app_two_time_in_a_week',
+          account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+        });
+      }
+    }
+
     configNotification();
     await checkAppNeedResetLocalData(appInfo);
 
@@ -279,6 +305,18 @@ const doInactiveBitmarkHealthData = async (touchFaceIdSession) => {
 const doJoinStudy = async (touchFaceIdSession, studyId) => {
   let donationInformation = await DonationService.doJoinStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);
   await doCheckNewDonationInformation(donationInformation);
+
+  let appInfo = (await doGetAppInformation()) || {};
+  if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_joined_study) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents.health_user_first_time_joined_study = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    await CommonModel.doTrackEvent({
+      event_name: 'health_user_first_time_joined_study',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
   return donationInformation;
 };
 const doLeaveStudy = async (touchFaceIdSession, studyId) => {
@@ -306,6 +344,18 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     list,
     currentDonationInformation.commonTaskIds.bitmark_health_data);
   await doCheckNewDonationInformation(donationInformation);
+
+  let appInfo = (await doGetAppInformation()) || {};
+  if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_issued_weekly_health_data) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents.health_user_first_time_issued_weekly_health_data = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    await CommonModel.doTrackEvent({
+      event_name: 'health_user_first_time_issued_weekly_health_data',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
   return donationInformation;
 };
 
@@ -322,6 +372,18 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     await DonationService.doCompleteTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, donationInformation.commonTaskIds.bitmark_health_issuance, moment().toDate(), null, result[0]);
   }
   await doReloadUserData();
+
+  let appInfo = (await doGetAppInformation()) || {};
+  if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_issued_file) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents.health_user_first_time_issued_file = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    await CommonModel.doTrackEvent({
+      event_name: 'health_user_first_time_issued_file',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
   return result;
 };
 
