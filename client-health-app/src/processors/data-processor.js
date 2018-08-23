@@ -265,6 +265,9 @@ const doOpenApp = async () => {
           event_name: 'health_user_open_app_two_time_in_a_week',
           account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
         });
+      } else {
+        appInfo.lastTimeOpen = currentTime.toDate().getTime();
+        await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
       }
     }
 
