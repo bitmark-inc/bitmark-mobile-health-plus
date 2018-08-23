@@ -35,6 +35,9 @@ export default StyleSheet.create({
     fontStyle: 'italic',
     fontWeight: '300',
   },
+  contentNormalRow: {
+    flexDirection: 'row',
+  },
   contentNormalText: {
     width: convertWidth(375),
     paddingLeft: convertWidth(19),
