@@ -179,7 +179,7 @@ const doLoadDonationTask = async (donationInformation) => {
 }
 
 const doActiveBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, activeBitmarkHealthDataAt) => {
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession, );
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   if (!signatureData) {
     return null;
   }
@@ -395,7 +395,6 @@ const removeEmptyValueData = (healthData) => {
   return realData;
 };
 const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, allDataTypes, list, taskType) => {
-  let donationInformation;
   for (let dateRange of list) {
     let healthRawData = await doGetHealthKitData(allDataTypes, dateRange.startDate, dateRange.endDate);
     let randomId = randomString({ length: 8, numeric: true, letters: false, });
@@ -416,9 +415,8 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
     let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.assetMetadata, 1);
     await FileUtil.remove(filePath);
     await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment(dateRange.endDate).toDate(), null, issueResult[0]);
-    return doGetUserInformation(bitmarkAccountNumber);
   }
-  return donationInformation;
+  return doGetUserInformation(bitmarkAccountNumber);
 };
 
 const doDownloadStudyConsent = async (study) => {

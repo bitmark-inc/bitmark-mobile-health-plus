@@ -160,7 +160,7 @@ const BitmarkSDK = {
         if (ok) {
           resolve({ result: ok });
         } else {
-          reject(new Error(results || 'Can transfer One Signature!'));
+          reject(new Error(results || 'Can not transfer One Signature!'));
         }
       });
     });
