@@ -23,7 +23,7 @@ let config = {
   mobile_server_url: 'https://bm.devel.bitmark.com',
   preview_asset_url: 'https://preview.test.bitmarkaccountassets.com',
   bitmark_web_site: 'https://website.test.bitmark.com',
-  needResetLocalData: 1531973005311,
+  needResetLocalData: 1535081368111,
 };
 
 if (config.network === NETWORKS.testnet) {
@@ -67,7 +67,7 @@ export { config, ios, android };
 
 
 // testnet
-// code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.0.map" --targetBinaryVersion "1.1.0"
+// code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map" --targetBinaryVersion "1.1.1"
 // code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.0.0.map" [--targetBinaryVersion "~1.0.0"]
 
 // livetnet
