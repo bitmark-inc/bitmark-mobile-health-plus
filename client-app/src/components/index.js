@@ -31,7 +31,6 @@ import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-e
 import RNExitApp from 'react-native-exit-app';
 import Mailer from "react-native-mail";
 import { FileUtil } from "../utils";
-import { config } from '../configs';
 
 const CRASH_LOG_FILE_NAME = 'crash_log.txt';
 const CRASH_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + CRASH_LOG_FILE_NAME;
@@ -300,17 +299,7 @@ class MainComponent extends Component {
   }
 
   doOpenApp() {
-    // // TODO
-    AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
-      if (!result) {
-        Alert.alert('New Version Available', 'You’re using a version of Bitmark or operating system that’s no longer supported. Please update to the newest app version. Thanks!', [{
-          text: 'Visit Appstore',
-          onPress: Linking.openURL(config.appLink)
-        }]);
-        return;
-      }
-      return DataProcessor.doOpenApp();
-    }).then(user => {
+    DataProcessor.doOpenApp().then(user => {
       this.setState({ user });
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {

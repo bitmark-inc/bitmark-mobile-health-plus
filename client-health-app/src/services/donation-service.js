@@ -240,6 +240,9 @@ const doStudyTask = async (study, taskType) => {
     return await Study2Model.showActiveTask1();
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task2) {
     let oldData = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_STUDY_TASK2);
+    if (!oldData || !oldData.value || !oldData.date || !oldData.type) {
+      oldData = {};
+    }
     return await Study2Model.showActiveTask2(oldData);
   } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
     return await Study2Model.showActiveTask3();
