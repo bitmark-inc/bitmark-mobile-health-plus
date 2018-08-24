@@ -255,8 +255,9 @@ const doOpenApp = async () => {
 
       let firstTime = moment(appInfo.lastTimeOpen);
       let currentTime = moment();
-      let diff = currentTime.diff(firstTime, 'week');
-      if (diff === 0) {
+      let diffWeeks = currentTime.diff(firstTime, 'week');
+      let diffHours = currentTime.diff(firstTime, 'hour');
+      if (diffWeeks === 0 && diffHours > 1) {
         console.log('open app two times in week!');
         appInfo.trackEvents = appInfo.trackEvents || {};
         appInfo.trackEvents.health_user_open_app_two_time_in_a_week = true;
@@ -265,7 +266,7 @@ const doOpenApp = async () => {
           event_name: 'health_user_open_app_two_time_in_a_week',
           account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
         });
-      } else {
+      } else if (diffWeeks > 0) {
         appInfo.lastTimeOpen = currentTime.toDate().getTime();
         await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
       }
