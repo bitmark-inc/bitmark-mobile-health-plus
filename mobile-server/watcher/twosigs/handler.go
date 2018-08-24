@@ -108,7 +108,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Message: messages[event],
 			Data:    &data,
 			Pinned:  false,
-			Source:  "gateway",
+			Source:  "",
 			Silent:  false,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferAccepted:
@@ -118,7 +118,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Message: messages[event],
 			Data:    &data,
 			Pinned:  false,
-			Source:  "gateway",
+			Source:  "",
 			Silent:  false,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferFailed:
@@ -128,7 +128,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Message: messages[event],
 			Data:    &data,
 			Pinned:  false,
-			Source:  "gateway",
+			Source:  "",
 			Silent:  false,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferRejected:
@@ -138,7 +138,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Message: messages[event],
 			Data:    &data,
 			Pinned:  false,
-			Source:  "gateway",
+			Source:  "",
 			Silent:  false,
 		}, h.pushStore, h.pushAPIClient)
 	default:
