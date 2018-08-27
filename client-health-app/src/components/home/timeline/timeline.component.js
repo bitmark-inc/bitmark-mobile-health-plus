@@ -133,7 +133,7 @@ export class TimelineComponent extends React.Component {
                 if (item.taskType) {
                   return (<View style={timelineStyle.rowData}>
                     <View style={timelineStyle.rowDataTime}>
-                      <Text style={timelineStyle.rowDataTimeText}>{item.time}</Text>
+                      <Text style={timelineStyle.rowDataTimeText}>{item.time.toUpperCase()}</Text>
                     </View>
 
                     <View style={timelineStyle.rowDataLineArea}>
@@ -203,7 +203,7 @@ export class TimelineComponent extends React.Component {
 
                 return (<View style={timelineStyle.rowData}>
                   <View style={[timelineStyle.rowDataTime]}>
-                    <Text style={timelineStyle.rowDataTimeText}>{item.time}</Text>
+                    <Text style={timelineStyle.rowDataTimeText}>{item.time.toUpperCase()}</Text>
                   </View>
 
                   <View style={timelineStyle.rowDataLineArea}>
