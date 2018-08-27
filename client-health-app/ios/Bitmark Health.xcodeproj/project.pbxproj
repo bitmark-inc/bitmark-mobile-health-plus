@@ -2583,7 +2583,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.health;
 				PRODUCT_NAME = "Bitmark Health";
-				PROVISIONING_PROFILE = "af7eafe1-9dc2-4bc8-bfca-b9ca809c10ed";
+				PROVISIONING_PROFILE = "ff029f8b-19c2-4f49-8ba3-ebdfb18e17fd";
 				PROVISIONING_PROFILE_SPECIFIER = "Bitmark Health Distribution";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
