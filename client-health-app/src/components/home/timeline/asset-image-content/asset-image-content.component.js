@@ -9,6 +9,7 @@ import { BitmarkComponent } from './../../../../commons/components';
 import style from './asset-image-content.componentstyle';
 import defaultStyle from './../../../../commons/styles';
 import { AppProcessor } from '../../../../processors';
+import { EventEmitterService } from '../../../../services';
 
 // let ComponentName = 'AssetImageContentComponent';
 export class AssetImageContentComponent extends React.Component {
@@ -35,9 +36,16 @@ export class AssetImageContentComponent extends React.Component {
   }
 
   saveAsset(filePath) {
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
     Share.share({ title: this.state.assetName, url: filePath })
-      .then((data) => console.log('data:', data))
-      .catch((error) => {console.log('error:', error)});
+      .then((data) => {
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+        console.log('data:', data);
+      })
+      .catch((error) => {
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+        console.log('error:', error);
+      });
   }
 
   render() {
