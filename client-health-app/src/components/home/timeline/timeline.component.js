@@ -68,8 +68,7 @@ export class TimelineComponent extends React.Component {
       account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
     });
     let options = {
-      title: 'Capture asset',
-      quality: 1
+      title: 'Capture asset'
     };
 
     ImagePicker.showImagePicker(options, (response) => {
