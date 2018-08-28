@@ -115,7 +115,7 @@ export class LocalPropertyDetailComponent extends React.Component {
       indicator: true, title: 'Preparing to export...', message: `Downloading “${this.state.asset.name}”...`
     }).then(filePath => {
       if (filePath) {
-        Share.share({ title: this.state.asset.name, message: '', url: filePath });
+        Share.share({ title: this.state.asset.name, url: filePath });
       }
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { title: "Your bitmark isn't ready to download.\nPlease try again later." });
