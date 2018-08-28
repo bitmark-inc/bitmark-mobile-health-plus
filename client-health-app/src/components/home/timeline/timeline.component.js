@@ -69,7 +69,7 @@ export class TimelineComponent extends React.Component {
     });
     let options = {
       title: 'Capture asset',
-      quality: 0.7
+      quality: 1
     };
 
     ImagePicker.showImagePicker(options, (response) => {
