@@ -28,7 +28,7 @@ export default StyleSheet.create({
     backgroundColor: '#C4C4C4',
     width: 8,
     height: 8,
-    borderRadius: 3,
+    borderRadius: 4,
     marginLeft: 3,
     marginRight: 3,
     marginTop: 3,
