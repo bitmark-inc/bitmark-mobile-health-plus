@@ -98,10 +98,6 @@ export class FaceTouchIdComponent extends React.Component {
           </TouchableOpacity>
         </View>)}
       />
-
-
-
-
     );
   }
 }

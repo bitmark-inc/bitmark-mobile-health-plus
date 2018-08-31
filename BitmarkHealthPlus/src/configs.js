@@ -1,14 +1,22 @@
-// import DeviceInfo from 'react-native-device-info';
+import { Dimensions } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 let NETWORKS = {
   devnet: 'devnet',
   testnet: 'testnet',
   livenet: 'livenet',
 };
 
-let network = NETWORKS.testnet;
-// network = DeviceInfo.getBundleId() === 'com.bitmark.health.inhouse' ? NETWORKS.testnet : network;
+console.log('DeviceInfo :', DeviceInfo);
+console.log('DeviceInfo getBundleId:', DeviceInfo.getBundleId());
+
+let network = NETWORKS.livenet;
+network = DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse' ? NETWORKS.testnet : network;
+
+const currentSize = Dimensions.get('window');
+const isIPhoneX = (currentSize.height === 812);
 
 let config = {
+  isIPhoneX,
   network,
 
   NETWORKS,
@@ -56,7 +64,7 @@ export { config, };
 // code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" --mandatory true  --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.1.1.map" --targetBinaryVersion "1.1.1"
 // code-push release-react 'BitmarkHealth' ios --pre "Bitmark Health dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.0.0.map" [--targetBinaryVersion "~1.0.0"]
 
-// livetnet
+// livenet
 // code-push release-react 'BitmarkHealth' ios -d Production --mandatory true --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.1.1.map" --targetBinaryVersion "1.1.1"
 // code-push release-react 'BitmarkHealth' ios -d Production -m --description "update code" --sourcemapOutput "source-map-tool/source-map/live/main.jsbundle_1.0.0.map" [--targetBinaryVersion "~1.0.0"]
 

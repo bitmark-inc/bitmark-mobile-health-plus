@@ -9,11 +9,12 @@ import {
 import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
+import { EventEmitterService } from '../../services';
+import { AppProcessor } from '../../processors';
 
 export class HomeComponent extends Component {
   constructor(props) {
     super(props);
-
   }
 
   createNewAccount() {
@@ -23,7 +24,12 @@ export class HomeComponent extends Component {
       text: 'Cancel',
     }, {
       text: 'Agree', style: 'cancel', onPress: () => {
-        //TODO
+        AppProcessor.doRequireHealthKitPermission().then(() => {
+          Actions.touchFaceId();
+        }).catch(error => {
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+          console.log('doRequireHealthKitPermission error :', error);
+        });
       }
     }]);
   }
