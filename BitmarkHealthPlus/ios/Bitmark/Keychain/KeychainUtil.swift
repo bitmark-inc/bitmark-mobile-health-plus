@@ -59,6 +59,6 @@ struct KeychainUtil {
   }
   
   static func clearCore() throws {
-    return try getKeychain(reason: "Bitmark app would like to remove your account from keychain").remove(bitmarkSeedCoreKey)
+    return try getKeychain(reason: "Health + app would like to remove your account from keychain").remove(bitmarkSeedCoreKey)
   }
 }

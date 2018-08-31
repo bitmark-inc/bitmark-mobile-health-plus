@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Bitmark</string>
+	<string>Health+</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -57,7 +57,7 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to your health data</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Bitmark app would like to access your location for metric purpose.</string>
+	<string>Health + app would like to access your location for metric purpose.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>
 	<key>NSMotionUsageDescription</key>
