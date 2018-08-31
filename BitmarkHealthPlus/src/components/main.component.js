@@ -8,19 +8,24 @@ import { View, StatusBar } from 'react-native';
 import {
   LoadingComponent,
 } from '../commons'
-import { HomeComponent, LoginComponent } from './home';
-import { UserComponent } from './user';
+import { HomeRouterComponent } from './home';
+import { } from './user';
 
 export class MainComponent extends Component {
   static propTypes = {
     message: PropTypes.string,
   };
-  render() {
 
+  doOpenApp() {
+
+  }
+  doLoad() {
+
+  }
+
+  render() {
     let DisplayComponent = LoadingComponent;
-    DisplayComponent = HomeComponent;
-    DisplayComponent = UserComponent;
-    DisplayComponent = LoginComponent;
+    DisplayComponent = HomeRouterComponent;
     return (
       <View style={{ flex: 1 }}>
         <StatusBar hidden={true} />

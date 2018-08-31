@@ -8,6 +8,7 @@ import {
 
 import { convertWidth } from './../../utils';
 import { config } from './../../configs';
+import { Actions } from 'react-native-router-flux';
 
 export class HomeComponent extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ export class HomeComponent extends Component {
             <TouchableOpacity style={styles.button} onPress={this.createNewAccount.bind(this)}>
               <Text style={styles.buttonText}>CREATE NEW ACCOUNT</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, { backgroundColor: 'white' }]}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: 'white' }]} onPress={Actions.login}>
               <Text style={[styles.buttonText, { color: '#FF4444' }]}>ACCESS EXISTING ACCOUNT</Text>
             </TouchableOpacity>
           </View>

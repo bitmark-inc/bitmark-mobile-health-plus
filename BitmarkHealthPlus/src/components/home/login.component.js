@@ -4,7 +4,6 @@ import {
   Keyboard,
   Image, View, SafeAreaView, TouchableOpacity, Text, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Animated,
 } from 'react-native';
-import { Header } from 'react-navigation';
 
 import { convertWidth, dictionary24Words } from './../../utils';
 import { constants } from '../../constants';
@@ -12,7 +11,12 @@ import { constants } from '../../constants';
 const statuses = {
   done: 'done',
   inputting: 'inputting'
-}
+};
+const PreCheckResults = {
+  success: 'SUBMIT',
+  error: 'RETRY'
+};
+
 
 export class LoginComponent extends Component {
   constructor(props) {
@@ -41,6 +45,7 @@ export class LoginComponent extends Component {
       selectedIndex: -1,
       remainWordNumber: 24,
       keyboardHeight: 0,
+      preCheckResult: null,
       keyboardExternalBottom: new Animated.Value(0),
       keyboardExternalOpacity: new Animated.Value(0),
       keyboardExternalDataSource: dictionary24Words,
@@ -168,95 +173,98 @@ export class LoginComponent extends Component {
       <View style={{ flex: 1, }}>
         <SafeAreaView style={styles.bodySafeView}>
           <View style={styles.body}>
-            <KeyboardAvoidingView behavior="padding" enabled style={styles.bodyContent} keyboardVerticalOffset={constants.keyboardExternalHeight} >
-              <ScrollView style={styles.bodyScroll} >
-                <Text style={styles.title}>{'Recovery Phrase SIGN-IN'.toUpperCase()}</Text>
-                <Text style={styles.description}>Please type all 24 words of your recovery phrase in the exact sequence below:</Text>
-                <View style={styles.inputArea}>
-                  <View style={styles.inputAreaHalf}>
-                    <FlatList data={this.state.smallerList}
-                      keyExtractor={(item) => item.key + ''}
-                      scrollEnabled={false}
-                      extraData={this.state}
-                      renderItem={({ item }) => {
-                        return (<View style={styles.recoveryPhraseSet}>
-                          <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                          <TextInput
-                            style={[styles.recoveryPhraseWord, {
-                              backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-                              borderColor: '#0060F2',
-                              borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
-                            }]}
-                            ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                            value={item.word}
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                            onFocus={() => this.onFocus.bind(this)(item.key)}
-                            onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                          />
-                        </View>)
-                      }}
-                    />
+            <KeyboardAvoidingView behavior="padding" enabled style={styles.avoidingView} keyboardVerticalOffset={constants.keyboardExternalHeight} >
+              <View style={styles.bodyContent}>
+                <ScrollView style={styles.bodyScroll} >
+                  <Text style={styles.title}>{'Recovery Phrase SIGN-IN'.toUpperCase()}</Text>
+                  <Text style={styles.description}>Please type all 24 words of your recovery phrase in the exact sequence below:</Text>
+                  <View style={styles.inputArea}>
+                    <View style={styles.inputAreaHalf}>
+                      <FlatList data={this.state.smallerList}
+                        keyExtractor={(item) => item.key + ''}
+                        scrollEnabled={false}
+                        extraData={this.state}
+                        renderItem={({ item }) => {
+                          return (<View style={styles.recoveryPhraseSet}>
+                            <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
+                            <TextInput
+                              style={[styles.recoveryPhraseWord, {
+                                backgroundColor: (item.word ? 'white' : '#F5F5F5'),
+                                borderColor: '#0060F2',
+                                borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
+                              }]}
+                              ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                              value={item.word}
+                              autoCorrect={false}
+                              autoCapitalize="none"
+                              onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                              onFocus={() => this.onFocus.bind(this)(item.key)}
+                              onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                            />
+                          </View>)
+                        }}
+                      />
+                    </View>
+                    <View style={[styles.inputAreaHalf, { marginLeft: 15, }]}>
+                      <FlatList data={this.state.biggerList}
+                        scrollEnabled={false}
+                        extraData={this.state}
+                        renderItem={({ item }) => {
+                          return (<View style={styles.recoveryPhraseSet}>
+                            <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
+                            <TextInput
+                              style={[styles.recoveryPhraseWord, {
+                                backgroundColor: (item.word ? 'white' : '#F5F5F5'),
+                                borderColor: '#0060F2',
+                                borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
+                              }]}
+                              ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                              value={item.word}
+                              autoCorrect={false}
+                              autoCapitalize="none"
+                              onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                              onFocus={() => this.onFocus.bind(this)(item.key)}
+                              onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                            />
+                          </View>)
+                        }}
+                      />
+                    </View>
                   </View>
-                  <View style={[styles.inputAreaHalf, { marginLeft: 15, }]}>
-                    <FlatList data={this.state.biggerList}
-                      scrollEnabled={false}
-                      extraData={this.state}
-                      renderItem={({ item }) => {
-                        return (<View style={styles.recoveryPhraseSet}>
-                          <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                          <TextInput
-                            style={[styles.recoveryPhraseWord, {
-                              backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-                              borderColor: '#0060F2',
-                              borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
-                            }]}
-                            ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                            value={item.word}
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                            onFocus={() => this.onFocus.bind(this)(item.key)}
-                            onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                          />
-                        </View>)
-                      }}
-                    />
-                  </View>
-                </View>
-              </ScrollView>
+                </ScrollView>
+              </View>
             </KeyboardAvoidingView>
+            <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn} disabled={this.state.remainWordNumber > 0}>
+              <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
+            </TouchableOpacity>
           </View>
         </SafeAreaView >
-        {this.state.keyboardHeight > 0 && <Animated.View style={[styles.keyboardExternal, {
-          bottom: this.state.keyboardExternalBottom,
-          opacity: this.state.keyboardExternalOpacity,
-        }]}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 1) % 24)}>
-            <Image style={styles.nextButtonImage} source={require('./../../../assets/imgs/arrow_down_enable.png')} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 23) % 24)}>
-            <Image style={styles.prevButtonImage} source={require('./../../../assets/imgs/arrow_up_enable.png')} />
-          </TouchableOpacity>
-          {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
-            <FlatList
-              ref={(ref) => this.listViewElement = ref}
-              keyboardShouldPersistTaps="handled"
-              horizontal={true}
-              extraData={this.state}
-              data={this.state.keyboardExternalDataSource}
-              renderItem={({ item }) => {
-                return (<TouchableOpacity style={styles.selectionItem} onPress={() => this.onSubmitWord(item)}>
-                  <Text style={[styles.selectionItemText, { color: this.state.currentInputtedText === item ? 'blue' : 'gray' }]}>{item}</Text>
-                </TouchableOpacity>)
-              }}
-            />
-          </View>}
-          <TouchableOpacity style={styles.doneButton} onPress={this.doCheck24Word.bind(this)} disabled={this.state.status !== statuses.done}>
-            <Text style={[styles.doneButtonText, { color: this.state.status === statuses.done ? '#0060F2' : 'gray' }]}>Done</Text>
-          </TouchableOpacity>
-        </Animated.View>}
+        {this.state.keyboardHeight > 0 &&
+          <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
+            <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 1) % 24)}>
+              <Image style={styles.nextButtonImage} source={require('./../../../assets/imgs/arrow_down_enable.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.prevButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 23) % 24)}>
+              <Image style={styles.prevButtonImage} source={require('./../../../assets/imgs/arrow_up_enable.png')} />
+            </TouchableOpacity>
+            {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
+              <FlatList
+                ref={(ref) => this.listViewElement = ref}
+                keyboardShouldPersistTaps="handled"
+                horizontal={true}
+                extraData={this.state}
+                data={this.state.keyboardExternalDataSource}
+                renderItem={({ item }) => {
+                  return (<TouchableOpacity style={styles.selectionItem} onPress={() => this.onSubmitWord(item)}>
+                    <Text style={[styles.selectionItemText, { color: this.state.currentInputtedText === item ? 'blue' : 'gray' }]}>{item}</Text>
+                  </TouchableOpacity>)
+                }}
+              />
+            </View>}
+            <TouchableOpacity style={styles.doneButton} onPress={this.doCheck24Word.bind(this)} disabled={this.state.status !== statuses.done}>
+              <Text style={[styles.doneButtonText, { color: this.state.status === statuses.done ? '#0060F2' : 'gray' }]}>Done</Text>
+            </TouchableOpacity>
+          </Animated.View>}
       </View>
     );
   }
@@ -273,11 +281,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: convertWidth(16),
   },
+  avoidingView: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#FF4444',
+  },
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: '#FF4444',
     padding: convertWidth(17),
   },
   title: {
@@ -323,7 +334,34 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
+  submitButton: {
+    height: constants.buttonHeight,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FF4444',
+  },
+  submitButtonText: {
+    fontFamily: 'Avenir Heavy',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '900',
+    color: 'white'
+  },
 
+
+  keyboardExternal: {
+    position: 'absolute',
+    width: '100%', height: constants.keyboardExternalHeight,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 8,
+    paddingRight: 8,
+    backgroundColor: '#EEEFF1',
+  },
   prevButton: {
     marginLeft: 10,
   },
@@ -365,18 +403,6 @@ const styles = StyleSheet.create({
   },
   selectionItemText: {
     color: 'blue',
-  },
-
-  keyboardExternal: {
-    position: 'absolute',
-    width: '100%', height: constants.keyboardExternalHeight,
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 8,
-    paddingRight: 8,
-    backgroundColor: '#EEEFF1',
-    borderWidth: 1,
   },
 
 });
