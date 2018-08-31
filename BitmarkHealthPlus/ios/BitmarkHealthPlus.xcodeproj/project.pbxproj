@@ -29,7 +29,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2D13B60C19A845D7B6A86936 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */; };
 		32B57ECB1D8A5A50E3D15BD3 /* Pods_BitmarkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */; };
-		580C4BE22099978D00AAEEE0 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580C4BE12099978D00AAEEE0 /* CloudKit.framework */; };
+		5824028B21393018001206A2 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5824028A21393018001206A2 /* CloudKit.framework */; };
 		58400A98202C013C00550ADB /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
 		58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
 		588FE23D205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */; };
@@ -135,7 +135,6 @@
 		58908AB720A18A5A00C0064A /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		58908AB820A18A5A00C0064A /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		58908AB920A18A5A00C0064A /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
-		58908ABA20A18A5A00C0064A /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580C4BE12099978D00AAEEE0 /* CloudKit.framework */; };
 		58908ABB20A18A5A00C0064A /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68EEEE1542C435DA913552D /* libRNFS.a */; };
 		58908ABC20A18A5A00C0064A /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 295B8983183E4140AD6083BB /* libRNMail.a */; };
 		58908ABD20A18A5A00C0064A /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B46290362EA64E3A93EE362E /* libRCTVideo.a */; };
@@ -535,7 +534,7 @@
 		};
 		F16DDBD3213926E300EE9FF9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 5840099F20243AA700550ADB /* RNCamera.xcodeproj */;
+			containerPortal = 5840099F20243AA700550ADB /* RCTCamera.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RNCamera;
@@ -614,8 +613,8 @@
 		3E2B6E48BB257498C8AA0F2F /* Pods-BitmarkHealthPlus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus.release.xcconfig"; sourceTree = "<group>"; };
 		51B7B1D26E8F8C51D6B1B579 /* Pods_BitmarkHealthPlusTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmarkHealthPlusTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		579C1381393E59B3042E29F2 /* Pods-Bitmark.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.release.xcconfig"; sourceTree = "<group>"; };
-		580C4BE12099978D00AAEEE0 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		5840099F20243AA700550ADB /* RNCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
+		5824028A21393018001206A2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		5840099F20243AA700550ADB /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		58557E6A2062041C00402734 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTAppleHealthKit+Methods_Body.m"; sourceTree = "<group>"; };
@@ -788,7 +787,6 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				580C4BE22099978D00AAEEE0 /* CloudKit.framework in Frameworks */,
 				72A0ED28C921482083D1D737 /* libRNFS.a in Frameworks */,
 				B7856E9B0E4B4CF3BA90EB21 /* libRNMail.a in Frameworks */,
 				A75355ACD4CF4A668E3CF8D3 /* libRCTVideo.a in Frameworks */,
@@ -813,6 +811,7 @@
 				58908AAD20A18A5A00C0064A /* libRCTBlob.a in Frameworks */,
 				58908AAE20A18A5A00C0064A /* libRCTAnimation.a in Frameworks */,
 				58908AAF20A18A5A00C0064A /* libReact.a in Frameworks */,
+				5824028B21393018001206A2 /* CloudKit.framework in Frameworks */,
 				58908AAE20A18A5A00C0064A /* libRCTAnimation.a in Frameworks */,
 				58908AB020A18A5A00C0064A /* libRCTActionSheet.a in Frameworks */,
 				58908AB220A18A5A00C0064A /* libRCTImage.a in Frameworks */,
@@ -823,7 +822,6 @@
 				58908AB720A18A5A00C0064A /* libRCTText.a in Frameworks */,
 				58908AB820A18A5A00C0064A /* libRCTVibration.a in Frameworks */,
 				58908AB920A18A5A00C0064A /* libRCTWebSocket.a in Frameworks */,
-				58908ABA20A18A5A00C0064A /* CloudKit.framework in Frameworks */,
 				58908ABB20A18A5A00C0064A /* libRNFS.a in Frameworks */,
 				58908ABC20A18A5A00C0064A /* libRNMail.a in Frameworks */,
 				58908ABD20A18A5A00C0064A /* libRCTVideo.a in Frameworks */,
@@ -984,7 +982,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				580C4BE12099978D00AAEEE0 /* CloudKit.framework */,
+				5824028A21393018001206A2 /* CloudKit.framework */,
 				F1D09CF7207707BF008B16EE /* libz.tbd */,
 				58557E6A2062041C00402734 /* HealthKit.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
@@ -1254,7 +1252,7 @@
 				F18C03B8204929BC00FA36E4 /* RNDeviceInfo.xcodeproj */,
 				F18C03802049095000FA36E4 /* RCTPushNotification.xcodeproj */,
 				F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */,
-				5840099F20243AA700550ADB /* RNCamera.xcodeproj */,
+				5840099F20243AA700550ADB /* RCTCamera.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -1509,6 +1507,11 @@
 					58908A7820A18A5A00C0064A = {
 						DevelopmentTeam = A52M7AQ8B2;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1549,6 +1552,10 @@
 				{
 					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
 					ProjectRef = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = F16DDBD0213926E300EE9FF9 /* Products */;
+					ProjectRef = 5840099F20243AA700550ADB /* RCTCamera.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -1597,10 +1604,6 @@
 				{
 					ProductGroup = 0E7B97A220EF55C90064EEEC /* Products */;
 					ProjectRef = 0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */;
-				},
-				{
-					ProductGroup = F16DDBD0213926E300EE9FF9 /* Products */;
-					ProjectRef = 5840099F20243AA700550ADB /* RNCamera.xcodeproj */;
 				},
 				{
 					ProductGroup = F1F6E2A620B6BF4000CECD53 /* Products */;
@@ -2539,8 +2542,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus;
 				PRODUCT_NAME = BitmarkHealthPlus;
-				PROVISIONING_PROFILE = "29d1fce9-a905-4f4f-a0fb-b9ca37de04e8";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Development";
+				PROVISIONING_PROFILE = "965b76b3-db39-4944-b288-a3aee506dc8e";
+				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2575,8 +2578,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus;
 				PRODUCT_NAME = BitmarkHealthPlus;
-				PROVISIONING_PROFILE = "f45aa561-78c9-48fc-b83f-50c90c8be0e8";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark App Distribution";
+				PROVISIONING_PROFILE = "824ea5ca-f7be-4719-9c78-af531275f01a";
+				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Distribution";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2616,8 +2619,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.inhouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0eb04629-7358-4418-98a6-93a8913f75b7";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark DEV development";
+				PROVISIONING_PROFILE = "d33a3f18-e17d-4e43-9956-1ff9a756759f";
+				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2657,8 +2660,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.inhouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b1efacbd-64e2-463e-849e-3d983c722066";
-				PROVISIONING_PROFILE_SPECIFIER = "Bitmark DEV inhouse";
+				PROVISIONING_PROFILE = "d8d34896-37b2-42fb-8942-ad0b914f9b50";
+				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
