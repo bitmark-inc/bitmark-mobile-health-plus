@@ -8,7 +8,7 @@ import { View, StatusBar } from 'react-native';
 import {
   LoadingComponent,
 } from '../commons'
-import { HomeComponent } from './home';
+import { HomeComponent, LoginComponent } from './home';
 import { UserComponent } from './user';
 
 export class MainComponent extends Component {
@@ -20,6 +20,7 @@ export class MainComponent extends Component {
     let DisplayComponent = LoadingComponent;
     DisplayComponent = HomeComponent;
     DisplayComponent = UserComponent;
+    DisplayComponent = LoginComponent;
     return (
       <View style={{ flex: 1 }}>
         <StatusBar hidden={true} />

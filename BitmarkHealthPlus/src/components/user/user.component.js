@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Alert,
-  Linking,
   Image, View, SafeAreaView, TouchableOpacity, Text,
 } from 'react-native';
 
 import { convertWidth } from './../../utils';
-import { config } from './../../configs';
 
 export class UserComponent extends Component {
   constructor(props) {
