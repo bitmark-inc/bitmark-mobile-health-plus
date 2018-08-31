@@ -5,7 +5,7 @@ import { registerTasks } from './app-tasks-register';
 import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel, DonationModel, NotificationModel } from './../models';
 import { AccountService, EventEmitterService, TransactionService } from './../services'
 import { DataProcessor } from './data-processor';
-import { ios, config } from '../configs';
+import { config } from '../configs';
 import { compareVersion } from '../utils';
 
 registerTasks();
@@ -74,11 +74,12 @@ const doCreateNewAccount = async () => {
   return await processing(DataProcessor.doCreateAccount(touchFaceIdSession));
 };
 
-const doGetCurrentAccount = async (touchFaceIdMessage) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
-  if (!touchFaceIdSession) {
-    return null;
-  }
+const doGetCurrentAccount = async () => {
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   let userInfo = await processing(AccountModel.doGetCurrentAccount(touchFaceIdSession));
   return userInfo;
 };

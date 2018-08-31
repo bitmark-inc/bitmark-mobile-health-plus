@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View, SafeAreaView, TouchableOpacity,
+  View, TouchableOpacity,
 } from 'react-native';
 
 import { convertWidth } from './../../utils';
@@ -19,7 +19,7 @@ export class LoadingComponent extends Component {
   };
   render() {
     return (
-      <SafeAreaView style={styles.header}>
+      <View style={styles.header}>
         <View style={styles.headerContent}>
           {!this.props.renderHeaderLeft && !this.props.hideHeaderLeft && <TouchableOpacity style={[styles.headerLeft, this.props.headerLeft]}>
 
@@ -36,7 +36,7 @@ export class LoadingComponent extends Component {
           </TouchableOpacity>}
           {this.props.renderHeaderRight && this.props.renderHeaderRight()}
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity, SafeAreaView,
+  View, Text, Image, TouchableOpacity,
   Linking,
   Alert,
   Share,
@@ -63,7 +63,7 @@ export class BitmarkLegalComponent extends React.Component {
 
   render() {
     return (
-      <SafeAreaView>
+      <View>
         <View style={[styles.header]}>
           <TouchableOpacity style={styles.headerLeft} onPress={Actions.pop}>
             <Image style={styles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
@@ -520,7 +520,7 @@ export class BitmarkLegalComponent extends React.Component {
             <Text style={styles.lastBottomButtonText}>SHARE</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 }

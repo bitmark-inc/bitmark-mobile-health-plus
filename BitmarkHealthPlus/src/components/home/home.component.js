@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Alert,
   Linking,
-  Image, View, SafeAreaView, TouchableOpacity, Text,
+  Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 
 import { convertWidth } from './../../utils';
@@ -56,6 +56,7 @@ export class HomeComponent extends Component {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
+    backgroundColor: 'white',
   },
   bodyContent: {
     flex: 1,

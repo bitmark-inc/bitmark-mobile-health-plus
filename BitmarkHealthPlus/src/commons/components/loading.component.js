@@ -10,11 +10,11 @@ import { convertWidth } from './../../utils';
 export class LoadingComponent extends Component {
   render() {
     return (
-      <SafeAreaView style={styles.body}>
+      <View style={styles.body}>
         <View style={styles.bodyContent}>
           <Image style={styles.loadingLogo} source={require('./../../../assets/imgs/loading.png')} />
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 }

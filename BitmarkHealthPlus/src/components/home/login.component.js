@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Keyboard,
-  Image, View, SafeAreaView, TouchableOpacity, Text, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Animated,
+  Image, View, TouchableOpacity, Text, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Animated, SafeAreaView,
 } from 'react-native';
 
 import { convertWidth, dictionary24Words } from './../../utils';
 import { constants } from '../../constants';
+import { config } from '../../configs';
+import { AppProcessor } from '../../processors';
+import { EventEmitterService } from '../../services';
+import { Actions } from 'react-native-router-flux';
 
 const statuses = {
   done: 'done',
@@ -16,6 +20,8 @@ const PreCheckResults = {
   success: 'SUBMIT',
   error: 'RETRY'
 };
+
+let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 
 
 export class LoginComponent extends Component {
@@ -28,12 +34,14 @@ export class LoginComponent extends Component {
       if (index < 12) {
         smallerList.push({
           key: index,
-          word: '',
+          // word: '',
+          word: testWords[index],
         });
       } else {
         biggerList.push({
           key: index,
-          word: '',
+          // word: '',
+          word: testWords[index],
         });
       }
     }
@@ -50,6 +58,7 @@ export class LoginComponent extends Component {
       keyboardExternalOpacity: new Animated.Value(0),
       keyboardExternalDataSource: dictionary24Words,
     };
+    setTimeout(this.checkStatusInputting.bind(this), 200);
   }
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
@@ -158,20 +167,76 @@ export class LoginComponent extends Component {
     this.selectedIndex((selectedIndex + 1) % 24);
   }
 
-  doCheck24Word() {
-    Keyboard.dismiss();
-  }
-
   doFilter(text) {
     let keyboardExternalDataSource = dictionary24Words.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
     this.setState({ keyboardExternalDataSource, currentInputtedText: text });
   }
 
+  doCheck24Word() {
+    return new Promise((resolve) => {
+      Keyboard.dismiss();
+      if (this.state.remainWordNumber === 0) {
+        let inputtedWords = [];
+        this.state.smallerList.forEach(item => inputtedWords.push(item.word));
+        this.state.biggerList.forEach(item => inputtedWords.push(item.word));
+        AppProcessor.doCheck24Words(inputtedWords).then(() => {
+          this.setState({ preCheckResult: PreCheckResults.success });
+          resolve(inputtedWords);
+        }).catch((error) => {
+          resolve(false);
+          console.log('check24Words error: ', error);
+          this.setState({ preCheckResult: PreCheckResults.error });
+        });
+      } else {
+        this.setState({ preCheckResult: null });
+        resolve(null);
+      }
+    });
+  }
+
+  doSignIn() {
+    if (this.state.preCheckResult === PreCheckResults.error) {
+      let smallerList = [];
+      let biggerList = [];
+      for (let index = 0; index < 24; index++) {
+        if (index < 12) {
+          smallerList.push({
+            key: index,
+            word: '',
+          });
+        } else {
+          biggerList.push({
+            key: index,
+            word: '',
+          });
+        }
+      }
+      this.setState({
+        smallerList: smallerList,
+        biggerList: biggerList,
+        preCheckResult: null,
+        selectedIndex: -1,
+        remainWordNumber: 24,
+      });
+      return;
+    }
+    this.doCheck24Word().then((result) => {
+      if (result) {
+        AppProcessor.doRequireHealthKitPermission().then(() => {
+          Actions.touchFaceId({ passPhrase24Words: result });
+        }).catch(error => {
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+          console.log('doRequireHealthKitPermission error :', error);
+        });
+      }
+    });
+  }
+
   render() {
     console.log(this.state);
     return (
-      <View style={{ flex: 1, }}>
-        <SafeAreaView style={styles.bodySafeView}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={styles.bodySafeView}>
           <View style={styles.body}>
             <KeyboardAvoidingView behavior="padding" enabled style={styles.avoidingView} keyboardVerticalOffset={constants.keyboardExternalHeight} >
               <View style={styles.bodyContent}>
@@ -207,6 +272,7 @@ export class LoginComponent extends Component {
                     </View>
                     <View style={[styles.inputAreaHalf, { marginLeft: 15, }]}>
                       <FlatList data={this.state.biggerList}
+                        keyExtractor={(item) => item.key + ''}
                         scrollEnabled={false}
                         extraData={this.state}
                         renderItem={({ item }) => {
@@ -234,11 +300,11 @@ export class LoginComponent extends Component {
                 </ScrollView>
               </View>
             </KeyboardAvoidingView>
-            <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn} disabled={this.state.remainWordNumber > 0}>
+            <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn.bind(this)} disabled={this.state.remainWordNumber > 0}>
               <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
             </TouchableOpacity>
           </View>
-        </SafeAreaView >
+        </View >
         {this.state.keyboardHeight > 0 &&
           <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
             <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 1) % 24)}>
@@ -265,7 +331,7 @@ export class LoginComponent extends Component {
               <Text style={[styles.doneButtonText, { color: this.state.status === statuses.done ? '#0060F2' : 'gray' }]}>Done</Text>
             </TouchableOpacity>
           </Animated.View>}
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -273,13 +339,15 @@ export class LoginComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
-  },
-  bodyScroll: {
-    flex: 1,
+    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0,
   },
   body: {
     flex: 1,
     padding: convertWidth(16),
+    backgroundColor: 'white',
+  },
+  bodyScroll: {
+    flex: 1,
   },
   avoidingView: {
     flex: 1,
@@ -331,6 +399,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     fontFamily: 'Avenir Light',
     fontWeight: '300',
+    color: '#FF4444',
     fontSize: 15,
   },
 

@@ -4,7 +4,7 @@ import moment from 'moment';
 import { CommonModel, AccountModel, FaceTouchId, } from './../models';
 import { EventEmitterService, BitmarkService, } from './../services'
 import { DataProcessor } from './data-processor';
-import { ios } from '../configs';
+import { config } from '../configs';
 import { DonationService } from '../services/donation-service';
 import { FileUtil } from '../utils';
 
@@ -60,7 +60,7 @@ let submitting = (promise, processingData) => {
 // ================================================================================================
 
 const doLogin = async ({ phrase24Words }) => {
-  if (Platform.OS === 'ios' && ios.config.isIPhoneX) {
+  if (Platform.OS === 'ios' && config.isIPhoneX) {
     await FaceTouchId.authenticate();
   }
   let touchFaceIdSession = await AccountModel.doLogin(phrase24Words);

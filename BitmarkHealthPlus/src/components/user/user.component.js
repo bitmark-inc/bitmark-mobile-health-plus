@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image, View, SafeAreaView, TouchableOpacity, Text,
+  Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 
 import { convertWidth } from './../../utils';
+import { config } from '../../configs';
+import { constants } from '../../constants';
 
 export class UserComponent extends Component {
   constructor(props) {
@@ -47,10 +49,11 @@ export class UserComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
+    backgroundColor: 'white',
   },
-
   body: {
     padding: convertWidth(16),
+    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
     flex: 1,
   },
   bodyContent: {

@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "ios-test": "react-native run-ios --scheme 'BitmarkHealthPlus dev'",
+    "ios-test-x": "react-native run-ios --scheme 'BitmarkHealthPlus dev' --simulator='iPhone X'",
     "ios-live": "react-native run-ios",
     "test": "jest"
   },

@@ -11,6 +11,7 @@ import { AppProcessor } from '../../processors';
 import { StudyCommonModel } from '../../models';
 import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
+import { EventEmitterService } from '../../services';
 
 export class TouchFaceIdComponent extends React.Component {
   static propTypes = {
@@ -18,6 +19,7 @@ export class TouchFaceIdComponent extends React.Component {
   };
   constructor(props) {
     super(props);
+    console.log('TouchFaceIdComponent props :', props);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.checkSupportFaceTouchId = this.checkSupportFaceTouchId.bind(this);
     this.doContinue = this.doContinue.bind(this);
@@ -61,7 +63,7 @@ export class TouchFaceIdComponent extends React.Component {
     promise.then((user) => {
       console.log('user :', user);
       if (user) {
-        //TODO
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, true)
       }
     }).catch(error => {
       console.log('error :', error);
@@ -105,6 +107,7 @@ export class TouchFaceIdComponent extends React.Component {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
+    backgroundColor: '#FF4444',
   },
   body: {
     flex: 1,

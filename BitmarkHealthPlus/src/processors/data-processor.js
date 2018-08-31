@@ -202,6 +202,7 @@ const checkAppNeedResetLocalData = async (appInfo) => {
 };
 
 const doOpenApp = async () => {
+  // await UserModel.doRemoveUserInfo();
   userInformation = await UserModel.doTryGetCurrentUser();
 
   await CommonModel.doTrackEvent({
@@ -245,6 +246,8 @@ const doOpenApp = async () => {
     // }).catch(error => {
     //   console.log('registerIdentifiedUser error :', error);
     // });
+
+    await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
 
     if (!appInfo.lastTimeOpen) {
       let appInfo = await doGetAppInformation();
@@ -501,7 +504,7 @@ const doGenerateDisplayedData = async () => {
 
       if (item.bitmarkId) {
         let bitmark = bitmarks.find(bm => bm.id === item.bitmarkId);
-        item.status = bitmark.status;
+        item.status = bitmark ? bitmark.status : null;
       }
     }
     timelines = timelines.concat(tempTimelines.reverse());

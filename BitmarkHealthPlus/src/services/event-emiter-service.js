@@ -3,7 +3,7 @@ import { NativeAppEventEmitter } from 'react-native';
 let EventEmitterService = {
   event_extra: {},
   events: {
-    COMPONENT_MOUNTING: 'app-component-mounting',
+    APP_NEED_REFRESH: 'app-need-refresh',
     APP_PROCESSING: 'app-processing',
     APP_SUBMITTING: 'app-submitting',
     APP_PROCESS_ERROR: 'app-process-error',
