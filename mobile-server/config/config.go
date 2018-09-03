@@ -49,6 +49,10 @@ type Configuration struct {
 		PushServer     string `hcl:"pushServer"`
 		PushServerBeta string `hcl:"pushServerBeta"`
 	} `hcl:"external"`
+	JWT struct {
+		SecretKey string `hcl:"secretKey"`
+		Expire    int    `hcl:"expireInHour"`
+	}
 	DataDonation struct {
 		ResearcherAccounts map[string]string `hcl:"researchers"`
 	} `hcl:"data-donation"`

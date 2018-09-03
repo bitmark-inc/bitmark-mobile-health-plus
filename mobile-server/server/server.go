@@ -40,7 +40,7 @@ func (s *Server) Run(addr string) error {
 	api := r.Group("/api")
 
 	pushUUIDs := api.Group("/push_uuids")
-	pushUUIDs.Use(authenticate())
+	pushUUIDs.Use(s.authenticateBoth())
 	{
 		pushUUIDs.POST("", s.AddPushToken)
 		pushUUIDs.DELETE("/:token", s.RemovePushToken)
@@ -48,14 +48,14 @@ func (s *Server) Run(addr string) error {
 
 	trackingBitmarks := api.Group("/tracking_bitmarks")
 	trackingBitmarks.GET("", s.ListBitmarkTracking)
-	trackingBitmarks.Use(authenticate())
+	trackingBitmarks.Use(s.authenticateBoth())
 	{
 		trackingBitmarks.POST("", s.AddBitmarkTracking)
 		trackingBitmarks.DELETE("/:bitmarkid", s.DeleteBitmarkTracking)
 	}
 
 	notifications := api.Group("/notifications")
-	notifications.Use(authenticate())
+	notifications.Use(s.authenticateBoth())
 	{
 		notifications.GET("", s.NotificationList)
 	}
@@ -63,7 +63,7 @@ func (s *Server) Run(addr string) error {
 	api.POST("/metrics", s.AddMetrics)
 
 	eventsGroup := api.Group("/events")
-	eventsGroup.Use(authenticate())
+	eventsGroup.Use(s.authenticateBoth())
 	{
 		eventsGroup.POST("/register-account", s.AddRegisterAccountEvent)
 	}
@@ -71,6 +71,8 @@ func (s *Server) Run(addr string) error {
 	api.GET("/healthz", s.HealthCheck)
 
 	api.GET("/app-versions/:app", s.GetSupportedVersion)
+
+	api.POST("/auth", s.RequestJWT)
 
 	srv := &http.Server{
 		Addr:    addr,
