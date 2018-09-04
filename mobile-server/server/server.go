@@ -73,6 +73,14 @@ func (s *Server) Run(addr string) error {
 		eventsGroup.POST("/register-account", s.AddRegisterAccountEvent)
 	}
 
+	grantingBitmarksGroup := api.Group("/granting_bitmarks")
+	grantingBitmarksGroup.Use(s.authenticateJWT())
+	{
+		grantingBitmarksGroup.POST("", s.registerRenting)
+		grantingBitmarksGroup.PATCH("/:id", s.updateRentingReceiver)
+		grantingBitmarksGroup.GET("", s.queryRentingBitmark)
+	}
+
 	api.GET("/healthz", s.HealthCheck)
 
 	api.GET("/app-versions/:app", s.GetSupportedVersion)
