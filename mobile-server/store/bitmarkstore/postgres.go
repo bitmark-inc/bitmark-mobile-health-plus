@@ -24,7 +24,7 @@ const (
 	sqlQueryBitmarkTracking           = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
 	sqlQueryAccountHasTrackingBitmark = "SELECT bitmark_id, array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = ANY($1) GROUP BY bitmark_id"
 	sqlInsertBitmarkRenting           = "INSERT INTO mobile.bitmark_renting(id, sender) VALUES ($1, $2)"
-	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_tracking SET receiver = $1, granted_at = NOW() WHERE id = $2 AND created_at < NOW() - INTERVAL '5 minutes' RETURNING sender"
+	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, granted_at = NOW() WHERE id = $2 AND created_at > NOW() - INTERVAL '5 minutes' RETURNING sender"
 	sqlDeleteBitmarkRenting           = "DELETE FROM mobile.bitmark_renting WHERE id = $1"
 	sqlQueryBitmarkRenting            = "SELECT id, receiver, created_at, granted_at FROM mobile.bitmark_renting WHERE sender = $1 AND granted_at IS NOT NULL"
 )
@@ -108,7 +108,7 @@ func (b *BitmarkPGStore) AddBitmarkRenting(ctx context.Context, sender string) (
 
 // UpdateReceiverBitmarkRenting update receiver and return sender
 func (b *BitmarkPGStore) UpdateReceiverBitmarkRenting(ctx context.Context, id, receiver string) (*string, error) {
-	row := b.dbConn.QueryRowEx(ctx, sqlUpdateBitmarkRentingReceiver, nil, id, receiver)
+	row := b.dbConn.QueryRowEx(ctx, sqlUpdateBitmarkRentingReceiver, nil, receiver, id)
 	if row == nil {
 		return nil, nil
 	}

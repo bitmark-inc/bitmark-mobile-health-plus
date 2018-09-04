@@ -24,6 +24,11 @@ func (s *Server) ServeWs(c *gin.Context) {
 		return
 	}
 
+	ws.SetCloseHandler(func(code int, text string) error {
+		s.wsConnStore.DropConn(jwtid, s.redisPubSubConn)
+		return nil
+	})
+
 	log.Debug("Subscribe to redis")
 	if err := s.redisPubSubConn.Subscribe("id-"+jwtid, "ac-"+account); err != nil {
 		c.Error(err)
