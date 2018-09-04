@@ -16,10 +16,8 @@ var upgrader = websocket.Upgrader{
 }
 
 func (s *Server) ServeWs(c *gin.Context) {
-	// jwtid := c.MustGet("jwtid").(string)
-	// account := c.MustGet("requester").(string)
-	jwtid := "37082cfe-ed09-48b3-9ccc-d553d89c1f51"
-	account := "ey9pm32VVbgS8fxQgM18hsjZ4btSMPtrqLVx36QotDGB8C31Mm"
+	jwtid := c.MustGet("jwtid").(string)
+	account := c.MustGet("requester").(string)
 	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		c.Error(err)

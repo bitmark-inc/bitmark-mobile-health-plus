@@ -123,9 +123,6 @@ func New(conf *config.Configuration, pushStore pushstore.PushStore, bitmarkStore
 }
 
 func (s *Server) HealthCheck(c *gin.Context) {
-	redisConn, _ := s.redisPool.Dial()
-	redisConn.Do("PUBLISH", "ac-ey9pm32VVbgS8fxQgM18hsjZ4btSMPtrqLVx36QotDGB8C31Mm", s.conf.JWT.SecretKey)
-
 	conn, err := s.dbConn.Acquire()
 	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{
