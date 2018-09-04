@@ -1,15 +1,9 @@
 import moment from 'moment';
-import { union } from 'lodash';
-import DeviceInfo from 'react-native-device-info';
-
 import {
   DonationModel,
   CommonModel,
   AppleHealthKitModel,
-  StudiesModel,
-  Study2Model,
   BitmarkModel,
-  Study1Model
 } from '../models';
 import { FileUtil } from '../utils';
 import randomString from 'random-string';
@@ -48,10 +42,6 @@ const doCheckDataSource = async (donationInformation) => {
   let listDataTypes = [];
   if (donationInformation.activeBitmarkHealthDataAt) {
     listDataTypes = donationInformation.allDataTypes;
-  } else {
-    for (let joinedStudy of donationInformation.joinedStudies) {
-      listDataTypes = union(listDataTypes, joinedStudy.dataTypes);
-    }
   }
   if (listDataTypes && listDataTypes.length > 0) {
     await AppleHealthKitModel.initHealthKit(listDataTypes);
@@ -64,18 +54,10 @@ const doCheckDataSource = async (donationInformation) => {
   let dataSourceStatuses = [];
   for (let type in mapData) {
     if (isEmptyHealthData(mapData[type])) {
-      let numberStudyRequireThisType = 0;
-      if (donationInformation.joinedStudies && donationInformation.joinedStudies.length > 0) {
-        for (let study of donationInformation.joinedStudies) {
-          let found = (study.dataTypes || []).findIndex(studyDataType => studyDataType === type);
-          numberStudyRequireThisType += found >= 0 ? 1 : 0;
-        }
-      }
       dataSourceStatuses.push({
         key: type,
         title: donationInformation.titleDataTypes[type],
         status: 'Inactive',
-        numberStudyRequired: numberStudyRequireThisType,
       });
     } else {
       dataSourceStatuses.push({
@@ -89,92 +71,12 @@ const doCheckDataSource = async (donationInformation) => {
   return donationInformation;
 };
 
-
-const getStudy = (donationInformation, studyId) => {
-  for (let index in donationInformation.joinedStudies) {
-    if (donationInformation.joinedStudies[index].studyId === studyId) {
-      return donationInformation.joinedStudies[index];
-    }
-  }
-  for (let index in donationInformation.otherStudies) {
-    if (donationInformation.otherStudies[index].studyId === studyId) {
-      return donationInformation.otherStudies[index];
-    }
-  }
-  return null;
-};
 const doLoadDonationTask = async (donationInformation) => {
   if (!donationInformation.createdAt) {
     return donationInformation;
   }
   donationInformation = await doCheckDataSource(donationInformation);
-
-  let todoTasks = [];
-  let totalTodoTask = 0;
-  // let bitmarkHealthDataTask = donationInformation.bitmarkHealthDataTask;
-  // if (bitmarkHealthDataTask && bitmarkHealthDataTask.list && bitmarkHealthDataTask.list.length > 0) {
-  //   todoTasks.push({
-  //     title: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].title,
-  //     description: donationInformation.commonTasks[donationInformation.commonTaskIds.bitmark_health_data].description,
-  //     taskType: donationInformation.commonTaskIds.bitmark_health_data,
-  //     number: bitmarkHealthDataTask.list.length,
-  //     list: bitmarkHealthDataTask.list,
-  //   });
-  //   totalTodoTask += bitmarkHealthDataTask.list.length;
-  // }
-  if (donationInformation.joinedStudies && donationInformation.joinedStudies.length > 0) {
-    donationInformation.joinedStudies.forEach(study => {
-      if (study.tasks) {
-        for (let taskType in study.tasks) {
-          if (study.tasks[taskType].number) {
-            todoTasks.push({
-              study,
-              title: study.studyTasks[taskType].title,
-              description: study.studyTasks[taskType].description,
-              important: study.tasks[taskType].important,
-              taskType,
-              number: study.tasks[taskType].number,
-              list: study.tasks[taskType].list,
-            });
-            totalTodoTask += study.tasks[taskType].number;
-          }
-        }
-      }
-    });
-  }
-  donationInformation.todoTasks = todoTasks;
-  donationInformation.totalTodoTask = totalTodoTask;
-
-
-  let completedTasks = [];
   donationInformation.completedTasks = donationInformation.completedTasks || [];
-
-  donationInformation.completedTasks.forEach(item => {
-    if (item.studyId) {
-      let study = getStudy(donationInformation, item.studyId);
-      if (study) {
-        completedTasks.push({
-          title: study.studyTasks[item.taskType].title,
-          description: study.studyTasks[item.taskType].description,
-          completedDate: moment(item.completedAt),
-          taskType: item.taskType,
-          study: study,
-          bitmarkId: item.bitmarkId,
-        });
-      }
-    }
-    if (item.taskType === donationInformation.commonTaskIds.bitmark_health_data) {
-      completedTasks.push({
-        title: donationInformation.commonTasks[item.taskType].title,
-        description: donationInformation.commonTasks[item.taskType].description,
-        completedDate: moment(item.completedAt),
-        taskType: item.taskType,
-        bitmarkId: item.bitmarkId,
-      });
-    }
-  });
-  donationInformation.completedTasks = completedTasks;
-
   return donationInformation;
 }
 
@@ -196,62 +98,18 @@ const doInactiveBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNum
   return await doLoadDonationTask(donationInformation);
 };
 
-const doJoinStudy = async (touchFaceIdSession, bitmarkAccountNumber, studyId) => {
+const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType, completedAt, bitmarkId) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   if (!signatureData) {
     return null;
   }
-  let donationInformation = await DonationModel.doJoinStudy(bitmarkAccountNumber, studyId, signatureData.timestamp, signatureData.signature);
-  return await doLoadDonationTask(donationInformation);
-};
-
-const doLeaveStudy = async (touchFaceIdSession, bitmarkAccountNumber, studyId) => {
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  if (!signatureData) {
-    return null;
-  }
-  let donationInformation = await DonationModel.doLeaveStudy(bitmarkAccountNumber, studyId, signatureData.timestamp, signatureData.signature);
-  await CommonModel.doTrackEvent({
-    event_name: studyId === 'study1' ? 'health_donation_user_leaved_madelena_study' : 'health_donation_user_leaved_victor_study',
-    account_number: bitmarkAccountNumber,
-  });
-  return await doLoadDonationTask(donationInformation);
-};
-
-const doCompleteTask = async (touchFaceIdSession, bitmarkAccountNumber, taskType, completedAt, studyId, bitmarkId) => {
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  if (!signatureData) {
-    return null;
-  }
-  let donationInformation = await DonationModel.doCompleteTask(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, taskType, completedAt, studyId, bitmarkId);
+  let donationInformation = await DonationModel.doCompleteTask(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, taskType, completedAt, bitmarkId);
   return await doLoadDonationTask(donationInformation);
 };
 
 const doGetUserInformation = async (bitmarkAccountNumber) => {
   let donationInformation = await DonationModel.doGetUserInformation(bitmarkAccountNumber);
   return await doLoadDonationTask(donationInformation);
-};
-
-const doStudyTask = async (study, taskType) => {
-  console.log('doStudyTask :', study, taskType);
-  if ((study.studyId === 'study1' || study.studyId === 'study2') && taskType === study.taskIds.intake_survey) {
-    return await StudiesModel[study.studyId].doIntakeSurvey();
-  } else if (study.studyId === 'study2' && taskType === study.taskIds.task1) {
-    return await Study2Model.showActiveTask1();
-  } else if (study.studyId === 'study2' && taskType === study.taskIds.task2) {
-    let oldData = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_STUDY_TASK2);
-    if (!oldData || !oldData.value || !oldData.date || !oldData.type) {
-      oldData = {};
-    }
-    return await Study2Model.showActiveTask2(oldData);
-  } else if (study.studyId === 'study2' && taskType === study.taskIds.task3) {
-    return await Study2Model.showActiveTask3();
-  } else if (study.studyId === 'study2' && taskType === study.taskIds.task4) {
-    return await Study2Model.showActiveTask4();
-  } else if (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_1) {
-    console.log('run exit survey');
-    return await Study1Model.doExitSurvey1();
-  }
 };
 
 let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
@@ -277,113 +135,6 @@ let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
   }
   await FileUtil.zip(assetFolder, assetFilePath);
   return assetFilePath;
-};
-
-let doPrepareSurveyFile = async (touchFaceIdSession, bitmarkAccountNumber, study, taskType, taskResult) => {
-  let donateData;
-  let tempResult = taskResult;
-  let extFiles;
-  let filePath;
-  let study2Task2Data;
-  if (study.studyId === 'study2') {
-    if (taskType === study.taskIds.task4) {
-      tempResult = taskResult.textAnswer;
-      extFiles = taskResult.mediaAnswer;
-    } else if (taskType === study.taskIds.task1 || taskType === study.taskIds.task2) {
-      tempResult = taskResult.result;
-      study2Task2Data = taskResult.saveData;
-    }
-  }
-  if ((study.studyId === 'study1' &&
-    (taskType === study.taskIds.intake_survey || taskType === study.taskIds.exit_survey_1 || taskType === study.taskIds.exit_survey_2)) ||
-    (study.studyId === 'study2' &&
-      (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4 || taskType === study.taskIds.entry_study))) {
-    donateData = StudiesModel[study.studyId].generateSurveyAsset(study, bitmarkAccountNumber, tempResult,
-      taskType, moment().toDate(), 'ResearchKit', randomString({ length: 8, numeric: true, letters: false, }));
-  }
-  if (donateData) {
-    filePath = await doCreateFile(study.studyId, bitmarkAccountNumber, donateData.date, donateData.data, donateData.randomId, extFiles);
-  }
-  return { filePath, donateData, study2Task2Data };
-};
-
-
-const doCompletedStudyTask = async (touchFaceIdSession, bitmarkAccountNumber, study, taskType, result) => {
-  if ((study.studyId === 'study1' &&
-    (taskType === study.taskIds.intake_survey || taskType === study.taskIds.exit_survey_1 || (taskType === study.taskIds.exit_survey_2 && result))) ||
-    (study.studyId === 'study2' &&
-      (taskType === study.taskIds.intake_survey || taskType === study.taskIds.task1 || taskType === study.taskIds.task2 || taskType === study.taskIds.task4 || (taskType === study.taskIds.entry_study && result)))) {
-    let prepareResult = await doPrepareSurveyFile(touchFaceIdSession, bitmarkAccountNumber, study, taskType, result);
-
-    let extra = {
-      app: 'bitmark-data-donation',
-      // message: taskType === study.taskIds.intake_survey ? `Your first data donation has been securely delivered to the ${study.title}. Thanks for donating!` : '',
-      // data: taskType === study.taskIds.intake_survey ? { event: 'DONATION_SUCCESS' } : null,
-    };
-    let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, prepareResult.filePath, prepareResult.donateData.assetName, prepareResult.donateData.assetMetadata, study.researcherAccount, extra);
-    await FileUtil.remove(prepareResult.filePath);
-    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId, bitmarkId);
-    if (prepareResult.study2Task2Data) {
-      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_STUDY_TASK2, prepareResult.study2Task2Data);
-    }
-    await CommonModel.doTrackEvent({
-      event_name: study.studyId === 'study1' ? 'health_donation_user_donated_bitmark_for_madelena_study' : 'health_donation_user_donated_bitmark_for_victor_study',
-      account_number: bitmarkAccountNumber,
-    });
-    if (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2) {
-      await CommonModel.doTrackEvent({
-        event_name: 'health_donation_user_send_email_when_exit_madelena_study',
-        account_number: bitmarkAccountNumber,
-      });
-    }
-    if (study.studyId === 'study2' && taskType === study.taskIds.entry_study) {
-      await CommonModel.doTrackEvent({
-        event_name: 'health_donation_user_send_email_when_entry_victor_study',
-        account_number: bitmarkAccountNumber,
-      });
-    }
-    return doGetUserInformation(bitmarkAccountNumber);
-  } else if (
-    (study.studyId === 'study2' && (taskType === study.taskIds.task3 || taskType === study.taskIds.entry_study)) ||
-    (study.studyId === 'study1' && taskType === study.taskIds.exit_survey_2)) {
-    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment().toDate(), study.studyId);
-    await CommonModel.doTrackEvent({
-      event_name: study.studyId === 'study1' ? 'health_donation_user_donated_bitmark_for_madelena_study' : 'health_donation_user_donated_bitmark_for_victor_study',
-      account_number: bitmarkAccountNumber,
-    });
-    return doGetUserInformation(bitmarkAccountNumber);
-  }
-  throw new Error('Can not detect task and study');
-};
-
-const doDonateHealthData = async (touchFaceIdSession, bitmarkAccountNumber, study, list) => {
-  for (let dateRange of list) {
-    let healthRawData = await doGetHealthKitData(study.dataTypes, dateRange.startDate, dateRange.endDate);
-    let tempData = StudiesModel[study.studyId].generateHealthKitAsset(study, bitmarkAccountNumber,
-      removeEmptyValueData(healthRawData),
-      study.taskIds.donations,
-      dateRange.endDate,
-      randomString({ length: 8, numeric: true, letters: false, })
-    );
-    let deviceName = DeviceInfo.getDeviceName();
-    let deviceId = DeviceInfo.getDeviceId();
-    tempData.data = tempData.data.replace(new RegExp(deviceName, 'g'), deviceId);
-    let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, tempData.date, tempData.data, tempData.randomId);
-    let format = 'YYYY MMM DD HH:mm:ss';
-    let extra = {
-      app: 'bitmark-data-donation',
-      message: `Your ${study.studyId === 'study1' ? 'daily' : 'weekly'} data donation for ${moment(dateRange.startDate).format(format)} - ${moment(dateRange.endDate).format(format)} has been securely delivered to the ${study.title}. Thanks for donating!`,
-      data: { event: 'DONATION_SUCCESS' }
-    };
-    let bitmarkId = await BitmarkModel.doIssueThenTransferFile(touchFaceIdSession, filePath, tempData.assetName, tempData.assetMetadata, study.researcherAccount, extra);
-    await FileUtil.remove(filePath);
-    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, study.taskIds.donations, moment(dateRange.endDate).toDate(), study.studyId, bitmarkId);
-    await CommonModel.doTrackEvent({
-      event_name: study.studyId === 'study1' ? 'health_donation_user_donated_bitmark_for_madelena_study' : 'health_donation_user_donated_bitmark_for_victor_study',
-      account_number: bitmarkAccountNumber,
-    });
-  }
-  return doGetUserInformation(bitmarkAccountNumber);
 };
 
 const removeEmptyValueData = (healthData) => {
@@ -421,25 +172,11 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
   return donationInformation;
 };
 
-const doDownloadStudyConsent = async (study) => {
-  let folderPath = FileUtil.DocumentDirectory + '/' + study.studyId;
-  let filePath = folderPath + '/consent.pdf';
-  await FileUtil.mkdir(folderPath);
-  return await FileUtil.downloadFile(study.consentLinkDownload, filePath);
-};
-
 const DonationService = {
   doGetUserInformation,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
-  doJoinStudy,
-  doLeaveStudy,
-  doStudyTask,
-  doDonateHealthData,
-  doCompletedStudyTask,
   doBitmarkHealthData,
-  doDownloadStudyConsent,
-  getStudy,
   doCompleteTask,
 };
 

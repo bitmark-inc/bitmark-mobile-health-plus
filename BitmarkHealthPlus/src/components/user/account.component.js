@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Linking,
+  Alert,
+  Share,
+  Clipboard,
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
 } from 'react-native';
 
 import HyperLink from 'react-native-hyperlink';
+import Mailer from 'react-native-mail';
 
 import { convertWidth } from './../../utils';
 import { config } from './../../configs';
@@ -18,15 +22,59 @@ export class AccountComponent extends Component {
     super(props);
   }
 
+  rateApp() {
+    Alert.alert('App Store Review', 'Positive App Store ratings and reviews help support Bitmark. How would you rate us?', [{
+      text: '5 Stars!',
+      style: 'cancel',
+      onPress: () => { Linking.openURL(config.appLink) }
+    }, {
+      text: '4 Stars or less', onPress: this.requestSendFeedback,
+    }]);
+  }
+
+  requestSendFeedback() {
+    Alert.alert('Send Feedback', 'Have a comment or suggestion? We are always making improvements based on community feedback', [{
+      text: 'Cancel', style: 'cancel',
+    }, {
+      text: 'Send', onPress: this.sendFeedback,
+    }]);
+  }
+
+  sendFeedback() {
+    Mailer.mail({
+      subject: 'Suggestion for Bitmark iOS',
+      recipients: ['support@bitmark.com'],
+      body: 'Health+ version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
+    }, (error) => {
+      if (error) {
+        Alert.alert('Error', 'Could not send mail. Please send a mail to support@bitmark.com');
+      }
+    });
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <ScrollView style={styles.bodyContent}>
             <View style={styles.accountNumberArea}>
-              <Text style={styles.accountNumberTitle} >Account number</Text>
-              <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}</Text>
+              <View style={[styles.accountNumberTitleRow,]}>
+                <Text style={styles.accountNumberTitle} >Account</Text>
+                <TouchableOpacity onPress={Actions.pop}>
+                  <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_black.png')} />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity onPress={() => {
+                Clipboard.setString(DataProcessor.getUserInformation().bitmarkAccountNumber);
+                this.setState({ accountNumberCopyText: 'Account number copied!' });
+                setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
+              }}>
+                <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}</Text>
+              </TouchableOpacity>
               <View style={styles.accountNumberValueBar}></View>
+              <View style={[styles.accountNumberCopiedArea, this.state.accountNumberCopyText ? {} : { backgroundColor: 'white' }]}>
+                <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
+              </View>
               <HyperLink
                 onPress={(url) => Linking.openURL(url)}
                 linkStyle={{ color: '#0060F2', }}
@@ -42,11 +90,7 @@ export class AccountComponent extends Component {
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                <Text style={styles.rowButtonText}>Remove Access</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.rowButton}>
-                <Text style={styles.rowButtonText}>Delete your account</Text>
+                <Text style={styles.rowButtonText}>Log out</Text>
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
               </TouchableOpacity>
             </View>
@@ -56,12 +100,31 @@ export class AccountComponent extends Component {
             </View>
             <View style={styles.aboutArea}>
               <Text style={styles.aboutTitle}>About</Text>
+              <TouchableOpacity style={styles.rowButton} onPress={this.rateApp.bind(this)}>
+                <Text style={styles.rowButtonText}>App Store Rating & Review</Text>
+                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.rowButton} onPress={() => Share.share({ title: 'Bitmark', message: '', url: config.appLink })}>
+                <Text style={styles.rowButtonText}>Share This App</Text>
+                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.rowButton} onPress={this.requestSendFeedback.bind(this)}>
+                <Text style={styles.rowButtonText}>Send Feedback</Text>
+                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.aboutArea}>
+              <Text style={styles.powerTitle}>POWERED BY</Text>
               <TouchableOpacity style={styles.rowButton} disabled={true}>
                 <Text style={styles.rowButtonText}>Version</Text>
                 <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
                 <Text style={styles.rowButtonText}>Support</Text>
+                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]}>
+                <Text style={styles.rowButtonText}>Delete your account</Text>
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
               </TouchableOpacity>
             </View>
@@ -94,11 +157,21 @@ const styles = StyleSheet.create({
     padding: convertWidth(20),
     paddingBottom: 30,
   },
+  accountNumberTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   accountNumberTitle: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
     color: '#464646',
+  },
+  closeIcon: {
+    width: convertWidth(30),
+    height: convertWidth(30),
+    resizeMode: 'contain',
   },
   accountNumberValue: {
     fontFamily: 'Andale Mono',
@@ -109,6 +182,19 @@ const styles = StyleSheet.create({
     marginTop: 4,
     borderBottomWidth: 1,
     width: '100%',
+  },
+  accountNumberCopiedArea: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'black',
+    marginTop: 8,
+    minHeight: 21,
+  },
+  accountNumberCopiedText: {
+    fontFamily: 'Avenir Light',
+    fontWeight: '300',
+    fontSize: 14,
+    color: 'white',
   },
   accountNumberDescription: {
     marginTop: 24,
@@ -153,6 +239,14 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: '#464646',
   },
+
+  powerTitle: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '600',
+    fontSize: 14,
+    color: '#6D6D72',
+  },
+
   rowButton: {
     flexDirection: 'row',
     alignItems: 'center',

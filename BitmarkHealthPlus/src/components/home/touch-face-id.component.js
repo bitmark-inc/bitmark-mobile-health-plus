@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 
 import { AppProcessor } from '../../processors';
-import { StudyCommonModel } from '../../models';
+import { CommonModel } from '../../models';
 import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
@@ -47,7 +47,7 @@ export class TouchFaceIdComponent extends React.Component {
   }
 
   checkSupportFaceTouchId() {
-    StudyCommonModel.doCheckPasscodeAndFaceTouchId().then((supported) => {
+    CommonModel.doCheckPasscodeAndFaceTouchId().then((supported) => {
       this.setState({ supported });
     });
   }

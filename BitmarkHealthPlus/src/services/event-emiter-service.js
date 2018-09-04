@@ -4,7 +4,6 @@ let EventEmitterService = {
   event_extra: {},
   events: {
     APP_NETWORK_CHANGED: 'app-network-changed',
-
     APP_NEED_REFRESH: 'app-need-refresh',
     APP_PROCESSING: 'app-processing',
     APP_SUBMITTING: 'app-submitting',
@@ -15,11 +14,6 @@ let EventEmitterService = {
 
     CHANGE_USER_INFO: 'change-user-info',
     CHANGE_USER_DATA_DONATION_INFORMATION: 'change-user-data:donation-information',
-
-    CHANGE_DONATION_TASK: 'change-donation-tasks',
-    CHANGE_TIMELINES: 'change-timelines',
-
-    CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY: 'check-data-source-health-kit-empty',
   },
   on: (eventName, func, extra) => {
     if (extra && (!EventEmitterService.event_extra[eventName] || !EventEmitterService.event_extra[eventName][extra])) {

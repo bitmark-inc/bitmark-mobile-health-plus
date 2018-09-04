@@ -79,6 +79,7 @@ class MainEventsHandlerComponent extends Component {
   handleDeppLink(event) {
     const route = event.url.replace(/.*?:\/\//g, '');
     const params = route.split('/');
+    // `granting-access/[token]`
     switch (params[0]) {
       // case 'login': {
       //   break;

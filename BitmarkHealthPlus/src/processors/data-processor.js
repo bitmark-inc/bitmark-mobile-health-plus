@@ -1,6 +1,7 @@
 import DeviceInfo from 'react-native-device-info';
 // import Intercom from 'react-native-intercom';
 import moment from 'moment';
+import { Actions } from 'react-native-router-flux';
 
 import {
   EventEmitterService,
@@ -8,7 +9,7 @@ import {
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel, BitmarkModel, DonationModel } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel, DonationModel } from '../models';
 import { DonationService } from '../services/donation-service';
 import { DataCacheProcessor } from './data-cache-processor';
 import { config } from '../configs';
@@ -48,6 +49,7 @@ const runGetDonationInformationInBackground = () => {
 // ================================================================================================================================================
 // special process
 const runOnBackground = async () => {
+  console.log('runOnBackground =====');
   let userInfo = await UserModel.doTryGetCurrentUser();
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
     userInformation = userInfo;
@@ -55,6 +57,9 @@ const runOnBackground = async () => {
   }
   if (userInformation && userInformation.bitmarkAccountNumber) {
     let donationInformation = await runGetDonationInformationInBackground();
+    if (donationInformation && donationInformation.bitmarkHealthDataTask && donationInformation.bitmarkHealthDataTask.list && donationInformation.bitmarkHealthDataTask.list.length > 0) {
+      Actions.bitmarkHealthData({ list: donationInformation.bitmarkHealthDataTask.list });
+    }
     await doCheckNewDonationInformation(donationInformation, true);
     await doGenerateDisplayedData();
     console.log('runOnBackground done ====================================', donationInformation);
@@ -108,6 +113,7 @@ const configNotification = () => {
 let dataInterval = null;
 const startInterval = () => {
   stopInterval();
+  runOnBackground();
   dataInterval = setInterval(runOnBackground, 30 * 1000);
 };
 
@@ -121,17 +127,6 @@ const stopInterval = () => {
 // ================================================================================================================================================
 // ================================================================================================================================================
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
-  let donationInformation = await doReloadUserData();
-  if (justCreatedBitmarkAccount && donationInformation) {
-    let countActive = 0;
-    donationInformation.dataSourceStatuses.forEach(item => {
-      countActive += (item.status === 'Active') ? 1 : 0;
-    });
-    if (countActive === 0) {
-      EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
-    }
-  }
-
   startInterval();
   if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
     await NotificationService.doCheckNotificationPermission();
@@ -277,21 +272,6 @@ const doOpenApp = async () => {
 
     configNotification();
     await checkAppNeedResetLocalData(appInfo);
-
-    let donationTasks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK)) || [];
-    let totalTasks = 0;
-    donationTasks.forEach(item => totalTasks += (item.number ? item.number : 1));
-    DataCacheProcessor.setDonationTasks({
-      totalTasks,
-      totalDonationTasks: donationTasks.length,
-      donationTasks: donationTasks.slice(0, DataCacheProcessor.cacheLength),
-    });
-
-    let timelines = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TIMELINES)) || [];
-    let totalTimelines = 0;
-    let remainTimelines = 0;
-    timelines.forEach(tl => remainTimelines += (tl.taskType && !tl.bitmarkId) ? 1 : 0);
-    DataCacheProcessor.setTimelines({ timelines, totalTimelines, remainTimelines });
   }
 
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
@@ -306,39 +286,6 @@ const doActiveBitmarkHealthData = async (touchFaceIdSession, activeBitmarkHealth
 };
 const doInactiveBitmarkHealthData = async (touchFaceIdSession) => {
   let donationInformation = await DonationService.doInactiveBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber);
-  await doCheckNewDonationInformation(donationInformation);
-  return donationInformation;
-};
-const doJoinStudy = async (touchFaceIdSession, studyId) => {
-  let donationInformation = await DonationService.doJoinStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);
-  await doCheckNewDonationInformation(donationInformation);
-
-  let appInfo = (await doGetAppInformation()) || {};
-  if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_joined_study) {
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents.health_user_first_time_joined_study = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-
-    await CommonModel.doTrackEvent({
-      event_name: 'health_user_first_time_joined_study',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
-  return donationInformation;
-};
-const doLeaveStudy = async (touchFaceIdSession, studyId) => {
-  let donationInformation = await DonationService.doLeaveStudy(touchFaceIdSession, userInformation.bitmarkAccountNumber, studyId);
-  await doCheckNewDonationInformation(donationInformation);
-  return donationInformation;
-};
-const doCompletedStudyTask = async (touchFaceIdSession, study, taskType, result) => {
-  let donationInformation = await DonationService.doCompletedStudyTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, study, taskType, result);
-  await doCheckNewDonationInformation(donationInformation);
-  return donationInformation;
-};
-
-const doDonateHealthData = async (touchFaceIdSession, study, list) => {
-  let donationInformation = await DonationService.doDonateHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, study, list);
   await doCheckNewDonationInformation(donationInformation);
   return donationInformation;
 };
@@ -420,138 +367,7 @@ const doGetDonationInformation = () => {
 // ======================================================================================================================================================================================
 // ======================================================================================================================================================================================
 const doGenerateDisplayedData = async () => {
-  let donationTasks = [];
-  let totalTasks = 0;
-  let donationInformation = await doGetDonationInformation();
 
-  if (donationInformation && donationInformation.todoTasks) {
-    (donationInformation.todoTasks || []).forEach(item => {
-      item.key = donationTasks.length;
-      item.typeTitle = 'DONATION Request';
-      item.timestamp = (item.list && item.list.length > 0) ? item.list[0].endDate : (item.study ? item.study.joinedDate : null);
-      donationTasks.push(item);
-      totalTasks += item.number;
-    });
-  }
-  donationTasks = donationTasks.sort((a, b) => {
-    if (a.important) { return -1; }
-    if (b.important) { return 1; }
-    if (!a.timestamp) return -1;
-    if (!b.timestamp) return 1;
-    return moment(b.timestamp).toDate().getTime() - moment(a.timestamp).toDate().getTime();
-  });
-
-
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK, donationTasks);
-
-  DataCacheProcessor.setDonationTasks({
-    totalTasks,
-    totalDonationTasks: donationTasks.length,
-    donationTasks: donationTasks.slice(0, DataCacheProcessor.cacheLength),
-  });
-
-  EventEmitterService.emit(EventEmitterService.events.CHANGE_DONATION_TASK, { totalTasks, donationTasks, donationInformation });
-  console.log('donationTasks :', donationTasks);
-
-
-  let timelines = [{
-    time: '', title: 'Your health data will be bitmarked each week...',
-  }];
-  let remainTimelines = 0;
-
-  if (donationInformation) {
-    let bitmarkIds = [];
-    let tempTimelines = [];
-
-    (donationInformation.timelines || []).forEach(item => {
-      tempTimelines.push({
-        time: item.completedAt,
-        taskType: item.taskType,
-        title: item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? (item.bitmarkId ? 'Weekly health data' : `Register your ${item.isFirst ? 'first ' : ''}weekly health data`) :
-          (item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 'Captured asset' : ''),
-        startDate: item.startDate,
-        endDate: item.endDate,
-        bitmarkId: item.bitmarkId,
-      });
-      remainTimelines += item.bitmarkId ? 0 : 1;
-      if (item.bitmarkId) {
-        bitmarkIds.push(item.bitmarkId);
-      }
-    });
-
-    let bitmarks = [];
-
-    if (bitmarkIds && bitmarkIds.length > 0) {
-      bitmarks = (await BitmarkModel.doGetListBitmarks(bitmarkIds)).bitmarks;
-    }
-
-    tempTimelines = [{
-      time: moment(donationInformation.createdAt),
-      isFirst: true,
-      title: 'Your Bitmark account was created.',
-    }].concat(tempTimelines.sort((a, b) => {
-      return moment(a.time).toDate().getTime() - moment(b.time).toDate().getTime();
-    }));
-
-    let currentYear = 0;
-    for (let item of tempTimelines) {
-      if (moment(item.time).toDate().getFullYear() > currentYear) {
-        currentYear = moment(item.time).toDate().getFullYear();
-        item.time = moment(item.time).format(item.isFirst ? 'YYYY MMM DD' : 'YYYY MMM DD HH:mm');
-      } else {
-        item.time = moment(item.time).format('MMM DD HH:mm');
-      }
-
-      if (item.bitmarkId) {
-        let bitmark = bitmarks.find(bm => bm.id === item.bitmarkId);
-        item.status = bitmark ? bitmark.status : null;
-      }
-    }
-    timelines = timelines.concat(tempTimelines.reverse());
-  }
-
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_TIMELINES, timelines);
-
-  DataCacheProcessor.setTimelines({
-    remainTimelines,
-    totalTimelines: timelines.length,
-    timelines: timelines.slice(0, DataCacheProcessor.cacheLength),
-  });
-
-  EventEmitterService.emit(EventEmitterService.events.CHANGE_TIMELINES, { remainTimelines, timelines, donationInformation });
-  console.log('timelines :', timelines);
-};
-
-const doGetDonationTasks = async (length) => {
-  let donationTasks;
-  let cacheData = DataCacheProcessor.getDonationTasks();
-  if (length !== undefined && length <= cacheData.donationTasks.length) {
-    donationTasks = cacheData.donationTasks;
-  } else {
-    let allDonationTasks = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_TASK)) || [];
-    donationTasks = (length && length < allDonationTasks.length) ? allDonationTasks.slice(0, length) : allDonationTasks;
-  }
-  return {
-    donationTasks,
-    totalTasks: cacheData.totalTasks,
-    totalDonationTasks: cacheData.totalDonationTasks,
-  }
-};
-
-const doGetTimelines = async (length) => {
-  let timelines;
-  let cacheData = DataCacheProcessor.getTimelines();
-  if (length !== undefined && length <= cacheData.timelines.length) {
-    timelines = cacheData.timelines;
-  } else {
-    let allTimelines = (await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_TIMELINES)) || [];
-    timelines = (length && length < allTimelines.length) ? allTimelines.slice(0, length) : allTimelines;
-  }
-  return {
-    timelines,
-    totalTimelines: cacheData.totalTimelines,
-    remainTimelines: cacheData.remainTimelines,
-  }
 };
 
 const doCheckFileToIssue = async (filePath) => {
@@ -588,19 +404,12 @@ const DataProcessor = {
   doDeactiveApplication,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
-  doJoinStudy,
-  doLeaveStudy,
-  doCompletedStudyTask,
-  doDonateHealthData,
   doBitmarkHealthData,
   doDownloadBitmark,
   doIssueFile,
 
   doGetDonationInformation,
   doCheckFileToIssue,
-
-  doGetDonationTasks,
-  doGetTimelines,
 
   getApplicationVersion,
   getApplicationBuildNumber,

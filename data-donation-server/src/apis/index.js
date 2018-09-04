@@ -281,10 +281,14 @@ const completedTask = async (req, res) => {
   }
 };
 
+const getCompletedTasks = async (req, res) => {
+
+};
 
 const getAllHealthKitDataTypes = (req, res) => {
   res.send(userService.allDataTypes);
 };
+
 
 
 

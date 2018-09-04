@@ -1,38 +1,105 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
+  Alert,
+  Linking,
   Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 
-import { convertWidth } from './../../utils';
+import ImagePicker from 'react-native-image-picker';
+import { convertWidth, runPromiseWithoutError, FileUtil } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { DataProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
+import { EventEmitterService } from '../../services';
 
+let ComponentName = 'ComponentName';
 export class UserComponent extends Component {
   constructor(props) {
     super(props);
+
+    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
+
     this.state = {
       numberHealthDataRecords: 0,
       numberHealthRecords: 0,
       displayAccount: true,
-      bitmarkAccountNumber: DataProcessor.getUserInformation().bitmarkAccountNumber,
     }
+    runPromiseWithoutError(DataProcessor.doGetDonationInformation()).then(donationInformation => {
+      let numberHealthDataRecords = 0;
+      let numberHealthRecords = 0;
+      donationInformation.completedTasks.forEach(item => {
+        numberHealthDataRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 1 : 0;
+        numberHealthRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 1 : 0;
+      });
+      this.setState({ numberHealthDataRecords, numberHealthRecords });
+    });
+  }
+
+  componentDidMount() {
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+  }
+
+  handerDonationInformationChange(donationInformation) {
+    let numberHealthDataRecords = 0;
+    let numberHealthRecords = 0;
+    donationInformation.completedTasks.forEach(item => {
+      numberHealthDataRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 1 : 0;
+      numberHealthRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 1 : 0;
+    });
+    this.setState({ numberHealthDataRecords, numberHealthRecords });
+  }
+
+  captureAsset() {
+    let options = {
+      title: 'Capture asset'
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+
+      if (response.didCancel) {
+        return;
+      }
+      if (response.error) {
+        Alert.alert('Permission error!', response.error, [{
+          text: 'Enable',
+          onPress: () => Linking.openURL('app-settings:')
+        }, {
+          text: 'Cancel',
+          style: 'cancel',
+        }]);
+        return;
+      }
+      let filePath = response.uri.replace('file://', '');
+      filePath = decodeURIComponent(filePath);
+
+      // Move file from "tmp" folder to "cache" folder
+      let fileName = response.fileName ? response.fileName : response.uri.substring(response.uri.lastIndexOf('/') + 1);
+      let timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
+      let destPath = FileUtil.CacheDirectory + '/' + fileName;
+      FileUtil.moveFileSafe(filePath, destPath);
+      filePath = destPath;
+      Actions.captureAsset({ filePath, timestamp })
+    });
   }
 
   render() {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-
           <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ displayAccount: true })} activeOpacity={1}>
             <View style={styles.dataArea}>
-              <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataRecords}</Text> Weeks of Health Data{this.state.numberHealthDataRecords > 1 ? 's' : ''}</Text>
+              <TouchableOpacity style={{ flex: 1 }}>
+                <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataRecords}</Text> Weeks of Health Data{this.state.numberHealthDataRecords > 1 ? 's' : ''}</Text>
+              </TouchableOpacity>
             </View>
             <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1 }]}>
-              <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthRecords}</Text> Health Record{this.state.numberHealthRecords > 1 ? 's' : ''}</Text>
-              <TouchableOpacity style={styles.addHealthRecordButton}>
+              <TouchableOpacity style={{ flex: 1 }}>
+                <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthRecords}</Text> Health Record{this.state.numberHealthRecords > 1 ? 's' : ''}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
                 <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
                 <Text style={styles.addHealthRecordButtonText} > {'Add records'.toUpperCase()}</Text>
               </TouchableOpacity>
@@ -40,7 +107,7 @@ export class UserComponent extends Component {
           </TouchableOpacity>
           <View style={styles.accountArea}>
             <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ displayAccount: !this.state.displayAccount })}>
-              <Text style={styles.accountButtonText}>{'[' + this.state.bitmarkAccountNumber.substring(0, 4) + '...' + this.state.bitmarkAccountNumber.substring(this.state.bitmarkAccountNumber.length - 4, this.state.bitmarkAccountNumber.length) + ']'}</Text>
+              <Text style={styles.accountButtonText}>{'[' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(0, 4) + '...' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(DataProcessor.getUserInformation().bitmarkAccountNumber.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}</Text>
             </TouchableOpacity>
           </View>
           {!this.state.displayAccount && <View style={styles.overlapButtonsArea}>

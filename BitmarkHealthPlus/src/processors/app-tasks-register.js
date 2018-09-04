@@ -5,7 +5,6 @@ import { CommonModel, AccountModel, FaceTouchId, } from './../models';
 import { EventEmitterService, BitmarkService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';
-import { DonationService } from '../services/donation-service';
 import { FileUtil } from '../utils';
 
 // ================================================================================================
@@ -102,50 +101,6 @@ const doInactiveBitmarkHealthData = async () => {
   return await processing(DataProcessor.doInactiveBitmarkHealthData(touchFaceIdSession));
 };
 
-const doJoinStudy = async ({ studyId }) => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to join study.');
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await processing(DataProcessor.doJoinStudy(touchFaceIdSession, studyId));
-};
-const doLeaveStudy = async ({ studyId }) => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to opt out study.');
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await processing(DataProcessor.doLeaveStudy(touchFaceIdSession, studyId));
-};
-const doStudyTask = async ({ study, taskType }) => {
-  let result = await DonationService.doStudyTask(study, taskType);
-  if (!result) {
-    return null;
-  }
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your data donation for this task.');
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await processing(DataProcessor.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
-};
-const doCompletedStudyTask = async ({ study, taskType, result }) => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your data donation for this task.');
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await processing(DataProcessor.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
-};
-const doDonateHealthData = async ({ study, list, processingData }) => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Please sign your data donation for ${study.title}.`);
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await submitting(DataProcessor.doDonateHealthData(touchFaceIdSession, study, list), processingData);
-};
 const doBitmarkHealthData = async ({ list, processingData }) => {
   // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Your fingerprint signature is required.`);
   // if (!touchFaceIdSession) {
@@ -153,9 +108,6 @@ const doBitmarkHealthData = async ({ list, processingData }) => {
   // }
   let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await submitting(DataProcessor.doBitmarkHealthData(touchFaceIdSession, list), processingData);
-};
-const doDownloadStudyConsent = async ({ study }) => {
-  return await processing(DonationService.doDownloadStudyConsent(study));
 };
 
 const doDownloadBitmark = async ({ bitmarkId, processingData }) => {
@@ -193,13 +145,7 @@ let AppTasks = {
   doIssueFile,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
-  doJoinStudy,
-  doLeaveStudy,
-  doStudyTask,
-  doCompletedStudyTask,
-  doDonateHealthData,
   doBitmarkHealthData,
-  doDownloadStudyConsent,
   doDownloadBitmark,
   doGetBitmarkInformation,
   doDownloadAndShareLegal,

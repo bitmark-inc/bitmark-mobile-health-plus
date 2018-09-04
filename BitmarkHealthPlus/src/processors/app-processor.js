@@ -143,28 +143,9 @@ const doInactiveBitmarkHealthData = async () => {
   return executeTask('doInactiveBitmarkHealthData');
 };
 
-const doJoinStudy = async (studyId) => {
-  return executeTask('doJoinStudy', { studyId });
-};
-const doLeaveStudy = async (studyId) => {
-  return executeTask('doLeaveStudy', { studyId });
-};
-const doStudyTask = async (study, taskType) => {
-  return executeTask('doStudyTask', { study, taskType });
-};
-const doCompletedStudyTask = async (study, taskType, result) => {
-  return executeTask('doCompletedStudyTask', { study, taskType, result });
-};
-const doDonateHealthData = async (study, list, processingData) => {
-  return executeTask('doDonateHealthData', { study, list, processingData });
-};
 const doBitmarkHealthData = async (list, processingData) => {
   return executeTask('doBitmarkHealthData', { list, processingData });
 };
-const doDownloadStudyConsent = async (study) => {
-  return executeTask('doDownloadStudyConsent', { study });
-};
-
 const doDownloadBitmark = async (bitmarkId, processingData) => {
   return executeTask('doDownloadBitmark', { bitmarkId, processingData });
 };
@@ -207,13 +188,7 @@ let AppProcessor = {
   doRequireHealthKitPermission,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
-  doJoinStudy,
-  doLeaveStudy,
-  doStudyTask,
-  doCompletedStudyTask,
-  doDonateHealthData,
   doBitmarkHealthData,
-  doDownloadStudyConsent,
 
   doGetBitmarkInformation,
   doDownloadBitmark,

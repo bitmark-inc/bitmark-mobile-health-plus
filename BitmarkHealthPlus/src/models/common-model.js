@@ -7,16 +7,10 @@ import { config } from './../configs';
 const KEYS = {
   APP_INFORMATION: 'app-information',
 
-  USER_INFORMATION: 'bitmark-app',
-
+  USER_INFORMATION: 'user-information',
   //original data
   USER_DATA_DONATION_INFORMATION: 'user-data:donation-information',
 
-  // data can be change
-  USER_DATA_DONATION_TASK: 'user-data:donation-tasks',
-  USER_DATA_TIMELINES: 'user-data:timelines',
-
-  USER_DATA_DONATION_STUDY_TASK2: 'user-data:donation-study-task2',
 };
 
 // ================================================================================================
