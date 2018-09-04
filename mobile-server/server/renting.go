@@ -20,7 +20,7 @@ func (s *Server) registerRenting(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"renting_id": id})
+	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
 func (s *Server) updateRentingReceiver(c *gin.Context) {
