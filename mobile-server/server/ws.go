@@ -1,0 +1,67 @@
+package server
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
+	"github.com/gorilla/websocket"
+	log "github.com/sirupsen/logrus"
+)
+
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+func (s *Server) ServeWs(c *gin.Context) {
+	// jwtid := c.MustGet("jwtid").(string)
+	// account := c.MustGet("requester").(string)
+	jwtid := "37082cfe-ed09-48b3-9ccc-d553d89c1f51"
+	account := "ey9pm32VVbgS8fxQgM18hsjZ4btSMPtrqLVx36QotDGB8C31Mm"
+	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	log.Debug("Subscribe to redis")
+	if err := s.redisPubSubConn.Subscribe("id-"+jwtid, "ac-"+account); err != nil {
+		c.Error(err)
+		ws.Close()
+	}
+	s.wsConnStore.NewConn(jwtid, account, ws)
+}
+
+func (s *Server) ProcessWSMessage() {
+	for {
+		switch v := s.redisPubSubConn.Receive().(type) {
+		case redis.Message:
+			log.Debugf("%s: message: %s\n", v.Channel, v.Data)
+			s.dispatchWSMessage(v.Channel, v.Data)
+		case redis.Subscription:
+			log.Debugf("%s: %s %d\n", v.Channel, v.Kind, v.Count)
+		case error:
+			log.Error(v)
+		}
+	}
+}
+
+func (s *Server) dispatchWSMessage(channel string, data []byte) {
+	if len(channel) <= 3 {
+		log.Error("Invalid channel:", channel)
+		return
+	}
+
+	left := channel[:3]
+	right := channel[3:]
+
+	if left == "id-" {
+		s.wsConnStore.DispatchMessageToId(right, data)
+	} else if left == "ac-" {
+		s.wsConnStore.DispatchMessageToAccount(right, data)
+	} else {
+		log.Error("Invalid channel:", channel)
+	}
+}

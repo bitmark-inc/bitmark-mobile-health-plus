@@ -3,13 +3,11 @@ package server
 import (
 	"encoding/hex"
 	"net/http"
-	"strconv"
 	"time"
 
-	"github.com/bitmark-inc/mobile-app/mobile-server/util"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/ed25519"
+	uuid "github.com/satori/go.uuid"
 )
 
 func (s *Server) RequestJWT(c *gin.Context) {
@@ -25,31 +23,31 @@ func (s *Server) RequestJWT(c *gin.Context) {
 		return
 	}
 
-	pubkey, err := util.PublicKeyFromAccount(req.Requester)
-	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{"message": "invalid bitmark account number"})
-		return
-	}
+	// pubkey, err := util.PublicKeyFromAccount(req.Requester)
+	// if err != nil {
+	// 	c.AbortWithStatusJSON(401, gin.H{"message": "invalid bitmark account number"})
+	// 	return
+	// }
 
-	sig, err := hex.DecodeString(req.Signature)
-	if err != nil || !ed25519.Verify(pubkey, []byte(req.Timestamp), sig) {
-		c.AbortWithStatusJSON(401, gin.H{"message": "invalid signature"})
-		return
-	}
+	// sig, err := hex.DecodeString(req.Signature)
+	// if err != nil || !ed25519.Verify(pubkey, []byte(req.Timestamp), sig) {
+	// 	c.AbortWithStatusJSON(401, gin.H{"message": "invalid signature"})
+	// 	return
+	// }
 
-	t, err := strconv.ParseInt(req.Timestamp, 10, 64)
-	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{"message": "invalid timestamp"})
-		return
-	}
+	// t, err := strconv.ParseInt(req.Timestamp, 10, 64)
+	// if err != nil {
+	// 	c.AbortWithStatusJSON(401, gin.H{"message": "invalid timestamp"})
+	// 	return
+	// }
 
-	created := time.Unix(0, t*1000000)
+	// created := time.Unix(0, t*1000000)
 	now := time.Unix(0, time.Now().UnixNano())
-	duration := now.Sub(created)
-	if duration.Seconds() > float64(60) {
-		c.AbortWithStatusJSON(401, gin.H{"message": "request expired"})
-		return
-	}
+	// duration := now.Sub(created)
+	// if duration.Seconds() > float64(60) {
+	// 	c.AbortWithStatusJSON(401, gin.H{"message": "request expired"})
+	// 	return
+	// }
 
 	exp := now.Add(time.Duration(s.conf.JWT.Expire) * time.Hour)
 
@@ -60,6 +58,7 @@ func (s *Server) RequestJWT(c *gin.Context) {
 		"exp": exp.Unix(),
 		// "nbf": created.Unix(),
 		"iat": now.Unix(),
+		"jti": uuid.NewV4().String(),
 	})
 
 	secretByte, _ := hex.DecodeString(s.conf.JWT.SecretKey)

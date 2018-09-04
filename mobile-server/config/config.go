@@ -31,6 +31,9 @@ type Configuration struct {
 		DBName   string `hcl:"dbname"`
 		SSLMode  string `hcl:"sslmode"`
 	} `hcl:"db"`
+	Redis struct {
+		URI string `hcl:"uri"`
+	}
 	Influx struct {
 		Addr     string `hcl:"addr"`
 		Username string `hcl:"username"`

@@ -114,7 +114,14 @@ func (s *Server) authenticateJWT() gin.HandlerFunc {
 			return
 		}
 
+		jwtID, ok := claims["jti"]
+		if !ok {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization jti"})
+			return
+		}
+
 		c.Set("requester", requester)
+		c.Set("jwtid", jwtID)
 	}
 }
 

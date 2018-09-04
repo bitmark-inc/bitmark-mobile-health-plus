@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	influx "github.com/influxdata/influxdb/client/v2"
 	"github.com/jackc/pgx"
 	log "github.com/sirupsen/logrus"
@@ -15,6 +16,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/websocketstore"
 )
 
 type Server struct {
@@ -22,9 +24,12 @@ type Server struct {
 	server *http.Server
 
 	// DB instance
-	dbConn         *pgx.ConnPool
-	influxDBClient influx.Client
-	gatewayClient  *gateway.Client
+	dbConn          *pgx.ConnPool
+	redisPool       *redis.Pool
+	redisPubSubConn *redis.PubSubConn
+	wsConnStore     *websocketstore.WSStore
+	influxDBClient  influx.Client
+	gatewayClient   *gateway.Client
 
 	// Stores
 	pushStore    pushstore.PushStore
@@ -74,6 +79,8 @@ func (s *Server) Run(addr string) error {
 
 	api.POST("/auth", s.RequestJWT)
 
+	r.GET("/ws", s.ServeWs)
+
 	srv := &http.Server{
 		Addr:    addr,
 		Handler: s.router,
@@ -85,24 +92,40 @@ func (s *Server) Run(addr string) error {
 }
 
 func (s *Server) Shutdown(ctx context.Context) error {
+	s.wsConnStore.DropAll(s.redisPubSubConn)
+	s.redisPubSubConn.Close()
 	return s.server.Shutdown(ctx)
 }
 
-func New(conf *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, influxClient influx.Client, gatewayClient *gateway.Client) *Server {
+func New(conf *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, redisPool *redis.Pool, influxClient influx.Client, gatewayClient *gateway.Client) *Server {
 	r := gin.New()
+	wsConnStore := websocketstore.NewStore()
+	redisConn, err := redisPool.Dial()
+	if err != nil {
+		log.Panic(err)
+	}
+	psc := &redis.PubSubConn{
+		Conn: redisConn,
+	}
 
 	return &Server{
-		router:         r,
-		pushStore:      pushStore,
-		bitmarkStore:   bitmarkStore,
-		dbConn:         dbConn,
-		influxDBClient: influxClient,
-		gatewayClient:  gatewayClient,
-		conf:           conf,
+		router:          r,
+		pushStore:       pushStore,
+		bitmarkStore:    bitmarkStore,
+		dbConn:          dbConn,
+		redisPool:       redisPool,
+		redisPubSubConn: psc,
+		wsConnStore:     wsConnStore,
+		influxDBClient:  influxClient,
+		gatewayClient:   gatewayClient,
+		conf:            conf,
 	}
 }
 
 func (s *Server) HealthCheck(c *gin.Context) {
+	redisConn, _ := s.redisPool.Dial()
+	redisConn.Do("PUBLISH", "ac-ey9pm32VVbgS8fxQgM18hsjZ4btSMPtrqLVx36QotDGB8C31Mm", s.conf.JWT.SecretKey)
+
 	conn, err := s.dbConn.Acquire()
 	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{
