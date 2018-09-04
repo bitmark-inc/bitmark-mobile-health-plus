@@ -76,41 +76,46 @@ const doLogout = async () => {
 };
 
 const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset), processingInfo);
 };
 
 const doActiveBitmarkHealthData = async ({ activeBitmarkHealthDataAt }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark health data.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark health data.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await processing(DataProcessor.doActiveBitmarkHealthData(touchFaceIdSession, activeBitmarkHealthDataAt));
 };
 
 const doInactiveBitmarkHealthData = async () => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to remove bitmark health data.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to remove bitmark health data.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await processing(DataProcessor.doInactiveBitmarkHealthData(touchFaceIdSession));
 };
 
 const doJoinStudy = async ({ studyId }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to join study.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to join study.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await processing(DataProcessor.doJoinStudy(touchFaceIdSession, studyId));
 };
 const doLeaveStudy = async ({ studyId }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to opt out study.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to opt out study.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await processing(DataProcessor.doLeaveStudy(touchFaceIdSession, studyId));
 };
 const doStudyTask = async ({ study, taskType }) => {
@@ -118,31 +123,35 @@ const doStudyTask = async ({ study, taskType }) => {
   if (!result) {
     return null;
   }
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your data donation for this task.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your data donation for this task.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await processing(DataProcessor.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
 };
 const doCompletedStudyTask = async ({ study, taskType, result }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your data donation for this task.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign your data donation for this task.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await processing(DataProcessor.doCompletedStudyTask(touchFaceIdSession, study, taskType, result));
 };
 const doDonateHealthData = async ({ study, list, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Please sign your data donation for ${study.title}.`);
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Please sign your data donation for ${study.title}.`);
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await submitting(DataProcessor.doDonateHealthData(touchFaceIdSession, study, list), processingData);
 };
 const doBitmarkHealthData = async ({ list, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Your fingerprint signature is required.`);
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Your fingerprint signature is required.`);
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await submitting(DataProcessor.doBitmarkHealthData(touchFaceIdSession, list), processingData);
 };
 const doDownloadStudyConsent = async ({ study }) => {
@@ -150,10 +159,11 @@ const doDownloadStudyConsent = async ({ study }) => {
 };
 
 const doDownloadBitmark = async ({ bitmarkId, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
-  if (!touchFaceIdSession) {
-    return null;
-  }
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   return await submitting(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkId), processingData);
 };
 

@@ -7,6 +7,8 @@ import {
 import { convertWidth } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
+import { DataProcessor } from './../../processors';
+import { Actions } from 'react-native-router-flux';
 
 export class UserComponent extends Component {
   constructor(props) {
@@ -14,6 +16,8 @@ export class UserComponent extends Component {
     this.state = {
       numberHealthDataRecords: 0,
       numberHealthRecords: 0,
+      displayAccount: true,
+      bitmarkAccountNumber: DataProcessor.getUserInformation().bitmarkAccountNumber,
     }
   }
 
@@ -21,7 +25,8 @@ export class UserComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-          <View style={styles.bodyContent}>
+
+          <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ displayAccount: true })} activeOpacity={1}>
             <View style={styles.dataArea}>
               <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataRecords}</Text> Weeks of Health Data{this.state.numberHealthDataRecords > 1 ? 's' : ''}</Text>
             </View>
@@ -32,14 +37,20 @@ export class UserComponent extends Component {
                 <Text style={styles.addHealthRecordButtonText} > {'Add records'.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
-
-            <View style={[styles.accountArea]}>
-              <TouchableOpacity style={styles.accountButton}>
-                <Text style={styles.accountButtonText}>[3xi3...4u83i]</Text>
-              </TouchableOpacity>
-            </View>
-
+          </TouchableOpacity>
+          <View style={styles.accountArea}>
+            <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ displayAccount: !this.state.displayAccount })}>
+              <Text style={styles.accountButtonText}>{'[' + this.state.bitmarkAccountNumber.substring(0, 4) + '...' + this.state.bitmarkAccountNumber.substring(this.state.bitmarkAccountNumber.length - 4, this.state.bitmarkAccountNumber.length) + ']'}</Text>
+            </TouchableOpacity>
           </View>
+          {!this.state.displayAccount && <View style={styles.overlapButtonsArea}>
+            <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444' }]} onPress={Actions.account}>
+              <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>ACCOUNT SETTING</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]}>
+              <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>GRANT ACCESS</Text>
+            </TouchableOpacity>
+          </View>}
         </View>
       </SafeAreaView>
     );
@@ -59,10 +70,9 @@ const styles = StyleSheet.create({
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#FF4444',
+    width: "100%"
   },
 
   dataArea: {
@@ -96,12 +106,13 @@ const styles = StyleSheet.create({
   },
   accountArea: {
     width: '100%', height: 38,
-    borderTopColor: '#FF1829', borderTopWidth: 1,
-    flexDirection: 'row',
+    borderColor: '#FF1829', borderTopWidth: 0, borderWidth: 1,
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   accountButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -113,5 +124,15 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 16,
     color: '#FF1F1F'
-  }
+  },
+  overlapButtonsArea: {
+    width: '100%',
+    borderColor: '#FF1829', borderTopWidth: 0, borderWidth: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: convertWidth(16),
+    marginLeft: convertWidth(16),
+  },
 });

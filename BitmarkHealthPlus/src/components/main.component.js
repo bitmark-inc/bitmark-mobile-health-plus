@@ -24,6 +24,7 @@ import { UserModel, CommonModel } from '../models';
 import { FileUtil } from '../utils';
 import { DataProcessor, AppProcessor } from '../processors';
 import { config } from '../configs';
+import { constants } from '../constants';
 
 
 const CRASH_LOG_FILE_NAME = 'crash_log.txt';
@@ -31,65 +32,75 @@ const CRASH_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + CRASH_LOG_FILE_NAME;
 const ERROR_LOG_FILE_NAME = 'error_log.txt';
 const ERROR_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + ERROR_LOG_FILE_NAME;
 
-export class MainComponent extends Component {
-  static propTypes = {
-    message: PropTypes.string,
-  };
-
+class MainEventsHandlerComponent extends Component {
   constructor(props) {
     super(props);
-
-    this.handleDeppLink = this.handleDeppLink.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.handerProcessingEvent = this.handerProcessingEvent.bind(this);
     this.handerSubmittingEvent = this.handerSubmittingEvent.bind(this);
     this.handleNetworkChange = this.handleNetworkChange.bind(this);
     this.handerProcessErrorEvent = this.handerProcessErrorEvent.bind(this);
     this.doTryConnectInternet = this.doTryConnectInternet.bind(this);
-    this.displayEmptyDataSource = this.displayEmptyDataSource.bind(this);
-
-    this.doOpenApp = this.doOpenApp.bind(this);
-    this.doRefresh = this.doRefresh.bind(this);
+    this.handleDeppLink = this.handleDeppLink.bind(this);
 
     this.state = {
-      user: null,
       processingCount: false,
       submitting: null,
-      justCreatedBitmarkAccount: false,
       networkStatus: true,
-      emptyDataSource: false,
     };
     this.appState = AppState.currentState;
   }
 
   componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
+    Linking.addEventListener('url', this.handleDeppLink);
+    NetInfo.isConnected.fetch().then().done(() => {
+      NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
+    });
 
     EventEmitterService.on(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
-
-    EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
-    EventEmitterService.on(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
-
-    Linking.addEventListener('url', this.handleDeppLink);
-    AppState.addEventListener('change', this.handleAppStateChange);
-    NetInfo.isConnected.fetch().then().done(() => {
-      NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
-    });
 
     // Handle Crashes
     this.checkAndShowCrashLog();
     this.registerCrashHandler();
   }
   componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+    Linking.removeListener('url', this.handleDeppLink);
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
+
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
-    EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
-    EventEmitterService.on(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
-    Linking.addEventListener('url', this.handleDeppLink);
-    AppState.removeEventListener('change', this.handleAppStateChange);
-    NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
+  }
+
+  handleDeppLink(event) {
+    const route = event.url.replace(/.*?:\/\//g, '');
+    const params = route.split('/');
+    switch (params[0]) {
+      // case 'login': {
+      //   break;
+      // }
+      default: {
+        // TODO
+        break;
+      }
+    }
+  }
+
+  handleNetworkChange(networkStatus) {
+    let networkChanged = networkStatus === this.state.networkStatus;
+    EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkChanged);
+    this.setState({ networkStatus });
+  }
+
+  handleAppStateChange = (nextAppState) => {
+    if (this.appState.match(/background/) && nextAppState === 'active') {
+      this.doTryConnectInternet();
+    }
+    this.appState = nextAppState;
   }
 
   handerProcessingEvent(processing) {
@@ -101,10 +112,6 @@ export class MainComponent extends Component {
     } else if (processingCount === 0) {
       KeepAwake.deactivate();
     }
-
-  }
-  displayEmptyDataSource() {
-    this.setState({ emptyDataSource: true });
   }
 
   registerCrashHandler() {
@@ -239,35 +246,6 @@ export class MainComponent extends Component {
     } else {
       KeepAwake.deactivate();
     }
-
-  }
-
-  handleDeppLink(event) {
-    const route = event.url.replace(/.*?:\/\//g, '');
-    const params = route.split('/');
-    switch (params[0]) {
-      // case 'login': {
-      //   break;
-      // }
-      default: {
-        // TODO
-        break;
-      }
-    }
-  }
-
-  handleAppStateChange = (nextAppState) => {
-    if (this.appState.match(/background/) && nextAppState === 'active') {
-      this.doTryConnectInternet();
-    }
-    this.appState = nextAppState;
-  }
-
-  handleNetworkChange(networkStatus) {
-    this.setState({ networkStatus });
-    if (networkStatus) {
-      this.doOpenApp();
-    }
   }
 
   doTryConnectInternet() {
@@ -275,6 +253,53 @@ export class MainComponent extends Component {
     NetInfo.isConnected.fetch().then().done(() => {
       NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
     });
+  }
+
+  render() {
+    let styles = {};
+    if (!this.state.networkStatus || this.state.processingCount ||
+      (!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message) ||
+      (!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message))) {
+      styles.height = '100%';
+    }
+    return (
+      <View style={[{ position: 'absolute', width: '100%', top: 0, left: 0, zIndex: constants.zIndex.dialog }, styles]}>
+        {/* <DefaultIndicatorComponent /> */}
+        {!this.state.networkStatus && <BitmarkInternetOffComponent tryConnectInternet={this.doTryConnectInternet} />}
+        {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
+        {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}
+        {!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message) && <BitmarkIndicatorComponent
+          indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
+      </View>
+    );
+  }
+
+}
+
+export class MainComponent extends Component {
+  static propTypes = {
+    message: PropTypes.string,
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.doOpenApp = this.doOpenApp.bind(this);
+    this.doRefresh = this.doRefresh.bind(this);
+
+    this.state = {
+      user: null,
+      networkStatus: true,
+    };
+  }
+
+  componentDidMount() {
+    EventEmitterService.on(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
+    EventEmitterService.on(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
+  }
+  componentWillUnmount() {
+    EventEmitterService.remove(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
+    EventEmitterService.remove(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
   }
 
   doOpenApp() {
@@ -286,17 +311,18 @@ export class MainComponent extends Component {
         }]);
         return;
       }
+    }).then(() => {
       this.doRefresh();
     }).catch(error => {
       console.log('doOpenApp error:', error);
     });
   }
   doRefresh(justCreatedBitmarkAccount) {
-    this.setState({ user: null });
-
     return DataProcessor.doOpenApp().then(user => {
       console.log('doOpenApp user:', user);
-      this.setState({ user });
+      if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
+        this.setState({ user });
+      }
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
           if (ok) {
@@ -330,13 +356,8 @@ export class MainComponent extends Component {
 
       <View style={{ flex: 1 }}>
         <StatusBar hidden={config.isIPhoneX ? false : true} />
-        {!this.state.networkStatus && <BitmarkInternetOffComponent tryConnectInternet={this.doTryConnectInternet} />}
-        {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
-        {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}
-        {!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message) && <BitmarkIndicatorComponent
-          indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
-
         <DisplayComponent />
+        <MainEventsHandlerComponent />
       </View>
     );
   }

@@ -173,6 +173,7 @@ const doTrackEvent = (tags, fields) => {
   return new Promise((resolve) => {
     let statusCode;
     let bitmarkUrl = config.mobile_server_url + `/api/metrics`;
+    console.log('doTrackEvent :', bitmarkUrl, { tags, fields });
     fetch(bitmarkUrl, {
       method: 'POST',
       headers: {

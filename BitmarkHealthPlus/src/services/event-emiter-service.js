@@ -3,6 +3,8 @@ import { NativeAppEventEmitter } from 'react-native';
 let EventEmitterService = {
   event_extra: {},
   events: {
+    APP_NETWORK_CHANGED: 'app-network-changed',
+
     APP_NEED_REFRESH: 'app-need-refresh',
     APP_PROCESSING: 'app-processing',
     APP_SUBMITTING: 'app-submitting',

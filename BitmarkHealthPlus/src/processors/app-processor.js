@@ -75,11 +75,10 @@ const doCreateNewAccount = async () => {
 };
 
 const doGetCurrentAccount = async () => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize access to your recovery phrase.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
   let userInfo = await processing(AccountModel.doGetCurrentAccount(touchFaceIdSession));
   return userInfo;
 };
