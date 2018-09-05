@@ -29,6 +29,7 @@
     "react-native-keep-awake": "^3.1.0",
     "react-native-mail": "^3.0.6",
     "react-native-push-notification": "^3.1.1",
+    "react-native-qrcode": "^0.2.7",
     "react-native-router-flux": "^4.0.1",
     "react-native-swiper": "^1.5.13",
     "react-native-video": "^3.2.0",

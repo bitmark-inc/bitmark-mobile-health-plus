@@ -103,10 +103,10 @@ export class UserComponent extends Component {
               <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthRecords === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
                 <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthRecords}</Text> Health Record{this.state.numberHealthRecords > 1 ? 's' : ''}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
+              {!this.state.displayAccount && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
                 <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
                 <Text style={styles.addHealthRecordButtonText} > {'Add records'.toUpperCase()}</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>}
             </View>
           </TouchableOpacity>
           <View style={styles.accountArea}>
@@ -118,7 +118,7 @@ export class UserComponent extends Component {
             <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444' }]} onPress={Actions.account}>
               <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>ACCOUNT SETTING</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]}>
+            <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={Actions.grantingAccess}>
               <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>GRANT ACCESS</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]}>

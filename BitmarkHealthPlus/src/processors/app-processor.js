@@ -162,6 +162,10 @@ const doDownloadAndShareLegal = async (title, urlDownload) => {
   return executeTask('doDownloadAndShareLegal', { title, urlDownload });
 };
 
+const doGrantingAccess = async () => {
+  return executeTask('doGrantingAccess');
+};
+
 const doCheckNoLongerSupportVersion = async () => {
   let data = await NotificationModel.doTryGetAppVersion();
   if (data && data.version && data.version.minimum_supported_version) {
@@ -202,6 +206,7 @@ let AppProcessor = {
   doDownloadAndShareLegal,
 
   doCheckNoLongerSupportVersion,
+  doGrantingAccess,
 }
 
 export {

@@ -14,6 +14,7 @@ import { DonationService } from '../services/donation-service';
 import { config } from '../configs';
 
 let userInformation = {};
+let jwt;
 let isLoadingData = false;
 // ================================================================================================================================================
 const doCheckNewDonationInformation = async (donationInformation, isLoadingAllUserData) => {
@@ -174,7 +175,7 @@ const doLogout = async () => {
 };
 
 const doDeleteAccount = async (touchFaceIdSession) => {
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  // let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   // await NotificationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   // await DonationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await AccountModel.doLogout();
@@ -258,6 +259,7 @@ const doOpenApp = async () => {
     let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
     let result = await NotificationModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
     console.log('doRegisterJWT :', result);
+    jwt = result.jwt_token;
     // let jwt = result.jwt_token;
     // result = await NotificationModel.doGrantingAccess(jwt);
     // console.log('doGrantingAccess :', result);
@@ -413,7 +415,12 @@ const doMarkRequestedNotification = async (result) => {
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
     });
   }
-}
+};
+
+const doGrantingAccess = async () => {
+  console.log('jwt :', jwt);
+  return NotificationModel.doGrantingAccess(jwt);
+};
 
 
 const DataProcessor = {
@@ -441,6 +448,7 @@ const DataProcessor = {
   isAppLoadingData: () => isLoadingData,
 
   doMarkRequestedNotification,
+  doGrantingAccess,
 };
 
 export { DataProcessor };

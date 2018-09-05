@@ -119,8 +119,6 @@ let doRegisterJWT = (accountNumber, timestamp, signature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/auth`;
-    console.log('doRegisterJWT :=======', tempURL);
-    console.log({ requester: accountNumber, timestamp, signature });
     fetch(tempURL, {
       method: 'POST',
       headers: {
@@ -148,6 +146,7 @@ let doGrantingAccess = (jwt) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
+    console.log('tempURL :', tempURL, jwt);
     fetch(tempURL, {
       method: 'POST',
       headers: {

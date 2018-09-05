@@ -140,6 +140,10 @@ const doDownloadAndShareLegal = async ({ title, urlDownload }) => {
   return filePath;
 };
 
+const doGrantingAccess = async () => {
+  return processing(DataProcessor.doGrantingAccess());
+};
+
 
 // ================================================================================================
 // ================================================================================================
@@ -156,6 +160,7 @@ let AppTasks = {
   doDownloadBitmark,
   doGetBitmarkInformation,
   doDownloadAndShareLegal,
+  doGrantingAccess,
 };
 
 let registeredTasks = {};

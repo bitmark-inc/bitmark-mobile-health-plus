@@ -343,7 +343,7 @@ export class AccountPhraseComponent extends Component {
 
             {this.state.step === STEPS.testing && (this.state.testingResult !== null) && <View style={styles.bottomButtonArea}>
               <TouchableOpacity style={styles.bottomButton} onPress={this.state.testingResult ? (this.props.isLogout ? this.doLogout.bind(this) : Actions.pop) : this.resetTest.bind(this)}>
-                <Text style={styles.bottomButtonText}>{(this.state.testingResult ? (this.props.isLogout ? 'remove access' : 'done') : 'retry').toUpperCase()}</Text>
+                <Text style={styles.bottomButtonText}>{(this.state.testingResult ? (this.props.isLogout ? 'log out' : 'done') : 'retry').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>}
           </ScrollView>
