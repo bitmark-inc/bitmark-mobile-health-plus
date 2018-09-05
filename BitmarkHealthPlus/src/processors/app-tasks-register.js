@@ -102,11 +102,10 @@ const doInactiveBitmarkHealthData = async () => {
 };
 
 const doBitmarkHealthData = async ({ list, processingData }) => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Your fingerprint signature is required.`);
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Your fingerprint signature is required.`);
+  if (!touchFaceIdSession) {
+    return null;
+  }
   return await submitting(DataProcessor.doBitmarkHealthData(touchFaceIdSession, list), processingData);
 };
 

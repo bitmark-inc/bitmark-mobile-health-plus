@@ -11,7 +11,7 @@ import { AppProcessor } from '../../processors';
 import { CommonModel } from '../../models';
 import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
-import { EventEmitterService } from '../../services';
+import { Actions } from 'react-native-router-flux';
 
 export class TouchFaceIdComponent extends React.Component {
   static propTypes = {
@@ -63,7 +63,7 @@ export class TouchFaceIdComponent extends React.Component {
     promise.then((user) => {
       console.log('user :', user);
       if (user) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, true)
+        Actions.notification();
       }
     }).catch(error => {
       console.log('error :', error);
@@ -107,7 +107,6 @@ export class TouchFaceIdComponent extends React.Component {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#FF4444',
   },
   body: {
     flex: 1,
@@ -174,10 +173,13 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
     width: '100%',
+    paddingLeft: convertWidth(20),
+    paddingRight: convertWidth(20),
+    paddingBottom: convertWidth(20),
   },
   enableButton: {
     height: constants.buttonHeight,
-    width: convertWidth(375),
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',

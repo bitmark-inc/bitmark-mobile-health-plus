@@ -9,7 +9,6 @@ import { convertWidth, dictionary24Words } from './../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
 import { AppProcessor } from '../../processors';
-import { EventEmitterService } from '../../services';
 import { Actions } from 'react-native-router-flux';
 
 const statuses = {
@@ -222,18 +221,12 @@ export class LoginComponent extends Component {
     }
     this.doCheck24Word().then((result) => {
       if (result) {
-        AppProcessor.doRequireHealthKitPermission().then(() => {
-          Actions.touchFaceId({ passPhrase24Words: result });
-        }).catch(error => {
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-          console.log('doRequireHealthKitPermission error :', error);
-        });
+        Actions.getStart({ passPhrase24Words: result });
       }
     });
   }
 
   render() {
-    console.log(this.state);
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.bodySafeView}>
@@ -255,7 +248,7 @@ export class LoginComponent extends Component {
                             <TextInput
                               style={[styles.recoveryPhraseWord, {
                                 backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-                                borderColor: '#0060F2',
+                                borderColor: '#FF4444',
                                 borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
                               }]}
                               ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -281,7 +274,7 @@ export class LoginComponent extends Component {
                             <TextInput
                               style={[styles.recoveryPhraseWord, {
                                 backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-                                borderColor: '#0060F2',
+                                borderColor: '#FF4444',
                                 borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
                               }]}
                               ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -298,11 +291,23 @@ export class LoginComponent extends Component {
                     </View>
                   </View>
                 </ScrollView>
+
+                {this.state.keyboardHeight === 0 && this.state.preCheckResult === PreCheckResults.error && <View style={styles.resultStatusArea}>
+                  <Text style={[styles.resultTitle, { color: '#FF4444' }]}>Wrong Recovery Phrase!</Text>
+                  <Text style={[styles.resultMessage, { color: '#FF4444' }]}>Please try again!</Text>
+                </View>}
+                {this.state.keyboardHeight === 0 && this.state.preCheckResult === PreCheckResults.success && <View style={styles.resultStatusArea}>
+                  <Text style={styles.resultTitle}>Success!</Text>
+                  <Text style={styles.resultMessage}>Keep your written copy private in a secure and safe location. </Text>
+                </View>}
+              </View>
+
+              <View style={styles.submitButtonArea}>
+                <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn.bind(this)} disabled={this.state.remainWordNumber > 0}>
+                  <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
+                </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-            <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn.bind(this)} disabled={this.state.remainWordNumber > 0}>
-              <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
-            </TouchableOpacity>
           </View>
         </View >
         {this.state.keyboardHeight > 0 &&
@@ -403,6 +408,25 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
+  resultStatusArea: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  resultTitle: {
+    fontFamily: 'Avenir Heavy',
+    fontWeight: '900',
+    fontSize: 15,
+  },
+  resultMessage: {
+    fontFamily: 'Avenir Heavy',
+    fontWeight: '300',
+    fontSize: 15,
+  },
+
+  submitButtonArea: {
+    padding: 20,
+  },
   submitButton: {
     height: constants.buttonHeight,
     width: '100%',
@@ -435,16 +459,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   prevButtonImage: {
-    width: 16,
-    height: 16,
+    width: convertWidth(16),
+    height: convertWidth(16),
     resizeMode: 'contain'
   },
   nextButton: {
     marginLeft: 5,
   },
   nextButtonImage: {
-    width: 16,
-    height: 16,
+    width: convertWidth(16),
+    height: convertWidth(16),
     resizeMode: 'contain'
   },
   doneButton: {

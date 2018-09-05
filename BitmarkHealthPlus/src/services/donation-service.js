@@ -166,7 +166,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
     let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.assetMetadata, 1);
     await FileUtil.remove(filePath);
-    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment(dateRange.endDate).toDate(), null, issueResult[0]);
+    await doCompleteTask(touchFaceIdSession, bitmarkAccountNumber, taskType, moment(dateRange.endDate).toDate(), issueResult[0]);
     return doGetUserInformation(bitmarkAccountNumber);
   }
   return donationInformation;

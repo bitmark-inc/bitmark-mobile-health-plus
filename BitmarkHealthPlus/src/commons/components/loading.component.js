@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image, View, SafeAreaView
+  Image, View
 } from 'react-native';
 
 import { convertWidth } from './../../utils';
@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingLogo: {
-    width: convertWidth(191),
-    height: 49 * convertWidth(191) / 191,
+    width: convertWidth(213),
+    height: 45 * convertWidth(213) / 213,
     resizeMode: 'contain',
   },
 });

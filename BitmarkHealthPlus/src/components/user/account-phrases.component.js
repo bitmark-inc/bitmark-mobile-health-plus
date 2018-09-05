@@ -326,28 +326,27 @@ export class AccountPhraseComponent extends Component {
               </View>}
             </View>}
 
+            {this.state.step === STEPS.warning && <View style={styles.bottomButtonArea}>
+              <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhrase24Words.bind(this)}>
+                <Text style={styles.bottomButtonText}>SUBMIT</Text>
+              </TouchableOpacity>
+            </View>}
 
+            {this.state.step === STEPS.phrase24Word && <View style={styles.bottomButtonArea}>
+              {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={this.goToTest.bind(this)}>
+                <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'Test recover phrase'.toUpperCase()}</Text>
+              </TouchableOpacity>}
+              <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)() : Actions.pop()}>
+                <Text style={[styles.bottomButtonText,]}>{'Done'.toUpperCase()}</Text>
+              </TouchableOpacity>
+            </View>}
+
+            {this.state.step === STEPS.testing && (this.state.testingResult !== null) && <View style={styles.bottomButtonArea}>
+              <TouchableOpacity style={styles.bottomButton} onPress={this.state.testingResult ? (this.props.isLogout ? this.doLogout.bind(this) : Actions.pop) : this.resetTest.bind(this)}>
+                <Text style={styles.bottomButtonText}>{(this.state.testingResult ? (this.props.isLogout ? 'remove access' : 'done') : 'retry').toUpperCase()}</Text>
+              </TouchableOpacity>
+            </View>}
           </ScrollView>
-          {this.state.step === STEPS.warning && <View style={styles.bottomButtonArea}>
-            <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhrase24Words.bind(this)}>
-              <Text style={styles.bottomButtonText}>SUBMIT</Text>
-            </TouchableOpacity>
-          </View>}
-
-          {this.state.step === STEPS.phrase24Word && <View style={styles.bottomButtonArea}>
-            <TouchableOpacity style={styles.bottomButton} onPress={this.goToTest.bind(this)}>
-              <Text style={styles.bottomButtonText}>{(this.props.isLogout ? 'done' : 'Test recover phrase').toUpperCase()}</Text>
-            </TouchableOpacity>
-            {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { backgroundColor: 'white', borderWidth: 1, borderColor: '#FF4444' }]} onPress={Actions.pop}>
-              <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'Done'.toUpperCase()}</Text>
-            </TouchableOpacity>}
-          </View>}
-
-          {this.state.step === STEPS.testing && (this.state.testingResult !== null) && <View style={styles.bottomButtonArea}>
-            <TouchableOpacity style={styles.bottomButton} onPress={this.state.testingResult ? (this.props.isLogout ? this.doLogout.bind(this) : Actions.pop) : this.resetTest.bind(this)}>
-              <Text style={styles.bottomButtonText}>{(this.state.testingResult ? (this.props.isLogout ? 'remove access' : 'done') : 'retry').toUpperCase()}</Text>
-            </TouchableOpacity>
-          </View>}
         </View>
       </SafeAreaView>
     );
@@ -497,7 +496,7 @@ const styles = StyleSheet.create({
   },
 
   bottomButtonArea: {
-
+    padding: convertWidth(20),
   },
   bottomButton: {
     height: 45,
@@ -508,7 +507,6 @@ const styles = StyleSheet.create({
   },
   bottomButtonText: {
     fontFamily: 'Avenir Heavy',
-    fontWeight: '800',
     fontSize: 16,
     color: 'white',
   }

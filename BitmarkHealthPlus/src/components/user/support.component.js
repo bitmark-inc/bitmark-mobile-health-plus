@@ -21,21 +21,19 @@ export class SupportComponent extends Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <ScrollView style={styles.bodyContent} contentContainerStyle={styles.content}>
-            <Text style={styles.title}>SUPPORT</Text>
-
-            <Text style={styles.legalTitle}>SUPPORT</Text>
+            <Text style={styles.title}>Legal</Text>
 
             <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.TermOfService.name })}>
               <Text style={styles.rowButtonText}>Terms of Service</Text>
-              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
+              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.PrivacyPolicy.name })}>
               <Text style={styles.rowButtonText}>Privacy Policy</Text>
-              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
+              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.KnowYourRights.name })}>
               <Text style={styles.rowButtonText}>Knows your right</Text>
-              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_black.png')} />
+              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -71,13 +69,6 @@ const styles = StyleSheet.create({
     fontSize: 34,
     color: '#464646',
   },
-  legalTitle: {
-    fontFamily: 'Avenir Medium',
-    fontWeight: '800',
-    fontSize: 16,
-    color: '#6D6D72',
-    marginTop: 54,
-  },
 
   rowButton: {
     flexDirection: 'row',
@@ -88,8 +79,8 @@ const styles = StyleSheet.create({
     minHeight: 24.5,
   },
   rowButtonIcon: {
-    width: convertWidth(14),
-    height: 8 * convertWidth(14) / 14,
+    width: convertWidth(8),
+    height: 14 * convertWidth(8) / 8,
     resizeMode: 'contain',
   },
   rowButtonText: {

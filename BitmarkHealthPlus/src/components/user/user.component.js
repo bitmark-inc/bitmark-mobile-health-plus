@@ -28,6 +28,10 @@ export class UserComponent extends Component {
       displayAccount: true,
     }
     runPromiseWithoutError(DataProcessor.doGetDonationInformation()).then(donationInformation => {
+      if (donationInformation && donationInformation.error) {
+        // TODO
+        return;
+      }
       let numberHealthDataRecords = 0;
       let numberHealthRecords = 0;
       donationInformation.completedTasks.forEach(item => {
@@ -91,12 +95,12 @@ export class UserComponent extends Component {
         <View style={styles.body}>
           <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ displayAccount: true })} activeOpacity={1}>
             <View style={styles.dataArea}>
-              <TouchableOpacity style={{ flex: 1 }}>
+              <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthDataRecords === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
                 <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataRecords}</Text> Weeks of Health Data{this.state.numberHealthDataRecords > 1 ? 's' : ''}</Text>
               </TouchableOpacity>
             </View>
             <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1 }]}>
-              <TouchableOpacity style={{ flex: 1 }}>
+              <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthRecords === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
                 <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthRecords}</Text> Health Record{this.state.numberHealthRecords > 1 ? 's' : ''}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
@@ -116,6 +120,9 @@ export class UserComponent extends Component {
             </TouchableOpacity>
             <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]}>
               <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>GRANT ACCESS</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]}>
+              <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>VIEW OTHER ACCOUNT</Text>
             </TouchableOpacity>
           </View>}
         </View>
@@ -184,7 +191,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    width: convertWidth(305),
   },
   accountButtonText: {
     fontFamily: 'Avenir Medium',

@@ -244,6 +244,18 @@ const doOpenApp = async () => {
 
     await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
 
+    let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
+    let result = await NotificationModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+    console.log('doRegisterJWT :', result);
+    // let jwt = result.jwt_token;
+    // result = await NotificationModel.doGrantingAccess(jwt);
+    // console.log('doGrantingAccess :', result);
+    // let token = result.id;
+    // result = await NotificationModel.doReceiveGrantingAccess(jwt, token);
+    // console.log('doReceiveGrantingAccess :', result);
+    // result = await NotificationModel.doGetAllGrantedAccess(jwt);
+    // console.log('doGetAllGrantedAccess :', result);
+
     if (!appInfo.lastTimeOpen) {
       let appInfo = await doGetAppInformation();
       appInfo.lastTimeOpen = moment().toDate().getTime();
@@ -323,7 +335,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
   let result = await BitmarkService.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset);
   if (forHealthData) {
     let donationInformation = await doGetDonationInformation();
-    await DonationService.doCompleteTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, donationInformation.commonTaskIds.bitmark_health_issuance, moment().toDate(), null, result[0]);
+    await DonationService.doCompleteTask(touchFaceIdSession, userInformation.bitmarkAccountNumber, donationInformation.commonTaskIds.bitmark_health_issuance, moment().toDate(), result[0]);
   }
   await doReloadUserData();
 

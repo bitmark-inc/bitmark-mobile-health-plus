@@ -69,26 +69,23 @@ export class BitmarkLegalComponent extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.bodySafeView}>
-        <View style={styles.bodyContent}>
-          <View style={[styles.header, config.isIPhoneX ? { paddingTop: constants.iPhoneXStatusBarHeight } : {}]}>
-            <TouchableOpacity style={styles.headerLeft} />
-            <View style={styles.headerCenter}>
+        <View style={styles.body}>
+          <View style={styles.bodyContent}>
+            <View style={[styles.header]}>
               {this.state.displayedContentName === Contents.KnowYourRights.name && <Text style={styles.headerTitle}>KNOW YOUR RIGHTS</Text>}
               {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={styles.headerTitle}>PRIVACY POLICY</Text>}
               {this.state.displayedContentName === Contents.TermOfService.name && <Text style={styles.headerTitle}>TERMS OF SERVICE</Text>}
+              <TouchableOpacity onPress={Actions.pop}>
+                <Text style={styles.doneButtonText}>Done</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.headerRight} onPress={Actions.pop}>
-              <Text>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={[styles.content]}>
             <ScrollView >
+
               {(this.state.displayedContentName === Contents.KnowYourRights.name || this.state.displayAll) && <View style={styles.legalContent}>
                 <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
                   <Text style={[styles.contentNormalText, { paddingTop: 40, paddingBottom: 40, color: '#0060F2' }]}>
                     Original idea comes from Stacey Higginbotham
-            </Text>
+                    </Text>
                 </TouchableOpacity>
                 <View style={styles.knowYourRightsRow}>
                   <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
@@ -260,7 +257,7 @@ export class BitmarkLegalComponent extends React.Component {
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
                   <Text style={styles.contentNormalText}>
                     These Terms of Service (this "Agreement") govern the use of the downloadable and web-based software application (collectively, the "Application") provided by Bitmark Inc. ("Company" or "us"), the website and website domain name and any other linked pages, features, or content, or application services offered from time to time by Company in connection therewith (collectively, the "Website") and any services provided by Company (together with the Website and the Application, the "Services"). Please read this agreement carefully before accessing or using the Application or any other Services. Each time you access or use the Services, you agree to be bound by this Agreement. If you are an individual entering into this agreement on behalf of a company or other legal entity, you represent that you have the authority to bind such entity to these terms and conditions, in which case "you" shall refer to such entity. If you do not agree to be bound by this Agreement, you should not access or use the Services. In addition, certain elements of the Services may be subject to additional terms of use. In the event that any of the additional terms of use governing such elements conflict with this Agreement, the additional terms will control.
-            </Text>
+                 </Text>
                 </Hyperlink>
 
                 <Text style={styles.contentSubTitleText}>SERVICES DESCRIPTION AND AGREEMENT APPLICABILITY</Text>
@@ -277,26 +274,26 @@ export class BitmarkLegalComponent extends React.Component {
                 }} >
                   <Text style={[styles.contentNormalText]}>The Services consist primarily of tools allowing users to:{'\n'}</Text>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>1.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>1.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       create, access and manage accounts within a distributed, publicly available registry and ledger system (the "Bitmark Property System") which uses blockchain technology to allow users to create unique identifiers (each a "bitmark") to claim ownership of digital files containing data, text, graphics, articles, photographs, images, illustrations, software and other items of content or technology (each a "Digital Asset" and together with the associated bitmark, each a "Crypto property");{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>2.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>2.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       to provide additional information of potential utility to users, such as descriptions of Digital Properties ("Ancillary Information"); and{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>3.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>3.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       to store Digital Assets, and to permit users of the Service to distribute copies of the Digital Assets to other users of the Services, concurrent with the transfer of the associated bitmark to the same recipient(s);{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>4.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>4.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       to transfer such bitmarks from one user of the Bitmark Property System to another user of the Bitmark Property System.{'\n'}
                     </Text>
                   </View>
@@ -399,48 +396,48 @@ export class BitmarkLegalComponent extends React.Component {
                   </Text>
 
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>1.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>1.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       A physical or electronic signature of a person authorized to act on behalf of the owner of the copyright that has been allegedly infringed;{'\n'}
                     </Text>
                   </View>
 
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>2.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>2.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       Specific identification of the copyrighted works or materials being infringed;{'\n'}
                     </Text>
                   </View>
 
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>3.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>3.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       Identification of the material that is claimed to be infringing including information regarding the location of the infringing materials that the copyright owner seeks to have removed, with sufficient detail so that Company is capable of finding and verifying its existence;{'\n'}
                     </Text>
                   </View>
 
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>4.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>4.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       Contact information about the notifier including address, telephone number and, if available, email address;{'\n'}
                     </Text>
                   </View>
 
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>5.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>5.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       A statement that the notifier has a good faith belief that the material identified in (3) is not authorized by the copyright owner, its agent, or the law; and{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>6.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>6.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       A statement requesting that Company take a specific act with respect to the alleged infringement (e.g., removal, access restricted or disabled); and{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>7.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>7.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       A statement made under penalty of perjury that the information provided is accurate and the notifying party is authorized to make the complaint on behalf of the copyright owner.{'\n'}
                     </Text>
                   </View>
@@ -449,20 +446,20 @@ export class BitmarkLegalComponent extends React.Component {
                     Once proper bona fide infringement notification is received by the designated agent, it is Company's policy:{'\n'}
                   </Text>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>1.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>1.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       to remove or disable access to the infringing material;{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>2.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>2.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       to notify the content provider, or user that it has removed or disabled access to the material; and{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>3.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>3.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       that repeat offenders will have the infringing material removed from the system and that Company will terminate such content provider's or user's access to the Services.{'\n'}
                     </Text>
                   </View>
@@ -470,26 +467,26 @@ export class BitmarkLegalComponent extends React.Component {
                     <Text style={{ fontWeight: '600' }}>Procedure to Supply a Counter-Notice.</Text> If the content provider or user believes that the material that was removed (or to which access was disabled) is not infringing, or the content provider or user believes that it has the right to post and use such material from the copyright owner, the copyright owner's agent, or, pursuant to the law, the content provider or user, must send a counter-notice containing the following information to the Designated Agent listed below:{'\n'}
                   </Text>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>1.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>1.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       A physical or electronic signature of the content provider or user;{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>2.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>2.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       Identification of the material that has been removed or to which access has been disabled and the location at which the material appeared before it was removed or disabled;{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>3.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>3.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       A statement that the content provider or user has a good faith belief that the material was removed or disabled as a result of mistake or misidentification of the material; and{'\n'}
                     </Text>
                   </View>
                   <View style={styles.contentNormalRow}>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(30), paddingRight: 0 }]}>4.</Text>
-                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, width: convertWidth(40), paddingRight: 0 }]}>4.</Text>
+                    <Text style={[styles.contentNormalText, { marginTop: 0, flex: 1, }]}>
                       Content provider's or user's name, address, telephone number, and, if available, email address, and a statement that such person or entity consents to the jurisdiction of the Federal Court for the judicial district in which the content provider's, member's or user's address is located, or, if the content provider's, member's or user's address is located outside the United States, for any judicial district in which Company is located, and that such person or entity will accept service of process from the person who provided notification of the alleged infringement. If a counter-notice is received by the Designated Agent, Company may send a copy of the counter-notice to the original complaining party informing that person that Company may replace the removed material or cease disabling it in 10 business days. Unless the copyright owner files an action seeking a court order against the content provider, member or user, the removed material may be replaced or access to it restored in 10 to 14 business days or more after receipt of the counter-notice, at Company's discretion.{'\n'}
                     </Text>
                   </View>
@@ -520,11 +517,12 @@ export class BitmarkLegalComponent extends React.Component {
               </View>}
 
             </ ScrollView>
-
+            <View style={styles.lastBottomButtonArea}>
+              <TouchableOpacity style={styles.lastBottomButton} onPress={this.shareLegal}>
+                <Text style={styles.lastBottomButtonText}>SHARE</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <TouchableOpacity style={styles.lastBottomButton} onPress={this.shareLegal}>
-            <Text style={styles.lastBottomButtonText}>SHARE</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -536,37 +534,39 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  body: {
+    padding: convertWidth(16),
+    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+    flex: 1,
+  },
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
     width: "100%",
+    borderWidth: 1,
+    borderColor: '#FF4444'
   },
   header: {
-    height: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0) + 44,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
+    paddingTop: convertWidth(20),
+    paddingLeft: convertWidth(20),
+    paddingRight: convertWidth(20),
   },
-  headerLeft: {
-    width: convertWidth(70),
-  },
-  headerCenter: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   headerTitle: {
     fontFamily: 'Avenir black',
     fontSize: 18,
     fontWeight: '900',
   },
-  headerRight: {
-    width: convertWidth(70),
+  doneButtonText: {
+    fontFamily: 'Avenir Light',
+    fontSize: 16,
+    color: '#FF4444',
   },
-  content: {
-    flex: 1,
-  },
+
   legalContent: {
     flexDirection: 'column',
     flex: 1,
@@ -575,7 +575,7 @@ const styles = StyleSheet.create({
   },
 
   contentSubTitleText: {
-    width: convertWidth(375),
+    width: '100%',
     fontFamily: 'Avenir black',
     fontSize: 15,
     fontWeight: '900',
@@ -585,7 +585,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   contentCreatedText: {
-    width: convertWidth(375),
+    width: '100%',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
     fontFamily: 'Avenir Light',
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentNormalText: {
-    width: convertWidth(375),
+    width: '100%',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
     fontSize: 15,
@@ -623,13 +623,16 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
 
+  lastBottomButtonArea: {
+    padding: convertWidth(20),
+  },
   lastBottomButton: {
     height: constants.buttonHeight,
-    width: convertWidth(375),
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0060F2',
+    backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
     fontFamily: 'Avenir black',

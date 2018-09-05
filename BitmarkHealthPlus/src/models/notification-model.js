@@ -115,6 +115,104 @@ let setApplicationIconBadgeNumber = (number) => {
   return PushNotification.setApplicationIconBadgeNumber(number);
 };
 
+let doRegisterJWT = (accountNumber, timestamp, signature) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/auth`;
+    console.log('doRegisterJWT :=======', tempURL);
+    console.log({ requester: accountNumber, timestamp, signature });
+    fetch(tempURL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        requester: accountNumber,
+        timestamp,
+        signature,
+      })
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+let doGrantingAccess = (jwt) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
+    fetch(tempURL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+let doReceiveGrantingAccess = (jwt, token) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks/${token}`;
+    fetch(tempURL, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+let doGetAllGrantedAccess = (jwt) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
+    fetch(tempURL, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 let NotificationModel = {
   doRegisterNotificationInfo,
   doDeregisterNotificationInfo,
@@ -124,6 +222,12 @@ let NotificationModel = {
   doRequestNotificationPermissions,
   setApplicationIconBadgeNumber,
   doTryRegisterAccount,
+
+  doRegisterJWT,
+  doGrantingAccess,
+  doReceiveGrantingAccess,
+  doGetAllGrantedAccess,
+
 };
 
 export { NotificationModel };

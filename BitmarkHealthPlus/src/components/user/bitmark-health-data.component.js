@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View, TouchableOpacity, Text, SafeAreaView, ScrollView,
+  View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 
 
@@ -25,26 +25,31 @@ export class BitmarkHealthDataComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-          <ScrollView style={styles.bodyContent} contentContainerStyle={styles.content}>
-            <Text style={styles.title}>{(this.props.list && this.props.list.length > 1) ? `Sign Your ${this.props.list.length} Weeks Weekly Data` : 'Sign Your Weekly Data'}</Text>
-            <Text style={styles.message}>
-              To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.
+          <View style={styles.bodyContent}>
+            <View style={styles.content}>
+              <Text style={styles.title}>{(this.props.list && this.props.list.length > 1) ? `Sign Your ${this.props.list.length} Weeks Weekly Data` : 'Sign Your Weekly Data'}</Text>
+              <Text style={styles.message}>
+                To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.
               </Text>
-          </ScrollView>
-          <TouchableOpacity style={styles.signButton} onPress={() => {
-            AppProcessor.doBitmarkHealthData(this.props.list, {
-              indicator: true, title: 'Encrypting and protecting your health data...', message: ''
-            }).then(result => {
-              if (result) {
-                Actions.pop();
-              }
-            }).catch(error => {
-              console.log('doBitmarkHealthData error:', error);
-              EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-            });
-          }} >
-            <Text style={styles.signButtonText}>SIGN</Text>
-          </TouchableOpacity>
+            </View>
+
+            <View style={styles.signButtonArea}>
+              <TouchableOpacity style={styles.signButton} onPress={() => {
+                AppProcessor.doBitmarkHealthData(this.props.list, {
+                  indicator: true, title: 'Encrypting and protecting your health data...', message: ''
+                }).then(result => {
+                  if (result) {
+                    Actions.pop();
+                  }
+                }).catch(error => {
+                  console.log('doBitmarkHealthData error:', error);
+                  EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+                });
+              }} >
+                <Text style={styles.signButtonText}>SIGN</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -84,6 +89,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontWeight: '300',
     fontSize: 12,
+  },
+
+  signButtonArea: {
+    position: 'absolute',
+    bottom: 20,
+    width: '100%',
+    paddingLeft: convertWidth(20),
+    paddingRight: convertWidth(20),
   },
   signButton: {
     flexDirection: 'row',

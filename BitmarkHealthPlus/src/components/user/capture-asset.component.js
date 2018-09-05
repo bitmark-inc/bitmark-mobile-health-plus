@@ -65,13 +65,13 @@ export class CaptureAssetComponent extends Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.bodyContent}>
           <View style={[styles.header, config.isIPhoneX ? { paddingTop: constants.iPhoneXStatusBarHeight } : {}]}>
-            <TouchableOpacity style={styles.headerLeft} />
+            <TouchableOpacity style={styles.headerLeft} onPress={Actions.pop}>
+              <Image style={styles.backIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+            </TouchableOpacity>
             <View style={styles.headerCenter}>
               <Text style={styles.headerTitle}>CAPTURE</Text>
             </View>
-            <TouchableOpacity style={styles.headerRight} onPress={Actions.pop}>
-              <Text>Cancel</Text>
-            </TouchableOpacity>
+            <TouchableOpacity style={styles.headerRight} />
           </View>
           <View style={[styles.content]}>
             <Image style={styles.previewImage} source={{ uri: 'file://' + this.props.filePath }} />
@@ -88,7 +88,7 @@ export class CaptureAssetComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#FF4444',
   },
   bodyContent: {
     flex: 1,
@@ -119,6 +119,12 @@ const styles = StyleSheet.create({
   headerRight: {
     width: convertWidth(70),
   },
+  backIcon: {
+    height: convertWidth(21),
+    width: convertWidth(21),
+    marginLeft: convertWidth(19),
+    resizeMode: 'contain'
+  },
   content: {
     flex: 1,
   },
@@ -135,7 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'black',
+    backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
     fontFamily: 'Avenir black',

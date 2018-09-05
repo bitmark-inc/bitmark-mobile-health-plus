@@ -7,8 +7,10 @@ import { AccountPhraseComponent } from './account-phrases.component';
 import { SupportComponent } from './support.component';
 import { BitmarkHealthDataComponent } from './bitmark-health-data.component';
 import { CaptureAssetComponent } from './capture-asset.component';
+import { BitmarkListComponent } from './bitmark-list.component';
 
 import { BitmarkLegalComponent } from './../../commons';
+import { BitmarkDetailComponent } from './bitmark-detail.component';
 
 
 // bitmarkHealthData
@@ -23,12 +25,14 @@ export class UserRouterComponent extends Component {
       <Router sceneStyle={{ shadowOpacity: 0, flex: 1 }}  >
         <Stack hideNavBar={true} >
           <Scene key="user" component={UserComponent} initial={true} />
+          <Scene key="bitmarkHealthData" component={BitmarkHealthDataComponent} panHandlers={null} />
           <Scene key="account" component={AccountComponent} />
           <Scene key="accountPhrase" component={AccountPhraseComponent} />
           <Scene key="support" component={SupportComponent} />
           <Scene key="legal" component={BitmarkLegalComponent} />
-          <Scene key="bitmarkHealthData" component={BitmarkHealthDataComponent} panHandlers={null} />
           <Scene key="captureAsset" component={CaptureAssetComponent} />
+          <Scene key="bitmarkList" component={BitmarkListComponent} />
+          <Scene key="bitmarkDetail" component={BitmarkDetailComponent} />
 
         </Stack>
       </Router>
