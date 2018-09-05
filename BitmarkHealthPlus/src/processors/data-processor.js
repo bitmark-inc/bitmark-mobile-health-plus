@@ -11,7 +11,6 @@ import {
 } from "../services";
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel, DonationModel } from '../models';
 import { DonationService } from '../services/donation-service';
-import { DataCacheProcessor } from './data-cache-processor';
 import { config } from '../configs';
 
 let userInformation = {};
@@ -172,7 +171,17 @@ const doLogout = async () => {
   await UserModel.doRemoveUserInfo();
   userInformation = {};
   // await Intercom.reset();
-  DataCacheProcessor.resetCacheData();
+};
+
+const doDeleteAccount = async (touchFaceIdSession) => {
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  // await NotificationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  // await DonationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  await AccountModel.doLogout();
+  await UserModel.doRemoveUserInfo();
+  userInformation = {};
+  // await Intercom.reset();
+  return userInformation;
 };
 
 
@@ -412,6 +421,7 @@ const DataProcessor = {
   doCreateAccount,
   doLogin,
   doLogout,
+  doDeleteAccount,
   doStartBackgroundProcess,
   doReloadUserData,
 

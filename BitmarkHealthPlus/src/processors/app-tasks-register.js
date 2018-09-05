@@ -73,6 +73,13 @@ const doLogin = async ({ phrase24Words }) => {
 const doLogout = async () => {
   return await processing(DataProcessor.doLogout());
 };
+const doDeleteAccount = async (processingInfo) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  return await submitting(DataProcessor.doDeleteAccount(touchFaceIdSession), processingInfo);
+};
 
 const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo }) => {
   // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
@@ -141,6 +148,7 @@ const doDownloadAndShareLegal = async ({ title, urlDownload }) => {
 let AppTasks = {
   doLogin,
   doLogout,
+  doDeleteAccount,
   doIssueFile,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,

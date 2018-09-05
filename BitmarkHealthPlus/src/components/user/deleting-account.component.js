@@ -2,42 +2,48 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Text, View, TouchableOpacity, SafeAreaView,
-  Alert,
   StyleSheet,
 } from 'react-native';
 import { constants } from '../../constants';
 import { config } from '../../configs';
 import { convertWidth } from '../../utils';
+import { Actions } from 'react-native-router-flux';
+import { AppProcessor } from '../../processors';
+import { EventEmitterService } from '../../services';
 
-export class BitmarkInternetOffComponent extends React.Component {
+export class DeletingAccountComponent extends React.Component {
   static propTypes = {
     tryConnectInternet: PropTypes.func,
   }
+  deleteAccount() {
+    AppProcessor.doDeleteAccount({
+      indicator: true, title: 'Encrypting and protecting your health data...', message: ''
+    }).then((result) => {
+      if (result) {
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+      }
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    })
+  }
 
   render() {
-    let showAlert = () => {
-      Alert.alert('Network Error', 'Failed to connect to Bitmark. Please check your device’s network connection.', [{
-        text: 'Cancel', style: 'cancel',
-      }, {
-        text: 'Retry',
-        onPress: () => {
-          if (this.props.tryConnectInternet) {
-            this.props.tryConnectInternet();
-          }
-        }
-      }]);
-    }
     return (
-      <View style={styles.body} activeOpacity={1} onPress={showAlert}>
+      <View style={styles.body} activeOpacity={1}>
         <SafeAreaView style={styles.safeAreaView}>
           <View style={styles.content}>
             <View style={{ flex: 1, }}>
-              <Text style={[styles.titleText,]}>NO INTERNET CONNECTION</Text>
-              <Text style={[styles.description,]}>You do not have internet connection now, try again when it is connected.</Text>
+              <Text style={[styles.titleText,]}>Delete your account</Text>
+              <Text style={[styles.description,]}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.</Text>
             </View>
-            <TouchableOpacity style={styles.okButton} onPress={showAlert}>
-              <Text style={styles.okButtonText}>OK</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonArea}>
+              <TouchableOpacity style={[styles.okButton, { borderWidth: 1, borderColor: 'white', backgroundColor: '#FF4444', marginRight: convertWidth(10) }]} onPress={Actions.pop}>
+                <Text style={[styles.okButtonText, { color: 'white' }]}>CANCEL</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.okButton} onPress={this.deleteAccount.bind(this)}>
+                <Text style={styles.okButtonText}>CONFIRM</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </SafeAreaView>
       </View>
@@ -80,6 +86,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     marginTop: 70,
+  },
+  buttonArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   okButton: {
     backgroundColor: 'white',

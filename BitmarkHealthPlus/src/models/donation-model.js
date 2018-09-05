@@ -135,6 +135,30 @@ const doGetAllDataTypes = () => {
       resolve(data);
     }).catch(reject);
   });
+};
+
+const doDeleteAccount = (bitmark_account, timestamp, signature) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.donation_server_url + `/s/api/user/` + bitmark_account;
+    fetch(bitmarkUrl, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        timestamp,
+        signature,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doGetAllDataTypes error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
 }
 
 let DonationModel = {
@@ -143,6 +167,7 @@ let DonationModel = {
   doGetUserInformation,
   doCompleteTask,
   doGetAllDataTypes,
+  doDeleteAccount,
 };
 
 export { DonationModel };

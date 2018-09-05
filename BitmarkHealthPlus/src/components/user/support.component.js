@@ -21,7 +21,13 @@ export class SupportComponent extends Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <ScrollView style={styles.bodyContent} contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Legal</Text>
+            <View style={styles.titleRow}>
+              <Text style={styles.title}>Legal</Text>
+              <TouchableOpacity onPress={Actions.pop}>
+                <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+              </TouchableOpacity>
+            </View>
+
 
             <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.TermOfService.name })}>
               <Text style={styles.rowButtonText}>Terms of Service</Text>
@@ -68,6 +74,16 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontSize: 34,
     color: '#464646',
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  closeIcon: {
+    width: convertWidth(21),
+    height: convertWidth(21),
+    resizeMode: 'contain',
   },
 
   rowButton: {

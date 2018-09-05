@@ -131,6 +131,10 @@ const doLogout = async () => {
   return executeTask('doLogout');
 };
 
+const doDeleteAccount = async (processingInfo) => {
+  return executeTask('doDeleteAccount', { processingInfo });
+};
+
 const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo) => {
   return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
 };
@@ -181,6 +185,7 @@ let AppProcessor = {
   doCheck24Words,
   doLogin,
   doLogout,
+  doDeleteAccount,
   doCreateSignatureData,
   doCheckFileToIssue,
   doIssueFile,
