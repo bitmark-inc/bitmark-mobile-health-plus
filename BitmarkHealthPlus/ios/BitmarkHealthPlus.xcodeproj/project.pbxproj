@@ -1421,8 +1421,6 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				8FD9F25D4DFFAF8EC22A7654 /* [CP] Embed Pods Frameworks */,
-				9B8CB3D29FDC30AA3D976AD0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1444,7 +1442,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				912484C07EACD4CABE823B67 /* [CP] Embed Pods Frameworks */,
-				038849409186F5E5B81B055E /* [CP] Copy Pods Resources */,
+				D4DA50A7A9F24FB7689D49B4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2116,21 +2114,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		038849409186F5E5B81B055E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		521CEE845EEDD5CD3230D01F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2218,30 +2201,19 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-resources.sh",
+				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
+				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8FD9F25D4DFFAF8EC22A7654 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlusTests/Pods-BitmarkHealthPlusTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		912484C07EACD4CABE823B67 /* [CP] Embed Pods Frameworks */ = {
@@ -2274,19 +2246,28 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9B8CB3D29FDC30AA3D976AD0 /* [CP] Copy Pods Resources */ = {
+		D4DA50A7A9F24FB7689D49B4 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-resources.sh",
+				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
+				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlusTests/Pods-BitmarkHealthPlusTests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FB242BC11C4777CE29CD187B /* [CP] Check Pods Manifest.lock */ = {

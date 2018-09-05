@@ -6,6 +6,7 @@ def pods
     pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
     pod 'KeychainAccess'
     pod 'ResearchKit', :git => 'https://github.com/bitmark-inc/ResearchKit.git'
+    pod 'Intercom'
     
 end
 
