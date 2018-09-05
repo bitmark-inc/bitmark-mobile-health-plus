@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Alert,
-  Linking,
   Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 
@@ -20,7 +19,7 @@ export class HomeComponent extends Component {
 
   createNewAccount() {
     Alert.alert('Accept Terms', 'By creating an account, you agree to the Bitmark Health Terms of Service and Privacy Policy.', [{
-      text: 'Read Terms', onPress: () => Linking.openURL(config.bitmark_web_site + '/terms')
+      text: 'Read Terms', onPress: () => Actions.legal()
     }, {
       text: 'Cancel',
     }, {

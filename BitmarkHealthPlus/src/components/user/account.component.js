@@ -7,6 +7,7 @@ import {
   Clipboard,
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
 } from 'react-native';
+// import Intercom from 'react-native-intercom';
 
 import HyperLink from 'react-native-hyperlink';
 import Mailer from 'react-native-mail';
@@ -15,7 +16,10 @@ import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
-import { DataProcessor, AppProcessor } from '../../processors';
+import {
+  DataProcessor,
+  AppProcessor
+} from '../../processors';
 import { EventEmitterService } from '../../services';
 
 export class AccountComponent extends Component {
@@ -87,7 +91,9 @@ export class AccountComponent extends Component {
                 <Text style={styles.accountNumberDescription}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. {config.registry_server_url}. You can safely share it with others without compromising your security.</Text>
               </HyperLink>
 
-              <TouchableOpacity style={styles.rowButton} onPress={this.requestSendFeedback.bind(this)}>
+              <TouchableOpacity style={styles.rowButton} onPress={() => {
+                // Intercom.displayMessageComposer();
+              }}>
                 <Text style={styles.rowButtonText}>Help and feedback</Text>
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>
@@ -103,14 +109,14 @@ export class AccountComponent extends Component {
                 <Text style={styles.rowButtonText}>Write Down Recovery Phrase</Text>
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
+              {/* <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
+              <TouchableOpacity style={styles.rowButton} onPress={() => {
                 AppProcessor.doLogout().then(() => {
                   EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
                 }).catch(error => {
                   EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                 })
-              }}> */}
+              }}>
                 <Text style={styles.rowButtonText}>Log out</Text>
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>

@@ -242,7 +242,9 @@ const doOpenApp = async () => {
     //   console.log('registerIdentifiedUser error :', error);
     // });
 
-    await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+    if (!CommonModel.getFaceTouchSessionId()) {
+      await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+    }
 
     let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
     let result = await NotificationModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);

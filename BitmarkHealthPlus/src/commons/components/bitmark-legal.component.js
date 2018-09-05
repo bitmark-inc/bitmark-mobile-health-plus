@@ -53,8 +53,11 @@ export class BitmarkLegalComponent extends React.Component {
   }
 
   shareLegal() {
-    AppProcessor.doDownloadAndShareLegal(this.state.displayedContentName, this.state.displayedContent.filePathUrl).then(filePath => {
-      Share.share({ title: this.state.displayedContentName, url: filePath }).then(() => {
+    let displayedContentName = this.state.displayedContentName || 'BitmarkLegal'
+    let filePathUrl = this.state.displayedContent ? this.state.displayedContent.filePathUrl : '';
+
+    AppProcessor.doDownloadAndShareLegal(displayedContentName, filePathUrl).then(filePath => {
+      Share.share({ title: displayedContentName, url: filePath }).then(() => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       }).catch(error => {
         console.log('Share error:', error);
@@ -72,6 +75,7 @@ export class BitmarkLegalComponent extends React.Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={[styles.header]}>
+              {!this.state.displayedContentName && <Text style={[styles.headerTitle]}>BITMARK LEGAL</Text>}
               {this.state.displayedContentName === Contents.KnowYourRights.name && <Text style={styles.headerTitle}>KNOW YOUR RIGHTS</Text>}
               {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={styles.headerTitle}>PRIVACY POLICY</Text>}
               {this.state.displayedContentName === Contents.TermOfService.name && <Text style={styles.headerTitle}>TERMS OF SERVICE</Text>}
@@ -81,7 +85,8 @@ export class BitmarkLegalComponent extends React.Component {
             </View>
             <ScrollView >
 
-              {(this.state.displayedContentName === Contents.KnowYourRights.name || this.state.displayAll) && <View style={styles.legalContent}>
+              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.KnowYourRights.name) && <View style={styles.legalContent}>
+                {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, marginLeft: convertWidth(19), marginBottom: 20, }]}>KNOW YOUR RIGHTS</Text>}
                 <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
                   <Text style={[styles.contentNormalText, { paddingTop: 40, paddingBottom: 40, color: '#0060F2' }]}>
                     Original idea comes from Stacey Higginbotham
@@ -127,7 +132,11 @@ export class BitmarkLegalComponent extends React.Component {
 
               </View>}
 
-              {(this.state.displayedContentName === Contents.PrivacyPolicy.name || this.state.displayAll) && <View style={styles.legalContent}>
+              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.PrivacyPolicy.name) && <View style={[styles.legalContent, !this.state.displayedContentName ? {
+                borderTopWidth: 1, borderColor: '#FF4444'
+              } : {
+                }]}>
+                {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, marginLeft: convertWidth(19), marginBottom: 20, }]}>PRIVACY POLICY</Text>}
                 <Text style={styles.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => {
                   console.log('url :', url);
@@ -252,7 +261,11 @@ export class BitmarkLegalComponent extends React.Component {
 
               </View>}
 
-              {(this.state.displayedContentName === Contents.TermOfService.name || this.state.displayAll) && <View style={styles.legalContent}>
+              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.TermOfService.name) && <View style={[styles.legalContent, !this.state.displayedContentName ? {
+                borderTopWidth: 1, borderColor: '#FF4444'
+              } : {
+                }]}>
+                {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, }]}>TERMS OF SERVICE</Text>}
                 <Text style={styles.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
                   <Text style={styles.contentNormalText}>

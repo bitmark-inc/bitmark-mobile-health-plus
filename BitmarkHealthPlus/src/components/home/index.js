@@ -7,6 +7,8 @@ import { TouchFaceIdComponent } from './touch-face-id.component';
 import { GetStartComponent } from './get-start.component';
 import { NotificationComponent } from './notifications.component';
 
+import { BitmarkLegalComponent } from './../../commons';
+
 
 export class HomeRouterComponent extends Component {
   render() {
@@ -20,6 +22,7 @@ export class HomeRouterComponent extends Component {
           <Scene key="touchFaceId" component={TouchFaceIdComponent} />
           <Scene key="getStart" component={GetStartComponent} />
           <Scene key="notification" component={NotificationComponent} />
+          <Scene key="legal" component={BitmarkLegalComponent} />
         </Stack>
       </Router>
     );

@@ -234,7 +234,12 @@ export class LoginComponent extends Component {
             <KeyboardAvoidingView behavior="padding" enabled style={styles.avoidingView} keyboardVerticalOffset={constants.keyboardExternalHeight} >
               <View style={styles.bodyContent}>
                 <ScrollView style={styles.bodyScroll} >
-                  <Text style={styles.title}>{'Recovery Phrase SIGN-IN'.toUpperCase()}</Text>
+                  <View style={styles.titleRow}>
+                    <Text style={styles.title}>{'Recovery Phrase SIGN-IN'.toUpperCase()}</Text>
+                    <TouchableOpacity onPress={Actions.pop}>
+                      <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                    </TouchableOpacity>
+                  </View>
                   <Text style={styles.description}>Please type all 24 words of your recovery phrase in the exact sequence below:</Text>
                   <View style={styles.inputArea}>
                     <View style={styles.inputAreaHalf}>
@@ -364,12 +369,22 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: convertWidth(17),
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 18,
     paddingLeft: 3,
     paddingRight: 3,
+  },
+  closeIcon: {
+    width: convertWidth(21),
+    height: convertWidth(21),
+    resizeMode: 'contain',
   },
   description: {
     fontFamily: 'Avenir Light',

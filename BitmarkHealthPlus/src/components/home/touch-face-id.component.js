@@ -107,6 +107,7 @@ export class TouchFaceIdComponent extends React.Component {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
+    backgroundColor: 'white',
   },
   body: {
     flex: 1,

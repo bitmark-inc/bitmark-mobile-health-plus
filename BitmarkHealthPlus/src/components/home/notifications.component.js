@@ -36,15 +36,15 @@ export class NotificationComponent extends React.Component {
           </View>
         </View>
         <View style={styles.enableButtonArea}>
-          <TouchableOpacity style={[styles.enableButton]} onPress={requestNotification}>
-            <Text style={styles.enableButtonText}>ENABLE</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={[styles.enableButton, {
-            backgroundColor: 'white',
+            backgroundColor: 'white', borderWidth: 1, borderColor: '#FF4444', marginBottom: 10,
           }]} onPress={() => {
             EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, true);
           }}>
-            <Text style={[styles.enableButtonText, { color: '#FF4444' }]}>LATER</Text>
+            <Text style={[styles.enableButtonText, { color: '#FF4444', fontWeight: '600', }]}>LATER</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.enableButton]} onPress={requestNotification}>
+            <Text style={styles.enableButtonText}>ENABLE</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
