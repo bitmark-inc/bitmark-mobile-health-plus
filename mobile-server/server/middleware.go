@@ -190,8 +190,14 @@ func (s *Server) authenticateBoth() gin.HandlerFunc {
 				return
 			}
 
-			log.Debug("Requester:", requester)
+			jwtID, ok := claims["jti"]
+			if !ok {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization jti"})
+				return
+			}
+
 			c.Set("requester", requester)
+			c.Set("jwtid", jwtID)
 		} else {
 			log.Debug("Authenticate using tranditional way")
 			pubkey, err := util.PublicKeyFromAccount(requester)

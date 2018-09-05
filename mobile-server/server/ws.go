@@ -16,8 +16,8 @@ var upgrader = websocket.Upgrader{
 }
 
 func (s *Server) ServeWs(c *gin.Context) {
-	jwtid := c.MustGet("jwtid").(string)
-	account := c.MustGet("requester").(string)
+	jwtid := c.GetString("jwtid")
+	account := c.GetString("requester")
 	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		c.Error(err)
@@ -29,7 +29,7 @@ func (s *Server) ServeWs(c *gin.Context) {
 		return nil
 	})
 
-	log.Debug("Subscribe to redis")
+	log.Debugf("Subscribe to redis with account %s, id: %s", account, id)
 	if err := s.redisPubSubConn.Subscribe("id-"+jwtid, "ac-"+account); err != nil {
 		c.Error(err)
 		ws.Close()
