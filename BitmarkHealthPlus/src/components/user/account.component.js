@@ -7,7 +7,7 @@ import {
   Clipboard,
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
 } from 'react-native';
-// import Intercom from 'react-native-intercom';
+import Intercom from 'react-native-intercom';
 
 import HyperLink from 'react-native-hyperlink';
 import Mailer from 'react-native-mail';
@@ -93,7 +93,7 @@ export class AccountComponent extends Component {
                 </HyperLink>
 
                 <TouchableOpacity style={styles.rowButton} onPress={() => {
-                  // Intercom.displayMessageComposer();
+                  Intercom.displayMessageComposer();
                 }}>
                   <Text style={styles.rowButtonText}>Help and feedback</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />

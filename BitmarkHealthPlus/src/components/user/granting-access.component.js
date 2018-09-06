@@ -42,7 +42,8 @@ export class GrantingAccessComponent extends Component {
     Mailer.mail({
       subject: 'Suggestion for Bitmark iOS',
       recipients: ['support@bitmark.com'],
-      body: '\nHealth+ app version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
+      body: '<a>https://www.24h.com.vn</a> </br> Health+ app version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
+      isHTML: true,
     }, (error) => {
       if (error) {
         Alert.alert('Error', 'Could not send mail. Please send a mail to support@bitmark.com');

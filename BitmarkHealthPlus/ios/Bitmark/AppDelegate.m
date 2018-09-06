@@ -15,6 +15,7 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
 #import "ReactNativeExceptionHandler.h"
+#import "Intercom/intercom.h"
 
 #ifdef HOCKEYAPP
   @import HockeySDK;
@@ -25,9 +26,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  NSURL *jsCodeLocation;
 
-  
+  // Intercom
+  [Intercom setApiKey:@"ios_sdk-73c4808d20211944196736d561a405f6ffcdaded" forAppId:@"ejkeunzw"];
+
+  NSURL *jsCodeLocation;
     #ifdef DEBUG
         jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
     #else
