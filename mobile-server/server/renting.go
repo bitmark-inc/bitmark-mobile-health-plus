@@ -14,8 +14,9 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 func (s *Server) registerRenting(c *gin.Context) {
 	account := c.GetString("requester")
+	jwtid := c.GetString("jwtid")
 
-	id, err := s.bitmarkStore.AddBitmarkRenting(c.Copy(), account)
+	id, err := s.bitmarkStore.AddBitmarkRenting(c.Copy(), account, jwtid)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
@@ -29,7 +30,7 @@ func (s *Server) updateRentingReceiver(c *gin.Context) {
 	account := c.GetString("requester")
 	id := c.Param("id")
 
-	sender, err := s.bitmarkStore.UpdateReceiverBitmarkRenting(c.Copy(), id, account)
+	sender, socketID, err := s.bitmarkStore.UpdateReceiverBitmarkRenting(c.Copy(), id, account)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
@@ -41,6 +42,13 @@ func (s *Server) updateRentingReceiver(c *gin.Context) {
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	if sender == nil || socketID == nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": "cannot find grantor with that id",
+		})
 		return
 	}
 
@@ -56,7 +64,7 @@ func (s *Server) updateRentingReceiver(c *gin.Context) {
 		return
 	}
 
-	_, err = redisConn.Do("PUBLISH", "ac-"+account, buf.Bytes())
+	_, err = redisConn.Do("PUBLISH", "id-"+*socketID, buf.Bytes())
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)

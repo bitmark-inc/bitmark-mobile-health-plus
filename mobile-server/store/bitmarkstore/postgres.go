@@ -23,8 +23,8 @@ const (
 	sqlDeleteBitmarkTracking          = "DELETE FROM mobile.bitmark_tracking WHERE bitmark_id = $1 AND account_number = $2"
 	sqlQueryBitmarkTracking           = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
 	sqlQueryAccountHasTrackingBitmark = "SELECT bitmark_id, array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = ANY($1) GROUP BY bitmark_id"
-	sqlInsertBitmarkRenting           = "INSERT INTO mobile.bitmark_renting(id, sender) VALUES ($1, $2)"
-	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, granted_at = NOW() WHERE id = $2 AND created_at > NOW() - INTERVAL '3 days' RETURNING sender"
+	sqlInsertBitmarkRenting           = "INSERT INTO mobile.bitmark_renting(id, sender, socket_id) VALUES ($1, $2, $3)"
+	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, granted_at = NOW() WHERE id = $2 AND created_at > NOW() - INTERVAL '3 days' RETURNING sender, socket_id"
 	sqlDeleteBitmarkRenting           = "DELETE FROM mobile.bitmark_renting WHERE id = $1 AND sender = $2"
 	sqlQueryBitmarkRentingSender      = "SELECT id, sender, receiver, created_at, granted_at FROM mobile.bitmark_renting WHERE sender = $1 AND granted_at IS NOT NULL"
 	sqlQueryBitmarkRentingReceiver    = "SELECT id, sender, receiver, created_at, granted_at FROM mobile.bitmark_renting WHERE receiver = $1 AND granted_at IS NOT NULL"
@@ -100,26 +100,26 @@ func (b *BitmarkPGStore) GetAccountHasTrackingBitmark(ctx context.Context, bitma
 }
 
 // AddBitmarkRenting add bitmark renting item
-func (b *BitmarkPGStore) AddBitmarkRenting(ctx context.Context, sender string) (string, error) {
+func (b *BitmarkPGStore) AddBitmarkRenting(ctx context.Context, sender, socketID string) (string, error) {
 	id := uuid.NewV4().String()
 
-	_, err := b.dbConn.ExecEx(ctx, sqlInsertBitmarkRenting, nil, id, sender)
+	_, err := b.dbConn.ExecEx(ctx, sqlInsertBitmarkRenting, nil, id, sender, socketID)
 	return id, err
 }
 
 // UpdateReceiverBitmarkRenting update receiver and return sender
-func (b *BitmarkPGStore) UpdateReceiverBitmarkRenting(ctx context.Context, id, receiver string) (*string, error) {
+func (b *BitmarkPGStore) UpdateReceiverBitmarkRenting(ctx context.Context, id, receiver string) (*string, *string, error) {
 	row := b.dbConn.QueryRowEx(ctx, sqlUpdateBitmarkRentingReceiver, nil, receiver, id)
 	if row == nil {
-		return nil, nil
+		return nil, nil, nil
 	}
 
-	var sender *string
-	if err := row.Scan(&sender); err != nil {
-		return nil, err
+	var sender, socketID *string
+	if err := row.Scan(&sender, &socketID); err != nil {
+		return nil, nil, err
 	}
 
-	return sender, nil
+	return sender, socketID, nil
 }
 
 // DeleteBitmarkRenting delete bitmark renting item
