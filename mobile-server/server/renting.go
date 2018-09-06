@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"net/http"
 
+	"github.com/jackc/pgx"
+
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -75,4 +77,26 @@ func (s *Server) queryRentingBitmark(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, info)
+}
+
+func (s *Server) revokeRentingBitmartk(c *gin.Context) {
+	account := c.GetString("requester")
+	id := c.Param("id")
+
+	if err := s.bitmarkStore.DeleteBitmarkRenting(c.Copy(), id, account); err != nil {
+		if err == pgx.ErrNoRows {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": "invalid id or id does not belong to account",
+			})
+			return
+		} else {
+			c.Error(err)
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
 }

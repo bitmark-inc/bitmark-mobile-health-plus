@@ -25,7 +25,7 @@ const (
 	sqlQueryAccountHasTrackingBitmark = "SELECT bitmark_id, array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = ANY($1) GROUP BY bitmark_id"
 	sqlInsertBitmarkRenting           = "INSERT INTO mobile.bitmark_renting(id, sender) VALUES ($1, $2)"
 	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, granted_at = NOW() WHERE id = $2 AND created_at > NOW() - INTERVAL '5 minutes' RETURNING sender"
-	sqlDeleteBitmarkRenting           = "DELETE FROM mobile.bitmark_renting WHERE id = $1"
+	sqlDeleteBitmarkRenting           = "DELETE FROM mobile.bitmark_renting WHERE id = $1 AND sender = $2"
 	sqlQueryBitmarkRenting            = "SELECT id, receiver, created_at, granted_at FROM mobile.bitmark_renting WHERE sender = $1 AND granted_at IS NOT NULL"
 )
 
@@ -122,8 +122,8 @@ func (b *BitmarkPGStore) UpdateReceiverBitmarkRenting(ctx context.Context, id, r
 }
 
 // DeleteBitmarkRenting delete bitmark renting item
-func (b *BitmarkPGStore) DeleteBitmarkRenting(ctx context.Context, id string) error {
-	_, err := b.dbConn.ExecEx(ctx, sqlDeleteBitmarkRenting, nil, id)
+func (b *BitmarkPGStore) DeleteBitmarkRenting(ctx context.Context, id, account string) error {
+	_, err := b.dbConn.ExecEx(ctx, sqlDeleteBitmarkRenting, nil, id, account)
 	return err
 }
 

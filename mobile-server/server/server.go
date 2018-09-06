@@ -79,6 +79,7 @@ func (s *Server) Run(addr string) error {
 		grantingBitmarksGroup.POST("", s.registerRenting)
 		grantingBitmarksGroup.PATCH("/:id", s.updateRentingReceiver)
 		grantingBitmarksGroup.GET("", s.queryRentingBitmark)
+		grantingBitmarksGroup.DELETE("/:id", s.revokeRentingBitmartk)
 	}
 
 	api.GET("/healthz", s.HealthCheck)

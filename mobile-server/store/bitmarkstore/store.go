@@ -26,6 +26,6 @@ type BitmarkStore interface {
 	GetAccountHasTrackingBitmark(ctx context.Context, bitmarkIDs []string) (map[string][]string, error)
 	AddBitmarkRenting(ctx context.Context, sender string) (string, error)
 	UpdateReceiverBitmarkRenting(ctx context.Context, id, receiver string) (*string, error)
-	DeleteBitmarkRenting(ctx context.Context, id string) error
+	DeleteBitmarkRenting(ctx context.Context, id, account string) error
 	QueryBitmarkRenting(ctx context.Context, sender string) ([]BitmarkRenting, error)
 }
