@@ -24,9 +24,10 @@ const (
 	sqlQueryBitmarkTracking           = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
 	sqlQueryAccountHasTrackingBitmark = "SELECT bitmark_id, array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = ANY($1) GROUP BY bitmark_id"
 	sqlInsertBitmarkRenting           = "INSERT INTO mobile.bitmark_renting(id, sender) VALUES ($1, $2)"
-	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, granted_at = NOW() WHERE id = $2 AND created_at > NOW() - INTERVAL '5 minutes' RETURNING sender"
+	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, granted_at = NOW() WHERE id = $2 AND created_at > NOW() - INTERVAL '3 days' RETURNING sender"
 	sqlDeleteBitmarkRenting           = "DELETE FROM mobile.bitmark_renting WHERE id = $1 AND sender = $2"
-	sqlQueryBitmarkRenting            = "SELECT id, receiver, created_at, granted_at FROM mobile.bitmark_renting WHERE sender = $1 AND granted_at IS NOT NULL"
+	sqlQueryBitmarkRentingSender      = "SELECT id, sender, receiver, created_at, granted_at FROM mobile.bitmark_renting WHERE sender = $1 AND granted_at IS NOT NULL"
+	sqlQueryBitmarkRentingReceiver    = "SELECT id, sender, receiver, created_at, granted_at FROM mobile.bitmark_renting WHERE receiver = $1 AND granted_at IS NOT NULL"
 )
 
 func New(dbConn *pgx.ConnPool) *BitmarkPGStore {
@@ -127,31 +128,60 @@ func (b *BitmarkPGStore) DeleteBitmarkRenting(ctx context.Context, id, account s
 	return err
 }
 
-func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, sender string) ([]BitmarkRenting, error) {
-	rows, err := b.dbConn.QueryEx(ctx, sqlQueryBitmarkRenting, nil, sender)
+func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string) ([]BitmarkRenting, []BitmarkRenting, error) {
+	// Sender
+	rows, err := b.dbConn.QueryEx(ctx, sqlQueryBitmarkRentingSender, nil, account)
 
 	defer rows.Close()
 	if err != nil {
 		if err != sql.ErrNoRows {
-			return nil, err
+			return nil, nil, err
 		}
 	}
 
-	items := make([]BitmarkRenting, 0)
+	senderList := make([]BitmarkRenting, 0)
 	for rows.Next() {
-		var id, receiver string
+		var id, sender, receiver string
 		var createdAt, grantedAt time.Time
-		if err := rows.Scan(&id, &receiver, &createdAt, &grantedAt); err != nil {
-			return nil, err
+		if err := rows.Scan(&id, &sender, &receiver, &createdAt, &grantedAt); err != nil {
+			return nil, nil, err
 		}
 
-		items = append(items, BitmarkRenting{
+		senderList = append(senderList, BitmarkRenting{
 			ID:        id,
+			Sender:    sender,
+			Receiver:  receiver,
+			CreatedAt: createdAt,
+			GrantedAt: grantedAt,
+		})
+	}
+	rows.Close()
+
+	// Receiver
+	rows, err = b.dbConn.QueryEx(ctx, sqlQueryBitmarkRentingReceiver, nil, account)
+
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, nil, err
+		}
+	}
+
+	receiverList := make([]BitmarkRenting, 0)
+	for rows.Next() {
+		var id, sender, receiver string
+		var createdAt, grantedAt time.Time
+		if err := rows.Scan(&id, &sender, &receiver, &createdAt, &grantedAt); err != nil {
+			return nil, nil, err
+		}
+
+		senderList = append(senderList, BitmarkRenting{
+			ID:        id,
+			Sender:    sender,
 			Receiver:  receiver,
 			CreatedAt: createdAt,
 			GrantedAt: grantedAt,
 		})
 	}
 
-	return items, nil
+	return senderList, receiverList, nil
 }

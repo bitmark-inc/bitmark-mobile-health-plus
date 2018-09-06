@@ -69,14 +69,17 @@ func (s *Server) updateRentingReceiver(c *gin.Context) {
 func (s *Server) queryRentingBitmark(c *gin.Context) {
 	account := c.GetString("requester")
 
-	info, err := s.bitmarkStore.QueryBitmarkRenting(c.Copy(), account)
+	sender, receiver, err := s.bitmarkStore.QueryBitmarkRenting(c.Copy(), account)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	c.JSON(http.StatusOK, info)
+	c.JSON(http.StatusOK, gin.H{
+		"granting":   sender,
+		"is_granted": receiver,
+	})
 }
 
 func (s *Server) revokeRentingBitmartk(c *gin.Context) {

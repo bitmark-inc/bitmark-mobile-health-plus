@@ -14,6 +14,7 @@ type BitmarkTracking struct {
 
 type BitmarkRenting struct {
 	ID        string    `json:"id"`
+	Sender    string    `json:"grantor"`
 	Receiver  string    `json:"grantee"`
 	CreatedAt time.Time `json:"created_at"`
 	GrantedAt time.Time `json:"granted_at"`
@@ -27,5 +28,5 @@ type BitmarkStore interface {
 	AddBitmarkRenting(ctx context.Context, sender string) (string, error)
 	UpdateReceiverBitmarkRenting(ctx context.Context, id, receiver string) (*string, error)
 	DeleteBitmarkRenting(ctx context.Context, id, account string) error
-	QueryBitmarkRenting(ctx context.Context, sender string) ([]BitmarkRenting, error)
+	QueryBitmarkRenting(ctx context.Context, account string) ([]BitmarkRenting, []BitmarkRenting, error)
 }
