@@ -131,6 +131,10 @@ const doLogout = async () => {
   return executeTask('doLogout');
 };
 
+const doDeleteAccount = async (processingInfo) => {
+  return executeTask('doDeleteAccount', { processingInfo });
+};
+
 const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo) => {
   return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
 };
@@ -158,6 +162,10 @@ const doDownloadAndShareLegal = async (title, urlDownload) => {
   return executeTask('doDownloadAndShareLegal', { title, urlDownload });
 };
 
+const doGrantingAccess = async () => {
+  return executeTask('doGrantingAccess');
+};
+
 const doCheckNoLongerSupportVersion = async () => {
   let data = await NotificationModel.doTryGetAppVersion();
   if (data && data.version && data.version.minimum_supported_version) {
@@ -181,6 +189,7 @@ let AppProcessor = {
   doCheck24Words,
   doLogin,
   doLogout,
+  doDeleteAccount,
   doCreateSignatureData,
   doCheckFileToIssue,
   doIssueFile,
@@ -197,6 +206,7 @@ let AppProcessor = {
   doDownloadAndShareLegal,
 
   doCheckNoLongerSupportVersion,
+  doGrantingAccess,
 }
 
 export {

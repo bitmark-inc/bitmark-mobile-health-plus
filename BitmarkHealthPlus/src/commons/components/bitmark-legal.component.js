@@ -54,7 +54,7 @@ export class BitmarkLegalComponent extends React.Component {
 
   shareLegal() {
     let displayedContentName = this.state.displayedContentName || 'BitmarkLegal'
-    let filePathUrl = this.state.displayedContent ? this.state.displayedContent.filePathUrl : '';
+    let filePathUrl = this.state.displayedContent ? this.state.displayedContent.filePathUrl : 'https://s3-ap-northeast-1.amazonaws.com/bitmark-mobile-files/3+combination.pdf';
 
     AppProcessor.doDownloadAndShareLegal(displayedContentName, filePathUrl).then(filePath => {
       Share.share({ title: displayedContentName, url: filePath }).then(() => {
@@ -85,57 +85,7 @@ export class BitmarkLegalComponent extends React.Component {
             </View>
             <ScrollView >
 
-              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.KnowYourRights.name) && <View style={styles.legalContent}>
-                {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, marginLeft: convertWidth(19), marginBottom: 20, }]}>KNOW YOUR RIGHTS</Text>}
-                <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
-                  <Text style={[styles.contentNormalText, { paddingTop: 40, paddingBottom: 40, color: '#0060F2' }]}>
-                    Original idea comes from Stacey Higginbotham
-                    </Text>
-                </TouchableOpacity>
-                <View style={styles.knowYourRightsRow}>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47), fontWeight: '800' }]}>RETAIN</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35), fontWeight: '800' }]}>SELL</Text>
-                </View>
-
-                <View style={styles.knowYourRightsRow}>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Email (to map Bitmark accounts)</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
-                </View>
-
-                <View style={styles.knowYourRightsRow}>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Log data (when accessing website)	</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
-                </View>
-
-                <View style={styles.knowYourRightsRow}>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account number	</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
-                </View>
-
-                <View style={styles.knowYourRightsRow}>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account (in case of webapp)</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
-                </View>
-
-                <View style={[styles.knowYourRightsRow, { borderBottomWidth: 0 }]}>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Digital assets</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
-                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
-                </View>
-                <Text style={[styles.knowYourRightsRowText, { marginLeft: convertWidth(19) }]}>(with or without client side encryption)	</Text>
-
-
-              </View>}
-
-              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.PrivacyPolicy.name) && <View style={[styles.legalContent, !this.state.displayedContentName ? {
-                borderTopWidth: 1, borderColor: '#FF4444'
-              } : {
-                }]}>
+              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.PrivacyPolicy.name) && <View style={[styles.legalContent, !this.state.displayedContentName ? { borderTopWidth: 1, borderColor: '#FF4444' } : {}]}>
                 {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, marginLeft: convertWidth(19), marginBottom: 20, }]}>PRIVACY POLICY</Text>}
                 <Text style={styles.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => {
@@ -261,10 +211,7 @@ export class BitmarkLegalComponent extends React.Component {
 
               </View>}
 
-              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.TermOfService.name) && <View style={[styles.legalContent, !this.state.displayedContentName ? {
-                borderTopWidth: 1, borderColor: '#FF4444'
-              } : {
-                }]}>
+              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.TermOfService.name) && <View style={[styles.legalContent, !this.state.displayedContentName ? { borderTopWidth: 1, borderColor: '#FF4444' } : {}]}>
                 {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, }]}>TERMS OF SERVICE</Text>}
                 <Text style={styles.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
@@ -529,6 +476,52 @@ export class BitmarkLegalComponent extends React.Component {
 
               </View>}
 
+              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.KnowYourRights.name) && <View style={styles.legalContent}>
+                {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, marginLeft: convertWidth(19), marginBottom: 20, }]}>KNOW YOUR RIGHTS</Text>}
+                <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
+                  <Text style={[styles.contentNormalText, { paddingTop: 40, paddingBottom: 40, color: '#0060F2' }]}>
+                    Original idea comes from Stacey Higginbotham
+                    </Text>
+                </TouchableOpacity>
+                <View style={styles.knowYourRightsRow}>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47), fontWeight: '800' }]}>RETAIN</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35), fontWeight: '800' }]}>SELL</Text>
+                </View>
+
+                <View style={styles.knowYourRightsRow}>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Email (to map Bitmark accounts)</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
+                </View>
+
+                <View style={styles.knowYourRightsRow}>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Log data (when accessing website)	</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
+                </View>
+
+                <View style={styles.knowYourRightsRow}>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account number	</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
+                </View>
+
+                <View style={styles.knowYourRightsRow}>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Bitmark account (in case of webapp)</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
+                </View>
+
+                <View style={[styles.knowYourRightsRow, { borderBottomWidth: 0 }]}>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(222) }]}>Digital assets</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(47) }]}>yes</Text>
+                  <Text style={[styles.knowYourRightsRowText, { width: convertWidth(35) }]}>no</Text>
+                </View>
+                <Text style={[styles.knowYourRightsRowText, { marginLeft: convertWidth(19) }]}>(with or without client side encryption)	</Text>
+
+
+              </View>}
             </ ScrollView>
             <View style={styles.lastBottomButtonArea}>
               <TouchableOpacity style={styles.lastBottomButton} onPress={this.shareLegal}>

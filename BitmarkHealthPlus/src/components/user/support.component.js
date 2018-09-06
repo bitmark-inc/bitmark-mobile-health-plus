@@ -20,22 +20,30 @@ export class SupportComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-          <ScrollView style={styles.bodyContent} contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Legal</Text>
+          <View style={styles.bodyContent} >
+            <View style={styles.titleRow}>
+              <Text style={styles.title}>Legal</Text>
+              <TouchableOpacity onPress={Actions.pop}>
+                <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView contentContainerStyle={styles.content}>
 
-            <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.TermOfService.name })}>
-              <Text style={styles.rowButtonText}>Terms of Service</Text>
-              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.PrivacyPolicy.name })}>
-              <Text style={styles.rowButtonText}>Privacy Policy</Text>
-              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.KnowYourRights.name })}>
-              <Text style={styles.rowButtonText}>Knows your right</Text>
-              <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-            </TouchableOpacity>
-          </ScrollView>
+
+              <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.TermOfService.name })}>
+                <Text style={styles.rowButtonText}>Terms of Service</Text>
+                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.PrivacyPolicy.name })}>
+                <Text style={styles.rowButtonText}>Privacy Policy</Text>
+                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.KnowYourRights.name })}>
+                <Text style={styles.rowButtonText}>Knows your right</Text>
+                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -56,6 +64,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     borderWidth: 1,
+    borderColor: '#FF4444',
     width: "100%",
   },
   content: {
@@ -68,6 +77,18 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontSize: 34,
     color: '#464646',
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: convertWidth(20),
+    paddingBottom: 0,
+  },
+  closeIcon: {
+    width: convertWidth(21),
+    height: convertWidth(21),
+    resizeMode: 'contain',
   },
 
   rowButton: {

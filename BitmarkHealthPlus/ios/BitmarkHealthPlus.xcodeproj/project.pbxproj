@@ -165,6 +165,8 @@
 		C8723921B1B727A4206142C9 /* Pods_BitmarkHealthPlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DC7D46BBC681E6294ED31F4 /* Pods_BitmarkHealthPlus.framework */; };
 		F12EC13921393C69008E6F4C /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16DDBCD213926D100EE9FF9 /* libRNDeviceInfo.a */; };
 		F12EC13A21393C70008E6F4C /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16DDBCD213926D100EE9FF9 /* libRNDeviceInfo.a */; };
+		F13CAA9D2140BF9E001414A9 /* libRNIntercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F13CAA992140BF8F001414A9 /* libRNIntercom.a */; };
+		F13CAA9E2140BFA5001414A9 /* libRNIntercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F13CAA992140BF8F001414A9 /* libRNIntercom.a */; };
 		F150CA412023230B00C8FC17 /* AndaleMono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F150CA152023230B00C8FC17 /* AndaleMono.ttf */; };
 		F15C1D112063B9D4002DDF98 /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15C1D102063B9B6002DDF98 /* libRNZipArchive.a */; };
 		F15F68E1203D70EC00A5A582 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15F68DE203D70DE00A5A582 /* libRNImagePicker.a */; };
@@ -513,6 +515,13 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RNCamera;
 		};
+		F13CAA982140BF8F001414A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F13CAA5E2140BF8F001414A9 /* RNIntercom.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 112EE36D1CC0AB8A00BF6BB8;
+			remoteInfo = RNIntercom;
+		};
 		F15C1D0F2063B9B6002DDF98 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F15C1CDA2063B9B6002DDF98 /* RNZipArchive.xcodeproj */;
@@ -739,6 +748,7 @@
 		DDDF52A44890C0CADB5CC2CF /* Pods-Bitmark dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark dev/Pods-Bitmark dev.release.xcconfig"; sourceTree = "<group>"; };
 		E3045E478EDA4BB795BE1653 /* RNMail.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNMail.xcodeproj; path = "../node_modules/react-native-mail/RNMail.xcodeproj"; sourceTree = "<group>"; };
 		E68EEEE1542C435DA913552D /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
+		F13CAA5E2140BF8F001414A9 /* RNIntercom.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNIntercom.xcodeproj; path = "../node_modules/react-native-intercom/iOS/RNIntercom.xcodeproj"; sourceTree = "<group>"; };
 		F150CA152023230B00C8FC17 /* AndaleMono.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AndaleMono.ttf; path = ../assets/fonts/AndaleMono.ttf; sourceTree = "<group>"; };
 		F15C1CDA2063B9B6002DDF98 /* RNZipArchive.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNZipArchive.xcodeproj; path = "../node_modules/react-native-zip-archive/ios/RNZipArchive.xcodeproj"; sourceTree = "<group>"; };
 		F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
@@ -766,6 +776,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F13CAA9E2140BFA5001414A9 /* libRNIntercom.a in Frameworks */,
 				F12EC13921393C69008E6F4C /* libRNDeviceInfo.a in Frameworks */,
 				0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */,
 				0E25DDFC20F470EB00635A33 /* libReactNativeExceptionHandler.a in Frameworks */,
@@ -801,6 +812,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F13CAA9D2140BF9E001414A9 /* libRNIntercom.a in Frameworks */,
 				F12EC13A21393C70008E6F4C /* libRNDeviceInfo.a in Frameworks */,
 				0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */,
 				0E7B97DE20EF56170064EEEC /* libReactNativeExceptionHandler.a in Frameworks */,
@@ -1246,6 +1258,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F13CAA5E2140BF8F001414A9 /* RNIntercom.xcodeproj */,
 				0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */,
 				0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */,
 				F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */,
@@ -1347,6 +1360,14 @@
 			isa = PBXGroup;
 			children = (
 				F12EC138213938F5008E6F4C /* libRNCamera.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F13CAA5F2140BF8F001414A9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F13CAA992140BF8F001414A9 /* libRNIntercom.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1630,6 +1651,10 @@
 				{
 					ProductGroup = F15F68B0203D70DE00A5A582 /* Products */;
 					ProjectRef = F15F68AF203D70DE00A5A582 /* RNImagePicker.xcodeproj */;
+				},
+				{
+					ProductGroup = F13CAA5F2140BF8F001414A9 /* Products */;
+					ProjectRef = F13CAA5E2140BF8F001414A9 /* RNIntercom.xcodeproj */;
 				},
 				{
 					ProductGroup = 58FC1DFD201B14CB00F60AF9 /* Products */;
@@ -1979,6 +2004,13 @@
 			remoteRef = F12EC137213938F5008E6F4C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F13CAA992140BF8F001414A9 /* libRNIntercom.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNIntercom.a;
+			remoteRef = F13CAA982140BF8F001414A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F15C1D102063B9B6002DDF98 /* libRNZipArchive.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2251,16 +2283,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-resources.sh",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",

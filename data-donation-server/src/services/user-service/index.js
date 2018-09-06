@@ -214,7 +214,6 @@ let titleDataTypes = {
   'WorkoutType': 'Workout Type Identifier',
 };
 
-
 let getStudyInformation = (studyId) => {
   return _.merge({}, mapStudies[studyId].studyInformation);
 };
@@ -345,15 +344,17 @@ const getFullUserInformation = async (userInformation, joinedStudies, timezone) 
     }
 
     let currentDate = studyCommonService.getMomentLocalTime(new Date(), timezone);
-    while (endDate.toDate() <= currentDate.toDate()) {
-      list.push({
-        startDate: startDate.toDate(),
-        endDate: endDate.toDate(),
-      });
-      startDate = studyCommonService.getNextDayInLocalTime(endDate, timezone);
-      startDate = studyCommonService.getBeginDayInLocalTime(startDate);
-      endDate = studyCommonService.getNextDayInLocalTime(startDate, timezone, SATURDAY);
-      endDate = studyCommonService.getEndDayInLocalTime(endDate);
+    if (currentDate.hour() >= timeSendNotification) {
+      while (endDate.toDate() <= currentDate.toDate()) {
+        list.push({
+          startDate: startDate.toDate(),
+          endDate: endDate.toDate(),
+        });
+        startDate = studyCommonService.getNextDayInLocalTime(endDate, timezone);
+        startDate = studyCommonService.getBeginDayInLocalTime(startDate);
+        endDate = studyCommonService.getNextDayInLocalTime(startDate, timezone, SATURDAY);
+        endDate = studyCommonService.getEndDayInLocalTime(endDate);
+      }
     }
     userInformation.bitmarkHealthDataTask = {
       list: list,

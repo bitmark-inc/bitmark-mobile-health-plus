@@ -31,68 +31,68 @@ export class HomeComponent extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.body}>
-        <View style={styles.bodyContent}>
-          <Swiper activeDotColor='#FF4444'
-            scrollEnabled={true}
-            showsPagination={true}
-            showsButtons={false}
-            buttonWrapperStyle={{ color: 'black' }}
-            loop={false}
-            paginationStyle={styles.swipePagination}
-            ref={swiper => this.swiper = swiper}
-            onIndexChanged={(index) => {
-              this.setState({
-                index: index,
-              });
-              if (this['player' + index] && this['player' + index].seek) {
-                this['player' + index].seek(0);
-              }
-            }}
-            dot={
-              <View style={styles.swipeDotButton} />
-            }>
+      <View style={styles.body}>
+        <Swiper activeDotColor='#FF4444'
+          scrollEnabled={true}
+          showsPagination={true}
+          showsButtons={false}
+          buttonWrapperStyle={{ color: 'black' }}
+          loop={false}
+          paginationStyle={styles.swipePagination}
+          ref={swiper => this.swiper = swiper}
+          onIndexChanged={(index) => {
+            this.setState({
+              index: index,
+            });
+            if (this['player' + index] && this['player' + index].seek) {
+              this['player' + index].seek(0);
+            }
+          }}
+          dot={
+            <View style={styles.swipeDotButton} />
+          }>
+          <View style={[styles.swipePage, { paddingBottom: 0 }]}>
+            <Image style={styles.loadingLogo} source={require('./../../../assets/imgs/loading.png')} />
+          </View>
 
-            <View style={[styles.swipePage, { paddingBottom: 0 }]}>
-              <Image style={styles.loadingLogo} source={require('./../../../assets/imgs/loading.png')} />
+          <View style={styles.swipePage}>
+            <View style={styles.introductionImageArea}>
+              <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome1.png')} />
             </View>
-
-            <View style={styles.swipePage}>
-              <View style={styles.introductionImageArea}>
-                <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome1.png')} />
-              </View>
-              <View style={styles.introductionArea}>
-                <Text style={[styles.introductionTitle]}>{'Create Property Around Your Health Data'.toUpperCase()}</Text>
-                <Text style={[styles.introductionDescription]}>
-                  Bitmark Health protects the rights to your health data by registering it on a global public registry so that no other party can legally access it without your explicit permission.
+            <View style={styles.introductionArea}>
+              <Text style={[styles.introductionTitle]}>{'Create Property Around Your Health Data'.toUpperCase()}</Text>
+              <Text style={[styles.introductionDescription]}>
+                Bitmark Health protects the rights to your health data by registering it on a global public registry so that no other party can legally access it without your explicit permission.
                 </Text>
-              </View>
             </View>
+          </View>
 
-            <View style={styles.swipePage}>
-              <View style={styles.introductionImageArea}>
-                <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome2.png')} />
-              </View>
-              <View style={styles.introductionArea}>
-                <Text style={[styles.introductionTitle]}>{'Registration is Private and Secure'.toUpperCase()}</Text>
-                <Text style={[styles.introductionDescription]}>
-                  Registration is anonymous and your identity is completely protected. Only you hold the keys to link your identity to these records; Bitmark cannot view your encrypted data.
-                </Text>
-              </View>
+          <View style={styles.swipePage}>
+            <View style={styles.introductionImageArea}>
+              <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome2.png')} />
             </View>
-            <View style={styles.swipePage}>
-              <View style={styles.introductionImageArea}>
-                <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome3.png')} />
-              </View>
-              <View style={styles.introductionArea}>
-                <Text style={[styles.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>
-                <Text style={[styles.introductionDescription]}>
-                  Once health data is registered as your property, you will be able to donate, sell, or transfer it to another party (family member, university researcher, etc.) at your complete discretion.
+            <View style={styles.introductionArea}>
+              <Text style={[styles.introductionTitle]}>{'Registration is Private and Secure'.toUpperCase()}</Text>
+              <Text style={[styles.introductionDescription]}>
+                Registration is anonymous and your identity is completely protected. Only you hold the keys to link your identity to these records; Bitmark cannot view your encrypted data.
                 </Text>
-              </View>
             </View>
+          </View>
+          <View style={styles.swipePage}>
+            <View style={styles.introductionImageArea}>
+              <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome3.png')} />
+            </View>
+            <View style={styles.introductionArea}>
+              <Text style={[styles.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>
+              <Text style={[styles.introductionDescription]}>
+                Once health data is registered as your property, you will be able to donate, sell, or transfer it to another party (family member, university researcher, etc.) at your complete discretion.
+                </Text>
+            </View>
+          </View>
 
-          </Swiper>
+        </Swiper>
+
+        <SafeAreaView style={styles.bottomButtonsAreaSafeView}>
           <View style={styles.bottomButtonsArea}>
             <TouchableOpacity style={[styles.button, { backgroundColor: 'white', borderWidth: 1, borderColor: '#FF4444', marginBottom: 15 }]} onPress={Actions.login}>
               <Text style={[styles.buttonText, { color: '#FF4444' }]}>ACCESS EXISTING ACCOUNT</Text>
@@ -102,8 +102,8 @@ export class HomeComponent extends Component {
               <Text style={styles.buttonText}>CREATE NEW ACCOUNT</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     );
   }
 }
@@ -112,12 +112,6 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  bodyContent: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   swipeDotButton: {
     backgroundColor: '#C4C4C4',
@@ -131,7 +125,7 @@ const styles = StyleSheet.create({
   },
   swipePagination: {
     position: 'absolute',
-    bottom: 142,
+    bottom: 142 + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
   },
 
   swipePage: {
@@ -140,8 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
-    paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    paddingBottom: 142,
+    paddingBottom: 142 + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
   },
   onBoardingImage: {
     resizeMode: 'contain',
@@ -178,12 +171,16 @@ const styles = StyleSheet.create({
     height: 45 * convertWidth(213) / 213,
     resizeMode: 'contain',
   },
-  bottomButtonsArea: {
+  bottomButtonsAreaSafeView: {
     position: "absolute",
     bottom: 0,
     width: '100%',
+  },
+  bottomButtonsArea: {
+    width: '100%',
     paddingLeft: convertWidth(20),
     paddingRight: convertWidth(20),
+    paddingBottom: convertWidth(20),
   },
   button: {
     height: 49,

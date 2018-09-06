@@ -17,6 +17,12 @@ const doUpdateLastAction = async (bitmarkAccount, lastAction) => {
   await database.executeQuery(query);
 };
 
+const doDeleteUserInformation = async (bitmarkAccount) => {
+  let query = squel.delete().from('data_donation.user')
+    .where('bitmark_account = ?', bitmarkAccount);
+  await database.executeQuery(query);
+};
+
 const doInsertUserInformation = async (userInformation, ) => {
   const query = squel.insert().into('data_donation.user')
     .set('bitmark_account', userInformation.bitmarkAccount)
@@ -124,6 +130,7 @@ const doGetAllUserInformation = async () => {
 
 module.exports = {
   doGetUserInformationInternal,
+  doDeleteUserInformation,
   doGetUserInformation,
   doSaveUserInformation,
   doUpdateBitmarkHealthData,

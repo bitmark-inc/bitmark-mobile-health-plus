@@ -35,9 +35,9 @@ const doUpdateUserJoinedStudy = async (joinedInfo) => {
 
 const doDeleteUserJoinedStudy = async (bitmarkAccount, studyId) => {
   let query = squel.delete().from('data_donation.user_joined_study')
-    .where('bitmark_account = ?', bitmarkAccount)
-    .where('study_id = ?', studyId)
-    .toParam();
+    .where('bitmark_account = ?', bitmarkAccount);
+  query = studyId ? query.where('study_id = ?', studyId) : query;
+  query = query.toParam();
   await database.executeQuery(query);
 };
 

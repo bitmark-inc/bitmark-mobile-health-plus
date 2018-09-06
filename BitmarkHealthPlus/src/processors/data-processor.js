@@ -1,5 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
-// import Intercom from 'react-native-intercom';
+import Intercom from 'react-native-intercom';
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
 
@@ -11,10 +11,11 @@ import {
 } from "../services";
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel, DonationModel } from '../models';
 import { DonationService } from '../services/donation-service';
-import { DataCacheProcessor } from './data-cache-processor';
 import { config } from '../configs';
 
 let userInformation = {};
+let jwt;
+let websocket;
 let isLoadingData = false;
 // ================================================================================================================================================
 const doCheckNewDonationInformation = async (donationInformation, isLoadingAllUserData) => {
@@ -96,10 +97,6 @@ const configNotification = () => {
       if (!userInformation || !userInformation.bitmarkAccountNumber) {
         userInformation = await UserModel.doGetCurrentUser();
       }
-      await CommonModel.doTrackEvent({
-        event_name: 'health_user_click_notification',
-        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-      });
       setTimeout(async () => {
         EventEmitterService.emit(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
       }, 1000);
@@ -146,7 +143,7 @@ const doCreateAccount = async (touchFaceIdSession) => {
   await doCheckNewDonationInformation(donationInformation, true);
   await doGenerateDisplayedData();
   await CommonModel.doTrackEvent({
-    event_name: 'health_create_new_account',
+    event_name: 'health_plus_create_new_account',
     account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
   });
   return userInformation;
@@ -171,8 +168,18 @@ const doLogout = async () => {
   await AccountModel.doLogout();
   await UserModel.doRemoveUserInfo();
   userInformation = {};
-  // await Intercom.reset();
-  DataCacheProcessor.resetCacheData();
+  await Intercom.reset();
+};
+
+const doDeleteAccount = async (touchFaceIdSession) => {
+  // let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  // await NotificationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  // await DonationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  await AccountModel.doLogout();
+  await UserModel.doRemoveUserInfo();
+  userInformation = {};
+  await Intercom.reset();
+  return userInformation;
 };
 
 
@@ -200,28 +207,8 @@ const doOpenApp = async () => {
   // await UserModel.doRemoveUserInfo();
   userInformation = await UserModel.doTryGetCurrentUser();
 
-  await CommonModel.doTrackEvent({
-    event_name: 'health_open',
-    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-  });
-
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
-
-  if (appInfo.trackEvents && appInfo.trackEvents.app_user_allow_notification) {
-    let result = await NotificationService.doCheckNotificationPermission();
-
-    if (result && !result.alert && !result.badge && !result.sound &&
-      (!appInfo.trackEvents || !appInfo.trackEvents.app_user_turn_off_notification)) {
-      appInfo.trackEvents = appInfo.trackEvents || {};
-      appInfo.trackEvents.app_user_turn_off_notification = true;
-      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-      await CommonModel.doTrackEvent({
-        event_name: 'health_user_turn_off_notification',
-        account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-      });
-    }
-  }
 
   if (!appInfo.trackEvents || !appInfo.trackEvents.app_download) {
     let appInfo = await doGetAppInformation();
@@ -230,33 +217,60 @@ const doOpenApp = async () => {
     appInfo.trackEvents.app_download = true;
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
     await CommonModel.doTrackEvent({
-      event_name: 'health_download',
+      event_name: 'health_plus_download',
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
     });
   }
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
-    // Intercom.registerIdentifiedUser({ userId: userInformation.bitmarkAccountNumber }).then(() => {
-    //   console.log('registerIdentifiedUser success =============================');
-    // }).catch(error => {
-    //   console.log('registerIdentifiedUser error :', error);
-    // });
+    Intercom.registerIdentifiedUser({ userId: userInformation.bitmarkAccountNumber }).then(() => {
+      console.log('registerIdentifiedUser success =============================');
+    }).catch(error => {
+      console.log('registerIdentifiedUser error :', error);
+    });
 
     if (!CommonModel.getFaceTouchSessionId()) {
       await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
     }
 
-    let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
-    let result = await NotificationModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
-    console.log('doRegisterJWT :', result);
-    // let jwt = result.jwt_token;
-    // result = await NotificationModel.doGrantingAccess(jwt);
-    // console.log('doGrantingAccess :', result);
-    // let token = result.id;
-    // result = await NotificationModel.doReceiveGrantingAccess(jwt, token);
-    // console.log('doReceiveGrantingAccess :', result);
-    // result = await NotificationModel.doGetAllGrantedAccess(jwt);
-    // console.log('doGetAllGrantedAccess :', result);
+    // let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
+    // let result = await NotificationModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+    // console.log('doRegisterJWT :', result);
+    // jwt = result.jwt_token;
+    // // let jwt = result.jwt_token;
+    // // result = await NotificationModel.doGrantingAccess(jwt);
+    // // console.log('doGrantingAccess :', result);
+    // // let token = result.id;
+    // // result = await NotificationModel.doReceiveGrantingAccess(jwt, token);
+    // // console.log('doReceiveGrantingAccess :', result);
+    // // result = await NotificationModel.doGetAllGrantedAccess(jwt);
+    // // console.log('doGetAllGrantedAccess :', result);
+
+    // console.log('Bearer ' + jwt);
+    // websocket =
+    //   // new WebSocket(config.mobile_server_url + '/ws');
+    //   new WebSocket(config.mobile_server_url + '/ws', [], {
+    //     headers: {
+    //       'Authorization': 'Bearer ' + jwt
+    //     }
+    //   });
+
+    // websocket.onopen = () => {
+    //   // connection opened
+    //   console.log('onopen ===='); // send a message
+    //   websocket.send
+    // };
+    // websocket.onmessage = (event) => {
+    //   console.log('onmessage :', event);
+    // };
+    // websocket.onerror = (e) => {
+    //   // an error occurred
+    //   console.log('error : ', e.message);
+    // };
+    // websocket.onclose = (e) => {
+    //   // connection closed
+    //   console.log('onclose :', e.code, e.reason);
+    // };
 
     if (!appInfo.lastTimeOpen) {
       let appInfo = await doGetAppInformation();
@@ -275,7 +289,7 @@ const doOpenApp = async () => {
         appInfo.trackEvents.health_user_open_app_two_time_in_a_week = true;
         await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
         await CommonModel.doTrackEvent({
-          event_name: 'health_user_open_app_two_time_in_a_week',
+          event_name: 'health_plus_user_open_app_two_time_in_a_week',
           account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
         });
       } else if (diffWeeks > 0) {
@@ -320,7 +334,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 
     await CommonModel.doTrackEvent({
-      event_name: 'health_user_first_time_issued_weekly_health_data',
+      event_name: 'health_plus_user_first_time_issued_weekly_health_data',
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
     });
   }
@@ -348,7 +362,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 
     await CommonModel.doTrackEvent({
-      event_name: 'health_user_first_time_issued_file',
+      event_name: 'health_plus_user_first_time_issued_file',
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
     });
   }
@@ -388,23 +402,10 @@ const doCheckFileToIssue = async (filePath) => {
   return await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
 };
 
-const doMarkRequestedNotification = async (result) => {
-  let appInfo = await doGetAppInformation();
-  appInfo = appInfo || {};
-
-  if (result && result.alert && result.badge && result.sound &&
-    (!appInfo.trackEvents || !appInfo.trackEvents.app_user_allow_notification)) {
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents.app_user_allow_notification = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-
-    userInformation = userInformation || (await UserModel.doTryGetCurrentUser());
-    await CommonModel.doTrackEvent({
-      event_name: 'health_user_allow_notification',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
-}
+const doGrantingAccess = async () => {
+  console.log('jwt :', jwt);
+  return NotificationModel.doGrantingAccess(jwt);
+};
 
 
 const DataProcessor = {
@@ -412,6 +413,7 @@ const DataProcessor = {
   doCreateAccount,
   doLogin,
   doLogout,
+  doDeleteAccount,
   doStartBackgroundProcess,
   doReloadUserData,
 
@@ -430,7 +432,7 @@ const DataProcessor = {
   getUserInformation,
   isAppLoadingData: () => isLoadingData,
 
-  doMarkRequestedNotification,
+  doGrantingAccess,
 };
 
 export { DataProcessor };
