@@ -64,99 +64,101 @@ export class AccountComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-          <ScrollView style={styles.bodyContent}>
-            <View style={styles.accountNumberArea}>
-              <View style={[styles.accountNumberTitleRow,]}>
-                <Text style={styles.accountNumberTitle} >Account</Text>
-                <TouchableOpacity onPress={Actions.pop}>
-                  <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
+          <View style={styles.bodyContent}>
+            <View style={[styles.accountNumberTitleRow,]}>
+              <Text style={styles.accountNumberTitle} >Account</Text>
+              <TouchableOpacity onPress={Actions.pop}>
+                <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView>
+              <View style={styles.accountNumberArea}>
+                <Text style={styles.accountNumberLabel}>Account number</Text>
+                <TouchableOpacity onPress={() => {
+                  Clipboard.setString(DataProcessor.getUserInformation().bitmarkAccountNumber);
+                  this.setState({ accountNumberCopyText: 'Account number copied!' });
+                  setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
+                }}>
+                  <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}</Text>
+                </TouchableOpacity>
+                <View style={styles.accountNumberValueBar}></View>
+                <View style={[styles.accountNumberCopiedArea, this.state.accountNumberCopyText ? {} : { backgroundColor: 'white' }]}>
+                  <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
+                </View>
+                <HyperLink
+                  onPress={(url) => Linking.openURL(url)}
+                  linkStyle={{ color: '#0060F2', }}
+                  linkText={() => 'This number is public'} >
+                  <Text style={styles.accountNumberDescription}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. {config.registry_server_url}. You can safely share it with others without compromising your security.</Text>
+                </HyperLink>
+
+                <TouchableOpacity style={styles.rowButton} onPress={() => {
+                  // Intercom.displayMessageComposer();
+                }}>
+                  <Text style={styles.rowButtonText}>Help and feedback</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
+                  <Text style={styles.rowButtonText}>Legal</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.accountNumberLabel}>Account number</Text>
-              <TouchableOpacity onPress={() => {
-                Clipboard.setString(DataProcessor.getUserInformation().bitmarkAccountNumber);
-                this.setState({ accountNumberCopyText: 'Account number copied!' });
-                setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
-              }}>
-                <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}</Text>
-              </TouchableOpacity>
-              <View style={styles.accountNumberValueBar}></View>
-              <View style={[styles.accountNumberCopiedArea, this.state.accountNumberCopyText ? {} : { backgroundColor: 'white' }]}>
-                <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
+
+              <View style={styles.securityArea}>
+                <Text style={styles.securityTitle} >Security</Text>
+                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase()}>
+                  <Text style={styles.rowButtonText}>Write Down Recovery Phrase</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
+                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
+                  AppProcessor.doLogout().then(() => {
+                    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+                  }).catch(error => {
+                    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
+                  })
+                }}> */}
+                  <Text style={styles.rowButtonText}>Log out</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
               </View>
-              <HyperLink
-                onPress={(url) => Linking.openURL(url)}
-                linkStyle={{ color: '#0060F2', }}
-                linkText={() => 'This number is public'} >
-                <Text style={styles.accountNumberDescription}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. {config.registry_server_url}. You can safely share it with others without compromising your security.</Text>
-              </HyperLink>
 
-              <TouchableOpacity style={styles.rowButton} onPress={() => {
-                // Intercom.displayMessageComposer();
-              }}>
-                <Text style={styles.rowButtonText}>Help and feedback</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
-                <Text style={styles.rowButtonText}>Legal</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
+              <View style={styles.accessArea}>
+                <Text style={styles.accessTitle}>Access list</Text>
+              </View>
+              <View style={styles.aboutArea}>
+                <Text style={styles.aboutTitle}>About</Text>
+                <TouchableOpacity style={styles.rowButton} onPress={this.rateApp.bind(this)}>
+                  <Text style={styles.rowButtonText}>App Store Rating & Review</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={() => Share.share({ title: 'Bitmark', message: '', url: config.appLink })}>
+                  <Text style={styles.rowButtonText}>Share This App</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={this.requestSendFeedback.bind(this)}>
+                  <Text style={styles.rowButtonText}>Send Feedback</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.aboutArea}>
+                <Text style={styles.powerTitle}>POWERED BY</Text>
+                <TouchableOpacity style={styles.rowButton} onPress={() => Linking.openURL(config.bitmark_web_site)}>
+                  <Text style={styles.rowButtonText}>Bitmark Inc.</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} disabled={true}>
+                  <Text style={styles.rowButtonText}>Version</Text>
+                  <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} onPress={Actions.deletingAccount}>
+                  <Text style={[styles.rowButtonText, { color: '#FF4444' }]}>Delete your account</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+              </View>
 
-            <View style={styles.securityArea}>
-              <Text style={styles.securityTitle} >Security</Text>
-              <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase()}>
-                <Text style={styles.rowButtonText}>Write Down Recovery Phrase</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-              {/* <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
-              <TouchableOpacity style={styles.rowButton} onPress={() => {
-                AppProcessor.doLogout().then(() => {
-                  EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
-                }).catch(error => {
-                  EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
-                })
-              }}>
-                <Text style={styles.rowButtonText}>Log out</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.accessArea}>
-              <Text style={styles.accessTitle}>Access list</Text>
-            </View>
-            <View style={styles.aboutArea}>
-              <Text style={styles.aboutTitle}>About</Text>
-              <TouchableOpacity style={styles.rowButton} onPress={this.rateApp.bind(this)}>
-                <Text style={styles.rowButtonText}>App Store Rating & Review</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.rowButton} onPress={() => Share.share({ title: 'Bitmark', message: '', url: config.appLink })}>
-                <Text style={styles.rowButtonText}>Share This App</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.rowButton} onPress={this.requestSendFeedback.bind(this)}>
-                <Text style={styles.rowButtonText}>Send Feedback</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.aboutArea}>
-              <Text style={styles.powerTitle}>POWERED BY</Text>
-              <TouchableOpacity style={styles.rowButton} onPress={() => Linking.openURL(config.bitmark_web_site)}>
-                <Text style={styles.rowButtonText}>Bitmark Inc.</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.rowButton} disabled={true}>
-                <Text style={styles.rowButtonText}>Version</Text>
-                <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} onPress={Actions.deletingAccount}>
-                <Text style={[styles.rowButtonText, { color: '#FF4444' }]}>Delete your account</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
-
-          </ScrollView>
+            </ScrollView>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -189,6 +191,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: convertWidth(20),
+    paddingBottom: 0,
   },
   accountNumberTitle: {
     fontFamily: 'Avenir Black',
@@ -204,7 +208,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Medium',
     fontSize: 16,
     color: '#6D6D72',
-    marginTop: 21,
   },
   accountNumberValue: {
     fontFamily: 'Andale Mono',

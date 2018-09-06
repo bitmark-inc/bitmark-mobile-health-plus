@@ -13,6 +13,7 @@ import { BitmarkLegalComponent } from './../../commons';
 import { BitmarkDetailComponent } from './bitmark-detail.component';
 import { DeletingAccountComponent } from './deleting-account.component';
 import { GrantingAccessComponent } from './granting-access.component';
+import { OtherAccountsComponent } from './other-account.component';
 
 
 // bitmarkHealthData
@@ -37,6 +38,7 @@ export class UserRouterComponent extends Component {
           <Scene key="bitmarkDetail" component={BitmarkDetailComponent} />
           <Scene key="deletingAccount" component={DeletingAccountComponent} />
           <Scene key="grantingAccess" component={GrantingAccessComponent} />
+          <Scene key="otherAccounts" component={OtherAccountsComponent} />
 
         </Stack>
       </Router>

@@ -175,178 +175,173 @@ export class AccountPhraseComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-          <ScrollView style={styles.bodyContent} contentContainerStyle={{ flex: 1 }}>
-            {this.state.step === STEPS.warning && <View style={styles.content}>
-              <View style={styles.titleArea}>
-                <Text style={styles.titleText}>{'Recovery Phrase'.toUpperCase()}</Text>
-              </View>
-              <View style={styles.warningIconArea}>
-                <Image style={styles.warningIcon} source={require('./../../../assets/imgs/warning_icon.png')} />
-              </View>
-              {!this.props.isLogout && <Text style={styles.warningMessage}>
-                Your recovery phrase is the only way to restore your Bitmark account if your phone is lost, stolen, broken, or upgraded.{'\n\n'}
-                We will show you a list of words to write down on a piece of paper and keep safe.{'\n\n'}
-                Make sure you are in a private location before writing down your recovery phrase.
+          <View style={styles.bodyContent}>
+            <View style={styles.titleArea}>
+              <Text style={styles.titleText}>{(this.props.isLogout ? 'Log out' : (this.state.step === STEPS.testing ? 'TEST Recovery Phrase' : 'Recovery phrase')).toUpperCase()}</Text>
+              <TouchableOpacity onPress={Actions.pop}>
+                {this.state.step !== STEPS.testing && <Image style={styles.titleBackIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />}
+                {this.state.step === STEPS.testing && <Text style={styles.titleCancelText}>Cancel</Text>}
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView contentContainerStyle={{ flex: 1 }}>
+              {this.state.step === STEPS.warning && <View style={styles.content}>
+                <View style={styles.warningIconArea}>
+                  <Image style={styles.warningIcon} source={require('./../../../assets/imgs/warning_icon.png')} />
+                </View>
+                {!this.props.isLogout && <Text style={styles.warningMessage}>
+                  Your recovery phrase is the only way to restore your Bitmark account if your phone is lost, stolen, broken, or upgraded.{'\n\n'}
+                  We will show you a list of words to write down on a piece of paper and keep safe.{'\n\n'}
+                  Make sure you are in a private location before writing down your recovery phrase.
               </Text>}
-              {this.props.isLogout && <Text style={styles.warningMessage}>
-                Your recovery phrase is the only way to access your Bitmark account after signing out. If you have not already written down your recovery phrase, you must do so now or you will be permanently lose access to your account and lose ownership of all your digital properties. {'\n\n'}
-                Your recovery phrase is a list of 24 words to write on a piece of paper and keep safe. Make sure you are in a private location when you write it down.{'\n\n'}
-                This will completely remove access to your account on this device. Regular data bitmarking and data donations will be paused until you sign back in with your recovery phrase.
+                {this.props.isLogout && <Text style={styles.warningMessage}>
+                  Your recovery phrase is the only way to access your Bitmark account after signing out. If you have not already written down your recovery phrase, you must do so now or you will be permanently lose access to your account and lose ownership of all your digital properties. {'\n\n'}
+                  Your recovery phrase is a list of 24 words to write on a piece of paper and keep safe. Make sure you are in a private location when you write it down.{'\n\n'}
+                  This will completely remove access to your account on this device. Regular data bitmarking and data donations will be paused until you sign back in with your recovery phrase.
               </Text>}
-            </View>}
+              </View>}
 
-            {this.state.step === STEPS.phrase24Word && <View style={styles.content}>
-              <View style={styles.titleArea}>
-                <Text style={styles.titleText}>{'Recovery Phrase SIGN-IN'.toUpperCase()}</Text>
-                <TouchableOpacity onPress={Actions.pop}>
-                  <Image style={styles.titleBackIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.phrase24WordMessage}>
-                Please write down your recovery phrase in the exact sequence below:
+              {this.state.step === STEPS.phrase24Word && <View style={styles.content}>
+                <Text style={styles.phrase24WordMessage}>
+                  Please write down your recovery phrase in the exact sequence below:
               </Text>
-              <View style={styles.phrase24WordsArea}>
-                <FlatList data={this.state.smallerList}
-                  keyExtractor={(item, index) => index + ''}
-                  scrollEnabled={false}
-                  extraData={this.state}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <View style={styles.recoveryPhraseSet}>
-                        <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                        <Text style={styles.recoveryPhraseWord}>{item.word}</Text>
-                      </View>
-                    )
-                  }}
-                />
-                <FlatList data={this.state.biggerList}
-                  keyExtractor={(item, index) => index + ''}
-                  style={{ marginLeft: 9 }}
-                  scrollEnabled={false}
-                  extraData={this.state}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <View style={styles.recoveryPhraseSet}>
-                        <Text style={styles.recoveryPhraseIndex}>{index + 13}.</Text>
-                        <Text style={styles.recoveryPhraseWord}>{item.word}</Text>
-                      </View>
-                    )
-                  }}
-                />
-              </View>
+                <View style={styles.phrase24WordsArea}>
+                  <FlatList data={this.state.smallerList}
+                    keyExtractor={(item, index) => index + ''}
+                    scrollEnabled={false}
+                    extraData={this.state}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <View style={styles.recoveryPhraseSet}>
+                          <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
+                          <Text style={styles.recoveryPhraseWord}>{item.word}</Text>
+                        </View>
+                      )
+                    }}
+                  />
+                  <FlatList data={this.state.biggerList}
+                    keyExtractor={(item, index) => index + ''}
+                    style={{ marginLeft: 9 }}
+                    scrollEnabled={false}
+                    extraData={this.state}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <View style={styles.recoveryPhraseSet}>
+                          <Text style={styles.recoveryPhraseIndex}>{index + 13}.</Text>
+                          <Text style={styles.recoveryPhraseWord}>{item.word}</Text>
+                        </View>
+                      )
+                    }}
+                  />
+                </View>
 
-            </View>}
+              </View>}
 
-            {this.state.step === STEPS.testing && <View style={styles.content}>
-              <View style={styles.titleArea}>
-                <Text style={styles.titleText}>{'TEST Recovery Phrase'.toUpperCase()}</Text>
-                <TouchableOpacity onPress={Actions.pop}>
-                  <Text style={styles.titleCancelText}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.phrase24WordMessage}>
-                Please write down your recovery phrase in the exact sequence below:
-              </Text>
-              <View style={styles.phrase24WordsArea}>
-                <FlatList data={this.state.smallerList}
+              {this.state.step === STEPS.testing && <View style={styles.content}>
+                <Text style={styles.phrase24WordMessage}>
+                  Tap the words to put them in the correct order for your recovery phrase:
+                </Text>
+                <View style={styles.phrase24WordsArea}>
+                  <FlatList data={this.state.smallerList}
+                    keyExtractor={(item, index) => index + ''}
+                    scrollEnabled={false}
+                    extraData={this.state}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <TouchableOpacity style={[styles.recoveryPhraseSet, {
+                          borderWidth: this.state.selectingIndex === index ? 1 : 0,
+                          borderColor: '#FF4444'
+                        }]}
+                          disabled={item.selected}
+                          onPress={() => this.setState({ selectingIndex: index })}
+                        >
+                          <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
+                          <Text style={[styles.recoveryPhraseWord, {
+                            color: item.selected ? '#828282' : '#FF4444',
+                            backgroundColor: item.word ? 'white' : '#F5F5F5'
+                          }]}>{item.word}</Text>
+                        </TouchableOpacity>
+                      )
+                    }}
+                  />
+                  <FlatList data={this.state.biggerList}
+                    keyExtractor={(item, index) => index + ''}
+                    style={{ marginLeft: 9 }}
+                    scrollEnabled={false}
+                    extraData={this.state}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <TouchableOpacity style={[styles.recoveryPhraseSet, {
+                          borderWidth: this.state.selectingIndex === (index + 12) ? 1 : 0,
+                          borderColor: '#FF4444'
+                        }]}
+                          disabled={item.selected}
+                          onPress={() => this.setState({ selectingIndex: index + 12 })}
+                        >
+                          <Text style={styles.recoveryPhraseIndex}>{index + 13}.</Text>
+                          <Text style={[styles.recoveryPhraseWord, {
+                            color: item.selected ? '#828282' : '#FF4444',
+                            backgroundColor: item.word ? 'white' : '#F5F5F5'
+                          }]}>{item.word}</Text>
+                        </TouchableOpacity>
+                      )
+                    }}
+                  />
+                </View>
+
+                {this.state.testingResult === null && <FlatList data={this.state.randomWords}
                   keyExtractor={(item, index) => index + ''}
                   scrollEnabled={false}
+                  horizontal={false}
+                  numColumns={4}
+                  contentContainerStyle={{ flexDirection: 'column' }}
                   extraData={this.state}
-                  renderItem={({ item, index }) => {
+                  renderItem={({ item }) => {
                     return (
-                      <TouchableOpacity style={[styles.recoveryPhraseSet, {
-                        borderWidth: this.state.selectingIndex === index ? 1 : 0,
-                        borderColor: '#FF4444'
+                      <TouchableOpacity style={[styles.recoveryPhraseChooseButton, {
+                        borderColor: item.selected ? 'white' : '#FF4444'
                       }]}
                         disabled={item.selected}
-                        onPress={() => this.setState({ selectingIndex: index })}
-                      >
-                        <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                        <Text style={[styles.recoveryPhraseWord, {
-                          color: item.selected ? '#828282' : '#FF4444',
-                          backgroundColor: item.word ? 'white' : '#F5F5F5'
+                        onPress={() => this.selectRandomWord(item)}>
+                        <Text style={[styles.recoveryPhraseChooseButtonText, {
+                          color: item.selected ? 'white' : 'black'
                         }]}>{item.word}</Text>
                       </TouchableOpacity>
                     )
                   }}
-                />
-                <FlatList data={this.state.biggerList}
-                  keyExtractor={(item, index) => index + ''}
-                  style={{ marginLeft: 9 }}
-                  scrollEnabled={false}
-                  extraData={this.state}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <TouchableOpacity style={[styles.recoveryPhraseSet, {
-                        borderWidth: this.state.selectingIndex === (index + 12) ? 1 : 0,
-                        borderColor: '#FF4444'
-                      }]}
-                        disabled={item.selected}
-                        onPress={() => this.setState({ selectingIndex: index + 12 })}
-                      >
-                        <Text style={styles.recoveryPhraseIndex}>{index + 13}.</Text>
-                        <Text style={[styles.recoveryPhraseWord, {
-                          color: item.selected ? '#828282' : '#FF4444',
-                          backgroundColor: item.word ? 'white' : '#F5F5F5'
-                        }]}>{item.word}</Text>
-                      </TouchableOpacity>
-                    )
-                  }}
-                />
-              </View>
-
-              {this.state.testingResult === null && <FlatList data={this.state.randomWords}
-                keyExtractor={(item, index) => index + ''}
-                scrollEnabled={false}
-                horizontal={false}
-                numColumns={4}
-                contentContainerStyle={{ flexDirection: 'column' }}
-                extraData={this.state}
-                renderItem={({ item }) => {
-                  return (
-                    <TouchableOpacity style={[styles.recoveryPhraseChooseButton, {
-                      borderColor: item.selected ? 'white' : '#FF4444'
-                    }]}
-                      disabled={item.selected}
-                      onPress={() => this.selectRandomWord(item)}>
-                      <Text style={[styles.recoveryPhraseChooseButtonText, {
-                        color: item.selected ? 'white' : 'black'
-                      }]}>{item.word}</Text>
-                    </TouchableOpacity>
-                  )
-                }}
-              />}
-              {this.state.testingResult === false && <View style={styles.testingResultArea}>
-                <Text style={styles.errorTitle}>Error!</Text>
-                <Text style={styles.errorMessage}>Please try again!</Text>
+                />}
+                {this.state.testingResult === false && <View style={styles.testingResultArea}>
+                  <Text style={styles.errorTitle}>Error!</Text>
+                  <Text style={styles.errorMessage}>Please try again!</Text>
+                </View>}
+                {this.state.testingResult === true && <View style={styles.testingResultArea}>
+                  <Text style={styles.successTitle}>Success!</Text>
+                  <Text style={styles.successMessage}>Keep your written copy private in a secure and safe location. </Text>
+                </View>}
               </View>}
-              {this.state.testingResult === true && <View style={styles.testingResultArea}>
-                <Text style={styles.successTitle}>Success!</Text>
-                <Text style={styles.successMessage}>Keep your written copy private in a secure and safe location. </Text>
+
+              {this.state.step === STEPS.warning && <View style={styles.bottomButtonArea}>
+                <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhrase24Words.bind(this)}>
+                  <Text style={styles.bottomButtonText}>SUBMIT</Text>
+                </TouchableOpacity>
               </View>}
-            </View>}
 
-            {this.state.step === STEPS.warning && <View style={styles.bottomButtonArea}>
-              <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhrase24Words.bind(this)}>
-                <Text style={styles.bottomButtonText}>SUBMIT</Text>
-              </TouchableOpacity>
-            </View>}
+              {this.state.step === STEPS.phrase24Word && <View style={styles.bottomButtonArea}>
+                {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={this.goToTest.bind(this)}>
+                  <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'Test recover phrase'.toUpperCase()}</Text>
+                </TouchableOpacity>}
+                <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)() : Actions.pop()}>
+                  <Text style={[styles.bottomButtonText,]}>{'Done'.toUpperCase()}</Text>
+                </TouchableOpacity>
+              </View>}
 
-            {this.state.step === STEPS.phrase24Word && <View style={styles.bottomButtonArea}>
-              {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={this.goToTest.bind(this)}>
-                <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'Test recover phrase'.toUpperCase()}</Text>
-              </TouchableOpacity>}
-              <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)() : Actions.pop()}>
-                <Text style={[styles.bottomButtonText,]}>{'Done'.toUpperCase()}</Text>
-              </TouchableOpacity>
-            </View>}
-
-            {this.state.step === STEPS.testing && (this.state.testingResult !== null) && <View style={styles.bottomButtonArea}>
-              <TouchableOpacity style={styles.bottomButton} onPress={this.state.testingResult ? (this.props.isLogout ? this.doLogout.bind(this) : Actions.pop) : this.resetTest.bind(this)}>
-                <Text style={styles.bottomButtonText}>{(this.state.testingResult ? (this.props.isLogout ? 'log out' : 'done') : 'retry').toUpperCase()}</Text>
-              </TouchableOpacity>
-            </View>}
-          </ScrollView>
+              {this.state.step === STEPS.testing && (this.state.testingResult !== null) && <View style={styles.bottomButtonArea}>
+                <TouchableOpacity style={styles.bottomButton} onPress={this.state.testingResult ? (this.props.isLogout ? this.doLogout.bind(this) : Actions.pop) : this.resetTest.bind(this)}>
+                  <Text style={styles.bottomButtonText}>{(this.state.testingResult ? (this.props.isLogout ? 'log out' : 'done') : 'retry').toUpperCase()}</Text>
+                </TouchableOpacity>
+              </View>}
+            </ScrollView>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -380,6 +375,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    padding: convertWidth(20),
+    paddingBottom: 0,
   },
   titleText: {
     fontFamily: 'Avenir Black',
