@@ -1,13 +1,17 @@
 package server
 
 import (
+	"bytes"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/websocket"
+	jsoniter "github.com/json-iterator/go"
 	log "github.com/sirupsen/logrus"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -29,12 +33,25 @@ func (s *Server) ServeWs(c *gin.Context) {
 		return nil
 	})
 
-	log.Debugf("Subscribe to redis with account %s, id: %s", account, id)
+	log.Debugf("Subscribe to redis with account %s, id: %s", account, jwtid)
 	if err := s.redisPubSubConn.Subscribe("id-"+jwtid, "ac-"+account); err != nil {
 		c.Error(err)
 		ws.Close()
 	}
 	s.wsConnStore.NewConn(jwtid, account, ws)
+
+	buf := &bytes.Buffer{}
+	enc := json.NewEncoder(buf)
+	if err := enc.Encode(map[string]string{
+		"message": "welcome",
+		"jwtid":   jwtid,
+		"account": account,
+	}); err != nil {
+		c.Error(err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	ws.WriteMessage(websocket.TextMessage, buf.Bytes())
 }
 
 func (s *Server) ProcessWSMessage() {

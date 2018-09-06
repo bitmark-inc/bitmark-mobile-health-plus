@@ -87,7 +87,7 @@ func (s *Server) Run(addr string) error {
 
 	api.POST("/auth", s.RequestJWT)
 
-	r.GET("/ws", s.ServeWs)
+	r.Use(s.authenticateJWT()).GET("/ws", s.ServeWs)
 
 	srv := &http.Server{
 		Addr:    addr,
