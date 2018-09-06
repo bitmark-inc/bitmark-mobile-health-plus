@@ -1,17 +1,39 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
+  Image, View, TouchableOpacity, Text, SafeAreaView, FlatList,
 } from 'react-native';
 
-import { convertWidth } from './../../utils';
+import { convertWidth, runPromiseWithoutError } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
+import { DataProcessor, AppProcessor } from '../../processors';
+import { EventEmitterService } from '../../services';
 
 export class OtherAccountsComponent extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      accessAccounts: [],
+    }
+    runPromiseWithoutError(DataProcessor.doGetAccountAccesses()).then(accessAccounts => {
+      // accessAccounts = [{
+      //   grantor: DataProcessor.getUserInformation().bitmarkAccountNumber
+      // }];
+      this.setState({ accessAccounts });
+    });
+  }
+
+  selectAccount(accountNumber) {
+    AppProcessor.doSelectAccountAccess(accountNumber).then(result => {
+      if (result) {
+        Actions.reset('user');
+      }
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
   }
 
   render() {
@@ -25,9 +47,21 @@ export class OtherAccountsComponent extends Component {
                 <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
               </TouchableOpacity>
             </View>
-            <ScrollView contentContainerStyle={styles.content}>
-
-            </ScrollView>
+            <View style={styles.content}>
+              <FlatList
+                keyExtractor={(item, index) => index + ''}
+                data={this.state.accessAccounts}
+                extraData={this.state}
+                renderItem={({ item }) => {
+                  return (<TouchableOpacity style={styles.accountRow} onPress={() => this.selectAccount.bind(this)(item.grantor)}>
+                    <Text style={styles.accountNumber}>
+                      {'[' + item.grantor.substring(0, 4) + '...' + item.grantor.substring(item.grantor.length - 5, item.grantor.length) + ']'}
+                    </Text>
+                    <Image style={styles.accountRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />
+                  </TouchableOpacity>);
+                }}
+              />
+            </View>
             <View style={styles.bottomButtonArea} >
               <TouchableOpacity style={styles.bottomButton} >
                 <Text style={styles.bottomButtonText}>{'scan qr code'.toUpperCase()}</Text>
@@ -77,6 +111,23 @@ const styles = StyleSheet.create({
   closeIcon: {
     width: convertWidth(40),
     height: convertWidth(40),
+    resizeMode: 'contain',
+  },
+
+  accountRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  accountNumber: {
+    fontFamily: 'Avenir Book',
+    fontSize: 16,
+    fontWeight: '300',
+    color: '#464646',
+  },
+  accountRowIcon: {
+    width: convertWidth(8),
+    height: 14 * convertWidth(8) / 8,
     resizeMode: 'contain',
   },
 

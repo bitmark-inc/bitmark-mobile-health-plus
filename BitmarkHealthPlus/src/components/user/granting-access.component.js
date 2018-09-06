@@ -40,9 +40,12 @@ export class GrantingAccessComponent extends Component {
 
   sendEmail() {
     Mailer.mail({
-      subject: 'Suggestion for Bitmark iOS',
-      recipients: ['support@bitmark.com'],
-      body: '<a>https://www.24h.com.vn</a> </br> Health+ app version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
+      subject: 'Granting access',
+      recipients: [],
+      body: `
+        <a href="healthplush://${this.state.token}">Click to receive the granting!</a>
+        </br>
+        Health+ app version: ${DataProcessor.getApplicationVersion()} (${DataProcessor.getApplicationBuildNumber()})`,
       isHTML: true,
     }, (error) => {
       if (error) {
@@ -67,10 +70,11 @@ export class GrantingAccessComponent extends Component {
             <View style={styles.content}>
               {!!this.state.token && <QRCode
                 value={this.state.token}
-                size={300}
+                size={convertWidth(270)}
                 bgColor='black'
                 fgColor='white' />}
               <Text style={styles.message}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.</Text>
+              <View></View>
             </View>
           </View>
           <TouchableOpacity style={styles.bottomButton} onPress={this.sendEmail.bind(this)}>
@@ -121,13 +125,11 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     marginTop: 29,
-    paddingLeft: convertWidth(20),
-    paddingRight: convertWidth(20),
+    padding: convertWidth(20),
   },
   message: {
-    marginTop: 20,
     fontFamily: 'Avenir Light',
     fontWeight: '300',
     fontSize: 12,

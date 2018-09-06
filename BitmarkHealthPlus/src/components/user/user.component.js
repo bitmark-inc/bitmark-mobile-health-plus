@@ -21,13 +21,14 @@ export class UserComponent extends Component {
 
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_OTHER_USER_DATA_DONATION_INFORMATION, null, ComponentName);
 
     this.state = {
       numberHealthDataRecords: 0,
       numberHealthRecords: 0,
-      displayAccount: true,
+      isDisplayingAccountNumber: true,
     }
-    runPromiseWithoutError(DataProcessor.doGetDonationInformation()).then(donationInformation => {
+    runPromiseWithoutError(DataProcessor.doGetDonationInformation(DataProcessor.getAccountAccessSelected())).then(donationInformation => {
       if (donationInformation && donationInformation.error) {
         // TODO
         return;
@@ -44,9 +45,10 @@ export class UserComponent extends Component {
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_OTHER_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
   }
 
-  handerDonationInformationChange(donationInformation) {
+  handerDonationInformationChange({ donationInformation }) {
     let numberHealthDataRecords = 0;
     let numberHealthRecords = 0;
     donationInformation.completedTasks.forEach(item => {
@@ -93,7 +95,7 @@ export class UserComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-          <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ displayAccount: true })} activeOpacity={1}>
+          <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
             <View style={styles.dataArea}>
               <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthDataRecords === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
                 <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataRecords}</Text> Weeks of Health Data{this.state.numberHealthDataRecords > 1 ? 's' : ''}</Text>
@@ -103,20 +105,20 @@ export class UserComponent extends Component {
               <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthRecords === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
                 <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthRecords}</Text> Health Record{this.state.numberHealthRecords > 1 ? 's' : ''}</Text>
               </TouchableOpacity>
-              {this.state.displayAccount && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
+              {this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
                 <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
                 <Text style={styles.addHealthRecordButtonText} > {'Add records'.toUpperCase()}</Text>
               </TouchableOpacity>}
             </View>
           </TouchableOpacity>
-          <View style={styles.accountArea}>
-            <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ displayAccount: !this.state.displayAccount })}>
+          {!DataProcessor.getAccountAccessSelected() && <View style={styles.accountArea}>
+            <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ isDisplayingAccountNumber: !this.state.isDisplayingAccountNumber })}>
               <Text style={styles.accountButtonText}>
-                {this.state.displayAccount ? ('[' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(0, 4) + '...' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(DataProcessor.getUserInformation().bitmarkAccountNumber.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']') : ''}
+                {this.state.isDisplayingAccountNumber ? ('[' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(0, 4) + '...' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(DataProcessor.getUserInformation().bitmarkAccountNumber.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']') : ''}
               </Text>
             </TouchableOpacity>
-          </View>
-          {!this.state.displayAccount && <View style={styles.overlapButtonsArea}>
+          </View>}
+          {!this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <View style={styles.overlapButtonsArea}>
             <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444' }]} onPress={Actions.account}>
               <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>ACCOUNT SETTING</Text>
             </TouchableOpacity>

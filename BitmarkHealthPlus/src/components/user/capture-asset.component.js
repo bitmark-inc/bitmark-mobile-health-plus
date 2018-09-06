@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Alert,
-  Linking,
   Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 import randomString from "random-string";
@@ -11,7 +10,7 @@ import randomString from "random-string";
 import { convertWidth, FileUtil } from '../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
-import { AppProcessor } from '../../processors';
+import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
 
@@ -26,14 +25,16 @@ export class CaptureAssetComponent extends Component {
 
   issueFile() {
     let filePath = this.props.filePath;
-    AppProcessor.doCheckFileToIssue(filePath).then(({ asset, bitmark }) => {
+    AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
       if (asset && asset.name) {
 
-        Alert.alert('', 'This data has registered before, please select another data to register again. You also can view the public information of the data registration.', [{
+        let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
+          ? 'The image has already issued by you.'
+          : 'The image has already issued by other account.';
+        Alert.alert('', message, [{
           text: 'Cancel', style: 'cancel'
         }, {
-          text: 'View',
-          onPress: () => Linking.openURL(config.registry_server_url + `/bitmark/${bitmark.id}`)
+          text: 'OK',
         }]);
       } else {
         // Do issue

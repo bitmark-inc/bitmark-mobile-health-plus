@@ -14,41 +14,72 @@ import { DonationService } from '../services/donation-service';
 import { config } from '../configs';
 
 let userInformation = {};
+let accountAccessSelected = null;
 let jwt;
 let websocket;
 let isLoadingData = false;
 // ================================================================================================================================================
-const doCheckNewDonationInformation = async (donationInformation, isLoadingAllUserData) => {
+const doCheckNewDonationInformation = async (donationInformation, bitmarkAccountNumber) => {
   if (donationInformation) {
-    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
-    EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, donationInformation);
-    if (!isLoadingAllUserData) {
-      await doGenerateDisplayedData();
+    if (!bitmarkAccountNumber || bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, donationInformation);
+      EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, { donationInformation });
+    } else {
+      let otherUserDataDonationInformation = await CommonModel.doGetLocalData(CommonModel.KEYS.OTHER_USER_DATA_DONATION_INFORMATION);
+      otherUserDataDonationInformation = otherUserDataDonationInformation || {};
+      otherUserDataDonationInformation[bitmarkAccountNumber] = donationInformation;
+      await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, otherUserDataDonationInformation);
+      EventEmitterService.emit(EventEmitterService.events.CHANGE_OTHER_USER_DATA_DONATION_INFORMATION, { donationInformation, bitmarkAccountNumber });
     }
   }
 };
-// ================================================================================================================================================
-let queueGetDonationInformation = [];
-const runGetDonationInformationInBackground = () => {
+let queueGetDonationInformation = {};
+const runGetUserDonationInformationInBackground = (bitmarkAccountNumber) => {
+  bitmarkAccountNumber = bitmarkAccountNumber | userInformation.bitmarkAccountNumber;
   return new Promise((resolve) => {
-    queueGetDonationInformation.push(resolve);
-    if (queueGetDonationInformation.length > 1) {
+    queueGetDonationInformation[bitmarkAccountNumber] = queueGetDonationInformation[bitmarkAccountNumber] || {};
+    queueGetDonationInformation[bitmarkAccountNumber].push(resolve);
+    if (queueGetDonationInformation[bitmarkAccountNumber].length > 1) {
       return;
     }
-    DonationService.doGetUserInformation(userInformation.bitmarkAccountNumber).then(donationInformation => {
-      console.log('runOnBackground  runGetDonationInformationInBackground success');
-      queueGetDonationInformation.forEach(queueResolve => queueResolve(donationInformation));
-      queueGetDonationInformation = [];
+    DonationService.doGetUserInformation(bitmarkAccountNumber).then(donationInformation => {
+      queueGetDonationInformation[bitmarkAccountNumber].forEach(queueResolve => queueResolve(donationInformation));
+      queueGetDonationInformation[bitmarkAccountNumber] = [];
+      doCheckNewDonationInformation(donationInformation, bitmarkAccountNumber);
     }).catch(error => {
-      queueGetDonationInformation.forEach(queueResolve => queueResolve());
-      queueGetDonationInformation = [];
-      console.log('runOnBackground  runGetDonationInformationInBackground error :', error);
+      queueGetDonationInformation[bitmarkAccountNumber].forEach(queueResolve => queueResolve());
+      queueGetDonationInformation[bitmarkAccountNumber] = [];
+      console.log('runOnBackground  runGetUserDonationInformationInBackground error :', error);
     });
   });
 };
 
-// ================================================================================================================================================
-// special process
+let queueGetAccountAccesses = [];
+const doCheckNewAccesses = async (accesses) => {
+  if (accesses) {
+    await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
+    EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, accesses);
+  }
+};
+const runGetAccountAccessesInBackground = () => {
+  return new Promise((resolve) => {
+    queueGetAccountAccesses = queueGetAccountAccesses || {};
+    queueGetAccountAccesses.push(resolve);
+    if (queueGetAccountAccesses.length > 1) {
+      return;
+    }
+    NotificationModel.doGetAllGrantedAccess().then(accesses => {
+      queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
+      queueGetAccountAccesses = [];
+      doCheckNewAccesses(accesses);
+    }).catch(error => {
+      queueGetAccountAccesses.forEach(queueResolve => queueResolve());
+      queueGetAccountAccesses = [];
+      console.log('runOnBackground  runGetAccountAccessesInBackground error :', error);
+    });
+  });
+};
+
 const runOnBackground = async () => {
   console.log('runOnBackground =====');
   let userInfo = await UserModel.doTryGetCurrentUser();
@@ -57,17 +88,20 @@ const runOnBackground = async () => {
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);
   }
   if (userInformation && userInformation.bitmarkAccountNumber) {
-    let donationInformation = await runGetDonationInformationInBackground();
+    // TODO
+    // await runGetAccountAccessesInBackground();
+    let donationInformation = await runGetUserDonationInformationInBackground();
     if (donationInformation && donationInformation.bitmarkHealthDataTask && donationInformation.bitmarkHealthDataTask.list && donationInformation.bitmarkHealthDataTask.list.length > 0) {
       Actions.bitmarkHealthData({ list: donationInformation.bitmarkHealthDataTask.list });
     }
-    await doCheckNewDonationInformation(donationInformation, true);
-    await doGenerateDisplayedData();
+    if (accountAccessSelected) {
+      await runGetUserDonationInformationInBackground(accountAccessSelected);
+    }
     console.log('runOnBackground done ====================================', donationInformation);
     return donationInformation;
   }
 };
-
+// ================================================================================================================================================
 const doReloadUserData = async () => {
   isLoadingData = true;
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
@@ -140,8 +174,7 @@ const doCreateAccount = async (touchFaceIdSession) => {
 
   signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   let donationInformation = await DonationModel.doActiveBitmarkHealthData(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, moment().toDate());
-  await doCheckNewDonationInformation(donationInformation, true);
-  await doGenerateDisplayedData();
+  await doCheckNewDonationInformation(donationInformation);
   await CommonModel.doTrackEvent({
     event_name: 'health_plus_create_new_account',
     account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
@@ -155,8 +188,7 @@ const doLogin = async (touchFaceIdSession) => {
   await checkAppNeedResetLocalData();
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   let donationInformation = await DonationModel.doActiveBitmarkHealthData(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature, moment().toDate());
-  await doCheckNewDonationInformation(donationInformation, true);
-  await doGenerateDisplayedData();
+  await doCheckNewDonationInformation(donationInformation);
   return userInformation;
 };
 
@@ -172,8 +204,8 @@ const doLogout = async () => {
 };
 
 const doDeleteAccount = async (touchFaceIdSession) => {
+  // await NotificationModel.doDeleteAccount(jwt);
   // let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  // await NotificationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   // await DonationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await AccountModel.doLogout();
   await UserModel.doRemoveUserInfo();
@@ -233,18 +265,9 @@ const doOpenApp = async () => {
       await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
     }
 
-    // let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
-    // let result = await NotificationModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
-    // console.log('doRegisterJWT :', result);
-    // jwt = result.jwt_token;
-    // // let jwt = result.jwt_token;
-    // // result = await NotificationModel.doGrantingAccess(jwt);
-    // // console.log('doGrantingAccess :', result);
-    // // let token = result.id;
-    // // result = await NotificationModel.doReceiveGrantingAccess(jwt, token);
-    // // console.log('doReceiveGrantingAccess :', result);
-    // // result = await NotificationModel.doGetAllGrantedAccess(jwt);
-    // // console.log('doGetAllGrantedAccess :', result);
+    let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
+    let result = await NotificationModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+    jwt = result.jwt_token;
 
     // console.log('Bearer ' + jwt);
     // websocket =
@@ -381,30 +404,70 @@ const getApplicationBuildNumber = () => {
   return DeviceInfo.getBuildNumber();
 };
 
-const doGetDonationInformation = () => {
+const doGetDonationInformation = (bitmarkAccountNumber) => {
   return new Promise((resolve) => {
-    CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION).then(resolve).catch((error => {
-      console.log('doGetDonationInformation error:', error);
-      resolve();
-    }));
+    if (!bitmarkAccountNumber || bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
+      CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION).then(resolve).catch((error => {
+        console.log('doGetDonationInformation error:', error);
+        resolve();
+      }));
+    } else {
+      CommonModel.doGetLocalData(CommonModel.KEYS.OTHER_USER_DATA_DONATION_INFORMATION).then((otherUserDataDonationInformation) => {
+        resolve(otherUserDataDonationInformation ? otherUserDataDonationInformation[bitmarkAccountNumber] : undefined);
+      }).catch((error => {
+        console.log('doGetDonationInformation error:', error);
+        resolve();
+      }));
+    }
   });
 };
 
-// ======================================================================================================================================================================================
-// ======================================================================================================================================================================================
-// ======================================================================================================================================================================================
-// ======================================================================================================================================================================================
-const doGenerateDisplayedData = async () => {
+const doGetAccountAccesses = (type) => {
+  return new Promise((resolve) => {
+    CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION).then((accesses) => {
+      if (!accesses) {
+        return resolve();
+      }
+      if (type) {
+        //TODO field
+        return resolve(accesses['granting_' + type]);
+      }
+      resolve(accesses);
+    }).catch((error => {
+      console.log('doGetDonationInformation error:', error);
+      resolve();
+    }));
 
+  });
 };
-
+// ======================================================================================================================================================================================
+// ======================================================================================================================================================================================
+// ======================================================================================================================================================================================
+// ======================================================================================================================================================================================
 const doCheckFileToIssue = async (filePath) => {
   return await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
 };
 
 const doGrantingAccess = async () => {
-  console.log('jwt :', jwt);
   return NotificationModel.doGrantingAccess(jwt);
+};
+
+const getAccountAccessSelected = () => {
+  return accountAccessSelected;
+};
+
+const doSelectAccountAccess = async (accountNumber) => {
+  if (accountNumber === userInformation.bitmarkAccountNumber) {
+    accountAccessSelected = null;
+    return true;
+  }
+  let accesses = await runGetAccountAccessesInBackground();
+  let canSelect = accesses && accesses.granting_from && ((accesses.granting_from | []).findIndex(item => item.grantor === accountNumber) >= 0);
+  if (canSelect) {
+    accountAccessSelected = accountNumber;
+    await runGetUserDonationInformationInBackground(accountAccessSelected);
+  }
+  return canSelect;
 };
 
 
@@ -433,6 +496,9 @@ const DataProcessor = {
   isAppLoadingData: () => isLoadingData,
 
   doGrantingAccess,
+  doGetAccountAccesses,
+  doSelectAccountAccess,
+  getAccountAccessSelected,
 };
 
 export { DataProcessor };

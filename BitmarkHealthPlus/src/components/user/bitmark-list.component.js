@@ -41,7 +41,7 @@ export class BitmarkListComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
   }
 
-  handerDonationInformationChange(donationInformation) {
+  handerDonationInformationChange({ donationInformation }) {
     let completedTasks = donationInformation.completedTasks.filter(item => item.taskType === this.props.bitmarkType);
     this.setState({ donationInformation, completedTasks });
   }

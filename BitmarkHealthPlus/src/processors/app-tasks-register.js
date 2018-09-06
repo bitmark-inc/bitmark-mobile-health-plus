@@ -82,11 +82,10 @@ const doDeleteAccount = async (processingInfo) => {
 };
 
 const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo }) => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
   return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset), processingInfo);
 };
 
@@ -144,6 +143,10 @@ const doGrantingAccess = async () => {
   return processing(DataProcessor.doGrantingAccess());
 };
 
+const doSelectAccountAccess = async ({ accountNumber }) => {
+  return processing(DataProcessor.doSelectAccountAccess(accountNumber));
+};
+
 
 // ================================================================================================
 // ================================================================================================
@@ -161,6 +164,7 @@ let AppTasks = {
   doGetBitmarkInformation,
   doDownloadAndShareLegal,
   doGrantingAccess,
+  doSelectAccountAccess,
 };
 
 let registeredTasks = {};

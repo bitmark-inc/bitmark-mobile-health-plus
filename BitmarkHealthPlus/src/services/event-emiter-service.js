@@ -14,6 +14,8 @@ let EventEmitterService = {
 
     CHANGE_USER_INFO: 'change-user-info',
     CHANGE_USER_DATA_DONATION_INFORMATION: 'change-user-data:donation-information',
+    CHANGE_USER_DATA_ACCOUNT_ACCESSES: 'change-user-data:account-accesses',
+    CHANGE_OTHER_USER_DATA_DONATION_INFORMATION: 'change-other-user-data:donation-information',
   },
   on: (eventName, func, extra) => {
     if (extra && (!EventEmitterService.event_extra[eventName] || !EventEmitterService.event_extra[eventName][extra])) {

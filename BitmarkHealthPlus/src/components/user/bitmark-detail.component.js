@@ -53,7 +53,8 @@ export class BitmarkDetailComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
   }
 
-  handerDonationInformationChange() {
+  handerDonationInformationChange({ donationInformation }) {
+    console.log('BitmarkDetailComponent handerDonationInformationChange donationInformation :', donationInformation)
   }
 
 

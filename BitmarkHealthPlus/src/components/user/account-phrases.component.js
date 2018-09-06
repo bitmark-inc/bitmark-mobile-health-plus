@@ -38,6 +38,9 @@ export class AccountPhraseComponent extends Component {
   }
   accessPhrase24Words() {
     AppProcessor.doGetCurrentAccount().then((userInfo) => {
+      if (!userInfo) {
+        return;
+      }
       console.log('userInfo :', userInfo);
       let smallerList = [];
       let biggerList = [];

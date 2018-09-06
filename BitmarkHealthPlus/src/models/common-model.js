@@ -10,7 +10,8 @@ const KEYS = {
   USER_INFORMATION: 'user-information',
   //original data
   USER_DATA_DONATION_INFORMATION: 'user-data:donation-information',
-
+  USER_DATA_ACCOUNT_ACCESSES: 'user-data:account-access',
+  OTHER_USER_DATA_DONATION_INFORMATION: 'other-user-data:donation-information',
 };
 
 // ================================================================================================
