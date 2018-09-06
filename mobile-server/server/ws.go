@@ -7,11 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/websocket"
-	jsoniter "github.com/json-iterator/go"
 	log "github.com/sirupsen/logrus"
 )
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
