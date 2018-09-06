@@ -369,18 +369,18 @@ class BitmarkSDK: NSObject {
     }
   }
   
-//  @objc(createSessionData::::)
-//  func createSessionData(_ sessionId: String, _ bitmarkId: String, _ recipient: String, _ callback: @escaping RCTResponseSenderBlock) {
-//    do {
-//      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-//      let sessionData = try account.createSess
-//      callback([true, sessionData])
-//    }
-//    catch let e {
-//      print(e)
-//      callback([false])
-//    }
-//  }
+  @objc(createSessionData::::)
+  func createSessionData(_ sessionId: String, _ bitmarkId: String, _ recipient: String, _ callback: @escaping RCTResponseSenderBlock) {
+    do {
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+      let sessionData = try account.createSessionData(forBitmark: bitmarkId, recipient: recipient)
+      callback([true, sessionData])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
   
   @objc(issueRecord:::)
   func issueRecord(_ sessionId: String, _ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {

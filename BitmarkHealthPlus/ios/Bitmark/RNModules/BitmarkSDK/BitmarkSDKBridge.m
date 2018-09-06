@@ -36,6 +36,7 @@ RCT_EXTERN_METHOD(validateAccountNumber:(NSString *)address:(NSString *)network:
 
 // Decentrailized issuance
 RCT_EXTERN_METHOD(createSessionData:(NSString *)sessionId:(NSString *)encryptionKey:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(createSessionData:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)recipient:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(issueRecord:(NSString *)sessionId:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
 
 @end
