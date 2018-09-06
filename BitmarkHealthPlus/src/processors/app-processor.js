@@ -184,6 +184,10 @@ const doCheckNoLongerSupportVersion = async () => {
   return false;
 };
 
+const doReceivedAccessQRCode = async (token) => {
+  return executeTask('doReceivedAccessQRCode', { token });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -213,6 +217,7 @@ let AppProcessor = {
   doCheckNoLongerSupportVersion,
   doGrantingAccess,
   doSelectAccountAccess,
+  doReceivedAccessQRCode,
 }
 
 export {

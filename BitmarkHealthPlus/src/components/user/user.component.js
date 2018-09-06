@@ -29,6 +29,7 @@ export class UserComponent extends Component {
       isDisplayingAccountNumber: true,
     }
     runPromiseWithoutError(DataProcessor.doGetDonationInformation(DataProcessor.getAccountAccessSelected())).then(donationInformation => {
+      console.log('donationInformation :', donationInformation);
       if (donationInformation && donationInformation.error) {
         // TODO
         return;
@@ -49,9 +50,10 @@ export class UserComponent extends Component {
   }
 
   handerDonationInformationChange({ donationInformation }) {
+    console.log('handerDonationInformationChange donationInformation :', donationInformation);
     let numberHealthDataRecords = 0;
     let numberHealthRecords = 0;
-    donationInformation.completedTasks.forEach(item => {
+    (donationInformation.completedTasks || []).forEach(item => {
       numberHealthDataRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 1 : 0;
       numberHealthRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 1 : 0;
     });

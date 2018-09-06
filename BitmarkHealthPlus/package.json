@@ -28,6 +28,7 @@
     "react-native-intercom": "^12.0.0",
     "react-native-keep-awake": "^3.1.0",
     "react-native-mail": "^3.0.6",
+    "react-native-permissions": "^1.1.1",
     "react-native-push-notification": "^3.1.1",
     "react-native-qrcode": "^0.2.7",
     "react-native-router-flux": "^4.0.1",

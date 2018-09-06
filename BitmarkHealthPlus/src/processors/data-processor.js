@@ -35,19 +35,19 @@ const doCheckNewDonationInformation = async (donationInformation, bitmarkAccount
 };
 let queueGetDonationInformation = {};
 const runGetUserDonationInformationInBackground = (bitmarkAccountNumber) => {
-  bitmarkAccountNumber = bitmarkAccountNumber | userInformation.bitmarkAccountNumber;
+  bitmarkAccountNumber = bitmarkAccountNumber || userInformation.bitmarkAccountNumber;
   return new Promise((resolve) => {
-    queueGetDonationInformation[bitmarkAccountNumber] = queueGetDonationInformation[bitmarkAccountNumber] || {};
+    queueGetDonationInformation[bitmarkAccountNumber] = queueGetDonationInformation[bitmarkAccountNumber] || [];
     queueGetDonationInformation[bitmarkAccountNumber].push(resolve);
     if (queueGetDonationInformation[bitmarkAccountNumber].length > 1) {
       return;
     }
     DonationService.doGetUserInformation(bitmarkAccountNumber).then(donationInformation => {
-      queueGetDonationInformation[bitmarkAccountNumber].forEach(queueResolve => queueResolve(donationInformation));
+      (queueGetDonationInformation[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve(donationInformation));
       queueGetDonationInformation[bitmarkAccountNumber] = [];
       doCheckNewDonationInformation(donationInformation, bitmarkAccountNumber);
     }).catch(error => {
-      queueGetDonationInformation[bitmarkAccountNumber].forEach(queueResolve => queueResolve());
+      (queueGetDonationInformation[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve());
       queueGetDonationInformation[bitmarkAccountNumber] = [];
       console.log('runOnBackground  runGetUserDonationInformationInBackground error :', error);
     });
@@ -63,7 +63,7 @@ const doCheckNewAccesses = async (accesses) => {
 };
 const runGetAccountAccessesInBackground = () => {
   return new Promise((resolve) => {
-    queueGetAccountAccesses = queueGetAccountAccesses || {};
+    queueGetAccountAccesses = queueGetAccountAccesses || [];
     queueGetAccountAccesses.push(resolve);
     if (queueGetAccountAccesses.length > 1) {
       return;
@@ -97,7 +97,7 @@ const runOnBackground = async () => {
     if (accountAccessSelected) {
       await runGetUserDonationInformationInBackground(accountAccessSelected);
     }
-    console.log('runOnBackground done ====================================', donationInformation);
+    console.log('runOnBackground done ====================================', userInformation, accountAccessSelected, donationInformation);
     return donationInformation;
   }
 };
@@ -462,12 +462,16 @@ const doSelectAccountAccess = async (accountNumber) => {
     return true;
   }
   let accesses = await runGetAccountAccessesInBackground();
-  let canSelect = accesses && accesses.granting_from && ((accesses.granting_from | []).findIndex(item => item.grantor === accountNumber) >= 0);
+  let canSelect = accesses && accesses.granting_from && ((accesses.granting_from || []).findIndex(item => item.grantor === accountNumber) >= 0);
   if (canSelect) {
     accountAccessSelected = accountNumber;
     await runGetUserDonationInformationInBackground(accountAccessSelected);
   }
   return canSelect;
+};
+
+const doReceivedAccessQRCode = async (token) => {
+  return await NotificationModel.doReceiveGrantingAccess(jwt, token);
 };
 
 
@@ -499,6 +503,7 @@ const DataProcessor = {
   doGetAccountAccesses,
   doSelectAccountAccess,
   getAccountAccessSelected,
+  doReceivedAccessQRCode,
 };
 
 export { DataProcessor };

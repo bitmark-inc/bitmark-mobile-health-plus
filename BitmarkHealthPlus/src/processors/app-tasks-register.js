@@ -147,6 +147,11 @@ const doSelectAccountAccess = async ({ accountNumber }) => {
   return processing(DataProcessor.doSelectAccountAccess(accountNumber));
 };
 
+const doReceivedAccessQRCode = async ({ token }) => {
+  return processing(DataProcessor.doReceivedAccessQRCode(token));
+};
+
+
 
 // ================================================================================================
 // ================================================================================================
@@ -165,6 +170,7 @@ let AppTasks = {
   doDownloadAndShareLegal,
   doGrantingAccess,
   doSelectAccountAccess,
+  doReceivedAccessQRCode,
 };
 
 let registeredTasks = {};

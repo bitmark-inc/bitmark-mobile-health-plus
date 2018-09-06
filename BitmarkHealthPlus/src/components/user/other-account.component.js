@@ -43,12 +43,12 @@ export class OtherAccountsComponent extends Component {
           <View style={styles.bodyContent} >
             <View style={styles.titleRow}>
               <Text style={styles.title}>View other accounts</Text>
-              <TouchableOpacity onPress={Actions.pop}>
+              <TouchableOpacity onPress={Actions.pop} >
                 <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
               </TouchableOpacity>
             </View>
             <View style={styles.content}>
-              <FlatList
+              {this.state.accessAccounts && this.state.accessAccounts.length > 0 && <FlatList
                 keyExtractor={(item, index) => index + ''}
                 data={this.state.accessAccounts}
                 extraData={this.state}
@@ -60,10 +60,10 @@ export class OtherAccountsComponent extends Component {
                     <Image style={styles.accountRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />
                   </TouchableOpacity>);
                 }}
-              />
+              />}
             </View>
             <View style={styles.bottomButtonArea} >
-              <TouchableOpacity style={styles.bottomButton} >
+              <TouchableOpacity style={styles.bottomButton} onPress={Actions.scanAccessQRCode} >
                 <Text style={styles.bottomButtonText}>{'scan qr code'.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
+    flex: 1,
     fontFamily: 'Avenir Light',
     fontWeight: '900',
     fontSize: 34,
