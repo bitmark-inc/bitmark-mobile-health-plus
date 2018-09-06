@@ -77,8 +77,8 @@ func (s *Server) queryRentingBitmark(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"granting":   sender,
-		"is_granted": receiver,
+		"granting_to":   sender,
+		"granting_from": receiver,
 	})
 }
 
