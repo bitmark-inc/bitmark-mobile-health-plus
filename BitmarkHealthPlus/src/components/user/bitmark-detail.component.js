@@ -83,8 +83,8 @@ export class BitmarkDetailComponent extends Component {
       <SafeAreaView style={[styles.bodySafeView, { backgroundColor: this.props.bitmarkType === 'bitmark_health_data' ? 'white' : 'black' }]}>
         <View style={styles.body}>
           <View style={styles.titleRow}>
-            {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText, { color: 'black' }]}>Health data</Text>}
-            {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>Issued on {moment(this.props.issuedAt).format('YYYY')}</Text>}
+            {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText, { color: 'black' }]}>{moment(this.props.issuedAt).format('YYYY MMM DD').toUpperCase()}</Text>}
+            {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{moment(this.props.issuedAt).format('YYYY MMM DD').toUpperCase()}</Text>}
             <TouchableOpacity onPress={Actions.pop}>
               {this.props.bitmarkType === 'bitmark_health_data' && <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />}
               {this.props.bitmarkType === 'bitmark_health_issuance' && <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />}

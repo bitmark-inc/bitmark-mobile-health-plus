@@ -153,10 +153,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
     let randomId = randomString({ length: 8, numeric: true, letters: false, });
     let healthData = {
       date: dateRange.endDate,
-      data: JSON.stringify({
-        time: dateRange,
-        data: removeEmptyValueData(healthRawData)
-      }),
+      data: JSON.stringify(removeEmptyValueData(healthRawData)),
 
       assetName: 'HK' + randomId,
       assetMetadata: {
