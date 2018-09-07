@@ -24,7 +24,6 @@ let config = {
   appLink: 'https://itunes.apple.com/us/app/bitmark-health/id1428203492?ls=1&mt=8',
   api_server_url: 'https://api.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
-  donation_server_url: 'http://192.168.0.101:9001',
   mobile_server_url: 'https://bm.devel.bitmark.com',
   preview_asset_url: 'https://preview.test.bitmarkaccountassets.com',
   bitmark_web_site: 'https://bitmark.com',
@@ -32,8 +31,6 @@ let config = {
 };
 
 if (config.network === NETWORKS.testnet) {
-  config.donation_server_url = 'https://data-donation.test.bitmark.com';
-  // config.donation_server_url = 'http://192.168.0.101:9001';
   config.mobile_server_url = 'https://bm.test.bitmark.com';
   config.preview_asset_url = "https://preview.test.bitmarkaccountassets.com";
 } else if (config.network === NETWORKS.livenet) {
@@ -41,7 +38,6 @@ if (config.network === NETWORKS.testnet) {
   config.api_server_url = 'https://api.bitmark.com';
   config.registry_server_url = 'https://registry.bitmark.com';
   config.mobile_server_url = 'https://bm.bitmark.com';
-  config.donation_server_url = 'https://data-donation.bitmark.com';
   config.preview_asset_url = "https://preview.bitmarkaccountassets.com";
   config.bitmark_web_site = 'https://bitmark.com';
 }

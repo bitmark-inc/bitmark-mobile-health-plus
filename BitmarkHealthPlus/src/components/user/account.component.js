@@ -110,14 +110,14 @@ export class AccountComponent extends Component {
                   <Text style={styles.rowButtonText}>Write Down Recovery Phrase</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
+                {/* <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
+                <TouchableOpacity style={styles.rowButton} onPress={() => {
                   AppProcessor.doLogout().then(() => {
                     EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
                   }).catch(error => {
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
-                }}> */}
+                }}>
                   <Text style={styles.rowButtonText}>Log out</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
@@ -136,27 +136,11 @@ export class AccountComponent extends Component {
                   <Text style={styles.rowButtonText}>Share This App</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={this.requestSendFeedback.bind(this)}>
-                  <Text style={styles.rowButtonText}>Send Feedback</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.aboutArea}>
-                <Text style={styles.powerTitle}>POWERED BY</Text>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Linking.openURL(config.bitmark_web_site)}>
-                  <Text style={styles.rowButtonText}>Bitmark Inc.</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} disabled={true}>
+                <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} disabled={true}>
                   <Text style={styles.rowButtonText}>Version</Text>
                   <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
                 </TouchableOpacity>
-                {/* <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} onPress={Actions.deletingAccount}>
-                  <Text style={[styles.rowButtonText, { color: '#FF4444' }]}>Delete your account</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity> */}
               </View>
-
             </ScrollView>
           </View>
         </View>
@@ -272,7 +256,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#FF4444',
     padding: convertWidth(20),
-    paddingBottom: 30,
+    paddingBottom: 20,
   },
   aboutTitle: {
     fontFamily: 'Avenir Black',
@@ -280,14 +264,6 @@ const styles = StyleSheet.create({
     fontSize: 34,
     color: '#464646',
   },
-
-  powerTitle: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '600',
-    fontSize: 14,
-    color: '#6D6D72',
-  },
-
   rowButton: {
     flexDirection: 'row',
     alignItems: 'center',

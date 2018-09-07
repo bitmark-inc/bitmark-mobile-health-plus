@@ -56,6 +56,7 @@ export class BitmarkLegalComponent extends React.Component {
     let displayedContentName = this.state.displayedContentName || 'BitmarkLegal'
     let filePathUrl = this.state.displayedContent ? this.state.displayedContent.filePathUrl : 'https://s3-ap-northeast-1.amazonaws.com/bitmark-mobile-files/3+combination.pdf';
 
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
     AppProcessor.doDownloadAndShareLegal(displayedContentName, filePathUrl).then(filePath => {
       Share.share({ title: displayedContentName, url: filePath }).then(() => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
@@ -74,18 +75,18 @@ export class BitmarkLegalComponent extends React.Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
-            <View style={[styles.header]}>
+            <View style={[styles.header, this.state.displayedContentName ? {} : { borderBottomWidth: 1, borderColor: '#FF4444' }]}>
               {!this.state.displayedContentName && <Text style={[styles.headerTitle]}>BITMARK LEGAL</Text>}
               {this.state.displayedContentName === Contents.KnowYourRights.name && <Text style={styles.headerTitle}>KNOW YOUR RIGHTS</Text>}
               {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={styles.headerTitle}>PRIVACY POLICY</Text>}
               {this.state.displayedContentName === Contents.TermOfService.name && <Text style={styles.headerTitle}>TERMS OF SERVICE</Text>}
-              <TouchableOpacity onPress={Actions.pop}>
-                <Text style={styles.doneButtonText}>Done</Text>
+              <TouchableOpacity onPress={this.state.displayedContentName ? Actions.pop : this.shareLegal.bind(this)}>
+                <Text style={styles.doneButtonText}>{this.state.displayedContentName ? 'Done' : 'Print'}</Text>
               </TouchableOpacity>
             </View>
             <ScrollView >
 
-              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.PrivacyPolicy.name) && <View style={[styles.legalContent, !this.state.displayedContentName ? { borderTopWidth: 1, borderColor: '#FF4444' } : {}]}>
+              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.PrivacyPolicy.name) && <View style={[styles.legalContent]}>
                 {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, marginLeft: convertWidth(19), marginBottom: 20, }]}>PRIVACY POLICY</Text>}
                 <Text style={styles.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => {
@@ -211,8 +212,8 @@ export class BitmarkLegalComponent extends React.Component {
 
               </View>}
 
-              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.TermOfService.name) && <View style={[styles.legalContent, !this.state.displayedContentName ? { borderTopWidth: 1, borderColor: '#FF4444' } : {}]}>
-                {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, }]}>TERMS OF SERVICE</Text>}
+              {(!this.state.displayedContentName || this.state.displayedContentName === Contents.TermOfService.name) && <View style={[styles.legalContent]}>
+                {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, marginLeft: convertWidth(19), marginBottom: 20, }]}>TERMS OF SERVICE</Text>}
                 <Text style={styles.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
                   <Text style={styles.contentNormalText}>
@@ -523,12 +524,21 @@ export class BitmarkLegalComponent extends React.Component {
 
               </View>}
             </ ScrollView>
-            <View style={styles.lastBottomButtonArea}>
+            {!!this.state.displayedContentName && <View style={styles.lastBottomButtonArea}>
               <TouchableOpacity style={styles.lastBottomButton} onPress={this.shareLegal}>
                 <Text style={styles.lastBottomButtonText}>SHARE</Text>
               </TouchableOpacity>
-            </View>
+            </View>}
           </View>
+          {!this.state.displayedContentName && <View style={styles.lastBottomButtonArea}>
+            <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white' }]}
+              onPress={Actions.pop}>
+              <Text style={[styles.lastBottomButtonText, { color: '#FF4444' }]}>DISAGREE</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), marginLeft: convertWidth(18) }]} onPress={Actions.getStart}>
+              <Text style={styles.lastBottomButtonText}>AGREE</Text>
+            </TouchableOpacity>
+          </View>}
         </View>
       </SafeAreaView>
     );
@@ -557,9 +567,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    paddingTop: convertWidth(20),
-    paddingLeft: convertWidth(20),
-    paddingRight: convertWidth(20),
+    padding: convertWidth(20),
+    height: 70,
   },
 
   headerTitle: {
@@ -631,6 +640,8 @@ const styles = StyleSheet.create({
 
   lastBottomButtonArea: {
     padding: convertWidth(20),
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   lastBottomButton: {
     height: constants.buttonHeight,
@@ -644,7 +655,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: '900',
+    fontWeight: '800',
     color: 'white',
   },
 });

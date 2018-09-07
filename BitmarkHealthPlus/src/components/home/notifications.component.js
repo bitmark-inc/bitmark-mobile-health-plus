@@ -5,7 +5,7 @@ import {
   StyleSheet,
 } from 'react-native'
 
-import { EventEmitterService, NotificationService } from '../../services';
+import { EventEmitterService, AccountService } from '../../services';
 import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
@@ -20,7 +20,7 @@ export class NotificationComponent extends React.Component {
   render() {
 
     let requestNotification = () => {
-      NotificationService.doRequestNotificationPermissions().then(() => {
+      AccountService.doRequestNotificationPermissions().then(() => {
         EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, true);
       }).catch(error => {
         console.log('NotificationComponent requestNotification error:', error);

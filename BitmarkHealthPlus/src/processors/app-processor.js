@@ -2,11 +2,12 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 import { registerTasks } from './app-tasks-register';
 
-import { CommonModel, AccountModel, FaceTouchId, AppleHealthKitModel, DonationModel, NotificationModel } from './../models';
+import { CommonModel, AccountModel, FaceTouchId } from './../models';
 import { AccountService, EventEmitterService, TransactionService } from './../services'
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';
 import { compareVersion } from '../utils';
+import { HealthKitService } from '../services/health-kit-service';
 
 registerTasks();
 // ================================================================================================
@@ -110,10 +111,7 @@ const doReloadUserData = async () => {
 };
 
 const doRequireHealthKitPermission = async () => {
-  let allDataTypes = await DonationModel.doGetAllDataTypes();
-  if (allDataTypes) {
-    await AppleHealthKitModel.initHealthKit(allDataTypes);
-  }
+  return await HealthKitService.initHealthKit();
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
@@ -137,14 +135,6 @@ const doDeleteAccount = async (processingInfo) => {
 
 const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo) => {
   return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
-};
-
-const doActiveBitmarkHealthData = async (activeBitmarkHealthDataAt) => {
-  return executeTask('doActiveBitmarkHealthData', { activeBitmarkHealthDataAt });
-};
-
-const doInactiveBitmarkHealthData = async () => {
-  return executeTask('doInactiveBitmarkHealthData');
 };
 
 const doBitmarkHealthData = async (list, processingData) => {
@@ -175,7 +165,7 @@ const doSelectAccountAccess = async (accountNumber) => {
 
 
 const doCheckNoLongerSupportVersion = async () => {
-  let data = await NotificationModel.doTryGetAppVersion();
+  let data = await AccountModel.doTryGetAppVersion();
   if (data && data.version && data.version.minimum_supported_version) {
     let minimumSupportedVersion = data.version.minimum_supported_version;
     let currentVersion = DataProcessor.getApplicationVersion();
@@ -194,6 +184,11 @@ const doReceivedAccessQRCode = async (token) => {
 const doRemoveGrantingAccess = async (token) => {
   return executeTask('doRemoveGrantingAccess', { token });
 };
+
+const doConfirmGrantingAccess = async (token, grantee) => {
+  return executeTask('doConfirmGrantingAccess', { token, grantee });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -210,8 +205,6 @@ let AppProcessor = {
   doIssueFile,
   doGetTransferOfferDetail,
   doRequireHealthKitPermission,
-  doActiveBitmarkHealthData,
-  doInactiveBitmarkHealthData,
   doBitmarkHealthData,
 
   doGetBitmarkInformation,
@@ -226,6 +219,7 @@ let AppProcessor = {
   doSelectAccountAccess,
   doReceivedAccessQRCode,
   doRemoveGrantingAccess,
+  doConfirmGrantingAccess,
 }
 
 export {

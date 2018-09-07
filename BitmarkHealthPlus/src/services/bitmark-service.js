@@ -56,9 +56,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {
-  let data = await BitmarkModel.doGetBitmarkInformation(bitmarkId);
-  data.bitmark.bitmark_id = data.bitmark.id;
-  return data;
+  return await BitmarkModel.doGetBitmarkInformation(bitmarkId);
 };
 
 // ================================================================================================

@@ -21,40 +21,41 @@ export class BitmarkListComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
+    this.handerChangeUserDataBitmarks = this.handerChangeUserDataBitmarks.bind(this);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, null, ComponentName);
     this.state = {
-      donationInformation: null,
-      completedTasks: [],
+      bitmarkList: [],
     };
-    runPromiseWithoutError(DataProcessor.doGetDonationInformation()).then(donationInformation => {
-      if (donationInformation && donationInformation.error) {
-        // TODO
-        Actions.pop();
-      }
-      let completedTasks = donationInformation.completedTasks.filter(item => item.taskType === this.props.bitmarkType);
-      this.setState({ donationInformation, completedTasks });
+    runPromiseWithoutError(DataProcessor.doGetUserDataBitmarks()).then(({ healthDataBitmarks, healthAssetBitmarks }) => {
+      let bitmarkList = this.props.bitmarkType === 'bitmark_health_data' ? healthDataBitmarks :
+        (this.props.bitmarkType === 'bitmark_health_data' ? healthAssetBitmarks : [])
+      this.setState({ bitmarkList });
     });
   }
 
   componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, this.handerChangeUserDataBitmarks, ComponentName);
   }
 
-  handerDonationInformationChange({ donationInformation }) {
-    let completedTasks = donationInformation.completedTasks.filter(item => item.taskType === this.props.bitmarkType);
-    this.setState({ donationInformation, completedTasks });
+  handerChangeUserDataBitmarks({ healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber }) {
+    console.log('handerChangeUserDataBitmarks user data bitmarks :', healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
+    let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    if (accountNumberDisplay === bitmarkAccountNumber) {
+      let bitmarkList = this.props.bitmarkType === 'bitmark_health_data' ? healthDataBitmarks :
+        (this.props.bitmarkType === 'bitmark_health_data' ? healthAssetBitmarks : [])
+      this.setState({ bitmarkList });
+    }
   }
 
-  goToDetailScreen(bitmarkId, bitmarkType, issuedAt) {
-    Actions.bitmarkDetail({ bitmarkId, bitmarkType, issuedAt });
+  goToDetailScreen(bitmark, bitmarkType) {
+    Actions.bitmarkDetail({ bitmark, bitmarkType });
   }
 
   render() {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-          <ScrollView style={styles.bodyContent}>
+          <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
               {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.titleText}>Health data</Text>}
               {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>Health records</Text>}
@@ -63,35 +64,22 @@ export class BitmarkListComponent extends Component {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.bitmarkList}>
+            <ScrollView style={styles.bitmarkList}>
               <FlatList
+                keyExtractor={(item, index) => index}
                 scrollEnabled={false}
-                data={this.state.completedTasks}
+                data={this.state.bitmarkList}
                 extraData={this.state}
                 renderItem={({ item }) => {
-                  return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => this.goToDetailScreen.bind(this)(item.bitmarkId, this.props.bitmarkType, item.completedAt)}>
-                    <Text style={styles.bitmarkRowText}>{moment(item.completedAt).format('YYYY MMM DD').toUpperCase()}</Text>
-                    <Image style={styles.bitmarkRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />
+                  return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)}>
+                    <Text style={styles.bitmarkRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
+                    {item.status === 'confirmed' && <Image style={styles.bitmarkRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
+                    {item.status === 'pending' && <Text style={styles.bitmarkPending}>Registering ownership...</Text>}
                   </TouchableOpacity>);
                 }}
               />
-            </View>
-
-            {/* {this.props.bitmarkType === 'bitmark_health_data' && <View style={styles.dataSourcesArea}>
-              <Text style={styles.dataSourcesMessage}>{'Claim ownership over your health data. Connect Bitmark to Apple’s Health app: Health App > Sources > Health+. Any data sources that you allow Bitmark to access will be bitmarked automatically. (If you did not grant access or if you did and no data was detected, the status will be inactive.)'}</Text>
-              {this.state.donationInformation && <FlatList style={styles.dataSourceList}
-                scrollEnabled={false}
-                data={this.state.donationInformation.dataSourceStatuses}
-                extraData={this.state}
-                renderItem={({ item }) => {
-                  return (<View style={styles.dataSourceRow}>
-                    <Text style={styles.dataSourcesName} numberOfLines={1}>{item.title}</Text>
-                    <Text style={[styles.dataSourceStatus, item.status === 'Inactive' ? { color: '#999999' } : {}]}>{item.status.toUpperCase()}</Text>
-                  </View>);
-                }}
-              />}
-            </View>} */}
-          </ScrollView>
+            </ScrollView>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -153,37 +141,12 @@ const styles = StyleSheet.create({
     height: 14 * convertWidth(8) / 8,
     resizeMode: 'contain',
   },
-
-
-  // dataSourcesArea: {
-  //   padding: convertWidth(6),
-  // },
-  // dataSourcesMessage: {
-  //   fontFamily: 'Avenir Book',
-  //   fontSize: 16,
-  //   fontWeight: '300',
-  //   marginTop: 36,
-  //   color: '#464646',
-  // },
-  // dataSourceList: {
-  //   marginTop: 20,
-  // },
-  // dataSourceRow: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   justifyContent: 'space-between',
-  //   marginTop: 3,
-  //   minHeight: 21,
-  // },
-  // dataSourcesName: {
-  //   fontFamily: 'Avenir Medium',
-  //   fontSize: 14,
-  //   color: '#464646',
-  // },
-  // dataSourceStatus: {
-  //   color: '#0060F2',
-  //   fontFamily: 'Avenir Medium',
-  //   fontSize: 14,
-  // },
+  bitmarkPending: {
+    fontFamily: 'Avenir Medium',
+    fontSize: 14,
+    fontStyle: 'italic',
+    fontWeight: '300',
+    color: '#C1C1C1',
+  }
 
 });

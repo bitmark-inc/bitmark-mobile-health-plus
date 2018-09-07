@@ -23,10 +23,16 @@ export class ConfirmAccessComponent extends Component {
   }
 
   cancelRequest() {
-
+    AppProcessor.doRemoveGrantingAccess(this.props.token).then((result) => {
+      if (result) {
+        Actions.pop();
+      }
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
   }
   confirmRequest() {
-    AppProcessor.doRemoveGrantingAccess(this.props.token).then((result) => {
+    AppProcessor.doConfirmGrantingAccess(this.props.token, this.props.grantee).then((result) => {
       if (result) {
         Actions.pop();
       }

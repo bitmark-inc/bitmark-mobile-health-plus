@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { CommonModel } from './common-model';
 import { merge } from 'lodash';
 import { config } from '../configs';
@@ -24,13 +25,16 @@ const doUpdateUserInfo = async (userInfo) => {
   let currentUser = await doGetCurrentUser();
   currentUser = merge({}, currentUser, userInfo);
   currentUser.network = config.network;
+  if (!currentUser.createdAt) {
+    currentUser.createdAt = moment().toDate().toISOString();
+  }
   return await CommonModel.doSetLocalData(CommonModel.KEYS.USER_INFORMATION, currentUser);
 };
 
 const resetUserLocalData = async () => {
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_DONATION_INFORMATION, {});
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_COMMON, {});
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, {});
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, {});
-  await CommonModel.doSetLocalData(CommonModel.KEYS.OTHER_USER_DATA_DONATION_INFORMATION, {});
 };
 
 const doRemoveUserInfo = async () => {

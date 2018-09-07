@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import QRCode from 'react-native-qrcode';
 import Mailer from 'react-native-mail';
+import Hyperlink from 'react-native-hyperlink';
 
 import { convertWidth, runPromiseWithoutError } from './../../utils';
 import { config } from '../../configs';
@@ -43,8 +44,14 @@ export class GrantingAccessComponent extends Component {
       subject: 'Granting access',
       recipients: [],
       body: `
+        Hi
+        <br/>
+        I would like you to view my health records and data. Here’s a direct link:
+        <br/>
         <a href="healthplush://${this.state.token}">Click to receive the granting!</a>
-        </br>
+        <br/>
+        Get the free <a href="${config.appLink}">Bitmark Health</a> app. 
+        <br/>
         Health+ app version: ${DataProcessor.getApplicationVersion()} (${DataProcessor.getApplicationBuildNumber()})`,
       isHTML: true,
     }, (error) => {
@@ -72,7 +79,17 @@ export class GrantingAccessComponent extends Component {
                 size={convertWidth(270)}
                 bgColor='black'
                 fgColor='white' />}
-              <Text style={styles.message}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.</Text>
+              <Hyperlink linkStyle={{ color: '#FF4444' }}
+                onPress={() => {
+                  Actions.account();
+                }}
+                linkText={() => 'Account Settings.'}
+              >
+                <Text style={styles.message}>
+                  Granting access to your account allows someone to view all your records and data. But they cannot transfer or change your records or data.{'\n\n'}
+                  You can revoke access under http://account
+              </Text>
+              </Hyperlink>
               <View></View>
             </View>
           </View>
@@ -88,6 +105,7 @@ export class GrantingAccessComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
+    backgroundColor: 'white',
   },
   body: {
     padding: convertWidth(16),
@@ -131,7 +149,7 @@ const styles = StyleSheet.create({
   message: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
-    fontSize: 12,
+    fontSize: 16,
   },
 
   bottomButton: {

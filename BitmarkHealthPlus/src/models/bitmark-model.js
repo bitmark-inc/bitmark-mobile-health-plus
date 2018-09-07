@@ -6,6 +6,58 @@ import { BitmarkSDK } from './adapters';
 // ===================================================================================================================
 // ===================================================================================================================
 
+const doGet100Bitmarks = (accountNumber, lastOffset) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let bitmarkUrl = config.api_server_url +
+      `/v1/bitmarks?owner=${accountNumber}&asset=true&pending=true&to=later&sent=true` + (lastOffset ? `&at=${lastOffset}` : '');
+    console.log('bitmarkUrl :', bitmarkUrl);
+    fetch(bitmarkUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doGetBitmarks error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+const doGetAllBitmarks = async (accountNumber, lastOffset) => {
+  let totalData;
+  let canContinue = true;
+  while (canContinue) {
+    let data = await doGet100Bitmarks(accountNumber, lastOffset);
+    if (!totalData) {
+      totalData = data;
+    } else {
+      data.assets.forEach((item) => {
+        let index = totalData.assets.findIndex(asset => asset.id === item.id);
+        if (index < 0) {
+          totalData.assets.push(item);
+        }
+      });
+      totalData.bitmarks = totalData.bitmarks.concat(data.bitmarks);
+    }
+    if (data.bitmarks.length < 100) {
+      canContinue = false;
+      break;
+    }
+    data.bitmarks.forEach(bitmark => {
+      if (!lastOffset || lastOffset < bitmark.offset) {
+        lastOffset = bitmark.offset;
+      }
+    });
+  }
+  return totalData;
+};
 const doGetList100Bitmarks = (bitmarkIds, external) => {
   let queryString = '';
   return new Promise((resolve, reject) => {
@@ -294,6 +346,8 @@ const doGetBitmarkInformation = (bitmarkId) => {
 };
 
 let BitmarkModel = {
+  doGet100Bitmarks,
+  doGetAllBitmarks,
   doGetBitmarksOfAsset,
   doGetAssetInformation,
   doPrepareAssetInfo,

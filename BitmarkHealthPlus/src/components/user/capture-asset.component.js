@@ -29,7 +29,7 @@ export class CaptureAssetComponent extends Component {
       if (asset && asset.name) {
 
         let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
-          ? 'The image has already issued by you.'
+          ? 'You have already registered this image. '
           : 'The image has already issued by other account.';
         Alert.alert('', message, [{
           text: 'Cancel', style: 'cancel'
@@ -68,15 +68,17 @@ export class CaptureAssetComponent extends Component {
           <View style={[styles.header, config.isIPhoneX ? { paddingTop: constants.iPhoneXStatusBarHeight } : {}]}>
             <Text style={styles.headerTitle}>CAPTURE</Text>
             <TouchableOpacity onPress={Actions.pop}>
-              <Image style={styles.backIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+              <Image style={styles.backIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />
             </TouchableOpacity>
           </View>
           <View style={[styles.content]}>
             <Image style={styles.previewImage} source={{ uri: 'file://' + this.props.filePath }} />
           </View>
-          <TouchableOpacity style={styles.lastBottomButton} onPress={this.issueFile.bind(this)}>
-            <Text style={styles.lastBottomButtonText}>USE IMAGE</Text>
-          </TouchableOpacity>
+          <View style={styles.lastBottomButtonArea}>
+            <TouchableOpacity style={styles.lastBottomButton} onPress={this.issueFile.bind(this)}>
+              <Text style={styles.lastBottomButtonText}>USE IMAGE</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -86,13 +88,12 @@ export class CaptureAssetComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
-    backgroundColor: '#FF4444',
+    backgroundColor: 'black',
   },
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
     width: "100%",
-    backgroundColor: 'white',
   },
   header: {
     height: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0) + 44,
@@ -106,8 +107,9 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: 'Avenir black',
-    fontSize: 18,
+    fontSize: 28,
     fontWeight: '900',
+    color: 'white',
   },
   backIcon: {
     height: convertWidth(21),
@@ -117,17 +119,21 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    justifyContent: 'center',
   },
   previewImage: {
-    height: '100%',
+    width: convertWidth(375),
+    height: convertWidth(375),
     resizeMode: 'contain'
   },
 
 
-
+  lastBottomButtonArea: {
+    padding: convertWidth(20),
+  },
   lastBottomButton: {
     height: constants.buttonHeight,
-    width: convertWidth(375),
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

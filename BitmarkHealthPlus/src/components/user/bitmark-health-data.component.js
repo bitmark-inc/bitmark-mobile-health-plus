@@ -22,14 +22,15 @@ export class BitmarkHealthDataComponent extends Component {
   }
 
   render() {
+    console.log('props :', this.props);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.content}>
-              <Text style={styles.title}>{(this.props.list && this.props.list.length > 1) ? `Sign Your ${this.props.list.length} Weeks Weekly Data` : 'Sign Your Weekly Data'}</Text>
+              <Text style={styles.title}>{(this.props.list && this.props.list.length > 1) ? `Register the last ${this.props.list.length} weeks of your  data` : 'Register your weekly data'}</Text>
               <Text style={styles.message}>
-                To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.
+                Once health data is registered as your property, you will be able to donate, share, or transfer it to another party (medical professional, family member, etc.) at your complete discretion.
               </Text>
             </View>
 
@@ -46,7 +47,7 @@ export class BitmarkHealthDataComponent extends Component {
                   EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
                 });
               }} >
-                <Text style={styles.signButtonText}>SIGN</Text>
+                <Text style={styles.signButtonText}>REGISTER</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
   },
   signButtonText: {
     fontFamily: 'Avenir Medium',
-    fontWeight: '300',
+    fontWeight: '800',
     fontSize: 16,
     color: 'white'
   },

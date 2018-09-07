@@ -89,24 +89,6 @@ const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPubl
   return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset), processingInfo);
 };
 
-const doActiveBitmarkHealthData = async ({ activeBitmarkHealthDataAt }) => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize bitmark health data.');
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await processing(DataProcessor.doActiveBitmarkHealthData(touchFaceIdSession, activeBitmarkHealthDataAt));
-};
-
-const doInactiveBitmarkHealthData = async () => {
-  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to remove bitmark health data.');
-  // if (!touchFaceIdSession) {
-  //   return null;
-  // }
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await processing(DataProcessor.doInactiveBitmarkHealthData(touchFaceIdSession));
-};
-
 const doBitmarkHealthData = async ({ list, processingData }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Your fingerprint signature is required.`);
   if (!touchFaceIdSession) {
@@ -135,9 +117,8 @@ const doDownloadHealthDataBitmark = async ({ bitmarkId, processingData }) => {
 
 
 const doGetBitmarkInformation = async ({ bitmarkId }) => {
-  let donationInformation = await DataProcessor.doGetDonationInformation();
   let { asset, bitmark } = await processing(BitmarkService.doGetBitmarkInformation(bitmarkId));
-  return { asset, bitmark, donationInformation };
+  return { asset, bitmark };
 };
 
 const doDownloadAndShareLegal = async ({ title, urlDownload }) => {
@@ -164,7 +145,10 @@ const doRemoveGrantingAccess = async ({ token }) => {
   return processing(DataProcessor.doRemoveGrantingAccess(token));
 };
 
-
+const doConfirmGrantingAccess = async ({ token, grantee }) => {
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  return processing(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee));
+};
 
 
 // ================================================================================================
@@ -176,8 +160,6 @@ let AppTasks = {
   doLogout,
   doDeleteAccount,
   doIssueFile,
-  doActiveBitmarkHealthData,
-  doInactiveBitmarkHealthData,
   doBitmarkHealthData,
   doDownloadBitmark,
   doDownloadHealthDataBitmark,
@@ -187,6 +169,7 @@ let AppTasks = {
   doSelectAccountAccess,
   doReceivedAccessQRCode,
   doRemoveGrantingAccess,
+  doConfirmGrantingAccess,
 };
 
 let registeredTasks = {};

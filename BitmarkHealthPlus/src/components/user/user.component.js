@@ -19,45 +19,33 @@ export class UserComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_OTHER_USER_DATA_DONATION_INFORMATION, null, ComponentName);
+    this.handerChangeUserDataBitmarks = this.handerChangeUserDataBitmarks.bind(this);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, null, ComponentName);
 
     this.state = {
-      numberHealthDataRecords: 0,
-      numberHealthRecords: 0,
+      numberHealthDataBitmarks: 0,
+      numberHealthAssetBitmarks: 0,
       isDisplayingAccountNumber: true,
     }
-    runPromiseWithoutError(DataProcessor.doGetDonationInformation(DataProcessor.getAccountAccessSelected())).then(donationInformation => {
-      console.log('donationInformation :', donationInformation);
-      if (donationInformation && donationInformation.error) {
-        // TODO
-        return;
-      }
-      let numberHealthDataRecords = 0;
-      let numberHealthRecords = 0;
-      donationInformation.completedTasks.forEach(item => {
-        numberHealthDataRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 1 : 0;
-        numberHealthRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 1 : 0;
-      });
-      this.setState({ numberHealthDataRecords, numberHealthRecords });
+    runPromiseWithoutError(DataProcessor.doGetUserDataBitmarks(DataProcessor.getAccountAccessSelected())).then(({ healthDataBitmarks, healthAssetBitmarks }) => {
+      let numberHealthDataBitmarks = (healthDataBitmarks || []).length;
+      let numberHealthAssetBitmarks = (healthAssetBitmarks || []).length;
+      this.setState({ numberHealthDataBitmarks, numberHealthAssetBitmarks });
     });
   }
 
   componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
-    EventEmitterService.on(EventEmitterService.events.CHANGE_OTHER_USER_DATA_DONATION_INFORMATION, this.handerDonationInformationChange, ComponentName);
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, this.handerChangeUserDataBitmarks, ComponentName);
   }
 
-  handerDonationInformationChange({ donationInformation }) {
-    console.log('handerDonationInformationChange donationInformation :', donationInformation);
-    let numberHealthDataRecords = 0;
-    let numberHealthRecords = 0;
-    (donationInformation.completedTasks || []).forEach(item => {
-      numberHealthDataRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_data ? 1 : 0;
-      numberHealthRecords += item.taskType === donationInformation.commonTaskIds.bitmark_health_issuance ? 1 : 0;
-    });
-    this.setState({ numberHealthDataRecords, numberHealthRecords });
+  handerChangeUserDataBitmarks({ healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber }) {
+    console.log('handerChangeUserDataBitmarks user data bitmarks :', healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
+    let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    if (accountNumberDisplay === bitmarkAccountNumber) {
+      let numberHealthDataBitmarks = (healthDataBitmarks || []).length;
+      let numberHealthAssetBitmarks = (healthAssetBitmarks || []).length;
+      this.setState({ numberHealthDataBitmarks, numberHealthAssetBitmarks });
+    }
   }
 
   captureAsset() {
@@ -99,13 +87,13 @@ export class UserComponent extends Component {
         <View style={styles.body}>
           <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
             <View style={styles.dataArea}>
-              <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthDataRecords === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
-                <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataRecords}</Text> Weeks of Health Data{this.state.numberHealthDataRecords > 1 ? 's' : ''}</Text>
+              <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
+                <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks}</Text> Weeks of Health Data{this.state.numberHealthDataBitmarks > 1 ? 's' : ''}</Text>
               </TouchableOpacity>
             </View>
             <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1 }]}>
-              <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthRecords === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
-                <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthRecords}</Text> Health Record{this.state.numberHealthRecords > 1 ? 's' : ''}</Text>
+              <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
+                <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks}</Text> Health Record{this.state.numberHealthAssetBitmarks > 1 ? 's' : ''}</Text>
               </TouchableOpacity>
               {this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
                 <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
