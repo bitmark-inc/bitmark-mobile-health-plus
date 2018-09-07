@@ -16,6 +16,7 @@ import { GrantingAccessComponent } from './granting-access.component';
 import { OtherAccountsComponent } from './other-account.component';
 import { ScanAccessQRCodeComponent } from './scan-access-qr-code.component';
 import { ConfirmAccessComponent } from './confirm-access.component';
+import { RevokeAccessComponent } from './revoke-access.component';
 
 
 // bitmarkHealthData
@@ -43,6 +44,7 @@ export class UserRouterComponent extends Component {
           <Scene key="otherAccounts" component={OtherAccountsComponent} />
           <Scene key="scanAccessQRCode" component={ScanAccessQRCodeComponent} />
           <Scene key="confirmAccess" component={ConfirmAccessComponent} />
+          <Scene key="revokeAccess" component={RevokeAccessComponent} />
 
         </Stack>
       </Router>

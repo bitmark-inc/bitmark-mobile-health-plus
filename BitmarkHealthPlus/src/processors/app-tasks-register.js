@@ -146,7 +146,10 @@ const doRemoveGrantingAccess = async ({ token }) => {
 };
 
 const doConfirmGrantingAccess = async ({ token, grantee }) => {
-  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+  if (!touchFaceIdSession) {
+    return null;
+  }
   return processing(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee));
 };
 

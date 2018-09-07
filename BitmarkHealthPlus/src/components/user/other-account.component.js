@@ -18,15 +18,13 @@ export class OtherAccountsComponent extends Component {
     this.state = {
       accessAccounts: [],
     }
-    runPromiseWithoutError(DataProcessor.doGetAccountAccesses()).then(accessAccounts => {
-      // accessAccounts = [{
-      //   grantor: DataProcessor.getUserInformation().bitmarkAccountNumber
-      // }];
-      this.setState({ accessAccounts });
+    runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_from')).then(accessAccounts => {
+      this.setState({ accessAccounts: accessAccounts || [] });
     });
   }
 
   selectAccount(accountNumber) {
+    console.log('selectAccount :', accountNumber);
     AppProcessor.doSelectAccountAccess(accountNumber).then(result => {
       if (result) {
         Actions.reset('user');
@@ -37,6 +35,7 @@ export class OtherAccountsComponent extends Component {
   }
 
   render() {
+    console.log('accessAccounts ;', this.state.accessAccounts);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
@@ -61,6 +60,14 @@ export class OtherAccountsComponent extends Component {
                   </TouchableOpacity>);
                 }}
               />}
+              {(!this.state.accessAccounts || this.state.accessAccounts.length === 0) && <View style={{ flex: 1, paddingTop: 50, }}>
+                <Text style={{ fontFamily: 'Avenir Heavy', fontWeight: '800', fontSize: 16 }}>
+                  NO ACCOUNTS AVAILABLE TO VIEW.
+                </Text>
+                <Text style={{ fontFamily: 'Avenir Heavy', fontWeight: '300', fontSize: 16, marginTop: 20, }}>
+                  When someone grants access to their account, it will appear here for viewing.
+                </Text>
+              </View>}
             </View>
             <View style={styles.bottomButtonArea} >
               <TouchableOpacity style={styles.bottomButton} onPress={Actions.scanAccessQRCode} >

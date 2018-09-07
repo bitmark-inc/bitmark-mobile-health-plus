@@ -3,12 +3,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  View,
+  View, Text, TouchableOpacity,
   StatusBar,
   AppState,
   Linking,
   NetInfo,
   Alert,
+  StyleSheet,
 } from 'react-native';
 
 import KeepAwake from 'react-native-keep-awake';
@@ -16,12 +17,12 @@ import Mailer from 'react-native-mail';
 import RNExitApp from 'react-native-exit-app';
 import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-exception-handler";
 
-import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponent, BitmarkIndicatorComponent, } from '../commons'
+import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent, } from '../commons'
 import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
 import { EventEmitterService } from '../services';
 import { UserModel, CommonModel } from '../models';
-import { FileUtil } from '../utils';
+import { FileUtil, convertWidth } from '../utils';
 import { DataProcessor, AppProcessor } from '../processors';
 import { config } from '../configs';
 import { constants } from '../constants';
@@ -42,11 +43,13 @@ class MainEventsHandlerComponent extends Component {
     this.handerProcessErrorEvent = this.handerProcessErrorEvent.bind(this);
     this.doTryConnectInternet = this.doTryConnectInternet.bind(this);
     this.handleDeppLink = this.handleDeppLink.bind(this);
+    this.displayEmptyDataSource = this.displayEmptyDataSource.bind(this);
 
     this.state = {
       processingCount: false,
       submitting: null,
       networkStatus: true,
+      emptyDataSource: false,
     };
     this.appState = AppState.currentState;
   }
@@ -61,6 +64,7 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
+    EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
 
     // Handle Crashes
     this.checkAndShowCrashLog();
@@ -74,6 +78,7 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
+    EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
   }
 
   handleDeppLink(event) {
@@ -256,26 +261,74 @@ class MainEventsHandlerComponent extends Component {
     });
   }
 
+  displayEmptyDataSource() {
+    this.setState({ emptyDataSource: true });
+  }
+
   render() {
     let styles = {};
-    if (!this.state.networkStatus || this.state.processingCount ||
+    if (!this.state.networkStatus || this.state.processingCount || this.state.emptyDataSource ||
       (!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message) ||
       (!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message))) {
       styles.height = '100%';
     }
     return (
       <View style={[{ position: 'absolute', width: '100%', top: 0, left: 0, zIndex: constants.zIndex.dialog }, styles]}>
-        {/* <DefaultIndicatorComponent /> */}
         {!this.state.networkStatus && <BitmarkInternetOffComponent tryConnectInternet={this.doTryConnectInternet} />}
         {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
         {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}
         {!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message) && <BitmarkIndicatorComponent
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
+        {this.state.emptyDataSource && <BitmarkDialogComponent dialogStyle={mainStyle.emptyDataSourceDialog}>
+          <View style={mainStyle.emptyDataSourceDialogContent}>
+            <Text style={mainStyle.emptyDataSourceTitle}>Bitmark Health cannot access your HealthKit data.</Text>
+            <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data from within the Apple Health App.\n\nGo to Health App -> Sources.'}</Text>
+            <TouchableOpacity style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
+              <Text style={mainStyle.emptyDataSourceOKButtonText}>{'OK, I’ve ALLOWED access!'.toUpperCase()}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={mainStyle.emptyDataSourceLaterButton} onPress={() => this.setState({ emptyDataSource: false })}>
+              <Text style={mainStyle.emptyDataSourceLaterButtonText}>I will do it later.</Text>
+            </TouchableOpacity>
+          </View>
+        </BitmarkDialogComponent>}
       </View>
     );
   }
-
 }
+
+
+let mainStyle = StyleSheet.create({
+  emptyDataSourceDialog: {
+    width: convertWidth(308), borderRadius: 5,
+  },
+  emptyDataSourceDialogContent: {
+    paddingTop: 40, paddingBottom: 40, width: convertWidth(308), flexDirection: 'column', alignItems: 'center'
+  },
+  emptyDataSourceTitle: {
+    width: convertWidth(256),
+    fontFamily: 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
+  },
+  emptyDataSourceDescription: {
+    width: convertWidth(256),
+    marginTop: 20,
+    fontFamily: 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
+  },
+  emptyDataSourceOKButton: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    width: convertWidth(277), minHeight: 52, marginTop: 50,
+    borderRadius: 5, borderWidth: 1, borderColor: '#FF4444', backgroundColor: '#FF4444',
+  },
+  emptyDataSourceOKButtonText: {
+    fontFamily: 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
+  },
+  emptyDataSourceLaterButton: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    width: convertWidth(277), minHeight: 52, marginTop: 10,
+  },
+  emptyDataSourceLaterButtonText: {
+    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '300', color: '#FF4444',
+  },
+});
 
 export class MainComponent extends Component {
   static propTypes = {

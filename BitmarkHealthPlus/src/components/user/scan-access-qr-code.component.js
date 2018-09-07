@@ -55,12 +55,12 @@ export class ScanAccessQRCodeComponent extends React.Component {
       <View style={styles.body}>
         {this.state.step === 'scanning' && <View style={styles.bodyContent}>
           <View style={styles.titleRow}>
-            <Text style={styles.title}>Sign access code</Text>
+            <Text style={styles.title}>{this.state.permission === 'denied' ? 'Enable camera access' : 'Sign access code'}</Text>
             <TouchableOpacity onPress={Actions.pop}>
-              <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+              <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
             </TouchableOpacity>
           </View>
-          <View style={styles.content}>
+          <View style={[styles.content, this.state.permission === 'denied' ? { justifyContent: 'space-between', } : {}]}>
             {this.state.permission === 'authorized' && <RNCamera
               ref={(ref) => this.cameraRef = ref}
               style={styles.scanCamera}
@@ -68,13 +68,11 @@ export class ScanAccessQRCodeComponent extends React.Component {
               onBarCodeRead={this.onBarCodeRead.bind(this)}
             />}
             {this.state.permission === 'authorized' && <Text style={styles.authorizedMessage}>
-              By granting access, it allows doctor’s account access all your health data. you can revoke access from the account settings anytime.{'\n\n'}
-              Scan the request access QRcode from doctor.
+              Align QR Code within frame to scan.
             </Text>}
 
             {this.state.permission === 'denied' && <Text style={styles.deniedMessage}>
-              Grant camera access for Bitmark Health to capture asset.{'\n\n'}
-              Save a document or file into your Health data. (Your asset will be encrypted.)
+              Grant camera access for Bitmark Health to scan an access code.{'\n\n'}
             </Text>}
             {this.state.permission === 'denied' && <View style={styles.deniedButtonArea}>
               <TouchableOpacity style={styles.deniedButton} onPress={() => Linking.openURL('app-settings:')}>
@@ -92,7 +90,7 @@ export class ScanAccessQRCodeComponent extends React.Component {
             <Text style={[styles.authorizedMessage, { color: 'white' }]}>You have to wait {'[' + this.state.grantor.substring(0, 4) + '...' + this.state.grantor.substring(this.state.grantor.length - 5, this.state.grantor.length) + ']'} to confirm this request.</Text>
           </View>
           <View style={[styles.deniedButtonArea, { paddingBottom: 20, }]}>
-            <TouchableOpacity style={[styles.deniedButton, { backgroundColor: 'white' }]} onPress={Actions.pop}>
+            <TouchableOpacity style={[styles.deniedButton, { backgroundColor: 'white' }]} onPress={() => { Actions.reset('user') }}>
               <Text style={[styles.deniedButtonText, { color: '#FF4444' }]}>{'OK'.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
@@ -128,20 +126,17 @@ const styles = StyleSheet.create({
   },
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     padding: convertWidth(20),
     paddingBottom: 0,
   },
   closeIcon: {
-    width: convertWidth(21),
-    height: convertWidth(21),
+    width: convertWidth(40),
+    height: convertWidth(40),
     resizeMode: 'contain',
   },
   content: {
     flexDirection: 'column',
-
-    justifyContent: 'space-between',
     flex: 1,
     paddingTop: 20,
     paddingBottom: 20,

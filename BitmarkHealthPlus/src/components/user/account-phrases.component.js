@@ -53,20 +53,34 @@ export class AccountPhraseComponent extends Component {
         }
         phrase24Words.push({ index, word: userInfo.phrase24Words[index] });
       }
-      this.setState({ phrase24Words, smallerList, biggerList, step: STEPS.phrase24Word });
+      if (this.props.isLogout) {
+        this.goToTest(phrase24Words);
+      } else {
+        this.setState({ phrase24Words, smallerList, biggerList, step: STEPS.phrase24Word });
+      }
     }).catch((error => {
+      console.log('error:', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {
         error,
         onClose: Actions.pop
       });
     }));
   }
-  goToTest() {
+  goToTest(phrase24Words) {
+    console.log('phrase24Words :', phrase24Words);
     let numberWorldFilled = 20;
     let countPreFill = 0;
-    let phrase24Words = this.state.phrase24Words;
-    let smallerList = this.state.smallerList;
-    let biggerList = this.state.biggerList;
+    let smallerList = [];
+    let biggerList = [];
+    for (let index in phrase24Words) {
+      if (index < 12) {
+        smallerList.push({ word: phrase24Words[index].word });
+      } else {
+        biggerList.push({ word: phrase24Words[index].word });
+      }
+    }
+    console.log('run1')
+
     while (countPreFill < numberWorldFilled) {
       let randomIndex = Math.floor(Math.random() * phrase24Words.length);
       if (!phrase24Words[randomIndex].selected) {
@@ -87,13 +101,17 @@ export class AccountPhraseComponent extends Component {
         remainIndex.push(index);
       }
     }
+    console.log('run2')
     randomWords = randomWords.sort((a, b) => a.word < b.word ? -1 : (a.word > b.word ? 1 : 0));
 
     randomWords.forEach(item => item.selected = null);
     smallerList.forEach(item => item.word = item.selected ? item.word : '');
     biggerList.forEach(item => item.word = item.selected ? item.word : '');
-
-    console.log('goToTest :', remainIndex);
+    console.log('run3', randomWords,
+      phrase24Words,
+      smallerList,
+      biggerList,
+      remainIndex)
     this.setState({
       step: STEPS.testing,
       randomWords,
@@ -175,6 +193,7 @@ export class AccountPhraseComponent extends Component {
   }
 
   render() {
+    console.log('this.state', this.state);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
@@ -198,9 +217,8 @@ export class AccountPhraseComponent extends Component {
                   Make sure you are in a private location before writing down your recovery phrase.
               </Text>}
                 {this.props.isLogout && <Text style={styles.warningMessage}>
-                  Your recovery phrase is the only way to access your Bitmark account after signing out. If you have not already written down your recovery phrase, you must do so now or you will be permanently lose access to your account and lose ownership of all your digital properties. {'\n\n'}
-                  Your recovery phrase is a list of 24 words to write on a piece of paper and keep safe. Make sure you are in a private location when you write it down.{'\n\n'}
-                  This will completely remove access to your account on this device. Regular data bitmarking and data donations will be paused until you sign back in with your recovery phrase.
+                  Logging out of this account will allow you to access and manage a different account on this device.{'\n\n'}
+                  Your current account will be removed from this device. If you wish to restore it in the future, you will need to enter your Recovery Phrase.
               </Text>}
               </View>}
 
@@ -242,7 +260,8 @@ export class AccountPhraseComponent extends Component {
 
               {this.state.step === STEPS.testing && <View style={styles.content}>
                 <Text style={styles.phrase24WordMessage}>
-                  Tap the words to put them in the correct order for your recovery phrase:
+                  {this.props.isLogout ? 'To continue, tap the words to put them in the correct order for your recovery phrase:'
+                    : 'Tap the words to put them in the correct order for your recovery phrase:'}
                 </Text>
                 <View style={styles.phrase24WordsArea}>
                   <FlatList data={this.state.smallerList}
@@ -250,6 +269,7 @@ export class AccountPhraseComponent extends Component {
                     scrollEnabled={false}
                     extraData={this.state}
                     renderItem={({ item, index }) => {
+                      console.log('render 1', item);
                       return (
                         <TouchableOpacity style={[styles.recoveryPhraseSet, {
                           borderWidth: this.state.selectingIndex === index ? 1 : 0,
@@ -273,6 +293,7 @@ export class AccountPhraseComponent extends Component {
                     scrollEnabled={false}
                     extraData={this.state}
                     renderItem={({ item, index }) => {
+                      console.log('render 2', item);
                       return (
                         <TouchableOpacity style={[styles.recoveryPhraseSet, {
                           borderWidth: this.state.selectingIndex === (index + 12) ? 1 : 0,
@@ -300,6 +321,7 @@ export class AccountPhraseComponent extends Component {
                   contentContainerStyle={{ flexDirection: 'column' }}
                   extraData={this.state}
                   renderItem={({ item }) => {
+                    console.log('render 3', item);
                     return (
                       <TouchableOpacity style={[styles.recoveryPhraseChooseButton, {
                         borderColor: item.selected ? 'white' : '#FF4444'
@@ -330,10 +352,10 @@ export class AccountPhraseComponent extends Component {
               </View>}
 
               {this.state.step === STEPS.phrase24Word && <View style={styles.bottomButtonArea}>
-                {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={this.goToTest.bind(this)}>
+                {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={() => this.goToTest.bind(this)(this.state.phrase24Words)}>
                   <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'Test recover phrase'.toUpperCase()}</Text>
                 </TouchableOpacity>}
-                <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)() : Actions.pop()}>
+                <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)(this.state.phrase24Words) : Actions.pop()}>
                   <Text style={[styles.bottomButtonText,]}>{'Done'.toUpperCase()}</Text>
                 </TouchableOpacity>
               </View>}
@@ -420,7 +442,7 @@ const styles = StyleSheet.create({
   phrase24WordMessage: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
-    fontSize: 17,
+    fontSize: 16,
     marginTop: 16,
   },
   phrase24WordsArea: {

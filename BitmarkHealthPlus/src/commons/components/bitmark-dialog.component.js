@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     position: 'absolute',
-    top: 0,
     width: '100%',
     height: '100%',
     zIndex: constants.zIndex.dialog,
+    borderWidth: 1,
   },
   dialogBodyContent: {
     alignItems: 'center',

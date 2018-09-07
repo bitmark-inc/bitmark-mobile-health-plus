@@ -21,14 +21,27 @@ import {
   AppProcessor
 } from '../../processors';
 import { EventEmitterService } from '../../services';
-
+let ComponentName = 'AccountComponent';
 export class AccountComponent extends Component {
   constructor(props) {
     super(props);
+    this.handerChangeUserDataAccountAccess = this.handerChangeUserDataAccountAccess.bind(this);
+
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, null, ComponentName);
     this.state = {
       accountNumberCopyText: '',
       accessList: [],
     };
+    runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_to')).then((accessList) => {
+      accessList = accessList || [];
+      this.setState({ accessList });
+    });
+  }
+  componentDidMount() {
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, this.handerChangeUserDataAccountAccess, ComponentName);
+  }
+
+  handerChangeUserDataAccountAccess() {
     runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_to')).then((accessList) => {
       accessList = accessList || [];
       this.setState({ accessList });
@@ -115,14 +128,14 @@ export class AccountComponent extends Component {
                   <Text style={styles.rowButtonText}>Write Down Recovery Phrase</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
-                {/* <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
-                <TouchableOpacity style={styles.rowButton} onPress={() => {
+                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
+                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
                   AppProcessor.doLogout().then(() => {
                     EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
                   }).catch(error => {
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
-                }}>
+                }}> */}
                   <Text style={styles.rowButtonText}>Log out</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
@@ -137,7 +150,12 @@ export class AccountComponent extends Component {
                   extraData={this.state}
                   renderItem={({ item }) => {
                     return (<View style={styles.accessAccountRow} >
-                      <Text style={styles.accessAccountNumber}>{item}</Text>
+                      <Text style={styles.accessAccountNumber}>
+                        {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}
+                      </Text>
+                      <TouchableOpacity onPress={() => Actions.revokeAccess({ accessInfo: item })}>
+                        <Text style={styles.accessRevokeButtonText}>Revoke</Text>
+                      </TouchableOpacity>
                     </View>);
                   }}
                 />}
@@ -266,6 +284,21 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontSize: 34,
     color: '#464646',
+  },
+  accessAccountRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+  },
+  accessAccountNumber: {
+    fontFamily: 'Andale Mono',
+    fontSize: 14,
+    color: '#0060F2',
+  },
+  accessRevokeButtonText: {
+    fontFamily: 'Andale Mono',
+    fontSize: 14,
+    color: '#FF003C',
   },
 
   aboutArea: {

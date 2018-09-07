@@ -123,6 +123,9 @@ let queueGetAccountAccesses = [];
 const doCheckNewAccesses = async (accesses) => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
   EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, accesses);
+  if (accesses && accesses.waiting && accesses.waiting.length > 0) {
+    Actions.confirmAccess({ token: accesses.waiting[0].id, grantee: accesses.waiting[0].grantee });
+  }
 };
 const runGetAccountAccessesInBackground = () => {
   return new Promise((resolve) => {
@@ -131,7 +134,7 @@ const runGetAccountAccessesInBackground = () => {
     if (queueGetAccountAccesses.length > 1) {
       return;
     }
-    AccountModel.doGetAllGrantedAccess().then(accesses => {
+    AccountModel.doGetAllGrantedAccess(jwt).then(accesses => {
       queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
       queueGetAccountAccesses = [];
       doCheckNewAccesses(accesses);
@@ -548,7 +551,9 @@ const doReceivedAccessQRCode = async (token) => {
 };
 
 const doRemoveGrantingAccess = async (token) => {
-  return await AccountModel.doRemoveGrantingAccess(jwt, token);
+  let result = await AccountModel.doRemoveGrantingAccess(jwt, token);
+  await runGetAccountAccessesInBackground();
+  return result;
 };
 
 const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
@@ -580,8 +585,10 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
     let timestamp = moment().toDate().getTime();
     let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
-    await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
+    let result = await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
+    console.log('result :', result);
   }
+  await runGetAccountAccessesInBackground();
   return await AccountModel.doReceiveGrantingAccess(jwt, token, { "completed": true });
 };
 

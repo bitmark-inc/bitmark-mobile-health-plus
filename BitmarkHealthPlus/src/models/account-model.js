@@ -195,7 +195,6 @@ let doGrantingAccess = (jwt) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
-    console.log('tempURL :', tempURL, jwt);
     fetch(tempURL, {
       method: 'POST',
       headers: {
@@ -266,6 +265,7 @@ let doGetAllGrantedAccess = (jwt) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
+    console.log('tempURL :', tempURL, jwt);
     fetch(tempURL, {
       method: 'GET',
       headers: {

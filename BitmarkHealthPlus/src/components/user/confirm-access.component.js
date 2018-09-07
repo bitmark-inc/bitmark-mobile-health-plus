@@ -19,11 +19,14 @@ export class ConfirmAccessComponent extends Component {
   };
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      token: this.props.token,
+      grantee: this.props.grantee,
+    };
   }
 
   cancelRequest() {
-    AppProcessor.doRemoveGrantingAccess(this.props.token).then((result) => {
+    AppProcessor.doRemoveGrantingAccess(this.state.token).then((result) => {
       if (result) {
         Actions.pop();
       }
@@ -32,9 +35,15 @@ export class ConfirmAccessComponent extends Component {
     });
   }
   confirmRequest() {
-    AppProcessor.doConfirmGrantingAccess(this.props.token, this.props.grantee).then((result) => {
+    AppProcessor.doConfirmGrantingAccess(this.state.token, this.state.grantee).then((result) => {
       if (result) {
-        Actions.pop();
+        DataProcessor.doGetAccountAccesses('waiting').then(list => {
+          if (list && list.length > 0) {
+            this.state({ token: list[0].id, grantee: list[0].grantee });
+          } else {
+            Actions.pop();
+          }
+        })
       }
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
@@ -42,7 +51,7 @@ export class ConfirmAccessComponent extends Component {
   }
 
   render() {
-    let grantee = this.props.grantee || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    let grantee = this.state.grantee || DataProcessor.getUserInformation().bitmarkAccountNumber;
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
