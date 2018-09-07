@@ -54,9 +54,7 @@ export class GrantingAccessComponent extends Component {
     });
   }
 
-
   render() {
-    console.log('this.state:', this.state);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>

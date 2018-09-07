@@ -7,11 +7,11 @@ import {
   Image, View, SafeAreaView, TouchableOpacity, Text,
 } from 'react-native';
 
-import { convertWidth, runPromiseWithoutError, } from './../../utils';
+import { convertWidth, runPromiseWithoutError, FileUtil, } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
-import { AppProcessor } from '../../processors';
+import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 
 let ComponentName = 'BitmarkDetailComponent';
@@ -25,23 +25,42 @@ export class BitmarkDetailComponent extends Component {
     super(props);
     this.state = {
       filePath: '',
+      content: '',
     }
 
     this.handerDonationInformationChange = this.handerDonationInformationChange.bind(this);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_DONATION_INFORMATION, null, ComponentName);
     if (this.props.bitmarkId) {
-      runPromiseWithoutError(AppProcessor.doDownloadBitmark(this.props.bitmarkId, {
-        indicator: true, title: 'Encrypting and protecting your health data...'
-      })).then(result => {
-        console.log('result :', result);
-        if (result && result.error) {
-          Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
-            text: 'OK', onPress: Actions.pop
-          }]);
-          return;
-        }
-        this.setState({ filePath: result });
-      });
+      if (this.props.bitmarkType === 'bitmark_health_data') {
+        runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(this.props.bitmarkId, {
+          indicator: true, title: 'Encrypting and protecting your health data...'
+        })).then(result => {
+          console.log('result :', result);
+          if (result && result.error) {
+            Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+              text: 'OK', onPress: Actions.pop
+            }]);
+            return;
+          }
+          this.setState({ content: JSON.stringify(JSON.parse(result), null, 2) });
+          // this.setState({ content: JSON.stringify(DataProcessor.getUserInformation(), null, 2) });
+        });
+      } else if (this.props.bitmarkType === 'bitmark_health_issuance') {
+        runPromiseWithoutError(AppProcessor.doDownloadBitmark(this.props.bitmarkId, {
+          indicator: true, title: 'Encrypting and protecting your health data...'
+        })).then(result => {
+          console.log('result :', result);
+          if (result && result.error) {
+            Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+              text: 'OK', onPress: Actions.pop
+            }]);
+            return;
+          }
+          this.setState({ filePath: result });
+        });
+      } else {
+        Actions.pop();
+      }
     } else {
       Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
         text: 'OK', onPress: Actions.pop
@@ -61,21 +80,22 @@ export class BitmarkDetailComponent extends Component {
   render() {
     console.log('this.state :', this.state, this.props)
     return (
-      <SafeAreaView style={styles.bodySafeView}>
+      <SafeAreaView style={[styles.bodySafeView, { backgroundColor: this.props.bitmarkType === 'bitmark_health_data' ? 'white' : 'black' }]}>
         <View style={styles.body}>
           <View style={styles.titleRow}>
-            {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.titleText}>Health data</Text>}
+            {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText, { color: 'black' }]}>Health data</Text>}
             {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>Issued on {moment(this.props.issuedAt).format('YYYY')}</Text>}
             <TouchableOpacity onPress={Actions.pop}>
-              <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />
+              {this.props.bitmarkType === 'bitmark_health_data' && <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />}
+              {this.props.bitmarkType === 'bitmark_health_issuance' && <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />}
             </TouchableOpacity>
           </View>
 
           <View style={styles.content}>
             {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
-              <Image style={styles.bitmarkImageImage} source={{ uri: this.state.filePath }} />}
-            {this.props.bitmarkType === 'bitmark_health_data' && <View>
-
+              <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} />}
+            {this.props.bitmarkType === 'bitmark_health_data' && <View style={styles.bitmarkContent}>
+              <Text >{this.state.content}</Text>
             </View>}
           </View>
         </View>
@@ -107,18 +127,20 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   closeIcon: {
-    width: convertWidth(29),
-    height: convertWidth(29),
+    width: convertWidth(30),
+    height: convertWidth(30),
     resizeMode: 'contain',
   },
 
   content: {
     flex: 1,
   },
-  bitmarkImageImage: {
+  bitmarkImage: {
     height: '100%',
     resizeMode: 'contain',
   },
-
+  bitmarkContent: {
+    padding: convertWidth(20),
+  },
 
 });

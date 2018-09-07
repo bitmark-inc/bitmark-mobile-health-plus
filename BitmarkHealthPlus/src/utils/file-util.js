@@ -44,6 +44,12 @@ const FileUtil = {
     };
     return await RNFS.downloadFile(options).promise;
   },
+  readDir: async (folderPath) => {
+    return await RNFS.readdir(folderPath);
+  },
+  readFile: async (filePath) => {
+    return await RNFS.readFile(filePath);
+  },
 
   zip: async (inputPath, outputPath) => {
     return zip(inputPath, outputPath);

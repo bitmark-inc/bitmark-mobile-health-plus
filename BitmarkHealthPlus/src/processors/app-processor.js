@@ -153,6 +153,9 @@ const doBitmarkHealthData = async (list, processingData) => {
 const doDownloadBitmark = async (bitmarkId, processingData) => {
   return executeTask('doDownloadBitmark', { bitmarkId, processingData });
 };
+const doDownloadHealthDataBitmark = async (bitmarkId, processingData) => {
+  return executeTask('doDownloadHealthDataBitmark', { bitmarkId, processingData });
+};
 
 const doGetBitmarkInformation = async (bitmarkId) => {
   return executeTask('doGetBitmarkInformation', { bitmarkId });
@@ -188,6 +191,9 @@ const doReceivedAccessQRCode = async (token) => {
   return executeTask('doReceivedAccessQRCode', { token });
 };
 
+const doRemoveGrantingAccess = async (token) => {
+  return executeTask('doRemoveGrantingAccess', { token });
+};
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -210,6 +216,7 @@ let AppProcessor = {
 
   doGetBitmarkInformation,
   doDownloadBitmark,
+  doDownloadHealthDataBitmark,
   doReloadUserData,
   doStartBackgroundProcess,
   doDownloadAndShareLegal,
@@ -218,6 +225,7 @@ let AppProcessor = {
   doGrantingAccess,
   doSelectAccountAccess,
   doReceivedAccessQRCode,
+  doRemoveGrantingAccess,
 }
 
 export {

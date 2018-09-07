@@ -12,6 +12,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, NotificationModel, DonationModel } from '../models';
 import { DonationService } from '../services/donation-service';
 import { config } from '../configs';
+import { FileUtil } from '../utils';
 
 let userInformation = {};
 let accountAccessSelected = null;
@@ -205,8 +206,8 @@ const doLogout = async () => {
 
 const doDeleteAccount = async (touchFaceIdSession) => {
   // await NotificationModel.doDeleteAccount(jwt);
-  // let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
-  // await DonationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await DonationModel.doDeleteAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await AccountModel.doLogout();
   await UserModel.doRemoveUserInfo();
   userInformation = {};
@@ -269,31 +270,37 @@ const doOpenApp = async () => {
     let result = await NotificationModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
     jwt = result.jwt_token;
 
-    // console.log('Bearer ' + jwt);
-    // websocket =
-    //   // new WebSocket(config.mobile_server_url + '/ws');
-    //   new WebSocket(config.mobile_server_url + '/ws', [], {
-    //     headers: {
-    //       'Authorization': 'Bearer ' + jwt
-    //     }
-    //   });
+    console.log('Bearer ' + jwt);
+    websocket =
+      // new WebSocket(config.mobile_server_url + '/ws');
+      new WebSocket(config.mobile_server_url + '/ws', [], {
+        headers: {
+          'Authorization': 'Bearer ' + jwt
+        }
+      });
 
-    // websocket.onopen = () => {
-    //   // connection opened
-    //   console.log('onopen ===='); // send a message
-    //   websocket.send
-    // };
-    // websocket.onmessage = (event) => {
-    //   console.log('onmessage :', event);
-    // };
-    // websocket.onerror = (e) => {
-    //   // an error occurred
-    //   console.log('error : ', e.message);
-    // };
-    // websocket.onclose = (e) => {
-    //   // connection closed
-    //   console.log('onclose :', e.code, e.reason);
-    // };
+    websocket.onopen = () => {
+      // connection opened
+      console.log('onopen ===='); // send a message
+      websocket.send
+    };
+    websocket.onmessage = (event) => {
+      console.log('onmessage :', event);
+      if (event.data) {
+        let data = JSON.parse(event.data)
+        if (data.event === 'bitmarks_grant_access' && data.id && data.grantee) {
+          Actions.confirmAccess({ token: data.id, grantee: data.grantee });
+        }
+      }
+    };
+    websocket.onerror = (e) => {
+      // an error occurred
+      console.log('error : ', e.message);
+    };
+    websocket.onclose = (e) => {
+      // connection closed
+      console.log('onclose :', e.code, e.reason);
+    };
 
     if (!appInfo.lastTimeOpen) {
       let appInfo = await doGetAppInformation();
@@ -368,6 +375,16 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmarkId) => {
   let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
   filePath = filePath.replace('file://', '');
   return filePath;
+};
+
+const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkId) => {
+  let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
+  filePath = filePath.replace('file://', '');
+  let folderPathUnzip = filePath.replace('.zip', '');
+  await FileUtil.unzip(filePath, folderPathUnzip);
+  let listFile = await FileUtil.readDir(folderPathUnzip);
+  let result = await FileUtil.readFile(folderPathUnzip + '/' + listFile[0]);
+  return result;
 };
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset, forHealthData = true) => {
@@ -474,6 +491,10 @@ const doReceivedAccessQRCode = async (token) => {
   return await NotificationModel.doReceiveGrantingAccess(jwt, token);
 };
 
+const doRemoveGrantingAccess = async (token) => {
+  return await NotificationModel.doRemoveGrantingAccess(jwt, token);
+};
+
 
 const DataProcessor = {
   doOpenApp,
@@ -504,6 +525,8 @@ const DataProcessor = {
   doSelectAccountAccess,
   getAccountAccessSelected,
   doReceivedAccessQRCode,
+  doRemoveGrantingAccess,
+  doDownloadHealthDataBitmark,
 };
 
 export { DataProcessor };

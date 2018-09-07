@@ -124,6 +124,16 @@ const doDownloadBitmark = async ({ bitmarkId, processingData }) => {
   return await submitting(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkId), processingData);
 };
 
+const doDownloadHealthDataBitmark = async ({ bitmarkId, processingData }) => {
+  // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
+  // if (!touchFaceIdSession) {
+  //   return null;
+  // }
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  return await submitting(DataProcessor.doDownloadHealthDataBitmark(touchFaceIdSession, bitmarkId), processingData);
+};
+
+
 const doGetBitmarkInformation = async ({ bitmarkId }) => {
   let donationInformation = await DataProcessor.doGetDonationInformation();
   let { asset, bitmark } = await processing(BitmarkService.doGetBitmarkInformation(bitmarkId));
@@ -150,6 +160,10 @@ const doSelectAccountAccess = async ({ accountNumber }) => {
 const doReceivedAccessQRCode = async ({ token }) => {
   return processing(DataProcessor.doReceivedAccessQRCode(token));
 };
+const doRemoveGrantingAccess = async ({ token }) => {
+  return processing(DataProcessor.doRemoveGrantingAccess(token));
+};
+
 
 
 
@@ -166,11 +180,13 @@ let AppTasks = {
   doInactiveBitmarkHealthData,
   doBitmarkHealthData,
   doDownloadBitmark,
+  doDownloadHealthDataBitmark,
   doGetBitmarkInformation,
   doDownloadAndShareLegal,
   doGrantingAccess,
   doSelectAccountAccess,
   doReceivedAccessQRCode,
+  doRemoveGrantingAccess,
 };
 
 let registeredTasks = {};

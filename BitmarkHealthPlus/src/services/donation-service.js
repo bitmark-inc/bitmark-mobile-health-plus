@@ -116,6 +116,7 @@ let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
   let folderPath = FileUtil.CacheDirectory + '/' + prefix;
   let assetFilename = prefix + '_' + userId + '_' + date.toString() + '_' + randomId;
   let assetFolder = folderPath + '/' + assetFilename;
+
   let filename = assetFilename + '.txt';
   let filePath = assetFolder + '/' + filename;
   await FileUtil.mkdir(assetFolder);
@@ -152,7 +153,10 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, all
     let randomId = randomString({ length: 8, numeric: true, letters: false, });
     let healthData = {
       date: dateRange.endDate,
-      data: JSON.stringify(removeEmptyValueData(healthRawData)),
+      data: JSON.stringify({
+        time: dateRange,
+        data: removeEmptyValueData(healthRawData)
+      }),
 
       assetName: 'HK' + randomId,
       assetMetadata: {

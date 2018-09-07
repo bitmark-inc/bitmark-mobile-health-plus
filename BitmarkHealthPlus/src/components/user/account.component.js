@@ -151,10 +151,10 @@ export class AccountComponent extends Component {
                   <Text style={styles.rowButtonText}>Version</Text>
                   <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} onPress={Actions.deletingAccount}>
+                {/* <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} onPress={Actions.deletingAccount}>
                   <Text style={[styles.rowButtonText, { color: '#FF4444' }]}>Delete your account</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
 
             </ScrollView>
