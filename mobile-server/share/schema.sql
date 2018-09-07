@@ -79,12 +79,14 @@ CREATE TABLE mobile.bitmark_tracking (
 );
 
 -- TABLE bitmark_renting
+CREATE TYPE renting_status AS ENUM ('open', 'waiting_confirmation', 'completed');
 CREATE TABLE mobile.bitmark_renting (
     id TEXT NOT NULL PRIMARY KEY,
     sender TEXT NOT NULL,
     receiver TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-    granted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    status renting_status DEFAULT 'open'
 );
 
 CREATE INDEX idx_bitmark_tracking_bitmark_id ON mobile.bitmark_tracking(bitmark_id);

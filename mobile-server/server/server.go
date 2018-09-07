@@ -77,7 +77,7 @@ func (s *Server) Run(addr string) error {
 	grantingBitmarksGroup.Use(s.authenticateJWT())
 	{
 		grantingBitmarksGroup.POST("", s.registerRenting)
-		grantingBitmarksGroup.PATCH("/:id", s.updateRentingReceiver)
+		grantingBitmarksGroup.PATCH("/:id", s.updateRenting)
 		grantingBitmarksGroup.GET("", s.queryRentingBitmark)
 		grantingBitmarksGroup.DELETE("/:id", s.revokeRentingBitmartk)
 	}
