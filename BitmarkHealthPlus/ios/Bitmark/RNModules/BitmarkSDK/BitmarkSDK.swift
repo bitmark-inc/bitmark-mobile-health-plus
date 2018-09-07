@@ -178,6 +178,30 @@ class BitmarkSDK: NSObject {
     }
   }
   
+  @objc(downloadBitmarkWithGrantId:::)
+  func downloadBitmarkWithGrantId(_ sessionId: String, _ grantID: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+    do {
+      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
+      let (f, d) = try account.downloadAssetGrant(grantId: grantID)
+      guard let filename = f,
+        let data = d else {
+          callback([false])
+          return
+      }
+      
+      let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+      let documentsDirectory = paths[0]
+      let filePath = documentsDirectory.appendingPathComponent(filename)
+      try data.write(to: filePath)
+      
+      callback([true, filePath.absoluteString])
+    }
+    catch let e {
+      print(e)
+      callback([false])
+    }
+  }
+  
   @objc(getAssetInfo::)
   func getAssetInfo(_ filePath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
