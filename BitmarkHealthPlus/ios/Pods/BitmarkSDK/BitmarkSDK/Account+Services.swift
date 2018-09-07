@@ -361,6 +361,30 @@ public extension Account {
                                       recipient: recipient)
             .serialize()
     }
+    
+    public func downloadAssetGrant(grantId: String) throws -> (String?, Data?) {
+        let network = self.authKey.network
+        let api = API(network: network)
+        guard let access = try api.getAssetGrant(account: self, grantId: grantId) else {
+            return (nil, nil)
+        }
+        
+        let r = try api.getAssetContent(url: access.url!)
+        guard let content = r.1 else {
+            return (nil, nil)
+        }
+        let filename = r.0
+        
+        guard let sessionData = access.sessionData,
+            let sender = access.from else {
+                return (filename, content)
+        }
+        
+        let senderEncryptionPublicKey = try api.getEncryptionPublicKey(accountNumber: sender)
+        let dataKey = try AssetEncryption.encryptionKey(fromSessionData: sessionData, account: self, senderEncryptionPublicKey: senderEncryptionPublicKey!.hexDecodedData)
+        let decryptedData = try dataKey.decypt(data: content)
+        return (filename, decryptedData)
+    }
 }
 
 extension Account {

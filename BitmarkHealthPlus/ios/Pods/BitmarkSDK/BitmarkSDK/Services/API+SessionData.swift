@@ -69,6 +69,43 @@ extension AssetAccess: Codable {
     }
 }
 
+struct AssetGrant {
+    let grantId: String
+    let assetId: String?
+    let url: String?
+    let from: String?
+    let sessionData: SessionData?
+}
+
+extension AssetGrant: Codable {
+    
+    enum AssetGrantKeys: String, CodingKey {
+        case grantId = "id"
+        case assetId = "asset_id"
+        case url = "url"
+        case from = "from"
+        case sessionData = "session_data"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: AssetGrantKeys.self)
+        self.init(grantId: try container.decode(String.self, forKey: AssetGrantKeys.grantId),
+                  assetId: try? container.decode(String.self, forKey: AssetGrantKeys.assetId),
+                  url: try? container.decode(String.self, forKey: AssetGrantKeys.url),
+                  from: try? container.decode(String.self, forKey: AssetGrantKeys.from),
+                  sessionData: try? container.decode(SessionData.self, forKey: AssetGrantKeys.sessionData))
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: AssetGrantKeys.self)
+        try container.encode(self.grantId, forKey: .grantId)
+        try container.encode(self.assetId, forKey: .assetId)
+        try container.encode(self.url, forKey: .url)
+        try container.encode(self.from, forKey: .from)
+        try container.encode(self.sessionData, forKey: .sessionData)
+    }
+}
+
 extension API {
     
     func registerEncryptionPublicKey(forAccount account: Account) throws -> Bool {
@@ -146,6 +183,22 @@ extension API {
         }
         
         return try JSONDecoder().decode(AssetAccess.self, from: result)
+    }
+    
+    func getAssetGrant(account: Account, grantId: String) throws -> AssetGrant? {
+        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v2/access-grants/" + grantId)
+        var urlRequest = URLRequest(url: requestURL)
+        urlRequest.httpMethod = "GET"
+        try urlRequest.signRequest(withAccount: account, action: "accessGrant", resource: grantId)
+        
+        let (r, res) = try urlSession.synchronousDataTask(with: urlRequest)
+        guard let result = r,
+            let response = res,
+            200..<300 ~= response.statusCode else {
+                return nil
+        }
+        
+        return try JSONDecoder().decode(AssetGrant.self, from: result)
     }
 }
 
