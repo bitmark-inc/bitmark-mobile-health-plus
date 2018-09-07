@@ -68,7 +68,7 @@ export class TimelineComponent extends React.Component {
       account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
     });
     let options = {
-      title: 'Capture asset'
+      title: 'Capture asset\nSave a document or file into your Health data.\n(Your asset will be encrypted.)'
     };
 
     ImagePicker.showImagePicker(options, (response) => {

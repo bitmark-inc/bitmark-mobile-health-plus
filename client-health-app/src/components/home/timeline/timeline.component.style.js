@@ -33,8 +33,8 @@ export default StyleSheet.create({
   },
 
   addIcon: {
-    width: 48,
-    height: 48,
+    width: 64,
+    height: 64,
     resizeMode: 'contain'
   },
 

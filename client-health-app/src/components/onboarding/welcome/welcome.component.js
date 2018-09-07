@@ -111,7 +111,7 @@ export class WelcomeComponent extends React.Component {
                     <View style={welcomeComponentStyle.introductionArea}>
                       <Text style={[welcomeComponentStyle.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>
                       <Text style={[welcomeComponentStyle.introductionDescription]}>
-                        Once health data is registered as your property, you will be able to donate, sell, or transfer it to another party (family member, university researcher, etc.) at your complete discretion.
+                        Once your health data is registered as your property, you can help advance science by donating it to approved public health research studies.
                     </Text>
                     </View>
                   </View>
