@@ -9,6 +9,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
+	log "github.com/sirupsen/logrus"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
@@ -131,6 +132,7 @@ func (s *Server) updateRenting(c *gin.Context) {
 	response := make(map[string]interface{})
 
 	if req.UpdateGrantee {
+		log.Debug("Update grantee")
 		sender, err := s.bitmarkStore.AddBitmarkRentingReceiver(c.Copy(), id, account)
 		if err != nil {
 			c.Error(err)
@@ -165,7 +167,9 @@ func (s *Server) updateRenting(c *gin.Context) {
 			return
 		}
 
-		_, err = redisConn.Do("PUBLISH", "id-"+*sender, buf.Bytes())
+		log.Debugf("Sending message to sender: %s", *sender)
+
+		_, err = redisConn.Do("PUBLISH", "ac-"+*sender, buf.Bytes())
 		if err != nil {
 			c.Error(err)
 			c.AbortWithStatus(http.StatusInternalServerError)
@@ -177,6 +181,7 @@ func (s *Server) updateRenting(c *gin.Context) {
 	}
 
 	if len(req.Status) > 0 {
+		log.Debug("Update status")
 		status := bitmarkstore.BitmarkRentingStatus(req.Status)
 		if status != bitmarkstore.RentingCompleted {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid status"})
