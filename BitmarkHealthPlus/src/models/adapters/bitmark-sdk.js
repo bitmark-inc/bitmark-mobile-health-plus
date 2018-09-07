@@ -113,9 +113,9 @@ const BitmarkSDK = {
     });
   },
 
-  createSessionData: (sessionId, encryptionKeyOrBitmarkId, recipient) => {
+  createSessionData: (sessionId, encryptionKey) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.createSessionData(sessionId, encryptionKeyOrBitmarkId, recipient, (ok, result) => {
+      SwiftBitmarkSDK.createSessionData(sessionId, encryptionKey, (ok, result) => {
         if (ok && result) {
           resolve(result);
         } else {
@@ -260,6 +260,18 @@ const BitmarkSDK = {
           resolve(result);
         } else {
           reject(newError(result, 'Can not download bitmark!'));
+        }
+      });
+    });
+  },
+
+  createSessionDataForRecipient: (sessionId, encryptionKeyOrBitmarkId, recipient) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.createSessionDataForRecipient(sessionId, encryptionKeyOrBitmarkId, recipient, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
+        } else {
+          reject(newError(result, 'Can not create session data!'));
         }
       });
     });

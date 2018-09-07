@@ -16,6 +16,7 @@ let EventEmitterService = {
     CHANGE_USER_DATA_BITMARKS: 'change-user-data:bitmarks',
 
     CHANGE_USER_DATA_ACCOUNT_ACCESSES: 'change-user-data:account-accesses',
+    CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY: 'CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY',
   },
   on: (eventName, func, extra) => {
     if (extra && (!EventEmitterService.event_extra[eventName] || !EventEmitterService.event_extra[eventName][extra])) {

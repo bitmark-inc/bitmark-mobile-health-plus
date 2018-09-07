@@ -5,14 +5,14 @@ import {
   Alert,
   Share,
   Clipboard,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
+  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList,
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 
 import HyperLink from 'react-native-hyperlink';
 import Mailer from 'react-native-mail';
 
-import { convertWidth } from './../../utils';
+import { convertWidth, runPromiseWithoutError } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
@@ -26,8 +26,13 @@ export class AccountComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accountNumberCopyText: ''
-    }
+      accountNumberCopyText: '',
+      accessList: [],
+    };
+    runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_to')).then((accessList) => {
+      accessList = accessList || [];
+      this.setState({ accessList });
+    });
   }
 
   rateApp() {
@@ -125,6 +130,17 @@ export class AccountComponent extends Component {
 
               <View style={styles.accessArea}>
                 <Text style={styles.accessTitle}>Access list</Text>
+                {this.state.accessList && this.state.accessList.length > 0 && <FlatList
+                  keyExtractor={(item, index) => index}
+                  scrollEnabled={false}
+                  data={this.state.accessList}
+                  extraData={this.state}
+                  renderItem={({ item }) => {
+                    return (<View style={styles.accessAccountRow} >
+                      <Text style={styles.accessAccountNumber}>{item}</Text>
+                    </View>);
+                  }}
+                />}
               </View>
               <View style={styles.aboutArea}>
                 <Text style={styles.aboutTitle}>About</Text>

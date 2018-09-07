@@ -248,7 +248,6 @@ const doIssueThenTransferFile = async (touchFaceIdSession, filePath, assetName, 
   return result;
 };
 
-
 const doGet100Transactions = (accountNumber, offsetNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -345,6 +344,32 @@ const doGetBitmarkInformation = (bitmarkId) => {
   });
 };
 
+const doAccessGrants = (accountNumber, timestamp, signature, body) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.api_server_url}/v2/access-grants`;
+    fetch(tempURL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        requester: accountNumber,
+        timestamp,
+        signature,
+      },
+      body: JSON.stringify(body),
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doAccessGrants error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 let BitmarkModel = {
   doGet100Bitmarks,
   doGetAllBitmarks,
@@ -362,6 +387,7 @@ let BitmarkModel = {
   doGetAssetAccessibility,
   doGetAssetTextContentType,
   doGetAssetTextContent,
+  doAccessGrants,
 
 };
 

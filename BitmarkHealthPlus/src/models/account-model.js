@@ -262,7 +262,7 @@ let doRevokeGrantingAccess = (jwt, token) => {
   });
 };
 
-let doGetAllGrantedAccess = (jwt, ) => {
+let doGetAllGrantedAccess = (jwt) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
@@ -288,7 +288,7 @@ let doGetAllGrantedAccess = (jwt, ) => {
 let doRemoveGrantingAccess = (jwt, id) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks${id}`;
+    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks/${id}`;
     fetch(tempURL, {
       method: 'DELETE',
       headers: {

@@ -393,8 +393,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(createSessionData::::)
-  func createSessionData(_ sessionId: String, _ bitmarkId: String, _ recipient: String, _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(createSessionDataForRecipient::::)
+  func createSessionDataForRecipient(_ sessionId: String, _ bitmarkId: String, _ recipient: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let sessionData = try account.createSessionData(forBitmark: bitmarkId, recipient: recipient)

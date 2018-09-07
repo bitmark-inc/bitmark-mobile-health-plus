@@ -276,7 +276,7 @@ const doGetHealthKitData = async (listTypes, startDate, endDate) => {
   return mapData;
 };
 
-const doCheckDataSource = async () => {
+const doGetDataSources = async () => {
   await AppleHealthKitModel.initHealthKit(allDataTypes);
   let startDate = moment().toDate();
   startDate.setDate(startDate.getDate() - 7);
@@ -408,10 +408,23 @@ const initHealthKit = async () => {
   await AppleHealthKitModel.initHealthKit(allDataTypes);
 };
 
+const doCheckEmptyDataSource = async () => {
+  let dataSourceStatuses = await doGetDataSources();
+  let empty = true;
+  for (let ds of dataSourceStatuses) {
+    if (ds.status === 'Active') {
+      empty = false;
+      break;
+    }
+  }
+  return empty;
+}
+
 const HealthKitService = {
   initHealthKit,
   doBitmarkHealthData,
-  doCheckDataSource,
+  doGetDataSources,
+  doCheckEmptyDataSource,
   doCheckBitmarkHealthDataTask,
 };
 
