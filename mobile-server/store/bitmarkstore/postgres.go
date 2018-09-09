@@ -28,7 +28,7 @@ const (
 	sqlUpdateBitmarkRentingStatus     = "UPDATE mobile.bitmark_renting SET status = $1, updated_at = NOW() WHERE id = $2"
 	sqlDeleteBitmarkRenting           = "DELETE FROM mobile.bitmark_renting WHERE id = $1 AND sender = $2"
 	sqlQueryBitmarkRentingSender      = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE sender = $1 AND status = 'completed'"
-	sqlQueryBitmarkRentingReceiver    = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE receiver = $1 AND updated_at IS NOT NULL"
+	sqlQueryBitmarkRentingReceiver    = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE receiver = $1 AND status = 'completed'"
 	sqlQueryBitmarkRentingAwaiting    = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE sender = $1 AND status = 'waiting_confirmation'"
 )
 
@@ -126,7 +126,7 @@ func (b *BitmarkPGStore) AddBitmarkRentingReceiver(ctx context.Context, id, rece
 
 // AddBitmarkRentingReceiver update receiver and return sender
 func (b *BitmarkPGStore) UpdateBitmarkRentingStatus(ctx context.Context, id string, status BitmarkRentingStatus) error {
-	_, err := b.dbConn.ExecEx(ctx, sqlUpdateBitmarkRentingStatus, nil, status, id)
+	_, err := b.dbConn.ExecEx(ctx, sqlUpdateBitmarkRentingStatus, nil, string(status), id)
 	return err
 }
 
@@ -138,9 +138,9 @@ func (b *BitmarkPGStore) DeleteBitmarkRenting(ctx context.Context, id, account s
 
 func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string) ([]BitmarkRenting, []BitmarkRenting, []BitmarkRenting, error) {
 	// Sender
-	rows, err := b.dbConn.QueryEx(ctx, sqlQueryBitmarkRentingSender, nil, account)
+	rows1, err := b.dbConn.QueryEx(ctx, sqlQueryBitmarkRentingSender, nil, account)
 
-	defer rows.Close()
+	defer rows1.Close()
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return nil, nil, nil, err
@@ -148,10 +148,10 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 	}
 
 	senderList := make([]BitmarkRenting, 0)
-	for rows.Next() {
+	for rows1.Next() {
 		var id, sender, receiver string
 		var createdAt, grantedAt time.Time
-		if err := rows.Scan(&id, &sender, &receiver, &createdAt, &grantedAt); err != nil {
+		if err := rows1.Scan(&id, &sender, &receiver, &createdAt, &grantedAt); err != nil {
 			return nil, nil, nil, err
 		}
 
@@ -163,10 +163,11 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 			GrantedAt: grantedAt,
 		})
 	}
-	rows.Close()
+	rows1.Close()
 
 	// Receiver
-	rows, err = b.dbConn.QueryEx(ctx, sqlQueryBitmarkRentingReceiver, nil, account)
+	rows2, err := b.dbConn.QueryEx(ctx, sqlQueryBitmarkRentingReceiver, nil, account)
+	defer rows2.Close()
 
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -175,14 +176,14 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 	}
 
 	receiverList := make([]BitmarkRenting, 0)
-	for rows.Next() {
+	for rows2.Next() {
 		var id, sender, receiver string
 		var createdAt, grantedAt time.Time
-		if err := rows.Scan(&id, &sender, &receiver, &createdAt, &grantedAt); err != nil {
+		if err := rows2.Scan(&id, &sender, &receiver, &createdAt, &grantedAt); err != nil {
 			return nil, nil, nil, err
 		}
 
-		senderList = append(senderList, BitmarkRenting{
+		receiverList = append(receiverList, BitmarkRenting{
 			ID:        id,
 			Sender:    sender,
 			Receiver:  receiver,
@@ -190,9 +191,11 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 			GrantedAt: grantedAt,
 		})
 	}
+	rows2.Close()
 
 	// Awaiting
-	rows, err = b.dbConn.QueryEx(ctx, sqlQueryBitmarkRentingAwaiting, nil, account)
+	rows3, err := b.dbConn.QueryEx(ctx, sqlQueryBitmarkRentingAwaiting, nil, account)
+	defer rows3.Close()
 
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -201,14 +204,14 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 	}
 
 	awaitingList := make([]BitmarkRenting, 0)
-	for rows.Next() {
+	for rows3.Next() {
 		var id, sender, awaiting string
 		var createdAt, grantedAt time.Time
-		if err := rows.Scan(&id, &sender, &awaiting, &createdAt, &grantedAt); err != nil {
+		if err := rows3.Scan(&id, &sender, &awaiting, &createdAt, &grantedAt); err != nil {
 			return nil, nil, nil, err
 		}
 
-		senderList = append(senderList, BitmarkRenting{
+		awaitingList = append(awaitingList, BitmarkRenting{
 			ID:        id,
 			Sender:    sender,
 			Receiver:  awaiting,

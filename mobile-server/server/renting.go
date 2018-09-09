@@ -65,7 +65,7 @@ func (s *Server) updateRentingReceiver(c *gin.Context) {
 		return
 	}
 
-	_, err = redisConn.Do("PUBLISH", "id-"+*sender, buf.Bytes())
+	_, err = redisConn.Do("PUBLISH", "ac-"+*sender, buf.Bytes())
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
