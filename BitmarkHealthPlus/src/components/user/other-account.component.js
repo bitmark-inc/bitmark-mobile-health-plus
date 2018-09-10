@@ -107,8 +107,9 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Avenir Light',
     fontWeight: '900',
-    fontSize: 34,
-    color: '#464646',
+    fontSize: 36,
+    lineHeight: 38,
+    color: 'black',
   },
   titleRow: {
     flexDirection: 'row',
@@ -117,8 +118,8 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   closeIcon: {
-    width: convertWidth(40),
-    height: convertWidth(40),
+    width: convertWidth(30),
+    height: convertWidth(30),
     resizeMode: 'contain',
   },
 

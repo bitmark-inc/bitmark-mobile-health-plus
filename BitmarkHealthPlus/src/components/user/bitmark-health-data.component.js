@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     fontFamily: 'Avenir Light',
     fontWeight: '300',
-    fontSize: 12,
+    fontSize: 16,
   },
 
   signButtonArea: {
