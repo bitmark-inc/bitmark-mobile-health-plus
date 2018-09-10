@@ -30,14 +30,13 @@ export class BitmarkDetailComponent extends Component {
     this.handerChangeUserDataBitmarks = this.handerChangeUserDataBitmarks.bind(this);
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, null, ComponentName);
     if (this.props.bitmark) {
+      let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
       if (this.props.bitmarkType === 'bitmark_health_data') {
         let id = this.props.bitmark.id;
-        if (DataProcessor.getAccountAccessSelected() !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+        if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
           let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
           id = grantedInfo.ids[this.props.bitmark.asset_id];
         }
-        console.log('id ===========:', id);
-
         runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, {
           indicator: true, title: 'Encrypting and protecting your health data...'
         })).then(result => {
@@ -53,12 +52,10 @@ export class BitmarkDetailComponent extends Component {
         });
       } else if (this.props.bitmarkType === 'bitmark_health_issuance') {
         let id = this.props.bitmark.id;
-        if (DataProcessor.getAccountAccessSelected() !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+        if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
           let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
           id = grantedInfo.ids[this.props.bitmark.asset_id];
         }
-        console.log('id ===========:', id);
-
         runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, {
           indicator: true, title: 'Encrypting and protecting your health data...'
         })).then(result => {
@@ -118,9 +115,9 @@ export class BitmarkDetailComponent extends Component {
                 {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                   <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({ filePath: this.state.filePath, bitmark: this.props.bitmark })}>
                     <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} /></TouchableOpacity>}
-                {this.props.bitmarkType === 'bitmark_health_data' && <View style={styles.bitmarkContent}>
+                {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent}>
                   <Text >{this.state.content}</Text>
-                </View>}
+                </ScrollView>}
               </ScrollView>
             </View>
           </View>

@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
     color: '#464646',
   },
   closeIcon: {
-    width: convertWidth(30),
-    height: convertWidth(30),
+    width: convertWidth(20),
+    height: convertWidth(20),
     resizeMode: 'contain',
   },
 
