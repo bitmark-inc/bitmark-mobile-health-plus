@@ -181,6 +181,10 @@ const doReceivedAccessQRCode = async (token) => {
   return executeTask('doReceivedAccessQRCode', { token });
 };
 
+const doCancelGrantingAccess = async (token) => {
+  return executeTask('doCancelGrantingAccess', { token });
+};
+
 const doRemoveGrantingAccess = async (grantee) => {
   return executeTask('doRemoveGrantingAccess', { grantee });
 };
@@ -219,6 +223,7 @@ let AppProcessor = {
   doSelectAccountAccess,
   doReceivedAccessQRCode,
   doRemoveGrantingAccess,
+  doCancelGrantingAccess,
   doConfirmGrantingAccess,
 }
 

@@ -330,6 +330,31 @@ let doRemoveGrantingAccess = (jwt, from, to) => {
   });
 };
 
+
+let doCancelGrantingAccess = (jwt, token) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks/${token}`;
+    fetch(tempURL, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+
 let AccountModel = {
   doGetCurrentAccount,
   doCheck24Words,
@@ -354,6 +379,7 @@ let AccountModel = {
   doGetWaitingGrantedAccess,
   doRevokeGrantingAccess,
   doRemoveGrantingAccess,
+  doCancelGrantingAccess,
 }
 
 export {

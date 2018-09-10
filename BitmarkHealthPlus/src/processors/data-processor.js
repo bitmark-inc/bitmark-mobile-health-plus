@@ -558,6 +558,12 @@ const doRemoveGrantingAccess = async (grantee) => {
   return result;
 };
 
+const doCancelGrantingAccess = async (token) => {
+  let result = await AccountModel.doCancelGrantingAccess(jwt, token);
+  await runGetAccountAccessesInBackground();
+  return result;
+};
+
 const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
   let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
   if (userBitmarks && (userBitmarks.healthDataBitmarks || userBitmarks.healthAssetBitmarks)) {
@@ -621,6 +627,7 @@ const DataProcessor = {
   getAccountAccessSelected,
   getGrantedAccessAccountSelected,
   doReceivedAccessQRCode,
+  doCancelGrantingAccess,
   doRemoveGrantingAccess,
   doConfirmGrantingAccess,
   doDownloadHealthDataBitmark,

@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FF4444',
     padding: convertWidth(20),
-
+    paddingTop: convertWidth(15),
   },
   titleText: {
     fontFamily: 'Avenir black',

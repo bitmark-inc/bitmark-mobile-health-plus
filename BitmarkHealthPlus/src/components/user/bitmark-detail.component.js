@@ -38,7 +38,7 @@ export class BitmarkDetailComponent extends Component {
           id = grantedInfo.ids[this.props.bitmark.asset_id];
         }
         runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, {
-          indicator: true, title: 'Encrypting and protecting your health data...'
+          indicator: true, title: 'Loading...'
         })).then(result => {
           console.log('result :', result);
           if (result && result.error) {
@@ -57,7 +57,7 @@ export class BitmarkDetailComponent extends Component {
           id = grantedInfo.ids[this.props.bitmark.asset_id];
         }
         runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, {
-          indicator: true, title: 'Encrypting and protecting your health data...'
+          indicator: true, title: 'Loading...'
         })).then(result => {
           console.log('result :', result);
           if (result && result.error) {
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     borderColor: "#FF4444",
     width: "100%",
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
   },
 
   titleRow: {

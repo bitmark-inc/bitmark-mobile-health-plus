@@ -12,6 +12,8 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import { Actions } from 'react-native-router-flux';
+
 import KeepAwake from 'react-native-keep-awake';
 import Mailer from 'react-native-mail';
 import RNExitApp from 'react-native-exit-app';
@@ -86,9 +88,10 @@ class MainEventsHandlerComponent extends Component {
     const params = route.split('/');
     // `granting-access/[token]`
     switch (params[0]) {
-      // case 'login': {
-      //   break;
-      // }
+      case 'granting-access': {
+        Actions.scanAccessQRCode({ token: params[1] });
+        break;
+      }
       default: {
         // TODO
         break;
@@ -281,8 +284,8 @@ class MainEventsHandlerComponent extends Component {
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
         {this.state.emptyDataSource && <BitmarkDialogComponent dialogStyle={mainStyle.emptyDataSourceDialog}>
           <View style={mainStyle.emptyDataSourceDialogContent}>
-            <Text style={mainStyle.emptyDataSourceTitle}>Bitmark Health cannot access your HealthKit data.</Text>
-            <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data from within the Apple Health App.\n\nGo to Health App -> Sources.'}</Text>
+            <Text style={mainStyle.emptyDataSourceTitle}>Health+ cannot access your HealthKit data.</Text>
+            <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Health+ to access specific (or all) categories of data from within the Apple Health App.\n\nGo to Health App -> Sources.'}</Text>
             <TouchableOpacity style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
               <Text style={mainStyle.emptyDataSourceOKButtonText}>{'OK, I’ve ALLOWED access!'.toUpperCase()}</Text>
             </TouchableOpacity>

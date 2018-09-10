@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     flexDirection: 'column',
     flex: 1,
   },

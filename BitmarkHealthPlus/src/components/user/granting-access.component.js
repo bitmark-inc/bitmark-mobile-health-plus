@@ -41,14 +41,14 @@ export class GrantingAccessComponent extends Component {
 
   sendEmail() {
     Mailer.mail({
-      subject: 'Granting access',
+      subject: 'Access my Bitmark Health account',
       recipients: [],
       body: `
         Hi
         <br/>
         I would like you to view my health records and data. Here’s a direct link:
         <br/>
-        <a href="healthplush://${this.state.token}">Click to receive the granting!</a>
+        <a href="healthplush://granting-access/${this.state.token}">healthplush://granting-access/${this.state.token}</a>
         <br/>
         Get the free <a href="${config.appLink}">Bitmark Health</a> app. 
         <br/>
@@ -79,23 +79,31 @@ export class GrantingAccessComponent extends Component {
                 size={convertWidth(270)}
                 bgColor='black'
                 fgColor='white' />}
-              <Hyperlink linkStyle={{ color: '#FF4444' }}
-                onPress={() => {
-                  Actions.account();
-                }}
-                linkText={() => 'Account Settings.'}
-              >
-                <Text style={styles.message}>
-                  Granting access to your account allows someone to view all your records and data. But they cannot transfer or change your records or data.{'\n\n'}
-                  You can revoke access under http://account
+              <View style={{ flex: 1, justifyContent: 'center' }}>
+                <Hyperlink linkStyle={{ color: '#FF4444' }}
+                  onPress={() => {
+                    Actions.account();
+                  }}
+                  linkText={() => 'Account Settings.'}
+                >
+                  <Text style={styles.message}>
+                    Granting access to your account allows someone to view all your records and data. But they cannot transfer or change your records or data.{'\n\n'}
+                    You can revoke access under http://abc
               </Text>
-              </Hyperlink>
-              <View></View>
+                </Hyperlink>
+                <Hyperlink linkStyle={{ color: '#FF4444' }}
+                  onPress={() => {
+                    Actions.account();
+                  }}
+                  linkText={() => 'Grant request'}
+                >
+                  <Text style={styles.messageEmail}>
+                    You can also email a http://abc.
+              </Text>
+                </Hyperlink>
+              </View>
             </View>
           </View>
-          <TouchableOpacity style={styles.bottomButton} onPress={this.sendEmail.bind(this)}>
-            <Text style={styles.bottomButtonText}>{'Send by email'.toUpperCase()}</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -126,6 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
   },
   titleText: {
     fontFamily: 'Avenir Black',
@@ -145,26 +154,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 29,
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
   },
   message: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
+    marginTop: 20,
   },
-
-  bottomButton: {
-    borderWidth: 1,
-    borderTopWidth: 0,
-    borderColor: '#FF4444',
-    height: constants.buttonHeight,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bottomButtonText: {
+  messageEmail: {
     fontFamily: 'Avenir Light',
-    fontWeight: '600',
+    fontWeight: '300',
     fontSize: 16,
-    color: '#FF4444'
+    marginTop: 20,
   }
-
 });

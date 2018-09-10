@@ -392,6 +392,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     flexDirection: 'column',
     flex: 1,
   },
@@ -401,6 +402,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     paddingBottom: 0,
   },
   titleText: {

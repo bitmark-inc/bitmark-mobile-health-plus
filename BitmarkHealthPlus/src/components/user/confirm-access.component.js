@@ -26,7 +26,7 @@ export class ConfirmAccessComponent extends Component {
   }
 
   cancelRequest() {
-    AppProcessor.doRemoveGrantingAccess(this.state.token).then((result) => {
+    AppProcessor.doCancelGrantingAccess(this.state.token).then((result) => {
       if (result) {
         Actions.pop();
       }
@@ -70,7 +70,7 @@ export class ConfirmAccessComponent extends Component {
 
             <View style={styles.bottomButtonArea}>
               <TouchableOpacity style={styles.bottomButton} onPress={this.cancelRequest.bind(this)}>
-                <Text style={styles.bottomButtonText}>{'Cancel'.toUpperCase()}</Text>
+                <Text style={[styles.bottomButtonText, { fontWeight: '300' }]}>{'Cancel'.toUpperCase()}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.bottomButton, { backgroundColor: 'white' }]} onPress={this.confirmRequest.bind(this)}>
                 <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'confirm'.toUpperCase()}</Text>
@@ -105,12 +105,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
   },
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
-    color: '#464646',
+    color: 'white',
   },
   content: {
     flex: 1,
@@ -118,11 +119,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 29,
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
   },
   message: {
     fontFamily: 'Avenir Light',
     fontWeight: '300',
     fontSize: 12,
+    color: 'white',
   },
 
   bottomButtonArea: {

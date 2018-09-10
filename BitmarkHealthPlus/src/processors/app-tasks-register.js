@@ -144,6 +144,9 @@ const doReceivedAccessQRCode = async ({ token }) => {
 const doRemoveGrantingAccess = async ({ grantee }) => {
   return processing(DataProcessor.doRemoveGrantingAccess(grantee));
 };
+const doCancelGrantingAccess = async ({ token }) => {
+  return processing(DataProcessor.doCancelGrantingAccess(token));
+};
 
 const doConfirmGrantingAccess = async ({ token, grantee }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
@@ -172,6 +175,7 @@ let AppTasks = {
   doSelectAccountAccess,
   doReceivedAccessQRCode,
   doRemoveGrantingAccess,
+  doCancelGrantingAccess,
   doConfirmGrantingAccess,
 };
 

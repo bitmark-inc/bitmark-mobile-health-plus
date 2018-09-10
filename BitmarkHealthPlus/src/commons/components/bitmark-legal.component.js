@@ -568,6 +568,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     height: 70,
   },
 

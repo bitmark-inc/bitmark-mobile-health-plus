@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
   accountNumberArea: {
     flexDirection: 'column',
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     paddingBottom: 45,
   },
   accountNumberTitleRow: {
@@ -207,6 +208,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     paddingBottom: 0,
   },
   accountNumberTitle: {

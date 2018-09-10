@@ -1,5 +1,6 @@
 import React from 'react';
-import Permissions from 'react-native-permissions'
+import PropTypes from 'prop-types';
+import Permissions from 'react-native-permissions';
 import {
   Text, View, TouchableOpacity, Image, SafeAreaView,
   Linking,
@@ -14,8 +15,12 @@ import { AppProcessor } from './../../processors';
 import { EventEmitterService } from '../../services';
 
 export class ScanAccessQRCodeComponent extends React.Component {
+  static propTypes = {
+    token: PropTypes.string,
+  };
   constructor(props) {
     super(props);
+    this.doReceivedAccessQRCode = this.doReceivedAccessQRCode.bind(this);
     this.scanned = false;
     this.state = {
       permission: null,
@@ -23,15 +28,19 @@ export class ScanAccessQRCodeComponent extends React.Component {
       grantor: '',
     }
 
-    Permissions.check('camera').then(permission => {
-      if (permission === 'undetermined') {
-        Permissions.request('camera').then(permission => {
-          this.setState({ permission })
-        });
-      } else {
-        this.setState({ permission })
-      }
-    });
+    if (this.props.token) {
+      this.doReceivedAccessQRCode(this.props.token);
+    } else {
+      Permissions.check('camera').then(permission => {
+        if (permission === 'undetermined') {
+          Permissions.request('camera').then(permission => {
+            this.setState({ permission });
+          });
+        } else {
+          this.setState({ permission });
+        }
+      });
+    }
   }
 
   onBarCodeRead(scanData) {
@@ -41,12 +50,18 @@ export class ScanAccessQRCodeComponent extends React.Component {
     }
     this.scanned = true;
     let token = scanData.data;
+    this.doReceivedAccessQRCode(token);
+  }
+
+  doReceivedAccessQRCode(token) {
     AppProcessor.doReceivedAccessQRCode(token).then(result => {
       if (result) {
         this.setState({ step: 'done', grantor: result.sender });
+      } else {
+        Actions.pop();
       }
     }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error, onClose: Actions.pop });
     });
   }
 
@@ -84,10 +99,10 @@ export class ScanAccessQRCodeComponent extends React.Component {
         </View>}
         {this.state.step !== 'scanning' && <View style={[styles.bodyContent, { backgroundColor: '#FF4444' }]}>
           <View style={styles.titleRow}>
-            <Text style={[styles.title, { color: 'white' }]}>Waiting for confirmation</Text>
+            <Text style={[styles.title, { color: 'white' }]}>Awaiting confirmation...</Text>
           </View>
           <View style={styles.content}>
-            <Text style={[styles.authorizedMessage, { color: 'white' }]}>You have to wait {'[' + this.state.grantor.substring(0, 4) + '...' + this.state.grantor.substring(this.state.grantor.length - 5, this.state.grantor.length) + ']'} to confirm this request.</Text>
+            <Text style={[styles.authorizedMessage, { color: 'white' }]}>You will be notified when {'[' + this.state.grantor.substring(0, 4) + '...' + this.state.grantor.substring(this.state.grantor.length - 5, this.state.grantor.length) + ']'} finishes granting access.</Text>
           </View>
           <View style={[styles.deniedButtonArea, { paddingBottom: 20, }]}>
             <TouchableOpacity style={[styles.deniedButton, { backgroundColor: 'white' }]} onPress={() => { Actions.reset('user') }}>
@@ -128,6 +143,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     paddingBottom: 0,
   },
   closeIcon: {

@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     flexDirection: 'column',
     flex: 1,
   },
@@ -108,18 +109,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontWeight: '900',
     fontSize: 36,
-    lineHeight: 38,
     color: 'black',
   },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
     paddingBottom: 0,
   },
   closeIcon: {
-    width: convertWidth(20),
-    height: convertWidth(20),
+    width: convertWidth(23),
+    height: convertWidth(23),
     resizeMode: 'contain',
   },
 

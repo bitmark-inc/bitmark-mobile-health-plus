@@ -89,6 +89,7 @@ export class BitmarkListComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
+    backgroundColor: 'white',
   },
   body: {
     padding: convertWidth(16),
