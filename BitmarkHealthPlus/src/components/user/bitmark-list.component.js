@@ -71,7 +71,7 @@ export class BitmarkListComponent extends Component {
                 data={this.state.bitmarkList}
                 extraData={this.state}
                 renderItem={({ item }) => {
-                  return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)}>
+                  return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
                     <Text style={styles.bitmarkRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
                     {item.status === 'confirmed' && <Image style={styles.bitmarkRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
                     {item.status === 'pending' && <Text style={styles.bitmarkPending}>Registering ownership...</Text>}
@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     borderColor: "#FF4444",
     width: "100%",
     padding: convertWidth(20),
+    paddingTop: convertWidth(15),
   },
 
   titleRow: {
@@ -130,6 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: 14,
   },
   bitmarkRowText: {
     fontFamily: 'Avenir Book',
