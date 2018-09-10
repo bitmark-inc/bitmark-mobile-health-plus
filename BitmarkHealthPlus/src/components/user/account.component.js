@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 
-import HyperLink from 'react-native-hyperlink';
 import Mailer from 'react-native-mail';
 
 import { convertWidth, runPromiseWithoutError } from './../../utils';
@@ -18,7 +17,7 @@ import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 import {
   DataProcessor,
-  AppProcessor
+  // AppProcessor
 } from '../../processors';
 import { EventEmitterService } from '../../services';
 let ComponentName = 'AccountComponent';
@@ -103,14 +102,10 @@ export class AccountComponent extends Component {
                 <View style={[styles.accountNumberCopiedArea, this.state.accountNumberCopyText ? {} : { backgroundColor: 'white' }]}>
                   <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
                 </View>
-                <HyperLink
-                  onPress={(url) => Linking.openURL(url)}
-                  linkStyle={{ color: '#0060F2', }}
-                  linkText={() => 'This number is public'} >
-                  <Text style={styles.accountNumberDescription}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. {config.registry_server_url}. You can safely share it with others without compromising your security.</Text>
-                </HyperLink>
 
-                <TouchableOpacity style={styles.rowButton} onPress={() => {
+                <Text style={styles.accountNumberDescription}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.</Text>
+
+                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => {
                   Intercom.displayMessageComposer();
                 }}>
                   <Text style={styles.rowButtonText}>Help and feedback</Text>
@@ -124,7 +119,7 @@ export class AccountComponent extends Component {
 
               <View style={styles.securityArea}>
                 <Text style={styles.securityTitle} >Security</Text>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase()}>
+                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => Actions.accountPhrase()}>
                   <Text style={styles.rowButtonText}>Write Down Recovery Phrase</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
@@ -143,7 +138,9 @@ export class AccountComponent extends Component {
 
               <View style={styles.accessArea}>
                 <Text style={styles.accessTitle}>Access list</Text>
+                <Text style={styles.accessDescription}>These accounts can view your records and data.</Text>
                 {this.state.accessList && this.state.accessList.length > 0 && <FlatList
+                  style={{ marginTop: 12 }}
                   keyExtractor={(item, index) => index}
                   scrollEnabled={false}
                   data={this.state.accessList}
@@ -162,7 +159,7 @@ export class AccountComponent extends Component {
               </View>
               <View style={styles.aboutArea}>
                 <Text style={styles.aboutTitle}>About</Text>
-                <TouchableOpacity style={styles.rowButton} onPress={this.rateApp.bind(this)}>
+                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={this.rateApp.bind(this)}>
                   <Text style={styles.rowButtonText}>App Store Rating & Review</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
@@ -203,7 +200,7 @@ const styles = StyleSheet.create({
   accountNumberArea: {
     flexDirection: 'column',
     padding: convertWidth(20),
-    paddingBottom: 30,
+    paddingBottom: 45,
   },
   accountNumberTitleRow: {
     flexDirection: 'row',
@@ -263,7 +260,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#FF4444',
     padding: convertWidth(20),
-    paddingBottom: 30,
+    paddingBottom: 45,
   },
   securityTitle: {
     fontFamily: 'Avenir Black',
@@ -277,13 +274,20 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#FF4444',
     padding: convertWidth(20),
-    paddingBottom: 30,
+    paddingBottom: 45,
   },
   accessTitle: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 34,
     color: '#464646',
+  },
+  accessDescription: {
+    fontFamily: 'Avenir Book',
+    fontWeight: '300',
+    fontSize: 14,
+    color: '#545454',
+    marginTop: 10,
   },
   accessAccountRow: {
     flexDirection: 'row',
