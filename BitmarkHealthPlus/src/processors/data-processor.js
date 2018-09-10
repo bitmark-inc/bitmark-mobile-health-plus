@@ -124,6 +124,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
 
 let queueGetAccountAccesses = [];
 const doCheckNewAccesses = async (accesses) => {
+  console.log('doCheckNewAccesses accesses :', accesses);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
   EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, accesses);
   if (accesses && accesses.waiting && accesses.waiting.length > 0) {
@@ -310,6 +311,7 @@ const doOpenApp = async () => {
         } catch (error) {
           //
         }
+        console.log('data event :', data);
         if (data && data.event === 'bitmarks_grant_access' && data.id && data.grantee) {
           Actions.confirmAccess({ token: data.id, grantee: data.grantee });
         }

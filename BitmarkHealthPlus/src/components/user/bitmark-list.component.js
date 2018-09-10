@@ -28,7 +28,7 @@ export class BitmarkListComponent extends Component {
     };
     runPromiseWithoutError(DataProcessor.doGetUserDataBitmarks()).then(({ healthDataBitmarks, healthAssetBitmarks }) => {
       let bitmarkList = this.props.bitmarkType === 'bitmark_health_data' ? healthDataBitmarks :
-        (this.props.bitmarkType === 'bitmark_health_data' ? healthAssetBitmarks : [])
+        (this.props.bitmarkType === 'bitmark_health_issuance' ? healthAssetBitmarks : [])
       this.setState({ bitmarkList });
     });
   }
@@ -42,7 +42,7 @@ export class BitmarkListComponent extends Component {
     let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
     if (accountNumberDisplay === bitmarkAccountNumber) {
       let bitmarkList = this.props.bitmarkType === 'bitmark_health_data' ? healthDataBitmarks :
-        (this.props.bitmarkType === 'bitmark_health_data' ? healthAssetBitmarks : [])
+        (this.props.bitmarkType === 'bitmark_health_issuance' ? healthAssetBitmarks : [])
       this.setState({ bitmarkList });
     }
   }

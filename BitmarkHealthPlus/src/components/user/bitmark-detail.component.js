@@ -77,19 +77,18 @@ export class BitmarkDetailComponent extends Component {
   render() {
     console.log('this.state :', this.state, this.props)
     return (
-      <SafeAreaView style={[styles.bodySafeView, { backgroundColor: this.props.bitmarkType === 'bitmark_health_data' ? 'white' : 'black' }]}>
+      <SafeAreaView style={[styles.bodySafeView]}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
               {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText, { color: 'black' }]}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
               {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
               <TouchableOpacity onPress={Actions.pop}>
-                {this.props.bitmarkType === 'bitmark_health_data' && <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />}
-                {this.props.bitmarkType === 'bitmark_health_issuance' && <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />}
+                <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
               </TouchableOpacity>
             </View>
             <View style={styles.content}>
-              <ScrollView style={styles.contentScroll}>
+              <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
                 <Text style={styles.metadataTitle}>PUBLIC METADATA</Text>
                 <Text style={styles.metadataMessage}>Visible to everyone</Text>
                 <View style={styles.metadataRow}>
@@ -102,7 +101,8 @@ export class BitmarkDetailComponent extends Component {
                 </View>
                 <Text style={styles.metadataTitle}>PRIVATE DATA:</Text>
                 {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
-                  <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} />}
+                  <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({ filePath: this.state.filePath, bitmark: this.props.bitmark })}>
+                    <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} /></TouchableOpacity>}
                 {this.props.bitmarkType === 'bitmark_health_data' && <View style={styles.bitmarkContent}>
                   <Text >{this.state.content}</Text>
                 </View>}
@@ -118,7 +118,6 @@ export class BitmarkDetailComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
-    backgroundColor: 'black',
   },
   body: {
     padding: convertWidth(16),
@@ -188,6 +187,9 @@ const styles = StyleSheet.create({
     color: '#999999'
   },
 
+  bitmarkImageArea: {
+    flex: 1,
+  },
   bitmarkImage: {
     height: '100%',
     resizeMode: 'contain',
