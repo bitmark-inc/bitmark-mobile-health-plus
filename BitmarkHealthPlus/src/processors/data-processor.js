@@ -552,8 +552,8 @@ const doReceivedAccessQRCode = async (token) => {
   return await AccountModel.doReceiveGrantingAccess(jwt, token, { "update_grantee": true });
 };
 
-const doRemoveGrantingAccess = async (token) => {
-  let result = await AccountModel.doRemoveGrantingAccess(jwt, token);
+const doRemoveGrantingAccess = async (grantee) => {
+  let result = await AccountModel.doRemoveGrantingAccess(jwt, userInformation.bitmarkAccountNumber, grantee);
   await runGetAccountAccessesInBackground();
   return result;
 };

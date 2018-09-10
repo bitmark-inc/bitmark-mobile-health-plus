@@ -181,8 +181,8 @@ const doReceivedAccessQRCode = async (token) => {
   return executeTask('doReceivedAccessQRCode', { token });
 };
 
-const doRemoveGrantingAccess = async (token) => {
-  return executeTask('doRemoveGrantingAccess', { token });
+const doRemoveGrantingAccess = async (grantee) => {
+  return executeTask('doRemoveGrantingAccess', { grantee });
 };
 
 const doConfirmGrantingAccess = async (token, grantee) => {

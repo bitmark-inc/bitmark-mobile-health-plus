@@ -141,8 +141,8 @@ const doSelectAccountAccess = async ({ accountNumber }) => {
 const doReceivedAccessQRCode = async ({ token }) => {
   return processing(DataProcessor.doReceivedAccessQRCode(token));
 };
-const doRemoveGrantingAccess = async ({ token }) => {
-  return processing(DataProcessor.doRemoveGrantingAccess(token));
+const doRemoveGrantingAccess = async ({ grantee }) => {
+  return processing(DataProcessor.doRemoveGrantingAccess(grantee));
 };
 
 const doConfirmGrantingAccess = async ({ token, grantee }) => {

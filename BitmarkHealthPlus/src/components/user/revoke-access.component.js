@@ -24,7 +24,7 @@ export class RevokeAccessComponent extends Component {
   }
 
   revokeAccess() {
-    AppProcessor.doRemoveGrantingAccess(this.props.accessInfo.id).then(result => {
+    AppProcessor.doRemoveGrantingAccess(this.props.accessInfo.grantee).then(result => {
       if (result) {
         Actions.pop();
       }
