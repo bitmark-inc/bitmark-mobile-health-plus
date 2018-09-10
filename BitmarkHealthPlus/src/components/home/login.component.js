@@ -20,7 +20,7 @@ const PreCheckResults = {
   error: 'RETRY'
 };
 
-let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
+// let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 
 
 export class LoginComponent extends Component {
@@ -33,14 +33,14 @@ export class LoginComponent extends Component {
       if (index < 12) {
         smallerList.push({
           key: index,
-          // word: '',
-          word: testWords[index],
+          word: '',
+          // word: testWords[index],
         });
       } else {
         biggerList.push({
           key: index,
-          // word: '',
-          word: testWords[index],
+          word: '',
+          // word: testWords[index],
         });
       }
     }
@@ -57,7 +57,7 @@ export class LoginComponent extends Component {
       keyboardExternalOpacity: new Animated.Value(0),
       keyboardExternalDataSource: dictionary24Words,
     };
-    setTimeout(this.checkStatusInputting.bind(this), 200);
+    // setTimeout(this.checkStatusInputting.bind(this), 200);
   }
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
