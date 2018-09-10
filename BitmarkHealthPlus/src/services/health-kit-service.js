@@ -196,7 +196,7 @@ const SUNDAY = 7;
 const SATURDAY = 6;
 const TIME_SENT_NOTIFICATION = 11;
 
-const getPreviousDayInLocalTime = (date, dayInWeek) => {
+const getPreviousDay = (date, dayInWeek) => {
   let tempMoment = moment(date);
   if (dayInWeek) {
     let currentDayInWeek = tempMoment.day();
@@ -211,7 +211,7 @@ const getPreviousDayInLocalTime = (date, dayInWeek) => {
   return tempMoment;
 };
 
-const getNextDayInLocalTime = (date, dayInWeek) => {
+const getNextDay = (date, dayInWeek) => {
   let tempMoment = moment(date);
   if (dayInWeek) {
     let currentDayInWeek = tempMoment.day();
@@ -226,7 +226,7 @@ const getNextDayInLocalTime = (date, dayInWeek) => {
   return tempMoment;
 };
 
-const getBeginDayInLocalTime = (date) => {
+const getBeginDay = (date) => {
   let tempMoment = moment(date);
   tempMoment.hour(0);
   tempMoment.minute(0);
@@ -235,7 +235,7 @@ const getBeginDayInLocalTime = (date) => {
   return tempMoment;
 };
 
-const getEndDayInLocalTime = (date) => {
+const getEndDay = (date) => {
   let tempMoment = moment(date);
   tempMoment.hour(23);
   tempMoment.minute(59);
@@ -372,21 +372,21 @@ const doCheckBitmarkHealthDataTask = (healthDataBitmarks, accountCreatedAt) => {
   let startDate, endDate;
   if (!lastTimeBitmarkHealthData) {
     lastTimeBitmarkHealthData = moment(accountCreatedAt);
-    startDate = getPreviousDayInLocalTime(lastTimeBitmarkHealthData, SUNDAY);
-    startDate = getBeginDayInLocalTime(startDate);
+    startDate = getPreviousDay(lastTimeBitmarkHealthData, SUNDAY);
+    startDate = getBeginDay(startDate);
     endDate = moment(lastTimeBitmarkHealthData);
     endDate.second(endDate.second() - 1);
 
     list.push({ startDate, endDate, });
 
     startDate = moment(lastTimeBitmarkHealthData);
-    endDate = getNextDayInLocalTime(startDate, SATURDAY);
-    endDate = getEndDayInLocalTime(endDate);
+    endDate = getNextDay(startDate, SATURDAY);
+    endDate = getEndDay(endDate);
   } else {
-    startDate = getNextDayInLocalTime(lastTimeBitmarkHealthData);
-    startDate = getBeginDayInLocalTime(startDate);
-    endDate = getNextDayInLocalTime(startDate, SATURDAY);
-    endDate = getEndDayInLocalTime(endDate);
+    startDate = getNextDay(lastTimeBitmarkHealthData);
+    startDate = getBeginDay(startDate);
+    endDate = getNextDay(startDate, SATURDAY);
+    endDate = getEndDay(endDate);
   }
 
   let currentDate = moment();
@@ -396,10 +396,10 @@ const doCheckBitmarkHealthDataTask = (healthDataBitmarks, accountCreatedAt) => {
         startDate: startDate.toDate(),
         endDate: endDate.toDate(),
       });
-      startDate = getNextDayInLocalTime(endDate);
-      startDate = getBeginDayInLocalTime(startDate);
-      endDate = getNextDayInLocalTime(startDate, SATURDAY);
-      endDate = getEndDayInLocalTime(endDate);
+      startDate = getNextDay(endDate);
+      startDate = getBeginDay(startDate);
+      endDate = getNextDay(startDate, SATURDAY);
+      endDate = getEndDay(endDate);
     }
   }
   return list;
@@ -419,6 +419,18 @@ const doCheckEmptyDataSource = async () => {
   }
   return empty;
 }
+const getNextSunday11AM = () => {
+  let timeSendNotification = moment();
+  if (timeSendNotification.day() === SUNDAY && timeSendNotification.hour() < TIME_SENT_NOTIFICATION) {
+    timeSendNotification.hour(TIME_SENT_NOTIFICATION);
+  } else {
+    timeSendNotification = getNextDay(timeSendNotification, SUNDAY);
+    timeSendNotification.hour(TIME_SENT_NOTIFICATION);
+  }
+  timeSendNotification.minute(0);
+  timeSendNotification.second(0);
+  return timeSendNotification;
+};
 
 const HealthKitService = {
   initHealthKit,
@@ -426,6 +438,7 @@ const HealthKitService = {
   doGetDataSources,
   doCheckEmptyDataSource,
   doCheckBitmarkHealthDataTask,
+  getNextSunday11AM,
 };
 
 export { HealthKitService };

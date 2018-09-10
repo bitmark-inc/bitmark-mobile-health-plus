@@ -48,7 +48,7 @@ const doGetLocalData = (localDataKey) => {
       try {
         localData = JSON.parse(data);
       } catch (error) {
-        //
+        console.log('doGetLocalData error:', error);
       }
       resolve(localData);
     });

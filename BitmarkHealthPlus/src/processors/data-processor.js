@@ -2,6 +2,10 @@ import DeviceInfo from 'react-native-device-info';
 import Intercom from 'react-native-intercom';
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
+import ReactNative from 'react-native';
+const {
+  PushNotificationIOS,
+} = ReactNative;
 
 import {
   EventEmitterService,
@@ -114,7 +118,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     }).catch(error => {
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve());
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
-      console.log('runOnBackground  runGetUserBitmarksInBackground error :', error);
     });
   });
 };
@@ -138,17 +141,14 @@ const runGetAccountAccessesInBackground = () => {
       queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
       queueGetAccountAccesses = [];
       doCheckNewAccesses(accesses);
-      console.log('runOnBackground  runGetAccountAccessesInBackground success :', accesses);
     }).catch(error => {
       queueGetAccountAccesses.forEach(queueResolve => queueResolve());
       queueGetAccountAccesses = [];
-      console.log('runOnBackground  runGetAccountAccessesInBackground error :', error);
     });
   });
 };
 
 const runOnBackground = async () => {
-  console.log('runOnBackground =====');
   let userInfo = await UserModel.doTryGetCurrentUser();
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
     userInformation = userInfo;
@@ -161,7 +161,6 @@ const runOnBackground = async () => {
       await runGetUserBitmarksInBackground(accountAccessSelected);
     }
   }
-  console.log('runOnBackground done ====================================');
 };
 // ================================================================================================================================================
 const doReloadUserData = async () => {
@@ -173,34 +172,6 @@ const doReloadUserData = async () => {
   return true;
 };
 
-const configNotification = () => {
-  const onRegistered = async (registeredNotificationInfo) => {
-    let notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
-    if (!userInformation || !userInformation.bitmarkAccountNumber) {
-      userInformation = await UserModel.doGetCurrentUser();
-    }
-    if (userInformation.notificationUUID !== notificationUUID) {
-      AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
-        userInformation.notificationUUID = notificationUUID;
-        return UserModel.doUpdateUserInfo(userInformation);
-      }).catch(error => {
-        console.log('DataProcessor doRegisterNotificationInfo error:', error);
-      });
-    }
-  };
-  const onReceivedNotification = async (notificationData) => {
-    if (!notificationData.foreground) {
-      if (!userInformation || !userInformation.bitmarkAccountNumber) {
-        userInformation = await UserModel.doGetCurrentUser();
-      }
-      setTimeout(async () => {
-        EventEmitterService.emit(EventEmitterService.events.APP_RECEIVED_NOTIFICATION, notificationData.data);
-      }, 1000);
-    }
-  };
-  AccountService.configure(onRegistered, onReceivedNotification);
-  AccountService.removeAllDeliveredNotifications();
-};
 // ================================================================================================================================================
 let dataInterval = null;
 const startInterval = () => {
@@ -272,6 +243,7 @@ const doLogout = async () => {
     let signatureData = await CommonModel.doTryCreateSignatureData('Please sign to authorize your transactions')
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
   }
+  PushNotificationIOS.cancelAllLocalNotifications();
   await AccountModel.doLogout();
   await UserModel.doRemoveUserInfo();
   userInformation = {};
@@ -285,7 +257,6 @@ const doDeactiveApplication = async () => {
 const doOpenApp = async () => {
   // await UserModel.doRemoveUserInfo();
   userInformation = await UserModel.doTryGetCurrentUser();
-
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
@@ -333,8 +304,13 @@ const doOpenApp = async () => {
     websocket.onmessage = (event) => {
       console.log('onmessage :', event);
       if (event.data) {
-        let data = JSON.parse(event.data)
-        if (data.event === 'bitmarks_grant_access' && data.id && data.grantee) {
+        let data
+        try {
+          data = JSON.parse(event.data);
+        } catch (error) {
+          //
+        }
+        if (data && data.event === 'bitmarks_grant_access' && data.id && data.grantee) {
           Actions.confirmAccess({ token: data.id, grantee: data.grantee });
         }
       }
@@ -374,8 +350,17 @@ const doOpenApp = async () => {
       }
     }
 
-    configNotification();
     await checkAppNeedResetLocalData(appInfo);
+
+    AccountService.removeAllDeliveredNotifications();
+    PushNotificationIOS.cancelAllLocalNotifications();
+    let dateNotification = HealthKitService.getNextSunday11AM();
+    PushNotificationIOS.scheduleLocalNotification({
+      fireDate: dateNotification.toDate(),
+      alertTitle: '',
+      alertBody: 'Your health data is ready to sign.',
+      repeatInterval: 'week'
+    });
   }
 
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
