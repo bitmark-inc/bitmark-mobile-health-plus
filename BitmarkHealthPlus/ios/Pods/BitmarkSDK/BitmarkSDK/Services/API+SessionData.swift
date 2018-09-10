@@ -70,8 +70,6 @@ extension AssetAccess: Codable {
 }
 
 struct AssetGrant {
-    let grantId: String
-    let assetId: String?
     let url: String?
     let from: String?
     let sessionData: SessionData?
@@ -80,8 +78,6 @@ struct AssetGrant {
 extension AssetGrant: Codable {
     
     enum AssetGrantKeys: String, CodingKey {
-        case grantId = "id"
-        case assetId = "asset_id"
         case url = "url"
         case from = "from"
         case sessionData = "session_data"
@@ -89,17 +85,13 @@ extension AssetGrant: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: AssetGrantKeys.self)
-        self.init(grantId: try container.decode(String.self, forKey: AssetGrantKeys.grantId),
-                  assetId: try? container.decode(String.self, forKey: AssetGrantKeys.assetId),
-                  url: try? container.decode(String.self, forKey: AssetGrantKeys.url),
+        self.init(url: try? container.decode(String.self, forKey: AssetGrantKeys.url),
                   from: try? container.decode(String.self, forKey: AssetGrantKeys.from),
                   sessionData: try? container.decode(SessionData.self, forKey: AssetGrantKeys.sessionData))
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: AssetGrantKeys.self)
-        try container.encode(self.grantId, forKey: .grantId)
-        try container.encode(self.assetId, forKey: .assetId)
         try container.encode(self.url, forKey: .url)
         try container.encode(self.from, forKey: .from)
         try container.encode(self.sessionData, forKey: .sessionData)
