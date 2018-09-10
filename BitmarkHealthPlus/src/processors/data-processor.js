@@ -379,16 +379,16 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     });
   }
 
-  let grantees = await doGetAccountAccesses('granted_from');
-  if (grantees && grantees.length > 0) {
+  let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
+  if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
     let body = { items: [] };
-    for (let grantee of grantees) {
+    for (let grantedInfo of grantedInformationForOtherAccount) {
       for (let bitmarkId of result) {
-        let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantee);
+        let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantedInfo.grantee);
         body.items.push({
           bitmark_id: bitmarkId,
           session_data: sessionData,
-          to: grantee,
+          to: grantedInfo.grantee,
           start_at: Math.floor(moment().toDate().getTime() / 1000),
           duration: { Years: 99 }
         });
@@ -450,16 +450,19 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     });
   }
 
-  let grantees = await doGetAccountAccesses('granted_from');
-  if (grantees && grantees.length > 0) {
+  console.log('result :', result);
+
+  let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
+  if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
     let body = { items: [] };
-    for (let grantee of grantees) {
+    for (let grantedInfo of grantedInformationForOtherAccount) {
       for (let bitmarkId of result) {
-        let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantee);
+        console.log('createSessionDataForRecipient :', bitmarkId, grantedInfo.grantee);
+        let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantedInfo.grantee);
         body.items.push({
           bitmark_id: bitmarkId,
           session_data: sessionData,
-          to: grantee,
+          to: grantedInfo.grantee,
           start_at: Math.floor(moment().toDate().getTime() / 1000),
           duration: { Years: 99 }
         });
