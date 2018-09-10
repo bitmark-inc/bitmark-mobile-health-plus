@@ -76,7 +76,7 @@ export class HomeComponent extends Component {
             <View style={styles.introductionArea}>
               <Text style={[styles.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>
               <Text style={[styles.introductionDescription]}>
-                Once health data is registered as your property, you will be able to donate, sell, or transfer it to another party (medical professional, family member, etc.) at your complete discretion.
+                Once health data is registered as your property, you will be able to donate, share, or transfer it to another party (medical professional, family member, etc.) at your complete discretion.
                 </Text>
             </View>
           </View>
