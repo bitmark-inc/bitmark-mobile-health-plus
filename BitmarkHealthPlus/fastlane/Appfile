@@ -1,0 +1,19 @@
+app_identifier("com.bitmark.health") # The bundle identifier of your app
+apple_id("anhnguyen@bitmark.com") # Your Apple email address
+
+itc_team_id "102358872" # iTunes Connect Team ID
+team_id "Z5CE7A3A7N" # Developer Portal Team ID
+
+for_lane :beta do
+    app_identifier "com.bitmark.health"
+    team_id "Z5CE7A3A7N" # Developer Portal Team ID
+end
+
+for_lane :enterprise do
+    app_identifier "com.bitmark.health.inhouse"
+    team_id "A52M7AQ8B2" # Developer Portal Team ID
+end
+
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
