@@ -302,7 +302,7 @@ const doGetDataSources = async () => {
 };
 
 let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
-  let folderPath = FileUtil.CacheDirectory + '/' + prefix;
+  let folderPath = FileUtil.CacheDirectory + '/' + userId;
   let assetFilename = prefix + '_' + userId + '_' + date.toString() + '_' + randomId;
   let assetFolder = folderPath + '/' + assetFilename;
 
@@ -321,7 +321,7 @@ let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
   for (let extFilePath of extFiles) {
     let extFilename = extFilePath.substring(extFilePath.lastIndexOf("/") + 1, extFilePath.length);
     let destinationExtFilePath = assetFolder + '/' + extFilename;
-    await FileUtil.moveFile(extFilePath, destinationExtFilePath);
+    await FileUtil.moveFileSafe(extFilePath, destinationExtFilePath);
   }
   await FileUtil.zip(assetFolder, assetFilePath);
   return assetFilePath;

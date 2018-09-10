@@ -53,7 +53,7 @@ export class UserComponent extends Component {
       title: 'Capture asset'
     };
 
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, async (response) => {
 
       if (response.didCancel) {
         return;
@@ -74,8 +74,8 @@ export class UserComponent extends Component {
       // Move file from "tmp" folder to "cache" folder
       let fileName = response.fileName ? response.fileName : response.uri.substring(response.uri.lastIndexOf('/') + 1);
       let timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
-      let destPath = FileUtil.CacheDirectory + '/' + fileName;
-      FileUtil.moveFileSafe(filePath, destPath);
+      let destPath = FileUtil.CacheDirectory + '/' + DataProcessor.getUserInformation().bitmarkAccountNumber + '/' + fileName;
+      await FileUtil.moveFileSafe(filePath, destPath);
       filePath = destPath;
       Actions.captureAsset({ filePath, timestamp })
     });
@@ -87,12 +87,12 @@ export class UserComponent extends Component {
         <View style={styles.body}>
           <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
             <View style={styles.dataArea}>
-              <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
+              <TouchableOpacity disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
                 <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks}</Text> Weeks of Health Data{this.state.numberHealthDataBitmarks > 1 ? 's' : ''}</Text>
               </TouchableOpacity>
             </View>
             <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1 }]}>
-              <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
+              <TouchableOpacity disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
                 <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks}</Text> Health Record{this.state.numberHealthAssetBitmarks > 1 ? 's' : ''}</Text>
               </TouchableOpacity>
               {this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
@@ -104,7 +104,7 @@ export class UserComponent extends Component {
           {!DataProcessor.getAccountAccessSelected() && <View style={styles.accountArea}>
             <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ isDisplayingAccountNumber: !this.state.isDisplayingAccountNumber })}>
               <Text style={styles.accountButtonText}>
-                {this.state.isDisplayingAccountNumber ? ('[' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(0, 4) + '...' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(DataProcessor.getUserInformation().bitmarkAccountNumber.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']') : ''}
+                {this.state.isDisplayingAccountNumber ? ('ACCOUNT') : ''}
               </Text>
             </TouchableOpacity>
           </View>}

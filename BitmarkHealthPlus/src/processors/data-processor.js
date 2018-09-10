@@ -74,7 +74,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       let lastOffset, totalAssets = [], totalBitmarks = [];
       while (canContinue) {
         let data = await BitmarkModel.doGet100Bitmarks(bitmarkAccountNumber, lastOffset);
-        console.log('data :', data);
         if (data && data.assets && data.bitmarks && data.assets.length > 0 && data.bitmarks.length > 0) {
           data.assets.forEach(asset => {
             let exist = totalAssets.findIndex(as => as.id == asset.id) >= 0;
@@ -97,7 +96,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       return { bitmarks: totalBitmarks, assets: totalAssets };
     };
     doGetAllBitmarks().then(({ assets, bitmarks }) => {
-      console.log('assets, bitmarks  :', assets, bitmarks);
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       bitmarks.forEach(bitmark => {
         let asset = assets.find(as => as.id === bitmark.asset_id);
@@ -118,6 +116,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     }).catch(error => {
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve());
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
+      console.log(' runGetUserBitmarksInBackground error:', error);
     });
   });
 };
@@ -138,13 +137,14 @@ const runGetAccountAccessesInBackground = () => {
     if (queueGetAccountAccesses.length > 1) {
       return;
     }
-    AccountModel.doGetAllGrantedAccess(jwt).then(accesses => {
+    AccountService.doGetAllGrantedAccess(userInformation.bitmarkAccountNumber).then(accesses => {
       queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
       queueGetAccountAccesses = [];
       doCheckNewAccesses(accesses);
     }).catch(error => {
       queueGetAccountAccesses.forEach(queueResolve => queueResolve());
       queueGetAccountAccesses = [];
+      console.log(' runGetAccountAccessesInBackground error:', error);
     });
   });
 };
@@ -247,8 +247,10 @@ const doLogout = async () => {
   PushNotificationIOS.cancelAllLocalNotifications();
   await AccountModel.doLogout();
   await UserModel.doRemoveUserInfo();
-  userInformation = {};
+  await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
+  await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
   await Intercom.reset();
+  userInformation = {};
 };
 
 const doDeactiveApplication = async () => {
@@ -274,9 +276,9 @@ const doOpenApp = async () => {
   }
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
-    Intercom.registerIdentifiedUser({ userId: userInformation.bitmarkAccountNumber }).then(() => {
-      console.log('registerIdentifiedUser success =============================');
-    }).catch(error => {
+    await FileUtil.mkdir(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
+    await FileUtil.mkdir(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
+    Intercom.registerIdentifiedUser({ userId: userInformation.bitmarkAccountNumber }).catch(error => {
       console.log('registerIdentifiedUser error :', error);
     });
 
@@ -288,7 +290,6 @@ const doOpenApp = async () => {
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
     jwt = result.jwt_token;
 
-    console.log('Bearer ' + jwt);
     websocket =
       // new WebSocket(config.mobile_server_url + '/ws');
       new WebSocket(config.mobile_server_url + '/ws', [], {
@@ -298,12 +299,9 @@ const doOpenApp = async () => {
       });
 
     websocket.onopen = () => {
-      // connection opened
-      console.log('onopen ===='); // send a message
-      websocket.send
+      console.log('websocket opened');
     };
     websocket.onmessage = (event) => {
-      console.log('onmessage :', event);
       if (event.data) {
         let data
         try {
@@ -318,19 +316,16 @@ const doOpenApp = async () => {
       }
     };
     websocket.onerror = (e) => {
-      // an error occurred
-      console.log('error : ', e.message);
+      console.log('websocket error : ', e);
     };
     websocket.onclose = (e) => {
-      // connection closed
-      console.log('onclose :', e.code, e.reason);
+      console.log('websocket closed:', e.code, e.reason);
     };
 
     if (!appInfo.lastTimeOpen) {
       let appInfo = await doGetAppInformation();
       appInfo.lastTimeOpen = moment().toDate().getTime();
       await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-      console.log('set first time open app');
     } else if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_open_app_two_time_in_a_week) {
 
       let firstTime = moment(appInfo.lastTimeOpen);
@@ -338,7 +333,6 @@ const doOpenApp = async () => {
       let diffWeeks = currentTime.diff(firstTime, 'week');
       let diffHours = currentTime.diff(firstTime, 'hour');
       if (diffWeeks === 0 && diffHours > 1) {
-        console.log('open app two times in week!');
         appInfo.trackEvents = appInfo.trackEvents || {};
         appInfo.trackEvents.health_user_open_app_two_time_in_a_week = true;
         await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
@@ -387,16 +381,16 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
 
   let grantees = await doGetAccountAccesses('granted_from');
   if (grantees && grantees.length > 0) {
-    let body = { item: [] };
+    let body = { items: [] };
     for (let grantee of grantees) {
       for (let bitmarkId of result) {
         let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantee);
-        body.item.push({
+        body.items.push({
           bitmark_id: bitmarkId,
           session_data: sessionData,
           to: grantee,
           start_at: moment().toDate().getTime(),
-          duration: { Years: 1000 }
+          duration: { Years: 99 }
         });
       }
     }
@@ -410,16 +404,21 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
 };
 
 const doDownloadBitmark = async (touchFaceIdSession, bitmarkId) => {
-  let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
-  filePath = filePath.replace('file://', '');
-  return filePath;
+  let downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
+  downloadedFilePath = downloadedFilePath.replace('file://', '');
+  let accountFilePath = FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber + downloadedFilePath.substring(downloadedFilePath.lastIndexOf('/'), downloadedFilePath.length);
+  await FileUtil.moveFileSafe(downloadedFilePath, accountFilePath);
+  return accountFilePath;
 };
 
 const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkId) => {
-  let filePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
-  filePath = filePath.replace('file://', '');
-  let folderPathUnzip = filePath.replace('.zip', '');
-  await FileUtil.unzip(filePath, folderPathUnzip);
+  let downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
+  downloadedFilePath = downloadedFilePath.replace('file://', '');
+  let accountFilePath = FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber + downloadedFilePath.substring(downloadedFilePath.lastIndexOf('/'), downloadedFilePath.length);
+  await FileUtil.moveFileSafe(downloadedFilePath, accountFilePath);
+
+  let folderPathUnzip = accountFilePath.replace('.zip', '');
+  await FileUtil.unzip(accountFilePath, folderPathUnzip);
   let listFile = await FileUtil.readDir(folderPathUnzip);
   let result = await FileUtil.readFile(folderPathUnzip + '/' + listFile[0]);
   return result;
@@ -443,16 +442,16 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
 
   let grantees = await doGetAccountAccesses('granted_from');
   if (grantees && grantees.length > 0) {
-    let body = { item: [] };
+    let body = { items: [] };
     for (let grantee of grantees) {
       for (let bitmarkId of result) {
         let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantee);
-        body.item.push({
+        body.items.push({
           bitmark_id: bitmarkId,
           session_data: sessionData,
           to: grantee,
           start_at: moment().toDate().getTime(),
-          duration: { Years: 1000 }
+          duration: { Years: 99 }
         });
       }
     }
@@ -546,26 +545,26 @@ const doRemoveGrantingAccess = async (token) => {
 const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
   let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
   if (userBitmarks && (userBitmarks.healthDataBitmarks || userBitmarks.healthAssetBitmarks)) {
-    let body = { item: [] };
+    let body = { items: [] };
 
     for (let bitmark of (userBitmarks.healthDataBitmarks || [])) {
       let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
-      body.item.push({
+      body.items.push({
         bitmark_id: bitmark.id,
         session_data: sessionData,
         to: grantee,
         start_at: moment().toDate().getTime(),
-        duration: { Years: 1000 }
+        duration: { Years: 99 }
       });
     }
     for (let bitmark of (userBitmarks.healthAssetBitmarks || [])) {
       let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
-      body.item.push({
+      body.items.push({
         bitmark_id: bitmark.id,
         session_data: sessionData,
         to: grantee,
         start_at: moment().toDate().getTime(),
-        duration: { Years: 1000 }
+        duration: { Years: 99 }
       });
     }
 
@@ -576,7 +575,7 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
     console.log('result :', result);
   }
   await runGetAccountAccessesInBackground();
-  return await AccountModel.doReceiveGrantingAccess(jwt, token, { "completed": true });
+  return await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
 };
 
 const DataProcessor = {

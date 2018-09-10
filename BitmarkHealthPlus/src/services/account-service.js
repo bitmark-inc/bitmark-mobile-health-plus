@@ -102,6 +102,12 @@ let removeAllDeliveredNotifications = () => {
   PushNotificationIOS.removeAllDeliveredNotifications();
 };
 
+let doGetAllGrantedAccess = async (accountNumber, jwt) => {
+  let accesses = await AccountModel.doGetAllGrantedAccess(accountNumber);
+  let waiting = await AccountModel.doGetWaitingGrantedAccess(jwt);
+  return { waiting };
+};
+
 
 let AccountService = {
   doGetCurrentAccount,
@@ -116,6 +122,7 @@ let AccountService = {
   doCheckNotificationPermission,
   doRegisterNotificationInfo,
   doTryDeregisterNotificationInfo,
+  doGetAllGrantedAccess,
 };
 
 export { AccountService };

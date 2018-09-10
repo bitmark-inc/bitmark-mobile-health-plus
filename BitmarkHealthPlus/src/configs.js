@@ -27,7 +27,7 @@ let config = {
   mobile_server_url: 'https://bm.devel.bitmark.com',
   preview_asset_url: 'https://preview.test.bitmarkaccountassets.com',
   bitmark_web_site: 'https://bitmark.com',
-  needResetLocalData: 1535081368111,
+  needResetLocalData: 1536550860837,
 };
 
 if (config.network === NETWORKS.testnet) {
