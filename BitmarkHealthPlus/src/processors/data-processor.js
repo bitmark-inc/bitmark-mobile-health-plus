@@ -450,14 +450,11 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     });
   }
 
-  console.log('result :', result);
-
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
     let body = { items: [] };
     for (let grantedInfo of grantedInformationForOtherAccount) {
       for (let bitmarkId of result) {
-        console.log('createSessionDataForRecipient :', bitmarkId, grantedInfo.grantee);
         let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantedInfo.grantee);
         body.items.push({
           bitmark_id: bitmarkId,

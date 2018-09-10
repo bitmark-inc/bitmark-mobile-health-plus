@@ -50,9 +50,7 @@ export class GrantingAccessComponent extends Component {
         <br/>
         <a href="healthplush://granting-access/${this.state.token}">healthplush://granting-access/${this.state.token}</a>
         <br/>
-        Get the free <a href="${config.appLink}">Bitmark Health</a> app. 
-        <br/>
-        Health+ app version: ${DataProcessor.getApplicationVersion()} (${DataProcessor.getApplicationBuildNumber()})`,
+        Get the free <a href="${config.appLink}">Bitmark Health</a> app.`,
       isHTML: true,
     }, (error) => {
       if (error) {
