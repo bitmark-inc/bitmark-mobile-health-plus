@@ -118,7 +118,7 @@ export class UserComponent extends Component {
                 </TouchableOpacity>}
               </View>
             </TouchableOpacity>
-            {isCurrentUser && <View style={styles.accountArea}>
+            {isCurrentUser && <View style={[styles.accountArea, this.state.isDisplayingAccountNumber ? {} : { borderTopWidth: 0, }]}>
               <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ isDisplayingAccountNumber: !this.state.isDisplayingAccountNumber })}>
                 <Text style={styles.accountButtonText}>
                   {this.state.isDisplayingAccountNumber ? ('ACCOUNT') : ''}
@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     borderWidth: 1,
+    borderBottomWidth: 0,
     borderColor: '#FF4444',
     width: "100%"
   },
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
   },
   accountArea: {
     width: '100%', height: 38,
-    borderColor: '#FF1829', borderTopWidth: 0, borderWidth: 1,
+    borderColor: '#FF1829', borderTopWidth: 1, borderWidth: 1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
