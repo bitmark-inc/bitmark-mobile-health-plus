@@ -11,7 +11,7 @@ import { convertWidth, runPromiseWithoutError, } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
-import { AppProcessor, } from '../../processors';
+import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 
 let ComponentName = 'BitmarkDetailComponent';
@@ -31,9 +31,17 @@ export class BitmarkDetailComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, null, ComponentName);
     if (this.props.bitmark) {
       if (this.props.bitmarkType === 'bitmark_health_data') {
-        runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(this.props.bitmark.id, {
+        let id = this.props.bitmark.id;
+        if (DataProcessor.getAccountAccessSelected() !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+          let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
+          id = grantedInfo.ids[this.props.bitmark.asset_id];
+        }
+        console.log('id ===========:', id);
+
+        runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, {
           indicator: true, title: 'Encrypting and protecting your health data...'
         })).then(result => {
+          console.log('result :', result);
           if (result && result.error) {
             Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
               text: 'OK', onPress: Actions.pop
@@ -44,7 +52,14 @@ export class BitmarkDetailComponent extends Component {
           // this.setState({ content: JSON.stringify(DataProcessor.getUserInformation(), null, 2) });
         });
       } else if (this.props.bitmarkType === 'bitmark_health_issuance') {
-        runPromiseWithoutError(AppProcessor.doDownloadBitmark(this.props.bitmark.id, {
+        let id = this.props.bitmark.id;
+        if (DataProcessor.getAccountAccessSelected() !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+          let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
+          id = grantedInfo.ids[this.props.bitmark.asset_id];
+        }
+        console.log('id ===========:', id);
+
+        runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, {
           indicator: true, title: 'Encrypting and protecting your health data...'
         })).then(result => {
           console.log('result :', result);

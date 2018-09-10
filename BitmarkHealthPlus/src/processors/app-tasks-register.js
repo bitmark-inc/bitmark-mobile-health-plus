@@ -97,22 +97,22 @@ const doBitmarkHealthData = async ({ list, processingData }) => {
   return await submitting(DataProcessor.doBitmarkHealthData(touchFaceIdSession, list), processingData);
 };
 
-const doDownloadBitmark = async ({ bitmarkId, processingData }) => {
+const doDownloadBitmark = async ({ bitmarkIdOrGrantedId, processingData }) => {
   // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
   // if (!touchFaceIdSession) {
   //   return null;
   // }
   let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await submitting(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkId), processingData);
+  return await submitting(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId), processingData);
 };
 
-const doDownloadHealthDataBitmark = async ({ bitmarkId, processingData }) => {
+const doDownloadHealthDataBitmark = async ({ bitmarkIdOrGrantedId, processingData }) => {
   // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
   // if (!touchFaceIdSession) {
   //   return null;
   // }
   let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await submitting(DataProcessor.doDownloadHealthDataBitmark(touchFaceIdSession, bitmarkId), processingData);
+  return await submitting(DataProcessor.doDownloadHealthDataBitmark(touchFaceIdSession, bitmarkIdOrGrantedId), processingData);
 };
 
 

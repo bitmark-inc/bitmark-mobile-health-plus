@@ -18,7 +18,7 @@ import { config } from '../configs';
 import { FileUtil } from '../utils';
 
 let userInformation = {};
-let accountAccessSelected = null;
+let grantedAccessAccountSelected = null;
 let jwt;
 let websocket;
 let isLoadingData = false;
@@ -137,7 +137,7 @@ const runGetAccountAccessesInBackground = () => {
     if (queueGetAccountAccesses.length > 1) {
       return;
     }
-    AccountService.doGetAllGrantedAccess(userInformation.bitmarkAccountNumber).then(accesses => {
+    AccountService.doGetAllGrantedAccess(userInformation.bitmarkAccountNumber, jwt).then(accesses => {
       queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
       queueGetAccountAccesses = [];
       doCheckNewAccesses(accesses);
@@ -158,8 +158,8 @@ const runOnBackground = async () => {
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
     await runGetAccountAccessesInBackground();
-    if (accountAccessSelected) {
-      await runGetUserBitmarksInBackground(accountAccessSelected);
+    if (grantedAccessAccountSelected) {
+      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
     }
   }
 };
@@ -389,7 +389,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
           bitmark_id: bitmarkId,
           session_data: sessionData,
           to: grantee,
-          start_at: moment().toDate().getTime(),
+          start_at: Math.floor(moment().toDate().getTime() / 1000),
           duration: { Years: 99 }
         });
       }
@@ -403,16 +403,26 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   return result;
 };
 
-const doDownloadBitmark = async (touchFaceIdSession, bitmarkId) => {
-  let downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
+const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId) => {
+  let downloadedFilePath;
+  if (grantedAccessAccountSelected) {
+    downloadedFilePath = await BitmarkSDK.downloadBitmarkWithGrantId(touchFaceIdSession, bitmarkIdOrGrantedId);
+  } else {
+    downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId);
+  }
   downloadedFilePath = downloadedFilePath.replace('file://', '');
   let accountFilePath = FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber + downloadedFilePath.substring(downloadedFilePath.lastIndexOf('/'), downloadedFilePath.length);
   await FileUtil.moveFileSafe(downloadedFilePath, accountFilePath);
   return accountFilePath;
 };
 
-const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkId) => {
-  let downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkId);
+const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId) => {
+  let downloadedFilePath;
+  if (grantedAccessAccountSelected) {
+    downloadedFilePath = await BitmarkSDK.downloadBitmarkWithGrantId(touchFaceIdSession, bitmarkIdOrGrantedId);
+  } else {
+    downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId);
+  }
   downloadedFilePath = downloadedFilePath.replace('file://', '');
   let accountFilePath = FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber + downloadedFilePath.substring(downloadedFilePath.lastIndexOf('/'), downloadedFilePath.length);
   await FileUtil.moveFileSafe(downloadedFilePath, accountFilePath);
@@ -450,7 +460,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
           bitmark_id: bitmarkId,
           session_data: sessionData,
           to: grantee,
-          start_at: moment().toDate().getTime(),
+          start_at: Math.floor(moment().toDate().getTime() / 1000),
           duration: { Years: 99 }
         });
       }
@@ -515,21 +525,27 @@ const doGrantingAccess = async () => {
 };
 
 const getAccountAccessSelected = () => {
-  return accountAccessSelected;
+  return grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : null;
+};
+const getGrantedAccessAccountSelected = () => {
+  return grantedAccessAccountSelected;
 };
 
 const doSelectAccountAccess = async (accountNumber) => {
   if (accountNumber === userInformation.bitmarkAccountNumber) {
-    accountAccessSelected = null;
+    grantedAccessAccountSelected = null;
     return true;
   }
   let accesses = await runGetAccountAccessesInBackground();
-  let canSelect = accesses && accesses.granted_from && ((accesses.granted_from || []).findIndex(item => item.grantor === accountNumber) >= 0);
-  if (canSelect) {
-    accountAccessSelected = accountNumber;
-    await runGetUserBitmarksInBackground(accountAccessSelected);
+  if (accesses && accesses.granted_from) {
+    grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === accountNumber);
+    console.log('grantedAccessAccountSelected :', grantedAccessAccountSelected);
+    if (grantedAccessAccountSelected) {
+      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
+      return true;
+    }
   }
-  return canSelect;
+  return false;
 };
 
 const doReceivedAccessQRCode = async (token) => {
@@ -553,7 +569,7 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
         bitmark_id: bitmark.id,
         session_data: sessionData,
         to: grantee,
-        start_at: moment().toDate().getTime(),
+        start_at: Math.floor(moment().toDate().getTime() / 1000),
         duration: { Years: 99 }
       });
     }
@@ -563,7 +579,7 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
         bitmark_id: bitmark.id,
         session_data: sessionData,
         to: grantee,
-        start_at: moment().toDate().getTime(),
+        start_at: Math.floor(moment().toDate().getTime() / 1000),
         duration: { Years: 99 }
       });
     }
@@ -574,8 +590,8 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
     let result = await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
     console.log('result :', result);
   }
-  await runGetAccountAccessesInBackground();
-  return await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
+  await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
+  return await runGetAccountAccessesInBackground();
 };
 
 const DataProcessor = {
@@ -603,6 +619,7 @@ const DataProcessor = {
   doGetAccountAccesses,
   doSelectAccountAccess,
   getAccountAccessSelected,
+  getGrantedAccessAccountSelected,
   doReceivedAccessQRCode,
   doRemoveGrantingAccess,
   doConfirmGrantingAccess,

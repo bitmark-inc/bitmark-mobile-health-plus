@@ -39,13 +39,14 @@ export class ConfirmAccessComponent extends Component {
       if (result) {
         DataProcessor.doGetAccountAccesses('waiting').then(list => {
           if (list && list.length > 0) {
-            this.state({ token: list[0].id, grantee: list[0].grantee });
+            this.setState({ token: list[0].id, grantee: list[0].grantee });
           } else {
             Actions.pop();
           }
         })
       }
     }).catch(error => {
+      console.log('doConfirmGrantingAccess  error :', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }

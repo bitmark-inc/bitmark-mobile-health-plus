@@ -264,6 +264,18 @@ const BitmarkSDK = {
       });
     });
   },
+  downloadBitmarkWithGrantId: (sessionId, grantId) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.downloadBitmarkWithGrantId(sessionId, grantId, (ok, result) => {
+        if (ok) {
+          resolve(result);
+        } else {
+          reject(newError(result, 'Can not download bitmark via grand id!'));
+        }
+      });
+    });
+  },
+
 
   createSessionDataForRecipient: (sessionId, encryptionKeyOrBitmarkId, recipient) => {
     return new Promise((resolve, reject) => {

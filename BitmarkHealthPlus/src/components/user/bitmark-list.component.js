@@ -26,7 +26,7 @@ export class BitmarkListComponent extends Component {
     this.state = {
       bitmarkList: [],
     };
-    runPromiseWithoutError(DataProcessor.doGetUserDataBitmarks()).then(({ healthDataBitmarks, healthAssetBitmarks }) => {
+    runPromiseWithoutError(DataProcessor.doGetUserDataBitmarks(DataProcessor.getAccountAccessSelected())).then(({ healthDataBitmarks, healthAssetBitmarks }) => {
       let bitmarkList = this.props.bitmarkType === 'bitmark_health_data' ? healthDataBitmarks :
         (this.props.bitmarkType === 'bitmark_health_issuance' ? healthAssetBitmarks : [])
       this.setState({ bitmarkList });

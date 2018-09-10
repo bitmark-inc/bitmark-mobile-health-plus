@@ -10,7 +10,7 @@ import ImagePicker from 'react-native-image-picker';
 import { convertWidth, runPromiseWithoutError, FileUtil } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
-import { DataProcessor } from './../../processors';
+import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
 
@@ -81,51 +81,85 @@ export class UserComponent extends Component {
     });
   }
 
+  backToUserAccount() {
+    AppProcessor.doSelectAccountAccess(DataProcessor.getUserInformation().bitmarkAccountNumber).then(result => {
+      if (result) {
+        Actions.reset('user');
+      }
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
+  }
+
   render() {
+    let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
+    console.log('accountNumberDisplay :', accountNumberDisplay, isCurrentUser);
     return (
-      <SafeAreaView style={styles.bodySafeView}>
-        <View style={styles.body}>
-          <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
-            <View style={styles.dataArea}>
-              <TouchableOpacity disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
-                <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks}</Text> Weeks of Health Data{this.state.numberHealthDataBitmarks > 1 ? 's' : ''}</Text>
+      <View style={{ flex: 1, }}>
+        {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
+          <Text style={styles.accountNumberDisplayText}>Viewing {'[' + accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) + ']'}, tap here to cancel.</Text>
+        </TouchableOpacity>}
+        <SafeAreaView style={styles.bodySafeView}>
+          <View style={styles.body}>
+            <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
+              <View style={styles.dataArea}>
+                <TouchableOpacity disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
+                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks}</Text> Weeks of Health Data{this.state.numberHealthDataBitmarks > 1 ? 's' : ''}</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1 }]}>
+                <TouchableOpacity disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
+                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks}</Text> Health Record{this.state.numberHealthAssetBitmarks > 1 ? 's' : ''}</Text>
+                </TouchableOpacity>
+                {this.state.isDisplayingAccountNumber && isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
+                  <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
+                  <Text style={styles.addHealthRecordButtonText} > {'Add records'.toUpperCase()}</Text>
+                </TouchableOpacity>}
+              </View>
+            </TouchableOpacity>
+            {isCurrentUser && <View style={styles.accountArea}>
+              <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ isDisplayingAccountNumber: !this.state.isDisplayingAccountNumber })}>
+                <Text style={styles.accountButtonText}>
+                  {this.state.isDisplayingAccountNumber ? ('ACCOUNT') : ''}
+                </Text>
               </TouchableOpacity>
-            </View>
-            <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1 }]}>
-              <TouchableOpacity disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
-                <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks}</Text> Health Record{this.state.numberHealthAssetBitmarks > 1 ? 's' : ''}</Text>
+            </View>}
+            {!this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <View style={styles.overlapButtonsArea}>
+              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444' }]} onPress={Actions.account}>
+                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>ACCOUNT SETTING</Text>
               </TouchableOpacity>
-              {this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
-                <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
-                <Text style={styles.addHealthRecordButtonText} > {'Add records'.toUpperCase()}</Text>
-              </TouchableOpacity>}
-            </View>
-          </TouchableOpacity>
-          {!DataProcessor.getAccountAccessSelected() && <View style={styles.accountArea}>
-            <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ isDisplayingAccountNumber: !this.state.isDisplayingAccountNumber })}>
-              <Text style={styles.accountButtonText}>
-                {this.state.isDisplayingAccountNumber ? ('ACCOUNT') : ''}
-              </Text>
-            </TouchableOpacity>
-          </View>}
-          {!this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <View style={styles.overlapButtonsArea}>
-            <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444' }]} onPress={Actions.account}>
-              <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>ACCOUNT SETTING</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={Actions.grantingAccess}>
-              <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>GRANT ACCESS</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={Actions.otherAccounts}>
-              <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>VIEW OTHER ACCOUNT</Text>
-            </TouchableOpacity>
-          </View>}
-        </View>
-      </SafeAreaView>
+              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={Actions.grantingAccess}>
+                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>GRANT ACCESS</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={Actions.otherAccounts}>
+                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '700', }]}>VIEW OTHER ACCOUNT</Text>
+              </TouchableOpacity>
+            </View>}
+          </View>
+        </SafeAreaView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  accountNumberDisplayArea: {
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: convertWidth(32) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+    backgroundColor: '#E6FF00',
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  accountNumberDisplayText: {
+    fontFamily: 'Avenir Heavy',
+    fontWeight: '800',
+    fontSize: 14,
+  },
   bodySafeView: {
     flex: 1,
     backgroundColor: 'white',

@@ -103,9 +103,45 @@ let removeAllDeliveredNotifications = () => {
 };
 
 let doGetAllGrantedAccess = async (accountNumber, jwt) => {
-  let accesses = await AccountModel.doGetAllGrantedAccess(accountNumber);
+  let data = await AccountModel.doGetAllGrantedAccess(accountNumber);
+  let granted_from = [];
+  let granted_to = [];
+  data.access_grants.forEach(item => {
+    if (item.from === accountNumber) {
+      let grantedInfo = granted_to.find(it => it.grantee === item.to);
+      if (!grantedInfo) {
+        grantedInfo = {
+          ids: {},
+          grantor: accountNumber,
+          grantee: item.to,
+          created_at: item.created_at,
+          granted_at: item.start_at,
+        };
+        grantedInfo.ids[item.asset_id] = item.id;
+        granted_to.push(grantedInfo);
+      } else {
+        grantedInfo.ids[item.asset_id] = item.id;
+      }
+    } else if (item.to === accountNumber) {
+      let grantedInfo = granted_from.find(it => it.grantor === item.from);
+      if (!grantedInfo) {
+        grantedInfo = {
+          ids: {},
+          grantor: item.from,
+          grantee: accountNumber,
+          created_at: item.created_at,
+          granted_at: item.start_at,
+        };
+        grantedInfo.ids[item.asset_id] = item.id;
+        granted_from.push(grantedInfo);
+      } else {
+        grantedInfo.ids[item.asset_id] = item.id;
+      }
+    }
+  });
+  console.log('doGetAllGrantedAccess :', granted_from, granted_to);
   let waiting = await AccountModel.doGetWaitingGrantedAccess(jwt);
-  return { waiting };
+  return { waiting, granted_from, granted_to };
 };
 
 

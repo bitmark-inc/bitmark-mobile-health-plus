@@ -264,7 +264,8 @@ let doRevokeGrantingAccess = (jwt, token) => {
 let doGetAllGrantedAccess = (accountNumber) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = `${config.api_server_url}/v2/api/access-grants?account=${accountNumber}`;
+    let tempURL = `${config.api_server_url}/v2/access-grants?account=${accountNumber}`;
+    console.log('tempURL :', tempURL);
     fetch(tempURL, {
       method: 'GET',
       headers: {
@@ -287,7 +288,6 @@ let doGetWaitingGrantedAccess = (jwt) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
-    console.log('tempURL :', tempURL, jwt);
     fetch(tempURL, {
       method: 'GET',
       headers: {
