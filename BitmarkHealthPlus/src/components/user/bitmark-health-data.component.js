@@ -37,7 +37,7 @@ export class BitmarkHealthDataComponent extends Component {
             <View style={styles.signButtonArea}>
               <TouchableOpacity style={styles.signButton} onPress={() => {
                 AppProcessor.doBitmarkHealthData(this.props.list, {
-                  indicator: true, title: 'Processing your health data...', message: ''
+                  indicator: true, title: 'Encrypting and protecting your health data...', message: ''
                 }).then(result => {
                   if (result) {
                     Actions.pop();
