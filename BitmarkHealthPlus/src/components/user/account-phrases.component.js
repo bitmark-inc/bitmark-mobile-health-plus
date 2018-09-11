@@ -271,17 +271,16 @@ export class AccountPhraseComponent extends Component {
                     renderItem={({ item, index }) => {
                       console.log('render 1', item);
                       return (
-                        <TouchableOpacity style={[styles.recoveryPhraseSet, {
-                          borderWidth: this.state.selectingIndex === index ? 1 : 0,
-                          borderColor: '#FF4444'
-                        }]}
+                        <TouchableOpacity style={[styles.recoveryPhraseSet,]}
                           disabled={item.selected}
                           onPress={() => this.setState({ selectingIndex: index })}
                         >
                           <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
                           <Text style={[styles.recoveryPhraseWord, {
                             color: item.selected ? '#828282' : '#FF4444',
-                            backgroundColor: item.word ? 'white' : '#F5F5F5'
+                            backgroundColor: item.word ? 'white' : '#F5F5F5',
+                            borderWidth: this.state.selectingIndex === index ? 1 : 0,
+                            borderColor: '#FF4444'
                           }]}>{item.word}</Text>
                         </TouchableOpacity>
                       )
@@ -295,17 +294,16 @@ export class AccountPhraseComponent extends Component {
                     renderItem={({ item, index }) => {
                       console.log('render 2', item);
                       return (
-                        <TouchableOpacity style={[styles.recoveryPhraseSet, {
-                          borderWidth: this.state.selectingIndex === (index + 12) ? 1 : 0,
-                          borderColor: '#FF4444'
-                        }]}
+                        <TouchableOpacity style={[styles.recoveryPhraseSet,]}
                           disabled={item.selected}
                           onPress={() => this.setState({ selectingIndex: index + 12 })}
                         >
                           <Text style={styles.recoveryPhraseIndex}>{index + 13}.</Text>
                           <Text style={[styles.recoveryPhraseWord, {
                             color: item.selected ? '#828282' : '#FF4444',
-                            backgroundColor: item.word ? 'white' : '#F5F5F5'
+                            backgroundColor: item.word ? 'white' : '#F5F5F5',
+                            borderWidth: this.state.selectingIndex === (index + 12) ? 1 : 0,
+                            borderColor: '#FF4444'
                           }]}>{item.word}</Text>
                         </TouchableOpacity>
                       )
