@@ -19,7 +19,7 @@ public extension Account {
                               accessibility: Accessibility = .publicAsset,
                               propertyName name: String,
                               propertyMetadata metadata: [String: String]? = nil,
-                              quantity: Int = 1) throws -> ([Issue], Asset) {
+                              quantity: Int = 1) throws -> ([Issue], Asset, [String: String]?, Data?) {
         let data = try Data(contentsOf: url)
         let fileName = url.lastPathComponent
         let network = self.authKey.network
@@ -44,7 +44,7 @@ public extension Account {
         // Upload asset
         let api = API(network: network)
         
-        let (_, uploadSuccess) = try api.uploadAsset(data: data, fileName: fileName, assetId: asset.id!, accessibility: accessibility, fromAccount: self)
+        let (sessionData, uploadSuccess, encryptedFile) = try api.uploadAsset(data: data, fileName: fileName, assetId: asset.id!, accessibility: accessibility, fromAccount: self)
         
         if !uploadSuccess {
             throw("Failed to upload assets")
@@ -55,7 +55,7 @@ public extension Account {
             throw("Fail to issue bitmark")
         }
         
-        return (issues, asset)
+        return (issues, asset, sessionData?.serialize(), encryptedFile)
     }
     
     public func issueBitmarks(fingerprint: String,
@@ -135,7 +135,7 @@ public extension Account {
         // upload the assets with the owner’s session data attached.
         let api = API(network: network)
         
-        let (sessionData, uploadSuccess) = try api.uploadAsset(data: data, fileName: fileName, assetId: asset.id!, accessibility: accessibility, fromAccount: self)
+        let (sessionData, uploadSuccess, _) = try api.uploadAsset(data: data, fileName: fileName, assetId: asset.id!, accessibility: accessibility, fromAccount: self)
         
         if !uploadSuccess {
             throw("Failed to upload assets")
@@ -189,7 +189,7 @@ public extension Account {
         // upload the assets with the owner’s session data attached.
         let api = API(network: network)
         
-        let (sessionData, uploadSuccess) = try api.uploadAsset(data: data, fileName: fileName, assetId: asset.id!, accessibility: accessibility, fromAccount: self)
+        let (sessionData, uploadSuccess, _) = try api.uploadAsset(data: data, fileName: fileName, assetId: asset.id!, accessibility: accessibility, fromAccount: self)
         
         if !uploadSuccess {
             throw("Failed to upload assets")

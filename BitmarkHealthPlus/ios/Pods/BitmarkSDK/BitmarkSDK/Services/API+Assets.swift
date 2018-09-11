@@ -9,7 +9,7 @@
 import Foundation
 
 internal extension API {
-    internal func uploadAsset(data: Data, fileName: String, assetId: String, accessibility: Accessibility, fromAccount account: Account) throws -> (SessionData?, Bool) {
+    internal func uploadAsset(data: Data, fileName: String, assetId: String, accessibility: Accessibility, fromAccount account: Account) throws -> (SessionData?, Bool, Data?) {
         var params = ["asset_id": assetId,
                       "accessibility": accessibility.rawValue]
         
@@ -17,28 +17,30 @@ internal extension API {
         
         var urlRequest: URLRequest
         var sessionData: SessionData?
+        var encryptedData: Data?
         
         switch accessibility {
         case .publicAsset:
             urlRequest = API.multipartRequest(data: data, fileName: fileName, toURL: requestURL, otherParams: params)
         case .privateAsset:
             let assetEncryption = try AssetEncryption()
-            let (encryptedData, sData) = try assetEncryption.encrypt(data: data, signWithAccount: account)
+            let (e, sData) = try assetEncryption.encrypt(data: data, signWithAccount: account)
             let sessionDataSerialized = try JSONEncoder().encode(sData)
             params["session_data"] = String(data: sessionDataSerialized, encoding: .utf8)
             sessionData = sData
             
-            urlRequest = API.multipartRequest(data: encryptedData, fileName: fileName, toURL: requestURL, otherParams: params)
+            urlRequest = API.multipartRequest(data: e, fileName: fileName, toURL: requestURL, otherParams: params)
+            encryptedData = e
         }
         
         try urlRequest.signRequest(withAccount: account, action: "uploadAsset", resource: assetId)
         
         let result = try urlSession.synchronousDataTask(with: urlRequest)
         guard let response = result.response else {
-                return (sessionData, false)
+                return (sessionData, false, encryptedData)
         }
         
-        return (sessionData, 200..<300 ~= response.statusCode)
+        return (sessionData, 200..<300 ~= response.statusCode, encryptedData)
     }
     
     internal func getAssetContent(url: String) throws -> (String?, Data?) {

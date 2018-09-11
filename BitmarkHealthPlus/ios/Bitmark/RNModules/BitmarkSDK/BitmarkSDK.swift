@@ -146,7 +146,20 @@ class BitmarkSDK: NSObject {
       let result = try account.issueBitmarks(assetFile: URL(fileURLWithPath: fileURL), accessibility: accessibility, propertyName: propertyName, propertyMetadata: metadata, quantity: quantity)
       let issues = result.0
       let issueIds = issues.map {$0.txId! }
-      callback([true, issueIds])
+      
+      if let sessionData = result.2,
+        let encryptedData = result.3 {
+        
+        let filename = URL(fileURLWithPath: fileURL).lastPathComponent
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        let filePath = documentsDirectory.appendingPathComponent(filename)
+        try encryptedData.write(to: filePath)
+        
+        callback([true, issueIds, result.1.id!, sessionData, filePath])
+      } else {
+        callback([true, issueIds])
+      }
     }
     catch let e {
       print(e)

@@ -16,7 +16,7 @@ PODS:
   - TweetNacl (1.0.1)
 
 DEPENDENCIES:
-  - BitmarkSDK (from `https://github.com/bitmark-inc/bitmark-sdk-swift.git`)
+  - BitmarkSDK (from `https://github.com/bitmark-inc/bitmark-sdk-swift.git`, branch `export-local-storage`)
   - HockeySDK
   - Intercom
   - KeychainAccess
@@ -34,13 +34,14 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   BitmarkSDK:
+    :branch: export-local-storage
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
   ResearchKit:
     :git: https://github.com/bitmark-inc/ResearchKit.git
 
 CHECKOUT OPTIONS:
   BitmarkSDK:
-    :commit: 6f628a033b16a5556fd4ce3e9c8240732ed7ea3f
+    :commit: 83dbb87006b13774e831b745a7464bbbdfb97e4a
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
   ResearchKit:
     :commit: 0b9690f4e586e7a5f4dfd655c7359f928c8e24ce
@@ -57,6 +58,6 @@ SPEC CHECKSUMS:
   SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
-PODFILE CHECKSUM: 241b9656a7e1bcda233919efdca155cc64571e16
+PODFILE CHECKSUM: 835993140ad5278854672877f57aae14d94ede5a
 
 COCOAPODS: 1.5.3

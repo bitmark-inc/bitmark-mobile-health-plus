@@ -3,7 +3,7 @@ platform :ios, '10.0'
 def pods
     # Pods for BitmarkHealthPlus
     
-    pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
+    pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git', :branch => 'export-local-storage'
     pod 'KeychainAccess'
     pod 'ResearchKit', :git => 'https://github.com/bitmark-inc/ResearchKit.git'
     pod 'Intercom'
