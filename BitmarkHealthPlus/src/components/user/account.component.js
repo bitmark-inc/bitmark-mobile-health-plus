@@ -138,7 +138,9 @@ export class AccountComponent extends Component {
 
               <View style={styles.accessArea}>
                 <Text style={styles.accessTitle}>Access list</Text>
-                <Text style={styles.accessDescription}>These accounts can view your records and data.</Text>
+                <Text style={styles.accessDescription}>
+                  {this.state.accessList && this.state.accessList.length > 0 ? 'These accounts can view your records and data.' : 'You have not granted access to any account.'}
+                </Text>
                 {this.state.accessList && this.state.accessList.length > 0 && <FlatList
                   style={{ marginTop: 12 }}
                   keyExtractor={(item, index) => index}
