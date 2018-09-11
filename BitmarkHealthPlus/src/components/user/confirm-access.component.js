@@ -38,7 +38,7 @@ export class ConfirmAccessComponent extends Component {
   checkDone() {
     DataProcessor.doGetAccountAccesses('waiting').then(list => {
       if (list && list.length > 0) {
-        this.setState({ token: list[0].id, grantee: list[0].grantee });
+        this.setState({ token: list[0].id, grantee: list[0].grantee, step: 'confirming' });
       } else {
         Actions.pop();
       }
