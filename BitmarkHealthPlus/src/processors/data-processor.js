@@ -61,7 +61,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
 };
 
 let queueGetUserDataBitmarks = {};
-const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
+const runGetUserBitmarksInBackground = (bitmarkAccountNumber, grantedAt) => {
   bitmarkAccountNumber = bitmarkAccountNumber || userInformation.bitmarkAccountNumber;
   return new Promise((resolve) => {
     queueGetUserDataBitmarks[bitmarkAccountNumber] = queueGetUserDataBitmarks[bitmarkAccountNumber] || [];
@@ -98,6 +98,15 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     doGetAllBitmarks().then(({ assets, bitmarks }) => {
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       bitmarks.forEach(bitmark => {
+        let isGrantedBitmark = false;
+        if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
+          isGrantedBitmark = true;
+        } else {
+          isGrantedBitmark = moment(grantedAt).toDate() > moment(bitmark.confirmed_at).toDate();
+        }
+        if (!isGrantedBitmark) {
+          return;
+        }
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
           if (isHealthDataBitmark(asset.name)) {
@@ -159,7 +168,7 @@ const runOnBackground = async () => {
     await runGetUserBitmarksInBackground();
     await runGetAccountAccessesInBackground();
     if (grantedAccessAccountSelected) {
-      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
+      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor, grantedAccessAccountSelected.granted_at);
     }
   }
 };
@@ -548,7 +557,7 @@ const doSelectAccountAccess = async (accountNumber) => {
     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === accountNumber);
     console.log('grantedAccessAccountSelected :', grantedAccessAccountSelected);
     if (grantedAccessAccountSelected) {
-      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
+      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor, grantedAccessAccountSelected.granted_at);
       return true;
     }
   }
