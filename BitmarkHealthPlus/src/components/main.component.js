@@ -51,7 +51,7 @@ class MainEventsHandlerComponent extends Component {
       processingCount: false,
       submitting: null,
       networkStatus: true,
-      emptyDataSource: true,
+      emptyDataSource: false,
     };
     this.appState = AppState.currentState;
   }
