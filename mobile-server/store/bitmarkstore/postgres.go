@@ -21,12 +21,14 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 const (
 	sqlInsertBitmarkTracking          = "INSERT INTO mobile.bitmark_tracking(account_number, bitmark_id, tx_id, status) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING"
 	sqlDeleteBitmarkTracking          = "DELETE FROM mobile.bitmark_tracking WHERE bitmark_id = $1 AND account_number = $2"
+	sqlDeleteBitmarkTrackingByAccount = "DELETE FROM mobile.bitmark_tracking WHERE account_number = $1"
 	sqlQueryBitmarkTracking           = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
 	sqlQueryAccountHasTrackingBitmark = "SELECT bitmark_id, array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = ANY($1) GROUP BY bitmark_id"
 	sqlInsertBitmarkRenting           = "INSERT INTO mobile.bitmark_renting(id, sender) VALUES ($1, $2)"
 	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, updated_at = NOW(), status = 'waiting_confirmation' WHERE id = $2 AND created_at > NOW() - INTERVAL '3 days' RETURNING sender"
 	sqlUpdateBitmarkRentingStatus     = "UPDATE mobile.bitmark_renting SET status = $1, updated_at = NOW() WHERE id = $2"
 	sqlDeleteBitmarkRenting           = "DELETE FROM mobile.bitmark_renting WHERE id = $1 AND sender = $2"
+	sqlDeleteBitmarkRentingByAccount  = "DELETE FROM mobile.bitmark_renting WHERE sender = $1 OR receiver = $1"
 	sqlQueryBitmarkRentingSender      = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE sender = $1 AND status = 'completed'"
 	sqlQueryBitmarkRentingReceiver    = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE receiver = $1 AND status = 'completed'"
 	sqlQueryBitmarkRentingAwaiting    = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE sender = $1 AND status = 'waiting_confirmation'"
@@ -46,6 +48,11 @@ func (b *BitmarkPGStore) AddTrackingBitmark(ctx context.Context, account, bitmar
 func (b *BitmarkPGStore) DeleteTrackingBitmark(ctx context.Context, account, bitmarkID string) (bool, error) {
 	tag, err := b.dbConn.ExecEx(ctx, sqlDeleteBitmarkTracking, nil, bitmarkID, account)
 	return tag.RowsAffected() > 0, err
+}
+
+func (b *BitmarkPGStore) DeleteTrackingBitmarkByAccount(ctx context.Context, account string) error {
+	_, err := b.dbConn.ExecEx(ctx, sqlDeleteBitmarkTrackingByAccount, nil, account)
+	return err
 }
 
 func (b *BitmarkPGStore) GetTrackingBitmarks(ctx context.Context, account string) ([]BitmarkTracking, error) {
@@ -133,6 +140,12 @@ func (b *BitmarkPGStore) UpdateBitmarkRentingStatus(ctx context.Context, id stri
 // DeleteBitmarkRenting delete bitmark renting item
 func (b *BitmarkPGStore) DeleteBitmarkRenting(ctx context.Context, id, account string) error {
 	_, err := b.dbConn.ExecEx(ctx, sqlDeleteBitmarkRenting, nil, id, account)
+	return err
+}
+
+// DeleteBitmarkRentingByAccount delete bitmark renting item
+func (b *BitmarkPGStore) DeleteBitmarkRentingByAccount(ctx context.Context, account string) error {
+	_, err := b.dbConn.ExecEx(ctx, sqlDeleteBitmarkRentingByAccount, nil, account)
 	return err
 }
 

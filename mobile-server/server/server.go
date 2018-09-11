@@ -82,6 +82,12 @@ func (s *Server) Run(addr string) error {
 		grantingBitmarksGroup.DELETE("/:id", s.revokeRentingBitmartk)
 	}
 
+	accountGroup := api.Group("/accounts")
+	accountGroup.Use(s.authenticateJWT())
+	{
+		accountGroup.DELETE("", s.deleteAccount)
+	}
+
 	api.GET("/healthz", s.HealthCheck)
 
 	api.GET("/app-versions/:app", s.GetSupportedVersion)
