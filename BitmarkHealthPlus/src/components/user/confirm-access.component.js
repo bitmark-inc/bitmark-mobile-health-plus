@@ -22,13 +22,14 @@ export class ConfirmAccessComponent extends Component {
     this.state = {
       token: this.props.token,
       grantee: this.props.grantee,
+      step: 'confirming',
     };
   }
 
   cancelRequest() {
     AppProcessor.doCancelGrantingAccess(this.state.token).then((result) => {
       if (result) {
-        Actions.pop();
+        this.setState({ step: 'success' });
       }
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
@@ -58,7 +59,7 @@ export class ConfirmAccessComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
-          <View style={styles.bodyContent}>
+          {this.state.step === 'confirming' && <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
               <Text style={styles.titleText}>Confirm access request</Text>
             </View>
@@ -78,7 +79,24 @@ export class ConfirmAccessComponent extends Component {
                 <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'confirm'.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </View>}
+
+          {this.state.step === 'success' && <View style={styles.bodyContent}>
+            <View style={styles.titleRow}>
+              <Text style={styles.titleText}>Access granted!</Text>
+            </View>
+            <View style={styles.content}>
+              <Text style={styles.message}>
+                {'[' + grantee.substring(0, 4) + '...' + grantee.substring(grantee.length - 5, grantee.length) + ']'}
+                {' can now view your records and data.'}
+              </Text>
+            </View>
+            <View style={styles.bottomButtonArea}>
+              <TouchableOpacity style={[styles.bottomButton, { width: '100%' }]} onPress={() => Actions.reset('user')}>
+                <Text style={[styles.bottomButtonText, { fontWeight: '300' }]}>{'OK'.toUpperCase()}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>}
         </View>
       </SafeAreaView>
     );
