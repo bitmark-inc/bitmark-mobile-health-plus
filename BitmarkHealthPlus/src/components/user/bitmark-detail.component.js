@@ -93,7 +93,7 @@ export class BitmarkDetailComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
-              {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText, { color: 'black' }]}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
+              {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText]}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
               {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
               <TouchableOpacity onPress={Actions.pop}>
                 <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 18,
-    color: 'white',
+    color: 'black',
   },
   closeIcon: {
     width: convertWidth(21),
