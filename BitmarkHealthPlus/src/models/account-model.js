@@ -308,7 +308,7 @@ let doGetWaitingGrantedAccess = (jwt) => {
   });
 };
 
-let doRemoveGrantingAccess = (jwt, from, to) => {
+let doRemoveGrantingAccess = (from, to) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.api_server_url}/v2/access-grants?from=${from}&to=${to}`;

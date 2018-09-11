@@ -250,6 +250,14 @@ const doLogout = async () => {
   await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
   await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
   await Intercom.reset();
+
+  let accesses = await doGetAccountAccesses();
+  for (let grantedInfo of accesses.granted_from) {
+    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee);
+  }
+  for (let grantedInfo of accesses.granted_to) {
+    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee);
+  }
   userInformation = {};
 };
 
@@ -554,7 +562,7 @@ const doReceivedAccessQRCode = async (token) => {
 };
 
 const doRemoveGrantingAccess = async (grantee) => {
-  let result = await AccountModel.doRemoveGrantingAccess(jwt, userInformation.bitmarkAccountNumber, grantee);
+  let result = await AccountModel.doRemoveGrantingAccess(userInformation.bitmarkAccountNumber, grantee);
   await runGetAccountAccessesInBackground();
   return result;
 };
