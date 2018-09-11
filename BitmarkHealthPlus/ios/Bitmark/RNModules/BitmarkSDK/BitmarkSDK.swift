@@ -154,7 +154,7 @@ class BitmarkSDK: NSObject {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
         let filePath = documentsDirectory.appendingPathComponent(filename)
-        try encryptedData.write(to: filePath)
+        try encryptedData.write(to: filePath, options: .atomic)
         
         callback([true, issueIds, result.1.id!, sessionData, filePath.absoluteString])
       } else {
