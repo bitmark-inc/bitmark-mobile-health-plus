@@ -17,7 +17,7 @@ import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 import {
   DataProcessor,
-  AppProcessor
+  // AppProcessor
 } from '../../processors';
 import { EventEmitterService } from '../../services';
 let ComponentName = 'AccountComponent';
@@ -123,14 +123,15 @@ export class AccountComponent extends Component {
                   <Text style={styles.rowButtonText}>Write Down Recovery Phrase</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
-                {/* <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
-                <TouchableOpacity style={styles.rowButton} onPress={() => {
+                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
+                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
                   AppProcessor.doLogout().then(() => {
                     EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
                   }).catch(error => {
+                    console.log('error :', error)
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
-                }}>
+                }}> */}
                   <Text style={styles.rowButtonText}>Log out</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>

@@ -245,17 +245,18 @@ const doLogout = async () => {
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
   }
   PushNotificationIOS.cancelAllLocalNotifications();
-  await AccountModel.doLogout();
+  await AccountModel.doLogout(jwt);
   await UserModel.doRemoveUserInfo();
   await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
   await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
   await Intercom.reset();
 
   let accesses = await doGetAccountAccesses();
-  for (let grantedInfo of accesses.granted_from) {
+  console.log('accesses :', accesses);
+  for (let grantedInfo of (accesses.granted_from || [])) {
     await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee);
   }
-  for (let grantedInfo of accesses.granted_to) {
+  for (let grantedInfo of (accesses.granted_to || [])) {
     await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee);
   }
   userInformation = {};
@@ -291,9 +292,7 @@ const doOpenApp = async () => {
       console.log('registerIdentifiedUser error :', error);
     });
 
-    if (!CommonModel.getFaceTouchSessionId()) {
-      await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
-    }
+    await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
 
     let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);

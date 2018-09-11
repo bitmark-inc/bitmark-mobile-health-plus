@@ -21,9 +21,9 @@ const doCheck24Words = async (phrase24Words) => {
   return await BitmarkSDK.try24Words(phrase24Words, config.bitmark_network);
 };
 
-const doLogout = async () => {
+const doLogout = async (jwt) => {
   await CookieManager.clearAll();
-  await doDeleteAccount();
+  await doDeleteAccount(jwt);
   return await BitmarkSDK.removeAccount();
 };
 
