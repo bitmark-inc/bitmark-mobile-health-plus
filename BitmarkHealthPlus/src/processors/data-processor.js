@@ -101,7 +101,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber, grantedAt) => {
         let isGrantedBitmark = false;
         if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
           isGrantedBitmark = true;
-        } else {
+        } else if (grantedAt) {
           isGrantedBitmark = moment(grantedAt).toDate() > moment(bitmark.confirmed_at).toDate();
         }
         if (!isGrantedBitmark) {
