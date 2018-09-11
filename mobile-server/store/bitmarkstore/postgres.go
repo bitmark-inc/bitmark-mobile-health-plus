@@ -25,7 +25,7 @@ const (
 	sqlQueryBitmarkTracking           = "SELECT bitmark_id, tx_id, status, created_at FROM mobile.bitmark_tracking WHERE account_number = $1 ORDER BY created_at ASC"
 	sqlQueryAccountHasTrackingBitmark = "SELECT bitmark_id, array_agg(account_number) FROM mobile.bitmark_tracking WHERE bitmark_id = ANY($1) GROUP BY bitmark_id"
 	sqlInsertBitmarkRenting           = "INSERT INTO mobile.bitmark_renting(id, sender) VALUES ($1, $2)"
-	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, updated_at = NOW(), status = 'waiting_confirmation' WHERE id = $2 AND created_at > NOW() - INTERVAL '3 days' RETURNING sender"
+	sqlUpdateBitmarkRentingReceiver   = "UPDATE mobile.bitmark_renting SET receiver = $1, updated_at = NOW(), status = 'waiting_confirmation' WHERE id = $2 AND receiver IS NULL AND created_at > NOW() - INTERVAL '3 days' RETURNING sender"
 	sqlUpdateBitmarkRentingStatus     = "UPDATE mobile.bitmark_renting SET status = $1, updated_at = NOW() WHERE id = $2"
 	sqlDeleteBitmarkRenting           = "DELETE FROM mobile.bitmark_renting WHERE id = $1 AND sender = $2"
 	sqlDeleteBitmarkRentingByAccount  = "DELETE FROM mobile.bitmark_renting WHERE sender = $1 OR receiver = $1"

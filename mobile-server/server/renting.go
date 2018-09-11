@@ -142,6 +142,7 @@ func (s *Server) updateRenting(c *gin.Context) {
 
 		// Notify sender
 		redisConn, err := s.redisPool.Dial()
+		defer redisConn.Close()
 		if err != nil {
 			c.Error(err)
 			c.AbortWithStatus(http.StatusInternalServerError)
