@@ -32,14 +32,12 @@ export class CaptureAssetComponent extends Component {
           ? 'You have already registered this image. '
           : 'The image has already issued by other account.';
         Alert.alert('', message, [{
-          text: 'Cancel', style: 'cancel'
-        }, {
-          text: 'OK',
+          text: 'OK', style: 'cancel'
         }]);
       } else {
         // Do issue
         let metadataList = [];
-        metadataList.push({ label: 'Source', value: 'Bitmark Health' });
+        metadataList.push({ label: 'Source', value: 'Health Records' });
         metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
         let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
         AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {

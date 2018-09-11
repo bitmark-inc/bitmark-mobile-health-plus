@@ -103,12 +103,18 @@ export class UserComponent extends Component {
           <View style={styles.body}>
             <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
               <View style={styles.dataArea}>
-                <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
+                <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => {
+                  this.setState({ isDisplayingAccountNumber: true });
+                  Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })
+                }}>
                   <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks}</Text> Week{this.state.numberHealthDataBitmarks !== 1 ? 's' : ''} of health data</Text>
                 </TouchableOpacity>
               </View>
               <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60), }]}>
-                <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
+                <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => {
+                  this.setState({ isDisplayingAccountNumber: true });
+                  Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })
+                }}>
                   <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks}</Text> Health record{this.state.numberHealthAssetBitmarks !== 1 ? 's' : ''}</Text>
                 </TouchableOpacity>
                 {this.state.isDisplayingAccountNumber && isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>

@@ -381,7 +381,7 @@ const doOpenApp = async () => {
 };
 
 const doBitmarkHealthData = async (touchFaceIdSession, list) => {
-  let bitmarkIds = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
+  let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
   await runGetUserBitmarksInBackground();
   let appInfo = (await doGetAppInformation()) || {};
   if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_issued_weekly_health_data) {
@@ -395,28 +395,28 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     });
   }
 
-  // let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
-  // if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
-  //   let body = { items: [] };
-  //   for (let grantedInfo of grantedInformationForOtherAccount) {
-  //     for (let bitmarkId of bitmarkIds) {
-  //       let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantedInfo.grantee);
-  //       body.items.push({
-  //         bitmark_id: bitmarkId,
-  //         session_data: sessionData,
-  //         to: grantedInfo.grantee,
-  //         start_at: Math.floor(moment().toDate().getTime() / 1000),
-  //         duration: { Years: 99 }
-  //       });
-  //     }
-  //   }
-  //   let timestamp = moment().toDate().getTime();
-  //   let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
-  //   let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
-  //   await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
-  // }
+  let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
+  if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
+    let body = { items: [] };
+    for (let grantedInfo of grantedInformationForOtherAccount) {
+      for (let record of results) {
+        let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, record.id, record.sessionData, grantedInfo.grantee);
+        body.items.push({
+          bitmark_id: record.id,
+          session_data: sessionData,
+          to: grantedInfo.grantee,
+          start_at: Math.floor(moment().toDate().getTime() / 1000),
+          duration: { Years: 99 }
+        });
+      }
+    }
+    let timestamp = moment().toDate().getTime();
+    let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
+    let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
+    await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
+  }
 
-  return bitmarkIds;
+  return results;
 };
 
 const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId) => {
@@ -451,7 +451,7 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 };
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
-  let bitmarkIds = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
+  let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
   await doReloadUserData();
 
   let appInfo = (await doGetAppInformation()) || {};
@@ -466,27 +466,27 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     });
   }
 
-  // let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
-  // if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
-  //   let body = { items: [] };
-  //   for (let grantedInfo of grantedInformationForOtherAccount) {
-  //     for (let bitmarkId of bitmarkIds) {
-  //       let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantedInfo.grantee);
-  //       body.items.push({
-  //         bitmark_id: bitmarkId,
-  //         session_data: sessionData,
-  //         to: grantedInfo.grantee,
-  //         start_at: Math.floor(moment().toDate().getTime() / 1000),
-  //         duration: { Years: 99 }
-  //       });
-  //     }
-  //   }
-  //   let timestamp = moment().toDate().getTime();
-  //   let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
-  //   let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
-  //   await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
-  // }
-  return bitmarkIds;
+  let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
+  if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
+    let body = { items: [] };
+    for (let grantedInfo of grantedInformationForOtherAccount) {
+      for (let record of results) {
+        let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, record.id, record.sessionData, grantedInfo.grantee);
+        body.items.push({
+          bitmark_id: record.id,
+          session_data: sessionData,
+          to: grantedInfo.grantee,
+          start_at: Math.floor(moment().toDate().getTime() / 1000),
+          duration: { Years: 99 }
+        });
+      }
+    }
+    let timestamp = moment().toDate().getTime();
+    let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
+    let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
+    await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
+  }
+  return results;
 };
 
 const getUserInformation = () => {
@@ -585,28 +585,50 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
   if (userBitmarks && (userBitmarks.healthDataBitmarks || userBitmarks.healthAssetBitmarks)) {
     let body = { items: [] };
 
+    let doGetSessionData = async (bitmarkAccountNumber, assetId) => {
+      let filePath = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + assetId + '/session_data.txt';
+      let exist = await FileUtil.exists(filePath);
+      if (exist) {
+        let content = await FileUtil.readFile(filePath);
+        if (content) {
+          try {
+            return JSON.parse(content);
+          } catch (error) {
+            //
+          }
+        }
+      }
+      return null;
+    };
+
     for (let bitmark of (userBitmarks.healthDataBitmarks || [])) {
-      if (bitmark.status === 'confirmed') {
-        let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
+      let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
+      if (sessionData) {
+        let granteeSessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
         body.items.push({
           bitmark_id: bitmark.id,
-          session_data: sessionData,
+          session_data: granteeSessionData,
           to: grantee,
           start_at: Math.floor(moment().toDate().getTime() / 1000),
           duration: { Years: 99 }
         });
+      } else if (bitmark.status === 'confirmed') {
+
       }
     }
     for (let bitmark of (userBitmarks.healthAssetBitmarks || [])) {
-      if (bitmark.status === 'confirmed') {
-        let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
+      let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
+      if (sessionData) {
+        let granteeSessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
         body.items.push({
           bitmark_id: bitmark.id,
-          session_data: sessionData,
+          session_data: granteeSessionData,
           to: grantee,
           start_at: Math.floor(moment().toDate().getTime() / 1000),
           duration: { Years: 99 }
         });
+      } else if (bitmark.status === 'confirmed') {
+
       }
     }
 

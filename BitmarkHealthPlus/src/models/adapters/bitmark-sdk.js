@@ -278,9 +278,9 @@ const BitmarkSDK = {
   },
 
 
-  createSessionDataForRecipient: (sessionId, encryptionKeyOrBitmarkId, recipient) => {
+  createSessionDataForRecipient: (sessionId, bitmarkId, sessionData, recipient) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.createSessionDataForRecipient(sessionId, encryptionKeyOrBitmarkId, recipient, (ok, result) => {
+      SwiftBitmarkSDK.createSessionDataForRecipient(sessionId, bitmarkId, sessionData, recipient, (ok, result) => {
         if (ok && result) {
           resolve(result);
         } else {

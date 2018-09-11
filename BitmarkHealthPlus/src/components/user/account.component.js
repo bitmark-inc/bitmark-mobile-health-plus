@@ -67,7 +67,7 @@ export class AccountComponent extends Component {
 
   sendFeedback() {
     Mailer.mail({
-      subject: 'Suggestion for Bitmark iOS',
+      subject: 'Suggestion for Bitmark Health Plus',
       recipients: ['support@bitmark.com'],
       body: 'Health+ version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
     }, (error) => {

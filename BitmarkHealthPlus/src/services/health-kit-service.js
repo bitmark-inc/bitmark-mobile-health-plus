@@ -337,7 +337,7 @@ const removeEmptyValueData = (healthData) => {
   return realData;
 };
 const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, list) => {
-  let bitmarkIds = [];
+  let results = [];
   for (let dateRange of list) {
     let healthRawData = await doGetHealthKitData(allDataTypes, dateRange.startDate, dateRange.endDate);
     let randomId = randomString({ length: 8, numeric: true, letters: false, });
@@ -362,13 +362,12 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     await FileUtil.create(encryptedAssetFolder + '/session_data.txt', JSON.stringify(issueResult.sessionData));
 
     let desEncryptedFilePath = encryptedAssetFolder + issueResult.encryptedFilePath.substring(issueResult.encryptedFilePath.lastIndexOf('/'), issueResult.encryptedFilePath.length);
-    console.log('issueResult.encryptedFilePath:', issueResult.encryptedFilePath);
-    console.log('desEncryptedFilePath:', desEncryptedFilePath);
     await FileUtil.moveFileSafe(issueResult.encryptedFilePath.replace('file://', ''), desEncryptedFilePath);
-
-    bitmarkIds = bitmarkIds.concat(issueResult.bitmarkIds);
+    issueResult.bitmarkIds.forEach(id => {
+      results.push({ id, sessionData: issueResult.sessionData });
+    });
   }
-  return bitmarkIds;
+  return results;
 };
 
 const doCheckBitmarkHealthDataTask = (healthDataBitmarks, accountCreatedAt) => {

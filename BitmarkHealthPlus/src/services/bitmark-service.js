@@ -53,14 +53,18 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
       metadata[item.label] = item.value;
     }
   });
-  let result = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
-  let encryptedAssetFolder = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + result.assetId;
+  let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
+  let encryptedAssetFolder = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + issueResult.assetId;
   await FileUtil.mkdir(encryptedAssetFolder);
-  await FileUtil.create(encryptedAssetFolder + '/session_data.txt', JSON.stringify(result.sessionData));
+  await FileUtil.create(encryptedAssetFolder + '/session_data.txt', JSON.stringify(issueResult.sessionData));
 
-  let desEncryptedFilePath = encryptedAssetFolder + result.encryptedFilePath.substring(result.encryptedFilePath.lastIndexOf('/'), result.encryptedFilePath.length);
-  await FileUtil.moveFileSafe(result.encryptedFilePath.replace('file://', ''), desEncryptedFilePath);
-  return result.bitmarkIds;
+  let desEncryptedFilePath = encryptedAssetFolder + issueResult.encryptedFilePath.substring(issueResult.encryptedFilePath.lastIndexOf('/'), issueResult.encryptedFilePath.length);
+  await FileUtil.moveFileSafe(issueResult.encryptedFilePath.replace('file://', ''), desEncryptedFilePath);
+  let results = [];
+  issueResult.bitmarkIds.forEach(id => {
+    results.push({ id, sessionData: issueResult.sessionData });
+  });
+  return results;
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {
