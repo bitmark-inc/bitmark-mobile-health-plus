@@ -360,20 +360,27 @@ export class MainComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (!this.state.user || this.state.user.bitmarkAccountNumber !== nextState.user.bitmarkAccountNumber) {
+      return true;
+    }
+    return false;
+  }
+
   doOpenApp() {
-    // AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
-    //   if (!result) {
-    //     Alert.alert('New Version Available', 'You’re using a version of Bitmark Health or operating system that’s no longer supported. Please update to the newest app version. Thanks!', [{
-    //       text: 'Visit Appstore',
-    //       onPress: () => Linking.openURL(config.appLink)
-    //     }]);
-    //     return;
-    //   }
-    //   this.doRefresh();
-    // }).catch(error => {
-    //   console.log('doOpenApp error:', error);
-    // });
-    this.doRefresh();
+    AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
+      if (!result) {
+        Alert.alert('New Version Available', 'You’re using a version of Bitmark Health or operating system that’s no longer supported. Please update to the newest app version. Thanks!', [{
+          text: 'Visit Appstore',
+          onPress: () => Linking.openURL(config.appLink)
+        }]);
+        return;
+      }
+      this.doRefresh();
+    }).catch(error => {
+      console.log('doOpenApp error:', error);
+    });
+    // this.doRefresh();
   }
   doRefresh(justCreatedBitmarkAccount) {
     return DataProcessor.doOpenApp().then(user => {
