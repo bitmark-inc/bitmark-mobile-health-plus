@@ -268,7 +268,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 34,
-    color: '#464646',
   },
 
 
@@ -282,13 +281,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 34,
-    color: '#464646',
   },
   accessDescription: {
     fontFamily: 'Avenir Book',
     fontWeight: '300',
-    fontSize: 14,
-    color: '#545454',
+    fontSize: 16,
     marginTop: 10,
   },
   accessAccountRow: {
@@ -317,7 +314,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 34,
-    color: '#464646',
   },
   rowButton: {
     flexDirection: 'row',
@@ -333,9 +329,10 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   rowButtonText: {
-    fontFamily: 'Avenir Light',
-    fontWeight: '300',
+    fontFamily: 'Avenir Medium',
+    fontWeight: '400',
     fontSize: 16,
+    color: 'black'
   }
 
 });

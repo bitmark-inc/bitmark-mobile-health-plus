@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
-    color: '#464646',
   },
   closeIcon: {
     width: convertWidth(20),
@@ -137,7 +136,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Book',
     fontSize: 16,
     fontWeight: '300',
-    color: '#464646',
   },
   bitmarkRowIcon: {
     width: convertWidth(8),

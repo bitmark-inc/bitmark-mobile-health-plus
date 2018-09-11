@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontWeight: '900',
     fontSize: 34,
-    color: '#464646',
   },
   titleRow: {
     flexDirection: 'row',

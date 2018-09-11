@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
   },
   message: {
     fontFamily: 'Avenir Medium',
-    fontWeight: '300',
-    fontSize: 14,
+    fontWeight: '400',
+    fontSize: 16,
     color: 'white',
     marginTop: 50,
   },
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontWeight: '900',
     fontSize: 34,
-    color: '#464646',
+    color: 'white',
   },
   titleRow: {
     flexDirection: 'row',
