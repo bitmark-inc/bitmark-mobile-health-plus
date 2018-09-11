@@ -278,9 +278,9 @@ const BitmarkSDK = {
   },
 
 
-  createSessionDataForRecipient: (sessionId, bitmarkId, sessionData, recipient) => {
+  createSessionDataFromLocalForRecipient: (sessionId, bitmarkId, sessionData, recipient) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.createSessionDataForRecipient(sessionId, bitmarkId, sessionData, recipient, (ok, result) => {
+      SwiftBitmarkSDK.createSessionDataFromLocalForRecipient(sessionId, bitmarkId, sessionData, recipient, (ok, result) => {
         if (ok && result) {
           resolve(result);
         } else {
@@ -289,5 +289,18 @@ const BitmarkSDK = {
       });
     });
   },
+  createSessionDataForRecipient: (sessionId, bitmarkId, recipient) => {
+    return new Promise((resolve, reject) => {
+      SwiftBitmarkSDK.createSessionDataForRecipient(sessionId, bitmarkId, recipient, (ok, result) => {
+        if (ok && result) {
+          resolve(result);
+        } else {
+          reject(newError(result, 'Can not create session data!'));
+        }
+      });
+    });
+  },
+
+
 };
 export { BitmarkSDK };
