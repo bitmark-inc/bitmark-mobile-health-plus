@@ -1,2 +1,2 @@
 export * from './main.component';
-// export * from './code-push.component';
+export * from './code-push.component';
