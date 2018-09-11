@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Permissions from 'react-native-permissions';
+
 import {
   Text, View, TouchableOpacity, Image, SafeAreaView,
-  Linking,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { convertWidth } from '../../utils';
@@ -23,23 +22,12 @@ export class ScanAccessQRCodeComponent extends React.Component {
     this.doReceivedAccessQRCode = this.doReceivedAccessQRCode.bind(this);
     this.scanned = false;
     this.state = {
-      permission: null,
       step: 'scanning',
       grantor: '',
     }
 
     if (this.props.token) {
       this.doReceivedAccessQRCode(this.props.token);
-    } else {
-      Permissions.check('camera').then(permission => {
-        if (permission === 'undetermined') {
-          Permissions.request('camera').then(permission => {
-            this.setState({ permission });
-          });
-        } else {
-          this.setState({ permission });
-        }
-      });
     }
   }
 
@@ -70,31 +58,21 @@ export class ScanAccessQRCodeComponent extends React.Component {
       <View style={styles.body}>
         {this.state.step === 'scanning' && <View style={styles.bodyContent}>
           <View style={styles.titleRow}>
-            <Text style={styles.title}>{this.state.permission === 'denied' ? 'Enable camera access' : 'Sign access code'}</Text>
+            <Text style={styles.title}>Sign access code</Text>
             <TouchableOpacity onPress={Actions.pop}>
               <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
             </TouchableOpacity>
           </View>
-          <View style={[styles.content, this.state.permission === 'denied' ? { justifyContent: 'space-between', } : {}]}>
-            {this.state.permission === 'authorized' && <RNCamera
+          <View style={[styles.content]}>
+            <RNCamera
               ref={(ref) => this.cameraRef = ref}
               style={styles.scanCamera}
               type={RNCamera.Constants.Type.back}
               onBarCodeRead={this.onBarCodeRead.bind(this)}
-            />}
-            {this.state.permission === 'authorized' && <Text style={styles.authorizedMessage}>
+            />
+            <Text style={styles.authorizedMessage}>
               Align QR Code within frame to scan.
-            </Text>}
-
-            {this.state.permission === 'denied' && <Text style={styles.deniedMessage}>
-              Grant camera access for Bitmark Health to scan an access code.{'\n\n'}
-            </Text>}
-            {this.state.permission === 'denied' && <View style={styles.deniedButtonArea}>
-              <TouchableOpacity style={styles.deniedButton} onPress={() => Linking.openURL('app-settings:')}>
-                <Text style={styles.deniedButtonText}>{'Enable Camera Access'.toUpperCase()}</Text>
-              </TouchableOpacity>
-            </View>
-            }
+            </Text>
           </View>
         </View>}
         {this.state.step !== 'scanning' && <View style={[styles.bodyContent, { backgroundColor: '#FF4444' }]}>

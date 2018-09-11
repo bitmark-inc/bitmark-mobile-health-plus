@@ -5,15 +5,15 @@ const FileUtil = {
   CacheDirectory: RNFS.CachesDirectoryPath,
   DocumentDirectory: RNFS.DocumentDirectoryPath,
   mkdir: async (folderPath) => {
-    return RNFS.mkdir(folderPath, {
+    return await RNFS.mkdir(folderPath, {
       NSURLIsExcludedFromBackupKey: true,
     });
   },
   create: async (filePath, data, encode) => {
-    return RNFS.writeFile(filePath, data || '', encode || 'utf8');
+    return await RNFS.writeFile(filePath, data || '', encode || 'utf8');
   },
   remove: async (path) => {
-    return RNFS.unlink(path);
+    return await RNFS.unlink(path);
   },
   removeSafe: async (path) => {
     try {
@@ -23,18 +23,20 @@ const FileUtil = {
     }
   },
   copyFile: async (sourcePath, destinationPath) => {
-    return RNFS.copyFile(sourcePath, destinationPath);
+    return await RNFS.copyFile(sourcePath, destinationPath);
   },
   moveFile: async (sourcePath, destinationPath) => {
-    return RNFS.moveFile(sourcePath, destinationPath);
+    console.log('moveFile :', sourcePath, destinationPath);
+    return await RNFS.moveFile(sourcePath, destinationPath);
   },
   moveFileSafe: async (sourcePath, destinationPath) => {
+    console.log('moveFileSafe :', sourcePath, destinationPath);
     try {
       await RNFS.unlink(destinationPath);
     } catch (err) {
       console.log("Destination path isn't existing");
     }
-    return RNFS.moveFile(sourcePath, destinationPath);
+    return await RNFS.moveFile(sourcePath, destinationPath);
   },
   downloadFile: async (urlDownload, filePath, headers) => {
     const options = {
@@ -57,9 +59,8 @@ const FileUtil = {
   unzip: async (inputPath, outputPath) => {
     return unzip(inputPath, outputPath);
   },
-
   exists: async (filePath) => {
-    return RNFS.exists(filePath);
+    return await RNFS.exists(filePath);
   }
 };
 export { FileUtil };

@@ -59,7 +59,7 @@ export class UserComponent extends Component {
         return;
       }
       if (response.error) {
-        Alert.alert('Permission error!', response.error, [{
+        Alert.alert('Permission error!', response.error + '.', [{
           text: 'Enable',
           onPress: () => Linking.openURL('app-settings:')
         }, {

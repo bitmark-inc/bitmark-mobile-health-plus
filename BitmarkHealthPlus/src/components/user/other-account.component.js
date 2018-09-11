@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import Permissions from 'react-native-permissions';
 import {
   StyleSheet,
+  Alert,
+  Linking,
   Image, View, TouchableOpacity, Text, SafeAreaView, FlatList,
 } from 'react-native';
 
@@ -33,6 +36,30 @@ export class OtherAccountsComponent extends Component {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
+  scanQRCode() {
+    let displayAlert = () => {
+      Alert.alert('Permission error!', 'Camera permissions not granted.', [{
+        text: 'Enable',
+        onPress: () => Linking.openURL('app-settings:')
+      }, {
+        text: 'Cancel', style: 'cancel',
+      }]);
+    }
+    Permissions.check('camera').then(permission => {
+      if (permission === 'denied') {
+        displayAlert();
+      } else if (permission === 'undetermined') {
+        Permissions.request('camera').then(permission => {
+          if (permission === 'denied') {
+            displayAlert();
+          }
+        });
+      } else if (permission === 'authorized') {
+        Actions.scanAccessQRCode();
+      }
+    });
+  }
+
 
   render() {
     console.log('accessAccounts ;', this.state.accessAccounts);
@@ -70,7 +97,7 @@ export class OtherAccountsComponent extends Component {
               </View>}
             </View>
             <View style={styles.bottomButtonArea} >
-              <TouchableOpacity style={styles.bottomButton} onPress={Actions.scanAccessQRCode} >
+              <TouchableOpacity style={styles.bottomButton} onPress={this.scanQRCode.bind(this)} >
                 <Text style={styles.bottomButtonText}>{'scan qr code'.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>

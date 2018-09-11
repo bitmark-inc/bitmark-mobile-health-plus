@@ -47,7 +47,7 @@ export class GrantingAccessComponent extends Component {
         I would like you to view my health records and data. Here’s a direct link:
         <br/>
         <br/>
-        <a href="healthplush://granting-access/${this.state.token}">healthplush://granting-access/${this.state.token}</a>
+        <a href="healthplus://granting-access/${this.state.token}">healthplus://granting-access/${this.state.token}</a>
         <br/>
         <br/>
         Get the free <a href="${config.appLink}">Bitmark Health</a> app.`,

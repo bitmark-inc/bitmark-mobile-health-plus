@@ -362,7 +362,9 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     await FileUtil.create(encryptedAssetFolder + '/session_data.txt', JSON.stringify(issueResult.sessionData));
 
     let desEncryptedFilePath = encryptedAssetFolder + issueResult.encryptedFilePath.substring(issueResult.encryptedFilePath.lastIndexOf('/'), issueResult.encryptedFilePath.length);
-    await FileUtil.moveFileSafe(issueResult.encryptedFilePath, desEncryptedFilePath);
+    console.log('issueResult.encryptedFilePath:', issueResult.encryptedFilePath);
+    console.log('desEncryptedFilePath:', desEncryptedFilePath);
+    await FileUtil.moveFileSafe(issueResult.encryptedFilePath.replace('file://', ''), desEncryptedFilePath);
 
     bitmarkIds = bitmarkIds.concat(issueResult.bitmarkIds);
   }
