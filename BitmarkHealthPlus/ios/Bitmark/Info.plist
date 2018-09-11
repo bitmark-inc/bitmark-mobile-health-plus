@@ -49,19 +49,19 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use your camera</string>
+	<string>$(PRODUCT_NAME) would like to use your camera.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Touch/Face ID or a passcode is required to authorize your transactions.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like access to your health data</string>
+	<string>$(PRODUCT_NAME) would like access to your health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to your health data</string>
+	<string>$(PRODUCT_NAME) would like to your health data.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like access to your location data</string>
+	<string>$(PRODUCT_NAME) would like access to your location data.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Health + app would like to access your location for metric purpose.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>
+	<string>$(PRODUCT_NAME) would like to your microphone (for videos).</string>
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

@@ -58,7 +58,7 @@ export class ScanAccessQRCodeComponent extends React.Component {
       <View style={styles.body}>
         {this.state.step === 'scanning' && <View style={styles.bodyContent}>
           <View style={styles.titleRow}>
-            <Text style={styles.title}>Sign access code</Text>
+            <Text style={styles.title}>Scan access code</Text>
             <TouchableOpacity onPress={Actions.pop}>
               <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
             </TouchableOpacity>
