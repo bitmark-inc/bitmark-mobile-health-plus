@@ -286,7 +286,7 @@ class MainEventsHandlerComponent extends Component {
           <View style={mainStyle.emptyDataSourceDialogContent}>
             <Text style={mainStyle.emptyDataSourceTitle}>Health+ cannot access your HealthKit data.</Text>
             <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Health+ to access specific (or all) categories of data from within the Apple Health App.'}</Text>
-            <Text style={[mainStyle.emptyDataSourceDescription, { marginTop: 20 }]}>Go to <Text style={{ fontWeight: '600' }}>Health App -> Sources</Text>.</Text>
+            <Text style={[mainStyle.emptyDataSourceDescription, { marginTop: 20 }]}>Go to <Text style={{ fontWeight: '600' }}>{'Health App -> Sources'}</Text>.</Text>
             <TouchableOpacity style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
               <Text style={mainStyle.emptyDataSourceOKButtonText}>{'OK, I’ve ALLOWED access!'.toUpperCase()}</Text>
             </TouchableOpacity>

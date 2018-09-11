@@ -29,10 +29,19 @@ export class ConfirmAccessComponent extends Component {
   cancelRequest() {
     AppProcessor.doCancelGrantingAccess(this.state.token).then((result) => {
       if (result) {
-        this.setState({ step: 'success' });
+        Actions.pop();
       }
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
+  }
+  checkDone() {
+    DataProcessor.doGetAccountAccesses('waiting').then(list => {
+      if (list && list.length > 0) {
+        this.setState({ token: list[0].id, grantee: list[0].grantee });
+      } else {
+        Actions.pop();
+      }
     });
   }
   confirmRequest() {
@@ -40,13 +49,7 @@ export class ConfirmAccessComponent extends Component {
       indicator: true, title: 'Waiting confirmation...', message: ''
     }).then((result) => {
       if (result) {
-        DataProcessor.doGetAccountAccesses('waiting').then(list => {
-          if (list && list.length > 0) {
-            this.setState({ token: list[0].id, grantee: list[0].grantee });
-          } else {
-            Actions.pop();
-          }
-        })
+        this.setState({ step: 'success' });
       }
     }).catch(error => {
       console.log('doConfirmGrantingAccess  error :', error);
@@ -92,8 +95,8 @@ export class ConfirmAccessComponent extends Component {
               </Text>
             </View>
             <View style={styles.bottomButtonArea}>
-              <TouchableOpacity style={[styles.bottomButton, { width: '100%' }]} onPress={() => Actions.reset('user')}>
-                <Text style={[styles.bottomButtonText, { fontWeight: '300' }]}>{'OK'.toUpperCase()}</Text>
+              <TouchableOpacity style={[styles.bottomButton, { width: '100%', backgroundColor: 'white' }]} onPress={this.checkDone.bind(this)}>
+                <Text style={[styles.bottomButtonText, { fontWeight: '900', color: "#FF4444" }]}>{'OK'.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>}
