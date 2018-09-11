@@ -123,7 +123,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber, grantedAt) => {
 
 let queueGetAccountAccesses = [];
 const doCheckNewAccesses = async (accesses) => {
-  console.log('doCheckNewAccesses accesses :', accesses);
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
   EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, accesses);
   if (accesses && accesses.waiting && accesses.waiting.length > 0) {
@@ -245,12 +244,6 @@ const doLogout = async () => {
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
   }
   PushNotificationIOS.cancelAllLocalNotifications();
-  await AccountModel.doLogout(jwt);
-  await UserModel.doRemoveUserInfo();
-  await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
-  await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
-  await Intercom.reset();
-
   let accesses = await doGetAccountAccesses();
   for (let grantedInfo of (accesses.granted_from || [])) {
     await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee);
@@ -258,6 +251,12 @@ const doLogout = async () => {
   for (let grantedInfo of (accesses.granted_to || [])) {
     await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee);
   }
+  await AccountModel.doLogout(jwt);
+  await UserModel.doRemoveUserInfo();
+  await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
+  await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
+  await Intercom.reset();
+
   userInformation = {};
 };
 
@@ -551,7 +550,6 @@ const doSelectAccountAccess = async (accountNumber) => {
   let accesses = await runGetAccountAccessesInBackground();
   if (accesses && accesses.granted_from) {
     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === accountNumber);
-    console.log('grantedAccessAccountSelected :', grantedAccessAccountSelected);
     if (grantedAccessAccountSelected) {
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor, grantedAccessAccountSelected.granted_at);
       return true;

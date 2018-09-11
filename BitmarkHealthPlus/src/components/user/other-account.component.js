@@ -14,10 +14,13 @@ import { constants } from '../../constants';
 import { DataProcessor, AppProcessor } from '../../processors';
 import { EventEmitterService } from '../../services';
 
+let ComponentName = 'OtherAccountsComponent';
 export class OtherAccountsComponent extends Component {
   constructor(props) {
     super(props);
 
+    this.handerChangeUserDataAccountAccess = this.handerChangeUserDataAccountAccess.bind(this);
+    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, null, ComponentName);
     this.state = {
       accessAccounts: [],
     }
@@ -25,12 +28,25 @@ export class OtherAccountsComponent extends Component {
       this.setState({ accessAccounts: accessAccounts || [] });
     });
   }
+  componentDidMount() {
+    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, this.handerChangeUserDataAccountAccess, ComponentName);
+  }
+
+  handerChangeUserDataAccountAccess() {
+    runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_from')).then((accessList) => {
+      accessList = accessList || [];
+      this.setState({ accessList });
+    });
+  }
 
   selectAccount(accountNumber) {
-    console.log('selectAccount :', accountNumber);
     AppProcessor.doSelectAccountAccess(accountNumber).then(result => {
-      if (result) {
+      if (result === true) {
         Actions.reset('user');
+      } else if (result === false) {
+        Alert.alert('', `You no longer have access to this account!`, [{
+          text: 'OK', style: 'cancel',
+        }]);
       }
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
