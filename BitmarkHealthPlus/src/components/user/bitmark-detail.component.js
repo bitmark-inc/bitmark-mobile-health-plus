@@ -48,7 +48,6 @@ export class BitmarkDetailComponent extends Component {
             return;
           }
           this.setState({ content: JSON.stringify(JSON.parse(result), null, 2) });
-          // this.setState({ content: JSON.stringify(DataProcessor.getUserInformation(), null, 2) });
         });
       } else if (this.props.bitmarkType === 'bitmark_health_issuance') {
         let id = this.props.bitmark.id;
@@ -105,11 +104,11 @@ export class BitmarkDetailComponent extends Component {
                 <Text style={styles.metadataMessage}>Visible to everyone</Text>
                 <View style={styles.metadataRow}>
                   <Text style={styles.metadataLabel}>{'Saved Time:   '.toUpperCase()}</Text>
-                  <Text style={styles.metadataValue}>{this.props.bitmark.asset.metadata['Saved Time']}</Text>
+                  <Text style={styles.metadataValue}>{moment(this.props.bitmark.asset.metadata['Saved Time']).format('YYYY MMM DD hh:mm:ss').toUpperCase()}</Text>
                 </View>
                 <View style={styles.metadataRow}>
                   <Text style={styles.metadataLabel}>{'Source:   '.toUpperCase()}</Text>
-                  <Text style={styles.metadataValue}>{this.props.bitmark.asset.metadata['Source']}</Text>
+                  <Text style={styles.metadataValue}>{this.props.bitmark.asset.metadata['Source'].toUpperCase()}</Text>
                 </View>
                 <Text style={styles.metadataTitle}>PRIVATE DATA:</Text>
                 {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
