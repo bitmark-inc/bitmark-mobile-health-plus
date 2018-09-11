@@ -343,6 +343,14 @@ public extension Account {
         return sessionData.serialize()
     }
     
+    public func createSessionData(forBitmark bitmarkId: String, sessionData: SessionData, recipient: String) throws -> [String: String] {
+        return try updatedSessionData(bitmarkId: bitmarkId,
+                                      sessionData: sessionData,
+                                      sender: self.accountNumber.string,
+                                      recipient: recipient)
+            .serialize()
+    }
+    
     public func createSessionData(forBitmark bitmarkId: String, recipient: String) throws -> [String: String] {
         let network = self.authKey.network
         let api = API(network: network)

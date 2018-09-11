@@ -406,11 +406,17 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(createSessionDataForRecipient::::)
-  func createSessionDataForRecipient(_ sessionId: String, _ bitmarkId: String, _ recipient: String, _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(createSessionDataForRecipient:::::)
+  func createSessionDataFromLocalForRecipient(_ sessionId: String, _ bitmarkId: String, _ sessionData: [String: String], _ recipient: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let sessionData = try account.createSessionData(forBitmark: bitmarkId, recipient: recipient)
+      guard let encryptedDataKeyHex = sessionData["enc_data_key"],
+        let dataKeyAlgorithm = sessionData["data_key_alg"]  else {
+        throw(BMError("Wrong session data"))
+      }
+      
+      let s = SessionData(encryptedDataKey: encryptedDataKeyHex.hexDecodedData, dataKeyAlgorithm: dataKeyAlgorithm)
+      let sessionData = try account.createSessionData(forBitmark: bitmarkId, sessionData: s, recipient: recipient)
       callback([true, sessionData])
     }
     catch let e {

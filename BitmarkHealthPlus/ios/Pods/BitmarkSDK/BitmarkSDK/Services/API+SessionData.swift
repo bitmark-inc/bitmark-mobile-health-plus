@@ -11,6 +11,11 @@ import Foundation
 public struct SessionData {
     let encryptedDataKey: Data
     let dataKeyAlgorithm: String
+    
+    public init (encryptedDataKey: Data, dataKeyAlgorithm: String) {
+        self.encryptedDataKey = encryptedDataKey
+        self.dataKeyAlgorithm = dataKeyAlgorithm
+    }
 }
 
 extension SessionData: Codable {
