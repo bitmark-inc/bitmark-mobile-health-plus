@@ -53,7 +53,7 @@ export class AccountComponent extends Component {
       style: 'cancel',
       onPress: () => { Linking.openURL(config.appLink) }
     }, {
-      text: '4 Stars or less', onPress: this.requestSendFeedback,
+      text: '4 Stars or less', onPress: this.requestSendFeedback.bind(this),
     }]);
   }
 
