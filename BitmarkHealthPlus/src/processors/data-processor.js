@@ -98,15 +98,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber, grantedAt) => {
     doGetAllBitmarks().then(({ assets, bitmarks }) => {
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       bitmarks.forEach(bitmark => {
-        let isGrantedBitmark = false;
-        if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
-          isGrantedBitmark = true;
-        } else if (grantedAt) {
-          isGrantedBitmark = moment(grantedAt).toDate() > moment(bitmark.confirmed_at).toDate();
-        }
-        if (!isGrantedBitmark) {
-          return;
-        }
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
           if (isHealthDataBitmark(asset.name)) {
@@ -451,9 +442,9 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 };
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
+  console.log('run1');
   let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
-  await doReloadUserData();
-
+  console.log('run2', results);
   let appInfo = (await doGetAppInformation()) || {};
   if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_issued_file) {
     appInfo.trackEvents = appInfo.trackEvents || {};
@@ -465,6 +456,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
     });
   }
+  console.log('run3', results);
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
@@ -481,11 +473,15 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
         });
       }
     }
+    console.log('run4', body);
     let timestamp = moment().toDate().getTime();
     let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
+    console.log('run5');
   }
+  await doReloadUserData();
+  console.log('run6');
   return results;
 };
 
