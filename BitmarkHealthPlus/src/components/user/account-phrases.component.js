@@ -504,7 +504,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Heavy',
     fontWeight: '300',
     fontSize: 15,
-    color: '#FF4444'
+    color: '#FF4444',
+    textAlign: 'center',
   },
   successTitle: {
     fontFamily: 'Avenir Heavy',
@@ -515,6 +516,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Heavy',
     fontWeight: '300',
     fontSize: 15,
+    textAlign: 'center',
   },
 
   bottomButtonArea: {

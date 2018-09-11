@@ -437,6 +437,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Heavy',
     fontWeight: '300',
     fontSize: 15,
+    textAlign: 'center',
   },
 
   submitButtonArea: {
