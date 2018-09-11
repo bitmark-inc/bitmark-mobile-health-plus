@@ -613,7 +613,7 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
     let timestamp = moment().toDate().getTime();
     let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
-    return await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
+    await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
   await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
   return await runGetAccountAccessesInBackground();
