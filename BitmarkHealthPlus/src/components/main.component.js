@@ -51,7 +51,7 @@ class MainEventsHandlerComponent extends Component {
       processingCount: false,
       submitting: null,
       networkStatus: true,
-      emptyDataSource: false,
+      emptyDataSource: true,
     };
     this.appState = AppState.currentState;
   }
@@ -285,12 +285,13 @@ class MainEventsHandlerComponent extends Component {
         {this.state.emptyDataSource && <BitmarkDialogComponent dialogStyle={mainStyle.emptyDataSourceDialog}>
           <View style={mainStyle.emptyDataSourceDialogContent}>
             <Text style={mainStyle.emptyDataSourceTitle}>Health+ cannot access your HealthKit data.</Text>
-            <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Health+ to access specific (or all) categories of data from within the Apple Health App.\n\nGo to Health App -> Sources.'}</Text>
+            <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Health+ to access specific (or all) categories of data from within the Apple Health App.'}</Text>
+            <Text style={[mainStyle.emptyDataSourceDescription, { marginTop: 20 }]}>Go to <Text style={{ fontWeight: '600' }}>Health App -> Sources</Text>.</Text>
             <TouchableOpacity style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
               <Text style={mainStyle.emptyDataSourceOKButtonText}>{'OK, I’ve ALLOWED access!'.toUpperCase()}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={mainStyle.emptyDataSourceLaterButton} onPress={() => this.setState({ emptyDataSource: false })}>
-              <Text style={mainStyle.emptyDataSourceLaterButtonText}>I will do it later.</Text>
+              <Text style={mainStyle.emptyDataSourceLaterButtonText}>{'I will do it later.'.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
         </BitmarkDialogComponent>}
@@ -305,7 +306,7 @@ let mainStyle = StyleSheet.create({
     width: convertWidth(308), borderRadius: 5,
   },
   emptyDataSourceDialogContent: {
-    paddingTop: 40, paddingBottom: 40, width: convertWidth(308), flexDirection: 'column', alignItems: 'center'
+    paddingTop: 28, paddingBottom: 19, width: convertWidth(308), flexDirection: 'column', alignItems: 'center'
   },
   emptyDataSourceTitle: {
     width: convertWidth(256),
@@ -318,18 +319,18 @@ let mainStyle = StyleSheet.create({
   },
   emptyDataSourceOKButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    width: convertWidth(277), minHeight: 52, marginTop: 50,
-    borderRadius: 5, borderWidth: 1, borderColor: '#FF4444', backgroundColor: '#FF4444',
+    width: convertWidth(260), minHeight: 52, marginTop: 30,
+    backgroundColor: '#FF4444',
   },
   emptyDataSourceOKButtonText: {
     fontFamily: 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
   },
   emptyDataSourceLaterButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    width: convertWidth(277), minHeight: 52, marginTop: 10,
+    width: convertWidth(260), marginTop: 10,
   },
   emptyDataSourceLaterButtonText: {
-    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '300', color: '#FF4444',
+    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
   },
 });
 
