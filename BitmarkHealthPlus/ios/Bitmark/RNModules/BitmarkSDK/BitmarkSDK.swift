@@ -156,7 +156,7 @@ class BitmarkSDK: NSObject {
         let filePath = documentsDirectory.appendingPathComponent(filename)
         try encryptedData.write(to: filePath)
         
-        callback([true, issueIds, result.1.id!, sessionData, filePath])
+        callback([true, issueIds, result.1.id!, sessionData, filePath.absoluteString])
       } else {
         callback([true, issueIds])
       }
