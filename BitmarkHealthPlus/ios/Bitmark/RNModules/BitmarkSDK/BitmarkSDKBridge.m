@@ -40,6 +40,7 @@ RCT_EXTERN_METHOD(createSessionData:(NSString *)sessionId:(NSString *)encryption
 RCT_EXTERN_METHOD(issueRecord:(NSString *)sessionId:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
 
 // grant access bitmark
-RCT_EXTERN_METHOD(createSessionDataForRecipient:(NSString *)sessionId:(NSString *)bitmarkId:(NSDictionary *)sessionData:(NSString *)recipient:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(createSessionDataForRecipient:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)recipient:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(createSessionDataFromLocalForRecipient:(NSString *)sessionId:(NSString *)bitmarkId:(NSDictionary *)sessionData:(NSString *)recipient:(RCTResponseSenderBlock)callback)
 
 @end
