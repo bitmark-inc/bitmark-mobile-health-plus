@@ -27,7 +27,7 @@
 			<string>com.bitmark.healthplus</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>bitmark</string>
+				<string>healthplus</string>
 			</array>
 		</dict>
 	</array>
