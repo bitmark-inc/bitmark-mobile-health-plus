@@ -28,7 +28,7 @@ export default StyleSheet.create({
   },
   addIconContainer: {
     position: 'absolute',
-    bottom: 25,
+    bottom: 15,
     right: 19,
   },
 

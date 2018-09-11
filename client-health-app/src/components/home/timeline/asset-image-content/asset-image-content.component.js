@@ -59,7 +59,9 @@ export class AssetImageContentComponent extends React.Component {
           <View style={defaultStyle.headerCenter}>
             <Text style={[defaultStyle.headerTitle, { color: 'white' }]}>CAPTURED ASSET</Text>
           </View>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <TouchableOpacity style={[defaultStyle.headerRight, style.headerRight]} onPress={() => this.saveAsset(this.state.filePath)}>
+            <Text style={[defaultStyle.headerRightText, { color: 'white' }]}>Download</Text>
+          </TouchableOpacity>
         </View>)}
         content={(<View style={style.body}>
           {this.state.filePath &&
@@ -70,9 +72,6 @@ export class AssetImageContentComponent extends React.Component {
                   source={{ uri: this.state.filePath }}
                 />
               </View>
-              <TouchableOpacity style={style.downloadButton} onPress={() => this.saveAsset(this.state.filePath)}>
-                <Text style={style.downloadText}>DOWNLOAD</Text>
-              </TouchableOpacity>
             </View>
           }
         </View>)}

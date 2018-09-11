@@ -96,7 +96,7 @@ export class BitmarkDetailComponent extends React.Component {
                   <View style={propertyDetailStyle.informationRow}>
                     <View style={propertyDetailStyle.informationRowContent}>
                       <Text style={propertyDetailStyle.informationRowLabel}>ISSUED BY</Text>
-                      <Text style={propertyDetailStyle.informationRowValue}>{this.state.shortAccountNumber}</Text>
+                      <Text style={propertyDetailStyle.informationRowValue}>{this.state.ownerAreYou ? `You - [${this.state.shortAccountNumber}]` : `[${this.state.shortAccountNumber}]`}</Text>
                     </View>
                     <View style={propertyDetailStyle.informationRowBarArea}>
                       <View style={propertyDetailStyle.informationRowBarLine} />

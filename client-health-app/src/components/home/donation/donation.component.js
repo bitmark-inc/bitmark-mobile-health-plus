@@ -149,7 +149,7 @@ export class DonationComponent extends React.Component {
         <View style={donationStyle.subTabArea}>
           {this.state.subTab === SubTabs.todo && <TouchableOpacity style={[donationStyle.subTabButton, {
             backgroundColor: '#0060F2',
-            borderLeftWidth: 1, borderTopLeftRadius: 3, borderBottomLeftRadius: 3, borderColor: '#0060F2',
+            borderLeftWidth: 1, borderColor: '#0060F2',
           }]}>
             {(this.state.donationTasks && this.state.donationTasks.length > 0) && <View style={donationStyle.todoHightLight}></View>}
             <View style={donationStyle.subTabButtonArea}>
@@ -190,7 +190,7 @@ export class DonationComponent extends React.Component {
 
           {this.state.subTab === SubTabs.news && <TouchableOpacity style={[donationStyle.subTabButton, {
             backgroundColor: '#0060F2',
-            borderRightWidth: 1, borderTopRightRadius: 3, borderBottomRightRadius: 3, borderColor: '#0060F2',
+            borderRightWidth: 1, borderColor: '#0060F2',
           }]}>
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>

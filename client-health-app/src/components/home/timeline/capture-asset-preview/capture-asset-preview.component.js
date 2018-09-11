@@ -104,7 +104,8 @@ export class CaptureAssetPreviewComponent extends React.Component {
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
           </TouchableOpacity>
           <Text style={defaultStyle.headerTitle}>CAPTURE</Text>
-          <TouchableOpacity style={defaultStyle.headerRight}>
+          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.checkAndIssueAsset()}>
+            <Text style={defaultStyle.headerRightText}>Next</Text>
           </TouchableOpacity>
         </View>)}
         content={(
@@ -112,9 +113,6 @@ export class CaptureAssetPreviewComponent extends React.Component {
             <View style={style.previewContainer}>
               <Image style={style.previewImage} source={{ uri: 'file://' + this.state.filePath }} />
             </View>
-            <TouchableOpacity style={style.bottomButton} onPress={() => this.checkAndIssueAsset()}>
-              <Text style={style.buttonText}>USE IMAGE</Text>
-            </TouchableOpacity>
           </View>
         )}
       />

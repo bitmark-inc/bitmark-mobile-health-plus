@@ -402,7 +402,7 @@ let mainStyle = StyleSheet.create({
   emptyDataSourceOKButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     width: convertWidth(277), minHeight: 52, marginTop: 50,
-    borderRadius: 5, borderWidth: 1, borderColor: '#0060F2', backgroundColor: '#0060F2',
+    borderWidth: 1, borderColor: '#0060F2', backgroundColor: '#0060F2',
   },
   emptyDataSourceOKButtonText: {
     fontFamily: 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
