@@ -148,12 +148,12 @@ const doCancelGrantingAccess = async ({ token }) => {
   return processing(DataProcessor.doCancelGrantingAccess(token));
 };
 
-const doConfirmGrantingAccess = async ({ token, grantee }) => {
+const doConfirmGrantingAccess = async ({ token, grantee, processingData }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
   if (!touchFaceIdSession) {
     return null;
   }
-  return processing(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee));
+  return submitting(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee), processingData);
 };
 
 

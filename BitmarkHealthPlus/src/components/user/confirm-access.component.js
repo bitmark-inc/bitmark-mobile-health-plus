@@ -35,7 +35,9 @@ export class ConfirmAccessComponent extends Component {
     });
   }
   confirmRequest() {
-    AppProcessor.doConfirmGrantingAccess(this.state.token, this.state.grantee).then((result) => {
+    AppProcessor.doConfirmGrantingAccess(this.state.token, this.state.grantee, {
+      indicator: true, title: 'Waiting confirmation...', message: ''
+    }).then((result) => {
       if (result) {
         DataProcessor.doGetAccountAccesses('waiting').then(list => {
           if (list && list.length > 0) {
@@ -64,7 +66,7 @@ export class ConfirmAccessComponent extends Component {
               <Text style={styles.message}>
                 {'[' + grantee.substring(0, 4) + '...' + grantee.substring(grantee.length - 5, grantee.length) + ']'}
                 {' wants to view your records and data. Tap confirm to allow.\n\n'}
-                {'You can always revoke their access from Account > Settings.'}
+                {'You can always revoke their access from Account Settings. '}
               </Text>
             </View>
 

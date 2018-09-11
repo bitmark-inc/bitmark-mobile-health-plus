@@ -189,8 +189,8 @@ const doRemoveGrantingAccess = async (grantee) => {
   return executeTask('doRemoveGrantingAccess', { grantee });
 };
 
-const doConfirmGrantingAccess = async (token, grantee) => {
-  return executeTask('doConfirmGrantingAccess', { token, grantee });
+const doConfirmGrantingAccess = async (token, grantee, processingData) => {
+  return executeTask('doConfirmGrantingAccess', { token, grantee, processingData });
 };
 
 // ================================================================================================

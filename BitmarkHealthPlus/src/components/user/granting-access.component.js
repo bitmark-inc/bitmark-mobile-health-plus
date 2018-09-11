@@ -13,7 +13,7 @@ import { convertWidth, runPromiseWithoutError } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
-import { DataProcessor, AppProcessor } from '../../processors';
+import { AppProcessor } from '../../processors';
 
 export class GrantingAccessComponent extends Component {
   static propTypes = {
@@ -90,9 +90,7 @@ export class GrantingAccessComponent extends Component {
               </Text>
                 </Hyperlink>
                 <Hyperlink linkStyle={{ color: '#FF4444' }}
-                  onPress={() => {
-                    Actions.account();
-                  }}
+                  onPress={this.sendEmail.bind(this)}
                   linkText={() => 'Grant request'}
                 >
                   <Text style={styles.messageEmail}>
