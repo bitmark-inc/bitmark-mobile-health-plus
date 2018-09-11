@@ -144,12 +144,6 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 16,
   },
-  deniedMessage: {
-    padding: convertWidth(20),
-    fontFamily: 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 16,
-  },
   deniedButtonArea: {
     padding: convertWidth(20),
     paddingBottom: 0,

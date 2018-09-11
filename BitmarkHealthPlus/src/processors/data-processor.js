@@ -600,6 +600,9 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
   await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
   return await runGetAccountAccessesInBackground();
 };
+const doDeleteAccount = async () => {
+  return await AccountModel.doDeleteAccount(jwt);
+}
 
 const DataProcessor = {
   doOpenApp,
@@ -632,6 +635,7 @@ const DataProcessor = {
   doRemoveGrantingAccess,
   doConfirmGrantingAccess,
   doDownloadHealthDataBitmark,
+  doDeleteAccount,
 };
 
 export { DataProcessor };

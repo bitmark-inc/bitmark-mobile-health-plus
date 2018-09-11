@@ -11,7 +11,6 @@ import { BitmarkListComponent } from './bitmark-list.component';
 
 import { BitmarkLegalComponent } from './../../commons';
 import { BitmarkDetailComponent } from './bitmark-detail.component';
-import { DeletingAccountComponent } from './deleting-account.component';
 import { GrantingAccessComponent } from './granting-access.component';
 import { OtherAccountsComponent } from './other-account.component';
 import { ScanAccessQRCodeComponent } from './scan-access-qr-code.component';
@@ -40,7 +39,6 @@ export class UserRouterComponent extends Component {
           <Scene key="captureAsset" component={CaptureAssetComponent} />
           <Scene key="bitmarkList" component={BitmarkListComponent} />
           <Scene key="bitmarkDetail" component={BitmarkDetailComponent} />
-          <Scene key="deletingAccount" component={DeletingAccountComponent} />
           <Scene key="grantingAccess" component={GrantingAccessComponent} />
           <Scene key="otherAccounts" component={OtherAccountsComponent} />
           <Scene key="scanAccessQRCode" component={ScanAccessQRCodeComponent} />

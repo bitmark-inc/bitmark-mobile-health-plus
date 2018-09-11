@@ -23,6 +23,7 @@ const doCheck24Words = async (phrase24Words) => {
 
 const doLogout = async () => {
   await CookieManager.clearAll();
+  await doDeleteAccount();
   return await BitmarkSDK.removeAccount();
 };
 
@@ -171,7 +172,7 @@ let doRegisterJWT = (accountNumber, timestamp, signature) => {
 let doDeleteAccount = (jwt) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/auth`;
+    let tempURL = `${config.mobile_server_url}/api/accounts`;
     fetch(tempURL, {
       method: 'DELETE',
       headers: {

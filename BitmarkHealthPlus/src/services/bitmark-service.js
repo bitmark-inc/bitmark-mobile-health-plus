@@ -61,7 +61,7 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
   let desEncryptedFilePath = encryptedAssetFolder + result.encryptedFilePath.substring(result.encryptedFilePath.lastIndexOf('/'), result.encryptedFilePath.length);
   console.log('issueResult.encryptedFilePath:', result.encryptedFilePath);
   console.log('desEncryptedFilePath:', desEncryptedFilePath);
-  await FileUtil.moveFileSafe(result.encryptedFilePath.replace('file://', ''), desEncryptedFilePath);
+  await FileUtil.copyFile(result.encryptedFilePath.replace('file://', ''), desEncryptedFilePath);
   return result.bitmarkIds;
 };
 
