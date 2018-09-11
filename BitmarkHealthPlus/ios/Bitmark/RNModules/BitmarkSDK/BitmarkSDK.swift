@@ -150,7 +150,7 @@ class BitmarkSDK: NSObject {
       if let sessionData = result.2,
         let encryptedData = result.3 {
         
-        let filename = URL(fileURLWithPath: fileURL).lastPathComponent
+        let filename = UUID().uuidString
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
         let filePath = documentsDirectory.appendingPathComponent(filename)
