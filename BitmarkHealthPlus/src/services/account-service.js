@@ -82,8 +82,8 @@ let doRegisterNotificationInfo = async (accountNumber, token) => {
   if (!signatureData) {
     return;
   }
-  let client = 'health';
-  client = DeviceInfo.getBundleId() === 'com.bitmark.health.inhouse' ? 'healthinhouse' : client;
+  let client = 'healthplus';
+  client = DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse' ? 'healthplusinhouse' : client;
   return await AccountModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token, client);
 };
 
