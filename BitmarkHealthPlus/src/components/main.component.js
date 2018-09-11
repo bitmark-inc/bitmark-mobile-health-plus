@@ -360,19 +360,19 @@ export class MainComponent extends Component {
   }
 
   doOpenApp() {
-    AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
-      if (!result) {
-        Alert.alert('New Version Available', 'You’re using a version of Bitmark Health or operating system that’s no longer supported. Please update to the newest app version. Thanks!', [{
-          text: 'Visit Appstore',
-          onPress: () => Linking.openURL(config.appLink)
-        }]);
-        return;
-      }
-    }).then(() => {
-      this.doRefresh();
-    }).catch(error => {
-      console.log('doOpenApp error:', error);
-    });
+    // AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
+    //   if (!result) {
+    //     Alert.alert('New Version Available', 'You’re using a version of Bitmark Health or operating system that’s no longer supported. Please update to the newest app version. Thanks!', [{
+    //       text: 'Visit Appstore',
+    //       onPress: () => Linking.openURL(config.appLink)
+    //     }]);
+    //     return;
+    //   }
+    //   this.doRefresh();
+    // }).catch(error => {
+    //   console.log('doOpenApp error:', error);
+    // });
+    this.doRefresh();
   }
   doRefresh(justCreatedBitmarkAccount) {
     return DataProcessor.doOpenApp().then(user => {

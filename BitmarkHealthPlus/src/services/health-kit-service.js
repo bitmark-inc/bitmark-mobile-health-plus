@@ -355,7 +355,16 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
     let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.assetMetadata, 1);
     await FileUtil.remove(filePath);
-    bitmarkIds = bitmarkIds.concat(issueResult);
+
+    let encryptedAssetFolder = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + issueResult.assetId;
+    console.log('encryptedAssetFolder :', encryptedAssetFolder);
+    await FileUtil.mkdir(encryptedAssetFolder);
+    await FileUtil.create(encryptedAssetFolder + '/session_data.txt', JSON.stringify(issueResult.sessionData));
+
+    let desEncryptedFilePath = encryptedAssetFolder + issueResult.encryptedFilePath.substring(issueResult.encryptedFilePath.lastIndexOf('/'), issueResult.encryptedFilePath.length);
+    await FileUtil.moveFileSafe(issueResult.encryptedFilePath, desEncryptedFilePath);
+
+    bitmarkIds = bitmarkIds.concat(issueResult.bitmarkIds);
   }
   return bitmarkIds;
 };

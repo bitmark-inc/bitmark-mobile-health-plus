@@ -1,4 +1,5 @@
 import { BitmarkModel } from "../models";
+import { FileUtil } from "../utils";
 
 // ================================================================================================
 // ================================================================================================
@@ -45,14 +46,21 @@ const doCheckMetadata = (metadataList) => {
   });
 };
 
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
+const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset) => {
   let metadata = {};
   metadataList.forEach(item => {
     if (item.label && item.value) {
       metadata[item.label] = item.value;
     }
   });
-  return await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
+  let result = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
+  let encryptedAssetFolder = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + result.assetId;
+  await FileUtil.mkdir(encryptedAssetFolder);
+  await FileUtil.create(encryptedAssetFolder + '/session_data.txt', JSON.stringify(result.sessionData));
+
+  let desEncryptedFilePath = encryptedAssetFolder + result.encryptedFilePath.substring(result.encryptedFilePath.lastIndexOf('/'), result.encryptedFilePath.length);
+  await FileUtil.moveFileSafe(result.encryptedFilePath, desEncryptedFilePath);
+  return result.bitmarkIds;
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {

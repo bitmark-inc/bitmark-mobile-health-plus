@@ -277,6 +277,7 @@ const doOpenApp = async () => {
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
+    await FileUtil.mkdir(FileUtil.DocumentDirectory + '/encrypted_' + userInformation.bitmarkAccountNumber);
     await FileUtil.mkdir(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
     Intercom.registerIdentifiedUser({ userId: userInformation.bitmarkAccountNumber }).catch(error => {
       console.log('registerIdentifiedUser error :', error);
@@ -365,7 +366,7 @@ const doOpenApp = async () => {
 };
 
 const doBitmarkHealthData = async (touchFaceIdSession, list) => {
-  let result = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
+  let bitmarkIds = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
   await runGetUserBitmarksInBackground();
   let appInfo = (await doGetAppInformation()) || {};
   if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_issued_weekly_health_data) {
@@ -383,7 +384,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
     let body = { items: [] };
     for (let grantedInfo of grantedInformationForOtherAccount) {
-      for (let bitmarkId of result) {
+      for (let bitmarkId of bitmarkIds) {
         let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantedInfo.grantee);
         body.items.push({
           bitmark_id: bitmarkId,
@@ -400,7 +401,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
 
-  return result;
+  return bitmarkIds;
 };
 
 const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId) => {
@@ -435,7 +436,7 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 };
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
-  let result = await BitmarkService.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset);
+  let bitmarkIds = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
   await doReloadUserData();
 
   let appInfo = (await doGetAppInformation()) || {};
@@ -454,7 +455,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
     let body = { items: [] };
     for (let grantedInfo of grantedInformationForOtherAccount) {
-      for (let bitmarkId of result) {
+      for (let bitmarkId of bitmarkIds) {
         let sessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmarkId, grantedInfo.grantee);
         body.items.push({
           bitmark_id: bitmarkId,
@@ -470,7 +471,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
-  return result;
+  return bitmarkIds;
 };
 
 const getUserInformation = () => {

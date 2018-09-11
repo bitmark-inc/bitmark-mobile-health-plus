@@ -145,11 +145,12 @@ const BitmarkSDK = {
         metadata,
         quantity,
         is_public_asset: !!isPublicAsset
-      }, (ok, results) => {
-        if (ok && results) {
-          resolve(results);
+      }, (ok, bitmarkIds, assetId, sessionData, encryptedFilePath) => {
+        console.log('issueFile :', ok, bitmarkIds, assetId, sessionData, encryptedFilePath);
+        if (ok) {
+          resolve({ bitmarkIds, assetId, sessionData, encryptedFilePath });
         } else {
-          reject(new Error(results || 'Can not issue file!'));
+          reject(new Error(bitmarkIds || 'Can not issue file!'));
         }
       });
     });

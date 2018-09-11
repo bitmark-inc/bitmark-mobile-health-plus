@@ -105,7 +105,7 @@ const doTryRegisterAccount = (accountNumber, timestamp, signature) => {
 const doTryGetAppVersion = () => {
   return new Promise((resolve) => {
     let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/app-versions/health`;
+    let tempURL = `${config.mobile_server_url}/api/app-versions/healthplus`;
     fetch(tempURL, {
       method: 'GET',
       headers: {
@@ -316,7 +316,6 @@ let doRemoveGrantingAccess = (jwt, from, to) => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt,
       },
     }).then((response) => {
       statusCode = response.status;
