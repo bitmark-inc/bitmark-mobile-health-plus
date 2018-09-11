@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   Text, View, TouchableOpacity, Image, SafeAreaView,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { convertWidth } from '../../utils';
@@ -44,7 +45,13 @@ export class ScanAccessQRCodeComponent extends React.Component {
   doReceivedAccessQRCode(token) {
     AppProcessor.doReceivedAccessQRCode(token).then(result => {
       if (result) {
-        this.setState({ step: 'done', grantor: result.sender });
+        if (result.error) {
+          Alert.alert(result.error, '', [{
+            text: 'OK', style: 'cancel', onPress: Actions.pop,
+          }]);
+        } else {
+          this.setState({ step: 'done', grantor: result.sender });
+        }
       } else {
         Actions.pop();
       }

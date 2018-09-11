@@ -231,8 +231,10 @@ let doReceiveGrantingAccess = (jwt, token, body) => {
       statusCode = response.status;
       return response.json();
     }).then((data) => {
-      if (statusCode >= 400) {
+      if (statusCode >= 500) {
         return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
+      } else if (statusCode >= 400) {
+        resolve({ error: 'QR code is invalided or expired!' });
       }
       resolve(data);
     }).catch(reject);
