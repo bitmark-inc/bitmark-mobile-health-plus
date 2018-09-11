@@ -43,7 +43,7 @@ export class CaptureAssetComponent extends Component {
         metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
         let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
         AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
-          indicator: true, title: 'Encrypting and protecting your health data...', message: ''
+          indicator: true, title: 'Encrypting and protecting your health record...', message: ''
         }).then((data) => {
           if (data) {
             FileUtil.removeSafe(filePath);

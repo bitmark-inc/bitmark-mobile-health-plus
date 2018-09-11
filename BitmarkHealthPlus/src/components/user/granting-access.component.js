@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Alert,
@@ -17,9 +17,6 @@ import { AppProcessor } from '../../processors';
 
 export class GrantingAccessComponent extends Component {
   static propTypes = {
-    bitmarkType: PropTypes.string,
-    bitmarkId: PropTypes.string,
-    issuedAt: PropTypes.any,
   };
   constructor(props) {
     super(props);
