@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Book',
     fontSize: 16,
     fontWeight: '300',
-    color: '#464646',
+    color: '#0060F2',
   },
   accountRowIcon: {
     width: convertWidth(8),
