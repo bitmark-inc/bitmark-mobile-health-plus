@@ -94,7 +94,6 @@ export class UserComponent extends Component {
   render() {
     let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
     let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
-    console.log('accountNumberDisplay :', accountNumberDisplay, isCurrentUser);
     return (
       <View style={{ flex: 1, }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
@@ -104,12 +103,12 @@ export class UserComponent extends Component {
           <View style={styles.body}>
             <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
               <View style={styles.dataArea}>
-                <TouchableOpacity disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
+                <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })}>
                   <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks}</Text> Week{this.state.numberHealthDataBitmarks !== 1 ? 's' : ''} of health data</Text>
                 </TouchableOpacity>
               </View>
-              <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1 }]}>
-                <TouchableOpacity disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
+              <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: 60, }]}>
+                <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })}>
                   <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks}</Text> Health record{this.state.numberHealthAssetBitmarks !== 1 ? 's' : ''}</Text>
                 </TouchableOpacity>
                 {this.state.isDisplayingAccountNumber && isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
@@ -190,7 +189,8 @@ const styles = StyleSheet.create({
   },
   addHealthRecordButton: {
     position: 'absolute',
-    left: convertWidth(16), bottom: convertWidth(22),
+    left: convertWidth(16),
+    bottom: convertWidth(22),
     padding: convertWidth(4),
     flexDirection: 'row',
     alignItems: 'center',
