@@ -23,20 +23,24 @@ let jwt;
 let websocket;
 let isLoadingData = false;
 
-const isHealthDataBitmark = (name) => {
-  var regResults = /HK((\d)*)/.exec(name);
-  if (regResults && regResults.length > 1) {
-    let randomNumber = regResults[1];
-    return ((randomNumber.length == 8) && ('HK' + randomNumber) === name);
+const isHealthDataBitmark = (asset) => {
+  if (asset && asset.name && asset.metadata && asset.metadata[''] && asset.metadata['']) {
+    var regResults = /HK((\d)*)/.exec(asset.name);
+    if (regResults && regResults.length > 1) {
+      let randomNumber = regResults[1];
+      return ((randomNumber.length == 8) && ('HK' + randomNumber) === name);
+    }
   }
   return false;
 };
 
-const isHealthAssetBitmark = (name) => {
-  var regResults = /HA((\d)*)/.exec(name);
-  if (regResults && regResults.length > 1) {
-    let randomNumber = regResults[1];
-    return ((randomNumber.length == 8) && ('HA' + randomNumber) === name);
+const isHealthAssetBitmark = (asset) => {
+  if (asset && asset.name && asset.metadata && asset.metadata[''] && asset.metadata['']) {
+    var regResults = /HA((\d)*)/.exec(asset.name);
+    if (regResults && regResults.length > 1) {
+      let randomNumber = regResults[1];
+      return ((randomNumber.length == 8) && ('HA' + randomNumber) === name);
+    }
   }
   return false;
 };
@@ -98,11 +102,11 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       bitmarks.forEach(bitmark => {
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
-          if (isHealthDataBitmark(asset.name)) {
+          if (isHealthDataBitmark(asset)) {
             bitmark.asset = asset;
             healthDataBitmarks.push(bitmark);
           }
-          if (isHealthAssetBitmark(asset.name)) {
+          if (isHealthAssetBitmark(asset)) {
             bitmark.asset = asset;
             healthAssetBitmarks.push(bitmark);
           }
