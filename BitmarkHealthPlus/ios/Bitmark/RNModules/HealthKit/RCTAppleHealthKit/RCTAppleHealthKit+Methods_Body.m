@@ -101,31 +101,8 @@
 
 - (void)body_getLatestBodyMassIndex:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
-    HKQuantityType *bmiType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMassIndex];
-
-    [self fetchMostRecentQuantitySampleOfType:bmiType
-                                    predicate:nil
-                                   completion:^(HKQuantity *mostRecentQuantity, NSDate *startDate, NSDate *endDate, NSError *error) {
-        if (!mostRecentQuantity) {
-            NSLog(@"error getting latest BMI: %@", error);
-            callback(@[RCTMakeError(@"error getting latest BMI", error, nil)]);
-        }
-        else {
-            // Determine the bmi in the required unit.
-            HKUnit *countUnit = [HKUnit countUnit];
-            double bmi = [mostRecentQuantity doubleValueForUnit:countUnit];
-
-            NSDictionary *response = @{
-                    @"value" : @(bmi),
-                    @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
-                    @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
-            };
-
-            callback(@[[NSNull null], response]);
-        }
-    }];
+  [self getBodySample:input type:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMassIndex] defaultUnit:[HKUnit countUnit] callback:callback];
 }
-
 
 - (void)body_saveBodyMassIndex:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
@@ -146,7 +123,6 @@
         callback(@[[NSNull null], @(bmi)]);
     }];
 }
-
 
 - (void)body_getLatestHeight:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
@@ -240,84 +216,46 @@
 
 - (void)body_getLatestBodyFatPercentage:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
-    HKQuantityType *bodyFatPercentType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyFatPercentage];
-
-    [self fetchMostRecentQuantitySampleOfType:bodyFatPercentType
-                                    predicate:nil
-                                   completion:^(HKQuantity *mostRecentQuantity, NSDate *startDate, NSDate *endDate, NSError *error) {
-        if (!mostRecentQuantity) {
-            NSLog(@"error getting latest body fat percentage: %@", error);
-            callback(@[RCTMakeError(@"error getting latest body fat percentage", error, nil)]);
-        }
-        else {
-            // Determine the weight in the required unit.
-            HKUnit *percentUnit = [HKUnit percentUnit];
-            double percentage = [mostRecentQuantity doubleValueForUnit:percentUnit];
-
-            percentage = percentage * 100;
-
-            NSDictionary *response = @{
-                    @"value" : @(percentage),
-                    @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
-                    @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
-            };
-
-            callback(@[[NSNull null], response]);
-        }
-    }];
+  [self getBodySample:input type:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyFatPercentage] defaultUnit:[HKUnit percentUnit] callback:callback];
 }
-
 
 - (void)body_getLatestLeanBodyMass:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
-    HKQuantityType *leanBodyMassType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierLeanBodyMass];
-
-    [self fetchMostRecentQuantitySampleOfType:leanBodyMassType
-                                    predicate:nil
-                                   completion:^(HKQuantity *mostRecentQuantity, NSDate *startDate, NSDate *endDate, NSError *error) {
-        if (!mostRecentQuantity) {
-            NSLog(@"error getting latest lean body mass: %@", error);
-            callback(@[RCTMakeError(@"error getting latest lean body mass", error, nil)]);
-        }
-        else {
-            HKUnit *weightUnit = [HKUnit poundUnit];
-            double leanBodyMass = [mostRecentQuantity doubleValueForUnit:weightUnit];
-
-            NSDictionary *response = @{
-                    @"value" : @(leanBodyMass),
-                    @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
-                    @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
-            };
-
-            callback(@[[NSNull null], response]);
-        }
-    }];
+  [self getBodySample:input type:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierLeanBodyMass] defaultUnit:[HKUnit gramUnit] callback:callback];
 }
 
 - (void)body_getLatestWaistCircumference:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
-  HKQuantityType *leanBodyMassType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierWaistCircumference];
+  [self getBodySample:input type:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierWaistCircumference] defaultUnit:[HKUnit meterUnitWithMetricPrefix:HKMetricPrefixMilli] callback:callback];
+}
+
+- (void)getBodySample:(NSDictionary *)input type:(HKQuantityType *)type defaultUnit:(HKUnit *)defaultUnit callback:(RCTResponseSenderBlock)callback {
+  HKUnit *unit = [RCTAppleHealthKit hkUnitFromOptions:input key:@"unit" withDefault:defaultUnit];
+  NSUInteger limit = [RCTAppleHealthKit uintFromOptions:input key:@"limit" withDefault:HKObjectQueryNoLimit];
+  BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
+  NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
+  NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+  if(startDate == nil){
+    callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
+    return;
+  }
+  NSPredicate * predicate = [RCTAppleHealthKit predicateForSamplesBetweenDates:startDate endDate:endDate];
   
-  [self fetchMostRecentQuantitySampleOfType:leanBodyMassType
-                                  predicate:nil
-                                 completion:^(HKQuantity *mostRecentQuantity, NSDate *startDate, NSDate *endDate, NSError *error) {
-                                   if (!mostRecentQuantity) {
-                                     NSLog(@"error getting latest lean body mass: %@", error);
-                                     callback(@[RCTMakeError(@"error getting latest lean body mass", error, nil)]);
-                                   }
-                                   else {
-                                     HKUnit *weightUnit = [HKUnit poundUnit];
-                                     double leanBodyMass = [mostRecentQuantity doubleValueForUnit:weightUnit];
-                                     
-                                     NSDictionary *response = @{
-                                                                @"value" : @(leanBodyMass),
-                                                                @"startDate" : [RCTAppleHealthKit buildISO8601StringFromDate:startDate],
-                                                                @"endDate" : [RCTAppleHealthKit buildISO8601StringFromDate:endDate],
-                                                                };
-                                     
-                                     callback(@[[NSNull null], response]);
-                                   }
-                                 }];
+  [self fetchQuantitySamplesOfType:type
+                              unit:unit
+                         predicate:predicate
+                         ascending:ascending
+                             limit:limit
+                        completion:^(NSArray *results, NSError *error) {
+                          if(results){
+                            callback(@[[NSNull null], results]);
+                            return;
+                          } else {
+                            NSLog(@"error getting samples: %@", error);
+                            callback(@[RCTMakeError(@"error weight samples", nil, nil)]);
+                            return;
+                          }
+                        }];
 }
 
 @end
