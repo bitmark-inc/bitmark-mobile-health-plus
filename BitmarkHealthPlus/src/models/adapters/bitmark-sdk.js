@@ -1,4 +1,5 @@
 import { NativeModules } from 'react-native'
+import { config } from '../../configs';
 let SwiftBitmarkSDK = NativeModules.BitmarkSDK;
 
 const newError = (reason, defaultMessage) => {
@@ -284,7 +285,7 @@ const BitmarkSDK = {
         if (ok && result) {
           resolve(result);
         } else {
-          reject(newError(result, 'Can not create session data!'));
+          reject(newError(result, 'Can not create session data local!'));
         }
       });
     });
