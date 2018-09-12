@@ -640,7 +640,7 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
       } else {
         let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
         if (sessionData) {
-          let granteeSessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, bitmark.id, grantee);
+          let granteeSessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
           body.items.push({
             bitmark_id: bitmark.id,
             session_data: granteeSessionData,
