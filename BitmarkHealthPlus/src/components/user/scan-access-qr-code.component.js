@@ -56,6 +56,7 @@ export class ScanAccessQRCodeComponent extends React.Component {
         Actions.pop();
       }
     }).catch(error => {
+      console.log('error :', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error, onClose: Actions.pop });
     });
   }

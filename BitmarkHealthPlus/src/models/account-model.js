@@ -310,7 +310,7 @@ let doGetWaitingGrantedAccess = (jwt) => {
   });
 };
 
-let doRemoveGrantingAccess = (from, to) => {
+let doRemoveGrantingAccess = (from, to, requester, timestamp, signature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.api_server_url}/v2/access-grants?from=${from}&to=${to}`;
@@ -319,6 +319,9 @@ let doRemoveGrantingAccess = (from, to) => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        requester,
+        timestamp,
+        signature,
       },
     }).then((response) => {
       statusCode = response.status;

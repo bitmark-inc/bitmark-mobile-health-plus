@@ -41,9 +41,7 @@ const isHealthAssetBitmark = (name) => {
   return false;
 };
 
-
 // ================================================================================================================================================
-
 const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber) => {
   bitmarkAccountNumber = bitmarkAccountNumber || userInformation.bitmarkAccountNumber;
   let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
@@ -61,7 +59,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
 };
 
 let queueGetUserDataBitmarks = {};
-const runGetUserBitmarksInBackground = (bitmarkAccountNumber, grantedAt) => {
+const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
   bitmarkAccountNumber = bitmarkAccountNumber || userInformation.bitmarkAccountNumber;
   return new Promise((resolve) => {
     queueGetUserDataBitmarks[bitmarkAccountNumber] = queueGetUserDataBitmarks[bitmarkAccountNumber] || [];
@@ -158,7 +156,7 @@ const runOnBackground = async () => {
     await runGetUserBitmarksInBackground();
     await runGetAccountAccessesInBackground();
     if (grantedAccessAccountSelected) {
-      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor, grantedAccessAccountSelected.granted_at);
+      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
     }
   }
 };
@@ -246,10 +244,16 @@ const doLogout = async () => {
   PushNotificationIOS.cancelAllLocalNotifications();
   let accesses = await doGetAccountAccesses();
   for (let grantedInfo of (accesses.granted_from || [])) {
-    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee);
+    let timestamp = moment().toDate().getTime();
+    let message = `accessGrant|${grantedInfo.id}|${userInformation.bitmarkAccountNumber}|${timestamp}`;
+    let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
+    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
   }
   for (let grantedInfo of (accesses.granted_to || [])) {
-    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee);
+    let timestamp = moment().toDate().getTime();
+    let message = `accessGrant|${grantedInfo.id}|${userInformation.bitmarkAccountNumber}|${timestamp}`;
+    let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
+    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
   }
   await AccountModel.doLogout(jwt);
   await UserModel.doRemoveUserInfo();
@@ -264,7 +268,7 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 
-const doOpenApp = async () => {
+const doOpenApp = async (justCreatedBitmarkAccount) => {
   // await UserModel.doRemoveUserInfo();
   userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
@@ -290,7 +294,9 @@ const doOpenApp = async () => {
       console.log('registerIdentifiedUser error :', error);
     });
 
-    await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+    if (!justCreatedBitmarkAccount) {
+      await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+    }
 
     let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);

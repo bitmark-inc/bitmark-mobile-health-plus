@@ -108,6 +108,9 @@ const setFaceTouchSessionId = (sessionId) => {
 const getFaceTouchSessionId = () => {
   return currentFaceTouchSessionId;
 };
+const resetFaceTouchSessionId = ()=> {
+  currentFaceTouchSessionId = null;
+};
 
 const doTryRickSignMessage = async (messages, touchFaceIdMessage) => {
   let result = await doWaitRequestSessionId();
@@ -212,6 +215,7 @@ let CommonModel = {
   doTryRickSignMessage,
   setFaceTouchSessionId,
   getFaceTouchSessionId,
+  resetFaceTouchSessionId,
   doTrackEvent,
 }
 

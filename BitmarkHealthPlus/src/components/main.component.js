@@ -89,7 +89,19 @@ class MainEventsHandlerComponent extends Component {
     // `granting-access/[token]`
     switch (params[0]) {
       case 'granting-access': {
-        Actions.scanAccessQRCode({ token: params[1] });
+
+        let waitTouchFaceId = async () => {
+          let wait100ms = ()=>  new Promise((resolve)=>setTimeout(resolve, 100));
+          let faceTouchId = CommonModel.getFaceTouchSessionId();
+          while (!faceTouchId) {
+            await wait100ms();
+            faceTouchId = CommonModel.getFaceTouchSessionId();
+          }
+          return true;
+        };
+        waitTouchFaceId().then(() => {
+          Actions.scanAccessQRCode({ token: params[1] });
+        });
         break;
       }
       default: {
@@ -108,6 +120,9 @@ class MainEventsHandlerComponent extends Component {
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
       this.doTryConnectInternet();
+    }
+    if (this.appState.match(/active/) && nextAppState !== 'active') {
+      CommonModel.resetFaceTouchSessionId();
     }
     this.appState = nextAppState;
   }
@@ -383,7 +398,7 @@ export class MainComponent extends Component {
     // this.doRefresh();
   }
   doRefresh(justCreatedBitmarkAccount) {
-    return DataProcessor.doOpenApp().then(user => {
+    return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
       console.log('doOpenApp user:', user);
       if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
         this.setState({ user });
