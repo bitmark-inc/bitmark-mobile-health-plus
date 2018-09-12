@@ -2,7 +2,6 @@ package bitmarkstore
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	"github.com/jackc/pgx"
@@ -59,7 +58,7 @@ func (b *BitmarkPGStore) GetTrackingBitmarks(ctx context.Context, account string
 	rows, err := b.dbConn.QueryEx(ctx, sqlQueryBitmarkTracking, nil, account)
 	defer rows.Close()
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if err != pgx.ErrNoRows {
 			return nil, err
 		}
 	}
@@ -88,7 +87,7 @@ func (b *BitmarkPGStore) GetAccountHasTrackingBitmark(ctx context.Context, bitma
 
 	defer rows.Close()
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if err != pgx.ErrNoRows {
 			return nil, err
 		}
 	}
@@ -125,7 +124,11 @@ func (b *BitmarkPGStore) AddBitmarkRentingReceiver(ctx context.Context, id, rece
 
 	var sender *string
 	if err := row.Scan(&sender); err != nil {
-		return nil, err
+		if err == pgx.ErrNoRows {
+			return nil, nil
+		} else {
+			return nil, err
+		}
 	}
 
 	return sender, nil
@@ -155,7 +158,7 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 
 	defer rows1.Close()
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if err != pgx.ErrNoRows {
 			return nil, nil, nil, err
 		}
 	}
@@ -183,7 +186,7 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 	defer rows2.Close()
 
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if err != pgx.ErrNoRows {
 			return nil, nil, nil, err
 		}
 	}
@@ -211,7 +214,7 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 	defer rows3.Close()
 
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if err != pgx.ErrNoRows {
 			return nil, nil, nil, err
 		}
 	}

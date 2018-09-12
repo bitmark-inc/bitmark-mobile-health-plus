@@ -140,19 +140,19 @@ func (s *Server) updateRenting(c *gin.Context) {
 			return
 		}
 
+		if sender == nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": "cannot find grantor with that id",
+			})
+			return
+		}
+
 		// Notify sender
 		redisConn, err := s.redisPool.Dial()
 		defer redisConn.Close()
 		if err != nil {
 			c.Error(err)
 			c.AbortWithStatus(http.StatusInternalServerError)
-			return
-		}
-
-		if sender == nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"error": "cannot find grantor with that id",
-			})
 			return
 		}
 
