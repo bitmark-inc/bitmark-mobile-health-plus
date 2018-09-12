@@ -189,9 +189,16 @@ func (s *Server) updateRenting(c *gin.Context) {
 		}
 
 		if err := s.bitmarkStore.UpdateBitmarkRentingStatus(c.Copy(), id, status); err != nil {
-			c.Error(err)
-			c.AbortWithStatus(http.StatusInternalServerError)
-			return
+			if err == pgx.ErrNoRows {
+				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+					"error": "invalid id or id does not belong to account",
+				})
+				return
+			} else {
+				c.Error(err)
+				c.AbortWithStatus(http.StatusInternalServerError)
+				return
+			}
 		}
 
 		response["status"] = status
