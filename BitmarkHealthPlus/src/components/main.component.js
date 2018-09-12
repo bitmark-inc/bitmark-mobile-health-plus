@@ -91,16 +91,22 @@ class MainEventsHandlerComponent extends Component {
       case 'granting-access': {
 
         let waitTouchFaceId = async () => {
-          let wait100ms = ()=>  new Promise((resolve)=>setTimeout(resolve, 100));
+          let wait100ms = () => new Promise((resolve) => setTimeout(resolve, 100));
           let faceTouchId = CommonModel.getFaceTouchSessionId();
           while (!faceTouchId) {
-            await wait100ms();
-            faceTouchId = CommonModel.getFaceTouchSessionId();
+            if (this.appState.match(/active/)) {
+              await wait100ms();
+              faceTouchId = CommonModel.getFaceTouchSessionId();
+            } else {
+              return false;
+            }
           }
           return true;
         };
-        waitTouchFaceId().then(() => {
-          Actions.scanAccessQRCode({ token: params[1] });
+        waitTouchFaceId().then((result) => {
+          if (result) {
+            Actions.scanAccessQRCode({ token: params[1] });
+          }
         });
         break;
       }

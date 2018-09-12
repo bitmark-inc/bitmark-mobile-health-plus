@@ -255,6 +255,7 @@ const doLogout = async () => {
     let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
     await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
   }
+  CommonModel.resetFaceTouchSessionId();
   await AccountModel.doLogout(jwt);
   await UserModel.doRemoveUserInfo();
   await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
@@ -294,9 +295,10 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       console.log('registerIdentifiedUser error :', error);
     });
 
-    if (!justCreatedBitmarkAccount) {
+    if (!(justCreatedBitmarkAccount && CommonModel.getFaceTouchSessionId())) {
       await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
     }
+    console.log('CommonModel.getFaceTouchSessionId() :', CommonModel.getFaceTouchSessionId());
 
     let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
