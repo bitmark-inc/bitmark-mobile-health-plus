@@ -93,19 +93,27 @@ class MainEventsHandlerComponent extends Component {
         let waitTouchFaceId = async () => {
           let wait100ms = () => new Promise((resolve) => setTimeout(resolve, 100));
           let faceTouchId = CommonModel.getFaceTouchSessionId();
+          let oldAppState = this.appState;
           while (!faceTouchId) {
-            if (this.appState.match(/active/)) {
-              await wait100ms();
-              faceTouchId = CommonModel.getFaceTouchSessionId();
-            } else {
+            if (oldAppState !== this.appState && this.appState.match(/inactive|background/)) {
               return false;
             }
+            await wait100ms();
+            oldAppState = this.appState;
+            faceTouchId = CommonModel.getFaceTouchSessionId();
           }
           return true;
         };
-        waitTouchFaceId().then((result) => {
-          if (result) {
-            Actions.scanAccessQRCode({ token: params[1] });
+
+        UserModel.doTryGetCurrentUser().then(userInformation => {
+          if (!userInformation || !userInformation.bitmarkAccountNumber) {
+            Alert.alert('', 'Access your account  and revisit the link to accept the grant access.', [{ text: 'OK', style: 'cancel' }]);
+          } else {
+            waitTouchFaceId().then((result) => {
+              if (result) {
+                Actions.scanAccessQRCode({ token: params[1] });
+              }
+            });
           }
         });
         break;
