@@ -50,7 +50,7 @@ export class GrantingAccessComponent extends Component {
         <a href="healthplus://granting-access/${this.state.token}">healthplus://granting-access/${this.state.token}</a>
         <br/>
         <br/>
-        Please install <a href="${config.appLink}">Bitmark Health+</a> app and sign in before confirm the authorization.`,
+        Please install <a href="${config.appLink}">Bitmark Health+</a> app and sign in before clicking the link.`,
       isHTML: true,
     }, (error) => {
       if (error) {
