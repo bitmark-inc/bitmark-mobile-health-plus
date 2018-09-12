@@ -34,7 +34,7 @@ const CRASH_LOG_FILE_NAME = 'crash_log.txt';
 const CRASH_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + CRASH_LOG_FILE_NAME;
 const ERROR_LOG_FILE_NAME = 'error_log.txt';
 const ERROR_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + ERROR_LOG_FILE_NAME;
-
+let isMainComponentMounted = false;
 class MainEventsHandlerComponent extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +44,7 @@ class MainEventsHandlerComponent extends Component {
     this.handleNetworkChange = this.handleNetworkChange.bind(this);
     this.handerProcessErrorEvent = this.handerProcessErrorEvent.bind(this);
     this.doTryConnectInternet = this.doTryConnectInternet.bind(this);
-    this.handleDeppLink = this.handleDeppLink.bind(this);
+    this.handleDeepLink = this.handleDeepLink.bind(this);
     this.displayEmptyDataSource = this.displayEmptyDataSource.bind(this);
 
     this.state = {
@@ -58,7 +58,12 @@ class MainEventsHandlerComponent extends Component {
 
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
-    Linking.addEventListener('url', this.handleDeppLink);
+    Linking.addEventListener('url', this.handleDeepLink);
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        this.handleDeepLink({ url });
+      }
+    })
     NetInfo.isConnected.fetch().then().done(() => {
       NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
     });
@@ -74,7 +79,7 @@ class MainEventsHandlerComponent extends Component {
   }
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
-    Linking.removeListener('url', this.handleDeppLink);
+    Linking.removeListener('url', this.handleDeepLink);
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
 
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
@@ -83,7 +88,7 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
   }
 
-  handleDeppLink(event) {
+  handleDeepLink(event) {
     const route = event.url.replace(/.*?:\/\//g, '');
     const params = route.split('/');
     // `granting-access/[token]`
@@ -92,15 +97,15 @@ class MainEventsHandlerComponent extends Component {
 
         let waitTouchFaceId = async () => {
           let wait100ms = () => new Promise((resolve) => setTimeout(resolve, 100));
-          let faceTouchId = CommonModel.getFaceTouchSessionId();
+          let continueWait = !CommonModel.getFaceTouchSessionId() || !isMainComponentMounted;
           let oldAppState = this.appState;
-          while (!faceTouchId) {
+          while (continueWait) {
             if (oldAppState !== this.appState && this.appState.match(/inactive|background/)) {
               return false;
             }
             await wait100ms();
             oldAppState = this.appState;
-            faceTouchId = CommonModel.getFaceTouchSessionId();
+            continueWait = !CommonModel.getFaceTouchSessionId() || !isMainComponentMounted;
           }
           return true;
         };
@@ -111,7 +116,9 @@ class MainEventsHandlerComponent extends Component {
           } else {
             waitTouchFaceId().then((result) => {
               if (result) {
-                Actions.scanAccessQRCode({ token: params[1] });
+                setTimeout(() => {
+                  Actions.scanAccessQRCode({ token: params[1] });
+                }, 500);
               }
             });
           }
@@ -383,10 +390,12 @@ export class MainComponent extends Component {
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
     EventEmitterService.on(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
+    isMainComponentMounted = true;
   }
   componentWillUnmount() {
     EventEmitterService.remove(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
     EventEmitterService.remove(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
+    isMainComponentMounted = false;
   }
 
   shouldComponentUpdate(nextProps, nextState) {
