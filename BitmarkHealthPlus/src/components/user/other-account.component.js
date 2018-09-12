@@ -68,6 +68,8 @@ export class OtherAccountsComponent extends Component {
         Permissions.request('camera').then(permission => {
           if (permission === 'denied') {
             displayAlert();
+          } else if (permission === 'authorized') {
+            Actions.scanAccessQRCode();
           }
         });
       } else if (permission === 'authorized') {
