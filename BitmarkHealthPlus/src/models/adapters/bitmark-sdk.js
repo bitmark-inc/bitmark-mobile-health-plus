@@ -1,5 +1,4 @@
 import { NativeModules } from 'react-native'
-import { config } from '../../configs';
 let SwiftBitmarkSDK = NativeModules.BitmarkSDK;
 
 const newError = (reason, defaultMessage) => {
