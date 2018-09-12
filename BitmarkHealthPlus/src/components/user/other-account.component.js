@@ -116,7 +116,7 @@ export class OtherAccountsComponent extends Component {
             </View>
             <View style={styles.bottomButtonArea} >
               <TouchableOpacity style={styles.bottomButton} onPress={this.scanQRCode.bind(this)} >
-                <Text style={styles.bottomButtonText}>{'scan qr code'.toUpperCase()}</Text>
+                <Text style={styles.bottomButtonText}>{'scan access code'.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   closeIcon: {
+    marginTop: 12,
     width: convertWidth(23),
     height: convertWidth(23),
     resizeMode: 'contain',

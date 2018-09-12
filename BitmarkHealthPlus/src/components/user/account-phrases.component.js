@@ -345,7 +345,7 @@ export class AccountPhraseComponent extends Component {
 
               {this.state.step === STEPS.warning && <View style={styles.bottomButtonArea}>
                 <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhrase24Words.bind(this)}>
-                  <Text style={styles.bottomButtonText}>SUBMIT</Text>
+                  <Text style={styles.bottomButtonText}>NEXT</Text>
                 </TouchableOpacity>
               </View>}
 

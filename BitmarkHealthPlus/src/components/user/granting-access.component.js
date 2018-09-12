@@ -3,17 +3,18 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Alert,
-  Image, View, SafeAreaView, TouchableOpacity, Text,
+  Image, View, SafeAreaView, TouchableOpacity, Text, ScrollView,
 } from 'react-native';
 import QRCode from 'react-native-qrcode';
 import Mailer from 'react-native-mail';
 import Hyperlink from 'react-native-hyperlink';
 
-import { convertWidth, runPromiseWithoutError } from './../../utils';
+import { convertWidth } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
 import { AppProcessor } from '../../processors';
+import { EventEmitterService } from '../../services';
 
 export class GrantingAccessComponent extends Component {
   static propTypes = {
@@ -24,16 +25,11 @@ export class GrantingAccessComponent extends Component {
       token: '',
     }
 
-    runPromiseWithoutError(AppProcessor.doGrantingAccess()).then(result => {
-      if (result && result.error) {
-        console.log('result.error :', result.error);
-        Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
-          text: 'OK', onPress: Actions.pop
-        }]);
-        return;
-      }
+    AppProcessor.doGrantingAccess().then(result => {
       this.setState({ token: result.id });
-    });
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error, onClose: Actions.pop })
+    })
   }
 
   sendEmail() {
@@ -62,7 +58,7 @@ export class GrantingAccessComponent extends Component {
   render() {
     return (
       <SafeAreaView style={styles.bodySafeView}>
-        <View style={styles.body}>
+        <View style={styles.body} contentContainerStyle={{ flex: 1 }}>
           <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
               <Text style={styles.titleText}>Grant access</Text>
@@ -71,7 +67,7 @@ export class GrantingAccessComponent extends Component {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.content}>
+            <ScrollView contentContainerStyle={styles.content}>
               {!!this.state.token && <QRCode
                 value={this.state.token}
                 size={convertWidth(270)}
@@ -98,7 +94,7 @@ export class GrantingAccessComponent extends Component {
               </Text>
                 </Hyperlink>
               </View>
-            </View>
+            </ScrollView>
           </View>
         </View>
       </SafeAreaView>
@@ -136,7 +132,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
-    color: '#464646',
   },
   closeIcon: {
     width: convertWidth(20),
@@ -156,7 +151,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
-    marginTop: 20,
+    marginTop: 35,
   },
   messageEmail: {
     fontFamily: 'Avenir Light',

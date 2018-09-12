@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Light',
     fontWeight: '900',
     fontSize: 34,
+    flex: 1,
   },
   titleRow: {
     flexDirection: 'row',
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   closeIcon: {
+    margin: 12,
     width: convertWidth(20),
     height: convertWidth(20),
     resizeMode: 'contain',

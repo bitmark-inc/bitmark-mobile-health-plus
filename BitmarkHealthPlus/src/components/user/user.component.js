@@ -99,11 +99,11 @@ export class UserComponent extends Component {
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
           <Text style={styles.accountNumberDisplayText}>Viewing {'[' + accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) + ']'}, tap here to cancel.</Text>
         </TouchableOpacity>}
-        <SafeAreaView style={styles.bodySafeView}>
+        <SafeAreaView style={[styles.bodySafeView, { backgroundColor: this.state.isDisplayingAccountNumber ? 'white' : 'rgba(0,0,0,0.25)', }]}>
           <View style={styles.body}>
             <TouchableOpacity style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
               <View style={styles.dataArea}>
-                <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => {
+                <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthDataBitmarks === 0 || !this.state.isDisplayingAccountNumber} onPress={() => {
                   this.setState({ isDisplayingAccountNumber: true });
                   Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })
                 }}>
@@ -111,7 +111,7 @@ export class UserComponent extends Component {
                 </TouchableOpacity>
               </View>
               <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60), }]}>
-                <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthAssetBitmarks === 0} onPress={() => {
+                <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthAssetBitmarks === 0 || !this.state.isDisplayingAccountNumber} onPress={() => {
                   this.setState({ isDisplayingAccountNumber: true });
                   Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })
                 }}>
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   addHealthRecordButton: {
     position: 'absolute',
     left: convertWidth(16),
-    bottom: convertWidth(22),
+    bottom: convertWidth(15),
     padding: convertWidth(4),
     flexDirection: 'row',
     alignItems: 'center',

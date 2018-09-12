@@ -544,7 +544,7 @@ const doCheckFileToIssue = async (filePath) => {
 };
 
 const doGrantingAccess = async () => {
-  return AccountModel.doGrantingAccess(jwt);
+  return await AccountModel.doGrantingAccess(jwt);
 };
 
 const getAccountAccessSelected = () => {
