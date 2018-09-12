@@ -28,7 +28,7 @@ const isHealthDataBitmark = (asset) => {
     var regResults = /HK((\d)*)/.exec(asset.name);
     if (regResults && regResults.length > 1) {
       let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HK' + randomNumber) === name);
+      return ((randomNumber.length == 8) && ('HK' + randomNumber) === asset.name);
     }
   }
   return false;
@@ -39,7 +39,7 @@ const isHealthAssetBitmark = (asset) => {
     var regResults = /HA((\d)*)/.exec(asset.name);
     if (regResults && regResults.length > 1) {
       let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HA' + randomNumber) === name);
+      return ((randomNumber.length == 8) && ('HA' + randomNumber) === asset.name);
     }
   }
   return false;

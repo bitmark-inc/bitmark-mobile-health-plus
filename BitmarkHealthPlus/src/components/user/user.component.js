@@ -101,7 +101,7 @@ export class UserComponent extends Component {
         </TouchableOpacity>}
         <SafeAreaView style={styles.bodySafeView}>
           <View style={styles.body}>
-            <TouchableOpacity style={styles.bodyContent} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
+            <TouchableOpacity style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1, }} disabled={this.state.numberHealthDataBitmarks === 0} onPress={() => {
                   this.setState({ isDisplayingAccountNumber: true });
