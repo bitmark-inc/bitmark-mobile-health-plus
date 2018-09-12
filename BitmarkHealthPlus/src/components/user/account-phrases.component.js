@@ -37,7 +37,7 @@ export class AccountPhraseComponent extends Component {
     }
   }
   accessPhrase24Words() {
-    AppProcessor.doGetCurrentAccount().then((userInfo) => {
+    AppProcessor.doGetCurrentAccount(this.props.isLogout).then((userInfo) => {
       if (!userInfo) {
         return;
       }
@@ -339,7 +339,7 @@ export class AccountPhraseComponent extends Component {
                 </View>}
                 {this.state.testingResult === true && <View style={styles.testingResultArea}>
                   <Text style={styles.successTitle}>Success!</Text>
-                  <Text style={styles.successMessage}>Keep your written copy private in a secure and safe location. </Text>
+                  <Text style={styles.successMessage}>{this.props.isLogout ? 'You may now log out of your current account.' : 'Keep your written copy private in a secure and safe location.'}</Text>
                 </View>}
               </View>}
 

@@ -75,8 +75,14 @@ const doCreateNewAccount = async () => {
   return await processing(DataProcessor.doCreateAccount(touchFaceIdSession));
 };
 
-const doGetCurrentAccount = async () => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize access to your recovery phrase.');
+const doGetCurrentAccount = async (canUseCurrentTouchFaceId) => {
+  let touchFaceIdSession;
+  if (canUseCurrentTouchFaceId) {
+    touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  }
+  if (!touchFaceIdSession) {
+    touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize access to your recovery phrase.');
+  }
   if (!touchFaceIdSession) {
     return null;
   }
