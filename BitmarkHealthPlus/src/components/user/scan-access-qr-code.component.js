@@ -72,15 +72,15 @@ export class ScanAccessQRCodeComponent extends React.Component {
             </TouchableOpacity>
           </View>
           <View style={[styles.content]}>
-            <RNCamera
+            {!this.props.token && <RNCamera
               ref={(ref) => this.cameraRef = ref}
               style={styles.scanCamera}
               type={RNCamera.Constants.Type.back}
               onBarCodeRead={this.onBarCodeRead.bind(this)}
-            />
-            <Text style={styles.authorizedMessage}>
+            />}
+            {!this.props.token && <Text style={styles.authorizedMessage}>
               Align QR Code within frame to scan.
-            </Text>
+            </Text>}
           </View>
         </View>}
         {this.state.step !== 'scanning' && <View style={[styles.bodyContent, { backgroundColor: '#FF4444' }]}>
@@ -100,7 +100,6 @@ export class ScanAccessQRCodeComponent extends React.Component {
     </SafeAreaView>);
   }
 }
-
 
 const styles = StyleSheet.create({
   bodySafeView: {
