@@ -24,7 +24,7 @@ let websocket;
 let isLoadingData = false;
 
 const isHealthDataBitmark = (asset) => {
-  if (asset && asset.name && asset.metadata && asset.metadata[''] && asset.metadata['']) {
+  if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
     var regResults = /HK((\d)*)/.exec(asset.name);
     if (regResults && regResults.length > 1) {
       let randomNumber = regResults[1];
@@ -35,7 +35,7 @@ const isHealthDataBitmark = (asset) => {
 };
 
 const isHealthAssetBitmark = (asset) => {
-  if (asset && asset.name && asset.metadata && asset.metadata[''] && asset.metadata['']) {
+  if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
     var regResults = /HA((\d)*)/.exec(asset.name);
     if (regResults && regResults.length > 1) {
       let randomNumber = regResults[1];
