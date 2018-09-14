@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	influx "github.com/influxdata/influxdb/client/v2"
 	"github.com/jackc/pgx"
 	log "github.com/sirupsen/logrus"
@@ -15,6 +16,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
+	"github.com/bitmark-inc/mobile-app/mobile-server/store/websocketstore"
 )
 
 type Server struct {
@@ -22,9 +24,12 @@ type Server struct {
 	server *http.Server
 
 	// DB instance
-	dbConn         *pgx.ConnPool
-	influxDBClient influx.Client
-	gatewayClient  *gateway.Client
+	dbConn          *pgx.ConnPool
+	redisPool       *redis.Pool
+	redisPubSubConn *redis.PubSubConn
+	wsConnStore     *websocketstore.WSStore
+	influxDBClient  influx.Client
+	gatewayClient   *gateway.Client
 
 	// Stores
 	pushStore    pushstore.PushStore
@@ -40,7 +45,7 @@ func (s *Server) Run(addr string) error {
 	api := r.Group("/api")
 
 	pushUUIDs := api.Group("/push_uuids")
-	pushUUIDs.Use(authenticate())
+	pushUUIDs.Use(s.authenticateBoth())
 	{
 		pushUUIDs.POST("", s.AddPushToken)
 		pushUUIDs.DELETE("/:token", s.RemovePushToken)
@@ -48,14 +53,14 @@ func (s *Server) Run(addr string) error {
 
 	trackingBitmarks := api.Group("/tracking_bitmarks")
 	trackingBitmarks.GET("", s.ListBitmarkTracking)
-	trackingBitmarks.Use(authenticate())
+	trackingBitmarks.Use(s.authenticateBoth())
 	{
 		trackingBitmarks.POST("", s.AddBitmarkTracking)
 		trackingBitmarks.DELETE("/:bitmarkid", s.DeleteBitmarkTracking)
 	}
 
 	notifications := api.Group("/notifications")
-	notifications.Use(authenticate())
+	notifications.Use(s.authenticateBoth())
 	{
 		notifications.GET("", s.NotificationList)
 	}
@@ -63,14 +68,33 @@ func (s *Server) Run(addr string) error {
 	api.POST("/metrics", s.AddMetrics)
 
 	eventsGroup := api.Group("/events")
-	eventsGroup.Use(authenticate())
+	eventsGroup.Use(s.authenticateBoth())
 	{
 		eventsGroup.POST("/register-account", s.AddRegisterAccountEvent)
+	}
+
+	grantingBitmarksGroup := api.Group("/granting_bitmarks")
+	grantingBitmarksGroup.Use(s.authenticateJWT())
+	{
+		grantingBitmarksGroup.POST("", s.registerRenting)
+		grantingBitmarksGroup.PATCH("/:id", s.updateRenting)
+		grantingBitmarksGroup.GET("", s.queryRentingBitmark)
+		grantingBitmarksGroup.DELETE("/:id", s.revokeRentingBitmartk)
+	}
+
+	accountGroup := api.Group("/accounts")
+	accountGroup.Use(s.authenticateJWT())
+	{
+		accountGroup.DELETE("", s.deleteAccount)
 	}
 
 	api.GET("/healthz", s.HealthCheck)
 
 	api.GET("/app-versions/:app", s.GetSupportedVersion)
+
+	api.POST("/auth", s.RequestJWT)
+
+	r.Use(s.authenticateJWT()).GET("/ws", s.ServeWs)
 
 	srv := &http.Server{
 		Addr:    addr,
@@ -83,20 +107,33 @@ func (s *Server) Run(addr string) error {
 }
 
 func (s *Server) Shutdown(ctx context.Context) error {
+	s.wsConnStore.DropAll(s.redisPubSubConn)
+	s.redisPubSubConn.Close()
 	return s.server.Shutdown(ctx)
 }
 
-func New(conf *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, influxClient influx.Client, gatewayClient *gateway.Client) *Server {
+func New(conf *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, redisPool *redis.Pool, influxClient influx.Client, gatewayClient *gateway.Client) *Server {
 	r := gin.New()
+	wsConnStore := websocketstore.NewStore()
+	redisConn, err := redisPool.Dial()
+	if err != nil {
+		log.Panic(err)
+	}
+	psc := &redis.PubSubConn{
+		Conn: redisConn,
+	}
 
 	return &Server{
-		router:         r,
-		pushStore:      pushStore,
-		bitmarkStore:   bitmarkStore,
-		dbConn:         dbConn,
-		influxDBClient: influxClient,
-		gatewayClient:  gatewayClient,
-		conf:           conf,
+		router:          r,
+		pushStore:       pushStore,
+		bitmarkStore:    bitmarkStore,
+		dbConn:          dbConn,
+		redisPool:       redisPool,
+		redisPubSubConn: psc,
+		wsConnStore:     wsConnStore,
+		influxDBClient:  influxClient,
+		gatewayClient:   gatewayClient,
+		conf:            conf,
 	}
 }
 
