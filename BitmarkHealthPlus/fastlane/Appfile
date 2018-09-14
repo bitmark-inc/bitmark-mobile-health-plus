@@ -1,4 +1,4 @@
-app_identifier("com.bitmark.health") # The bundle identifier of your app
+app_identifier("com.bitmark.healthplus") # The bundle identifier of your app
 apple_id("anhnguyen@bitmark.com") # Your Apple email address
 
 itc_team_id "102358872" # iTunes Connect Team ID
