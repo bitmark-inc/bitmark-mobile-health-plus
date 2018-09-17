@@ -133,8 +133,7 @@ class MainEventsHandlerComponent extends Component {
   }
 
   handleNetworkChange(networkStatus) {
-    let networkChanged = networkStatus === this.state.networkStatus;
-    EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkChanged);
+    EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkStatus);
     this.setState({ networkStatus });
   }
 
@@ -405,7 +404,10 @@ export class MainComponent extends Component {
     return false;
   }
 
-  doOpenApp() {
+  doOpenApp(networkStatus) {
+    if (!networkStatus) {
+      return;
+    }
     AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
       if (!result) {
         Alert.alert('New Version Available', 'You’re using a version of Bitmark Health or operating system that’s no longer supported. Please update to the newest app version. Thanks!', [{
