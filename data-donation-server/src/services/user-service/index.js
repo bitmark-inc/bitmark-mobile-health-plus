@@ -389,12 +389,21 @@ const doSendBitmarkHealthDataNotifications = async (userInformation) => {
       sendBitmarkNotification = true;
     } else {
       let lastTimeDonateInLocal = studyCommonService.getMomentLocalTime(lastTimeBitmarkHealthData, timezone);
-      let nextTimeSendNotification = studyCommonService.getNextDayInLocalTime(lastTimeDonateInLocal, timezone, SUNDAY);
-      nextTimeSendNotification.hour(timeSendNotification);
-      nextTimeSendNotification.minute(0);
-      nextTimeSendNotification.second(0);
-      nextTimeSendNotification.millisecond(0);
-      sendBitmarkNotification = currentTimeInLocal.toDate() >= nextTimeSendNotification.toDate();
+      let nearestEndDate = studyCommonService.getMomentLocalTime(currentTimeInLocal, timezone);
+      nearestEndDate.hour(0);
+      nearestEndDate.minute(0);
+      nearestEndDate.second(0);
+      nearestEndDate.millisecond(0);
+      nearestEndDate.second(nearestEndDate.second() - 1);
+      sendBitmarkNotification = nearestEndDate.toDate() > lastTimeDonateInLocal.toDate();
+
+      // let lastTimeDonateInLocal = studyCommonService.getMomentLocalTime(lastTimeBitmarkHealthData, timezone);
+      // let nextTimeSendNotification = studyCommonService.getNextDayInLocalTime(lastTimeDonateInLocal, timezone, SUNDAY);
+      // nextTimeSendNotification.hour(timeSendNotification);
+      // nextTimeSendNotification.minute(0);
+      // nextTimeSendNotification.second(0);
+      // nextTimeSendNotification.millisecond(0);
+      // sendBitmarkNotification = currentTimeInLocal.toDate() >= nextTimeSendNotification.toDate();
     }
   }
   if (sendBitmarkNotification) {
