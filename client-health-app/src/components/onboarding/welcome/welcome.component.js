@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image,
+  View, Text, Image,
   StatusBar,
 } from 'react-native';
 
@@ -11,6 +11,7 @@ import welcomeComponentStyle from './welcome.component.style';
 import { ios } from './../../../configs';
 import { BitmarkComponent } from '../../../commons/components';
 import defaultStyle from "../../../commons/styles";
+import {BitmarkOneTabButtonComponent} from "../../../commons/components/bitmark-button";
 
 export class WelcomeComponent extends React.Component {
   constructor(props) {
@@ -47,10 +48,10 @@ export class WelcomeComponent extends React.Component {
             backgroundColor='white'
             ref={(ref) => this.fullRef = ref}
             header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
-              <TouchableOpacity style={defaultStyle.headerLeft} />
-              <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.swiper.scrollBy(this.swiper.props.children.length - 1)}>
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} />
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => this.swiper.scrollBy(this.swiper.props.children.length - 1)}>
                 <Text style={defaultStyle.headerRightText}>SKIP</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>)}
             content={(
               <View style={welcomeComponentStyle.swipePage}>
@@ -124,9 +125,9 @@ export class WelcomeComponent extends React.Component {
             )}
             footerHeight={45 + ios.constant.blankFooter}
             footer={(<View style={[welcomeComponentStyle.doneButtonArea]}>
-              <TouchableOpacity style={[welcomeComponentStyle.doneButton,]} onPress={() => this.props.navigation.navigate('NewAccount')}>
+              <BitmarkOneTabButtonComponent style={[welcomeComponentStyle.doneButton,]} onPress={() => this.props.navigation.navigate('NewAccount')}>
                 <Text style={[welcomeComponentStyle.doneButtonText,]}>DONE</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>)}
           />
         </Swiper>

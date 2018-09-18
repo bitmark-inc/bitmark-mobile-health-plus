@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image,
   StatusBar,
   Linking,
   Alert,
@@ -19,6 +19,7 @@ import { BitmarkComponent, BitmarkLegalComponent } from '../../../commons/compon
 import { convertWidth } from '../../../utils';
 import { AppProcessor } from '../../../processors/app-processor';
 import { EventEmitterService } from '../../../services';
+import {BitmarkOneTabButtonComponent} from "../../../commons/components/bitmark-button";
 
 const Contents = BitmarkLegalComponent.Contents;
 export class LegalComponent extends React.Component {
@@ -71,9 +72,9 @@ export class LegalComponent extends React.Component {
           </View>
           <View style={defaultStyle.headerCenter}>
           </View>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.printLegal()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => this.printLegal()}>
             <Text style={defaultStyle.headerRightText}>Print</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
 
         contentInScroll={true}
@@ -476,11 +477,11 @@ export class LegalComponent extends React.Component {
               {/*KNOW YOUR RIGHTS*/}
               <View>
                 <Text style={legalStyle.contentTitleText}>KNOW YOUR RIGHTS</Text>
-                <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
+                <BitmarkOneTabButtonComponent onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
                   <Text style={[legalStyle.contentNormalText, { paddingBottom: 20, color: '#0060F2' }]}>
                     Original idea comes from Stacey Higginbotham
                   </Text>
-                </TouchableOpacity>
+                </BitmarkOneTabButtonComponent>
                 <View style={legalStyle.knowYourRightsRow}>
                   <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
                   <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(55), fontWeight: '800' }]}>RETAIN</Text>
@@ -524,13 +525,13 @@ export class LegalComponent extends React.Component {
         footerHeight={45 + iosConstant.blankFooter}
         footer={(<View style={legalStyle.bottomButtonArea}>
           {/*DISAGREE*/}
-          <TouchableOpacity style={[legalStyle.bottomButton]} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={[legalStyle.bottomButton]} onPress={() => this.props.navigation.goBack()}>
             <Text style={[legalStyle.bottomButtonText]}>DISAGREE</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           {/*AGREE*/}
-          <TouchableOpacity style={[legalStyle.lastBottomButton]} onPress={() => this.props.navigation.navigate('FaceTouchId', { passPhrase24Words: this.state.passPhrase24Words })}>
+          <BitmarkOneTabButtonComponent style={[legalStyle.lastBottomButton]} onPress={() => this.props.navigation.navigate('FaceTouchId', { passPhrase24Words: this.state.passPhrase24Words })}>
             <Text style={legalStyle.lastBottomButtonText}>AGREE</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
       />
     );
