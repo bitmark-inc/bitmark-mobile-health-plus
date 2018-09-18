@@ -38,6 +38,11 @@ db {
     SSLMode = "disable"
 }
 
+jwt {
+    secretKey = "10a8356f4216367b3b47731a23670461459391e6bed46124ed3641504cc771c1"
+    expireInHour = 3
+}
+
 data-donation {
     researchers = {
         egQvuKnfRkztqY161HW17QmHDihc6SrrFt8RH393LoQVJxHZhW = "Madelena"

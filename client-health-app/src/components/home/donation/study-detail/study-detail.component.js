@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView, Image,
+  View, Text, ScrollView, Image,
   Alert,
 } from 'react-native';
 
@@ -14,6 +14,7 @@ import defaultStyle from './../../../../commons/styles';
 import studyDetailsStyles from './study-detail.component.style';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 export class StudyDetailComponent extends React.Component {
   constructor(props) {
@@ -34,11 +35,11 @@ export class StudyDetailComponent extends React.Component {
     return (
       <BitmarkComponent
         header={<View style={[defaultStyle.header]}>
-          <TouchableOpacity style={[defaultStyle.headerLeft]} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={[defaultStyle.headerLeft]} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <Text style={defaultStyle.headerTitle}>Study Details</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} />
         </View>}
         content={(<View style={studyDetailsStyles.body}>
           {!DetailComponent && <Text>This study is not support!</Text>}

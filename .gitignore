@@ -4,3 +4,4 @@ settings.json
 client-app/src/markets-old
 client-app/source-map-tool/source-map
 logs
+package-lock.json

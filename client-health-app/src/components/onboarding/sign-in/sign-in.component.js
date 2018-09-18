@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, TouchableOpacity, TouchableWithoutFeedback, TextInput, Image, FlatList,
+  Text, View, TouchableWithoutFeedback, TextInput, Image, FlatList,
   Keyboard,
   StatusBar,
 } from 'react-native';
@@ -12,6 +12,7 @@ import { BitmarkAutoCompleteComponent, BitmarkComponent } from './../../../commo
 import { dictionary24Words, convertWidth } from './../../../utils';
 import { AppProcessor } from '../../../processors';
 import { iosConstant } from '../../../configs/ios/ios.config';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 
 let PreCheckResults = {
   success: 'SUBMIT',
@@ -206,19 +207,19 @@ export class SignInComponent extends React.Component {
         header={(<TouchableWithoutFeedback onPress={Keyboard.dismiss} >
           <View style={[defaultStyles.header, { backgroundColor: '#EDF0F4' }]}>
             <StatusBar hidden={false} />
-            <TouchableOpacity style={[defaultStyles.headerLeft, { width: 50 }]} onPress={() => { this.props.navigation.goBack() }}>
+            <BitmarkOneTabButtonComponent style={[defaultStyles.headerLeft, { width: 50 }]} onPress={() => { this.props.navigation.goBack() }}>
               <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
             <Text style={[defaultStyles.headerTitle, { maxWidth: convertWidth(375) - 100 }]}>RECOVERY PHRASE SIGN-IN</Text>
-            <TouchableOpacity style={[defaultStyles.headerRight, { width: 50 }]}>
-            </TouchableOpacity>
+            <BitmarkOneTabButtonComponent style={[defaultStyles.headerRight, { width: 50 }]}>
+            </BitmarkOneTabButtonComponent>
           </View>
         </TouchableWithoutFeedback>
         )}
         contentContainerStyle={{ backgroundColor: 'white' }}
         contentInScroll={true}
         content={(<TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-          <TouchableOpacity activeOpacity={1} style={signStyle.mainContent}>
+          <BitmarkOneTabButtonComponent activeOpacity={1} style={signStyle.mainContent}>
             <Text style={[signStyle.writeRecoveryPhraseContentMessage,]}>Please type all 24 words of your recovery phrase in the exact sequence below:</Text>
             <View style={[signStyle.writeRecoveryPhraseArea]}>
               <View style={signStyle.writeRecoveryPhraseContentHalfList}>
@@ -281,16 +282,16 @@ export class SignInComponent extends React.Component {
                 {this.state.preCheckResult === PreCheckResults.success ? 'Keep your written copy private in a secure and safe location.' : (this.state.preCheckResult === PreCheckResults.error ? 'Please try again!' : '')}
               </Text>
             </View>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </TouchableWithoutFeedback>
         )}
         footerHeight={iosConstant.bottomBottomHeight}
         footer={(
-          <TouchableOpacity style={[signStyle.submitButton, {
+          <BitmarkOneTabButtonComponent style={[signStyle.submitButton, {
             backgroundColor: !this.state.remainWordNumber ? '#0060F2' : 'gray'
           }]} onPress={this.doSignIn} disabled={this.state.remainWordNumber > 0}>
             <Text style={[signStyle.submitButtonText]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         )}
         keyboardExternal={(
           <BitmarkAutoCompleteComponent ref={(ref) => this.autoCompleteElement = ref}

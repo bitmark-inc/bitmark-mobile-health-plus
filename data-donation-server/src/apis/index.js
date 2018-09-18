@@ -281,10 +281,33 @@ const completedTask = async (req, res) => {
   }
 };
 
+const deleteAccount = async (req, res) => {
+  let bitmarkAccount = req.params.bitmark_account;
+  let timestamp = req.headers.timestamp;
+  let signature = req.headers.signature;
+  try {
+    if (!bitmarkAccount || !timestamp || !signature) {
+      return helper.responseError(res, new BitmarkError('Invalid params!'));
+    }
+    let validSignature = helper.validSignature(timestamp, signature, bitmarkAccount);
+    if (!validSignature) {
+      logger.error('Invalid signature : ', bitmarkAccount, timestamp, signature);
+      return helper.responseError(res, new BitmarkError('Invalid signature!'));
+    }
+
+    await completedTasksModel.doDeleteAllTasks(bitmarkAccount);
+    await userJoinedStudyModel.doDeleteUserJoinedStudy(bitmarkAccount);
+    await userModel.doDeleteUserInformation(bitmarkAccount);
+
+  } catch (error) {
+
+  }
+};
 
 const getAllHealthKitDataTypes = (req, res) => {
   res.send(userService.allDataTypes);
 };
+
 
 
 
@@ -387,6 +410,7 @@ module.exports = {
   joinStudy,
   leaveStudy,
   completedTask,
+  deleteAccount,
   getAllHealthKitDataTypes,
 
   testGetUserInfo,

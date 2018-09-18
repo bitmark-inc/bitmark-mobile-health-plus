@@ -14,7 +14,7 @@ const {
   NetInfo,
   // PushNotificationIOS,
   StyleSheet,
-  View, Text, TouchableOpacity,
+  View, Text,
 } = ReactNative;
 
 import {
@@ -34,6 +34,7 @@ import RNExitApp from 'react-native-exit-app';
 import Mailer from "react-native-mail";
 import { FileUtil, convertWidth } from "../utils";
 import { config } from '../configs';
+import { BitmarkOneTabButtonComponent } from '../commons/components/bitmark-button';
 
 const CRASH_LOG_FILE_NAME = 'crash_log.txt';
 const CRASH_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + CRASH_LOG_FILE_NAME;
@@ -368,12 +369,12 @@ class MainComponent extends Component {
             <View style={mainStyle.emptyDataSourceDialogContent}>
               <Text style={mainStyle.emptyDataSourceTitle}>Bitmark Health cannot access your HealthKit data.</Text>
               <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data from within the Apple Health App.\n\nGo to Health App -> Sources.'}</Text>
-              <TouchableOpacity style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
+              <BitmarkOneTabButtonComponent style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
                 <Text style={mainStyle.emptyDataSourceOKButtonText}>{'OK, I’ve ALLOWED access!'.toUpperCase()}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={mainStyle.emptyDataSourceLaterButton} onPress={() => this.setState({ emptyDataSource: false })}>
+              </BitmarkOneTabButtonComponent>
+              <BitmarkOneTabButtonComponent style={mainStyle.emptyDataSourceLaterButton} onPress={() => this.setState({ emptyDataSource: false })}>
                 <Text style={mainStyle.emptyDataSourceLaterButtonText}>I will do it later.</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>
           </BitmarkDialogComponent>}
           <DisplayedComponent screenProps={{ rootNavigation: this.props.navigation, }} />

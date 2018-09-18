@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, TouchableOpacity,
+  Text, View,
 } from 'react-native';
 
 import { BitmarkDialogComponent } from './../bitmark-dialog';
 import dialogStyles from './bitmark-error.component.style';
+import { BitmarkOneTabButtonComponent } from '../bitmark-button';
 
 export class BitmarkErrorComponent extends React.Component {
   constructor(props) {
@@ -30,9 +31,9 @@ export class BitmarkErrorComponent extends React.Component {
             {!!this.state.title && <Text style={dialogStyles.title}>{this.state.title}</Text>}
             {!!this.state.message && <Text style={dialogStyles.message}>{this.state.message}</Text>}
           </View>
-          <TouchableOpacity style={dialogStyles.okButton} onPress={this.props.close}>
+          <BitmarkOneTabButtonComponent style={dialogStyles.okButton} onPress={this.props.close}>
             <Text style={dialogStyles.okButtonText}>OK</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>
       </BitmarkDialogComponent>
     );

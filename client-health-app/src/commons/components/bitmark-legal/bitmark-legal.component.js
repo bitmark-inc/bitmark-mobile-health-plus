@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image,
   StatusBar,
   Linking,
   Alert,
@@ -18,6 +18,7 @@ import { BitmarkComponent } from '../bitmark/bitmark.component';
 import { convertWidth } from '../../../utils';
 import { AppProcessor } from '../../../processors/app-processor';
 import { EventEmitterService } from '../../../services';
+import { BitmarkOneTabButtonComponent } from '../bitmark-button';
 
 const Contents = {
   KnowYourRights: {
@@ -67,15 +68,15 @@ export class BitmarkLegalComponent extends React.Component {
       <BitmarkComponent
         backgroundColor='#F5F5F5'
         header={(<View style={[defaultStyle.header, { backgroundColor: '#F5F5F5', borderBottomColor: 'rgba(0,0,0,0.3)', borderBottomWidth: 0.3, }]}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <View style={defaultStyle.headerCenter}>
             {this.state.displayedContentName === Contents.KnowYourRights.name && <Text style={defaultStyle.headerTitle}>KNOW YOUR RIGHTS</Text>}
             {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={defaultStyle.headerTitle}>PRIVACY POLICY</Text>}
             {this.state.displayedContentName === Contents.TermOfService.name && <Text style={defaultStyle.headerTitle}>TERMS OF SERVICE</Text>}
           </View>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} />
         </View>)}
 
         contentInScroll={this.state.displayedContentName !== Contents.KnowYourRights.name}
@@ -83,11 +84,11 @@ export class BitmarkLegalComponent extends React.Component {
           <StatusBar hidden={false} />
 
           {this.state.displayedContentName === Contents.KnowYourRights.name && <View style={loadingStyles.swipePageContent}>
-            <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
+            <BitmarkOneTabButtonComponent onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
               <Text style={[loadingStyles.contentNormalText, { paddingTop: 40, paddingBottom: 40, color: '#0060F2' }]}>
                 Original idea comes from Stacey Higginbotham
             </Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
             <View style={loadingStyles.knowYourRightsRow}>
               <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
               <Text style={[loadingStyles.knowYourRightsRowText, { width: convertWidth(47), fontWeight: '800' }]}>RETAIN</Text>
@@ -521,9 +522,9 @@ export class BitmarkLegalComponent extends React.Component {
 
         footerHeight={iosConstant.bottomBottomHeight}
         footer={(<View style={loadingStyles.bottomButtonArea}>
-          <TouchableOpacity style={loadingStyles.lastBottomButton} onPress={this.shareLegal}>
+          <BitmarkOneTabButtonComponent style={loadingStyles.lastBottomButton} onPress={this.shareLegal}>
             <Text style={loadingStyles.lastBottomButtonText}>SHARE</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
       />
     );

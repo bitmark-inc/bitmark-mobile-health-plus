@@ -21,6 +21,7 @@ import (
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher"
 	"github.com/bitmark-inc/mobile-app/mobile-server/watcher/twosigs"
+	"github.com/gomodule/redigo/redis"
 	influx "github.com/influxdata/influxdb/client/v2"
 	nsq "github.com/nsqio/go-nsq"
 
@@ -59,10 +60,22 @@ func openDb(host string, port uint16, dbname, user, passwd string) (*pgx.ConnPoo
 	return c, nil
 }
 
+func newRedisPool(uri string) *redis.Pool {
+	return &redis.Pool{
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", uri)
+			if err != nil {
+				return nil, err
+			}
+			return c, nil
+		},
+	}
+}
+
 func initializeLog() {
 	log.SetFormatter(&log.TextFormatter{})
 	log.SetOutput(os.Stdout)
-	log.SetLevel(log.InfoLevel)
+	log.SetLevel(log.DebugLevel)
 }
 
 func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *watcher.NotifyClient {
@@ -112,6 +125,8 @@ func main() {
 		log.Panic("cannot connect to db", err)
 	}
 
+	redisPool := newRedisPool(conf.Redis.URI)
+
 	pushStore := pushstore.NewPGStore(dbConn)
 	bitmarkStore := bitmarkstore.New(dbConn)
 
@@ -128,7 +143,7 @@ func main() {
 
 	nc := initializeWatcher(conf, pushStore, bitmarkStore, pushClient, gatewayClient)
 
-	mobileAPIServer := server.New(conf, pushStore, bitmarkStore, dbConn, influxDBClient, gatewayClient)
+	mobileAPIServer := server.New(conf, pushStore, bitmarkStore, dbConn, redisPool, influxDBClient, gatewayClient)
 	internalAPIServer := internalapi.New(pushStore, bitmarkStore, pushClient)
 
 	c := make(chan os.Signal, 2)
@@ -156,8 +171,11 @@ func main() {
 		log.Info("Disconnect postgres")
 		dbConn.Close()
 
+		log.Info("Disconnect redis")
+		log.Error(redisPool.Close())
+
 		log.Info("Disconnect influxdb")
-		influxDBClient.Close()
+		log.Error(influxDBClient.Close())
 
 		os.Exit(1)
 	}()
@@ -168,6 +186,11 @@ func main() {
 
 	g.Go(func() error {
 		return internalAPIServer.Run(fmt.Sprintf(":%d", conf.Listen.InternalAPI))
+	})
+
+	g.Go(func() error {
+		mobileAPIServer.ProcessWSMessage()
+		return nil
 	})
 
 	if err := g.Wait(); err != nil {

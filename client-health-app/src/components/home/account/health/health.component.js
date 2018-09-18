@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image
+  View, Text, Image
 } from 'react-native';
 
 import { BitmarkComponent } from '../../../../commons/components';
 
 import defaultStyle from '../../../../commons/styles';
 import style from './health.component.style';
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 export class HealthComponent extends React.Component {
   constructor(props) {
@@ -19,21 +20,21 @@ export class HealthComponent extends React.Component {
       <BitmarkComponent
         backgroundColor='#F5F5F5'
         header={(<View style={defaultStyle.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <Text style={defaultStyle.headerTitle}>iOS HEALTH</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} />
         </View>)}
 
         content={(<View style={style.body}>
-          <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => this.props.navigation.navigate('HealthDataSource')}>
+          <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => this.props.navigation.navigate('HealthDataSource')}>
             <Text style={defaultStyle.text}>View Data Type</Text>
 
             <Text style={defaultStyle.textAlignRight}>
               <Image style={defaultStyle.iconArrowRight} source={require('./../../../../../assets/imgs/arrow-right.png')} />
             </Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
 
           <View style={style.textContainer}>
             <Text style={style.text}>Can:</Text>

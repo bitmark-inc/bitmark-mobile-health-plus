@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import {
-  View, Text, TouchableOpacity, Image, FlatList, ScrollView,
+  View, Text, Image, FlatList, ScrollView,
 } from 'react-native';
 
 import { UserModel } from "./../../../../models";
@@ -11,6 +11,7 @@ import { BitmarkComponent } from './../../../../commons/components';
 import accountRecoveryStyle from './account-recovery.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { iosConstant } from '../../../../configs/ios/ios.config';
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 let currentUser;
 class RecoveryPhraseComponent extends React.Component {
@@ -35,13 +36,13 @@ class RecoveryPhraseComponent extends React.Component {
         content={(
           <View style={accountRecoveryStyle.body}>
             <View style={[accountRecoveryStyle.header]}>
-              <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.screenProps.accountNavigation.goBack() }}>
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => { this.props.screenProps.accountNavigation.goBack() }}>
                 <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
               <Text style={defaultStyle.headerTitle}>{(isSignOut ? 'Remove Access' : 'Recovery Phrase').toUpperCase()}</Text>
-              <TouchableOpacity style={defaultStyle.headerRight} onPress={() => { this.props.screenProps.accountNavigation.goBack() }} disabled={isSignOut}>
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => { this.props.screenProps.accountNavigation.goBack() }} disabled={isSignOut}>
                 {!isSignOut && <Text style={defaultStyle.headerRightText}>Cancel</Text>}
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>
             <ScrollView style={accountRecoveryStyle.recoveryPhraseContent}>
               <Image style={accountRecoveryStyle.recoveryPhraseWarningIcon} source={require('./../../../../../assets/imgs/backup_warning.png')} />
@@ -49,9 +50,9 @@ class RecoveryPhraseComponent extends React.Component {
 
               {isSignOut && <Text style={accountRecoveryStyle.recoveryDescription}>Your recovery phrase is the only way to access your Bitmark account after signing out. If you have not already written down your recovery phrase, you must do so now or you will be permanently lose access to your account and lose ownership of all your digital properties. {'\n\n'}Your recovery phrase is a list of 24 words to write on a piece of paper and keep safe. Make sure you are in a private location when you write it down.{'\n\n'}This will completely remove access to your account on this device. Regular data bitmarking and data donations will be paused until you sign back in with your recovery phrase.</Text>}
             </ScrollView>
-            <TouchableOpacity style={[accountRecoveryStyle.recoveryPhraseBottomButton, { height: iosConstant.bottomBottomHeight, paddingTop: 10, paddingBottom: Math.max(10, iosConstant.blankFooter) }]} onPress={() => recoveryPhrase()}>
+            <BitmarkOneTabButtonComponent style={[accountRecoveryStyle.recoveryPhraseBottomButton, { height: iosConstant.bottomBottomHeight, paddingTop: 10, paddingBottom: Math.max(10, iosConstant.blankFooter) }]} onPress={() => recoveryPhrase()}>
               <Text style={accountRecoveryStyle.recoveryPhraseBottomButtonText}>WRITE DOWN RECOVERY PHRASE</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
         )}
       />);
@@ -104,11 +105,11 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
         content={(
           <View style={accountRecoveryStyle.body}>
             <View style={[accountRecoveryStyle.header]}>
-              <TouchableOpacity style={[defaultStyle.headerLeft]} onPress={() => { this.props.navigation.goBack() }}>
+              <BitmarkOneTabButtonComponent style={[defaultStyle.headerLeft]} onPress={() => { this.props.navigation.goBack() }}>
                 <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
               <Text style={[defaultStyle.headerTitle]}>{'Recovery Phrase'.toUpperCase()}</Text>
-              <TouchableOpacity style={[defaultStyle.headerRight]} />
+              <BitmarkOneTabButtonComponent style={[defaultStyle.headerRight]} />
             </View>
             <ScrollView style={accountRecoveryStyle.recoveryPhraseContent}>
               {!isSignOut && <Text style={accountRecoveryStyle.writeRecoveryPhraseContentMessage}>Please write down your recovery phrase in the exact sequence below:</Text>}
@@ -144,12 +145,12 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
                 </View>
               </View>
             </ScrollView>
-            {!isSignOut && <TouchableOpacity style={accountRecoveryStyle.recoveryPhraseBottomButton} onPress={() => {
+            {!isSignOut && <BitmarkOneTabButtonComponent style={accountRecoveryStyle.recoveryPhraseBottomButton} onPress={() => {
               this.props.navigation.navigate('TryRecovery')
             }}>
               <Text style={accountRecoveryStyle.recoveryPhraseBottomButtonText}>TEST RECOVERY PHRASE</Text>
-            </TouchableOpacity>}
-            <TouchableOpacity style={[
+            </BitmarkOneTabButtonComponent>}
+            <BitmarkOneTabButtonComponent style={[
               accountRecoveryStyle.recoveryPhraseBottomButton,
               { height: iosConstant.bottomBottomHeight, paddingTop: 10, paddingBottom: Math.max(10, iosConstant.blankFooter) },
               !isSignOut ? { backgroundColor: '#F2FAFF', } : {}
@@ -161,7 +162,7 @@ class WriteDownRecoveryPhraseComponent extends React.Component {
               }
             }}>
               <Text style={[accountRecoveryStyle.recoveryPhraseBottomButtonText, !isSignOut ? { color: '#0060F2' } : {}]}>{'DONE'}</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
         )}
       />
@@ -410,11 +411,11 @@ class TryRecoveryPhraseComponent extends React.Component {
         content={(
           <View style={accountRecoveryStyle.body}>
             <View style={[accountRecoveryStyle.header]}>
-              <TouchableOpacity style={defaultStyle.headerLeft} />
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} />
               <Text style={defaultStyle.headerTitle}>{'TEST Recovery Phrase'.toUpperCase()}</Text>
-              <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.screenProps.accountNavigation.goBack()} >
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => this.props.screenProps.accountNavigation.goBack()} >
                 <Text style={defaultStyle.headerRightText}>Cancel</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>
             <ScrollView style={accountRecoveryStyle.recoveryPhraseContent}>
               <Text style={accountRecoveryStyle.writeRecoveryPhraseContentMessage}>Tap the words to put them in the correct order for your recovery phrase:</Text>
@@ -427,7 +428,7 @@ class TryRecoveryPhraseComponent extends React.Component {
                       return (
                         <View style={accountRecoveryStyle.recoveryPhraseSet}>
                           <Text style={accountRecoveryStyle.recoveryPhraseIndex}>{parseInt(item.key) + 1}.</Text>
-                          <TouchableOpacity onPress={() => this.resetSelectedWord(item, index)}>
+                          <BitmarkOneTabButtonComponent onPress={() => this.resetSelectedWord(item, index)}>
                             <Text style={[accountRecoveryStyle.recoveryPhraseWord, {
                               backgroundColor: (item.word ? 'white' : '#F5F5F5'),
                               height: (item.word ? 'auto' : 14),
@@ -435,7 +436,7 @@ class TryRecoveryPhraseComponent extends React.Component {
                               borderColor: '#0060F2',
                               borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
                             }]}>{item.word}</Text>
-                          </TouchableOpacity>
+                          </BitmarkOneTabButtonComponent>
                         </View>
                       )
                     }}
@@ -449,7 +450,7 @@ class TryRecoveryPhraseComponent extends React.Component {
                       return (
                         <View style={accountRecoveryStyle.recoveryPhraseSet}>
                           <Text style={accountRecoveryStyle.recoveryPhraseIndex}>{parseInt(item.key) + 1}.</Text>
-                          <TouchableOpacity onPress={() => this.resetSelectedWord(item, index)}>
+                          <BitmarkOneTabButtonComponent onPress={() => this.resetSelectedWord(item, index)}>
                             <Text style={[accountRecoveryStyle.recoveryPhraseWord, {
                               backgroundColor: (item.word ? 'white' : '#F5F5F5'),
                               height: (item.word ? 'auto' : 14),
@@ -457,7 +458,7 @@ class TryRecoveryPhraseComponent extends React.Component {
                               borderColor: '#0060F2',
                               borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
                             }]}>{item.word}</Text>
-                          </TouchableOpacity>
+                          </BitmarkOneTabButtonComponent>
                         </View>
                       )
                     }}
@@ -475,14 +476,14 @@ class TryRecoveryPhraseComponent extends React.Component {
                     if (!item.cannotReset) {
                       return (
                         <View style={accountRecoveryStyle.recoveryPhraseChoose}>
-                          {<TouchableOpacity style={[accountRecoveryStyle.recoveryPhraseChooseButton, {
+                          {<BitmarkOneTabButtonComponent style={[accountRecoveryStyle.recoveryPhraseChooseButton, {
                             borderColor: item.selected ? 'white' : '#0060F2',
                           }]} disabled={item.selected}
                             onPress={() => this.selectRandomWord(item, item.index)}>
                             <Text style={[accountRecoveryStyle.recoveryPhraseChooseButtonText, {
                               color: item.selected ? 'white' : 'black'
                             }]}>{item.word}</Text>
-                          </TouchableOpacity>}
+                          </BitmarkOneTabButtonComponent>}
                         </View>
                       )
                     }
@@ -498,10 +499,10 @@ class TryRecoveryPhraseComponent extends React.Component {
               <Text style={[accountRecoveryStyle.recoveryPhraseTestTitle, { color: '#FF003C' }]}>Error!</Text>
               <Text style={[accountRecoveryStyle.recoveryPhraseTestMessage, { color: '#FF003C' }]}>Please try again!</Text>
             </View>}
-            {this.state.testResult.length > 0 && <TouchableOpacity style={[accountRecoveryStyle.recoveryPhraseBottomButton, { height: iosConstant.bottomBottomHeight, paddingTop: 10, paddingBottom: Math.max(10, iosConstant.blankFooter) },]}
+            {this.state.testResult.length > 0 && <BitmarkOneTabButtonComponent style={[accountRecoveryStyle.recoveryPhraseBottomButton, { height: iosConstant.bottomBottomHeight, paddingTop: 10, paddingBottom: Math.max(10, iosConstant.blankFooter) },]}
               onPress={() => this.doAfterInputtedAllWord()}>
               <Text style={accountRecoveryStyle.recoveryPhraseBottomButtonText}>{((this.state.testResult === 'done' && isSignOut ? 'Remove access' : this.state.testResult)).toUpperCase()}</Text>
-            </TouchableOpacity>}
+            </BitmarkOneTabButtonComponent>}
           </View>
         )}
       />);

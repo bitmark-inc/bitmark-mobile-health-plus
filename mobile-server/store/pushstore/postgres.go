@@ -23,14 +23,15 @@ type NotificationToken struct {
 }
 
 const (
-	sqlInsertAccount      = "INSERT INTO mobile.account(account_number) VALUES ($1) ON CONFLICT DO NOTHING"
-	sqlInsertUUID         = "INSERT INTO mobile.push_uuid VALUES($1, $2, $3, $4) ON CONFLICT DO NOTHING"
-	sqlRemoveUUID         = "DELETE FROM mobile.push_uuid WHERE account_number = $1 AND token = $2"
-	sqlQueryPushTokens    = "SELECT platform, client, json_agg(token) FROM mobile.push_uuid WHERE account_number = $1 GROUP BY platform, client"
-	sqlInsertPushItem     = "INSERT INTO mobile.push_item(account_number, source, title, message, data, pinned) VALUES ($1, $2, $3, $4, $5, $6)"
-	sqlUpdatePushItem     = "UPDATE mobile.push_item SET status = $1, updated_at = now() WHERE id = $2"
-	sqlQueryPushItems     = "SELECT id, source, title, message, data, pinned, status, created_at, updated_at FROM mobile.push_item WHERE account_number = $1 ORDER BY updated_at"
-	sqlQueryPushItemCount = "SELECT count(id) FROM mobile.push_item WHERE account_number = $1 AND status <> 'completed'"
+	sqlInsertAccount       = "INSERT INTO mobile.account(account_number) VALUES ($1) ON CONFLICT DO NOTHING"
+	sqlInsertUUID          = "INSERT INTO mobile.push_uuid VALUES($1, $2, $3, $4) ON CONFLICT DO NOTHING"
+	sqlRemoveUUID          = "DELETE FROM mobile.push_uuid WHERE account_number = $1 AND token = $2"
+	sqlRemoveUUIDByAccount = "DELETE FROM mobile.push_uuid WHERE account_number = $1"
+	sqlQueryPushTokens     = "SELECT platform, client, json_agg(token) FROM mobile.push_uuid WHERE account_number = $1 GROUP BY platform, client"
+	sqlInsertPushItem      = "INSERT INTO mobile.push_item(account_number, source, title, message, data, pinned) VALUES ($1, $2, $3, $4, $5, $6)"
+	sqlUpdatePushItem      = "UPDATE mobile.push_item SET status = $1, updated_at = now() WHERE id = $2"
+	sqlQueryPushItems      = "SELECT id, source, title, message, data, pinned, status, created_at, updated_at FROM mobile.push_item WHERE account_number = $1 ORDER BY updated_at"
+	sqlQueryPushItemCount  = "SELECT count(id) FROM mobile.push_item WHERE account_number = $1 AND status <> 'completed'"
 )
 
 func NewPGStore(dbConn *pgx.ConnPool) *PushPGStore {
@@ -69,6 +70,11 @@ func (p *PushPGStore) RemovePushToken(ctx context.Context, account, uuid string)
 	}
 
 	return true, nil
+}
+
+func (p *PushPGStore) RemovePushTokenByAccount(ctx context.Context, account string) error {
+	_, err := p.dbConn.ExecEx(ctx, sqlRemoveUUIDByAccount, nil, account)
+	return err
 }
 
 func (p *PushPGStore) QueryPushTokens(ctx context.Context, account string) (map[string]map[string][]string, error) {

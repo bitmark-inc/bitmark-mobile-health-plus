@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Image, Text, TouchableOpacity,
+  View, Image, Text,
   Linking,
 } from 'react-native';
 
@@ -9,6 +9,7 @@ import {
 import { StudyCardComponent } from './../../study-card/study-card.component';
 
 import styles from './study-joined.component.style';
+import { BitmarkOneTabButtonComponent } from '../../../../../commons/components/bitmark-button';
 
 export class Study1JoinedComponent extends React.Component {
   constructor(props) {
@@ -38,28 +39,28 @@ export class Study1JoinedComponent extends React.Component {
             </View>
           </View>
           <Text style={styles.cardMessage}>{"“Thank you for donating your data, and helping close the gap in women's health.”"}</Text>
-          {this.state.study.researcherLink && <TouchableOpacity onPress={() => {
+          {this.state.study.researcherLink && <BitmarkOneTabButtonComponent onPress={() => {
             Linking.openURL(this.state.study.researcherLink.indexOf('http') > 0 ? this.state.study.researcherLink : 'http://' + this.state.study.researcherLink)
           }}>
             <Text style={styles.studyResearcherLink}>Learn more about Madelena’s research and how to contact her »</Text>
-          </TouchableOpacity>}
+          </BitmarkOneTabButtonComponent>}
 
           <View style={[styles.infoArea, {
             marginTop: 10,
             borderWidth: 1,
             borderColor: '#BDBDBD',
           }]}>
-            <TouchableOpacity style={[styles.infoButton]} onPress={() => {
+            <BitmarkOneTabButtonComponent style={[styles.infoButton]} onPress={() => {
               this.props.navigation.navigate('StudyConsent', { study: this.state.study, })
             }}>
               <Text style={styles.infoButtonText}>View Study Consent Form</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
             <View style={styles.infoButtonBar} />
-            <TouchableOpacity style={[styles.infoButton]} onPress={() => {
+            <BitmarkOneTabButtonComponent style={[styles.infoButton]} onPress={() => {
               this.props.navigation.navigate('HealthDataSource', { dataTypes: this.state.study.dataTypes, })
             }}>
               <Text style={styles.infoButtonText}>View Data Types</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
           <View style={styles.infoArea}>
             <Text style={styles.infoAreaTitle}>List of Bitmarked Data</Text>
@@ -90,9 +91,9 @@ export class Study1JoinedComponent extends React.Component {
           </View>
         </View>
 
-        <TouchableOpacity style={[styles.leaveButton]} disabled={this.state.study.duration === 'COMPLETED'} onPress={() => this.props.doOutOptStudy()}>
+        <BitmarkOneTabButtonComponent style={[styles.leaveButton]} disabled={this.state.study.duration === 'COMPLETED'} onPress={() => this.props.doOutOptStudy()}>
           <Text style={styles.leaveButtonText}>{this.state.study.duration === 'COMPLETED' ? 'COMPLETED' : 'LEAVE STUDY'}</Text>
-        </TouchableOpacity>
+        </BitmarkOneTabButtonComponent>
       </View>
     );
   }

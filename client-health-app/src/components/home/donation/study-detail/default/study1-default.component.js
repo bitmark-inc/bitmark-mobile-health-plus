@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Image, Text, TouchableOpacity,
+  View, Image, Text,
 } from 'react-native';
 
 
 import { StudyCardComponent } from './../../study-card/study-card.component';
 import styles from './study-default.component.style';
+import { BitmarkOneTabButtonComponent } from '../../../../../commons/components/bitmark-button';
 
 export class Study1DefaultComponent extends React.Component {
   constructor(props) {
@@ -65,16 +66,16 @@ export class Study1DefaultComponent extends React.Component {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.requireButton} onPress={() => { this.setState({ agreed: !this.state.agreed }) }}>
+          <BitmarkOneTabButtonComponent style={styles.requireButton} onPress={() => { this.setState({ agreed: !this.state.agreed }) }}>
             <Image style={styles.requireIcon}
               source={this.state.agreed ? require('./../../../../../../assets/imgs/require_checked.png') : require('./../../../../../../assets/imgs/require_un_check.png')}
             />
             <Text style={styles.requireMessage}>I meet the participant requirements. </Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>
-        <TouchableOpacity style={[styles.bottomButton, { backgroundColor: this.state.agreed ? '#0060F2' : '#BDBDBD' }]} onPress={() => this.props.doJoinStudy()} disabled={!this.state.agreed}>
+        <BitmarkOneTabButtonComponent style={[styles.bottomButton, { backgroundColor: this.state.agreed ? '#0060F2' : '#BDBDBD' }]} onPress={() => this.props.doJoinStudy()} disabled={!this.state.agreed}>
           <Text style={styles.bottomButtonText}>LET’S GET STARTED</Text>
-        </TouchableOpacity>
+        </BitmarkOneTabButtonComponent>
       </View >
     );
   }

@@ -31,6 +31,9 @@ type Configuration struct {
 		DBName   string `hcl:"dbname"`
 		SSLMode  string `hcl:"sslmode"`
 	} `hcl:"db"`
+	Redis struct {
+		URI string `hcl:"uri"`
+	}
 	Influx struct {
 		Addr     string `hcl:"addr"`
 		Username string `hcl:"username"`
@@ -49,6 +52,10 @@ type Configuration struct {
 		PushServer     string `hcl:"pushServer"`
 		PushServerBeta string `hcl:"pushServerBeta"`
 	} `hcl:"external"`
+	JWT struct {
+		SecretKey string `hcl:"secretKey"`
+		Expire    int    `hcl:"expireInHour"`
+	}
 	DataDonation struct {
 		ResearcherAccounts map[string]string `hcl:"researchers"`
 	} `hcl:"data-donation"`

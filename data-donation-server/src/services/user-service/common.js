@@ -1,13 +1,13 @@
 const moment = require('moment');
 
-const getMomentLocalTime = (date, timezone) => {
+const getMomentLocalTime = (date, dateUTCOffset) => {
   let tempMoment = date ? moment(date) : moment();
-  tempMoment.utcOffset(timezone);
+  tempMoment.utcOffset(- dateUTCOffset);
   return tempMoment;
 };
 
-const getEndDayInLocalTime = (date, timezone) => {
-  let tempMoment = getMomentLocalTime(date, timezone);
+const getEndDayInLocalTime = (date, dateUTCOffset) => {
+  let tempMoment = getMomentLocalTime(date, dateUTCOffset);
   tempMoment.hour(23);
   tempMoment.minute(59);
   tempMoment.second(59);
@@ -15,8 +15,8 @@ const getEndDayInLocalTime = (date, timezone) => {
   return tempMoment;
 };
 
-const getBeginDayInLocalTime = (date, timezone) => {
-  let tempMoment = getMomentLocalTime(date, timezone);
+const getBeginDayInLocalTime = (date, dateUTCOffset) => {
+  let tempMoment = getMomentLocalTime(date, dateUTCOffset);
   tempMoment.hour(0);
   tempMoment.minute(0);
   tempMoment.second(0);
@@ -24,8 +24,8 @@ const getBeginDayInLocalTime = (date, timezone) => {
   return tempMoment;
 };
 
-const getNextDayInLocalTime = (date, timezone, dayInWeek) => {
-  let tempMoment = getMomentLocalTime(date, timezone);
+const getNextDayInLocalTime = (date, dateUTCOffset, dayInWeek) => {
+  let tempMoment = getMomentLocalTime(date, dateUTCOffset);
   if (dayInWeek) {
     let currentDayInWeek = tempMoment.day();
     if (currentDayInWeek <= dayInWeek) {
@@ -39,8 +39,8 @@ const getNextDayInLocalTime = (date, timezone, dayInWeek) => {
   return tempMoment;
 };
 
-const getPreviousDayInLocalTime = (date, timezone, dayInWeek) => {
-  let tempMoment = getMomentLocalTime(date, timezone);
+const getPreviousDayInLocalTime = (date, dateUTCOffset, dayInWeek) => {
+  let tempMoment = getMomentLocalTime(date, dateUTCOffset);
   if (dayInWeek) {
     let currentDayInWeek = tempMoment.day();
     if (currentDayInWeek >= dayInWeek) {

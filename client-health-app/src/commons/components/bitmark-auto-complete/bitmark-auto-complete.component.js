@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, FlatList,
+  View, Text, FlatList,
   Image,
 } from 'react-native';
 
 import styles from './bitmark-auto-complete.component.style';
+import { BitmarkOneTabButtonComponent } from './../bitmark-button'
 
 export class BitmarkAutoCompleteComponent extends React.Component {
   static statuses = {
@@ -68,12 +69,12 @@ export class BitmarkAutoCompleteComponent extends React.Component {
   render() {
     return (
       <View style={styles.selectionArea}>
-        <TouchableOpacity style={styles.nextButton} onPress={this.props.goToNextInputField}>
+        <BitmarkOneTabButtonComponent style={styles.nextButton} onPress={this.props.goToNextInputField}>
           <Image style={styles.nextButtonImage} source={require('./../../../../assets/imgs/arrow_down_enable.png')} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.prevButton} onPress={this.props.goToPrevInputField}>
+        </BitmarkOneTabButtonComponent>
+        <BitmarkOneTabButtonComponent style={styles.prevButton} onPress={this.props.goToPrevInputField}>
           <Image style={styles.prevButtonImage} source={require('./../../../../assets/imgs/arrow_up_enable.png')} />
-        </TouchableOpacity>
+        </BitmarkOneTabButtonComponent>
         {this.props.dataSource && !!this.state.inputtedText && <View style={[styles.selectionList]}>
           <FlatList
             ref={(ref) => this.listViewElement = ref}
@@ -82,15 +83,15 @@ export class BitmarkAutoCompleteComponent extends React.Component {
             extraData={this.state}
             data={this.state.dataSource}
             renderItem={({ item }) => {
-              return (<TouchableOpacity style={styles.selectionItem} onPress={() => this.selectText(item.word, item.key)}>
+              return (<BitmarkOneTabButtonComponent style={styles.selectionItem} onPress={() => this.selectText(item.word, item.key)}>
                 <Text style={[styles.selectionItemText, { color: this.state.selectedIndex === item.key ? 'blue' : 'gray' }]}>{item.word}</Text>
-              </TouchableOpacity>)
+              </BitmarkOneTabButtonComponent>)
             }}
           />
         </View>}
-        <TouchableOpacity style={styles.doneButton} onPress={this.onDone} disabled={this.state.status !== BitmarkAutoCompleteComponent.statuses.done}>
+        <BitmarkOneTabButtonComponent style={styles.doneButton} onPress={this.onDone} disabled={this.state.status !== BitmarkAutoCompleteComponent.statuses.done}>
           <Text style={[styles.doneButtonText, { color: this.state.status === BitmarkAutoCompleteComponent.statuses.done ? '#0060F2' : 'gray' }]}>Done</Text>
-        </TouchableOpacity>
+        </BitmarkOneTabButtonComponent>
       </View>
     );
   }

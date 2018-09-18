@@ -1,0 +1,6 @@
+framework module BitmarkSDK {
+  umbrella header "BitmarkSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}

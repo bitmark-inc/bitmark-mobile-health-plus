@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, TouchableOpacity, Image, Text, Share
+  View, Image, Text, Share
 } from 'react-native';
 
 import { BitmarkComponent } from './../../../../commons/components';
 
-import style from './asset-image-content.componentstyle';
+import style from './asset-image-content.component.style';
 import defaultStyle from './../../../../commons/styles';
 import { AppProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 // let ComponentName = 'AssetImageContentComponent';
 export class AssetImageContentComponent extends React.Component {
@@ -53,15 +54,15 @@ export class AssetImageContentComponent extends React.Component {
       <BitmarkComponent
         backgroundColor='black'
         header={(<View style={[defaultStyle.header, { backgroundColor: 'black' }]}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={[defaultStyle.headerLeftIcon, { width: 16, height: 16 }]} source={require('./../../../../../assets/imgs/close-icon-white.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <View style={defaultStyle.headerCenter}>
             <Text style={[defaultStyle.headerTitle, { color: 'white' }]}>CAPTURED ASSET</Text>
           </View>
-          <TouchableOpacity style={[defaultStyle.headerRight, style.headerRight]} onPress={() => this.saveAsset(this.state.filePath)}>
+          <BitmarkOneTabButtonComponent style={[defaultStyle.headerRight, style.headerRight]} onPress={() => this.saveAsset(this.state.filePath)}>
             <Text style={[defaultStyle.headerRightText, { color: 'white' }]}>Download</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
         content={(<View style={style.body}>
           {this.state.filePath &&

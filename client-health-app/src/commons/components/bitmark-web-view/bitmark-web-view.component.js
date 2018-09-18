@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, TouchableOpacity, WebView, Image, Share,
+  Text, View, WebView, Image, Share,
 } from 'react-native';
 import { BitmarkComponent } from './../bitmark';
 
@@ -9,6 +9,7 @@ import defaultStyles from './../../styles/index';
 import termsStyles from './bitmark-web-view.component.style';
 import { ios } from '../../../configs';
 import { EventEmitterService } from './../../../services';
+import { BitmarkOneTabButtonComponent } from '../bitmark-button';
 
 class WebViewComponent extends React.Component {
   constructor(props) {
@@ -90,16 +91,16 @@ class WebViewComponent extends React.Component {
       {!!title && <View style={termsStyles.header}>
         {!showDoneButton ? (
           // Go Back Arrow
-          <TouchableOpacity style={defaultStyles.headerLeft} onPress={() => {
+          <BitmarkOneTabButtonComponent style={defaultStyles.headerLeft} onPress={() => {
             if (this.props.screenProps && this.props.screenProps.setShowPagination) {
               this.props.screenProps.setShowPagination(true);
             }
             this.props.navigation.goBack()
           }}>
             <Image style={defaultStyles.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         ) : (
-            <TouchableOpacity style={defaultStyles.headerLeft} />
+            <BitmarkOneTabButtonComponent style={defaultStyles.headerLeft} />
           )}
 
         {/*Header Text*/}
@@ -107,11 +108,11 @@ class WebViewComponent extends React.Component {
 
         {showDoneButton ? (
           // Done Button
-          <TouchableOpacity style={defaultStyles.headerRight} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyles.headerRight} onPress={() => this.props.navigation.goBack()}>
             <Text style={defaultStyles.headerRightText}>Done</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         ) : (
-            <TouchableOpacity style={defaultStyles.headerRight} />
+            <BitmarkOneTabButtonComponent style={defaultStyles.headerRight} />
           )}
       </View>}
       <View style={termsStyles.main}>
@@ -126,18 +127,18 @@ class WebViewComponent extends React.Component {
         height: (heightButtonController || ios.constant.bottomBottomHeight) + (isFullScreen ? ios.constant.blankFooter : 0),
         paddingBottom: (isFullScreen ? ios.constant.blankFooter : 0),
       }]}>
-        <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { console.log('source :', this.webViewRef.getWebViewHandle()); this.webViewRef.goBack(); }}>
+        <BitmarkOneTabButtonComponent style={termsStyles.webViewControlButton} onPress={() => { console.log('source :', this.webViewRef.getWebViewHandle()); this.webViewRef.goBack(); }}>
           <Image style={termsStyles.webViewControlIcon} source={require('./../../../../assets/imgs/webview-back.png')} />
-        </TouchableOpacity>
-        <TouchableOpacity style={[termsStyles.webViewControlButton, { marginLeft: 90 }]} onPress={() => { this.webViewRef.goForward(); }}>
+        </BitmarkOneTabButtonComponent>
+        <BitmarkOneTabButtonComponent style={[termsStyles.webViewControlButton, { marginLeft: 90 }]} onPress={() => { this.webViewRef.goForward(); }}>
           <Image style={termsStyles.webViewControlIcon} source={require('./../../../../assets/imgs/webview-next.png')} />
-        </TouchableOpacity>
-        {/* <TouchableOpacity style={termsStyles.webViewControlButton} onPress={() => { this.webViewRef.reload(); }}>
+        </BitmarkOneTabButtonComponent>
+        {/* <BitmarkOneTabButtonComponent style={termsStyles.webViewControlButton} onPress={() => { this.webViewRef.reload(); }}>
           <Image style={[termsStyles.webViewControlIcon]} source={require('./../../../../assets/imgs/webview-reload.png')} />
-        </TouchableOpacity> */}
-        {/* <TouchableOpacity style={termsStyles.webViewControlButton} onPress={this.doShare}>
+        </BitmarkOneTabButtonComponent> */}
+        {/* <BitmarkOneTabButtonComponent style={termsStyles.webViewControlButton} onPress={this.doShare}>
           <Image style={[termsStyles.webViewControlIcon, { width: 17, height: 24 }]} source={require('./../../../../assets/imgs/webview-share.png')} />
-        </TouchableOpacity> */}
+        </BitmarkOneTabButtonComponent> */}
       </View>}
     </View>);
   }

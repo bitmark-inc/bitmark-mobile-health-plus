@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper'
 import {
-  View, Text, TouchableOpacity, ScrollView, TextInput, Image,
+  View, Text, ScrollView, TextInput, Image,
 } from 'react-native';
 
 import defaultStyle from '../../../../../../commons/styles';
@@ -12,6 +12,7 @@ import { BitmarkComponent } from '../../../../../../commons/components';
 import { AppProcessor, DataProcessor } from '../../../../../../processors';
 import { EventEmitterService } from '../../../../../../services';
 import { iosConstant } from '../../../../../../configs/ios/ios.config';
+import { BitmarkOneTabButtonComponent } from '../../../../../../commons/components/bitmark-button';
 
 export class Study2EntryInterviewComponent extends React.Component {
   constructor(props) {
@@ -59,11 +60,11 @@ export class Study2EntryInterviewComponent extends React.Component {
             backgroundColor={'white'}
             ref={(ref) => this.fullRef = ref}
             header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
-              <TouchableOpacity style={defaultStyle.headerLeft} />
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} />
               <Text style={defaultStyle.headerTitle}>Step 1 of 2</Text>
-              <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
                 <Text style={defaultStyle.headerRightText}>Cancel</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>)}
             content={(
               <ScrollView>
@@ -83,13 +84,13 @@ export class Study2EntryInterviewComponent extends React.Component {
 
             footerHeight={iosConstant.bottomBottomHeight}
             footer={(<View style={styles.bottomButtons}>
-              <TouchableOpacity style={styles.leftButton} onPress={this.doCompletedTask}>
+              <BitmarkOneTabButtonComponent style={styles.leftButton} onPress={this.doCompletedTask}>
                 <Text style={styles.leftButtonText}>{'No, thanks'.toUpperCase()}</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
 
-              <TouchableOpacity style={styles.rightButton} onPress={() => this.swiper.scrollBy(1)}>
+              <BitmarkOneTabButtonComponent style={styles.rightButton} onPress={() => this.swiper.scrollBy(1)}>
                 <Text style={styles.rightButtonText}>{'I’m interested'.toUpperCase()}</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>)}
           />
 
@@ -97,13 +98,13 @@ export class Study2EntryInterviewComponent extends React.Component {
             backgroundColor={'white'}
             ref={(ref) => this.fullRef = ref}
             header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
-              <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.swiper.scrollBy(-1)} >
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.swiper.scrollBy(-1)} >
                 <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../../assets/imgs/header_blue_icon.png')} />
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
               <Text style={defaultStyle.headerTitle}>Step 2 of 2</Text>
-              <TouchableOpacity style={defaultStyle.headerRight} onPress={() => { this.props.navigation.goBack() }}>
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => { this.props.navigation.goBack() }}>
                 <Text style={defaultStyle.headerRightText}>Cancel</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>)}
             content={(
               <ScrollView>
@@ -128,9 +129,9 @@ export class Study2EntryInterviewComponent extends React.Component {
             )}
             footerHeight={iosConstant.bottomBottomHeight}
             footer={(<View style={styles.bottomButtons}>
-              <TouchableOpacity style={styles.submitButton} onPress={this.doSubmit}>
+              <BitmarkOneTabButtonComponent style={styles.submitButton} onPress={this.doSubmit}>
                 <Text style={styles.submitButtonText}>SUBMIT</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>)}
           />
         </Swiper>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Image, Text, TouchableOpacity,
+  View, Image, Text,
   Alert,
 } from 'react-native';
 
@@ -12,6 +12,7 @@ import defaultStyle from './../../../../commons/styles';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
 import { convertWidth } from '../../../../utils';
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 export class StudyDonationComponent extends React.Component {
   constructor(props) {
@@ -26,14 +27,14 @@ export class StudyDonationComponent extends React.Component {
         content={(
           <View style={[donationStyles.body]}>
             <View style={[donationStyles.header]}>
-              <TouchableOpacity style={[defaultStyle.headerLeft, { maxWidth: 50 }]} onPress={() => this.props.navigation.goBack()}>
+              <BitmarkOneTabButtonComponent style={[defaultStyle.headerLeft, { maxWidth: 50 }]} onPress={() => this.props.navigation.goBack()}>
                 <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
               <View style={[defaultStyle.headerCenter, { maxWidth: convertWidth(375) - 100 }]}>
                 <Text style={[defaultStyle.headerTitle, { maxWidth: convertWidth(375) - 100 }]}>AUTHORIZE YOUR DONATION</Text>
               </View>
-              <TouchableOpacity style={[defaultStyle.headerRight, { maxWidth: 50 }]} >
-              </TouchableOpacity>
+              <BitmarkOneTabButtonComponent style={[defaultStyle.headerRight, { maxWidth: 50 }]} >
+              </BitmarkOneTabButtonComponent>
             </View>
             <View style={donationStyles.main}>
               <View style={donationStyles.passcodeRemindImages}>
@@ -43,7 +44,7 @@ export class StudyDonationComponent extends React.Component {
               <Text style={donationStyles.donationDescription}>
                 By signing you are consenting to give the researcher rights to use this donation in their study. Your consent will be recorded in the Bitmark blockchain.
               </Text>
-              <TouchableOpacity style={donationStyles.bitmarkButton} onPress={() => {
+              <BitmarkOneTabButtonComponent style={donationStyles.bitmarkButton} onPress={() => {
                 AppProcessor.doDonateHealthData(this.state.study, this.state.list, {
                   indicator: true, title: '', message: 'Sending your encrypted data to the researcher...'
                 }).then((result) => {
@@ -60,7 +61,7 @@ export class StudyDonationComponent extends React.Component {
                 });
               }}>
                 <Text style={donationStyles.bitmarkButtonText}>DONATE</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>
           </View>
         )}

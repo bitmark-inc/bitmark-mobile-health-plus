@@ -2,7 +2,7 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 
 import { CommonModel, AccountModel, FaceTouchId, } from './../models';
-import { EventEmitterService, BitmarkService, } from './../services'
+import { EventEmitterService, BitmarkService, AccountService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { ios } from '../configs';
 import { DonationService } from '../services/donation-service';
@@ -58,6 +58,42 @@ let submitting = (promise, processingData) => {
 
 // ================================================================================================
 // ================================================================================================
+
+const doCreateNewAccount = async () => {
+  if (Platform.OS === 'ios' && ios.config.isIPhoneX) {
+    await FaceTouchId.authenticate();
+  }
+  let touchFaceIdSession = await AccountModel.doCreateAccount();
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  CommonModel.setFaceTouchSessionId(touchFaceIdSession);
+  return await processing(DataProcessor.doCreateAccount(touchFaceIdSession));
+};
+
+const doGetCurrentAccount = async ({ touchFaceIdMessage }) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  let userInfo = await processing(AccountModel.doGetCurrentAccount(touchFaceIdSession));
+  return userInfo;
+};
+
+const doCheckFileToIssue = async ({ filePath }) => {
+  return await processing(DataProcessor.doCheckFileToIssue(filePath));
+};
+
+const doCreateSignatureData = async ({ touchFaceIdMessage, newSession }) => {
+  if (newSession) {
+    let sessionId = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
+    if (!sessionId) {
+      return null;
+    }
+  }
+  return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
+};
+
 
 const doLogin = async ({ phrase24Words }) => {
   if (Platform.OS === 'ios' && ios.config.isIPhoneX) {
@@ -178,6 +214,10 @@ const doDownloadAndShareLegal = async ({ title, urlDownload }) => {
 // ================================================================================================
 
 let AppTasks = {
+  doCreateNewAccount,
+  doGetCurrentAccount,
+  doCheckFileToIssue,
+  doCreateSignatureData,
   doLogin,
   doLogout,
   doIssueFile,
@@ -196,18 +236,26 @@ let AppTasks = {
 };
 
 let registeredTasks = {};
+let processingTasks = {};
 
 const registerTasks = () => {
   for (let taskKey in AppTasks) {
     if (taskKey && AppTasks[taskKey] && !registeredTasks[taskKey]) {
-      AppRegistry.registerHeadlessTask(taskKey, () => {
-        return (taskData) =>
-          AppTasks[taskKey](taskData).then(result => {
-            EventEmitterService.emit(`${EventEmitterService.events.APP_TASK}${taskData.taskId}`, { ok: true, result });
-          }).catch(error => {
-            EventEmitterService.emit(`${EventEmitterService.events.APP_TASK}${taskData.taskId}`, { ok: false, error });
-          });
-      });
+      let taskFunction = async (taskData) => {
+        if (processingTasks[taskKey]) {
+          EventEmitterService.emit(`${EventEmitterService.events.APP_TASK}${taskData.taskId}`, { ok: true });
+          return;
+        }
+        processingTasks[taskKey] = true;
+        AppTasks[taskKey](taskData).then(result => {
+          processingTasks[taskKey] = false;
+          EventEmitterService.emit(`${EventEmitterService.events.APP_TASK}${taskData.taskId}`, { ok: true, result });
+        }).catch(error => {
+          processingTasks[taskKey] = false;
+          EventEmitterService.emit(`${EventEmitterService.events.APP_TASK}${taskData.taskId}`, { ok: false, error });
+        });
+      };
+      AppRegistry.registerHeadlessTask(taskKey, () => taskFunction);
     }
   }
 }
