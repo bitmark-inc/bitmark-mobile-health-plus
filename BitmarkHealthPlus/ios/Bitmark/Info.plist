@@ -84,11 +84,11 @@
 	</array>
 	<key>NSCalendarsUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your calendars.</string>
-	<key>NSBluetoothPeripheralUsageDescription </key>
+	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your bluetooth.</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your Apple Music data.</string>
-	<key>NSSpeechRecognitionUsageDescription </key>
+	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use speech recognition.</string>
 	<key>UIBackgroundModes</key>
 	<array>
