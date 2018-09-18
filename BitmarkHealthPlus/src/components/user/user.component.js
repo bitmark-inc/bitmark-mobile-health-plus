@@ -131,13 +131,22 @@ export class UserComponent extends Component {
               </TouchableOpacity>
             </View>}
             {!this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <View style={styles.overlapButtonsArea}>
-              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444' }]} onPress={Actions.account}>
+              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444' }]} onPress={() => {
+                this.setState({ isDisplayingAccountNumber: true });
+                Actions.account();
+              }}>
                 <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>ACCOUNT SETTINGS</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={Actions.grantingAccess}>
+              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={() => {
+                this.setState({ isDisplayingAccountNumber: true });
+                Actions.grantingAccess();
+              }}>
                 <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>GRANT ACCESS</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={Actions.otherAccounts}>
+              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={() => {
+                this.setState({ isDisplayingAccountNumber: true });
+                Actions.otherAccounts();
+              }}>
                 <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>VIEW OTHER ACCOUNT</Text>
               </TouchableOpacity>
             </View>}

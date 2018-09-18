@@ -9,11 +9,11 @@ import QRCode from 'react-native-qrcode';
 import Mailer from 'react-native-mail';
 import Hyperlink from 'react-native-hyperlink';
 
-import { convertWidth } from './../../utils';
+import { convertWidth, runPromiseWithoutError } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
-import { AppProcessor } from '../../processors';
+import { AppProcessor, DataProcessor } from '../../processors';
 import { EventEmitterService } from '../../services';
 
 export class GrantingAccessComponent extends Component {
@@ -33,6 +33,7 @@ export class GrantingAccessComponent extends Component {
   }
 
   sendEmail() {
+    runPromiseWithoutError(DataProcessor.doTrackEvent({ eventName: 'health_plus_user_first_time_share_grant_access' }));
     Mailer.mail({
       subject: 'Access my Bitmark Health account',
       recipients: [],

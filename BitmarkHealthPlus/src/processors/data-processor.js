@@ -265,6 +265,10 @@ const doLogout = async () => {
   await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
   await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
   await Intercom.reset();
+  await CommonModel.doTrackEvent({
+    event_name: 'health_plus_user_delete_account',
+    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+  });
 
   userInformation = {};
 };
@@ -279,17 +283,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
-  if (!appInfo.trackEvents || !appInfo.trackEvents.app_download) {
-    let appInfo = await doGetAppInformation();
-    appInfo = appInfo || {};
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents.app_download = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    await CommonModel.doTrackEvent({
-      event_name: 'health_plus_download',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
+  await doTrackEvent({ appInfo, eventName: 'health_plus_download' });
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
@@ -344,7 +338,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       let appInfo = await doGetAppInformation();
       appInfo.lastTimeOpen = moment().toDate().getTime();
       await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    } else if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_open_app_two_time_in_a_week) {
+    } else if (!appInfo.trackEvents || !appInfo.trackEvents.health_plus_user_open_app_two_time_in_a_week) {
 
       let firstTime = moment(appInfo.lastTimeOpen);
       let currentTime = moment();
@@ -352,7 +346,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       let diffHours = currentTime.diff(firstTime, 'hour');
       if (diffWeeks === 0 && diffHours > 1) {
         appInfo.trackEvents = appInfo.trackEvents || {};
-        appInfo.trackEvents.health_user_open_app_two_time_in_a_week = true;
+        appInfo.trackEvents.health_plus_user_open_app_two_time_in_a_week = true;
         await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
         await CommonModel.doTrackEvent({
           event_name: 'health_plus_user_open_app_two_time_in_a_week',
@@ -385,17 +379,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
   await runGetUserBitmarksInBackground();
-  let appInfo = (await doGetAppInformation()) || {};
-  if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_issued_weekly_health_data) {
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents.health_user_first_time_issued_weekly_health_data = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 
-    await CommonModel.doTrackEvent({
-      event_name: 'health_plus_user_first_time_issued_weekly_health_data',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
+  await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_weekly_health_data' });
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
@@ -453,21 +438,9 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 };
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
-  console.log('run1');
   let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
-  console.log('run2', results);
-  let appInfo = (await doGetAppInformation()) || {};
-  if (!appInfo.trackEvents || !appInfo.trackEvents.health_user_first_time_issued_file) {
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents.health_user_first_time_issued_file = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 
-    await CommonModel.doTrackEvent({
-      event_name: 'health_plus_user_first_time_issued_file',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
-  console.log('run3', results);
+  await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_file' });
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
@@ -484,15 +457,12 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
         });
       }
     }
-    console.log('run4', body);
     let timestamp = moment().toDate().getTime();
     let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
-    console.log('run5');
   }
   await doReloadUserData();
-  console.log('run6');
   return results;
 };
 
@@ -658,11 +628,28 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
   await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
+
+  await doTrackEvent({ eventName: 'health_plus_user_first_time_grant_access' });
+
   return await runGetAccountAccessesInBackground();
 };
 const doDeleteAccount = async () => {
   return await AccountModel.doDeleteAccount(jwt);
-}
+};
+
+const doTrackEvent = async ({ appInfo, eventName }) => {
+  appInfo = appInfo || (await doGetAppInformation()) || {};
+  if (!appInfo.trackEvents || !appInfo.trackEvents[eventName]) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents[eventName] = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    await CommonModel.doTrackEvent({
+      event_name: eventName,
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
+};
 
 const DataProcessor = {
   doOpenApp,
@@ -696,6 +683,7 @@ const DataProcessor = {
   doConfirmGrantingAccess,
   doDownloadHealthDataBitmark,
   doDeleteAccount,
+  doTrackEvent,
 };
 
 export { DataProcessor };
