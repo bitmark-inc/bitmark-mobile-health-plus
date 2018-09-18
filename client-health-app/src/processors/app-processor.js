@@ -12,38 +12,6 @@ registerTasks();
 // ================================================================================================
 // ================================================================================================
 
-let commonProcess = (promise, successCallback, errorCallback) => {
-  let startAt = moment().toDate().getTime();
-  let check2Seconds = (done) => {
-    let endAt = moment().toDate().getTime();
-    let space = startAt + 2000 - endAt;
-    if (space > 0) {
-      setTimeout(done, space);
-    } else {
-      done();
-    }
-  };
-
-  promise.then((data) => {
-    check2Seconds(() => successCallback(data));
-  }).catch(error => {
-    check2Seconds(() => errorCallback(error));
-  });
-};
-
-let processing = (promise) => {
-  EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-  return new Promise((resolve, reject) => {
-    commonProcess(promise, (data) => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-      resolve(data);
-    }, (error) => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-      reject(error);
-    })
-  });
-};
-
 const executeTask = (taskKey, data) => {
   let taskId = `${taskKey}_${moment().toDate().getTime()}`;
   data = data || {};
@@ -62,48 +30,13 @@ const executeTask = (taskKey, data) => {
 }
 // ================================================================================================
 // ================================================================================================
-const doCreateNewAccount = async () => {
-  if (Platform.OS === 'ios' && ios.config.isIPhoneX) {
-    await FaceTouchId.authenticate();
-  }
-  let touchFaceIdSession = await AccountModel.doCreateAccount();
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouchSessionId(touchFaceIdSession);
-  return await processing(DataProcessor.doCreateAccount(touchFaceIdSession));
-};
 
-const doGetCurrentAccount = async (touchFaceIdMessage) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  let userInfo = await processing(AccountModel.doGetCurrentAccount(touchFaceIdSession));
-  return userInfo;
-};
 
 const doCheck24Words = async (phrase24Words) => {
   return await AccountModel.doCheck24Words(phrase24Words);
 };
 
-const doGetTransferOfferDetail = async (transferOfferId) => {
-  return await processing(TransactionService.doGetTransferOfferDetail(transferOfferId));
-};
 
-const doCheckFileToIssue = async (filePath) => {
-  return await processing(DataProcessor.doCheckFileToIssue(filePath));
-};
-
-const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
-  if (newSession) {
-    let sessionId = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
-    if (!sessionId) {
-      return null;
-    }
-  }
-  return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
-};
 
 const doReloadUserData = async () => {
   return await DataProcessor.doReloadUserData();
@@ -123,6 +56,23 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 
 // ================================================================================================
 // ================================================================================================
+
+const doCreateNewAccount = async () => {
+  return executeTask('doCreateNewAccount');
+};
+
+const doGetCurrentAccount = async (touchFaceIdMessage) => {
+  return executeTask('doGetCurrentAccount', { touchFaceIdMessage });
+};
+
+const doCheckFileToIssue = async (filePath) => {
+  return executeTask('doCheckFileToIssue', { filePath });
+};
+
+const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
+  return executeTask('doCreateSignatureData', { touchFaceIdMessage, newSession });
+};
+
 const doLogin = async (phrase24Words) => {
   return executeTask('doLogin', { phrase24Words });
 };
@@ -203,7 +153,6 @@ let AppProcessor = {
   doCreateSignatureData,
   doCheckFileToIssue,
   doIssueFile,
-  doGetTransferOfferDetail,
   doRequireHealthKitPermission,
   doActiveBitmarkHealthData,
   doInactiveBitmarkHealthData,
