@@ -9,10 +9,36 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
 
   swipeArea: {
+  },
+  swipePagination: {
+    position: 'absolute',
+    bottom: 50 + ios.constant.blankFooter,
+  },
+
+  swipePage: {
+    width: '100%',
+    height: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    alignContent: 'center'
+  },
+
+  swipePageContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: currentSize.height - (115 + ios.constant.blankFooter + ios.constant.headerSize.paddingTop),
+  },
+
+  swipePageMainContent: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: 320
   },
   swipeDotButton: {
     backgroundColor: '#C4C4C4',
@@ -24,41 +50,9 @@ export default StyleSheet.create({
     marginTop: 3,
     marginBottom: 3,
   },
-  swipePagination: {
-    position: 'absolute',
-    bottom: 107 + ios.constant.blankFooter,
-  },
-
-  swipePage: {
-    width: '100%',
-    height: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    alignContent: 'center',
-  },
-
-  swipePageContent: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: currentSize.height - (115 + ios.constant.blankFooter + ios.constant.headerSize.paddingTop),
-  },
-
-  swipePageMainContent: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 320,
-    height: 438,
-  },
-
-  welcomeLogo: {
-    width: convertWidth(285),
-    height: 48 * convertWidth(285) / 285,
-    resizeMode: 'contain',
-  },
 
   introductionArea: {
+    height: 200,
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
@@ -69,22 +63,24 @@ export default StyleSheet.create({
     color: '#0060F2',
     fontSize: 17,
     fontWeight: '900',
-    width: 275,
-    textAlign: 'center',
+    width: 310,
+    textAlign: 'left',
   },
   introductionDescription: {
     marginTop: 15,
-    width: 275,
+    width: 310,
     fontFamily: 'Avenir light',
     fontWeight: '300',
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 17,
+    textAlign: 'left',
   },
 
   introductionImageArea: {
+    flex: 1,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 15,
   },
   onBoardingImage: {
@@ -93,26 +89,23 @@ export default StyleSheet.create({
     height: 226,
   },
 
-  welcomeButtonArea: {
+  doneButtonArea: {
     position: 'absolute',
-    bottom: 0,
-    marginTop: 33,
+    bottom: 20,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
   },
-  welcomeButton: {
-    paddingTop: 10,
-    paddingBottom: 10,
+  doneButton: {
     height: 45,
     width: convertWidth(375),
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     backgroundColor: '#0060F2',
   },
-  welcomeButtonText: {
+  doneButtonText: {
     fontFamily: 'Avenir black',
     textAlign: 'center',
     fontSize: 16,

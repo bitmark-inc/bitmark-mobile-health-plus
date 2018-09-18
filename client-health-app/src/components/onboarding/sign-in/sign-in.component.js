@@ -193,7 +193,7 @@ export class SignInComponent extends React.Component {
     }
     this.doCheck24Word().then((result) => {
       if (result) {
-        this.props.navigation.navigate('GetStart', { passPhrase24Words: result })
+        this.props.navigation.navigate('FaceTouchId', { passPhrase24Words: result })
       }
     });
   }

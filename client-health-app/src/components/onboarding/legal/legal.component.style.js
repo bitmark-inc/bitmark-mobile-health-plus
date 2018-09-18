@@ -10,21 +10,27 @@ export default StyleSheet.create({
     paddingBottom: 20,
   },
 
+  legalHeaderLeft: {
+    width: 200,
+    marginLeft: convertWidth(19)
+  },
+
   swipePageContent: {
     flexDirection: 'column',
     flex: 1,
+    marginBottom: 50
   },
 
   contentTitleText: {
     width: convertWidth(375),
     fontFamily: 'Avenir black',
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 17,
     fontWeight: '900',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
-    paddingTop: 40,
-    paddingBottom: 40,
+    paddingTop: 50,
+    paddingBottom: 30,
   },
   contentSubTitleText: {
     width: convertWidth(375),
@@ -75,11 +81,11 @@ export default StyleSheet.create({
     lineHeight: 21,
   },
 
-
-
   bottomButtonArea: {
     flexDirection: 'column',
     width: '100%',
+    position: 'absolute',
+    bottom: 0
   },
   bottomButton: {
     height: 45,
@@ -91,18 +97,14 @@ export default StyleSheet.create({
     borderTopColor: '#919191',
     paddingTop: 10,
     paddingBottom: 10,
+    backgroundColor: 'white'
   },
   bottomButtonText: {
-    fontFamily: 'Avenir black',
+    fontFamily: 'Avenir book',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: '900',
+    fontWeight: '400',
     color: '#0060F2',
-  },
-  bottomButtonIcon: {
-    width: 8,
-    height: 13,
-    resizeMode: 'contain',
   },
   lastBottomButton: {
     height: iosConstant.bottomBottomHeight,
@@ -110,7 +112,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F2FAFF',
+    backgroundColor: '#0060F2',
     paddingTop: 10,
     paddingBottom: Math.max(10, iosConstant.blankFooter),
   },
@@ -119,6 +121,6 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',
-    color: '#0060F2',
+    color: 'white',
   },
 });

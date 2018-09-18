@@ -2,6 +2,7 @@ import { Dimensions } from 'react-native';
 
 const currentSize = Dimensions.get('window');
 const isIPhoneX = (currentSize.height === 812);
+const isIPhoneSE = (currentSize.height === 568);
 const windowHeight = isIPhoneX ? 812 : 667;
 const blankFooter = isIPhoneX ? 34 : 0;
 const headerHeight = isIPhoneX ? 80 : 71;
@@ -34,6 +35,7 @@ let iosConstant = {
 
 let iosConfig = {
   isIPhoneX,
+  isIPhoneSE,
   appLink: '',
 };
 

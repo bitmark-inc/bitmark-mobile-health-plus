@@ -58,7 +58,7 @@ export class FaceTouchIdComponent extends React.Component {
     }
     promise.then((user) => {
       if (user) {
-        this.props.navigation.navigate('Notification');
+        this.props.navigation.navigate('CoachMark1');
       }
     }).catch(error => {
       console.log('error :', error);
@@ -98,10 +98,6 @@ export class FaceTouchIdComponent extends React.Component {
           </TouchableOpacity>
         </View>)}
       />
-
-
-
-
     );
   }
 }
