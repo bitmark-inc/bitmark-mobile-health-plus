@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image,
 } from 'react-native'
 import { NavigationActions } from 'react-navigation';
 
@@ -10,6 +10,7 @@ import { NotificationService } from '../../../services';
 import { iosConstant } from '../../../configs/ios/ios.config';
 import { BitmarkComponent } from '../../../commons/components';
 import { DataProcessor } from '../../../processors';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 // import { DataProcessor } from '../../../processors';
 
 export class NotificationComponent extends React.Component {
@@ -45,10 +46,10 @@ export class NotificationComponent extends React.Component {
 
         footerHeight={45 + iosConstant.bottomBottomHeight}
         footer={(<View style={notificationStyle.enableButtonArea}>
-          <TouchableOpacity style={[notificationStyle.enableButton]} onPress={requestNotification}>
+          <BitmarkOneTabButtonComponent style={[notificationStyle.enableButton]} onPress={requestNotification}>
             <Text style={notificationStyle.enableButtonText}>ENABLE</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[notificationStyle.enableButton, {
+          </BitmarkOneTabButtonComponent>
+          <BitmarkOneTabButtonComponent style={[notificationStyle.enableButton, {
             backgroundColor: 'white',
             paddingBottom: Math.max(10, iosConstant.blankFooter),
             height: iosConstant.bottomBottomHeight,
@@ -56,7 +57,7 @@ export class NotificationComponent extends React.Component {
             this.props.screenProps.rootNavigation.dispatch(resetMainPage);
           }}>
             <Text style={[notificationStyle.enableButtonText, { color: '#0060F2' }]}>LATER</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
       />
     );

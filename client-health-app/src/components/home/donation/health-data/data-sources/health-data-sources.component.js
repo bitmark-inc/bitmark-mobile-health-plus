@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image, FlatList, ActivityIndicator,
+  View, Text, Image, FlatList, ActivityIndicator,
 } from 'react-native';
 
 import { BitmarkComponent } from './../../../../../commons/components';
@@ -11,6 +11,7 @@ import myStyle from './health-data-sources.component.style';
 
 import { DataProcessor } from '../../../../../processors';
 import { EventEmitterService } from '../../../../../services';
+import { BitmarkOneTabButtonComponent } from '../../../../../commons/components/bitmark-button';
 
 let ComponentName = 'HealthDataSourceComponent';
 export class HealthDataSourceComponent extends React.Component {
@@ -52,11 +53,11 @@ export class HealthDataSourceComponent extends React.Component {
     return (
       <BitmarkComponent
         header={(<View style={defaultStyle.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <Text style={defaultStyle.headerTitle}>DATA TYPES</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} />
         </View>)}
 
         content={(<View style={myStyle.body}>

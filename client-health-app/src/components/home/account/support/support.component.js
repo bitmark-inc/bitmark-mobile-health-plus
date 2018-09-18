@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Intercom from 'react-native-intercom';
 import {
-  View, Text, TouchableOpacity, Image,
+  View, Text, Image,
   Share,
   Alert,
   Linking
@@ -14,6 +14,7 @@ import { BitmarkComponent, BitmarkLegalComponent } from '../../../../commons/com
 import defaultStyle from '../../../../commons/styles';
 import style from './support.component.style';
 import { config } from "../../../../configs";
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 // import { DataProcessor } from "../../../../processors";
 
 export class SupportComponent extends React.Component {
@@ -22,11 +23,11 @@ export class SupportComponent extends React.Component {
       <BitmarkComponent
         backgroundColor='#F5F5F5'
         header={(<View style={defaultStyle.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <Text style={defaultStyle.headerTitle}>SUPPORT</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} />
         </View>)}
 
         content={(<View style={style.body}>
@@ -36,32 +37,32 @@ export class SupportComponent extends React.Component {
           </View>
 
           <View style={defaultStyle.itemContainer}>
-            <TouchableOpacity onPress={() => {
+            <BitmarkOneTabButtonComponent onPress={() => {
               this.props.navigation.navigate('BitmarkLegal', {
                 displayedContentName: BitmarkLegalComponent.Contents.TermOfService.name,
               })
             }}>
               <Text style={defaultStyle.text}>Terms of Service</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
 
           <View style={defaultStyle.itemContainer}>
-            <TouchableOpacity onPress={() => {
+            <BitmarkOneTabButtonComponent onPress={() => {
               this.props.navigation.navigate('BitmarkLegal', {
                 displayedContentName: BitmarkLegalComponent.Contents.PrivacyPolicy.name,
               })
             }}>
               <Text style={defaultStyle.text}>Privacy Policy</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
           <View style={defaultStyle.itemContainer}>
-            <TouchableOpacity onPress={() => {
+            <BitmarkOneTabButtonComponent onPress={() => {
               this.props.navigation.navigate('BitmarkLegal', {
                 displayedContentName: BitmarkLegalComponent.Contents.KnowYourRights.name,
               })
             }}>
               <Text style={defaultStyle.text}>Know Your Rights</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
 
           {/*ABOUT*/}
@@ -70,21 +71,21 @@ export class SupportComponent extends React.Component {
           </View>
 
           <View style={defaultStyle.itemContainer}>
-            <TouchableOpacity onPress={() => this.rateApp()}>
+            <BitmarkOneTabButtonComponent onPress={() => this.rateApp()}>
               <Text style={defaultStyle.text}>App Store Rating & Review</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
 
           <View style={defaultStyle.itemContainer}>
-            <TouchableOpacity onPress={() => this.shareApp()}>
+            <BitmarkOneTabButtonComponent onPress={() => this.shareApp()}>
               <Text style={defaultStyle.text}>Share This App</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
 
           <View style={defaultStyle.itemContainer}>
-            <TouchableOpacity onPress={() => this.sendFeedback()}>
+            <BitmarkOneTabButtonComponent onPress={() => this.sendFeedback()}>
               <Text style={defaultStyle.text}>Send Feedback</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
 
           {/*POWERED BY*/}
@@ -93,7 +94,7 @@ export class SupportComponent extends React.Component {
           </View>
 
           <View style={defaultStyle.itemContainer}>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('BitmarkWebView', {
+            <BitmarkOneTabButtonComponent onPress={() => this.props.navigation.navigate('BitmarkWebView', {
               title: 'Bitmark',
               sourceUrl: config.bitmark_web_site + '?env=app',
               hideBottomController: true,
@@ -101,7 +102,7 @@ export class SupportComponent extends React.Component {
               showDoneButton: true
             })}>
               <Text style={defaultStyle.text}>Bitmark Inc.</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
         </View >
         )}

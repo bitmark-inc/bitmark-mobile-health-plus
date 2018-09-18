@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Linking, Image
+  View, Text, Linking, Image
 } from 'react-native';
 
 import style from './capture-asset-permission-request.component.style';
 import { BitmarkComponent } from "../../../../commons/components/";
 import defaultStyle from "../../../../commons/styles";
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 
 export class CaptureAssetPermissionRequestComponent extends React.Component {
@@ -29,12 +30,12 @@ export class CaptureAssetPermissionRequestComponent extends React.Component {
     return (
       <BitmarkComponent
         header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/close-blue-icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <Text style={defaultStyle.headerTitle}></Text>
-          <TouchableOpacity style={defaultStyle.headerRight}>
-          </TouchableOpacity>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight}>
+          </BitmarkOneTabButtonComponent>
         </View>)}
         content={(
           <View style={style.body}>
@@ -42,9 +43,9 @@ export class CaptureAssetPermissionRequestComponent extends React.Component {
               <Text style={style.title}>CAPTURE ASSET</Text>
               <Text style={style.text_1}>{`Grant ${this.state.type} access for Bitmark Health to capture asset.`}</Text>
               <Text style={style.text_2}>Save a document or file into your Health data. (Your asset will be encrypted.)</Text>
-              <TouchableOpacity onPress={this.openAppSettings.bind(this)}>
+              <BitmarkOneTabButtonComponent onPress={this.openAppSettings.bind(this)}>
                 <Text style={style.link}>{`Enable ${this.state.type.substring(0, 1).toUpperCase() + this.state.type.substring(1)} Access`}</Text>
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </View>
             <View style={style.content}></View>
           </View>

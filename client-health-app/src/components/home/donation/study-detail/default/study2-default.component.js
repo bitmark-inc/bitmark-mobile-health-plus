@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Image, Text, TouchableOpacity,
+  View, Image, Text,
   Linking,
 } from 'react-native';
 
 
 import { StudyCardComponent } from './../../study-card/study-card.component';
 import styles from './study-default.component.style';
+import { BitmarkOneTabButtonComponent } from '../../../../../commons/components/bitmark-button';
 
 export class Study2DefaultComponent extends React.Component {
   constructor(props) {
@@ -39,11 +40,11 @@ export class Study2DefaultComponent extends React.Component {
           <Text style={[styles.cardMessage, { marginTop: 5, }]}>
             The IDRR is a study of people who want to prevent or reverse prediabetes, diabetes or related health problems.
           </Text>
-          <TouchableOpacity onPress={() => {
+          <BitmarkOneTabButtonComponent onPress={() => {
             Linking.openURL(this.state.study.researcherLink.indexOf('http') > 0 ? this.state.study.researcherLink : 'http://' + this.state.study.researcherLink)
           }}>
             <Text style={styles.studyResearcherLink}>Learn more about Victor’s research and how to contact him »</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
 
           <View style={styles.infoArea}>
             <Text style={styles.infoAreaTitle}>Participant Requirements</Text>
@@ -68,16 +69,16 @@ export class Study2DefaultComponent extends React.Component {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.requireButton} onPress={() => { this.setState({ agreed: !this.state.agreed }) }}>
+          <BitmarkOneTabButtonComponent style={styles.requireButton} onPress={() => { this.setState({ agreed: !this.state.agreed }) }}>
             <Image style={styles.requireIcon}
               source={this.state.agreed ? require('./../../../../../../assets/imgs/require_checked.png') : require('./../../../../../../assets/imgs/require_un_check.png')}
             />
             <Text style={styles.requireMessage}>I meet the participant requirements. </Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>
-        <TouchableOpacity style={[styles.bottomButton, { backgroundColor: this.state.agreed ? '#0060F2' : '#BDBDBD' }]} onPress={() => this.props.doJoinStudy()} disabled={!this.state.agreed}>
+        <BitmarkOneTabButtonComponent style={[styles.bottomButton, { backgroundColor: this.state.agreed ? '#0060F2' : '#BDBDBD' }]} onPress={() => this.props.doJoinStudy()} disabled={!this.state.agreed}>
           <Text style={styles.bottomButtonText}>LET’S GET STARTED</Text>
-        </TouchableOpacity>
+        </BitmarkOneTabButtonComponent>
       </View>
     );
   }

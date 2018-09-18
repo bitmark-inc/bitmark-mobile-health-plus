@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, ScrollView, Image,
+  View, Text, ScrollView, Image,
   Clipboard,
   Alert,
   ActivityIndicator,
@@ -16,6 +16,7 @@ import { DataProcessor, AppProcessor } from '../../../processors';
 import { BitmarkComponent } from '../../../commons/components';
 import { config } from "./../../../configs";
 import { CommonModel } from '../../../models';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 
 let ComponentName = 'AccountDetailComponent';
 export class AccountDetailComponent extends React.Component {
@@ -119,16 +120,16 @@ export class AccountDetailComponent extends React.Component {
       <BitmarkComponent
         backgroundColor='#F5F5F5'
         header={(<View style={style.header}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../assets/imgs/close-blue-icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <Text style={defaultStyle.headerTitle}>ACCOUNT SETTINGS</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} />
         </View>)}
         content={(
           <View style={style.body}>
             <ScrollView style={[style.scrollSubTabArea]}>
-              <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+              <BitmarkOneTabButtonComponent activeOpacity={1} style={{ flex: 1 }}>
                 <View style={style.contentSubTab}>
 
                   {/*YOUR BITMARK ACCOUNT NUMBER*/}
@@ -137,13 +138,13 @@ export class AccountDetailComponent extends React.Component {
                       <Text style={defaultStyle.headerText}>YOUR BITMARK ACCOUNT NUMBER</Text>
                     </View>
 
-                    <TouchableOpacity style={[defaultStyle.itemContainer]} onPress={() => {
+                    <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer]} onPress={() => {
                       Clipboard.setString(this.state.userInfo.bitmarkAccountNumber);
                       this.setState({ accountNumberCopyText: 'Copied to clipboard!' });
                       setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
                     }}>
                       <Text style={style.accountNumberValue}>{this.state.userInfo.bitmarkAccountNumber}</Text>
-                    </TouchableOpacity>
+                    </BitmarkOneTabButtonComponent>
                     <Text style={style.accountNumberCopyButtonText}>{this.state.accountNumberCopyText}</Text>
                   </View>
 
@@ -158,7 +159,7 @@ export class AccountDetailComponent extends React.Component {
                     </View>
 
                     {/*Write Down Recovery Phrase*/}
-                    <TouchableOpacity style={[defaultStyle.itemNoBorderContainer, style.itemContainer]} onPress={() => {
+                    <BitmarkOneTabButtonComponent style={[defaultStyle.itemNoBorderContainer, style.itemContainer]} onPress={() => {
                       CommonModel.doTrackEvent({
                         event_name: 'health_user_writedown_recovery_phrases',
                         account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
@@ -172,11 +173,11 @@ export class AccountDetailComponent extends React.Component {
                           <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
                         </Text>
                       </View>
-                    </TouchableOpacity>
+                    </BitmarkOneTabButtonComponent>
 
                     {/*Remove Access*/}
-                    {/* <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}> */}
-                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
+                    {/* <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}> */}
+                    <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
                       CommonModel.doTrackEvent({
                         event_name: 'health_user_want_remove_access',
                         account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
@@ -188,7 +189,7 @@ export class AccountDetailComponent extends React.Component {
                       <Text style={defaultStyle.textAlignRight}>
                         <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
                       </Text>
-                    </TouchableOpacity>
+                    </BitmarkOneTabButtonComponent>
                   </View>
 
                   {/*AUTHORIZED APP*/}
@@ -197,7 +198,7 @@ export class AccountDetailComponent extends React.Component {
                       <Text style={defaultStyle.headerText}>AUTHORIZED APP</Text>
                     </View>
                     {this.state.donationInformation && this.state.donationInformation.activeBitmarkHealthDataAt &&
-                      <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
+                      <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
                         this.props.navigation.navigate('Health', { removeHealthAuthCallBack: this.doGetScreenData })
                       }}>
                         <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon_health.png')} />
@@ -206,7 +207,7 @@ export class AccountDetailComponent extends React.Component {
                           <Text style={defaultStyle.text}>Authorized   </Text>
                           <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
                         </View>
-                      </TouchableOpacity>
+                      </BitmarkOneTabButtonComponent>
                     }
                     {this.state.gettingData && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
                   </View>
@@ -226,16 +227,16 @@ export class AccountDetailComponent extends React.Component {
                     </View>
 
                     {/*Support*/}
-                    <TouchableOpacity style={[defaultStyle.itemContainer, style.itemContainer, style.lastItemContainer]} onPress={() => { this.props.navigation.navigate('Support') }}>
+                    <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer, style.lastItemContainer]} onPress={() => { this.props.navigation.navigate('Support') }}>
                       <Text style={defaultStyle.text}>Support</Text>
                       <Text style={defaultStyle.textAlignRight}>
                         <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
                       </Text>
-                    </TouchableOpacity>
+                    </BitmarkOneTabButtonComponent>
                   </View>
                 </View>
 
-              </TouchableOpacity>
+              </BitmarkOneTabButtonComponent>
             </ScrollView>
           </View >
         )}

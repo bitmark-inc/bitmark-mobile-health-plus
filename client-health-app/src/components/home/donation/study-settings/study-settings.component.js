@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation'
 import {
-  View, Image, Text, TouchableOpacity,
+  View, Image, Text,
 } from 'react-native';
 
 import { StudyConnectDataComponent } from './study-connect-data.component';
@@ -16,6 +16,7 @@ import { EventEmitterService } from '../../../../services';
 import { AppProcessor, DataProcessor } from '../../../../processors';
 import { BitmarkComponent } from '../../../../commons/components';
 import { BottomTabsComponent } from '../../bottom-tabs/bottom-tabs.component';
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 // loading ==> connect-data  ==>loading=>thank-you
 const SettingStatus = {
@@ -125,17 +126,17 @@ export class StudySettingComponent extends React.Component {
       <BitmarkComponent
         backgroundColor={this.state.status === SettingStatus.thank_you ? 'white' : '#F5F5F5'}
         header={(<View style={[defaultStyle.header, { backgroundColor: this.state.status === SettingStatus.thank_you ? 'white' : '#F5F5F5' }]}>
-          {this.state.status !== SettingStatus.thank_you && <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          {this.state.status !== SettingStatus.thank_you && <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             {this.state.status !== SettingStatus.thank_you &&
               <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />}
-          </TouchableOpacity>}
+          </BitmarkOneTabButtonComponent>}
           {this.state.status !== SettingStatus.thank_you && <Text style={[defaultStyle.headerTitle, { color: '#0C3E79' }]}>{this.state.status}</Text>}
-          {this.state.status !== SettingStatus.thank_you && <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+          {this.state.status !== SettingStatus.thank_you && <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => {
             this.props.navigation.goBack();
           }}>
             {this.state.status !== SettingStatus.thank_you &&
               <Text style={[defaultStyle.headerRightText, { fontWeight: '300', fontSize: 14, }]}>Cancel</Text>}
-          </TouchableOpacity>}
+          </BitmarkOneTabButtonComponent>}
         </View>)}
         content={(<View style={styles.body} >
           {this.state.status === SettingStatus.connect_data && <StudyConnectDataComponent study={this.state.study} doJoinStudy={this.doJoinStudy} />}

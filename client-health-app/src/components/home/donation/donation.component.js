@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, TouchableOpacity, Text, ScrollView, FlatList, ActivityIndicator, Image,
+  View, Text, ScrollView, FlatList, ActivityIndicator, Image,
   Alert,
   Dimensions,
 } from 'react-native';
@@ -14,6 +14,7 @@ import { StudyCardComponent } from './study-card/study-card.component';
 import donationStyle from './donation.component.style';
 import { DataProcessor, AppProcessor } from '../../../processors';
 import { EventEmitterService } from '../../../services';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 
 const SubTabs = {
   todo: 'To-do',
@@ -147,7 +148,7 @@ export class DonationComponent extends React.Component {
     return (
       <View style={donationStyle.body}>
         <View style={donationStyle.subTabArea}>
-          {this.state.subTab === SubTabs.todo && <TouchableOpacity style={[donationStyle.subTabButton, {
+          {this.state.subTab === SubTabs.todo && <BitmarkOneTabButtonComponent style={[donationStyle.subTabButton, {
             backgroundColor: '#0060F2',
             borderLeftWidth: 1, borderColor: '#0060F2',
           }]}>
@@ -157,17 +158,17 @@ export class DonationComponent extends React.Component {
                 <Text style={donationStyle.subTabButtonText}>{SubTabs.todo}</Text>
               </View>
             </View>
-          </TouchableOpacity>}
-          {this.state.subTab !== SubTabs.todo && <TouchableOpacity style={[donationStyle.subTabButton]} onPress={() => this.switchSubTab(SubTabs.todo)}>
+          </BitmarkOneTabButtonComponent>}
+          {this.state.subTab !== SubTabs.todo && <BitmarkOneTabButtonComponent style={[donationStyle.subTabButton]} onPress={() => this.switchSubTab(SubTabs.todo)}>
             {(this.state.donationTasks && this.state.donationTasks.length > 0) && <View style={donationStyle.todoHightLight}></View>}
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
                 <Text style={[donationStyle.subTabButtonText, { color: '#0060F2' }]}>{SubTabs.todo}</Text>
               </View>
             </View>
-          </TouchableOpacity>}
+          </BitmarkOneTabButtonComponent>}
 
-          {this.state.subTab === SubTabs.studies && <TouchableOpacity style={[donationStyle.subTabButton, {
+          {this.state.subTab === SubTabs.studies && <BitmarkOneTabButtonComponent style={[donationStyle.subTabButton, {
             backgroundColor: '#0060F2',
             borderRightWidth: 1, borderLeftWidth: 1, borderColor: '#0060F2',
           }]}>
@@ -176,8 +177,8 @@ export class DonationComponent extends React.Component {
                 <Text style={donationStyle.subTabButtonText}>{SubTabs.studies}</Text>
               </View>
             </View>
-          </TouchableOpacity>}
-          {this.state.subTab !== SubTabs.studies && <TouchableOpacity style={[donationStyle.subTabButton, {
+          </BitmarkOneTabButtonComponent>}
+          {this.state.subTab !== SubTabs.studies && <BitmarkOneTabButtonComponent style={[donationStyle.subTabButton, {
             backgroundColor: 'white',
             borderRightWidth: 1, borderLeftWidth: 1, borderColor: '#0060F2',
           }]} onPress={() => this.switchSubTab(SubTabs.studies)}>
@@ -186,9 +187,9 @@ export class DonationComponent extends React.Component {
                 <Text style={[donationStyle.subTabButtonText, { color: '#0060F2' }]}>{SubTabs.studies}</Text>
               </View>
             </View>
-          </TouchableOpacity>}
+          </BitmarkOneTabButtonComponent>}
 
-          {this.state.subTab === SubTabs.news && <TouchableOpacity style={[donationStyle.subTabButton, {
+          {this.state.subTab === SubTabs.news && <BitmarkOneTabButtonComponent style={[donationStyle.subTabButton, {
             backgroundColor: '#0060F2',
             borderRightWidth: 1, borderColor: '#0060F2',
           }]}>
@@ -197,14 +198,14 @@ export class DonationComponent extends React.Component {
                 <Text style={donationStyle.subTabButtonText}>{SubTabs.news}</Text>
               </View>
             </View>
-          </TouchableOpacity>}
-          {this.state.subTab !== SubTabs.news && <TouchableOpacity style={[donationStyle.subTabButton]} onPress={() => this.switchSubTab(SubTabs.news)}>
+          </BitmarkOneTabButtonComponent>}
+          {this.state.subTab !== SubTabs.news && <BitmarkOneTabButtonComponent style={[donationStyle.subTabButton]} onPress={() => this.switchSubTab(SubTabs.news)}>
             <View style={donationStyle.subTabButtonArea}>
               <View style={donationStyle.subTabButtonTextArea}>
                 <Text style={[donationStyle.subTabButtonText, { color: '#0060F2' }]}>{SubTabs.news}</Text>
               </View>
             </View>
-          </TouchableOpacity>}
+          </BitmarkOneTabButtonComponent>}
         </View>
 
         {this.state.subTab === SubTabs.todo && <ScrollView style={donationStyle.contentScroll}
@@ -221,13 +222,13 @@ export class DonationComponent extends React.Component {
             this.loadingDonationTasksWhenScroll = false;
           }}
           scrollEventThrottle={1}>
-          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+          <BitmarkOneTabButtonComponent activeOpacity={1} style={{ flex: 1 }}>
             {(this.state.donationTasks && this.state.donationTasks.length > 0) && <View style={donationStyle.content}>
               <FlatList
                 extraData={this.state}
                 data={this.state.donationTasks}
                 renderItem={({ item }) => {
-                  return (<TouchableOpacity style={donationStyle.donationTaskItem} onPress={() => this.clickOnDonationTask(item)}>
+                  return (<BitmarkOneTabButtonComponent style={donationStyle.donationTaskItem} onPress={() => this.clickOnDonationTask(item)}>
                     <View style={donationStyle.donationTaskItemLeftArea}>
                       <Image style={donationStyle.researcherImage} source={(item.study && item.study.studyId === 'study1') ? require('./../../../../assets/imgs/madelena.png') :
                         ((item.study && item.study.studyId === 'study2') ? require('./../../../../assets/imgs/victor.png') : null)} />
@@ -238,7 +239,7 @@ export class DonationComponent extends React.Component {
                       <Text style={donationStyle.donationTaskItemDescription}>{item.description}</Text>
                       <Text style={donationStyle.donationTaskItemTime}>{moment(item.timestamp).format('HH:mm dddd, MMM DD, YYYY')}</Text>
                     </View>
-                  </TouchableOpacity>)
+                  </BitmarkOneTabButtonComponent>)
                 }}
               />
             </View>}
@@ -259,7 +260,7 @@ export class DonationComponent extends React.Component {
                 <Text style={donationStyle.todoEmptyDescription}>You have completed all the to-dos for now.</Text>
               </View>}
 
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
@@ -267,14 +268,14 @@ export class DonationComponent extends React.Component {
           backgroundColor: '#EDF0F4',
           borderTopWidth: 0,
         }]}>
-          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+          <BitmarkOneTabButtonComponent activeOpacity={1} style={{ flex: 1 }}>
             <View style={donationStyle.content}>
               <FlatList
                 keyExtractor={(item) => item.studyId}
                 extraData={this.state}
                 data={this.state.studies}
                 renderItem={({ item }) => {
-                  return (<TouchableOpacity style={donationStyle.studyCard} onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item })}>
+                  return (<BitmarkOneTabButtonComponent style={donationStyle.studyCard} onPress={() => this.props.screenProps.homeNavigation.navigate('StudyDetail', { study: item })}>
                     <StudyCardComponent
                       researcherImage={item.studyId === 'study1' ? require('./../../../../assets/imgs/madelena.png') :
                         (item.studyId === 'study2' ? require('./../../../../assets/imgs/victor.png') : '')}
@@ -284,23 +285,23 @@ export class DonationComponent extends React.Component {
                       description={item.description}
                       interval={item.interval}
                       duration={item.duration || item.durationText} />
-                  </TouchableOpacity>)
+                  </BitmarkOneTabButtonComponent>)
                 }}
               />
             </View>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
 
         {this.state.subTab === SubTabs.news && <ScrollView style={donationStyle.contentScroll}>
-          <TouchableOpacity activeOpacity={1} style={{ flex: 1 }}>
+          <BitmarkOneTabButtonComponent activeOpacity={1} style={{ flex: 1 }}>
             <View style={donationStyle.content}>
               <FlatList
                 keyExtractor={(item) => item.id}
                 extraData={this.state}
                 data={this.state.donationInformation ? this.state.donationInformation.news : []}
                 renderItem={({ item }) => {
-                  return (<TouchableOpacity style={donationStyle.newRecord} disabled={true}>
+                  return (<BitmarkOneTabButtonComponent style={donationStyle.newRecord} disabled={true}>
                     <View style={donationStyle.newRecordImageArea}>
                       {item.researcherImageUrl && <Image style={donationStyle.newRecordImageIcon} source={{ uri: item.researcherImageUrl }} />}
                     </View>
@@ -312,11 +313,11 @@ export class DonationComponent extends React.Component {
                         <Text style={donationStyle.newCreatedAt} numberOfLines={1}>{moment(item.createdAt).format('YYYY MMM DD')}</Text>
                       </View>
                     </View>
-                  </TouchableOpacity>)
+                  </BitmarkOneTabButtonComponent>)
                 }}
               />
             </View>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           {(this.state.appLoadingData || this.state.gettingData) && <ActivityIndicator size="large" style={{ marginTop: 46, }} />}
         </ScrollView>}
       </View>

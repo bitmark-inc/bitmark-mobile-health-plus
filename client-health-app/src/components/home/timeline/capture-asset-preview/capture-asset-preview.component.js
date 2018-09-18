@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image, Alert
+  View, Text, Image, Alert
 } from 'react-native';
 
 import { NavigationActions } from 'react-navigation';
@@ -14,6 +14,7 @@ import { FileUtil } from "../../../../utils";
 import { CommonModel } from '../../../../models';
 import { config } from '../../../../configs';
 import randomString from "random-string";
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 
 export class CaptureAssetPreviewComponent extends React.Component {
@@ -100,13 +101,13 @@ export class CaptureAssetPreviewComponent extends React.Component {
       <BitmarkComponent
         backgroundColor='#E5E5E5'
         header={(<View style={[defaultStyle.header, { backgroundColor: '#E5E5E5' }]}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => { this.props.navigation.goBack() }}>
             <Image style={defaultStyle.headerLeftIcon} source={require('../../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <Text style={defaultStyle.headerTitle}>CAPTURE</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.checkAndIssueAsset()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => this.checkAndIssueAsset()}>
             <Text style={defaultStyle.headerRightText}>Next</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
         content={(
           <View style={[style.body]}>

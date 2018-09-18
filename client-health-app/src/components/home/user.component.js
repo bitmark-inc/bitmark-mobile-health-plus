@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, TouchableOpacity, Text, Image,
+  View, Text, Image,
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 
@@ -18,6 +18,7 @@ import { DonationComponent } from './donation';
 import { TimelineComponent } from './timeline';
 import { CommonModel } from '../../models';
 import { convertWidth } from '../../utils';
+import { BitmarkOneTabButtonComponent } from '../../commons/components/bitmark-button';
 
 const MainTabs = BottomTabsComponent.MainTabs;
 
@@ -157,7 +158,7 @@ export class UserComponent extends React.Component {
         backgroundColor={'#EDF0F4'}
         header={(
           <View style={[defaultStyle.header, { backgroundColor: '#EDF0F4' }]}>
-            <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => {
+            <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => {
               CommonModel.doTrackEvent({
                 event_name: 'health_user_view_account_screen',
                 account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
@@ -165,13 +166,13 @@ export class UserComponent extends React.Component {
               this.props.navigation.navigate('Account');
             }}>
               <Image style={userStyle.accountIcon} source={require('./../../../assets/imgs/account-icon.png')} />
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
             <Text style={defaultStyle.headerTitle}>BITMARK HEALTH</Text>
-            <TouchableOpacity style={defaultStyle.headerRight} onPress={() => {
+            <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => {
               Intercom.displayMessageComposer();
             }}>
               <Image style={[userStyle.accountIcon, { width: 26, height: 26, marginRight: convertWidth(19) }]} source={require('./../../../assets/imgs/intercom.png')} />
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
 
         )}

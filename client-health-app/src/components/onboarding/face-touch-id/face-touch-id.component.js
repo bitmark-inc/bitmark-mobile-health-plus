@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image,
   Linking,
   AppState,
   // NativeModules,
@@ -12,6 +12,7 @@ import faceTouchIdStyle from './face-touch-id.component.style';
 import { BitmarkComponent } from '../../../commons/components';
 import { iosConstant } from '../../../configs/ios/ios.config';
 import { AppProcessor } from '../../../processors';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 
 export class FaceTouchIdComponent extends React.Component {
   constructor(props) {
@@ -86,7 +87,7 @@ export class FaceTouchIdComponent extends React.Component {
 
         footerHeight={iosConstant.bottomBottomHeight}
         footer={(<View style={faceTouchIdStyle.enableButtonArea}>
-          <TouchableOpacity style={[faceTouchIdStyle.enableButton]}
+          <BitmarkOneTabButtonComponent style={[faceTouchIdStyle.enableButton]}
             onPress={() => {
               if (!this.state.supported) {
                 Linking.openURL('app-settings:');
@@ -95,7 +96,7 @@ export class FaceTouchIdComponent extends React.Component {
               }
             }}>
             <Text style={faceTouchIdStyle.enableButtonText}>ENABLE</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
       />
     );

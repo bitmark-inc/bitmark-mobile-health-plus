@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Text, View, TouchableOpacity,
+  Text, View,
   WebView,
   Share,
 } from 'react-native';
@@ -13,6 +13,7 @@ import styles from './study-consent.component.style';
 
 import { AppProcessor } from '../../../../processors';
 import { EventEmitterService } from '../../../../services';
+import { BitmarkOneTabButtonComponent } from '../../../../commons/components/bitmark-button';
 
 export class StudyConsentComponent extends React.Component {
   constructor(props) {
@@ -30,26 +31,26 @@ export class StudyConsentComponent extends React.Component {
         shareConsent(filePath);
       }).catch(error => {
         console.log('doDownloadStudyConsent error:', error);
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       });
     };
     return (
       <BitmarkComponent
         header={(<View style={[defaultStyle.header]}>
-          <TouchableOpacity style={defaultStyle.headerLeft}></TouchableOpacity>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft}></BitmarkOneTabButtonComponent>
           <Text style={defaultStyle.headerTitle}>Study Consent</Text>
-          <TouchableOpacity style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => this.props.navigation.goBack()}>
             <Text style={defaultStyle.headerRightText}>Done</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
         content={(<View style={styles.body}>
           <View style={styles.main}>
             <WebView source={{ uri: this.state.study.consentLink }} />
           </View>
           <View style={styles.bottomButtonArea}>
-            <TouchableOpacity style={[styles.bottomButton, { backgroundColor: 'white' }]} onPress={() => downloadConsent()}>
+            <BitmarkOneTabButtonComponent style={[styles.bottomButton, { backgroundColor: 'white' }]} onPress={() => downloadConsent()}>
               <Text style={[styles.infoButtonText]}>Share</Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
           </View>
         </View>)}
       />

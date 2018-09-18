@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Image, Text, TouchableOpacity, FlatList, ScrollView,
+  View, Image, Text, FlatList, ScrollView,
   Dimensions,
 } from 'react-native';
 
@@ -11,6 +11,7 @@ import { DataProcessor, AppProcessor } from '../../../processors';
 import { EventEmitterService } from '../../../services';
 import { FileUtil, convertWidth } from "../../../utils";
 import { CommonModel } from '../../../models';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 
 let currentSize = Dimensions.get('window');
 let ComponentName = 'TimelineComponent';
@@ -122,7 +123,7 @@ export class TimelineComponent extends React.Component {
             this.loadingTimelinesWhenScroll = false;
           }}
           scrollEventThrottle={1}>
-          <TouchableOpacity activeOpacity={1} style={timelineStyle.contentSubTab}>
+          <BitmarkOneTabButtonComponent activeOpacity={1} style={timelineStyle.contentSubTab}>
             <FlatList
               scrollEnabled={false}
               keyExtractor={(item, index) => index}
@@ -143,7 +144,7 @@ export class TimelineComponent extends React.Component {
                     </View>
 
 
-                    <TouchableOpacity
+                    <BitmarkOneTabButtonComponent
                       style={[timelineStyle.rowDataDetail, {
                         paddingBottom: ((index === this.state.timelines.length - 2) ? 91 : 52)
                       }]}
@@ -196,7 +197,7 @@ export class TimelineComponent extends React.Component {
                         </View>}
                       </View>
 
-                    </TouchableOpacity>
+                    </BitmarkOneTabButtonComponent>
                   </View>);
                 }
 
@@ -225,12 +226,12 @@ export class TimelineComponent extends React.Component {
 
               }}
             />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </ScrollView>
 
-        <TouchableOpacity style={timelineStyle.addIconContainer} onPress={this.captureAsset.bind(this)}>
+        <BitmarkOneTabButtonComponent style={timelineStyle.addIconContainer} onPress={this.captureAsset.bind(this)}>
           <Image style={timelineStyle.addIcon} source={require('./../../../../assets/imgs/icon-add.png')} />
-        </TouchableOpacity>
+        </BitmarkOneTabButtonComponent>
       </View>
     );
   }

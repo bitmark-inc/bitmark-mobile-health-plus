@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image,
   StatusBar,
   Linking,
   Alert,
@@ -19,6 +19,7 @@ import { BitmarkComponent, BitmarkLegalComponent } from '../../../commons/compon
 import { convertWidth } from '../../../utils';
 import { AppProcessor } from '../../../processors/app-processor';
 import { EventEmitterService } from '../../../services';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 
 const Contents = BitmarkLegalComponent.Contents;
 export class LegalComponent extends React.Component {
@@ -63,13 +64,13 @@ export class LegalComponent extends React.Component {
           borderBottomColor: 'rgba(0, 0, 0, 0.3)',
           borderBottomWidth: 0.3,
         }]}>
-          <TouchableOpacity style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} onPress={() => this.props.navigation.goBack()}>
             <Image style={defaultStyle.headerLeftIcon} source={require('./../../../../assets/imgs/header_blue_icon.png')} />
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
           <View style={defaultStyle.headerCenter}>
             <Text style={defaultStyle.headerTitle}>BITMARK LEGAL</Text>
           </View>
-          <TouchableOpacity style={defaultStyle.headerRight} />
+          <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} />
         </View>)}
 
         contentInScroll={true}
@@ -78,11 +79,11 @@ export class LegalComponent extends React.Component {
 
           {this.state.displayedContentName === Contents.KnowYourRights.name && <View style={legalStyle.swipePageContent}>
             <Text style={legalStyle.contentTitleText}>KNOW YOUR RIGHTS</Text>
-            <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
+            <BitmarkOneTabButtonComponent onPress={() => Linking.openURL('https://twitter.com/gigastacey/status/904343096858697728')}>
               <Text style={[legalStyle.contentNormalText, { paddingBottom: 20, color: '#0060F2' }]}>
                 Original idea comes from Stacey Higginbotham
               </Text>
-            </TouchableOpacity>
+            </BitmarkOneTabButtonComponent>
             <View style={legalStyle.knowYourRightsRow}>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(222), fontWeight: '800' }]}>TYPE OF DATA</Text>
               <Text style={[legalStyle.knowYourRightsRowText, { width: convertWidth(55), fontWeight: '800' }]}>RETAIN</Text>
@@ -517,36 +518,36 @@ export class LegalComponent extends React.Component {
 
         footerHeight={45 * 3 + iosConstant.bottomBottomHeight}
         footer={(<View style={legalStyle.bottomButtonArea}>
-          {this.state.displayedContentName !== Contents.PrivacyPolicy.name && <TouchableOpacity style={[legalStyle.bottomButton, {
+          {this.state.displayedContentName !== Contents.PrivacyPolicy.name && <BitmarkOneTabButtonComponent style={[legalStyle.bottomButton, {
             justifyContent: 'space-between',
             paddingLeft: convertWidth(19),
             paddingRight: convertWidth(19)
           }]} onPress={() => this.displayContent(Contents.PrivacyPolicy)}>
             <Text style={legalStyle.bottomButtonText}>PRIVACY POLICY</Text>
             <Image style={legalStyle.bottomButtonIcon} source={require('./../../../../assets/imgs/next-icon.png')} />
-          </TouchableOpacity>}
-          {this.state.displayedContentName !== Contents.TermOfService.name && <TouchableOpacity style={[legalStyle.bottomButton, {
+          </BitmarkOneTabButtonComponent>}
+          {this.state.displayedContentName !== Contents.TermOfService.name && <BitmarkOneTabButtonComponent style={[legalStyle.bottomButton, {
             justifyContent: 'space-between',
             paddingLeft: convertWidth(19),
             paddingRight: convertWidth(19)
           }]} onPress={() => this.displayContent(Contents.TermOfService)}>
             <Text style={legalStyle.bottomButtonText}>TERMS OF SERVICE</Text>
             <Image style={legalStyle.bottomButtonIcon} source={require('./../../../../assets/imgs/next-icon.png')} />
-          </TouchableOpacity>}
-          {this.state.displayedContentName !== Contents.KnowYourRights.name && <TouchableOpacity style={[legalStyle.bottomButton, {
+          </BitmarkOneTabButtonComponent>}
+          {this.state.displayedContentName !== Contents.KnowYourRights.name && <BitmarkOneTabButtonComponent style={[legalStyle.bottomButton, {
             justifyContent: 'space-between',
             paddingLeft: convertWidth(19),
             paddingRight: convertWidth(19)
           }]} onPress={() => this.displayContent(Contents.KnowYourRights)}>
             <Text style={legalStyle.bottomButtonText}>KNOW YOUR RIGHTS</Text>
             <Image style={legalStyle.bottomButtonIcon} source={require('./../../../../assets/imgs/next-icon.png')} />
-          </TouchableOpacity>}
-          <TouchableOpacity style={[legalStyle.bottomButton, { backgroundColor: '#0060F2' }]} onPress={() => this.props.navigation.navigate('GetStart', { passPhrase24Words: this.state.passPhrase24Words })}>
+          </BitmarkOneTabButtonComponent>}
+          <BitmarkOneTabButtonComponent style={[legalStyle.bottomButton, { backgroundColor: '#0060F2' }]} onPress={() => this.props.navigation.navigate('GetStart', { passPhrase24Words: this.state.passPhrase24Words })}>
             <Text style={[legalStyle.bottomButtonText, { color: 'white' }]}>I ACCEPT BITMARK LEGAL</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={legalStyle.lastBottomButton} onPress={this.shareLegal}>
+          </BitmarkOneTabButtonComponent>
+          <BitmarkOneTabButtonComponent style={legalStyle.lastBottomButton} onPress={this.shareLegal}>
             <Text style={legalStyle.lastBottomButtonText}>SHARE</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
       />
     );

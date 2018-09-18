@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image,
   StatusBar,
 } from 'react-native'
 
@@ -10,6 +10,7 @@ import { iosConstant } from '../../../configs/ios/ios.config';
 import { BitmarkComponent } from '../../../commons/components';
 import { AppProcessor } from '../../../processors';
 import { EventEmitterService } from '../../../services';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 
 export class GetStartComponent extends React.Component {
   constructor(props) {
@@ -47,9 +48,9 @@ export class GetStartComponent extends React.Component {
 
         footerHeight={iosConstant.bottomBottomHeight}
         footer={(<View style={getStartStyles.enableButtonArea}>
-          <TouchableOpacity style={[getStartStyles.enableButton]} onPress={requestHealthKitPermission}>
+          <BitmarkOneTabButtonComponent style={[getStartStyles.enableButton]} onPress={requestHealthKitPermission}>
             <Text style={getStartStyles.enableButtonText}>ALLOW ACCESS</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>)}
       />
     );

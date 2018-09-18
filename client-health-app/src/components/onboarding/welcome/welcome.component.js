@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, Text, TouchableOpacity, Image,
+  View, Text, Image,
   StatusBar,
 } from 'react-native';
 
@@ -10,6 +10,7 @@ import Swiper from 'react-native-swiper';
 import welcomeComponentStyle from './welcome.component.style';
 import { ios } from './../../../configs';
 import { BitmarkComponent } from '../../../commons/components';
+import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
 
 export class WelcomeComponent extends React.Component {
   constructor(props) {
@@ -124,10 +125,10 @@ export class WelcomeComponent extends React.Component {
         </Swiper>
 
         <View style={[welcomeComponentStyle.welcomeButtonArea]}>
-          <TouchableOpacity style={[welcomeComponentStyle.welcomeButton,]} onPress={this.createNewAccount}>
+          <BitmarkOneTabButtonComponent style={[welcomeComponentStyle.welcomeButton,]} onPress={this.createNewAccount}>
             <Text style={[welcomeComponentStyle.welcomeButtonText,]}>{'CREATE NEW ACCOUNT'.toUpperCase()}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[welcomeComponentStyle.welcomeButton, {
+          </BitmarkOneTabButtonComponent>
+          <BitmarkOneTabButtonComponent style={[welcomeComponentStyle.welcomeButton, {
             backgroundColor: '#F2FAFF',
             height: ios.constant.bottomBottomHeight,
             paddingBottom: Math.max(10, ios.constant.blankFooter)
@@ -135,7 +136,7 @@ export class WelcomeComponent extends React.Component {
             this.props.navigation.navigate('SignIn');
           }}>
             <Text style={[welcomeComponentStyle.welcomeButtonText, { color: '#0060F2' }]}>{'ACCESS EXISTING ACCOUNT'.toUpperCase()}</Text>
-          </TouchableOpacity>
+          </BitmarkOneTabButtonComponent>
         </View>
       </View>
     );
