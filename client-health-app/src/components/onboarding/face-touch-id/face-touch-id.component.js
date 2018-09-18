@@ -13,6 +13,8 @@ import { BitmarkComponent } from '../../../commons/components';
 import { iosConstant } from '../../../configs/ios/ios.config';
 import { AppProcessor } from '../../../processors';
 import { BitmarkOneTabButtonComponent } from '../../../commons/components/bitmark-button';
+import {EventEmitterService} from "../../../services";
+import {NavigationActions} from "react-navigation";
 
 export class FaceTouchIdComponent extends React.Component {
   constructor(props) {
@@ -49,6 +51,24 @@ export class FaceTouchIdComponent extends React.Component {
     });
   }
 
+  requestHealthKitPermission() {
+    AppProcessor.doRequireHealthKitPermission().then(() => {
+      this.gotoTimeline();
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+      console.log('doRequireHealthKitPermission error :', error);
+    });
+  }
+
+  gotoTimeline() {
+    const resetMainPage = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({routeName: 'Main', params: {justCreatedBitmarkAccount: true}})]
+    });
+
+    this.props.screenProps.rootNavigation.dispatch(resetMainPage);
+  }
+
   doContinue() {
     let passPhrase24Words = (this.props && this.props.navigation && this.props.navigation.state && this.props.navigation.state.params) ? this.props.navigation.state.params.passPhrase24Words : null;
     let promise;
@@ -59,7 +79,11 @@ export class FaceTouchIdComponent extends React.Component {
     }
     promise.then((user) => {
       if (user) {
-        this.props.navigation.navigate('CoachMark1');
+        if (passPhrase24Words) {
+          this.requestHealthKitPermission();
+        } else {
+          this.props.navigation.navigate('CoachMark1');
+        }
       }
     }).catch(error => {
       console.log('error :', error);
