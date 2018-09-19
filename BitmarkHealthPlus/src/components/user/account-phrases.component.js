@@ -206,8 +206,8 @@ export class AccountPhraseComponent extends Component {
               </TouchableOpacity>
             </View>
 
-            <ScrollView >
-              {this.state.step === STEPS.warning && <View style={styles.content}>
+            {this.state.step === STEPS.warning && <View style={{ flex: 1 }}>
+              <ScrollView style={styles.content}>
                 <View style={styles.warningIconArea}>
                   <Image style={styles.warningIcon} source={require('./../../../assets/imgs/warning_icon.png')} />
                 </View>
@@ -215,17 +215,25 @@ export class AccountPhraseComponent extends Component {
                   Your recovery phrase is the only way to restore your Bitmark account if your phone is lost, stolen, broken, or upgraded.{'\n\n'}
                   We will show you a list of words to write down on a piece of paper and keep safe.{'\n\n'}
                   Make sure you are in a private location before writing down your recovery phrase.
-              </Text>}
+                </Text>}
                 {this.props.isLogout && <Text style={styles.warningMessage}>
                   Logging out of this account will allow you to access and manage a different account on this device.{'\n\n'}
                   Your current account will be removed from this device. If you wish to restore it in the future, you will need to enter your Recovery Phrase.
-              </Text>}
-              </View>}
+                </Text>}
+              </ScrollView>
 
-              {this.state.step === STEPS.phrase24Word && <View style={styles.content}>
+              <View style={styles.bottomButtonArea}>
+                <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhrase24Words.bind(this)}>
+                  <Text style={styles.bottomButtonText}>NEXT</Text>
+                </TouchableOpacity>
+              </View>
+            </View>}
+
+            {this.state.step === STEPS.phrase24Word && <View style={{ flex: 1 }}>
+              <ScrollView style={styles.content}>
                 <Text style={styles.phrase24WordMessage}>
                   Please write down your recovery phrase in the exact sequence below:
-              </Text>
+               </Text>
                 <View style={styles.phrase24WordsArea}>
                   <FlatList data={this.state.smallerList}
                     keyExtractor={(item, index) => index + ''}
@@ -256,9 +264,20 @@ export class AccountPhraseComponent extends Component {
                   />
                 </View>
 
-              </View>}
+              </ScrollView>
 
-              {this.state.step === STEPS.testing && <View style={styles.content}>
+              <View style={styles.bottomButtonArea}>
+                {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={() => this.goToTest.bind(this)(this.state.phrase24Words)}>
+                  <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'Test recover phrase'.toUpperCase()}</Text>
+                </TouchableOpacity>}
+                <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)(this.state.phrase24Words) : Actions.pop()}>
+                  <Text style={[styles.bottomButtonText,]}>{'Done'.toUpperCase()}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>}
+
+            {this.state.step === STEPS.testing && <View style={{ flex: 1 }}>
+              <ScrollView style={styles.content}>
                 <Text style={styles.phrase24WordMessage}>
                   {this.props.isLogout ? 'To continue, tap the words to put them in the correct order for your recovery phrase:'
                     : 'Tap the words to put them in the correct order for your recovery phrase:'}
@@ -316,10 +335,9 @@ export class AccountPhraseComponent extends Component {
                   scrollEnabled={false}
                   horizontal={false}
                   numColumns={4}
-                  contentContainerStyle={{ flexDirection: 'column' }}
+                  contentContainerStyle={{ flexDirection: 'column', paddingBottom: 20, }}
                   extraData={this.state}
                   renderItem={({ item }) => {
-                    console.log('render 3', item);
                     return (
                       <TouchableOpacity style={[styles.recoveryPhraseChooseButton, {
                         borderColor: item.selected ? 'white' : '#FF4444'
@@ -341,29 +359,15 @@ export class AccountPhraseComponent extends Component {
                   <Text style={styles.successTitle}>Success!</Text>
                   <Text style={styles.successMessage}>{this.props.isLogout ? 'You may now log out of your current account.' : 'Keep your written copy private in a secure and safe location.'}</Text>
                 </View>}
-              </View>}
+              </ScrollView>
 
-              {this.state.step === STEPS.warning && <View style={styles.bottomButtonArea}>
-                <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhrase24Words.bind(this)}>
-                  <Text style={styles.bottomButtonText}>NEXT</Text>
-                </TouchableOpacity>
-              </View>}
-
-              {this.state.step === STEPS.phrase24Word && <View style={styles.bottomButtonArea}>
-                {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={() => this.goToTest.bind(this)(this.state.phrase24Words)}>
-                  <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'Test recover phrase'.toUpperCase()}</Text>
-                </TouchableOpacity>}
-                <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)(this.state.phrase24Words) : Actions.pop()}>
-                  <Text style={[styles.bottomButtonText,]}>{'Done'.toUpperCase()}</Text>
-                </TouchableOpacity>
-              </View>}
-
-              {this.state.step === STEPS.testing && (this.state.testingResult !== null) && <View style={styles.bottomButtonArea}>
+              <View style={styles.bottomButtonArea}>
                 <TouchableOpacity style={styles.bottomButton} onPress={this.state.testingResult ? (this.props.isLogout ? this.doLogout.bind(this) : Actions.pop) : this.resetTest.bind(this)}>
                   <Text style={styles.bottomButtonText}>{(this.state.testingResult ? (this.props.isLogout ? 'log out' : 'done') : 'retry').toUpperCase()}</Text>
                 </TouchableOpacity>
-              </View>}
-            </ScrollView>
+              </View>
+
+            </View>}
           </View>
         </View>
       </SafeAreaView>
@@ -392,7 +396,6 @@ const styles = StyleSheet.create({
     padding: convertWidth(20),
     paddingTop: convertWidth(15),
     flexDirection: 'column',
-    flex: 1,
   },
   titleArea: {
     width: '100%',
@@ -449,6 +452,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 22,
+    paddingBottom: 20,
   },
   recoveryPhraseSet: {
     flex: 1,
@@ -480,7 +484,7 @@ const styles = StyleSheet.create({
     borderColor: '#FF4444',
     padding: 4,
     marginRight: 10,
-    marginTop: 27,
+    marginTop: 10,
   },
   recoveryPhraseChooseButtonText: {
     fontFamily: 'Avenir Light',
@@ -493,6 +497,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 20,
   },
   errorTitle: {
     fontFamily: 'Avenir Heavy',
