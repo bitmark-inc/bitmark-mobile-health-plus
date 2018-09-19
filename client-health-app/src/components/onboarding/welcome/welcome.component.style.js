@@ -4,6 +4,8 @@ import { ios } from '../../../configs';
 
 let currentSize = Dimensions.get('window');
 
+let contentWidth = ios.config.isIPhoneSE ? 255 : 310;
+
 export default StyleSheet.create({
   body: {
     flex: 1,
@@ -38,7 +40,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    width: 320
+    width: contentWidth
   },
   swipeDotButton: {
     backgroundColor: '#C4C4C4',
@@ -58,17 +60,17 @@ export default StyleSheet.create({
     width: '100%',
   },
   introductionTitle: {
-    marginTop: 25,
+    marginTop: ios.config.isIPhoneSE ? 10 : 25,
     fontFamily: 'Avenir black',
     color: '#0060F2',
     fontSize: 17,
     fontWeight: '900',
-    width: 310,
+    width: contentWidth,
     textAlign: 'left',
   },
   introductionDescription: {
     marginTop: 15,
-    width: 310,
+    width: contentWidth,
     fontFamily: 'Avenir light',
     fontWeight: '300',
     fontSize: 17,

@@ -64,8 +64,7 @@ export default StyleSheet.create({
     fontFamily: 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
-    lineHeight: 20,
-    textAlign: 'center',
+    lineHeight: 20
   },
 
   enableButtonArea: {

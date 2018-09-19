@@ -107,12 +107,12 @@ export class LegalComponent extends React.Component {
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
                   <Text style={legalStyle.contentNormalText}>
                     We collect the following information in connection with your use of the Applications, and use it as described:{'\n\n'}
-                    Log Data is collected as part of your use of the web version of the Application. We use Log Data to monitor use of the web version of the Application, to provide the web version of the Application to you, and to improve the web version of the Application and the other Services we provide.{'\n'}
-                    Your email address is required to use the web version of the Application. We use your email address to provide the web version of the Application to you and to communicate with you about your use of the Application.{'\n'}
-                    Your Bitmark Account Number is used to identify you within the Services and to enable you to use the Services to manage your Bitmark Property System Account, and is visible to other Users of the Services. It is not attached to other personally identifiable information unless (a) you are using the web version of the Application, in which case your Bitmark Account Number is tied to your email address, or (b) you specifically choose to publicly identify your account with an email address or other personal information.{'\n'}
-                    The source, title and metadata regarding each Digital Asset managed through our Services, a thumbnail picture of that Digital Asset (only if the Digital Asset is not encrypted), and the associated bitmark. This information is public.{'\n'}
-                    Any personally identifiable information you choose to make available within the Services by publicly identifying your account. This information is visible to other users of the Service.{'\n'}
-                    Users using the Services to transfer a bitmark from their Bitmark Property System account to another must provide payment information (presently payment card information) We do not ourselves retain or use payment card information. Your payment card information will be retained by our Payment Processor under their privacy policy, which can be found here: https://stripe.com/us/privacy.{'\n'}
+                    <Text>&#8226;</Text>   Log Data is collected as part of your use of the web version of the Application. We use Log Data to monitor use of the web version of the Application, to provide the web version of the Application to you, and to improve the web version of the Application and the other Services we provide.{'\n'}
+                    <Text>&#8226;</Text>   Your email address is required to use the web version of the Application. We use your email address to provide the web version of the Application to you and to communicate with you about your use of the Application.{'\n'}
+                    <Text>&#8226;</Text>   Your Bitmark Account Number is used to identify you within the Services and to enable you to use the Services to manage your Bitmark Property System Account, and is visible to other Users of the Services. It is not attached to other personally identifiable information unless (a) you are using the web version of the Application, in which case your Bitmark Account Number is tied to your email address, or (b) you specifically choose to publicly identify your account with an email address or other personal information.{'\n'}
+                    <Text>&#8226;</Text>   The source, title and metadata regarding each Digital Asset managed through our Services, a thumbnail picture of that Digital Asset (only if the Digital Asset is not encrypted), and the associated bitmark. This information is public.{'\n'}
+                    <Text>&#8226;</Text>   Any personally identifiable information you choose to make available within the Services by publicly identifying your account. This information is visible to other users of the Service.{'\n'}
+                    <Text>&#8226;</Text>   Users using the Services to transfer a bitmark from their Bitmark Property System account to another must provide payment information (presently payment card information) We do not ourselves retain or use payment card information. Your payment card information will be retained by our Payment Processor under their privacy policy, which can be found here: https://stripe.com/us/privacy.{'\n\n'}
                     As a general matter we use information we collect from you to monitor, research, analyze and report on the usage of the Services, to administer, operate, and improve the Services and our business, to process transactions relating to the use of the Services; and to enforce or exercise any rights in our terms and conditions and enforce compliance with laws and law enforcement.
                   </Text>
                 </Hyperlink>
@@ -156,10 +156,10 @@ export class LegalComponent extends React.Component {
                 <Text style={legalStyle.contentSubTitleText}>INFORMATION SHARED WITH OTHERS</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
                   <Text style={legalStyle.contentNormalText}>
-                    We may engage third party service providers to work with us to administer and provide the Services. These third-party service providers have access to information collected through the Services only for the purpose of performing services on our behalf.{'\n'}
-                    We may share aggregated information and information about users (but not personally identifiable information) with third parties for industry analysis, targeting advertising or other communications, demographic profiling and other similar purposes.{'\n'}
-                    Information collected through the Services including personally identifiable information, is considered to be a business asset. As a result, if we go out of business or enter bankruptcy or if we are acquired as a result of a transaction such as a merger, acquisition or asset sale, the information collected through the Services may be disclosed or transferred to the third-party acquirer in connection with the transaction.{'\n'}
-                    It is our policy to protect you from having your privacy violated through abuse of the legal systems, whether by individuals, entities or government, and to contest claims that we believe to be invalid under applicable law. However, it is also our policy to cooperate with government and law enforcement officials and private parties. Accordingly, we reserve the right to disclose any information about you to government or law enforcement officials or private parties as we, in our sole discretion, believe necessary: (a) to satisfy or comply with any applicable law, regulation or legal process or to respond to lawful requests, including subpoenas, warrants or court orders; (b) to enforce our agreements with you or third parties, to protect our property, rights and safety and the rights, property and safety of third parties or the public in general; and (c) to prevent or stop activity we consider to be illegal or unethical.
+                    <Text>&#8226;</Text>   We may engage third party service providers to work with us to administer and provide the Services. These third-party service providers have access to information collected through the Services only for the purpose of performing services on our behalf.{'\n'}
+                    <Text>&#8226;</Text>   We may share aggregated information and information about users (but not personally identifiable information) with third parties for industry analysis, targeting advertising or other communications, demographic profiling and other similar purposes.{'\n'}
+                    <Text>&#8226;</Text>   Information collected through the Services including personally identifiable information, is considered to be a business asset. As a result, if we go out of business or enter bankruptcy or if we are acquired as a result of a transaction such as a merger, acquisition or asset sale, the information collected through the Services may be disclosed or transferred to the third-party acquirer in connection with the transaction.{'\n'}
+                    <Text>&#8226;</Text>   It is our policy to protect you from having your privacy violated through abuse of the legal systems, whether by individuals, entities or government, and to contest claims that we believe to be invalid under applicable law. However, it is also our policy to cooperate with government and law enforcement officials and private parties. Accordingly, we reserve the right to disclose any information about you to government or law enforcement officials or private parties as we, in our sole discretion, believe necessary: (a) to satisfy or comply with any applicable law, regulation or legal process or to respond to lawful requests, including subpoenas, warrants or court orders; (b) to enforce our agreements with you or third parties, to protect our property, rights and safety and the rights, property and safety of third parties or the public in general; and (c) to prevent or stop activity we consider to be illegal or unethical.
                   </Text>
                 </Hyperlink>
 
@@ -167,6 +167,17 @@ export class LegalComponent extends React.Component {
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
                   <Text style={legalStyle.contentNormalText}>
                     We take reasonable measures to protect from unauthorized access, use or disclosure the information that we collect. Please be aware, however, that no method of transmitting information over the Internet or storing information is completely secure. Accordingly, we cannot guarantee the absolute security of any information.
+                  </Text>
+                </Hyperlink>
+
+                <Text style={legalStyle.contentSubTitleText}>INTERNATIONAL TRANSFER</Text>
+                <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
+                  <Text style={legalStyle.contentNormalText}>
+                    Your information (including personally identifiable information) may be
+                    transferred to, and maintained on, computers located outside of your state,
+                    province, country or other governmental jurisdiction where the privacy
+                    laws may not be as protective as those in your jurisdiction. By using the
+                    Services, you consent to this transfer.
                   </Text>
                 </Hyperlink>
 
@@ -191,8 +202,8 @@ export class LegalComponent extends React.Component {
                 <Text style={legalStyle.contentSubTitleText}>CHOICES AND CONTROL</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
                   <Text style={legalStyle.contentNormalText}>
-                    You can always opt not to disclose information to us, but keep in mind that some information is needed to use the Applications, and if you do not disclose that information, you cannot use the Applications.{'\n'}
-                    You can stop us from collecting further information about you through the Services by closing your Services account. You may also be able to add, update, or delete certain information using the Settings functionality of the Applications, including by closing your Services account. However, please be aware that information already incorporated the Bitmark Property System remains publicly visible in the Bitmark Property System, and any information which you previously made public within our Services will remain public in our Services in its then-current form. We may also maintain a copy of the unrevised or deleted information in our records to the extent we believe necessary for legal compliance or protection of our interests. We may also use any aggregated data derived from or incorporating your information after you update or delete it, but not in a manner that would identify you personally.
+                    <Text>&#8226;</Text>   You can always opt not to disclose information to us, but keep in mind that some information is needed to use the Applications, and if you do not disclose that information, you cannot use the Applications.{'\n'}
+                    <Text>&#8226;</Text>   You can stop us from collecting further information about you through the Services by closing your Services account. You may also be able to add, update, or delete certain information using the Settings functionality of the Applications, including by closing your Services account. However, please be aware that information already incorporated the Bitmark Property System remains publicly visible in the Bitmark Property System, and any information which you previously made public within our Services will remain public in our Services in its then-current form. We may also maintain a copy of the unrevised or deleted information in our records to the extent we believe necessary for legal compliance or protection of our interests. We may also use any aggregated data derived from or incorporating your information after you update or delete it, but not in a manner that would identify you personally.
                   </Text>
                 </Hyperlink>
 
@@ -233,25 +244,25 @@ export class LegalComponent extends React.Component {
                 }} >
                   <Text style={[legalStyle.contentNormalText]}>The Services consist primarily of tools allowing users to:{'\n'}</Text>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>1.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>1.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       create, access and manage accounts within a distributed, publicly available registry and ledger system (the "Bitmark Property System") which uses blockchain technology to allow users to create unique identifiers (each a "bitmark") to claim ownership of digital files containing data, text, graphics, articles, photographs, images, illustrations, software and other items of content or technology (each a "Digital Asset" and together with the associated bitmark, each a "Crypto property");{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>2.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>2.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       to provide additional information of potential utility to users, such as descriptions of Digital Properties ("Ancillary Information"); and{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>3.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>3.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       to store Digital Assets, and to permit users of the Service to distribute copies of the Digital Assets to other users of the Services, concurrent with the transfer of the associated bitmark to the same recipient(s);{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>4.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>4.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       to transfer such bitmarks from one user of the Bitmark Property System to another user of the Bitmark Property System.{'\n'}
                     </Text>
@@ -286,7 +297,7 @@ export class LegalComponent extends React.Component {
                   </Text>
                 </Hyperlink>
 
-                <Text style={legalStyle.contentSubTitleText}>TRANSFERRING CRYPTO PROPERTY</Text>
+                <Text style={legalStyle.contentSubTitleText}>TRANSFERRING DIGITAL PROPERTY</Text>
                 <Hyperlink linkStyle={{ color: '#0060F2' }} onPress={(url) => Linking.openURL(url)} >
                   <Text style={legalStyle.contentNormalText}>
                     The following terms govern the use of the Services to transfer bitmarks.{'\n\n'}
@@ -355,47 +366,47 @@ export class LegalComponent extends React.Component {
                   </Text>
 
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>1.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>1.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       A physical or electronic signature of a person authorized to act on behalf of the owner of the copyright that has been allegedly infringed;{'\n'}
                     </Text>
                   </View>
 
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>2.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>2.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       Specific identification of the copyrighted works or materials being infringed;{'\n'}
                     </Text>
                   </View>
 
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>3.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>3.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       Identification of the material that is claimed to be infringing including information regarding the location of the infringing materials that the copyright owner seeks to have removed, with sufficient detail so that Company is capable of finding and verifying its existence;{'\n'}
                     </Text>
                   </View>
 
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>4.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>4.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       Contact information about the notifier including address, telephone number and, if available, email address;{'\n'}
                     </Text>
                   </View>
 
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>5.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>5.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       A statement that the notifier has a good faith belief that the material identified in (3) is not authorized by the copyright owner, its agent, or the law; and{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>6.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>6.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       A statement requesting that Company take a specific act with respect to the alleged infringement (e.g., removal, access restricted or disabled); and{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>7.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>7.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       A statement made under penalty of perjury that the information provided is accurate and the notifying party is authorized to make the complaint on behalf of the copyright owner.{'\n'}
                     </Text>
@@ -405,19 +416,19 @@ export class LegalComponent extends React.Component {
                     Once proper bona fide infringement notification is received by the designated agent, it is Company's policy:{'\n'}
                   </Text>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>1.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>1.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       to remove or disable access to the infringing material;{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>2.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>2.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       to notify the content provider, or user that it has removed or disabled access to the material; and{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>3.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>3.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       that repeat offenders will have the infringing material removed from the system and that Company will terminate such content provider's or user's access to the Services.{'\n'}
                     </Text>
@@ -426,25 +437,25 @@ export class LegalComponent extends React.Component {
                     <Text style={{ fontWeight: '600' }}>Procedure to Supply a Counter-Notice.</Text> If the content provider or user believes that the material that was removed (or to which access was disabled) is not infringing, or the content provider or user believes that it has the right to post and use such material from the copyright owner, the copyright owner's agent, or, pursuant to the law, the content provider or user, must send a counter-notice containing the following information to the Designated Agent listed below:{'\n'}
                   </Text>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>1.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>1.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       A physical or electronic signature of the content provider or user;{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>2.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>2.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       Identification of the material that has been removed or to which access has been disabled and the location at which the material appeared before it was removed or disabled;{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>3.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>3.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       A statement that the content provider or user has a good faith belief that the material was removed or disabled as a result of mistake or misidentification of the material; and{'\n'}
                     </Text>
                   </View>
                   <View style={legalStyle.contentNormalRow}>
-                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(32), paddingRight: 0 }]}>4.</Text>
+                    <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(33), paddingRight: 0 }]}>4.</Text>
                     <Text style={[legalStyle.contentNormalText, { marginTop: 0, width: convertWidth(345) }]}>
                       Content provider's or user's name, address, telephone number, and, if available, email address, and a statement that such person or entity consents to the jurisdiction of the Federal Court for the judicial district in which the content provider's, member's or user's address is located, or, if the content provider's, member's or user's address is located outside the United States, for any judicial district in which Company is located, and that such person or entity will accept service of process from the person who provided notification of the alleged infringement. If a counter-notice is received by the Designated Agent, Company may send a copy of the counter-notice to the original complaining party informing that person that Company may replace the removed material or cease disabling it in 10 business days. Unless the copyright owner files an action seeking a court order against the content provider, member or user, the removed material may be replaced or access to it restored in 10 to 14 business days or more after receipt of the counter-notice, at Company's discretion.{'\n'}
                     </Text>

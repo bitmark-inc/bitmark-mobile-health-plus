@@ -49,7 +49,7 @@ export class WelcomeComponent extends React.Component {
             ref={(ref) => this.fullRef = ref}
             header={(<View style={[defaultStyle.header, { backgroundColor: 'white' }]}>
               <BitmarkOneTabButtonComponent style={defaultStyle.headerLeft} />
-              <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => this.swiper.scrollBy(this.swiper.props.children.length - 1)}>
+              <BitmarkOneTabButtonComponent style={defaultStyle.headerRight} onPress={() => this.props.navigation.navigate('NewAccount')}>
                 <Text style={defaultStyle.headerRightText}>SKIP</Text>
               </BitmarkOneTabButtonComponent>
             </View>)}
