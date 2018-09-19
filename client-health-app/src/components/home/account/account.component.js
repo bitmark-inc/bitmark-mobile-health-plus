@@ -167,17 +167,15 @@ export class AccountDetailComponent extends React.Component {
                       this.props.navigation.navigate('AccountRecovery', { isSignOut: false });
                     }}>
                       <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-write-down.png')} />
-                      <View style={[defaultStyle.itemBottomBorderContainer]}>
+                      <View style={[defaultStyle.itemBottomBorderContainer, { justifyContent: 'space-between', }]}>
                         <Text style={defaultStyle.text}>Write Down Recovery Phrase</Text>
-                        <Text style={defaultStyle.textAlignRight}>
-                          <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
-                        </Text>
+                        <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
                       </View>
                     </BitmarkOneTabButtonComponent>
 
                     {/*Remove Access*/}
                     {/* <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer]} onPress={this.logout}> */}
-                    <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => {
+                    <BitmarkOneTabButtonComponent style={[defaultStyle.itemNoBorderContainer, style.itemContainer]} onPress={() => {
                       CommonModel.doTrackEvent({
                         event_name: 'health_user_want_remove_access',
                         account_number: DataProcessor.getUserInformation() ? DataProcessor.getUserInformation().bitmarkAccountNumber : null,
@@ -185,10 +183,10 @@ export class AccountDetailComponent extends React.Component {
                       this.props.navigation.navigate('AccountRecovery', { isSignOut: true, logout: this.logout });
                     }}>
                       <Image style={defaultStyle.iconBase} source={require('./../../../../assets/imgs/icon-remove.png')} />
-                      <Text style={defaultStyle.text}>Remove Access</Text>
-                      <Text style={defaultStyle.textAlignRight}>
+                      <View style={[defaultStyle.itemBottomBorderContainer, { justifyContent: 'space-between', }]}>
+                        <Text style={defaultStyle.text}>Remove Access</Text>
                         <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
-                      </Text>
+                      </View>
                     </BitmarkOneTabButtonComponent>
                   </View>
 
@@ -227,11 +225,11 @@ export class AccountDetailComponent extends React.Component {
                     </View>
 
                     {/*Support*/}
-                    <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer, style.lastItemContainer]} onPress={() => { this.props.navigation.navigate('Support') }}>
-                      <Text style={defaultStyle.text}>Support</Text>
-                      <Text style={defaultStyle.textAlignRight}>
+                    <BitmarkOneTabButtonComponent style={[defaultStyle.itemNoBorderContainer, style.itemContainer]} onPress={() => { this.props.navigation.navigate('Support') }}>
+                      <View style={[defaultStyle.itemBottomBorderContainer, { justifyContent: 'space-between', }]}>
+                        <Text style={defaultStyle.text}>Support</Text>
                         <Image style={defaultStyle.iconArrowRight} source={require('./../../../../assets/imgs/arrow-right.png')} />
-                      </Text>
+                      </View>
                     </BitmarkOneTabButtonComponent>
                   </View>
                 </View>
