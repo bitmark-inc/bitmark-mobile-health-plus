@@ -206,7 +206,7 @@ export class AccountPhraseComponent extends Component {
               </TouchableOpacity>
             </View>
 
-            <ScrollView contentContainerStyle={{ flex: 1 }}>
+            <ScrollView >
               {this.state.step === STEPS.warning && <View style={styles.content}>
                 <View style={styles.warningIconArea}>
                   <Image style={styles.warningIcon} source={require('./../../../assets/imgs/warning_icon.png')} />
