@@ -28,8 +28,6 @@ export class SupportComponent extends Component {
               </TouchableOpacity>
             </View>
             <ScrollView contentContainerStyle={styles.content}>
-
-
               <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.TermOfService.name })}>
                 <Text style={styles.rowButtonText}>Terms of Service</Text>
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />

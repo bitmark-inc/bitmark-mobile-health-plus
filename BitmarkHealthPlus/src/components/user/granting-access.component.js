@@ -58,7 +58,7 @@ export class GrantingAccessComponent extends Component {
   render() {
     return (
       <SafeAreaView style={styles.bodySafeView}>
-        <View style={styles.body} contentContainerStyle={{ flex: 1 }}>
+        <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
               <Text style={styles.titleText}>Grant access</Text>
@@ -140,12 +140,10 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 29,
     padding: convertWidth(20),
-    paddingTop: convertWidth(15),
+    paddingTop: convertWidth(35),
   },
   message: {
     fontFamily: 'Avenir Light',
