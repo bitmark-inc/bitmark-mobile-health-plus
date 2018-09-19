@@ -89,6 +89,18 @@ CREATE TABLE mobile.bitmark_renting (
     status renting_status DEFAULT 'open'
 );
 
+-- TABLE future_issue
+CREATE TABLE mobile.issue_request (
+    id TEXT NOT NULL PRIMARY KEY,
+    sender TEXT NOT NULL,
+    receiver TEXT NOT NULL,
+    asset_name TEXT NOT NULL,
+    asset_metadata JSONB,
+    asset_filename TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+);
+
 CREATE INDEX idx_bitmark_tracking_bitmark_id ON mobile.bitmark_tracking(bitmark_id);
 
 -- finished

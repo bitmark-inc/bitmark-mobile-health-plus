@@ -23,6 +23,11 @@ type Configuration struct {
 		MobileAPI   int `hcl:"mobileAPI"`
 		InternalAPI int `hcl:"internalAPI"`
 	} `hcl:"listen"`
+	FileUpload struct {
+		ExpireIn int    `hcl:"expireIn"`
+		S3Bucket string `hcl:"s3bucket"`
+		S3Region string `hcl:"s3region"`
+	} `hcl:"fileupload"`
 	DB struct {
 		Host     string `hcl:"host"`
 		Port     int    `hcl:"port"`

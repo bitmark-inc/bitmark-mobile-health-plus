@@ -28,6 +28,16 @@ const (
 	RentingCompleted BitmarkRentingStatus = "completed"
 )
 
+type IssueRequestAsset struct {
+	ID            string            `json:"id"`
+	Sender        string            `json:"registrant"`
+	Receiver      string            `json:"issuer"`
+	AssetName     string            `json:"asset_name"`
+	AssetMetadata map[string]string `json:"asset_metadata"`
+	AssetFilename string            `json:"asset_filename"`
+	CreatedAt     time.Time         `json:"created_at"`
+}
+
 type BitmarkStore interface {
 	AddTrackingBitmark(ctx context.Context, account, bitmarkID, txID, status string) error
 	GetTrackingBitmarks(ctx context.Context, account string) ([]BitmarkTracking, error)
@@ -40,4 +50,7 @@ type BitmarkStore interface {
 	DeleteBitmarkRenting(ctx context.Context, id, account string) error
 	DeleteBitmarkRentingByAccount(ctx context.Context, account string) error
 	QueryBitmarkRenting(ctx context.Context, account string) ([]BitmarkRenting, []BitmarkRenting, []BitmarkRenting, error)
+	AddIssueRequest(ctx context.Context, id, sender, receiver, assetName, filename string, assetMetadata map[string]string) error
+	RemoveIssueRequest(ctx context.Context, id, receiver string) error
+	QueryIssueRequest(ctx context.Context, receiver string) ([]IssueRequestAsset, error)
 }

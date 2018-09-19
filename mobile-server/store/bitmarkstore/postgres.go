@@ -31,6 +31,9 @@ const (
 	sqlQueryBitmarkRentingSender      = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE sender = $1 AND status = 'completed'"
 	sqlQueryBitmarkRentingReceiver    = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE receiver = $1 AND status = 'completed'"
 	sqlQueryBitmarkRentingAwaiting    = "SELECT id, sender, receiver, created_at, updated_at FROM mobile.bitmark_renting WHERE sender = $1 AND status = 'waiting_confirmation'"
+	sqlInsertIssueRequestAsset        = "INSERT INTO mobile.issue_request(id, sender, receiver, asset_name, asset_metadata, asset_filename) VALUES($1, $2, $3, $4, $5, $6)"
+	sqlDeleteIssueRequestAsset        = "DELETE FROM mobile.issue_request WHERE id = $1 WHERE receiver = $2"
+	sqlQueryIssueRequest              = "SELECT id, sender, receiver, asset_name, asset_metadata, asset_filename, created_at FROM issue_request WHERE receiver = $1"
 )
 
 func New(dbConn *pgx.ConnPool) *BitmarkPGStore {
@@ -237,4 +240,38 @@ func (b *BitmarkPGStore) QueryBitmarkRenting(ctx context.Context, account string
 	}
 
 	return senderList, receiverList, awaitingList, nil
+}
+
+func (b *BitmarkPGStore) AddIssueRequest(ctx context.Context, id, sender, receiver, assetName, filename string, assetMetadata map[string]string) error {
+	_, err := b.dbConn.ExecEx(ctx, sqlInsertIssueRequestAsset, nil, id, sender, receiver, assetName, assetMetadata, filename)
+	return err
+}
+
+func (b *BitmarkPGStore) RemoveIssueRequest(ctx context.Context, id, receiver string) error {
+	_, err := b.dbConn.ExecEx(ctx, sqlDeleteIssueRequestAsset, nil, id, receiver)
+	return err
+}
+
+func (b *BitmarkPGStore) QueryIssueRequest(ctx context.Context, receiver string) ([]IssueRequestAsset, error) {
+	rows, err := b.dbConn.QueryEx(ctx, sqlQueryIssueRequest, nil, receiver)
+
+	defer rows.Close()
+	if err != nil {
+		if err != pgx.ErrNoRows {
+			return nil, err
+		}
+	}
+
+	issueRequests := make([]IssueRequestAsset, 0)
+
+	for rows.Next() {
+		var i IssueRequestAsset
+		if err := rows.Scan(&i.ID, &i.Sender, &i.Receiver, &i.AssetName, &i.AssetMetadata, &i.AssetFilename, &i.CreatedAt); err != nil {
+			return nil, err
+		}
+
+		issueRequests = append(issueRequests, i)
+	}
+
+	return issueRequests, nil
 }

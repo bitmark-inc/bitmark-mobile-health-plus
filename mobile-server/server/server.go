@@ -94,6 +94,15 @@ func (s *Server) Run(addr string) error {
 
 	api.POST("/auth", s.RequestJWT)
 
+	issueRequestGroup := api.Group("/issue_requests")
+	issueRequestGroup.Use(s.authenticateJWT())
+	{
+		issueRequestGroup.POST("", s.uploadAssetForIssueRequest)
+		issueRequestGroup.GET("/:id/download", s.downloadAsset)
+		issueRequestGroup.DELETE("/:id", s.deleteIssueRequest)
+		issueRequestGroup.GET("", s.queryIssueRequest)
+	}
+
 	r.Use(s.authenticateJWT()).GET("/ws", s.ServeWs)
 
 	srv := &http.Server{
