@@ -29,11 +29,10 @@ export class HealthComponent extends React.Component {
 
         content={(<View style={style.body}>
           <BitmarkOneTabButtonComponent style={[defaultStyle.itemContainer, style.itemContainer]} onPress={() => this.props.navigation.navigate('HealthDataSource')}>
-            <Text style={defaultStyle.text}>View Data Type</Text>
-
-            <Text style={defaultStyle.textAlignRight}>
+            <View style={[defaultStyle.itemBottomBorderContainer, { justifyContent: 'space-between', }]}>
+              <Text style={defaultStyle.text}>View Data Type</Text>
               <Image style={defaultStyle.iconArrowRight} source={require('./../../../../../assets/imgs/arrow-right.png')} />
-            </Text>
+            </View>
           </BitmarkOneTabButtonComponent>
 
           <View style={style.textContainer}>

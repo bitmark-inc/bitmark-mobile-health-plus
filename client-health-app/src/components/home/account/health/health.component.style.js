@@ -31,5 +31,11 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 0.3,
+  },
+  itemAlignRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flex: 1
   }
 });
