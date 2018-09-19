@@ -42,9 +42,10 @@ export class BitmarkDetailComponent extends Component {
         })).then(result => {
           console.log('result :', result);
           if (result && result.error) {
-            Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
-              text: 'OK', onPress: Actions.pop
-            }]);
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
+            // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+            //   text: 'OK', onPress: Actions.pop
+            // }]);
             return;
           }
           this.setState({ content: JSON.stringify(JSON.parse(result), null, 2) });
@@ -60,9 +61,10 @@ export class BitmarkDetailComponent extends Component {
         })).then(result => {
           console.log('result :', result);
           if (result && result.error) {
-            Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
-              text: 'OK', onPress: Actions.pop
-            }]);
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
+            // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+            //   text: 'OK', onPress: Actions.pop
+            // }]);
             return;
           }
           this.setState({ filePath: result });
