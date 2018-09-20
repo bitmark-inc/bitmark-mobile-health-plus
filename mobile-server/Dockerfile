@@ -10,6 +10,8 @@ RUN go install github.com/bitmark-inc/mobile-app/mobile-server
 
 FROM alpine
 
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+
 COPY --from=build-server /go/bin/mobile-server /usr/bin/mobile-server
 
 COPY mobile-server.conf.sample /.config/server/mobile-server.conf.sample
