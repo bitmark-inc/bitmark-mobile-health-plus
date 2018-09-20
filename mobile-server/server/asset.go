@@ -101,24 +101,27 @@ func (s *Server) uploadAssetForIssueRequest(c *gin.Context) {
 }
 
 func (s *Server) downloadAsset(c *gin.Context) {
-	token := c.Param("token")
+	token := c.Param("id")
 
 	key := aws.String("mobile_issuance/" + token)
 
 	conf := aws.Config{Region: aws.String(s.conf.FileUpload.S3Region)}
 	sess := session.New(&conf)
 
-	c.Stream(func(w io.Writer) bool {
-		downloadsvc := s3manager.NewDownloader(sess)
-		buff := &aws.WriteAtBuffer{}
-		_, err := downloadsvc.Download(buff, &s3.GetObjectInput{
-			Bucket: aws.String(s.conf.FileUpload.S3Bucket),
-			Key:    key,
-		})
+	downloadsvc := s3manager.NewDownloader(sess)
+	buff := &aws.WriteAtBuffer{}
+	_, err := downloadsvc.Download(buff, &s3.GetObjectInput{
+		Bucket: aws.String(s.conf.FileUpload.S3Bucket),
+		Key:    key,
+	})
 
-		if err != nil {
-			log.Error(err)
-		}
+	if err != nil {
+		log.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"error": "cannot download asset"})
+		return
+	}
+
+	c.Stream(func(w io.Writer) bool {
 		w.Write(buff.Bytes())
 		return true
 	})
