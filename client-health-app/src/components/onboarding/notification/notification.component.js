@@ -16,12 +16,17 @@ export class NotificationComponent extends React.Component {
   }
 
   componentDidMount() {
-    NotificationService.doRequestNotificationPermissions().then((result) => {
-      this.props.navigation.navigate('Welcome');
-      return DataProcessor.doMarkRequestedNotification(result);
-    }).catch(error => {
-      console.log('NotificationComponent requestNotification error:', error);
-    });
+    // Redirect if needed
+    if (this.props.screenProps && this.props.screenProps.initialRouteName) {
+      this.props.navigation.navigate(this.props.screenProps.initialRouteName);
+    } else {
+      NotificationService.doRequestNotificationPermissions().then((result) => {
+        this.props.navigation.navigate('Welcome');
+        return DataProcessor.doMarkRequestedNotification(result);
+      }).catch(error => {
+        console.log('NotificationComponent requestNotification error:', error);
+      });
+    }
   }
 
   render() {
@@ -45,6 +50,7 @@ NotificationComponent.propTypes = {
     rootNavigation: PropTypes.shape({
       navigate: PropTypes.func,
       dispatch: PropTypes.func,
-    })
+    }),
+    initialRouteName: PropTypes.string
   }),
 }

@@ -352,6 +352,11 @@ class MainComponent extends Component {
   }
 
   render() {
+    let initialRouteName;
+    if (this.props.navigation.state && this.props.navigation.state.params) {
+      initialRouteName = this.props.navigation.state.params.initialRouteName;
+    }
+
     let DisplayedComponent = LoadingComponent;
     if (this.state.user) {
       DisplayedComponent = this.state.user.bitmarkAccountNumber ? HomeComponent : OnBoardingComponent;
@@ -377,7 +382,7 @@ class MainComponent extends Component {
               </BitmarkOneTabButtonComponent>
             </View>
           </BitmarkDialogComponent>}
-          <DisplayedComponent screenProps={{ rootNavigation: this.props.navigation, }} />
+          <DisplayedComponent screenProps={{ rootNavigation: this.props.navigation, initialRouteName}} />
         </View>
       </View>
     )
