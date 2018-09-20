@@ -89,7 +89,7 @@ CREATE TABLE mobile.bitmark_renting (
     status renting_status DEFAULT 'open'
 );
 
--- TABLE future_issue
+-- TABLE issue_request
 CREATE TABLE mobile.issue_request (
     id TEXT NOT NULL PRIMARY KEY,
     sender TEXT NOT NULL,
@@ -99,6 +99,16 @@ CREATE TABLE mobile.issue_request (
     asset_filename TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
+);
+
+-- TABLE feedback
+CREATE TYPE feedback_app AS ENUM('registry', 'health', 'healthplus');
+CREATE TABLE mobile.feedback (
+    account TEXT NOT NULL,
+    app feedback_app NOT NULL,
+    version INT,
+    feedback JSONB NOT NULL,
+        PRIMARY KEY(account, app, version)
 );
 
 CREATE INDEX idx_bitmark_tracking_bitmark_id ON mobile.bitmark_tracking(bitmark_id);

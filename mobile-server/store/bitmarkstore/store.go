@@ -38,6 +38,21 @@ type IssueRequestAsset struct {
 	CreatedAt     time.Time         `json:"created_at"`
 }
 
+type Feedback struct {
+	Version  int                    `json:"version"`
+	App      FeedbackApp            `json:"app"`
+	Account  string                 `json:"account"`
+	Feedback map[string]interface{} `json:"feedback"`
+}
+
+type FeedbackApp string
+
+const (
+	Health     FeedbackApp = "health"
+	HealthPlus FeedbackApp = "healthplus"
+	Registry   FeedbackApp = "registry"
+)
+
 type BitmarkStore interface {
 	AddTrackingBitmark(ctx context.Context, account, bitmarkID, txID, status string) error
 	GetTrackingBitmarks(ctx context.Context, account string) ([]BitmarkTracking, error)
@@ -53,4 +68,6 @@ type BitmarkStore interface {
 	AddIssueRequest(ctx context.Context, id, sender, receiver, assetName, filename string, assetMetadata map[string]string) error
 	RemoveIssueRequest(ctx context.Context, id, receiver string) error
 	QueryIssueRequest(ctx context.Context, receiver string) ([]IssueRequestAsset, error)
+	AddFeedback(ctx context.Context, account string, app FeedbackApp, version int, feedback map[string]interface{}) error
+	QueryAllFeedback(ctx context.Context, version int, app FeedbackApp) ([]Feedback, error)
 }

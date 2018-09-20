@@ -103,6 +103,13 @@ func (s *Server) Run(addr string) error {
 		issueRequestGroup.GET("", s.queryIssueRequest)
 	}
 
+	feedbackGroup := api.Group("/feedbacks")
+	feedbackGroup.Use(s.authenticateJWT())
+	{
+		feedbackGroup.POST("/:app", s.addFeedback)
+		feedbackGroup.GET("/version", s.getCurrentFeedbackVersion)
+	}
+
 	r.Use(s.authenticateJWT()).GET("/ws", s.ServeWs)
 
 	srv := &http.Server{

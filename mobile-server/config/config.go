@@ -36,6 +36,11 @@ type Configuration struct {
 		DBName   string `hcl:"dbname"`
 		SSLMode  string `hcl:"sslmode"`
 	} `hcl:"db"`
+	Feedback struct {
+		Version        int    `hcl:"currentFeedbackVersion"`
+		FeedbackTo     string `hcl:"feedbackTo"`
+		ProtectedToken string `hcl:"protectedToken"`
+	} `hcl:"feedback"`
 	Redis struct {
 		URI string `hcl:"uri"`
 	}

@@ -34,6 +34,8 @@ const (
 	sqlInsertIssueRequestAsset        = "INSERT INTO mobile.issue_request(id, sender, receiver, asset_name, asset_metadata, asset_filename) VALUES($1, $2, $3, $4, $5, $6)"
 	sqlDeleteIssueRequestAsset        = "DELETE FROM mobile.issue_request WHERE id = $1 WHERE receiver = $2"
 	sqlQueryIssueRequest              = "SELECT id, sender, receiver, asset_name, asset_metadata, asset_filename, created_at FROM issue_request WHERE receiver = $1"
+	sqlInsertFeedback                 = "INSERT INTO mobile.feedback(account, app, version, feedback) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING"
+	sqlQueryAllFeedback               = "SELECT account, feedback FROM mobile.feedback WHERE version = $1 AND app = $2"
 )
 
 func New(dbConn *pgx.ConnPool) *BitmarkPGStore {
@@ -274,4 +276,33 @@ func (b *BitmarkPGStore) QueryIssueRequest(ctx context.Context, receiver string)
 	}
 
 	return issueRequests, nil
+}
+
+func (b *BitmarkPGStore) AddFeedback(ctx context.Context, account string, app FeedbackApp, version int, feedback map[string]interface{}) error {
+	_, err := b.dbConn.ExecEx(ctx, sqlInsertFeedback, nil, account, string(app), version, feedback)
+	return err
+}
+
+func (b *BitmarkPGStore) QueryAllFeedback(ctx context.Context, version int, app FeedbackApp) ([]Feedback, error) {
+	rows, err := b.dbConn.QueryEx(ctx, sqlQueryIssueRequest, nil, version, string(app))
+
+	defer rows.Close()
+	if err != nil {
+		if err != pgx.ErrNoRows {
+			return nil, err
+		}
+	}
+
+	feedbacks := make([]Feedback, 0)
+
+	for rows.Next() {
+		var f Feedback
+		if err := rows.Scan(&f.Account, &f.Feedback); err != nil {
+			return nil, err
+		}
+
+		feedbacks = append(feedbacks, f)
+	}
+
+	return feedbacks, nil
 }
