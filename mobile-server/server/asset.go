@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -10,6 +11,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/bitmark-inc/mobile-app/mobile-server/pushnotification"
+	"github.com/bitmark-inc/mobile-app/mobile-server/util"
 	"github.com/gin-gonic/gin"
 	"github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
@@ -82,7 +85,19 @@ func (s *Server) uploadAssetForIssueRequest(c *gin.Context) {
 		return
 	}
 
+	// Notify receiver
+	go pushnotification.Push(c.Copy(), &pushnotification.PushInfo{
+		Account: issuer,
+		Title:   "Issue request",
+		Message: fmt.Sprintf("%s has added a new health record to your account. Please examine the record and sign to claim ownership.", util.ShortenAccountNumber(account)),
+		Data: &map[string]interface{}{
+			"event":      "issue_request",
+			"registrant": account,
+		},
+	}, s.pushStore, s.pushAPIClient)
+
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
+
 }
 
 func (s *Server) downloadAsset(c *gin.Context) {

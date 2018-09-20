@@ -13,6 +13,7 @@ import (
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/config"
 	"github.com/bitmark-inc/mobile-app/mobile-server/external/gateway"
+	"github.com/bitmark-inc/mobile-app/mobile-server/external/gorush"
 	"github.com/bitmark-inc/mobile-app/mobile-server/logmodule"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/bitmarkstore"
 	"github.com/bitmark-inc/mobile-app/mobile-server/store/pushstore"
@@ -30,6 +31,7 @@ type Server struct {
 	wsConnStore     *websocketstore.WSStore
 	influxDBClient  influx.Client
 	gatewayClient   *gateway.Client
+	pushAPIClient   *gorush.Client
 
 	// Stores
 	pushStore    pushstore.PushStore
@@ -103,12 +105,8 @@ func (s *Server) Run(addr string) error {
 		issueRequestGroup.GET("", s.queryIssueRequest)
 	}
 
-	feedbackGroup := api.Group("/feedbacks")
-	feedbackGroup.Use(s.authenticateJWT())
-	{
-		feedbackGroup.POST("/:app", s.addFeedback)
-		feedbackGroup.GET("/version", s.getCurrentFeedbackVersion)
-	}
+	api.GET("/feedbacks/version", s.getCurrentFeedbackVersion)
+	api.POST("/feedbacks/:app", s.addFeedback).Use(s.authenticateBoth())
 
 	r.Use(s.authenticateJWT()).GET("/ws", s.ServeWs)
 
@@ -128,7 +126,7 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func New(conf *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, redisPool *redis.Pool, influxClient influx.Client, gatewayClient *gateway.Client) *Server {
+func New(conf *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, dbConn *pgx.ConnPool, redisPool *redis.Pool, influxClient influx.Client, gatewayClient *gateway.Client, pushAPIClient *gorush.Client) *Server {
 	r := gin.New()
 	wsConnStore := websocketstore.NewStore()
 	redisConn, err := redisPool.Dial()
@@ -149,6 +147,7 @@ func New(conf *config.Configuration, pushStore pushstore.PushStore, bitmarkStore
 		wsConnStore:     wsConnStore,
 		influxDBClient:  influxClient,
 		gatewayClient:   gatewayClient,
+		pushAPIClient:   pushAPIClient,
 		conf:            conf,
 	}
 }
