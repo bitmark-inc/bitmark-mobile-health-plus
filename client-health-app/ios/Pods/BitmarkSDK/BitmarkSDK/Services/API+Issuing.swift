@@ -69,7 +69,9 @@ extension API {
             payload["transfer_offer"] = transferOfferBody
             
             let action = "transferOffer"
-            let resource = String(data: try JSONEncoder().encode(try transferOffer.serialize()), encoding: .utf8)!
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .sortedKeys
+            let resource = String(data: try encoder.encode(transferOffer), encoding: .utf8)!
             
             try urlRequest.signRequest(withAccount: account, action: action, resource: resource)
         }

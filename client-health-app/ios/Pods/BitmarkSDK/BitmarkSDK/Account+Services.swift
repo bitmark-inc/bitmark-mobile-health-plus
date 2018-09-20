@@ -342,6 +342,49 @@ public extension Account {
         let sessionData = try api.createSessionData(key: key, fromAccount: self)
         return sessionData.serialize()
     }
+    
+    public func createSessionData(forBitmark bitmarkId: String, recipient: String) throws -> [String: String] {
+        let network = self.authKey.network
+        let api = API(network: network)
+        
+        guard let assetAccess = try api.getAssetAccess(account: self, bitmarkId: bitmarkId) else {
+            throw("Fail to get asset access")
+        }
+        
+        if assetAccess.sessionData == nil {
+            throw("Fail to get asset's access")
+        }
+        
+        return try updatedSessionData(bitmarkId: bitmarkId,
+                                      sessionData: assetAccess.sessionData!,
+                                      sender: assetAccess.sender!,
+                                      recipient: recipient)
+            .serialize()
+    }
+    
+    public func downloadAssetGrant(grantId: String) throws -> (String?, Data?) {
+        let network = self.authKey.network
+        let api = API(network: network)
+        guard let access = try api.getAssetGrant(account: self, grantId: grantId) else {
+            return (nil, nil)
+        }
+        
+        let r = try api.getAssetContent(url: access.url!)
+        guard let content = r.1 else {
+            return (nil, nil)
+        }
+        let filename = r.0
+        
+        guard let sessionData = access.sessionData,
+            let sender = access.from else {
+                return (filename, content)
+        }
+        
+        let senderEncryptionPublicKey = try api.getEncryptionPublicKey(accountNumber: sender)
+        let dataKey = try AssetEncryption.encryptionKey(fromSessionData: sessionData, account: self, senderEncryptionPublicKey: senderEncryptionPublicKey!.hexDecodedData)
+        let decryptedData = try dataKey.decypt(data: content)
+        return (filename, decryptedData)
+    }
 }
 
 extension Account {

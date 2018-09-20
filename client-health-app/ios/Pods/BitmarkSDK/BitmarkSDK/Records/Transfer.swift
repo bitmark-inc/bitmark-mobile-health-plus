@@ -185,6 +185,21 @@ extension TransferOffer {
     }
 }
 
+extension TransferOffer: Encodable {
+    enum TransferOfferKeys: String, CodingKey {
+        case link = "link"
+        case owner = "owner"
+        case signature = "signature"
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: TransferOfferKeys.self)
+        try container.encode(self.txId, forKey: .link)
+        try container.encode(self.receiver.string, forKey: .owner)
+        try container.encode(self.signature!.hexEncodedString, forKey: .signature)
+    }
+}
+
 public struct CountersignedTransferRecord {
     internal(set) public var offer: TransferOffer
     private(set) public var counterSignature: Data? = nil
