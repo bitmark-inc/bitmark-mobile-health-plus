@@ -384,7 +384,8 @@ const doSendBitmarkHealthDataNotifications = async (userInformation) => {
       }
     });
   }
-  if (userInformation.activeBitmarkHealthDataAt && currentTimeInLocal.hour() === timeSendNotification && currentTimeInLocal.day() === SUNDAY) {
+  if (userInformation.activeBitmarkHealthDataAt && currentTimeInLocal.hour() === timeSendNotification &&
+    (currentTimeInLocal.day() === SUNDAY || currentTimeInLocal.day() === 0)) {
     if (!lastTimeBitmarkHealthData) {
       sendBitmarkNotification = true;
     } else {
