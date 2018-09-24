@@ -2,7 +2,7 @@ const moment = require('moment');
 
 const getMomentLocalTime = (date, dateUTCOffset) => {
   let tempMoment = date ? moment(date) : moment();
-  tempMoment.utcOffset(- dateUTCOffset);
+  tempMoment.utcOffset(dateUTCOffset);
   return tempMoment;
 };
 
