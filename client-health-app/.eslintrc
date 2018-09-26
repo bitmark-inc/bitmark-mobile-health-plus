@@ -3,15 +3,18 @@
   "env": {
     "es6": true,
     "node": true,
-    "browser": true
+    "browser": true,
+    "jasmine": true
   },
   "plugins": [
     "react",
-    "react-native"
+    "react-native",
+    "jasmine"
   ],
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:jasmine/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {

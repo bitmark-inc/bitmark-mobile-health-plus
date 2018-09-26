@@ -120,7 +120,7 @@ class MainComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
-    Linking.addEventListener('url', this.handleDeppLink);
+    Linking.removeEventListener('url', this.handleDeppLink);
     AppState.removeEventListener('change', this.handleAppStateChange);
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
   }
@@ -382,7 +382,7 @@ class MainComponent extends Component {
               </BitmarkOneTabButtonComponent>
             </View>
           </BitmarkDialogComponent>}
-          <DisplayedComponent screenProps={{ rootNavigation: this.props.navigation, initialRouteName}} />
+          <DisplayedComponent screenProps={{ rootNavigation: this.props.navigation, initialRouteName }} />
         </View>
       </View>
     )

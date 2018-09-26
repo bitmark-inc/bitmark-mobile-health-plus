@@ -107,7 +107,7 @@ export class AccountDetailComponent extends React.Component {
       });
       const resetMainPage = NavigationActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Main', params: {initialRouteName: 'NewAccount'}})]
+        actions: [NavigationActions.navigate({ routeName: 'Main', params: { initialRouteName: 'NewAccount' } })]
       });
       this.props.screenProps.rootNavigation.dispatch(resetMainPage);
     }).catch((error) => {

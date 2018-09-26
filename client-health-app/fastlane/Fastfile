@@ -35,7 +35,7 @@ platform :ios do
     )
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
-      workspace: "ios/Bitmark.xcworkspace", 
+      workspace: "ios/Bitmark Health.xcworkspace", 
       scheme: "Bitmark Health",
       include_bitcode: false
     )

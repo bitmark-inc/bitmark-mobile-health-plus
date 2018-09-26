@@ -59,7 +59,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your location data.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Bitmark app would like to access your location for metric purpose.</string>
+	<string>Bitmark Health app would like to access your location for metric purpose.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>
 	<key>NSMotionUsageDescription</key>
