@@ -72,10 +72,17 @@ func newRedisPool(uri string) *redis.Pool {
 	}
 }
 
-func initializeLog() {
+func initializeLog(conf *config.Configuration) {
 	log.SetFormatter(&log.TextFormatter{})
 	log.SetOutput(os.Stdout)
 	log.SetLevel(log.DebugLevel)
+
+	if len(conf.Log.FluentdHost) == 0 {
+		return
+	}
+	hook := logmodule.NewFluentdHook(conf.Log.Tag, conf.Log.FluentdHost, conf.Log.FluentdPort)
+
+	log.AddHook(hook)
 }
 
 func initializeWatcher(c *config.Configuration, pushStore pushstore.PushStore, bitmarkStore bitmarkstore.BitmarkStore, pushAPIClient *gorush.Client, gatewayClient *gateway.Client) *watcher.NotifyClient {
@@ -103,12 +110,12 @@ func main() {
 	flag.StringVar(&configFile, "conf", "./mobile-server.conf", "mobile server configuration")
 	flag.Parse()
 
-	initializeLog()
-
 	conf, err := config.LoadConfig(configFile)
 	if err != nil {
-		log.Panic("can not open config file", err)
+		panic("can not open config file:" + err.Error())
 	}
+
+	initializeLog(conf)
 
 	// Open influx db
 	influxDBClient, err := influx.NewHTTPClient(influx.HTTPConfig{

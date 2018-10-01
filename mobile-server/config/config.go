@@ -36,6 +36,11 @@ type Configuration struct {
 		DBName   string `hcl:"dbname"`
 		SSLMode  string `hcl:"sslmode"`
 	} `hcl:"db"`
+	Log struct {
+		FluentdHost string `hcl:"fluentdHost"`
+		FluentdPort int    `hcl:"fluentdPort"`
+		Tag         string `hcl:"tag"`
+	} `hcl:"log"`
 	Feedback struct {
 		Version        int    `hcl:"currentFeedbackVersion"`
 		FeedbackTo     string `hcl:"feedbackTo"`
