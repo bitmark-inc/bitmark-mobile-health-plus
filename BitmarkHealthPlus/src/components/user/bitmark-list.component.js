@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList,
+  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList, Share,
 } from 'react-native';
 import moment from "moment";
 
@@ -61,9 +61,25 @@ export class BitmarkListComponent extends Component {
     });
   }
 
+  downloadBitmark(bitmarkId, fileName) {
+    AppProcessor.doDownloadBitmark(bitmarkId, {
+      indicator: true, title: i18n.t('BitmarkListComponent_downloadTitle'), message: i18n.t('BitmarkListComponent_downloadMessage', { fileName })
+    }).then((filePath) => {
+      Share.share({ title: i18n.t('BitmarkListComponent_shareTitle'), url: filePath }).then(() => {
+      }).catch(error => {
+        console.log('Share error:', error);
+      })
+    }).catch(error => {
+      console.log('Download bitmark error:', error);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
+  }
+
   render() {
     let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
     let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
+    let isFileRecord = (bitmark) => { return bitmark.asset.metadata.Source === 'Medical Records' };
+
     return (
       <View style={{ flex: 1, }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
@@ -89,7 +105,7 @@ export class BitmarkListComponent extends Component {
                   data={this.state.bitmarkList}
                   extraData={this.state}
                   renderItem={({ item }) => {
-                    return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
+                    return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => isFileRecord(item) ? this.downloadBitmark.bind(this)(item.id, item.asset.name) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
                       <Text style={styles.bitmarkRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
                       {item.status === 'confirmed' && <Image style={styles.bitmarkRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
                       {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
@@ -172,6 +188,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Book',
     fontSize: 16,
     fontWeight: '300',
+    paddingRight: 5,
+    flex: 1
   },
   bitmarkRowIcon: {
     width: convertWidth(8),

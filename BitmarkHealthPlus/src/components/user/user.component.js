@@ -4,15 +4,19 @@ import {
   Alert,
   Linking,
   Image, View, TouchableOpacity, Text, SafeAreaView,
+  ActionSheetIOS
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import { convertWidth, runPromiseWithoutError, FileUtil } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
+import randomString from "random-string";
+import { issue } from "../../utils";
 
 let ComponentName = 'ComponentName';
 export class UserComponent extends Component {
@@ -48,37 +52,89 @@ export class UserComponent extends Component {
     }
   }
 
-  captureAsset() {
-    let options = {
-      title: i18n.t('UserComponent_pickerTitle')
-    };
+  addRecord() {
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: [i18n.t('UserComponent_actionSheetOption1'), i18n.t('UserComponent_actionSheetOption2'), i18n.t('UserComponent_actionSheetOption3'), i18n.t('UserComponent_actionSheetOption4')],
+      title: i18n.t('UserComponent_pickerTitle'),
+      cancelButtonIndex: 0,
+    },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          this.onTakePhoto();
+        } else if (buttonIndex === 2) {
+          this.onChooseFromLibrary();
+        } else if (buttonIndex === 3) {
+          this.onChooseFile();
+        }
+      });
+  }
 
-    ImagePicker.showImagePicker(options, async (response) => {
-
-      if (response.didCancel) {
-        return;
-      }
-      if (response.error) {
-        Alert.alert(i18n.t('UserComponent_alertTitle'), response.error + '.', [{
-          text: i18n.t('UserComponent_alertButton1'),
-          onPress: () => Linking.openURL('app-settings:')
-        }, {
-          text: i18n.t('UserComponent_alertButton2'),
-          style: 'cancel',
-        }]);
-        return;
-      }
-      let filePath = response.uri.replace('file://', '');
-      filePath = decodeURIComponent(filePath);
-
-      // Move file from "tmp" folder to "cache" folder
-      let fileName = response.fileName ? response.fileName : response.uri.substring(response.uri.lastIndexOf('/') + 1);
-      let timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
-      let destPath = FileUtil.CacheDirectory + '/' + DataProcessor.getUserInformation().bitmarkAccountNumber + '/' + fileName;
-      await FileUtil.moveFileSafe(filePath, destPath);
-      filePath = destPath;
-      Actions.captureAsset({ filePath, timestamp })
+  onTakePhoto() {
+    ImagePicker.launchCamera({}, (response) => {
+      this.processOnChooseImage(response);
     });
+  }
+
+  onChooseFromLibrary() {
+    ImagePicker.launchImageLibrary({}, (response) => {
+      this.processOnChooseImage(response);
+    });
+  }
+
+  async processOnChooseImage(response) {
+    if (response.error) {
+      Alert.alert(i18n.t('UserComponent_alertTitle1'), response.error + '.', [{
+        text: i18n.t('UserComponent_alertButton11'),
+        onPress: () => Linking.openURL('app-settings:')
+      }, {
+        text: i18n.t('UserComponent_alertButton12'),
+        style: 'cancel',
+      }]);
+      return;
+    }
+
+    let info = await this.prepareToIssue(response);
+
+    Actions.captureAsset(info);
+  }
+
+  onChooseFile() {
+    DocumentPicker.show({
+      filetype: [DocumentPickerUtil.allFiles(), "public.data"],
+    }, async (error, response) => {
+      if (error) {
+        return;
+      }
+
+      if (response.fileSize > constants.ISSUE_FILE_SIZE_LIMIT_IN_MB * 1024 * 1024) {
+        Alert.alert('Error', i18n.t('UserComponent_maxFileSize', { size: constants.ISSUE_FILE_SIZE_LIMIT_IN_MB }));
+        return;
+      }
+
+      let info = await this.prepareToIssue(response);
+
+      let filePath = info.filePath;
+      let assetName = response.fileName;
+      let metadataList = [];
+      metadataList.push({ label: 'Source', value: 'Medical Records' });
+      metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
+
+      issue(filePath, assetName, metadataList, 'file');
+    });
+  }
+
+  async prepareToIssue(response) {
+    let filePath = response.uri.replace('file://', '');
+    filePath = decodeURIComponent(filePath);
+
+    // Move file from "tmp" folder to "cache" folder
+    let fileName = response.fileName ? response.fileName : response.uri.substring(response.uri.lastIndexOf('/') + 1);
+    let timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
+    let destPath = FileUtil.CacheDirectory + '/' + DataProcessor.getUserInformation().bitmarkAccountNumber + '/' + fileName;
+    await FileUtil.moveFileSafe(filePath, destPath);
+    filePath = destPath;
+
+    return { filePath, timestamp };
   }
 
   backToUserAccount() {
@@ -123,7 +179,7 @@ export class UserComponent extends Component {
                     {i18n.t('UserComponent_dataTitle2', { s: this.state.numberHealthAssetBitmarks !== 1 ? 's' : '' })}
                   </Text>
                 </TouchableOpacity>
-                {this.state.isDisplayingAccountNumber && isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
+                {this.state.isDisplayingAccountNumber && isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.addRecord.bind(this)}>
                   <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
                   <Text style={styles.addHealthRecordButtonText} > {i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>}

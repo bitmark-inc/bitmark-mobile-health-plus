@@ -8,5 +8,6 @@ const constants = {
     indicator: 200,
     dialog: 100,
   },
+  ISSUE_FILE_SIZE_LIMIT_IN_MB: 100
 };
 export { constants };

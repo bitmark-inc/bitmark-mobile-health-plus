@@ -2,17 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  Alert,
   Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 import randomString from "random-string";
 
-import { convertWidth, FileUtil } from '../../utils';
+import { convertWidth, issue } from '../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
-import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
-import { EventEmitterService } from '../../services';
 
 export class CaptureAssetComponent extends Component {
   static propTypes = {
@@ -25,37 +22,12 @@ export class CaptureAssetComponent extends Component {
 
   issueFile() {
     let filePath = this.props.filePath;
-    AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
-      if (asset && asset.name) {
+    let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+    let metadataList = [];
+    metadataList.push({ label: 'Source', value: 'Health Records' });
+    metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
 
-        let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
-          ? i18n.t('CaptureAssetComponent_alertMessage11')
-          : i18n.t('CaptureAssetComponent_alertMessage12');
-        Alert.alert('', message, [{
-          text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
-        }]);
-      } else {
-        // Do issue
-        let metadataList = [];
-        metadataList.push({ label: 'Source', value: 'Health Records' });
-        metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
-        let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
-        AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
-          indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
-        }).then((data) => {
-          if (data) {
-            FileUtil.removeSafe(filePath);
-            Actions.pop();
-          }
-        }).catch(error => {
-          Alert.alert(i18n.t('CaptureAssetComponent_alertTitle2'), i18n.t('CaptureAssetComponent_alertMessage2'));
-          console.log('issue bitmark error :', error);
-        });
-      }
-    }).catch(error => {
-      console.log('Check file error :', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-    });
+    issue(filePath, assetName, metadataList, 'image');
   }
 
 
