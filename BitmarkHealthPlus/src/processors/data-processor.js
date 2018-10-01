@@ -7,6 +7,7 @@ const {
   PushNotificationIOS,
 } = ReactNative;
 
+import { UserBitmarksStore, UserBitmarksActions, DataAccountAccessesStore, DataAccountAccessesActions } from './../stores';
 import {
   EventEmitterService,
   BitmarkService,
@@ -56,9 +57,9 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   userDataBitmarks[bitmarkAccountNumber] = { healthDataBitmarks, healthAssetBitmarks };
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
-  EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, { healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber });
 
   if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
+    UserBitmarksStore.dispatch(UserBitmarksActions.updateBitmarks(healthDataBitmarks, healthAssetBitmarks));
     let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.createdAt);
     if (list && list.length > 0) {
       Actions.bitmarkHealthData({ list });
@@ -130,7 +131,8 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
 let queueGetAccountAccesses = [];
 const doCheckNewAccesses = async (accesses) => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
-  EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, accesses);
+  DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(accesses));
+
   if (accesses && accesses.waiting && accesses.waiting.length > 0) {
     Actions.confirmAccess({ token: accesses.waiting[0].id, grantee: accesses.waiting[0].grantee });
   }
@@ -306,13 +308,11 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
     jwt = result.jwt_token;
 
-    websocket =
-      // new WebSocket(config.mobile_server_url + '/ws');
-      new WebSocket(config.mobile_server_url + '/ws', [], {
-        headers: {
-          'Authorization': 'Bearer ' + jwt
-        }
-      });
+    websocket = new WebSocket(config.mobile_server_url + '/ws', [], {
+      headers: {
+        'Authorization': 'Bearer ' + jwt
+      }
+    });
 
     websocket.onopen = () => {
       console.log('websocket opened');
@@ -362,6 +362,9 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       }
     }
 
+    let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
+    UserBitmarksStore.dispatch(UserBitmarksActions.updateBitmarks(userBitmarks.healthDataBitmarks, userBitmarks.healthAssetBitmarks));
+    DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(await doGetAccountAccesses()));
     await checkAppNeedResetLocalData(appInfo);
 
     AccountService.removeAllDeliveredNotifications();
@@ -537,6 +540,7 @@ const doSelectAccountAccess = async (accountNumber) => {
   if (accesses && accesses.granted_from) {
     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === accountNumber);
     if (grantedAccessAccountSelected) {
+      UserBitmarksStore.dispatch(UserBitmarksActions.reset());
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor, grantedAccessAccountSelected.granted_at);
       return true;
     }
@@ -668,7 +672,6 @@ const DataProcessor = {
   doDownloadBitmark,
   doIssueFile,
 
-  doGetUserDataBitmarks,
   doCheckFileToIssue,
 
   getApplicationVersion,

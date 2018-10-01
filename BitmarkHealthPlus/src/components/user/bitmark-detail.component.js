@@ -14,7 +14,6 @@ import { EventEmitterService } from '../../services';
 import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 
-let ComponentName = 'BitmarkDetailComponent';
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
     bitmarkType: PropTypes.string,
@@ -28,7 +27,6 @@ export class BitmarkDetailComponent extends Component {
     }
 
     this.handerChangeUserDataBitmarks = this.handerChangeUserDataBitmarks.bind(this);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, null, ComponentName);
     if (this.props.bitmark) {
       let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
       if (this.props.bitmarkType === 'bitmark_health_data') {
@@ -77,14 +75,6 @@ export class BitmarkDetailComponent extends Component {
         text: 'OK', onPress: Actions.pop
       }]);
     }
-  }
-
-  componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, this.handerChangeUserDataBitmarks, ComponentName);
-  }
-
-  handerChangeUserDataBitmarks({ healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber }) {
-    console.log('handerChangeUserDataBitmarks user data bitmarks :', healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
   }
 
   backToUserAccount() {

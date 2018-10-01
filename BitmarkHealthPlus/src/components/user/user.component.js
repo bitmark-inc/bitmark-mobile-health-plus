@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Alert,
@@ -6,49 +7,29 @@ import {
   Image, View, TouchableOpacity, Text, SafeAreaView,
   ActionSheetIOS
 } from 'react-native';
+import { Provider, connect } from 'react-redux';
 
 import ImagePicker from 'react-native-image-picker';
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-import { convertWidth, runPromiseWithoutError, FileUtil } from './../../utils';
+import { convertWidth, FileUtil } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
-import randomString from "random-string";
 import { issue } from "../../utils";
+import { UserBitmarksStore } from '../../stores';
 
-let ComponentName = 'ComponentName';
-export class UserComponent extends Component {
+class PrivateUserComponent extends Component {
+  static propTypes = {
+    healthDataBitmarks: PropTypes.array,
+    healthAssetBitmarks: PropTypes.array,
+  };
   constructor(props) {
     super(props);
 
-    this.handerChangeUserDataBitmarks = this.handerChangeUserDataBitmarks.bind(this);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, null, ComponentName);
-
     this.state = {
-      numberHealthDataBitmarks: 0,
-      numberHealthAssetBitmarks: 0,
       isDisplayingAccountNumber: true,
-    }
-    runPromiseWithoutError(DataProcessor.doGetUserDataBitmarks(DataProcessor.getAccountAccessSelected())).then(({ healthDataBitmarks, healthAssetBitmarks }) => {
-      let numberHealthDataBitmarks = (healthDataBitmarks || []).length;
-      let numberHealthAssetBitmarks = (healthAssetBitmarks || []).length;
-      this.setState({ numberHealthDataBitmarks, numberHealthAssetBitmarks });
-    });
-  }
-
-  componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, this.handerChangeUserDataBitmarks, ComponentName);
-  }
-
-  handerChangeUserDataBitmarks({ healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber }) {
-    console.log('handerChangeUserDataBitmarks user data bitmarks :', healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
-    let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
-    if (accountNumberDisplay === bitmarkAccountNumber) {
-      let numberHealthDataBitmarks = (healthDataBitmarks || []).length;
-      let numberHealthAssetBitmarks = (healthAssetBitmarks || []).length;
-      this.setState({ numberHealthDataBitmarks, numberHealthAssetBitmarks });
     }
   }
 
@@ -161,22 +142,22 @@ export class UserComponent extends Component {
           <View style={styles.body}>
             <TouchableOpacity style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
               <View style={styles.dataArea}>
-                <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthDataBitmarks === 0 || !this.state.isDisplayingAccountNumber} onPress={() => {
+                <TouchableOpacity style={{ flex: 1 }} disabled={this.props.healthDataBitmarks.length === 0 || !this.state.isDisplayingAccountNumber} onPress={() => {
                   this.setState({ isDisplayingAccountNumber: true });
                   Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })
                 }}>
-                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks} </Text>
-                    {i18n.t('UserComponent_dataTitle1', { s: this.state.numberHealthDataBitmarks !== 1 ? 's' : '' })}
+                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.props.healthDataBitmarks.length} </Text>
+                    {i18n.t('UserComponent_dataTitle1', { s: this.props.healthDataBitmarks.length !== 1 ? 's' : '' })}
                   </Text>
                 </TouchableOpacity>
               </View>
               <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60), }]}>
-                <TouchableOpacity style={{ flex: 1 }} disabled={this.state.numberHealthAssetBitmarks === 0 || !this.state.isDisplayingAccountNumber} onPress={() => {
+                <TouchableOpacity style={{ flex: 1 }} disabled={this.props.healthAssetBitmarks.length === 0 || !this.state.isDisplayingAccountNumber} onPress={() => {
                   this.setState({ isDisplayingAccountNumber: true });
                   Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })
                 }}>
-                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks} </Text>
-                    {i18n.t('UserComponent_dataTitle2', { s: this.state.numberHealthAssetBitmarks !== 1 ? 's' : '' })}
+                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.props.healthAssetBitmarks.length} </Text>
+                    {i18n.t('UserComponent_dataTitle2', { s: this.props.healthAssetBitmarks.length !== 1 ? 's' : '' })}
                   </Text>
                 </TouchableOpacity>
                 {this.state.isDisplayingAccountNumber && isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.addRecord.bind(this)}>
@@ -315,3 +296,22 @@ const styles = StyleSheet.create({
     marginLeft: convertWidth(16),
   },
 });
+
+const StoreUserComponent = connect(
+  (state) => state.data,
+)(PrivateUserComponent);
+
+export class UserComponent extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Provider store={UserBitmarksStore}>
+          <StoreUserComponent />
+        </Provider>
+      </View>
+    );
+  }
+}

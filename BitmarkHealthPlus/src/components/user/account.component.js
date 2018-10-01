@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Provider, connect } from 'react-redux';
 import {
   StyleSheet,
   Linking,
@@ -11,7 +13,7 @@ import Intercom from 'react-native-intercom';
 
 import Mailer from 'react-native-mail';
 
-import { convertWidth, runPromiseWithoutError } from './../../utils';
+import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
@@ -19,33 +21,20 @@ import {
   DataProcessor,
   // AppProcessor
 } from '../../processors';
-import { EventEmitterService } from '../../services';
-let ComponentName = 'AccountComponent';
-export class AccountComponent extends Component {
+import { DataAccountAccessesStore } from '../../stores';
+export class PrivateAccountComponent extends Component {
+  static propTypes = {
+    accesses: PropTypes.shape({
+      granted_to: PropTypes.array,
+    })
+  };
   constructor(props) {
     super(props);
-    this.handerChangeUserDataAccountAccess = this.handerChangeUserDataAccountAccess.bind(this);
-
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, null, ComponentName);
     this.state = {
       accountNumberCopyText: '',
-      accessList: [],
     };
-    runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_to')).then((accessList) => {
-      accessList = accessList || [];
-      this.setState({ accessList });
-    });
-  }
-  componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, this.handerChangeUserDataAccountAccess, ComponentName);
   }
 
-  handerChangeUserDataAccountAccess() {
-    runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_to')).then((accessList) => {
-      accessList = accessList || [];
-      this.setState({ accessList });
-    });
-  }
 
   rateApp() {
     Alert.alert(i18n.t('AccountComponent_alertTitle1'), i18n.t('AccountComponent_alertMessage1'), [{
@@ -140,14 +129,14 @@ export class AccountComponent extends Component {
               <View style={styles.accessArea}>
                 <Text style={styles.accessTitle}>{i18n.t('AccountComponent_accessTitle')}</Text>
                 <Text style={styles.accessDescription}>
-                  {this.state.accessList && this.state.accessList.length > 0 ? i18n.t('AccountComponent_accessDescription1') : i18n.t('AccountComponent_accessDescription2')}
+                  {this.props.accesses['granted_to'] && this.props.accesses['granted_to'].length > 0 ? i18n.t('AccountComponent_accessDescription1') : i18n.t('AccountComponent_accessDescription2')}
                 </Text>
-                {this.state.accessList && this.state.accessList.length > 0 && <FlatList
+                {this.props.accesses['granted_to'] && this.props.accesses['granted_to'].length > 0 && <FlatList
                   style={{ marginTop: 12 }}
                   keyExtractor={(item, index) => index}
                   scrollEnabled={false}
-                  data={this.state.accessList}
-                  extraData={this.state}
+                  data={this.props.accesses['granted_to']}
+                  extraData={this.props}
                   renderItem={({ item }) => {
                     return (<View style={styles.accessAccountRow} >
                       <Text style={styles.accessAccountNumber}>
@@ -339,3 +328,23 @@ const styles = StyleSheet.create({
   }
 
 });
+
+
+const StoreAccountComponent = connect(
+  (state) => state.data,
+)(PrivateAccountComponent);
+
+export class AccountComponent extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Provider store={DataAccountAccessesStore}>
+          <StoreAccountComponent />
+        </Provider>
+      </View>
+    );
+  }
+}

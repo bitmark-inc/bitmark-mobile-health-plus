@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Provider, connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Permissions from 'react-native-permissions';
 import {
   StyleSheet,
@@ -7,36 +9,23 @@ import {
   Image, View, TouchableOpacity, Text, SafeAreaView, FlatList,
 } from 'react-native';
 
-import { convertWidth, runPromiseWithoutError } from './../../utils';
+import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
-import { DataProcessor, AppProcessor } from '../../processors';
+import { AppProcessor } from '../../processors';
 import { EventEmitterService } from '../../services';
+import { DataAccountAccessesStore } from '../../stores';
 
-let ComponentName = 'OtherAccountsComponent';
-export class OtherAccountsComponent extends Component {
+
+class PrivateOtherUserComponent extends Component {
+  static propTypes = {
+    accesses: PropTypes.shape({
+      granted_from: PropTypes.array,
+    })
+  };
   constructor(props) {
     super(props);
-
-    this.handerChangeUserDataAccountAccess = this.handerChangeUserDataAccountAccess.bind(this);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, null, ComponentName);
-    this.state = {
-      accessAccounts: [],
-    }
-    runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_from')).then(accessAccounts => {
-      this.setState({ accessAccounts: accessAccounts || [] });
-    });
-  }
-  componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_ACCOUNT_ACCESSES, this.handerChangeUserDataAccountAccess, ComponentName);
-  }
-
-  handerChangeUserDataAccountAccess() {
-    runPromiseWithoutError(DataProcessor.doGetAccountAccesses('granted_from')).then((accessList) => {
-      accessList = accessList || [];
-      this.setState({ accessList });
-    });
   }
 
   selectAccount(accountNumber) {
@@ -78,9 +67,7 @@ export class OtherAccountsComponent extends Component {
     });
   }
 
-
   render() {
-    console.log('accessAccounts ;', this.state.accessAccounts);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
@@ -92,10 +79,10 @@ export class OtherAccountsComponent extends Component {
               </TouchableOpacity>
             </View>
             <View style={styles.content}>
-              {this.state.accessAccounts && this.state.accessAccounts.length > 0 && <FlatList
+              {this.props.accesses.granted_from && this.props.accesses.granted_from.length > 0 && <FlatList
                 keyExtractor={(item, index) => index + ''}
-                data={this.state.accessAccounts}
-                extraData={this.state}
+                data={this.props.accesses.granted_from}
+                extraData={this.props}
                 renderItem={({ item }) => {
                   return (<TouchableOpacity style={styles.accountRow} onPress={() => this.selectAccount.bind(this)(item.grantor)}>
                     <Text style={styles.accountNumber}>
@@ -105,7 +92,7 @@ export class OtherAccountsComponent extends Component {
                   </TouchableOpacity>);
                 }}
               />}
-              {(!this.state.accessAccounts || this.state.accessAccounts.length === 0) && <View style={{ flex: 1, paddingTop: 50, }}>
+              {(!this.props.accesses.granted_from || this.props.accesses.granted_from.length === 0) && <View style={{ flex: 1, paddingTop: 50, }}>
                 <Text style={{ fontFamily: 'Avenir Heavy', fontWeight: '800', fontSize: 16 }}>
                   {i18n.t('OtherAccountsComponent_message1')}
                 </Text>
@@ -208,3 +195,23 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+const StoreOtherUserComponent = connect(
+  (state) => state.data,
+)(PrivateOtherUserComponent);
+
+export class OtherUserComponent extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Provider store={DataAccountAccessesStore}>
+          <StoreOtherUserComponent />
+        </Provider>
+      </View>
+    );
+  }
+}

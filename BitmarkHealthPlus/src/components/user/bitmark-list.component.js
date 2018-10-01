@@ -1,50 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Provider, connect } from 'react-redux';
 import {
   StyleSheet,
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList, Share,
 } from 'react-native';
 import moment from "moment";
 
-import { convertWidth, runPromiseWithoutError } from '../../utils';
+import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
 import { EventEmitterService } from '../../services';
 import { DataProcessor, AppProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
+import { UserBitmarksStore, UserBitmarksActions } from '../../stores/user-bitmarks.store';
 
-let ComponentName = 'BitmarkListComponent';
-export class BitmarkListComponent extends Component {
+class PrivateBitmarkListComponent extends Component {
   static propTypes = {
-    bitmarkType: PropTypes.string
+    bitmarkType: PropTypes.string,
+    healthDataBitmarks: PropTypes.array,
+    healthAssetBitmarks: PropTypes.array,
   };
   constructor(props) {
     super(props);
-
-    this.handerChangeUserDataBitmarks = this.handerChangeUserDataBitmarks.bind(this);
-    EventEmitterService.remove(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, null, ComponentName);
-    this.state = {
-      bitmarkList: [],
-    };
-    runPromiseWithoutError(DataProcessor.doGetUserDataBitmarks(DataProcessor.getAccountAccessSelected())).then(({ healthDataBitmarks, healthAssetBitmarks }) => {
-      let bitmarkList = this.props.bitmarkType === 'bitmark_health_data' ? healthDataBitmarks :
-        (this.props.bitmarkType === 'bitmark_health_issuance' ? healthAssetBitmarks : [])
-      this.setState({ bitmarkList });
-    });
-  }
-
-  componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.CHANGE_USER_DATA_BITMARKS, this.handerChangeUserDataBitmarks, ComponentName);
-  }
-
-  handerChangeUserDataBitmarks({ healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber }) {
-    console.log('handerChangeUserDataBitmarks user data bitmarks :', healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
-    let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
-    if (accountNumberDisplay === bitmarkAccountNumber) {
-      let bitmarkList = this.props.bitmarkType === 'bitmark_health_data' ? healthDataBitmarks :
-        (this.props.bitmarkType === 'bitmark_health_issuance' ? healthAssetBitmarks : [])
-      this.setState({ bitmarkList });
-    }
   }
 
   goToDetailScreen(bitmark, bitmarkType) {
@@ -100,10 +78,11 @@ export class BitmarkListComponent extends Component {
 
               <ScrollView style={styles.bitmarkList}>
                 <FlatList
-                  keyExtractor={(item, index) => index}
+                  keyExtractor={(item) => item.id}
                   scrollEnabled={false}
-                  data={this.state.bitmarkList}
-                  extraData={this.state}
+                  data={this.props.bitmarkType === 'bitmark_health_data' ? this.props.healthDataBitmarks :
+                    (this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.healthAssetBitmarks : [])}
+                  extraData={this.props}
                   renderItem={({ item }) => {
                     return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => isFileRecord(item) ? this.downloadBitmark.bind(this)(item.id, item.asset.name) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
                       <Text style={styles.bitmarkRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
@@ -205,3 +184,27 @@ const styles = StyleSheet.create({
   }
 
 });
+
+const StoreBitmarkListComponent = connect(
+  (state) => state.data,
+)(PrivateBitmarkListComponent);
+
+export class BitmarkListComponent extends Component {
+  static propTypes = {
+    bitmarkType: PropTypes.string
+  };
+
+  constructor(props) {
+    super(props);
+    UserBitmarksStore.dispatch(UserBitmarksActions.updateBitmarkType(this.props.bitmarkType));
+  }
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Provider store={UserBitmarksStore}>
+          <StoreBitmarkListComponent />
+        </Provider>
+      </View>
+    );
+  }
+}
