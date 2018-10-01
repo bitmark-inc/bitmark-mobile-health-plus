@@ -242,7 +242,7 @@ const doLogin = async (touchFaceIdSession) => {
 
 const doLogout = async () => {
   if (userInformation.notificationUUID) {
-    let signatureData = await CommonModel.doTryCreateSignatureData('Please sign to authorize your transactions')
+    let signatureData = await CommonModel.doTryCreateSignatureData(i18n.t('FaceTouchId_doLogout'))
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
   }
   PushNotificationIOS.cancelAllLocalNotifications();
@@ -294,7 +294,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     });
 
     if (!(justCreatedBitmarkAccount && CommonModel.getFaceTouchSessionId())) {
-      await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+      await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp'));
     }
     console.log('CommonModel.getFaceTouchSessionId() :', CommonModel.getFaceTouchSessionId());
 
@@ -366,7 +366,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     PushNotificationIOS.scheduleLocalNotification({
       fireDate: dateNotification.toDate(),
       alertTitle: '',
-      alertBody: 'Your health data is ready to sign.',
+      alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
       repeatInterval: 'week'
     });
   }

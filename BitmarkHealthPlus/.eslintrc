@@ -5,6 +5,9 @@
     "node": true,
     "browser": true
   },
+  "globals": {
+    "i18n": true
+  },
   "plugins": [
     "react",
     "react-native"

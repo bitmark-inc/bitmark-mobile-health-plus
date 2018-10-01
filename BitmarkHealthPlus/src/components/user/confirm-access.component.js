@@ -46,7 +46,7 @@ export class ConfirmAccessComponent extends Component {
   }
   confirmRequest() {
     AppProcessor.doConfirmGrantingAccess(this.state.token, this.state.grantee, {
-      indicator: true, title: 'Waiting confirmation...', message: ''
+      indicator: true, title: i18n.t('ConfirmAccessComponent_title'), message: ''
     }).then((result) => {
       if (result) {
         this.setState({ step: 'success' });
@@ -64,39 +64,36 @@ export class ConfirmAccessComponent extends Component {
         <View style={styles.body}>
           {this.state.step === 'confirming' && <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
-              <Text style={styles.titleText}>Confirm access request</Text>
+              <Text style={styles.titleText}>{i18n.t('ConfirmAccessComponent_titleText1')}</Text>
             </View>
             <View style={styles.content}>
               <Text style={styles.message}>
-                {'[' + grantee.substring(0, 4) + '...' + grantee.substring(grantee.length - 5, grantee.length) + ']'}
-                {' wants to view your records and data. Tap confirm to allow.\n\n'}
-                {'You can always revoke their access from Account Settings. '}
+                {i18n.t('ConfirmAccessComponent_message1', { accountNumber: '[' + grantee.substring(0, 4) + '...' + grantee.substring(grantee.length - 5, grantee.length) + ']' })}
               </Text>
             </View>
 
             <View style={styles.bottomButtonArea}>
               <TouchableOpacity style={styles.bottomButton} onPress={this.cancelRequest.bind(this)}>
-                <Text style={[styles.bottomButtonText, { fontWeight: '300' }]}>{'Cancel'.toUpperCase()}</Text>
+                <Text style={[styles.bottomButtonText, { fontWeight: '300' }]}>{i18n.t('ConfirmAccessComponent_bottomButtonText1').toUpperCase()}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.bottomButton, { backgroundColor: 'white' }]} onPress={this.confirmRequest.bind(this)}>
-                <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'confirm'.toUpperCase()}</Text>
+                <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{i18n.t('ConfirmAccessComponent_bottomButtonText2').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>}
 
           {this.state.step === 'success' && <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
-              <Text style={styles.titleText}>Access granted!</Text>
+              <Text style={styles.titleText}>{i18n.t('ConfirmAccessComponent_titleText2')}</Text>
             </View>
             <View style={styles.content}>
               <Text style={styles.message}>
-                {'[' + grantee.substring(0, 4) + '...' + grantee.substring(grantee.length - 5, grantee.length) + ']'}
-                {' can now view your records and data.'}
+                {i18n.t('ConfirmAccessComponent_message2')}
               </Text>
             </View>
             <View style={styles.bottomButtonArea}>
               <TouchableOpacity style={[styles.bottomButton, { width: '100%', backgroundColor: 'white' }]} onPress={this.checkDone.bind(this)}>
-                <Text style={[styles.bottomButtonText, { fontWeight: '900', color: "#FF4444" }]}>{'OK'.toUpperCase()}</Text>
+                <Text style={[styles.bottomButtonText, { fontWeight: '900', color: "#FF4444" }]}>{i18n.t('ConfirmAccessComponent_bottomButtonText3').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>}

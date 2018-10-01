@@ -55,7 +55,7 @@ class CodePushComponent extends React.Component {
             </View>
             <View style={styles.statusContainer}>
               <Text style={this.state.status === 'downloading' ? styles.updatingStatus : styles.completedStatus}>
-                {this.state.status === 'downloading' ? 'UPDATING...' : 'COMPLETE!'}
+                {this.state.status === 'downloading' ? i18n.t('CodePushComponent_status1') : i18n.t('CodePushComponent_status2')}
               </Text>
             </View>
             <View style={styles.progressBar}>
@@ -122,19 +122,20 @@ const styles = StyleSheet.create({
   }
 })
 
-let codePushOptions = {
+import i18nTemp from 'i18n-js';
+let i18n = global.i18n || i18nTemp;
+
+let CodePushMainAppComponent = codePush({
   updateDialog: {
-    title: 'New Version Available',
-    optionalUpdateMessage: 'Please update the app to the new version to continue using. This will be quick and will not affect any of your data.',
-    mandatoryUpdateMessage: 'Please update the app to the new version to continue using. This will be quick and will not affect any of your data.',
-    optionalInstallButtonLabel: 'Update',
-    mandatoryContinueButtonLabel: 'Update',
+    title: i18n.t('CodePushComponent_title'),
+    optionalUpdateMessage: i18n.t('CodePushComponent_optionalUpdateMessage'),
+    mandatoryUpdateMessage: i18n.t('CodePushComponent_mandatoryUpdateMessage'),
+    optionalInstallButtonLabel: i18n.t('CodePushComponent_optionalInstallButtonLabel'),
+    mandatoryContinueButtonLabel: i18n.t('CodePushComponent_mandatoryContinueButtonLabel'),
     optionalIgnoreButtonLabel: null
   },
   checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
   installMode: codePush.InstallMode.IMMEDIATE
-};
-
-let CodePushMainAppComponent = codePush(codePushOptions)(CodePushComponent);
+})(CodePushComponent);
 
 export { CodePushMainAppComponent };

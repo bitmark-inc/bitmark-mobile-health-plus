@@ -28,9 +28,11 @@ export class BitmarkHealthDataComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.content}>
-              <Text style={styles.title}>{(this.props.list && this.props.list.length > 1) ? `Register the last ${this.props.list.length} weeks of your  data` : 'Register your weekly data'}</Text>
+              <Text style={styles.title}>{(this.props.list && this.props.list.length > 1) ?
+                i18n.t('BitmarkHealthDataComponent_title1', { length: this.props.list.length }) :
+                i18n.t('BitmarkHealthDataComponent_title2')}</Text>
               <Text style={styles.message}>
-                Once health data is registered as your property, you will be able to donate, share, or transfer it to another party (medical professional, family member, etc.) at your complete discretion.
+                {i18n.t('BitmarkHealthDataComponent_message')}
               </Text>
             </View>
 
@@ -47,7 +49,7 @@ export class BitmarkHealthDataComponent extends Component {
                   EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
                 });
               }} >
-                <Text style={styles.signButtonText}>REGISTER</Text>
+                <Text style={styles.signButtonText}>{i18n.t('BitmarkHealthDataComponent_signButtonText')}</Text>
               </TouchableOpacity>
             </View>
           </View>

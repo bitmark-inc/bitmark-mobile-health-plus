@@ -11,7 +11,7 @@ const FaceTouchId = {
   },
   authenticate: () => {
     return new Promise((resolve, reject) => {
-      SwiftFaceTouchId.authenticate('Please sign to authorize your transactions.', (ok) => {
+      SwiftFaceTouchId.authenticate(i18n.t('FaceTouchId_authenticate'), (ok) => {
         if (ok) {
           resolve();
         } else {

@@ -39,17 +39,19 @@ export class RevokeAccessComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent} >
             <View style={styles.titleRow}>
-              <Text style={styles.title}>Revoke access</Text>
+              <Text style={styles.title}>{i18n.t('RevokeAccessComponent_title')}</Text>
             </View>
             <View style={styles.content}>
-              <Text style={styles.message}>This will revoke account {'[' + this.props.accessInfo.grantee.substring(0, 4) + '...' + this.props.accessInfo.grantee.substring(this.props.accessInfo.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'} access your health data. </Text>
+              <Text style={styles.message}>
+                {i18n.t('RevokeAccessComponent_message', { accountNumber: '[' + this.props.accessInfo.grantee.substring(0, 4) + '...' + this.props.accessInfo.grantee.substring(this.props.accessInfo.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']' })}
+              </Text>
             </View>
             <View style={styles.bottomButtonArea}>
               <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: 'white' }]} onPress={Actions.pop}>
-                <Text style={styles.bottomButtonText}>{'no'.toUpperCase()}</Text>
+                <Text style={styles.bottomButtonText}>{i18n.t('RevokeAccessComponent_bottomButtonText1').toUpperCase()}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.bottomButton, { backgroundColor: 'white', borderWidth: 1, borderColor: '#FF4444' }]} onPress={this.revokeAccess.bind(this)}>
-                <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'yes'.toUpperCase()}</Text>
+                <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{i18n.t('RevokeAccessComponent_bottomButtonText2').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>

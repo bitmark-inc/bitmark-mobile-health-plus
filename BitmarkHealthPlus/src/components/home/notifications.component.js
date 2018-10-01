@@ -31,8 +31,8 @@ export class NotificationComponent extends React.Component {
         <View style={[styles.body]}>
           <View style={styles.swipePageContent}>
             <Image style={[styles.notificationImage]} source={require('../../../assets/imgs/notification.png')} />
-            <Text style={[styles.notificationTitle]}>NOTIFICATIONS</Text>
-            <Text style={[styles.notificationDescription,]}>Receive notifications when actions require your authorization.</Text>
+            <Text style={[styles.notificationTitle]}>{i18n.t('NotificationComponent_notificationTitle')}</Text>
+            <Text style={[styles.notificationDescription,]}>{i18n.t('NotificationComponent_notificationDescription')}</Text>
           </View>
         </View>
         <View style={styles.enableButtonArea}>
@@ -41,10 +41,10 @@ export class NotificationComponent extends React.Component {
           }]} onPress={() => {
             EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, true);
           }}>
-            <Text style={[styles.enableButtonText, { color: '#FF4444', fontWeight: '600', }]}>LATER</Text>
+            <Text style={[styles.enableButtonText, { color: '#FF4444', fontWeight: '600', }]}>{i18n.t('NotificationComponent_enableButtonText1')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.enableButton]} onPress={requestNotification}>
-            <Text style={styles.enableButtonText}>ENABLE</Text>
+            <Text style={styles.enableButtonText}>{i18n.t('NotificationComponent_enableButtonText2')}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

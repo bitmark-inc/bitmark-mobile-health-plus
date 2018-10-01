@@ -44,7 +44,7 @@ export class OtherAccountsComponent extends Component {
       if (result === true) {
         Actions.reset('user');
       } else if (result === false) {
-        Alert.alert('', `You no longer have access to this account!`, [{
+        Alert.alert('', i18n.t('OtherAccountsComponent_alertMessage1'), [{
           text: 'OK', style: 'cancel',
         }]);
       }
@@ -54,11 +54,11 @@ export class OtherAccountsComponent extends Component {
   }
   scanQRCode() {
     let displayAlert = () => {
-      Alert.alert('Permission error!', 'Camera permissions not granted.', [{
-        text: 'Enable',
+      Alert.alert(i18n.t('OtherAccountsComponent_alertTitle2'), i18n.t('OtherAccountsComponent_alertMessage2'), [{
+        text: i18n.t('OtherAccountsComponent_alertButton21'),
         onPress: () => Linking.openURL('app-settings:')
       }, {
-        text: 'Cancel', style: 'cancel',
+        text: i18n.t('OtherAccountsComponent_alertButton22'), style: 'cancel',
       }]);
     }
     Permissions.check('camera').then(permission => {
@@ -86,7 +86,7 @@ export class OtherAccountsComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent} >
             <View style={styles.titleRow}>
-              <Text style={styles.title}>View other accounts</Text>
+              <Text style={styles.title}>{i18n.t('OtherAccountsComponent_title')}</Text>
               <TouchableOpacity onPress={Actions.pop} >
                 <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
               </TouchableOpacity>
@@ -107,16 +107,16 @@ export class OtherAccountsComponent extends Component {
               />}
               {(!this.state.accessAccounts || this.state.accessAccounts.length === 0) && <View style={{ flex: 1, paddingTop: 50, }}>
                 <Text style={{ fontFamily: 'Avenir Heavy', fontWeight: '800', fontSize: 16 }}>
-                  NO ACCOUNTS AVAILABLE TO VIEW.
+                  {i18n.t('OtherAccountsComponent_message1')}
                 </Text>
                 <Text style={{ fontFamily: 'Avenir Heavy', fontWeight: '300', fontSize: 16, marginTop: 20, }}>
-                  When someone grants access to their account, it will appear here for viewing.
+                  {i18n.t('OtherAccountsComponent_message2')}
                 </Text>
               </View>}
             </View>
             <View style={styles.bottomButtonArea} >
               <TouchableOpacity style={styles.bottomButton} onPress={this.scanQRCode.bind(this)} >
-                <Text style={styles.bottomButtonText}>{'scan access code'.toUpperCase()}</Text>
+                <Text style={styles.bottomButtonText}>{i18n.t('OtherAccountsComponent_bottomButtonText').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>

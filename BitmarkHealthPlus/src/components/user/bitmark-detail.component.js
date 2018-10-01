@@ -38,7 +38,7 @@ export class BitmarkDetailComponent extends Component {
           id = grantedInfo.ids[this.props.bitmark.asset_id];
         }
         runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, {
-          indicator: true, title: 'Loading...'
+          indicator: true, title: i18n.t('BitmarkDetailComponent_title')
         })).then(result => {
           console.log('result :', result);
           if (result && result.error) {
@@ -57,7 +57,7 @@ export class BitmarkDetailComponent extends Component {
           id = grantedInfo.ids[this.props.bitmark.asset_id];
         }
         runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, {
-          indicator: true, title: 'Loading...'
+          indicator: true, title: i18n.t('BitmarkDetailComponent_title')
         })).then(result => {
           console.log('result :', result);
           if (result && result.error) {
@@ -73,7 +73,7 @@ export class BitmarkDetailComponent extends Component {
         Actions.pop();
       }
     } else {
-      Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+      Alert.alert(i18n.t('BitmarkDetailComponent_alertTitle1'), i18n.t('BitmarkDetailComponent_alertMessage1'), [{
         text: 'OK', onPress: Actions.pop
       }]);
     }
@@ -104,7 +104,9 @@ export class BitmarkDetailComponent extends Component {
     return (
       <View style={{ flex: 1, }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
-          <Text style={styles.accountNumberDisplayText}>Viewing {'[' + accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) + ']'}, tap here to cancel.</Text>
+          <Text style={styles.accountNumberDisplayText}>
+            {i18n.t('BitmarkDetailComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
+          </Text>
         </TouchableOpacity>}
         <SafeAreaView style={[styles.bodySafeView]}>
           <View style={styles.body}>
@@ -118,17 +120,17 @@ export class BitmarkDetailComponent extends Component {
               </View>
               <View style={styles.content}>
                 <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
-                  <Text style={styles.metadataTitle}>PUBLIC METADATA</Text>
-                  <Text style={styles.metadataMessage}>Visible to everyone</Text>
+                  <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle1')}</Text>
+                  <Text style={styles.metadataMessage}>{i18n.t('BitmarkDetailComponent_metadataMessage')}</Text>
                   <View style={styles.metadataRow}>
-                    <Text style={styles.metadataLabel}>{'Saved Time:   '.toUpperCase()}</Text>
+                    <Text style={styles.metadataLabel}>{i18n.t('BitmarkDetailComponent_metadataLabel1').toUpperCase()}</Text>
                     <Text style={styles.metadataValue}>{moment(this.props.bitmark.asset.metadata['Saved Time']).format('YYYY MMM DD hh:mm:ss').toUpperCase()}</Text>
                   </View>
                   <View style={styles.metadataRow}>
-                    <Text style={styles.metadataLabel}>{'Source:   '.toUpperCase()}</Text>
+                    <Text style={styles.metadataLabel}>{i18n.t('BitmarkDetailComponent_metadataLabel2').toUpperCase()}</Text>
                     <Text style={styles.metadataValue}>{this.props.bitmark.asset.metadata['Source'].toUpperCase()}</Text>
                   </View>
-                  <Text style={styles.metadataTitle}>PRIVATE DATA:</Text>
+                  <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                     <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({ filePath: this.state.filePath, bitmark: this.props.bitmark })}>
                       <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} /></TouchableOpacity>}

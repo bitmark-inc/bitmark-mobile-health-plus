@@ -81,8 +81,8 @@ export class TouchFaceIdComponent extends React.Component {
                 <Image style={[styles.touchIdImage]} source={require('../../../assets/imgs/touch_id_icon.png')} />
                 <Image style={[styles.faceIdImage]} source={require('../../../assets/imgs/face_id_icon.png')} />
               </View>
-              <Text style={[styles.faceTouchIdTitle]}>TOUCH/FACE ID & PASSCODE</Text>
-              <Text style={[styles.faceTouchIdDescription,]}>Touch/Face ID or a passcode is required to sign and encrypt your health data.</Text>
+              <Text style={[styles.faceTouchIdTitle]}>{i18n.t('TouchFaceIdComponent_faceTouchIdTitle')}</Text>
+              <Text style={[styles.faceTouchIdDescription,]}>{i18n.t('TouchFaceIdComponent_faceTouchIdDescription')}</Text>
             </View>
           </View>
 
@@ -95,7 +95,7 @@ export class TouchFaceIdComponent extends React.Component {
                   this.doContinue();
                 }
               }}>
-              <Text style={styles.enableButtonText}>ENABLE</Text>
+              <Text style={styles.enableButtonText}>{i18n.t('TouchFaceIdComponent_enableButtonText')}</Text>
             </TouchableOpacity>
           </View>
         </View>

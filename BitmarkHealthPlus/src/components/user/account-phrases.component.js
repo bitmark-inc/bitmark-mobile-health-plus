@@ -199,10 +199,11 @@ export class AccountPhraseComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.titleArea}>
-              <Text style={styles.titleText}>{(this.props.isLogout ? 'Log out' : (this.state.step === STEPS.testing ? 'TEST Recovery Phrase' : 'Recovery phrase')).toUpperCase()}</Text>
+              <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1')
+                : (this.state.step === STEPS.testing ? i18n.t('AccountPhraseComponent_titleText2') : i18n.t('AccountPhraseComponent_titleText3'))).toUpperCase()}</Text>
               <TouchableOpacity onPress={Actions.pop}>
                 {this.state.step !== STEPS.testing && <Image style={styles.titleBackIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />}
-                {this.state.step === STEPS.testing && <Text style={styles.titleCancelText}>Cancel</Text>}
+                {this.state.step === STEPS.testing && <Text style={styles.titleCancelText}>{i18n.t('AccountPhraseComponent_titleCancelText')}</Text>}
               </TouchableOpacity>
             </View>
 
@@ -212,19 +213,16 @@ export class AccountPhraseComponent extends Component {
                   <Image style={styles.warningIcon} source={require('./../../../assets/imgs/warning_icon.png')} />
                 </View>
                 {!this.props.isLogout && <Text style={styles.warningMessage}>
-                  Your recovery phrase is the only way to restore your Bitmark account if your phone is lost, stolen, broken, or upgraded.{'\n\n'}
-                  We will show you a list of words to write down on a piece of paper and keep safe.{'\n\n'}
-                  Make sure you are in a private location before writing down your recovery phrase.
+                  {i18n.t('AccountPhraseComponent_warningMessage1')}
                 </Text>}
                 {this.props.isLogout && <Text style={styles.warningMessage}>
-                  Logging out of this account will allow you to access and manage a different account on this device.{'\n\n'}
-                  Your current account will be removed from this device. If you wish to restore it in the future, you will need to enter your Recovery Phrase.
+                  {i18n.t('AccountPhraseComponent_warningMessage2')}
                 </Text>}
               </ScrollView>
 
               <View style={styles.bottomButtonArea}>
                 <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhrase24Words.bind(this)}>
-                  <Text style={styles.bottomButtonText}>NEXT</Text>
+                  <Text style={styles.bottomButtonText}>{i18n.t('AccountPhraseComponent_bottomButtonText1')}</Text>
                 </TouchableOpacity>
               </View>
             </View>}
@@ -232,8 +230,8 @@ export class AccountPhraseComponent extends Component {
             {this.state.step === STEPS.phrase24Word && <View style={{ flex: 1 }}>
               <ScrollView style={styles.content}>
                 <Text style={styles.phrase24WordMessage}>
-                  Please write down your recovery phrase in the exact sequence below:
-               </Text>
+                  {i18n.t('AccountPhraseComponent_phrase24WordMessage1')}
+                </Text>
                 <View style={styles.phrase24WordsArea}>
                   <FlatList data={this.state.smallerList}
                     keyExtractor={(item, index) => index + ''}
@@ -268,10 +266,10 @@ export class AccountPhraseComponent extends Component {
 
               <View style={styles.bottomButtonArea}>
                 {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={() => this.goToTest.bind(this)(this.state.phrase24Words)}>
-                  <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{'Test recover phrase'.toUpperCase()}</Text>
+                  <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{i18n.t('AccountPhraseComponent_bottomButtonText2').toUpperCase()}</Text>
                 </TouchableOpacity>}
                 <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)(this.state.phrase24Words) : Actions.pop()}>
-                  <Text style={[styles.bottomButtonText,]}>{'Done'.toUpperCase()}</Text>
+                  <Text style={[styles.bottomButtonText,]}>{i18n.t('AccountPhraseComponent_bottomButtonText3').toUpperCase()}</Text>
                 </TouchableOpacity>
               </View>
             </View>}
@@ -279,8 +277,8 @@ export class AccountPhraseComponent extends Component {
             {this.state.step === STEPS.testing && <View style={{ flex: 1 }}>
               <ScrollView style={styles.content}>
                 <Text style={styles.phrase24WordMessage}>
-                  {this.props.isLogout ? 'To continue, tap the words to put them in the correct order for your recovery phrase:'
-                    : 'Tap the words to put them in the correct order for your recovery phrase:'}
+                  {this.props.isLogout ? i18n.t('AccountPhraseComponent_phrase24WordMessage2')
+                    : i18n.t('AccountPhraseComponent_phrase24WordMessage3')}
                 </Text>
                 <View style={styles.phrase24WordsArea}>
                   <FlatList data={this.state.smallerList}
@@ -352,18 +350,20 @@ export class AccountPhraseComponent extends Component {
                   }}
                 />}
                 {this.state.testingResult === false && <View style={styles.testingResultArea}>
-                  <Text style={styles.errorTitle}>Error!</Text>
-                  <Text style={styles.errorMessage}>Please try again!</Text>
+                  <Text style={styles.errorTitle}>{i18n.t('AccountPhraseComponent_errorTitle')}</Text>
+                  <Text style={styles.errorMessage}>{i18n.t('AccountPhraseComponent_errorMessage')}</Text>
                 </View>}
                 {this.state.testingResult === true && <View style={styles.testingResultArea}>
-                  <Text style={styles.successTitle}>Success!</Text>
-                  <Text style={styles.successMessage}>{this.props.isLogout ? 'You may now log out of your current account.' : 'Keep your written copy private in a secure and safe location.'}</Text>
+                  <Text style={styles.successTitle}>{i18n.t('AccountPhraseComponent_successTitle')}</Text>
+                  <Text style={styles.successMessage}>{this.props.isLogout ? i18n.t('AccountPhraseComponent_successMessage1') : i18n.t('AccountPhraseComponent_successMessage2')}</Text>
                 </View>}
               </ScrollView>
 
               <View style={styles.bottomButtonArea}>
                 <TouchableOpacity style={styles.bottomButton} onPress={this.state.testingResult ? (this.props.isLogout ? this.doLogout.bind(this) : Actions.pop) : this.resetTest.bind(this)}>
-                  <Text style={styles.bottomButtonText}>{(this.state.testingResult ? (this.props.isLogout ? 'log out' : 'done') : 'retry').toUpperCase()}</Text>
+                  <Text style={styles.bottomButtonText}>{(this.state.testingResult ?
+                    (this.props.isLogout ? i18n.t('AccountPhraseComponent_bottomButtonText4') : i18n.t('AccountPhraseComponent_bottomButtonText5')) :
+                    i18n.t('AccountPhraseComponent_bottomButtonText6')).toUpperCase()}</Text>
                 </TouchableOpacity>
               </View>
 

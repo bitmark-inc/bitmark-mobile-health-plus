@@ -35,23 +35,13 @@ export class GrantingAccessComponent extends Component {
   sendEmail() {
     runPromiseWithoutError(DataProcessor.doTrackEvent({ eventName: 'health_plus_user_first_time_share_grant_access' }));
     Mailer.mail({
-      subject: 'Access my Bitmark Health account',
+      subject: i18n.t('GrantingAccessComponent_subject'),
       recipients: [],
-      body: `
-        Hi
-        <br/>
-        <br/>
-        I would like you to view my health records and data. Here’s a direct link:
-        <br/>
-        <br/>
-        <a href="healthplus://granting-access/${this.state.token}">healthplus://granting-access/${this.state.token}</a>
-        <br/>
-        <br/>
-        Please install <a href="${config.appLink}">Bitmark Health+</a> app and sign in before clicking the link.`,
+      body: i18n.t('GrantingAccessComponent_body', { token: this.state.token, appLink: config.appLink }),
       isHTML: true,
     }, (error) => {
       if (error) {
-        Alert.alert('Error', 'Could not send mail. Please send a mail to support@bitmark.com');
+        Alert.alert(i18n.t('GrantingAccessComponent_alertTitle'), i18n.t('GrantingAccessComponent_alertMessage'));
       }
     });
   }
@@ -62,7 +52,7 @@ export class GrantingAccessComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
-              <Text style={styles.titleText}>Grant access</Text>
+              <Text style={styles.titleText}>{i18n.t('GrantingAccessComponent_titleText')}</Text>
               <TouchableOpacity onPress={Actions.pop}>
                 <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
               </TouchableOpacity>
@@ -82,17 +72,16 @@ export class GrantingAccessComponent extends Component {
                   linkText={() => 'Account Settings.'}
                 >
                   <Text style={styles.message}>
-                    Granting access to your account allows someone to view all your records and data. But they cannot transfer or change your records or data.{'\n\n'}
-                    You can revoke access under http://abc
-              </Text>
+                    {i18n.t('GrantingAccessComponent_message')}
+                  </Text>
                 </Hyperlink>
                 <Hyperlink linkStyle={{ color: '#FF4444' }}
                   onPress={this.sendEmail.bind(this)}
                   linkText={() => 'Grant request'}
                 >
                   <Text style={styles.messageEmail}>
-                    You can also email a http://abc.
-              </Text>
+                    {i18n.t('GrantingAccessComponent_messageEmail')}
+                  </Text>
                 </Hyperlink>
               </View>
             </ScrollView>

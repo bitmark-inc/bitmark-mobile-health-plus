@@ -81,7 +81,7 @@ const doGetCurrentAccount = async (canUseCurrentTouchFaceId) => {
     touchFaceIdSession = CommonModel.getFaceTouchSessionId();
   }
   if (!touchFaceIdSession) {
-    touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Authorize access to your recovery phrase.');
+    touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doGetCurrentAccount'));
   }
   if (!touchFaceIdSession) {
     return null;

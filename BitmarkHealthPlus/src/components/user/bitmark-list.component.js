@@ -67,14 +67,16 @@ export class BitmarkListComponent extends Component {
     return (
       <View style={{ flex: 1, }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
-          <Text style={styles.accountNumberDisplayText}>Viewing {'[' + accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) + ']'}, tap here to cancel.</Text>
+          <Text style={styles.accountNumberDisplayText}>
+            {i18n.t('BitmarkListComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
+          </Text>
         </TouchableOpacity>}
         <SafeAreaView style={styles.bodySafeView}>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
-                {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.titleText}>Health data</Text>}
-                {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>Health records</Text>}
+                {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
+                {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText2')}</Text>}
                 <TouchableOpacity onPress={Actions.pop}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
                 </TouchableOpacity>
@@ -90,7 +92,7 @@ export class BitmarkListComponent extends Component {
                     return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
                       <Text style={styles.bitmarkRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
                       {item.status === 'confirmed' && <Image style={styles.bitmarkRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
-                      {item.status === 'pending' && <Text style={styles.bitmarkPending}>Registering ownership...</Text>}
+                      {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
                     </TouchableOpacity>);
                   }}
                 />

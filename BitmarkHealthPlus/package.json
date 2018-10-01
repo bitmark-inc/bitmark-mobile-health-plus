@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "clean": "watchman watch-del-all && rm -rf node_modules/ && rm -rf ios/build/ && npm cache clean --force && npm install",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "ios-test": "react-native run-ios --scheme 'BitmarkHealthPlus dev'",
     "ios-test-x": "react-native run-ios --scheme 'BitmarkHealthPlus dev' --simulator='iPhone X'",
@@ -10,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "i18n-js": "^3.0.11",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "random-string": "^0.2.0",

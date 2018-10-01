@@ -51,10 +51,10 @@ export class HomeComponent extends Component {
               <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome1.png')} />
             </View>
             <View style={styles.introductionArea}>
-              <Text style={[styles.introductionTitle]}>{'Create Property Around Your Health Data'.toUpperCase()}</Text>
+              <Text style={[styles.introductionTitle]}>{i18n.t('HomeComponent_introductionTitle1').toUpperCase()}</Text>
               <Text style={[styles.introductionDescription]}>
-                Bitmark Health protects the rights to your health data by registering it on a global public registry so that no other party can legally access it without your explicit permission.
-                </Text>
+                {i18n.t('HomeComponent_introductionDescription1')}
+              </Text>
             </View>
           </View>
 
@@ -63,10 +63,10 @@ export class HomeComponent extends Component {
               <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome2.png')} />
             </View>
             <View style={styles.introductionArea}>
-              <Text style={[styles.introductionTitle]}>{'Registration is Private and Secure'.toUpperCase()}</Text>
+              <Text style={[styles.introductionTitle]}>{i18n.t('HomeComponent_introductionTitle2').toUpperCase()}</Text>
               <Text style={[styles.introductionDescription]}>
-                Registration is anonymous and your identity is completely protected. Only you hold the keys to link your identity to these records; Bitmark cannot view your encrypted data.
-                </Text>
+                {i18n.t('HomeComponent_introductionDescription2')}
+              </Text>
             </View>
           </View>
           <View style={styles.swipePage}>
@@ -74,10 +74,10 @@ export class HomeComponent extends Component {
               <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome3.png')} />
             </View>
             <View style={styles.introductionArea}>
-              <Text style={[styles.introductionTitle]}>{'Complete Control over Your Property'.toUpperCase()}</Text>
+              <Text style={[styles.introductionTitle]}>{i18n.t('HomeComponent_introductionTitle3').toUpperCase()}</Text>
               <Text style={[styles.introductionDescription]}>
-                Once health data is registered as your property, you will be able to donate, share, or transfer it to another party (medical professional, family member, etc.) at your complete discretion.
-                </Text>
+                {i18n.t('HomeComponent_introductionDescription3')}
+              </Text>
             </View>
           </View>
 
@@ -86,11 +86,11 @@ export class HomeComponent extends Component {
         <SafeAreaView style={styles.bottomButtonsAreaSafeView}>
           <View style={styles.bottomButtonsArea}>
             <TouchableOpacity style={[styles.button, { backgroundColor: 'white', borderWidth: 1, borderColor: '#FF4444', marginBottom: 15 }]} onPress={Actions.login}>
-              <Text style={[styles.buttonText, { color: '#FF4444' }]}>ACCESS EXISTING ACCOUNT</Text>
+              <Text style={[styles.buttonText, { color: '#FF4444' }]}>{i18n.t('HomeComponent_buttonText1')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={this.createNewAccount.bind(this)}>
-              <Text style={styles.buttonText}>CREATE NEW ACCOUNT</Text>
+              <Text style={[styles.buttonText, { color: 'white' }]}>{i18n.t('HomeComponent_buttonText2')}</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>

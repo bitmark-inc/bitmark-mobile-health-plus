@@ -74,7 +74,7 @@ const doLogout = async () => {
   return await processing(DataProcessor.doLogout());
 };
 const doDeleteAccount = async (processingInfo) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doDeleteAccount'));
   if (!touchFaceIdSession) {
     return null;
   }
@@ -82,7 +82,7 @@ const doDeleteAccount = async (processingInfo) => {
 };
 
 const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doIssueFile'));
   if (!touchFaceIdSession) {
     return null;
   }
@@ -90,7 +90,7 @@ const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPubl
 };
 
 const doBitmarkHealthData = async ({ list, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(`Your fingerprint signature is required.`);
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doBitmarkHealthData'));
   if (!touchFaceIdSession) {
     return null;
   }
@@ -149,7 +149,7 @@ const doCancelGrantingAccess = async ({ token }) => {
 };
 
 const doConfirmGrantingAccess = async ({ token, grantee, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Your fingerprint signature is required.');
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doConfirmGrantingAccess'));
   if (!touchFaceIdSession) {
     return null;
   }

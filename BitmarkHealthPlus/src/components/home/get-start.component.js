@@ -38,13 +38,13 @@ export class GetStartComponent extends React.Component {
               <Image style={styles.accessIconPlus} source={require('../../../assets/imgs/plus-icon.png')} />
               <Image style={styles.accessIcon} source={require('../../../assets/imgs/bitmark-logo.png')} />
             </View>
-            <Text style={[styles.getStartTitle]}>GET STARTED NOW</Text>
-            <Text style={[styles.getStartDescription,]}>To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.</Text>
+            <Text style={[styles.getStartTitle]}>{i18n.t('GetStartComponent_getStartTitle')}</Text>
+            <Text style={[styles.getStartDescription,]}>{i18n.t('GetStartComponent_getStartDescription')}</Text>
           </View>
         </View>
         <View style={styles.enableButtonArea}>
           <TouchableOpacity style={[styles.enableButton]} onPress={requestHealthKitPermission}>
-            <Text style={styles.enableButtonText}>ALLOW ACCESS</Text>
+            <Text style={styles.enableButtonText}>{i18n.t('GetStartComponent_enableButtonText')}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

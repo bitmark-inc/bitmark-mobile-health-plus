@@ -15,12 +15,8 @@ const statuses = {
   done: 'done',
   inputting: 'inputting'
 };
-const PreCheckResults = {
-  success: 'SUBMIT',
-  error: 'RETRY'
-};
 
-// let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
+let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 
 
 export class LoginComponent extends Component {
@@ -33,14 +29,14 @@ export class LoginComponent extends Component {
       if (index < 12) {
         smallerList.push({
           key: index,
-          word: '',
-          // word: testWords[index],
+          // word: '',
+          word: testWords[index],
         });
       } else {
         biggerList.push({
           key: index,
-          word: '',
-          // word: testWords[index],
+          // word: '',
+          word: testWords[index],
         });
       }
     }
@@ -57,7 +53,7 @@ export class LoginComponent extends Component {
       keyboardExternalOpacity: new Animated.Value(0),
       keyboardExternalDataSource: dictionary24Words,
     };
-    // setTimeout(this.checkStatusInputting.bind(this), 200);
+    setTimeout(this.checkStatusInputting.bind(this), 200);
   }
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
@@ -179,12 +175,12 @@ export class LoginComponent extends Component {
         this.state.smallerList.forEach(item => inputtedWords.push(item.word));
         this.state.biggerList.forEach(item => inputtedWords.push(item.word));
         AppProcessor.doCheck24Words(inputtedWords).then(() => {
-          this.setState({ preCheckResult: PreCheckResults.success });
+          this.setState({ preCheckResult: i18n.t('LoginComponent_submitButtonText1') });
           resolve(inputtedWords);
         }).catch((error) => {
           resolve(false);
           console.log('check24Words error: ', error);
-          this.setState({ preCheckResult: PreCheckResults.error });
+          this.setState({ preCheckResult: i18n.t('LoginComponent_submitButtonText2') });
         });
       } else {
         this.setState({ preCheckResult: null });
@@ -194,7 +190,7 @@ export class LoginComponent extends Component {
   }
 
   doSignIn() {
-    if (this.state.preCheckResult === PreCheckResults.error) {
+    if (this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText2')) {
       let smallerList = [];
       let biggerList = [];
       for (let index = 0; index < 24; index++) {
@@ -235,12 +231,12 @@ export class LoginComponent extends Component {
               <View style={styles.bodyContent}>
                 <ScrollView style={styles.bodyScroll} >
                   <View style={styles.titleRow}>
-                    <Text style={styles.title}>{'Recovery Phrase SIGN-IN'.toUpperCase()}</Text>
+                    <Text style={styles.title}>{i18n.t('LoginComponent_title').toUpperCase()}</Text>
                     <TouchableOpacity onPress={Actions.pop}>
                       <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                     </TouchableOpacity>
                   </View>
-                  <Text style={styles.description}>Please type all 24 words of your recovery phrase in the exact sequence below:</Text>
+                  <Text style={styles.description}>{i18n.t('LoginComponent_description')}</Text>
                   <View style={styles.inputArea}>
                     <View style={styles.inputAreaHalf}>
                       <FlatList data={this.state.smallerList}
@@ -297,19 +293,19 @@ export class LoginComponent extends Component {
                   </View>
                 </ScrollView>
 
-                {this.state.keyboardHeight === 0 && this.state.preCheckResult === PreCheckResults.error && <View style={styles.resultStatusArea}>
-                  <Text style={[styles.resultTitle, { color: '#FF4444' }]}>Wrong Recovery Phrase!</Text>
-                  <Text style={[styles.resultMessage, { color: '#FF4444' }]}>Please try again!</Text>
+                {this.state.keyboardHeight === 0 && this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText2') && <View style={styles.resultStatusArea}>
+                  <Text style={[styles.resultTitle, { color: '#FF4444' }]}>{i18n.t('LoginComponent_resultTitle1')}</Text>
+                  <Text style={[styles.resultMessage, { color: '#FF4444' }]}>{i18n.t('LoginComponent_resultMessage1')}</Text>
                 </View>}
-                {this.state.keyboardHeight === 0 && this.state.preCheckResult === PreCheckResults.success && <View style={styles.resultStatusArea}>
-                  <Text style={styles.resultTitle}>Success!</Text>
-                  <Text style={styles.resultMessage}>Keep your written copy private in a secure and safe location. </Text>
+                {this.state.keyboardHeight === 0 && this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText1') && <View style={styles.resultStatusArea}>
+                  <Text style={styles.resultTitle}>{i18n.t('LoginComponent_resultTitle2')}</Text>
+                  <Text style={styles.resultMessage}>{i18n.t('LoginComponent_resultMessage2')}</Text>
                 </View>}
               </View>
 
               <View style={styles.submitButtonArea}>
                 <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn.bind(this)} disabled={this.state.remainWordNumber > 0}>
-                  <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || PreCheckResults.success}</Text>
+                  <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || i18n.t('LoginComponent_submitButtonText1')}</Text>
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
@@ -338,7 +334,7 @@ export class LoginComponent extends Component {
               />
             </View>}
             <TouchableOpacity style={styles.doneButton} onPress={this.doCheck24Word.bind(this)} disabled={this.state.status !== statuses.done}>
-              <Text style={[styles.doneButtonText, { color: this.state.status === statuses.done ? '#0060F2' : 'gray' }]}>Done</Text>
+              <Text style={[styles.doneButtonText, { color: this.state.status === statuses.done ? '#0060F2' : 'gray' }]}>{i18n.t('LoginComponent_doneButtonText')}</Text>
             </TouchableOpacity>
           </Animated.View>}
       </SafeAreaView>

@@ -47,7 +47,7 @@ export class ScanAccessQRCodeComponent extends React.Component {
       if (result) {
         if (result.error) {
           Alert.alert(result.error, '', [{
-            text: 'OK', style: 'cancel', onPress: Actions.pop,
+            text: i18n.t('ScanAccessQRCodeComponent_alertButton'), style: 'cancel', onPress: Actions.pop,
           }]);
         } else {
           this.setState({ step: 'done', grantor: result.sender });
@@ -66,7 +66,7 @@ export class ScanAccessQRCodeComponent extends React.Component {
       <View style={styles.body}>
         {this.state.step === 'scanning' && <View style={styles.bodyContent}>
           <View style={styles.titleRow}>
-            <Text style={styles.title}>Scan access code</Text>
+            <Text style={styles.title}>{i18n.t('ScanAccessQRCodeComponent_title1')}</Text>
             <TouchableOpacity onPress={Actions.pop}>
               <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
             </TouchableOpacity>
@@ -79,20 +79,22 @@ export class ScanAccessQRCodeComponent extends React.Component {
               onBarCodeRead={this.onBarCodeRead.bind(this)}
             />}
             {!this.props.token && <Text style={styles.authorizedMessage}>
-              Align QR Code within frame to scan.
+              {i18n.t('ScanAccessQRCodeComponent_authorizedMessage1')}
             </Text>}
           </View>
         </View>}
         {this.state.step !== 'scanning' && <View style={[styles.bodyContent, { backgroundColor: '#FF4444' }]}>
           <View style={styles.titleRow}>
-            <Text style={[styles.title, { color: 'white' }]}>Awaiting confirmation...</Text>
+            <Text style={[styles.title, { color: 'white' }]}>{i18n.t('ScanAccessQRCodeComponent_title2')}</Text>
           </View>
           <View style={styles.content}>
-            <Text style={[styles.authorizedMessage, { color: 'white' }]}>You will be notified when {'[' + this.state.grantor.substring(0, 4) + '...' + this.state.grantor.substring(this.state.grantor.length - 5, this.state.grantor.length) + ']'} finishes granting access.</Text>
+            <Text style={[styles.authorizedMessage, { color: 'white' }]}>
+              {i18n.t('ScanAccessQRCodeComponent_authorizedMessage2', { accountNumber: '[' + this.state.grantor.substring(0, 4) + '...' + this.state.grantor.substring(this.state.grantor.length - 5, this.state.grantor.length) + ']' })}
+            </Text>
           </View>
           <View style={[styles.deniedButtonArea, { paddingBottom: 20, }]}>
             <TouchableOpacity style={[styles.deniedButton, { backgroundColor: 'white' }]} onPress={() => { Actions.reset('user') }}>
-              <Text style={[styles.deniedButtonText, { color: '#FF4444' }]}>{'OK'.toUpperCase()}</Text>
+              <Text style={[styles.deniedButtonText, { color: '#FF4444' }]}>{i18n.t('ScanAccessQRCodeComponent_deniedButtonText').toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
         </View>}

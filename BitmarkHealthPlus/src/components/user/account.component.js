@@ -48,31 +48,31 @@ export class AccountComponent extends Component {
   }
 
   rateApp() {
-    Alert.alert('App Store Review', 'Positive App Store ratings and reviews help support Bitmark. How would you rate us?', [{
-      text: '5 Stars!',
+    Alert.alert(i18n.t('AccountComponent_alertTitle1'), i18n.t('AccountComponent_alertMessage1'), [{
+      text: i18n.t('AccountComponent_alertButton11'),
       style: 'cancel',
       onPress: () => { Linking.openURL(config.appLink) }
     }, {
-      text: '4 Stars or less', onPress: this.requestSendFeedback.bind(this),
+      text: i18n.t('AccountComponent_alertButton12'), onPress: this.requestSendFeedback.bind(this),
     }]);
   }
 
   requestSendFeedback() {
-    Alert.alert('Send Feedback', 'Have a comment or suggestion? We are always making improvements based on community feedback', [{
-      text: 'Cancel', style: 'cancel',
+    Alert.alert(i18n.t('AccountComponent_alertTitle2'), i18n.t('AccountComponent_alertMessage2'), [{
+      text: i18n.t('AccountComponent_alertButton21'), style: 'cancel',
     }, {
-      text: 'Send', onPress: this.sendFeedback,
+      text: i18n.t('AccountComponent_alertButton22'), onPress: this.sendFeedback,
     }]);
   }
 
   sendFeedback() {
     Mailer.mail({
-      subject: 'Suggestion for Bitmark Health Plus',
+      subject: i18n.t('AccountComponent_subject'),
       recipients: ['support@bitmark.com'],
       body: 'Health+ version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
     }, (error) => {
       if (error) {
-        Alert.alert('Error', 'Could not send mail. Please send a mail to support@bitmark.com');
+        Alert.alert(i18n.t('AccountComponent_alertTitle3'), i18n.t('AccountComponent_alertMessage3'));
       }
     });
   }
@@ -83,17 +83,17 @@ export class AccountComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={[styles.accountNumberTitleRow,]}>
-              <Text style={styles.accountNumberTitle} >Account</Text>
+              <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
               <TouchableOpacity onPress={Actions.pop}>
                 <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
               </TouchableOpacity>
             </View>
             <ScrollView>
               <View style={styles.accountNumberArea}>
-                <Text style={styles.accountNumberLabel}>Account number</Text>
+                <Text style={styles.accountNumberLabel}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
                 <TouchableOpacity onPress={() => {
                   Clipboard.setString(DataProcessor.getUserInformation().bitmarkAccountNumber);
-                  this.setState({ accountNumberCopyText: 'Account number copied!' });
+                  this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
                   setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
                 }}>
                   <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}</Text>
@@ -103,24 +103,24 @@ export class AccountComponent extends Component {
                   <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
                 </View>
 
-                <Text style={styles.accountNumberDescription}>To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.</Text>
+                <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
 
                 <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => {
                   Intercom.displayMessageComposer();
                 }}>
-                  <Text style={styles.rowButtonText}>Help and feedback</Text>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText1')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
-                  <Text style={styles.rowButtonText}>Legal</Text>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText2')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
               </View>
 
               <View style={styles.securityArea}>
-                <Text style={styles.securityTitle} >Security</Text>
+                <Text style={styles.securityTitle} >{i18n.t('AccountComponent_securityTitle')}</Text>
                 <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => Actions.accountPhrase()}>
-                  <Text style={styles.rowButtonText}>Write Down Recovery Phrase</Text>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText3')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
@@ -132,15 +132,15 @@ export class AccountComponent extends Component {
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
                 }}> */}
-                  <Text style={styles.rowButtonText}>Log out</Text>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText4')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
               </View>
 
               <View style={styles.accessArea}>
-                <Text style={styles.accessTitle}>Access list</Text>
+                <Text style={styles.accessTitle}>{i18n.t('AccountComponent_accessTitle')}</Text>
                 <Text style={styles.accessDescription}>
-                  {this.state.accessList && this.state.accessList.length > 0 ? 'These accounts can view your records and data.' : 'You have not granted access to any account.'}
+                  {this.state.accessList && this.state.accessList.length > 0 ? i18n.t('AccountComponent_accessDescription1') : i18n.t('AccountComponent_accessDescription2')}
                 </Text>
                 {this.state.accessList && this.state.accessList.length > 0 && <FlatList
                   style={{ marginTop: 12 }}
@@ -154,24 +154,24 @@ export class AccountComponent extends Component {
                         {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}
                       </Text>
                       <TouchableOpacity onPress={() => Actions.revokeAccess({ accessInfo: item })}>
-                        <Text style={styles.accessRevokeButtonText}>Revoke</Text>
+                        <Text style={styles.accessRevokeButtonText}>{i18n.t('AccountComponent_accessRevokeButtonText')}</Text>
                       </TouchableOpacity>
                     </View>);
                   }}
                 />}
               </View>
               <View style={styles.aboutArea}>
-                <Text style={styles.aboutTitle}>About</Text>
+                <Text style={styles.aboutTitle}>{i18n.t('AccountComponent_aboutTitle')}</Text>
                 <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={this.rateApp.bind(this)}>
-                  <Text style={styles.rowButtonText}>App Store Rating & Review</Text>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText5')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowButton} onPress={() => Share.share({ title: 'Bitmark', message: '', url: config.appLink })}>
-                  <Text style={styles.rowButtonText}>Share This App</Text>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText6')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} disabled={true}>
-                  <Text style={styles.rowButtonText}>Version</Text>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText7')}</Text>
                   <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
                 </TouchableOpacity>
               </View>

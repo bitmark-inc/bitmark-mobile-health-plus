@@ -1,6 +1,6 @@
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import DeviceInfo from 'react-native-device-info';
 
 import {
   View, Text, TouchableOpacity,
@@ -112,7 +112,7 @@ class MainEventsHandlerComponent extends Component {
 
         UserModel.doTryGetCurrentUser().then(userInformation => {
           if (!userInformation || !userInformation.bitmarkAccountNumber) {
-            Alert.alert('', 'Access your account  and revisit the link to accept the grant access.', [{ text: 'OK', style: 'cancel' }]);
+            Alert.alert('', i18n.t('MainComponent_alertMessage3'), [{ text: i18n.t('MainComponent_alertButton3'), style: 'cancel' }]);
           } else {
             waitTouchFaceId().then((result) => {
               if (result) {
@@ -139,6 +139,7 @@ class MainEventsHandlerComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
+      i18n.locale = DeviceInfo.getDeviceLocale();
       this.doTryConnectInternet();
     }
     if (this.appState.match(/active/) && nextAppState !== 'active') {
@@ -188,17 +189,17 @@ class MainEventsHandlerComponent extends Component {
     let hasCrashLog = await FileUtil.exists(CRASH_LOG_FILE_PATH);
 
     if (hasCrashLog) {
-      let title = 'Crash Report';
-      let message = 'The app has detected unreported crash.\nWould you like to send a report to the developer?';
+      let title = i18n.t('MainComponent_alertTitle4');
+      let message = i18n.t('MainComponent_alertMessage4');
 
       Alert.alert(title, message, [{
-        text: 'Cancel',
+        text: i18n.t('MainComponent_alertButton41'),
         style: 'cancel',
         onPress: () => {
           FileUtil.removeSafe(CRASH_LOG_FILE_PATH);
         }
       }, {
-        text: 'Send',
+        text: i18n.t('MainComponent_alertButton42'),
         onPress: () => {
           this.sendReport(CRASH_LOG_FILE_PATH, CRASH_LOG_FILE_NAME);
         }
@@ -208,7 +209,7 @@ class MainEventsHandlerComponent extends Component {
 
   sendReport(logFilePath, attachmentName) {
     Mailer.mail({
-      subject: (attachmentName == CRASH_LOG_FILE_NAME) ? 'Crash Report' : 'Error Report',
+      subject: (attachmentName == CRASH_LOG_FILE_NAME) ? i18n.t('MainComponent_subject1') : i18n.t('MainComponent_subject2'),
       recipients: ['support@bitmark.com'],
       body: `App version: ${DataProcessor.getApplicationVersion()} (${DataProcessor.getApplicationBuildNumber()})`,
       attachment: {
@@ -218,7 +219,7 @@ class MainEventsHandlerComponent extends Component {
       }
     }, (error) => {
       if (error) {
-        Alert.alert('Error', 'Could not send mail.');
+        Alert.alert(i18n.t('MainComponent_alertTitle5'), i18n.t('MainComponent_alertMessage5'));
       }
 
       // Remove crash/error log file
@@ -239,7 +240,7 @@ class MainEventsHandlerComponent extends Component {
     let message = processError.message;
 
     Alert.alert(title, message, [{
-      text: 'OK',
+      text: i18n.t('MainComponent_alertButton6'),
       style: 'cancel',
       onPress: () => {
         if (processError && processError.onClose) {
@@ -250,11 +251,11 @@ class MainEventsHandlerComponent extends Component {
   }
 
   handleUnexpectedJSError(processError) {
-    let title = 'Error Report';
-    let message = 'The app has detected unreported error.\nWould you like to send a report to the developer?';
+    let title = i18n.t('MainComponent_alertTitle7');
+    let message = i18n.t('MainComponent_alertMessage7');
 
     Alert.alert(title, message, [{
-      text: 'Cancel',
+      text: i18n.t('MainComponent_alertButton71'),
       style: 'cancel',
       onPress: () => {
         if (processError && processError.onClose) {
@@ -262,7 +263,7 @@ class MainEventsHandlerComponent extends Component {
         }
       }
     }, {
-      text: 'Send',
+      text: i18n.t('MainComponent_alertButton72'),
       onPress: async () => {
         // Write error to log file
         let error = processError.error || new Error('There was an error');
@@ -319,14 +320,14 @@ class MainEventsHandlerComponent extends Component {
           indicator={!!this.state.submitting.indicator} title={this.state.submitting.title} message={this.state.submitting.message} />}
         {this.state.emptyDataSource && <BitmarkDialogComponent dialogStyle={mainStyle.emptyDataSourceDialog}>
           <View style={mainStyle.emptyDataSourceDialogContent}>
-            <Text style={mainStyle.emptyDataSourceTitle}>Health+ cannot access your HealthKit data.</Text>
-            <Text style={mainStyle.emptyDataSourceDescription}>{'To register ownership of your health data, allow Health+ to access specific (or all) categories of data from within the Apple Health App.'}</Text>
-            <Text style={[mainStyle.emptyDataSourceDescription, { marginTop: 20 }]}>Go to <Text style={{ fontWeight: '600' }}>{'Health App -> Sources'}</Text>.</Text>
+            <Text style={mainStyle.emptyDataSourceTitle}>{i18n.t('MainComponent_emptyDataSourceTitle')}</Text>
+            <Text style={mainStyle.emptyDataSourceDescription}>{i18n.t('MainComponent_emptyDataSourceDescription1')}</Text>
+            <Text style={[mainStyle.emptyDataSourceDescription, { marginTop: 20 }]}>{i18n.t('MainComponent_emptyDataSourceDescription2')} <Text style={{ fontWeight: '600' }}>{i18n.t('MainComponent_emptyDataSourceDescription3')}</Text>.</Text>
             <TouchableOpacity style={mainStyle.emptyDataSourceOKButton} onPress={() => this.setState({ emptyDataSource: false })}>
-              <Text style={mainStyle.emptyDataSourceOKButtonText}>{'OK, I’ve ALLOWED access!'.toUpperCase()}</Text>
+              <Text style={mainStyle.emptyDataSourceOKButtonText}>{i18n.t('MainComponent_emptyDataSourceOKButtonText').toUpperCase()}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={mainStyle.emptyDataSourceLaterButton} onPress={() => this.setState({ emptyDataSource: false })}>
-              <Text style={mainStyle.emptyDataSourceLaterButtonText}>{'I will do it later.'.toUpperCase()}</Text>
+              <Text style={mainStyle.emptyDataSourceLaterButtonText}>{i18n.t('MainComponent_emptyDataSourceLaterButtonText').toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
         </BitmarkDialogComponent>}
@@ -410,8 +411,8 @@ export class MainComponent extends Component {
     }
     AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
       if (!result) {
-        Alert.alert('New Version Available', 'You’re using a version of Bitmark Health or operating system that’s no longer supported. Please update to the newest app version. Thanks!', [{
-          text: 'Visit Appstore',
+        Alert.alert(i18n.t('MainComponent_alertTitle1'), i18n.t('MainComponent_alertMessage1'), [{
+          text: i18n.t('MainComponent_alertButton1'),
           onPress: () => Linking.openURL(config.appLink)
         }]);
         return;
@@ -435,8 +436,8 @@ export class MainComponent extends Component {
           } else {
             if (!this.requiringTouchId) {
               this.requiringTouchId = true;
-              Alert.alert('Please enable your Touch ID & Passcode to continue using Bitmark. Settings > Touch ID & Passcode', '', [{
-                text: 'ENABLE',
+              Alert.alert(i18n.t('MainComponent_alertTitle2'), '', [{
+                text: i18n.t('MainComponent_alertButton2'),
                 style: 'cancel',
                 onPress: () => {
                   Linking.openURL('app-settings:');

@@ -29,10 +29,10 @@ export class CaptureAssetComponent extends Component {
       if (asset && asset.name) {
 
         let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
-          ? 'You have already registered this image. '
-          : 'The image has already issued by other account.';
+          ? i18n.t('CaptureAssetComponent_alertMessage11')
+          : i18n.t('CaptureAssetComponent_alertMessage12');
         Alert.alert('', message, [{
-          text: 'OK', style: 'cancel'
+          text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
         }]);
       } else {
         // Do issue
@@ -41,14 +41,14 @@ export class CaptureAssetComponent extends Component {
         metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
         let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
         AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
-          indicator: true, title: 'Encrypting and protecting your health record...', message: ''
+          indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
         }).then((data) => {
           if (data) {
             FileUtil.removeSafe(filePath);
             Actions.pop();
           }
         }).catch(error => {
-          Alert.alert('Error', 'There was a problem issuing bitmark. Please try again.');
+          Alert.alert(i18n.t('CaptureAssetComponent_alertTitle2'), i18n.t('CaptureAssetComponent_alertMessage2'));
           console.log('issue bitmark error :', error);
         });
       }
@@ -64,7 +64,7 @@ export class CaptureAssetComponent extends Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.bodyContent}>
           <View style={[styles.header, config.isIPhoneX ? { paddingTop: constants.iPhoneXStatusBarHeight } : {}]}>
-            <Text style={styles.headerTitle}>CAPTURE</Text>
+            <Text style={styles.headerTitle}>{i18n.t('CaptureAssetComponent_headerTitle')}</Text>
             <TouchableOpacity onPress={Actions.pop}>
               <Image style={styles.backIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />
             </TouchableOpacity>
@@ -74,7 +74,7 @@ export class CaptureAssetComponent extends Component {
           </View>
           <View style={styles.lastBottomButtonArea}>
             <TouchableOpacity style={styles.lastBottomButton} onPress={this.issueFile.bind(this)}>
-              <Text style={styles.lastBottomButtonText}>USE IMAGE</Text>
+              <Text style={styles.lastBottomButtonText}>{i18n.t('CaptureAssetComponent_lastBottomButtonText')}</Text>
             </TouchableOpacity>
           </View>
         </View>

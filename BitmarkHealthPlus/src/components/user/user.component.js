@@ -50,7 +50,7 @@ export class UserComponent extends Component {
 
   captureAsset() {
     let options = {
-      title: 'Add records'
+      title: i18n.t('UserComponent_pickerTitle')
     };
 
     ImagePicker.showImagePicker(options, async (response) => {
@@ -59,11 +59,11 @@ export class UserComponent extends Component {
         return;
       }
       if (response.error) {
-        Alert.alert('Permission error!', response.error + '.', [{
-          text: 'Enable',
+        Alert.alert(i18n.t('UserComponent_alertTitle'), response.error + '.', [{
+          text: i18n.t('UserComponent_alertButton1'),
           onPress: () => Linking.openURL('app-settings:')
         }, {
-          text: 'Cancel',
+          text: i18n.t('UserComponent_alertButton2'),
           style: 'cancel',
         }]);
         return;
@@ -97,7 +97,9 @@ export class UserComponent extends Component {
     return (
       <View style={{ flex: 1, }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
-          <Text style={styles.accountNumberDisplayText}>Viewing {'[' + accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) + ']'}, tap here to cancel.</Text>
+          <Text style={styles.accountNumberDisplayText}>
+            {i18n.t('UserComponent_accountNumberDisplayText', { accountNumber: '[' + accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) + ']' })}
+          </Text>
         </TouchableOpacity>}
         <SafeAreaView style={[styles.bodySafeView, { backgroundColor: this.state.isDisplayingAccountNumber ? 'white' : 'rgba(0,0,0,0.25)', }]}>
           <View style={styles.body}>
@@ -107,7 +109,9 @@ export class UserComponent extends Component {
                   this.setState({ isDisplayingAccountNumber: true });
                   Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })
                 }}>
-                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks}</Text> Week{this.state.numberHealthDataBitmarks !== 1 ? 's' : ''} of health data</Text>
+                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthDataBitmarks} </Text>
+                    {i18n.t('UserComponent_dataTitle1', { s: this.state.numberHealthDataBitmarks !== 1 ? 's' : '' })}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60), }]}>
@@ -115,18 +119,20 @@ export class UserComponent extends Component {
                   this.setState({ isDisplayingAccountNumber: true });
                   Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })
                 }}>
-                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks}</Text> Health record{this.state.numberHealthAssetBitmarks !== 1 ? 's' : ''}</Text>
+                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.state.numberHealthAssetBitmarks} </Text>
+                    {i18n.t('UserComponent_dataTitle2', { s: this.state.numberHealthAssetBitmarks !== 1 ? 's' : '' })}
+                  </Text>
                 </TouchableOpacity>
                 {this.state.isDisplayingAccountNumber && isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.captureAsset.bind(this)}>
                   <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
-                  <Text style={styles.addHealthRecordButtonText} > {'Add records'.toUpperCase()}</Text>
+                  <Text style={styles.addHealthRecordButtonText} > {i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>}
               </View>
             </TouchableOpacity>
             {isCurrentUser && <View style={[styles.accountArea, this.state.isDisplayingAccountNumber ? {} : { borderTopWidth: 0, }]}>
               <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ isDisplayingAccountNumber: !this.state.isDisplayingAccountNumber })}>
                 <Text style={styles.accountButtonText}>
-                  {this.state.isDisplayingAccountNumber ? ('ACCOUNT') : ''}
+                  {this.state.isDisplayingAccountNumber ? i18n.t('UserComponent_accountButtonText1') : ''}
                 </Text>
               </TouchableOpacity>
             </View>}
@@ -135,19 +141,19 @@ export class UserComponent extends Component {
                 this.setState({ isDisplayingAccountNumber: true });
                 Actions.account();
               }}>
-                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>ACCOUNT SETTINGS</Text>
+                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>{i18n.t('UserComponent_accountButtonText2')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={() => {
                 this.setState({ isDisplayingAccountNumber: true });
                 Actions.grantingAccess();
               }}>
-                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>GRANT ACCESS</Text>
+                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>{i18n.t('UserComponent_accountButtonText3')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={() => {
                 this.setState({ isDisplayingAccountNumber: true });
                 Actions.otherAccounts();
               }}>
-                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>VIEW OTHER ACCOUNT</Text>
+                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>{i18n.t('UserComponent_accountButtonText4')}</Text>
               </TouchableOpacity>
             </View>}
           </View>
