@@ -2,12 +2,9 @@
   "app_info_file_path": "{{app_info_file_path}}",
   "save_folder": "{{save_folder_path}}",
   "log": {
-    "logFolder": "{{log_folder_path}},
-    "name": "bitmark-data-donation",
-    "level": "debug",
-    "maxFiles": 10,
-    "maxSize": 1048576,
-    "console": false
+    "tagName": "{{tagName}}",
+    "host": "{{host}}",
+    "port": "{{port}}"
   },
   "port": {{port},
   "ip": "{{ip}}",
