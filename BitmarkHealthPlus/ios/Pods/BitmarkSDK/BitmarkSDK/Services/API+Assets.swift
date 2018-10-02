@@ -35,12 +35,9 @@ internal extension API {
         
         try urlRequest.signRequest(withAccount: account, action: "uploadAsset", resource: assetId)
         
-        let result = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let response = result.response else {
-                return (sessionData, false, encryptedData)
-        }
+        let _ = try urlSession.synchronousDataTask(with: urlRequest)
         
-        return (sessionData, 200..<300 ~= response.statusCode, encryptedData)
+        return (sessionData, true, encryptedData)
     }
     
     internal func getAssetContent(url: String) throws -> (String?, Data?) {
@@ -48,7 +45,7 @@ internal extension API {
         request.httpMethod = "GET"
         
         let result = try urlSession.synchronousDataTask(with: request)
-        return (result.response?.suggestedFilename, result.data)
+        return (result.response.suggestedFilename, result.data)
     }
     
     internal func createSessionData(key: Data, fromAccount account: Account) throws -> SessionData {

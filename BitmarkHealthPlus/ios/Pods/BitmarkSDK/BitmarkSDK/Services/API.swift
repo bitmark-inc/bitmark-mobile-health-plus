@@ -47,7 +47,7 @@ internal extension URLRequest {
 
 internal extension URLSession {
     
-    func synchronousDataTask(with request: URLRequest) throws -> (data: Data?, response: HTTPURLResponse?) {
+    func synchronousDataTask(with request: URLRequest) throws -> (data: Data, response: HTTPURLResponse) {
         
         let semaphore = DispatchSemaphore(value: 0)
         
@@ -93,7 +93,18 @@ internal extension URLSession {
 
         print("========================================================")
         
-        return (data: responseData, response: theResponse as! HTTPURLResponse?)
+        guard let data = responseData,
+            let response = theResponse as? HTTPURLResponse else {
+                throw("Empty response from request: " + request.description)
+        }
+        
+        if 200..<300 ~= response.statusCode {
+            return (data: data, response: response)
+        } else {
+            let responseMessage = String(data: data, encoding: .utf8)!
+            let requestMethod = request.httpMethod ?? "GET"
+            throw("Request " + requestMethod + " " + request.url!.absoluteString + " returns statuscode: " + String(response.statusCode) + " with data: " + responseMessage)
+        }
         
     }
     
