@@ -61,8 +61,15 @@ export class BitmarkListComponent extends Component {
     });
   }
 
-  downloadBitmark(bitmarkId, fileName) {
-    AppProcessor.doDownloadBitmark(bitmarkId, {
+  downloadBitmark(bitmarkId, assetId, fileName) {
+    let id = bitmarkId;
+    let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+      let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
+      id = grantedInfo.ids[assetId];
+    }
+
+    AppProcessor.doDownloadBitmark(id, {
       indicator: true, title: 'Preparing to export...', message: `Downloading "${fileName}"...`
     }).then((filePath) => {
       Share.share({title: 'File record', url: filePath}).then(() => {
@@ -103,7 +110,7 @@ export class BitmarkListComponent extends Component {
                   data={this.state.bitmarkList}
                   extraData={this.state}
                   renderItem={({ item }) => {
-                    return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => isFileRecord(item) ? this.downloadBitmark.bind(this)(item.id, item.asset.name) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
+                    return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => isFileRecord(item) ? this.downloadBitmark.bind(this)(item.id, item.asset.id, item.asset.name) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
                       <Text style={styles.bitmarkRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
                       {item.status === 'confirmed' && <Image style={styles.bitmarkRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
                       {item.status === 'pending' && <Text style={styles.bitmarkPending}>Registering ownership...</Text>}

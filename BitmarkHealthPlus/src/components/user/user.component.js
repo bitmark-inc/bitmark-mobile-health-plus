@@ -15,7 +15,6 @@ import { constants } from '../../constants';
 import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
-import randomString from "random-string";
 import {issue} from "../../utils";
 
 let ComponentName = 'ComponentName';
@@ -107,29 +106,37 @@ export class UserComponent extends Component {
       }
 
       if (response.fileSize > constants.ISSUE_FILE_SIZE_LIMIT_IN_MB * 1024 * 1024) {
-        Alert.alert(`Files must be less than ${constants.ISSUE_FILE_SIZE_LIMIT_IN_MB} MB.`);
+        Alert.alert('', `Files must be less than ${constants.ISSUE_FILE_SIZE_LIMIT_IN_MB} MB.`);
         return;
       }
 
-      let info = await this.prepareToIssue(response);
+      let info = await this.prepareToIssue(response, 'chooseFile');
 
       let filePath = info.filePath;
       let assetName = response.fileName;
       let metadataList = [];
       metadataList.push({label: 'Source', value: 'Medical Records'});
-      metadataList.push({label: 'Saved Time', value: new Date().toISOString()});
+      metadataList.push({label: 'Saved Time', value: new Date(info.timestamp).toISOString()});
 
       issue(filePath, assetName, metadataList, 'file');
     });
   }
 
-  async prepareToIssue(response) {
+  async prepareToIssue(response, type) {
     let filePath = response.uri.replace('file://', '');
     filePath = decodeURIComponent(filePath);
 
+
+    let timestamp;
+    if (type === 'chooseFile') {
+      let stat = await FileUtil.stat(filePath);
+      timestamp = stat.mtime || stat.ctime;
+    } else {
+      timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
+    }
+
     // Move file from "tmp" folder to "cache" folder
     let fileName = response.fileName ? response.fileName : response.uri.substring(response.uri.lastIndexOf('/') + 1);
-    let timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
     let destPath = FileUtil.CacheDirectory + '/' + DataProcessor.getUserInformation().bitmarkAccountNumber + '/' + fileName;
     await FileUtil.moveFileSafe(filePath, destPath);
     filePath = destPath;
