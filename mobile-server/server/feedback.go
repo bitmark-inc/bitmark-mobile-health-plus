@@ -14,7 +14,7 @@ func (s *Server) addFeedback(c *gin.Context) {
 	feedbackApp := bitmarkstore.FeedbackApp(app)
 
 	if feedbackApp != bitmarkstore.Health && feedbackApp != bitmarkstore.HealthPlus && feedbackApp != bitmarkstore.Registry {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid app"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidFileParameters)
 		return
 	}
 
@@ -24,13 +24,13 @@ func (s *Server) addFeedback(c *gin.Context) {
 
 	if err := c.BindJSON(&req); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "cannot parse request"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorCannotParseRequest)
 		return
 	}
 
 	if err := s.bitmarkStore.AddFeedback(c.Copy(), account, feedbackApp, s.conf.Feedback.Version, req.Feedback); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "cannot parse request"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorCannotParseRequest)
 		return
 	}
 

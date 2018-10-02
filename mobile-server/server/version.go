@@ -11,9 +11,7 @@ func (s *Server) GetSupportedVersion(c *gin.Context) {
 
 	supportedVersion, ok := s.conf.SupportedVersion[appName]
 	if !ok {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error": "invalid app name",
-		})
+		c.AbortWithStatusJSON(http.StatusNotFound, errorInvalidParameters)
 		return
 	}
 

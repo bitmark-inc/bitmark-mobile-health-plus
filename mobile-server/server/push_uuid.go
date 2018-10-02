@@ -40,12 +40,12 @@ func (s *Server) RemovePushToken(c *gin.Context) {
 	success, err := s.pushStore.RemovePushToken(c, account, pushToken)
 	if err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidParameters)
 		return
 	}
 
 	if success == false {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "push token is not found"})
+		c.AbortWithStatusJSON(http.StatusNotFound, errorInvalidParameters)
 		return
 	}
 

@@ -27,14 +27,14 @@ func (s *Server) uploadAssetForIssueRequest(c *gin.Context) {
 	assetMetadataString := c.PostForm("asset_metadata")
 
 	if len(issuer) == 0 || len(assetName) == 0 {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid parameters"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidParameters)
 		return
 	}
 
 	var assetMetadata map[string]string
 	if len(assetMetadataString) > 0 {
 		if err := json.UnmarshalFromString(assetMetadataString, &assetMetadata); err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid metadata"})
+			c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidParameters)
 			return
 		}
 	}
@@ -43,14 +43,14 @@ func (s *Server) uploadAssetForIssueRequest(c *gin.Context) {
 	header, err := c.FormFile("file")
 	if err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "No file found"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidFileParameters)
 		return
 	}
 
 	file, err := header.Open()
 	if err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Unable to read file"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidFileParameters)
 		return
 	}
 
@@ -75,13 +75,13 @@ func (s *Server) uploadAssetForIssueRequest(c *gin.Context) {
 	})
 	if err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"error": "Unable to upload file"})
+		c.AbortWithStatusJSON(http.StatusBadGateway, errorInvalidFileParameters)
 		return
 	}
 
 	if err := s.bitmarkStore.AddIssueRequest(c.Copy(), token, account, issuer, assetName, header.Filename, assetMetadata); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Fail to add asset"})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 		return
 	}
 
@@ -117,7 +117,7 @@ func (s *Server) downloadAsset(c *gin.Context) {
 
 	if err != nil {
 		log.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"error": "cannot download asset"})
+		c.AbortWithStatusJSON(http.StatusBadGateway, errorInternalServer)
 		return
 	}
 
@@ -136,7 +136,7 @@ func (s *Server) deleteIssueRequest(c *gin.Context) {
 			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "invalid token"})
 		} else {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "cannot query asset info"})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 		}
 		return
 	}
@@ -152,7 +152,7 @@ func (s *Server) queryIssueRequest(c *gin.Context) {
 	issueRequests, err := s.bitmarkStore.QueryIssueRequest(c.Copy(), account)
 	if err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Unable to query issue request"})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 		return
 	}
 

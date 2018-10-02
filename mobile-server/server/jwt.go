@@ -28,19 +28,20 @@ func (s *Server) RequestJWT(c *gin.Context) {
 
 	pubkey, err := util.PublicKeyFromAccount(req.Requester)
 	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{"message": "invalid bitmark account number"})
+		c.Error(err)
+		c.AbortWithStatusJSON(401, errorInvalidParameters)
 		return
 	}
 
 	sig, err := hex.DecodeString(req.Signature)
 	if err != nil || !ed25519.Verify(pubkey, []byte(req.Timestamp), sig) {
-		c.AbortWithStatusJSON(401, gin.H{"message": "invalid signature"})
+		c.AbortWithStatusJSON(401, errorInvalidSignature)
 		return
 	}
 
 	t, err := strconv.ParseInt(req.Timestamp, 10, 64)
 	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{"message": "invalid timestamp"})
+		c.AbortWithStatusJSON(401, errorInvalidParameters)
 		return
 	}
 
@@ -48,7 +49,7 @@ func (s *Server) RequestJWT(c *gin.Context) {
 	now := time.Unix(0, time.Now().UnixNano())
 	duration := now.Sub(created)
 	if duration.Seconds() > float64(60) {
-		c.AbortWithStatusJSON(401, gin.H{"message": "request expired"})
+		c.AbortWithStatusJSON(401, errorAuthorizationExpired)
 		return
 	}
 
@@ -68,7 +69,7 @@ func (s *Server) RequestJWT(c *gin.Context) {
 	tokenString, err := token.SignedString(secretByte)
 	if err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "cannot create jwt"})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 		return
 	}
 

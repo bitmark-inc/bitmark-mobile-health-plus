@@ -28,27 +28,24 @@ func (s *Server) AddMetrics(c *gin.Context) {
 		Precision: "s",
 	})
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": "cannot create new influx records",
-		})
+		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 		return
 	}
 
 	for _, metric := range req.Metrics {
 		pt, err := influx.NewPoint("mobile-events", metric.Tags, metric.Fields, time.Now())
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-				"error": "cannot create new influx records",
-			})
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 			return
 		}
 		bp.AddPoint(pt)
 	}
 
 	if err := s.influxDBClient.Write(bp); err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error": "cannot create new influx records",
-		})
+		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 		return
 	}
 
@@ -61,7 +58,7 @@ func (s *Server) AddRegisterAccountEvent(c *gin.Context) {
 	log.Info("Register a new account:", account)
 	if err := s.gatewayClient.RegisterAccount(c, account); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 		return
 	}
 
