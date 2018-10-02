@@ -33,8 +33,7 @@ class BitmarkSDK: NSObject {
         callback([true])
       }
       else {
-        print(e)
-        callback([false])
+        callback([false, e.localizedDescription])
       }
     }
   }
@@ -61,8 +60,7 @@ class BitmarkSDK: NSObject {
         callback([true])
       }
       else {
-        print(e)
-        callback([false])
+        callback([false, e.localizedDescription])
       }
     }
   }
@@ -81,8 +79,7 @@ class BitmarkSDK: NSObject {
       callback([true, account.accountNumber.string])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -99,8 +96,7 @@ class BitmarkSDK: NSObject {
         return
       }
       
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -111,8 +107,7 @@ class BitmarkSDK: NSObject {
       callback([true])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -123,8 +118,7 @@ class BitmarkSDK: NSObject {
       callback([try account.registerPublicEncryptionKey()])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -162,8 +156,7 @@ class BitmarkSDK: NSObject {
       }
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -186,8 +179,7 @@ class BitmarkSDK: NSObject {
       callback([true, filePath.absoluteString])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -210,8 +202,7 @@ class BitmarkSDK: NSObject {
       callback([true, filePath.absoluteString])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -231,8 +222,7 @@ class BitmarkSDK: NSObject {
       callback([true, assetid, fingerprint])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -255,7 +245,6 @@ class BitmarkSDK: NSObject {
       callback([true, bitmarkId])
     }
     catch let e {
-      print(e)
       callback([false, e.localizedDescription])
     }
   }
@@ -268,8 +257,7 @@ class BitmarkSDK: NSObject {
       callback([true, signature.hexEncodedString])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -283,8 +271,7 @@ class BitmarkSDK: NSObject {
       callback([true, signatures])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -297,7 +284,6 @@ class BitmarkSDK: NSObject {
       callback([success])
     }
     catch let e {
-      print(e)
       callback([false, e.localizedDescription])
     }
   }
@@ -311,8 +297,7 @@ class BitmarkSDK: NSObject {
       callback([true, offerId])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
 
@@ -325,8 +310,7 @@ class BitmarkSDK: NSObject {
       callback([success])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -346,8 +330,7 @@ class BitmarkSDK: NSObject {
         callback([true])
       }
       else {
-        print(e)
-        callback([false])
+        callback([false, e.localizedDescription])
       }
     }
   }
@@ -388,8 +371,8 @@ class BitmarkSDK: NSObject {
         callback([false])
       }
     }
-    catch {
-      callback([false])
+    catch let e {
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -401,8 +384,7 @@ class BitmarkSDK: NSObject {
       callback([true, sessionData])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -414,8 +396,7 @@ class BitmarkSDK: NSObject {
       callback([true, sessionData])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -433,8 +414,7 @@ class BitmarkSDK: NSObject {
       callback([true, sessionData])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
   
@@ -453,8 +433,7 @@ class BitmarkSDK: NSObject {
       callback([true, issueIds])
     }
     catch let e {
-      print(e)
-      callback([false])
+      callback([false, e.localizedDescription])
     }
   }
 }
