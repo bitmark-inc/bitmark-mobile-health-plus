@@ -7,7 +7,7 @@ import {
 import codePush from "react-native-code-push";
 import { MainComponent } from './main.component';
 
-class CodePushComponent extends React.Component {
+export class CodePushComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -120,22 +120,4 @@ const styles = StyleSheet.create({
     height: 5,
     bottom: 0
   }
-})
-
-import i18nTemp from 'i18n-js';
-let i18n = global.i18n || i18nTemp;
-
-let CodePushMainAppComponent = codePush({
-  updateDialog: {
-    title: i18n.t('CodePushComponent_title'),
-    optionalUpdateMessage: i18n.t('CodePushComponent_optionalUpdateMessage'),
-    mandatoryUpdateMessage: i18n.t('CodePushComponent_mandatoryUpdateMessage'),
-    optionalInstallButtonLabel: i18n.t('CodePushComponent_optionalInstallButtonLabel'),
-    mandatoryContinueButtonLabel: i18n.t('CodePushComponent_mandatoryContinueButtonLabel'),
-    optionalIgnoreButtonLabel: null
-  },
-  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
-  installMode: codePush.InstallMode.IMMEDIATE
-})(CodePushComponent);
-
-export { CodePushMainAppComponent };
+});
