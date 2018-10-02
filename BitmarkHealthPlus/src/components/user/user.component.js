@@ -107,7 +107,7 @@ export class UserComponent extends Component {
       }
 
       if (response.fileSize > constants.ISSUE_FILE_SIZE_LIMIT_IN_MB * 1024 * 1024) {
-        Alert.alert('Error', `Files must be less than ${constants.ISSUE_FILE_SIZE_LIMIT_IN_MB} MB.`);
+        Alert.alert(`Files must be less than ${constants.ISSUE_FILE_SIZE_LIMIT_IN_MB} MB.`);
         return;
       }
 
@@ -117,7 +117,7 @@ export class UserComponent extends Component {
       let assetName = response.fileName;
       let metadataList = [];
       metadataList.push({label: 'Source', value: 'Medical Records'});
-      metadataList.push({label: 'Saved Time', value: new Date(info.timestamp).toISOString()});
+      metadataList.push({label: 'Saved Time', value: new Date().toISOString()});
 
       issue(filePath, assetName, metadataList, 'file');
     });
