@@ -201,7 +201,7 @@ const StoreOtherUserComponent = connect(
   (state) => state.data,
 )(PrivateOtherUserComponent);
 
-export class OtherUserComponent extends Component {
+export class OtherAccountsComponent extends Component {
   constructor(props) {
     super(props);
   }

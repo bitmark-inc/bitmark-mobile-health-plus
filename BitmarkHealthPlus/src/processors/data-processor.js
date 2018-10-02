@@ -7,7 +7,10 @@ const {
   PushNotificationIOS,
 } = ReactNative;
 
-import { UserBitmarksStore, UserBitmarksActions, DataAccountAccessesStore, DataAccountAccessesActions } from './../stores';
+import {
+  UserBitmarksStore, UserBitmarksActions,
+  DataAccountAccessesStore, DataAccountAccessesActions
+} from './../stores';
 import {
   EventEmitterService,
   BitmarkService,
