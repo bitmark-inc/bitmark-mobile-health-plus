@@ -33,7 +33,11 @@ class BitmarkSDK: NSObject {
         callback([true])
       }
       else {
-        callback([false, e.localizedDescription])
+        if let msg = e as? NSString {
+          callback([false, msg])
+        } else {
+          callback([false])
+        }
       }
     }
   }
@@ -60,7 +64,11 @@ class BitmarkSDK: NSObject {
         callback([true])
       }
       else {
-        callback([false, e.localizedDescription])
+        if let msg = e as? NSString {
+          callback([false, msg])
+        } else {
+          callback([false])
+        }
       }
     }
   }
@@ -79,7 +87,11 @@ class BitmarkSDK: NSObject {
       callback([true, account.accountNumber.string])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -96,7 +108,11 @@ class BitmarkSDK: NSObject {
         return
       }
       
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -107,7 +123,11 @@ class BitmarkSDK: NSObject {
       callback([true])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -118,7 +138,11 @@ class BitmarkSDK: NSObject {
       callback([try account.registerPublicEncryptionKey()])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -156,7 +180,11 @@ class BitmarkSDK: NSObject {
       }
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -179,7 +207,11 @@ class BitmarkSDK: NSObject {
       callback([true, filePath.absoluteString])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -202,7 +234,11 @@ class BitmarkSDK: NSObject {
       callback([true, filePath.absoluteString])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -222,7 +258,11 @@ class BitmarkSDK: NSObject {
       callback([true, assetid, fingerprint])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -245,7 +285,11 @@ class BitmarkSDK: NSObject {
       callback([true, bitmarkId])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -257,7 +301,11 @@ class BitmarkSDK: NSObject {
       callback([true, signature.hexEncodedString])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -271,7 +319,11 @@ class BitmarkSDK: NSObject {
       callback([true, signatures])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -284,7 +336,11 @@ class BitmarkSDK: NSObject {
       callback([success])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -293,14 +349,18 @@ class BitmarkSDK: NSObject {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let offerId = try account.createAndSubmitTransferOffer(bitmarkId: bitmarkId, recipient: address)
-
+      
       callback([true, offerId])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
-
+  
   @objc(signForTransferOfferAndSubmit::::::)
   func signForTransferOfferAndSubmit(_ sessionId: String, _ txId: String, _ signature: String, _ offerId: String, _ action: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
@@ -310,7 +370,11 @@ class BitmarkSDK: NSObject {
       callback([success])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -330,7 +394,11 @@ class BitmarkSDK: NSObject {
         callback([true])
       }
       else {
-        callback([false, e.localizedDescription])
+        if let msg = e as? NSString {
+          callback([false, msg])
+        } else {
+          callback([false])
+        }
       }
     }
   }
@@ -372,7 +440,11 @@ class BitmarkSDK: NSObject {
       }
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -384,7 +456,11 @@ class BitmarkSDK: NSObject {
       callback([true, sessionData])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -396,7 +472,11 @@ class BitmarkSDK: NSObject {
       callback([true, sessionData])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -406,7 +486,7 @@ class BitmarkSDK: NSObject {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       guard let encryptedDataKeyHex = sessionData["enc_data_key"],
         let dataKeyAlgorithm = sessionData["data_key_alg"]  else {
-        throw(BMError("Wrong session data"))
+          throw(BMError("Wrong session data"))
       }
       
       let s = SessionData(encryptedDataKey: encryptedDataKeyHex.hexDecodedData, dataKeyAlgorithm: dataKeyAlgorithm)
@@ -414,7 +494,11 @@ class BitmarkSDK: NSObject {
       callback([true, sessionData])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
   
@@ -433,7 +517,11 @@ class BitmarkSDK: NSObject {
       callback([true, issueIds])
     }
     catch let e {
-      callback([false, e.localizedDescription])
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
     }
   }
 }
