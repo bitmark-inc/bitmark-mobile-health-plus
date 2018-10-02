@@ -14,12 +14,12 @@ const defaultConfig = {
   log_levels: logLevels,
   // =========================================================================================
   log: {
-    logFolder: '', // require
-    name: 'bitmark-data-donation', // default : bitmark
+    tagName: '',
+    host: '',
+    port: '',
     level: 'debug', // default : debug
-    maxFiles: 100, // default : 10
-    maxSize: 1024 * 1024, // default 1024 * 1024
-    console: true, // show in console or not, default : false
+    timeout: 3, // default : 3s
+    console: true, // show in console or not, default : true
   },
   port: 9001,
   ip: '127.0.0.1',

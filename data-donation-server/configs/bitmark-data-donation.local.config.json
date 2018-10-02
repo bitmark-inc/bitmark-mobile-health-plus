@@ -2,12 +2,9 @@
   "app_info_file_path": "/home/datadonation/bitmark/app-info.json",
   "save_folder": "/home/datadonation/bitmark/save",
   "log": {
-    "logFolder": "../logs",
-    "name": "bitmark-data-donation.log",
-    "level": "debug",
-    "maxFiles": 100,
-    "maxSize": 1048576,
-    "console": true
+    "tagName": "log.datadonation.testnet",
+    "host": "54.65.156.229",
+    "port": "31428"
   },
   "port": 9001,
   "ip": "",

@@ -27,6 +27,7 @@ module.exports = {
         address,
         port
       } = server.address();
+      logger.info('============================start serer=====================');
       logger.info(`server listening at http://${address}:${port}`);
     });
   }
