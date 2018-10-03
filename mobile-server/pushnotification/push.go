@@ -15,6 +15,8 @@ type PushInfo struct {
 	Pinned  bool
 	Source  string
 	Silent  bool
+	LocKey  *string
+	LocArgs []string
 }
 
 func Push(ctx context.Context, p *PushInfo, store pushstore.PushStore, client *gorush.Client) error {
@@ -23,16 +25,5 @@ func Push(ctx context.Context, p *PushInfo, store pushstore.PushStore, client *g
 		return err
 	}
 
-	// if !p.Silent {
-	// 	if err := store.AddPushItem(ctx, p.Account, p.Source, p.Title, p.Message, p.Data, p.Pinned); err != nil {
-	// 		return err
-	// 	}
-	// }
-
-	// badge, err := store.QueryBadgeCount(p.Account)
-	// if err != nil {
-	// 	return err
-	// }
-
-	return client.Send(ctx, p.Title, p.Message, p.Source, receivers, p.Data, 0, p.Silent)
+	return client.Send(ctx, p.Title, p.Message, p.Source, receivers, p.Data, p.LocKey, p.LocArgs, 0, p.Silent)
 }
