@@ -46,7 +46,7 @@ export class ScanAccessQRCodeComponent extends React.Component {
     AppProcessor.doReceivedAccessQRCode(token).then(result => {
       if (result) {
         if (result.error) {
-          Alert.alert(result.error, '', [{
+          Alert.alert(i18n.t('ScanAccessQRCodeComponent_alertMessage'), '', [{
             text: i18n.t('ScanAccessQRCodeComponent_alertButton'), style: 'cancel', onPress: Actions.pop,
           }]);
         } else {

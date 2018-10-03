@@ -21,7 +21,6 @@ import { EventEmitterService } from '../../services';
 import { issue } from "../../utils";
 import { UserBitmarksStore } from '../../stores';
 
-
 class PrivateUserComponent extends Component {
   static propTypes = {
     healthDataBitmarks: PropTypes.array,
