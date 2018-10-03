@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
+import ReactNative, {
   StyleSheet,
   Alert,
   Linking,
   Image, View, TouchableOpacity, Text, SafeAreaView,
-  ActionSheetIOS
 } from 'react-native';
+let { ActionSheetIOS } = ReactNative;
+
 import { Provider, connect } from 'react-redux';
 
 import ImagePicker from 'react-native-image-picker';
