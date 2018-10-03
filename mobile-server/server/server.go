@@ -108,7 +108,16 @@ func (s *Server) Run(addr string) error {
 	api.GET("/feedbacks/version", s.getCurrentFeedbackVersion)
 	api.POST("/feedbacks/:app", s.addFeedback).Use(s.authenticateBoth())
 
-	r.Use(s.authenticateJWT()).GET("/ws", s.ServeWs)
+	wsGroup := r.Group("/ws")
+	wsGroup.Use(s.authenticateJWT())
+	{
+		wsGroup.GET("", s.ServeWs)
+	}
+
+	webhooksGroup := r.Group("/webhooks")
+	{
+		webhooksGroup.POST("/intercom", s.intercomWebhook)
+	}
 
 	srv := &http.Server{
 		Addr:    addr,

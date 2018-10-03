@@ -179,7 +179,7 @@ func main() {
 		dbConn.Close()
 
 		log.Info("Disconnect redis")
-		log.Error(redisPool.Close())
+		redisPool.Close()
 
 		log.Info("Disconnect influxdb")
 		log.Error(influxDBClient.Close())
