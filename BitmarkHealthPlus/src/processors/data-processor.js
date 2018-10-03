@@ -278,7 +278,8 @@ const doLogout = async () => {
     event_name: 'health_plus_user_delete_account',
     account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
   });
-
+  UserBitmarksStore.dispatch(UserBitmarksActions.reset());
+  DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
 };
 

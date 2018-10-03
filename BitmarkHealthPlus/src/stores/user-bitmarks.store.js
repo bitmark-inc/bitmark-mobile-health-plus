@@ -1,5 +1,6 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import { merge } from 'lodash';
 
 const ACTION_TYPES = {
   RESET: 'RESET',
@@ -29,12 +30,12 @@ const data = (state = initialState, action) => {
   switch (action.type) {
     case ACTION_TYPES.RESET:
       state = initialState;
-      return state;
+      return merge({}, state);
     case ACTION_TYPES.INIT:
       state.healthDataBitmarks = action.healthDataBitmarks || state.healthDataBitmarks;
       state.healthAssetBitmarks = action.healthAssetBitmarks || state.healthAssetBitmarks;
       state.bitmarkType = action.bitmarkType || action.bitmarkType;
-      return state;
+      return merge({}, state);
     case ACTION_TYPES.UPDATE_BITMARKS:
 
       state.healthDataBitmarks = action.healthDataBitmarks || state.healthDataBitmarks;
@@ -42,7 +43,7 @@ const data = (state = initialState, action) => {
       return state;
     case ACTION_TYPES.UPDATE_BITMARK_TYPE:
       state.bitmarkType = action.bitmarkType || action.bitmarkType;
-      return state;
+      return merge({}, state);
     default:
       return state;
   }
