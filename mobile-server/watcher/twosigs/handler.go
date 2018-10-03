@@ -110,6 +110,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Pinned:  false,
 			Source:  "",
 			Silent:  false,
+			LocKey:  &event,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferAccepted:
 		return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
@@ -120,6 +121,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Pinned:  false,
 			Source:  "",
 			Silent:  false,
+			LocKey:  &event,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferFailed:
 		return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
@@ -130,6 +132,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Pinned:  false,
 			Source:  "",
 			Silent:  false,
+			LocKey:  &event,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferRejected:
 		return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
@@ -140,6 +143,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			Pinned:  false,
 			Source:  "",
 			Silent:  false,
+			LocKey:  &event,
 		}, h.pushStore, h.pushAPIClient)
 	default:
 		log.Info("Unhandled event:", event)

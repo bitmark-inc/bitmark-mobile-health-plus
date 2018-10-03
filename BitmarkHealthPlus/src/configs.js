@@ -21,7 +21,7 @@ let config = {
 
   NETWORKS,
   bitmark_network: NETWORKS.testnet,
-  appLink: 'https://itunes.apple.com/us/app/bitmark-health/id1428203492?ls=1&mt=8',
+  appLink: 'https://itunes.apple.com/us/app/bitmark-health/id1436273185?ls=1&mt=8',
   api_server_url: 'https://api.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
   mobile_server_url: 'https://bm.devel.bitmark.com',

@@ -86,7 +86,8 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 		}
 
 		event := EventTrackingBitmarkConfirmed
-		pushMessage := fmt.Sprintf(messages[event], bitmarkInfo.Asset.Name)
+		locKey := "EventTrackingBitmarkConfirmed"
+		pushMessage := fmt.Sprintf(messages[locKey], bitmarkInfo.Asset.Name)
 		pushData := &map[string]interface{}{
 			"bitmark_id": bitmarkID,
 			"event":      event,
@@ -101,6 +102,8 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 				Source:  "gateway",
 				Pinned:  false,
 				Silent:  true,
+				LocKey:  &locKey,
+				LocArgs: []string{bitmarkInfo.Asset.Name},
 			}, h.pushStore, h.pushAPIClient)
 		}
 	}
@@ -141,7 +144,8 @@ func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitma
 	// 	return err
 	// }
 
-	receiverPushMessage := fmt.Sprintf(messages[EventTransferConfirmedReceiver], asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner))
+	locKey := "EventTransferConfirmedReceiver"
+	receiverPushMessage := fmt.Sprintf(messages[locKey], asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner))
 	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
 		Account: transfer.Owner,
 		Title:   "",
@@ -151,9 +155,11 @@ func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitma
 			"bitmark_id": transfer.BitmarkID,
 			"name":       "transfer_item_received",
 		},
-		Source: "gateway",
-		Pinned: false,
-		Silent: true,
+		Source:  "gateway",
+		Pinned:  false,
+		Silent:  true,
+		LocKey:  &locKey,
+		LocArgs: []string{asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner)},
 	}, h.pushStore, h.pushAPIClient); err != nil {
 		return err
 	}
