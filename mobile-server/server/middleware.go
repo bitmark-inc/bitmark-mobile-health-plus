@@ -23,19 +23,19 @@ func (s *Server) authenticate() gin.HandlerFunc {
 
 		pubkey, err := util.PublicKeyFromAccount(requester)
 		if err != nil {
-			c.AbortWithStatusJSON(401, gin.H{"message": "invalid bitmark account number"})
+			c.AbortWithStatusJSON(401, errorInvalidAuthorizationFormat)
 			return
 		}
 
 		sig, err := hex.DecodeString(signature)
 		if err != nil || !ed25519.Verify(pubkey, []byte(timestamp), sig) {
-			c.AbortWithStatusJSON(401, gin.H{"message": "invalid signature"})
+			c.AbortWithStatusJSON(401, errorInvalidSignature)
 			return
 		}
 
 		t, err := strconv.ParseInt(timestamp, 10, 64)
 		if err != nil {
-			c.AbortWithStatusJSON(401, gin.H{"message": "invalid timestamp"})
+			c.AbortWithStatusJSON(401, errorInvalidAuthorizationFormat)
 			return
 		}
 
@@ -43,7 +43,7 @@ func (s *Server) authenticate() gin.HandlerFunc {
 		now := time.Unix(0, time.Now().UnixNano())
 		duration := now.Sub(created)
 		if duration.Seconds() > float64(60) {
-			c.AbortWithStatusJSON(401, gin.H{"message": "request expired"})
+			c.AbortWithStatusJSON(401, errorAuthorizationExpired)
 			return
 		}
 
@@ -55,18 +55,18 @@ func (s *Server) authenticateJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authorization := c.GetHeader("Authorization")
 		if len(authorization) == 0 {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "no authorization header found"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 			return
 		}
 
 		authParts := strings.Split(authorization, " ")
 		if len(authParts) != 2 {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization format, should be Authorization:Bearer XXX_TOKEN_XXX"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 			return
 		}
 
 		if authParts[0] != "Bearer" || len(authParts[1]) == 0 {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization format, should be Authorization:Bearer XXX_TOKEN_XXX"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 			return
 		}
 
@@ -83,40 +83,40 @@ func (s *Server) authenticateJWT() gin.HandlerFunc {
 		})
 		if err != nil {
 			c.Error(err)
-			c.AbortWithStatusJSON(401, gin.H{"message": "invalid authorization signature"})
+			c.AbortWithStatusJSON(401, errorInvalidSignature)
 			return
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "cannot parse authorization"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 			return
 		}
 
 		if !token.Valid {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 			return
 		}
 
 		if !claims.VerifyExpiresAt(time.Now().Unix(), true) {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "authorization expired"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorAuthorizationExpired)
 			return
 		}
 
 		if !claims.VerifyNotBefore(time.Now().Unix(), false) {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "authorization not before"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorAuthorizationExpired)
 			return
 		}
 
 		requester, ok := claims["aud"]
 		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization audience"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 			return
 		}
 
 		jwtID, ok := claims["jti"]
 		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization jti"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 			return
 		}
 
@@ -137,12 +137,12 @@ func (s *Server) authenticateBoth() gin.HandlerFunc {
 			log.Debug("Authenticate using JWT")
 			authParts := strings.Split(authorization, " ")
 			if len(authParts) != 2 {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization format, should be Authorization:Bearer XXX_TOKEN_XXX"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 				return
 			}
 
 			if authParts[0] != "Bearer" || len(authParts[1]) == 0 {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization format, should be Authorization:Bearer XXX_TOKEN_XXX"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 				return
 			}
 
@@ -159,40 +159,40 @@ func (s *Server) authenticateBoth() gin.HandlerFunc {
 			})
 			if err != nil {
 				c.Error(err)
-				c.AbortWithStatusJSON(401, gin.H{"message": "invalid authorization signature"})
+				c.AbortWithStatusJSON(401, errorInvalidSignature)
 				return
 			}
 
 			claims, ok := token.Claims.(jwt.MapClaims)
 			if !ok {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "cannot parse authorization"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 				return
 			}
 
 			if !token.Valid {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 				return
 			}
 
 			if !claims.VerifyExpiresAt(time.Now().Unix(), true) {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "authorization expired"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errorAuthorizationExpired)
 				return
 			}
 
 			if !claims.VerifyNotBefore(time.Now().Unix(), false) {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "authorization not before"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errorAuthorizationExpired)
 				return
 			}
 
 			requester, ok := claims["aud"]
 			if !ok {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization audience"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 				return
 			}
 
 			jwtID, ok := claims["jti"]
 			if !ok {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization jti"})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errorInvalidAuthorizationFormat)
 				return
 			}
 
@@ -202,19 +202,19 @@ func (s *Server) authenticateBoth() gin.HandlerFunc {
 			log.Debug("Authenticate using tranditional way")
 			pubkey, err := util.PublicKeyFromAccount(requester)
 			if err != nil {
-				c.AbortWithStatusJSON(401, gin.H{"message": "invalid bitmark account number"})
+				c.AbortWithStatusJSON(401, errorInvalidAuthorizationFormat)
 				return
 			}
 
 			sig, err := hex.DecodeString(signature)
 			if err != nil || !ed25519.Verify(pubkey, []byte(timestamp), sig) {
-				c.AbortWithStatusJSON(401, gin.H{"message": "invalid signature"})
+				c.AbortWithStatusJSON(401, errorInvalidSignature)
 				return
 			}
 
 			t, err := strconv.ParseInt(timestamp, 10, 64)
 			if err != nil {
-				c.AbortWithStatusJSON(401, gin.H{"message": "invalid timestamp"})
+				c.AbortWithStatusJSON(401, errorInvalidAuthorizationFormat)
 				return
 			}
 
@@ -222,7 +222,7 @@ func (s *Server) authenticateBoth() gin.HandlerFunc {
 			now := time.Unix(0, time.Now().UnixNano())
 			duration := now.Sub(created)
 			if duration.Seconds() > float64(60) {
-				c.AbortWithStatusJSON(401, gin.H{"message": "request expired"})
+				c.AbortWithStatusJSON(401, errorAuthorizationExpired)
 				return
 			}
 

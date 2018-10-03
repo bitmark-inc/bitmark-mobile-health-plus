@@ -12,10 +12,16 @@
 @implementation HKSourceRevision (Exporting)
 
 - (NSDictionary *)exportData {
-  return @{
-           @"version": self.version,
-           @"source": self.source.exportData
-           };
+  if (self.version) {
+    return @{
+             @"version": self.version,
+             @"source": self.source.exportData
+             };
+  } else {
+    return @{
+             @"source": self.source.exportData
+             };
+  }
 }
 
 @end
@@ -24,7 +30,7 @@
 
 - (NSDictionary *)exportData {
   return @{
-           @"bundleIdentifier": self.bundleIdentifier
+           @"bundleIdentifier": self.bundleIdentifier ?: @""
            };
 }
 

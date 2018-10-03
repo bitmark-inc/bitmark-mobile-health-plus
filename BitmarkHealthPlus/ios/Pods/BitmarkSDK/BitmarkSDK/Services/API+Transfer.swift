@@ -9,7 +9,7 @@
 import Foundation
 
 extension API {
-    internal func transfer(withData transfer: Transfer) throws -> Bool {
+    internal func transfer(withData transfer: Transfer) throws {
         let json = try JSONSerialization.data(withJSONObject: transfer.getRPCParam(), options: [])
         
         let requestURL = endpoint.apiServerURL.appendingPathComponent("/v1/transfer")
@@ -18,14 +18,7 @@ extension API {
         urlRequest.httpBody = json
         urlRequest.httpMethod = "POST"
         
-        let (result, response) = try urlSession.synchronousDataTask(with: urlRequest)
-        
-        guard let r = result,
-            let res = response else {
-            return false
-        }
-        
-        return 200..<300 ~= res.statusCode
+        let _ = try urlSession.synchronousDataTask(with: urlRequest)
     }
     
     internal func transfer(withData countersignTransfer: CountersignedTransferRecord) throws -> String {
@@ -38,14 +31,9 @@ extension API {
         urlRequest.httpBody = json
         urlRequest.httpMethod = "POST"
         
-        let (result, response) = try urlSession.synchronousDataTask(with: urlRequest)
+        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
         
-        guard let r = result,
-            let _ = response else {
-                throw("Invalid response from gateway server")
-        }
-        
-        let responseData = try JSONDecoder().decode([[String: String]].self, from: r)
+        let responseData = try JSONDecoder().decode([[String: String]].self, from: data)
         guard let txid = responseData[0]["txid"] else {
             throw("Invalid response from gateway server")
         }
@@ -71,15 +59,7 @@ extension API {
         
         try urlRequest.signRequest(withAccount: sender, action: action, resource: resource)
         
-        let (d, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let response = res,
-            let data = d else {
-            throw("Cannot get http response")
-        }
-        
-        if !(200..<300 ~= response.statusCode) {
-            throw("Request status" + String(response.statusCode))
-        }
+        let (data, res) = try urlSession.synchronousDataTask(with: urlRequest)
         
         let responseData = try JSONDecoder().decode([String: String].self, from: data)
         guard let offerId = responseData["offer_id"] else {
@@ -102,15 +82,7 @@ extension API {
         urlRequest.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
         try urlRequest.signRequest(withAccount: account, action: "transferOffer", resource: "patch")
         
-        let (d, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let response = res,
-            let _ = d else {
-                throw("Cannot get http response")
-        }
-        
-        if !(200..<300 ~= response.statusCode) {
-            return false
-        }
+        let (data, res) = try urlSession.synchronousDataTask(with: urlRequest)
         
         return true
     }
@@ -123,15 +95,7 @@ extension API {
         
         let urlRequest = URLRequest(url: url.url!)
         
-        let (d, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let response = res,
-            let data = d else {
-                throw("Cannot get http response")
-        }
-        
-        if !(200..<300 ~= response.statusCode) {
-            throw("Request status" + String(response.statusCode))
-        }
+        let (data, res) = try urlSession.synchronousDataTask(with: urlRequest)
         
         guard let responseData = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
             throw("Cannot parse response")

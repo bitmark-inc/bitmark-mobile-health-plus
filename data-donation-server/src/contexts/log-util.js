@@ -1,6 +1,5 @@
-let winston = require('winston');
-let path = require('path');
-const mkdirp = require('mkdirp');
+const winston = require('winston');
+const fluentTransport = require('fluent-logger').support.winstonTransport();
 
 let logger;
 
@@ -9,29 +8,19 @@ logUtil.initialize = (options) => {
   if (logger) {
     return;
   }
-  if (!options || !options.logFolder) {
-    throw new Error('No logFolder specified in options');
-  }
-  mkdirp.sync(options.logFolder, { mode: '755' });
+
+  console.log('options : ', options);
   let loggerTransports = [
-    new (winston.transports.File)({
-      filename: path.join(options.logFolder, (options.name || 'bitmark.log')),
-      name: options.name || 'bitmark',
-      level: options.level || 'debug',
-      maxFiles: options.maxFiles || 10,
-      maxsize: options.maxSize || 1024 * 1024,
-      tailable: true,
-      timestamp: true,
-    }),
+    new fluentTransport(options.tagName, { host: options.host, port: options.port, timeout: options.timeout }),
   ];
 
   if (options.console) {
     loggerTransports.push(new (winston.transports.Console)({
-      level: options.level || 'debug',
     }));
   }
 
-  logger = new (winston.Logger)({
+  logger = winston.createLogger({
+    level: options.level || 'debug',
     transports: loggerTransports,
   });
 };

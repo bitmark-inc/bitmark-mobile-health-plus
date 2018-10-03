@@ -105,7 +105,7 @@ extension AssetGrant: Codable {
 
 extension API {
     
-    func registerEncryptionPublicKey(forAccount account: Account) throws -> Bool {
+    func registerEncryptionPublicKey(forAccount account: Account) throws {
         let signature = try account.authKey.sign(message: account.encryptionKey.publicKey).hexEncodedString
         let params = ["encryption_pubkey": account.encryptionKey.publicKey.hexEncodedString,
                       "signature": signature]
@@ -116,12 +116,7 @@ extension API {
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
         
-        let (_, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let response = res else {
-            return false
-        }
-        
-        return 200..<300 ~= response.statusCode
+        let _ = try urlSession.synchronousDataTask(with: urlRequest)
     }
     
     func getEncryptionPublicKey(accountNumber: String) throws -> String? {
@@ -129,18 +124,13 @@ extension API {
         let requestURL = URL(string: urlString)!
         let urlRequest = URLRequest(url: requestURL)
         
-        let (r, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let result = r,
-            let response = res,
-            200..<300 ~= response.statusCode else {
-                return nil
-        }
+        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
         
-        let dic = try JSONDecoder().decode([String: String].self, from: result)
+        let dic = try JSONDecoder().decode([String: String].self, from: data)
         return dic["encryption_pubkey"]
     }
     
-    func updateSession(account: Account, bitmarkId: String, recipient: String, sessionData: SessionData, withIssue issue: Issue? = nil) throws -> Bool {
+    func updateSession(account: Account, bitmarkId: String, recipient: String, sessionData: SessionData, withIssue issue: Issue? = nil) throws {
         let requestURL = endpoint.apiServerURL.appendingPathComponent("/v2/session")
         
         let params: [String: Any] = ["bitmark_id": bitmarkId,
@@ -158,44 +148,29 @@ extension API {
             urlRequest.setValue(String(data: bitmarkIssueBody, encoding: .utf8), forHTTPHeaderField: "Bitmark-Issue-Body")
         }
         
-        let (_, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let response = res else {
-                return false
-        }
-        
-        return 200..<300 ~= response.statusCode
+        let _ = try urlSession.synchronousDataTask(with: urlRequest)
     }
     
-    func getAssetAccess(account: Account, bitmarkId: String) throws -> AssetAccess? {
+    func getAssetAccess(account: Account, bitmarkId: String) throws -> AssetAccess {
         let requestURL = endpoint.apiServerURL.appendingPathComponent("/v1/bitmarks/" + bitmarkId + "/asset")
         var urlRequest = URLRequest(url: requestURL)
         urlRequest.httpMethod = "GET"
         try urlRequest.signRequest(withAccount: account, action: "downloadAsset", resource: bitmarkId)
         
-        let (r, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let result = r,
-            let response = res,
-            200..<300 ~= response.statusCode else {
-                return nil
-        }
+        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
         
-        return try JSONDecoder().decode(AssetAccess.self, from: result)
+        return try JSONDecoder().decode(AssetAccess.self, from: data)
     }
     
-    func getAssetGrant(account: Account, grantId: String) throws -> AssetGrant? {
+    func getAssetGrant(account: Account, grantId: String) throws -> AssetGrant {
         let requestURL = endpoint.apiServerURL.appendingPathComponent("/v2/access-grants/" + grantId)
         var urlRequest = URLRequest(url: requestURL)
         urlRequest.httpMethod = "GET"
         try urlRequest.signRequest(withAccount: account, action: "accessGrant", resource: grantId)
         
-        let (r, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let result = r,
-            let response = res,
-            200..<300 ~= response.statusCode else {
-                return nil
-        }
+        let (data, res) = try urlSession.synchronousDataTask(with: urlRequest)
         
-        return try JSONDecoder().decode(AssetGrant.self, from: result)
+        return try JSONDecoder().decode(AssetGrant.self, from: data)
     }
 }
 

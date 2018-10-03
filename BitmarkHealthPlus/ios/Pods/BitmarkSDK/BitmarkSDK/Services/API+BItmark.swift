@@ -47,15 +47,7 @@ extension API {
         var urlRequest = URLRequest(url: requestURL)
         urlRequest.httpMethod = "GET"
         
-        let result = try urlSession.synchronousDataTask(with: urlRequest)
-        guard let data = result.data,
-            let response = result.response else {
-                return nil
-        }
-        
-        if !(200..<300 ~= response.statusCode) {
-            return nil
-        }
+        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
         
         let dic = try JSONDecoder().decode([String: BitmarkInfo].self, from: data)
         return dic["bitmark"]

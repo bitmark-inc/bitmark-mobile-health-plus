@@ -29,7 +29,7 @@ func Ginrus(server string) gin.HandlerFunc {
 			// Append error field if this is an erroneous request.
 			entry.Error(c.Errors.String())
 		} else {
-			entry.Info()
+			entry.Debug()
 		}
 	}
 }

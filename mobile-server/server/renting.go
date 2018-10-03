@@ -47,9 +47,7 @@ func (s *Server) updateRentingReceiver(c *gin.Context) {
 	}
 
 	if sender == nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": "cannot find grantor with that id",
-		})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidParameters)
 		return
 	}
 
@@ -98,9 +96,7 @@ func (s *Server) revokeRentingBitmartk(c *gin.Context) {
 
 	if err := s.bitmarkStore.DeleteBitmarkRenting(c.Copy(), id, account); err != nil {
 		if err == pgx.ErrNoRows {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"error": "invalid id or id does not belong to account",
-			})
+			c.AbortWithStatusJSON(http.StatusBadRequest, errorNoItems)
 			return
 		} else {
 			c.Error(err)
@@ -125,7 +121,7 @@ func (s *Server) updateRenting(c *gin.Context) {
 
 	if err := c.BindJSON(&req); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorInternalServer)
 		return
 	}
 
@@ -141,9 +137,7 @@ func (s *Server) updateRenting(c *gin.Context) {
 		}
 
 		if sender == nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"error": "cannot find grantor with that id",
-			})
+			c.AbortWithStatusJSON(http.StatusBadRequest, errorNoItems)
 			return
 		}
 
@@ -185,14 +179,13 @@ func (s *Server) updateRenting(c *gin.Context) {
 		log.Debug("Update status")
 		status := bitmarkstore.BitmarkRentingStatus(req.Status)
 		if status != bitmarkstore.RentingCompleted {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid status"})
+			c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidParameters)
+			return
 		}
 
 		if err := s.bitmarkStore.UpdateBitmarkRentingStatus(c.Copy(), id, status); err != nil {
 			if err == pgx.ErrNoRows {
-				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-					"error": "invalid id or id does not belong to account",
-				})
+				c.AbortWithStatusJSON(http.StatusBadRequest, errorNoItems)
 				return
 			} else {
 				c.Error(err)

@@ -50,10 +50,7 @@ public extension Account {
             throw("Failed to upload assets")
         }
         
-        let issueSuccess = try api.issue(withIssues: issues, assets: [asset])
-        if !issueSuccess {
-            throw("Fail to issue bitmark")
-        }
+        try api.issue(withIssues: issues, assets: [asset])
         
         return (issues, asset, sessionData?.serialize(), encryptedFile)
     }
@@ -81,24 +78,19 @@ public extension Account {
         
         let network = self.authKey.network
         let api = API(network: network)
-        let issueSuccess = try api.issue(withIssues: issues, assets: [asset])
-        if !issueSuccess {
-            throw("Fail to issue bitmark")
-        }
+        try api.issue(withIssues: issues, assets: [asset])
         
         return (issues, asset)
     }
     
     public func transferBitmark(bitmarkId: String,
-                                toAccount recipient: String) throws -> Bool {
+                                toAccount recipient: String) throws {
         
         let network = self.authKey.network
         let api = API(network: network)
         
         // Get asset's access information
-        guard let assetAccess = try api.getAssetAccess(account: self, bitmarkId: bitmarkId) else {
-            return false
-        }
+        let assetAccess = try api.getAssetAccess(account: self, bitmarkId: bitmarkId)
         
         if assetAccess.sessionData != nil {
             try updateSessionData(bitmarkId: bitmarkId, sessionData: assetAccess.sessionData!, sender: assetAccess.sender!, recipient: recipient)
@@ -147,10 +139,7 @@ public extension Account {
         issue.set(asset: asset)
         try issue.sign(privateKey: self.authKey)
         
-        let issueSuccess = try api.issue(withIssues: [issue], assets: [asset])
-        if !issueSuccess {
-            throw("Fail to issue bitmark")
-        }
+        try api.issue(withIssues: [issue], assets: [asset])
         
         guard let bitmarkId = issue.txId else {
             throw("Fail to get bitmark id")
@@ -214,10 +203,7 @@ public extension Account {
         var transfer = TransferOffer(txId: bitmarkId, receiver: try AccountNumber(address: recipient))
         try transfer.sign(withSender: self)
         
-        let ressult = try api.issueV2(withAccount: self, issues: [issue], assets: [asset], transferOffer: transfer, sessionData: newSessionData, extraInfo: extraInfo)
-        if !ressult {
-            throw("fail to give away issue")
-        }
+        try api.issueV2(withAccount: self, issues: [issue], assets: [asset], transferOffer: transfer, sessionData: newSessionData, extraInfo: extraInfo)
         
         return bitmarkId
     }
@@ -225,9 +211,7 @@ public extension Account {
     public func downloadAsset(bitmarkId: String) throws -> (String?, Data?) {
         let network = self.authKey.network
         let api = API(network: network)
-        guard let access = try api.getAssetAccess(account: self, bitmarkId: bitmarkId) else {
-            return (nil, nil)
-        }
+        let access = try api.getAssetAccess(account: self, bitmarkId: bitmarkId)
         
         let r = try api.getAssetContent(url: access.url)
         guard let content = r.1 else {
@@ -246,7 +230,7 @@ public extension Account {
         return (filename, decryptedData)
     }
     
-    public func registerPublicEncryptionKey() throws -> Bool {
+    public func registerPublicEncryptionKey() throws {
         let network = self.authKey.network
         let api = API(network: network)
         return try api.registerEncryptionPublicKey(forAccount: self)
@@ -257,9 +241,7 @@ public extension Account {
         let api = API(network: network)
         
         // Get asset's access information
-        guard let assetAccess = try api.getAssetAccess(account: self, bitmarkId: bitmarkId) else {
-            throw("Fail to get asset's access")
-        }
+        let assetAccess = try api.getAssetAccess(account: self, bitmarkId: bitmarkId)
 
         if assetAccess.sessionData != nil {
             try updateSessionData(bitmarkId: bitmarkId, sessionData: assetAccess.sessionData!, sender: assetAccess.sender!, recipient: recipient)
@@ -355,9 +337,7 @@ public extension Account {
         let network = self.authKey.network
         let api = API(network: network)
         
-        guard let assetAccess = try api.getAssetAccess(account: self, bitmarkId: bitmarkId) else {
-            throw("Fail to get asset access")
-        }
+        let assetAccess = try api.getAssetAccess(account: self, bitmarkId: bitmarkId)
         
         if assetAccess.sessionData == nil {
             throw("Fail to get asset's access")
@@ -373,9 +353,7 @@ public extension Account {
     public func downloadAssetGrant(grantId: String) throws -> (String?, Data?) {
         let network = self.authKey.network
         let api = API(network: network)
-        guard let access = try api.getAssetGrant(account: self, grantId: grantId) else {
-            return (nil, nil)
-        }
+        let access = try api.getAssetGrant(account: self, grantId: grantId)
         
         let r = try api.getAssetContent(url: access.url!)
         guard let content = r.1 else {
@@ -402,10 +380,7 @@ extension Account {
         
         let updatedSession = try self.updatedSessionData(bitmarkId: bitmarkId, sessionData: sessionData, sender: sender, recipient: recipient)
         
-        let result = try api.updateSession(account: self, bitmarkId: bitmarkId, recipient: recipient, sessionData: updatedSession)
-        if result == false {
-            throw("Fail to update session data")
-        }
+        return try api.updateSession(account: self, bitmarkId: bitmarkId, recipient: recipient, sessionData: updatedSession)
     }
     
     private func updatedSessionData(bitmarkId: String, sessionData: SessionData, sender: String, recipient: String) throws -> SessionData {

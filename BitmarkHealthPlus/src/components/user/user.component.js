@@ -20,6 +20,7 @@ import { EventEmitterService } from '../../services';
 import { issue } from "../../utils";
 import { UserBitmarksStore } from '../../stores';
 
+
 class PrivateUserComponent extends Component {
   static propTypes = {
     healthDataBitmarks: PropTypes.array,
@@ -92,7 +93,7 @@ class PrivateUserComponent extends Component {
         return;
       }
 
-      let info = await this.prepareToIssue(response);
+      let info = await this.prepareToIssue(response, 'chooseFile');
 
       let filePath = info.filePath;
       let assetName = response.fileName;
@@ -104,13 +105,21 @@ class PrivateUserComponent extends Component {
     });
   }
 
-  async prepareToIssue(response) {
+  async prepareToIssue(response, type) {
     let filePath = response.uri.replace('file://', '');
     filePath = decodeURIComponent(filePath);
 
+
+    let timestamp;
+    if (type === 'chooseFile') {
+      let stat = await FileUtil.stat(filePath);
+      timestamp = stat.mtime || stat.ctime;
+    } else {
+      timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
+    }
+
     // Move file from "tmp" folder to "cache" folder
     let fileName = response.fileName ? response.fileName : response.uri.substring(response.uri.lastIndexOf('/') + 1);
-    let timestamp = response.timestamp ? response.timestamp : new Date().toISOString();
     let destPath = FileUtil.CacheDirectory + '/' + DataProcessor.getUserInformation().bitmarkAccountNumber + '/' + fileName;
     await FileUtil.moveFileSafe(filePath, destPath);
     filePath = destPath;

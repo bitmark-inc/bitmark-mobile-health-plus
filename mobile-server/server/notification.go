@@ -11,7 +11,7 @@ func (s *Server) NotificationList(c *gin.Context) {
 	items, err := s.pushStore.QueryPushItems(c, account)
 	if err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, errorInternalServer)
 		return
 	}
 

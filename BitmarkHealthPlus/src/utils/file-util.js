@@ -61,6 +61,9 @@ const FileUtil = {
   },
   exists: async (filePath) => {
     return await RNFS.exists(filePath);
+  },
+  stat: async (filePath) => {
+    return await RNFS.stat(filePath);
   }
 };
 export { FileUtil };
