@@ -82,16 +82,20 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         let data = await BitmarkModel.doGet100Bitmarks(bitmarkAccountNumber, lastOffset);
         if (data && data.assets && data.bitmarks && data.assets.length > 0 && data.bitmarks.length > 0) {
           data.assets.forEach(asset => {
-            let exist = totalAssets.findIndex(as => as.id == asset.id) >= 0;
-            if (!exist) {
-              totalAssets.push(asset);
+            if (grantedAccessAccountSelected && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[asset.id]) {
+              let exist = totalAssets.findIndex(as => as.id == asset.id) >= 0;
+              if (!exist) {
+                totalAssets.push(asset);
+              }
             }
           });
           data.bitmarks.forEach(bitmark => {
             lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
-            let exist = totalBitmarks.findIndex(b => b.id == bitmark.id) >= 0;
-            if (!exist) {
-              totalBitmarks.push(bitmark);
+            if (grantedAccessAccountSelected && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[bitmark.asset_id]) {
+              let exist = totalBitmarks.findIndex(b => b.id == bitmark.id) >= 0;
+              if (!exist) {
+                totalBitmarks.push(bitmark);
+              }
             }
           });
           canContinue = true;
