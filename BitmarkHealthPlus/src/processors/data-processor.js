@@ -3,6 +3,7 @@ import Intercom from 'react-native-intercom';
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
 import ReactNative from 'react-native';
+import { sha3_256 } from 'js-sha3';
 const {
   PushNotificationIOS,
 } = ReactNative;
@@ -26,6 +27,7 @@ let grantedAccessAccountSelected = null;
 let jwt;
 let websocket;
 let isLoadingData = false;
+let notificationUUID;
 
 const isHealthDataBitmark = (asset) => {
   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
@@ -193,6 +195,29 @@ const doReloadUserData = async () => {
   return true;
 };
 
+const configNotification = () => {
+  const onRegistered = async (registeredNotificationInfo) => {
+    notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
+    if (!userInformation || !userInformation.bitmarkAccountNumber) {
+      userInformation = await UserModel.doGetCurrentUser();
+    }
+    if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
+      AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
+        userInformation.notificationUUID = notificationUUID;
+        return UserModel.doUpdateUserInfo(userInformation);
+      }).catch(error => {
+        console.log('DataProcessor doRegisterNotificationInfo error:', error);
+      });
+    }
+  };
+  const onReceivedNotification = async (notificationData) => {
+    if (!notificationData.foreground && notificationData.data && notificationData.data.event === 'intercom_reply') {
+      setTimeout(() => { Intercom.displayMessageComposer(); }, 1000);
+    }
+  };
+  AccountService.configure(onRegistered, onReceivedNotification);
+};
+
 // ================================================================================================================================================
 let dataInterval = null;
 const startInterval = () => {
@@ -244,6 +269,15 @@ const doCreateAccount = async (touchFaceIdSession) => {
   await checkAppNeedResetLocalData();
 
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  if (notificationUUID) {
+    AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
+      userInformation.notificationUUID = notificationUUID;
+      return UserModel.doUpdateUserInfo(userInformation);
+    }).catch(error => {
+      console.log('DataProcessor doRegisterNotificationInfo error:', error);
+    });
+  }
   await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await CommonModel.doTrackEvent({
     event_name: 'health_plus_create_new_account',
@@ -309,7 +343,10 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await FileUtil.mkdir(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
     await FileUtil.mkdir(FileUtil.DocumentDirectory + '/encrypted_' + userInformation.bitmarkAccountNumber);
     await FileUtil.mkdir(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
-    Intercom.registerIdentifiedUser({ userId: userInformation.bitmarkAccountNumber }).catch(error => {
+
+    configNotification();
+    let intercomUserId = `HealthPlus_${sha3_256(intercomUserId)}`;
+    Intercom.registerIdentifiedUser({ userId: intercomUserId }).catch(error => {
       console.log('registerIdentifiedUser error :', error);
     });
 

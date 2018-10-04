@@ -2,6 +2,7 @@ import { AccountModel, CommonModel, BitmarkSDK, UserModel } from './../models';
 import { config } from '../configs';
 import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
+import { sha3_256 } from 'js-sha3';
 const {
   PushNotificationIOS,
   Platform,
@@ -84,7 +85,8 @@ let doRegisterNotificationInfo = async (accountNumber, token) => {
   }
   let client = 'healthplus';
   client = DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse' ? 'healthplusinhouse' : client;
-  return await AccountModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token, client);
+  let intercomUserId = `HealthPlus_${sha3_256(intercomUserId)}`;
+  return await AccountModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token, client, intercomUserId);
 };
 
 let doTryDeregisterNotificationInfo = (accountNumber, token, signatureData) => {
