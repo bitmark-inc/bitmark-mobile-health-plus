@@ -94,8 +94,7 @@ func (h *BlockchainEventHandler) HandleMessage(message *nsq.Message) error {
 		}
 
 		for _, account := range accounts {
-			pushnotification.Push(ctx, &pushnotification.PushInfo{
-				Account: account,
+			pushnotification.PushByAccount(ctx, account, &pushnotification.PushInfo{
 				Title:   "",
 				Message: pushMessage,
 				Data:    pushData,
@@ -146,8 +145,7 @@ func (h *BlockchainEventHandler) processTransferConfirmation(transfer blockBitma
 
 	locKey := "EventTransferConfirmedReceiver"
 	receiverPushMessage := fmt.Sprintf(messages[locKey], asset.Name, util.ShortenAccountNumber(previousTx.Tx.Owner))
-	if err = pushnotification.Push(context.Background(), &pushnotification.PushInfo{
-		Account: transfer.Owner,
+	if err = pushnotification.PushByAccount(context.Background(), transfer.Owner, &pushnotification.PushInfo{
 		Title:   "",
 		Message: receiverPushMessage,
 		Data: &map[string]interface{}{

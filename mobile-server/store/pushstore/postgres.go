@@ -23,15 +23,16 @@ type NotificationToken struct {
 }
 
 const (
-	sqlInsertAccount       = "INSERT INTO mobile.account(account_number) VALUES ($1) ON CONFLICT DO NOTHING"
-	sqlInsertUUID          = "INSERT INTO mobile.push_uuid VALUES($1, $2, $3, $4) ON CONFLICT DO NOTHING"
-	sqlRemoveUUID          = "DELETE FROM mobile.push_uuid WHERE account_number = $1 AND token = $2"
-	sqlRemoveUUIDByAccount = "DELETE FROM mobile.push_uuid WHERE account_number = $1"
-	sqlQueryPushTokens     = "SELECT platform, client, json_agg(token) FROM mobile.push_uuid WHERE account_number = $1 GROUP BY platform, client"
-	sqlInsertPushItem      = "INSERT INTO mobile.push_item(account_number, source, title, message, data, pinned) VALUES ($1, $2, $3, $4, $5, $6)"
-	sqlUpdatePushItem      = "UPDATE mobile.push_item SET status = $1, updated_at = now() WHERE id = $2"
-	sqlQueryPushItems      = "SELECT id, source, title, message, data, pinned, status, created_at, updated_at FROM mobile.push_item WHERE account_number = $1 ORDER BY updated_at"
-	sqlQueryPushItemCount  = "SELECT count(id) FROM mobile.push_item WHERE account_number = $1 AND status <> 'completed'"
+	sqlInsertAccount             = "INSERT INTO mobile.account(account_number) VALUES ($1) ON CONFLICT DO NOTHING"
+	sqlInsertUUID                = "INSERT INTO mobile.push_uuid(account_number, intercom_user_id, token, platform, client) VALUES($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING"
+	sqlRemoveUUID                = "DELETE FROM mobile.push_uuid WHERE account_number = $1 AND token = $2"
+	sqlRemoveUUIDByAccount       = "DELETE FROM mobile.push_uuid WHERE account_number = $1"
+	sqlQueryPushTokensByAccount  = "SELECT platform, client, json_agg(token) FROM mobile.push_uuid WHERE account_number = $1 GROUP BY platform, client"
+	sqlQueryPushTokensByIntercom = "SELECT platform, client, json_agg(token) FROM mobile.push_uuid WHERE intercom_user_id = $1 GROUP BY platform, client"
+	sqlInsertPushItem            = "INSERT INTO mobile.push_item(account_number, source, title, message, data, pinned) VALUES ($1, $2, $3, $4, $5, $6)"
+	sqlUpdatePushItem            = "UPDATE mobile.push_item SET status = $1, updated_at = now() WHERE id = $2"
+	sqlQueryPushItems            = "SELECT id, source, title, message, data, pinned, status, created_at, updated_at FROM mobile.push_item WHERE account_number = $1 ORDER BY updated_at"
+	sqlQueryPushItemCount        = "SELECT count(id) FROM mobile.push_item WHERE account_number = $1 AND status <> 'completed'"
 )
 
 func NewPGStore(dbConn *pgx.ConnPool) *PushPGStore {
@@ -45,12 +46,12 @@ func (p *PushPGStore) AddAccount(ctx context.Context, account string) error {
 	return err
 }
 
-func (p *PushPGStore) AddPushToken(ctx context.Context, account, uuid, platform, client string) error {
+func (p *PushPGStore) AddPushToken(ctx context.Context, account, uuid, platform, client string, intercomUserID *string) error {
 	if err := p.AddAccount(ctx, account); err != nil {
 		return err
 	}
 
-	if _, err := p.dbConn.ExecEx(ctx, sqlInsertUUID, nil, account, uuid, platform, client); err != nil {
+	if _, err := p.dbConn.ExecEx(ctx, sqlInsertUUID, nil, account, intercomUserID, uuid, platform, client); err != nil {
 		return err
 	}
 
@@ -77,8 +78,42 @@ func (p *PushPGStore) RemovePushTokenByAccount(ctx context.Context, account stri
 	return err
 }
 
-func (p *PushPGStore) QueryPushTokens(ctx context.Context, account string) (map[string]map[string][]string, error) {
-	rows, err := p.dbConn.QueryEx(ctx, sqlQueryPushTokens, nil, account)
+func (p *PushPGStore) QueryPushTokensByAccount(ctx context.Context, account string) (map[string]map[string][]string, error) {
+	rows, err := p.dbConn.QueryEx(ctx, sqlQueryPushTokensByAccount, nil, account)
+	defer rows.Close()
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, err
+		}
+	}
+
+	clients := make(map[string]map[string][]string)
+	for rows.Next() {
+		var client string
+		var platform string
+		var rawTokens []byte
+		err := rows.Scan(&platform, &client, &rawTokens)
+		if err != nil {
+			return nil, err
+		}
+
+		receivers := clients[client]
+		if receivers == nil {
+			receivers = make(map[string][]string)
+		}
+
+		tokens := make([]string, 0)
+		json.Unmarshal(rawTokens, &tokens)
+
+		receivers[platform] = tokens
+		clients[client] = receivers
+	}
+
+	return clients, nil
+}
+
+func (p *PushPGStore) QueryPushTokensByIntercom(ctx context.Context, intercomUserID string) (map[string]map[string][]string, error) {
+	rows, err := p.dbConn.QueryEx(ctx, sqlQueryPushTokensByIntercom, nil, intercomUserID)
 	defer rows.Close()
 	if err != nil {
 		if err != sql.ErrNoRows {

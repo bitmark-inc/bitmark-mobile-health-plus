@@ -121,7 +121,7 @@ func (s *Server) updateRenting(c *gin.Context) {
 
 	if err := c.BindJSON(&req); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusBadRequest, errorInternalServer)
+		c.AbortWithStatusJSON(http.StatusBadRequest, errorInvalidParameters)
 		return
 	}
 

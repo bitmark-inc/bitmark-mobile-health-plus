@@ -23,15 +23,16 @@ var (
 )
 
 type notification struct {
-	Title    string                  `json:"title"`
-	Topic    string                  `json:"topic"`
-	Tokens   []string                `json:"tokens"`
-	Platform int                     `json:"platform"`
-	Message  string                  `json:"message"`
-	Data     *map[string]interface{} `json:"data"`
-	Alert    map[string]interface{}  `json:"alert"`
-	Badge    int                     `json:"badge"`
-	Sound    string                  `json:"sound"`
+	Title      string                  `json:"title"`
+	Topic      string                  `json:"topic"`
+	Tokens     []string                `json:"tokens"`
+	Platform   int                     `json:"platform"`
+	Message    string                  `json:"message"`
+	Data       *map[string]interface{} `json:"data"`
+	Alert      map[string]interface{}  `json:"alert"`
+	Badge      int                     `json:"badge"`
+	Sound      string                  `json:"sound"`
+	CollapseID string                  `json:"collapse_id"`
 	// ContentAvailable bool                    `json:"content_available"`
 }
 
@@ -49,7 +50,7 @@ func New(pushClients map[string]config.PushServerInfo) *Client {
 	}
 }
 
-func (c *Client) Send(ctx context.Context, title, message, source string, receivers map[string]map[string][]string, data *map[string]interface{}, locKey *string, locArgs []string, badge int, silent bool) error {
+func (c *Client) Send(ctx context.Context, title, message, source, collapseID string, receivers map[string]map[string][]string, data *map[string]interface{}, locKey *string, locArgs []string, badge int, silent bool) error {
 	var err error
 	for client, payloads := range receivers {
 
@@ -84,6 +85,7 @@ func (c *Client) Send(ctx context.Context, title, message, source string, receiv
 					"loc-key":  locKey,
 					"loc-args": locArgs,
 				},
+				CollapseID: collapseID,
 				// ContentAvailable: !silent,
 			})
 		}

@@ -10,9 +10,10 @@ import (
 // from mobile app
 func (s *Server) AddPushToken(c *gin.Context) {
 	var req struct {
-		Token    string `json:"token"`
-		Platform string `json:"platform"`
-		Client   string `json:"client"`
+		IntercomUserID *string `json:"intercom_user_id"`
+		Token          string  `json:"token"`
+		Platform       string  `json:"platform"`
+		Client         string  `json:"client"`
 	}
 
 	if err := c.BindJSON(&req); err != nil {
@@ -22,7 +23,7 @@ func (s *Server) AddPushToken(c *gin.Context) {
 	}
 
 	account := c.GetString("requester")
-	if err := s.pushStore.AddPushToken(c, account, req.Token, req.Platform, req.Client); err != nil {
+	if err := s.pushStore.AddPushToken(c, account, req.Token, req.Platform, req.Client, req.IntercomUserID); err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return

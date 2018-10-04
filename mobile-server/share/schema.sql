@@ -45,6 +45,7 @@ CREATE TYPE push_client AS ENUM('primary', 'beta', 'development');
 -- TABLE push_uuid
 CREATE TABLE mobile.push_uuid (
     account_number TEXT REFERENCES mobile.account(account_number),
+    intercom_user_id TEXT DEFAULT NULL,
     token TEXT NOT NULL,
     platform device_platform NOT NULL,
     client push_client DEFAULT 'primary',

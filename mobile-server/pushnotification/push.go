@@ -8,22 +8,31 @@ import (
 )
 
 type PushInfo struct {
-	Account string
-	Title   string
-	Message string
-	Data    *map[string]interface{}
-	Pinned  bool
-	Source  string
-	Silent  bool
-	LocKey  *string
-	LocArgs []string
+	Title      string
+	Message    string
+	Data       *map[string]interface{}
+	CollapseID string
+	Pinned     bool
+	Source     string
+	Silent     bool
+	LocKey     *string
+	LocArgs    []string
 }
 
-func Push(ctx context.Context, p *PushInfo, store pushstore.PushStore, client *gorush.Client) error {
-	receivers, err := store.QueryPushTokens(ctx, p.Account)
+func PushByAccount(ctx context.Context, account string, p *PushInfo, store pushstore.PushStore, client *gorush.Client) error {
+	receivers, err := store.QueryPushTokensByAccount(ctx, account)
 	if err != nil {
 		return err
 	}
 
-	return client.Send(ctx, p.Title, p.Message, p.Source, receivers, p.Data, p.LocKey, p.LocArgs, 0, p.Silent)
+	return client.Send(ctx, p.Title, p.Message, p.Source, p.CollapseID, receivers, p.Data, p.LocKey, p.LocArgs, 0, p.Silent)
+}
+
+func PushByIntercomUserID(ctx context.Context, intercomUserID string, p *PushInfo, store pushstore.PushStore, client *gorush.Client) error {
+	receivers, err := store.QueryPushTokensByIntercom(ctx, intercomUserID)
+	if err != nil {
+		return err
+	}
+
+	return client.Send(ctx, p.Title, p.Message, p.Source, p.CollapseID, receivers, p.Data, p.LocKey, p.LocArgs, 0, p.Silent)
 }

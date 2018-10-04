@@ -59,8 +59,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 		if okForApp && app == "bitmark-data-donation" {
 			if okForMessage && okForData {
 				data["offer_id"] = offerID
-				return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
-					Account: from,
+				return pushnotification.PushByAccount(context.Background(), from, &pushnotification.PushInfo{
 					Title:   "",
 					Message: message,
 					Data:    &data,
@@ -102,8 +101,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			return nil
 		}
 
-		return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
-			Account: to,
+		return pushnotification.PushByAccount(context.Background(), to, &pushnotification.PushInfo{
 			Title:   "",
 			Message: messages[event],
 			Data:    &data,
@@ -113,8 +111,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			LocKey:  &event,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferAccepted:
-		return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
-			Account: from,
+		return pushnotification.PushByAccount(context.Background(), from, &pushnotification.PushInfo{
 			Title:   "",
 			Message: messages[event],
 			Data:    &data,
@@ -124,8 +121,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			LocKey:  &event,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferFailed:
-		return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
-			Account: to,
+		return pushnotification.PushByAccount(context.Background(), to, &pushnotification.PushInfo{
 			Title:   "",
 			Message: messages[event],
 			Data:    &data,
@@ -135,8 +131,7 @@ func (h *TwoSigsHandler) HandleMessage(message *nsq.Message) error {
 			LocKey:  &event,
 		}, h.pushStore, h.pushAPIClient)
 	case EventTransferRejected:
-		return pushnotification.Push(context.Background(), &pushnotification.PushInfo{
-			Account: from,
+		return pushnotification.PushByAccount(context.Background(), from, &pushnotification.PushInfo{
 			Title:   "",
 			Message: messages[event],
 			Data:    &data,

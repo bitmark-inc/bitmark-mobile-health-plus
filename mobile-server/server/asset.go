@@ -86,8 +86,7 @@ func (s *Server) uploadAssetForIssueRequest(c *gin.Context) {
 	}
 
 	// Notify receiver
-	go pushnotification.Push(c.Copy(), &pushnotification.PushInfo{
-		Account: issuer,
+	go pushnotification.PushByAccount(c.Copy(), issuer, &pushnotification.PushInfo{
 		Title:   "Issue request",
 		Message: fmt.Sprintf("%s has added a new health record to your account. Please examine the record and sign to claim ownership.", util.ShortenAccountNumber(account)),
 		Data: &map[string]interface{}{

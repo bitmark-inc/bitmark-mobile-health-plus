@@ -41,7 +41,6 @@ func (h *FluentdHook) Fire(entry *log.Entry) (err error) {
 		"message": entry.Message,
 		"level":   levelToText(entry.Level),
 	}
-	fmt.Printf("send log to fluentd: %+v\n", message)
 	return h.fluentLogger.PostWithTime(h.tag, entry.Time, message)
 }
 
