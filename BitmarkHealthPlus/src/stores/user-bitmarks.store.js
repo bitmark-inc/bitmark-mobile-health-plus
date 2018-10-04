@@ -30,10 +30,10 @@ const data = (state = initialState, action) => {
     case ACTION_TYPES.INIT:
       state.healthDataBitmarks = action.healthDataBitmarks || state.healthDataBitmarks;
       state.healthAssetBitmarks = action.healthAssetBitmarks || state.healthAssetBitmarks;
-      state.bitmarkType = action.bitmarkType || action.bitmarkType;
+      state.bitmarkType = action.bitmarkType || state.bitmarkType;
       return merge({}, state);
     case ACTION_TYPES.UPDATE_BITMARK_TYPE:
-      state.bitmarkType = action.bitmarkType || action.bitmarkType;
+      state.bitmarkType = action.bitmarkType || state.bitmarkType;
       return merge({}, state);
     default:
       return state;
