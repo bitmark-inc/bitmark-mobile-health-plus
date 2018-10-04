@@ -147,7 +147,9 @@ let queueGetAccountAccesses = [];
 const doCheckNewAccesses = async (accesses) => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(accesses));
-
+  if (grantedAccessAccountSelected) {
+    grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === grantedAccessAccountSelected.grantor);
+  }
   if (accesses && accesses.waiting && accesses.waiting.length > 0) {
     Actions.confirmAccess({ token: accesses.waiting[0].id, grantee: accesses.waiting[0].grantee });
   }
