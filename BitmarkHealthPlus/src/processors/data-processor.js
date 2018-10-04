@@ -345,7 +345,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await FileUtil.mkdir(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
 
     configNotification();
-    let intercomUserId = `HealthPlus_${sha3_256(intercomUserId)}`;
+    let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
     Intercom.registerIdentifiedUser({ userId: intercomUserId }).catch(error => {
       console.log('registerIdentifiedUser error :', error);
     });
