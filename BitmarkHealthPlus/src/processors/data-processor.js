@@ -61,8 +61,16 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
 
+
+  if ((grantedAccessAccountSelected && grantedAccessAccountSelected.grantor === bitmarkAccountNumber) ||
+    (!grantedAccessAccountSelected && bitmarkAccountNumber === userInformation.bitmarkAccountNumber)) {
+    let storeState = UserBitmarksStore.getState().data
+    storeState.healthDataBitmarks = healthDataBitmarks;
+    storeState.healthAssetBitmarks = healthAssetBitmarks;
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
+  }
+
   if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
-    UserBitmarksStore.dispatch(UserBitmarksActions.updateBitmarks(healthDataBitmarks, healthAssetBitmarks));
     let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.createdAt);
     if (list && list.length > 0) {
       Actions.bitmarkHealthData({ list });
@@ -87,16 +95,16 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         if (data && data.assets && data.bitmarks && data.assets.length > 0 && data.bitmarks.length > 0) {
           data.assets.forEach(asset => {
             let exist = totalAssets.findIndex(as => as.id == asset.id) >= 0;
-            if ((grantedAccessAccountSelected && grantedAccessAccountSelected.grantor === bitmarkAccountNumber && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[asset.id] && !exist) ||
-              (!grantedAccessAccountSelected && !exist)) {
+            if ((bitmarkAccountNumber === userInformation.bitmarkAccountNumber && !exist) ||
+              (bitmarkAccountNumber !== userInformation.bitmarkAccountNumber && !exist && grantedAccessAccountSelected && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[asset.id])) {
               totalAssets.push(asset);
             }
           });
           data.bitmarks.forEach(bitmark => {
             lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
             let exist = totalBitmarks.findIndex(b => b.id == bitmark.id) >= 0;
-            if ((grantedAccessAccountSelected && grantedAccessAccountSelected.grantor === bitmarkAccountNumber && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[bitmark.asset_id] && !exist) ||
-              (!grantedAccessAccountSelected && !exist)) {
+            if ((bitmarkAccountNumber === userInformation.bitmarkAccountNumber && !exist) ||
+              (bitmarkAccountNumber !== userInformation.bitmarkAccountNumber && !exist && grantedAccessAccountSelected && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[bitmark.asset_id])) {
               totalBitmarks.push(bitmark);
             }
           });
@@ -368,8 +376,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       }
     }
 
-    let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
-    UserBitmarksStore.dispatch(UserBitmarksActions.updateBitmarks(userBitmarks.healthDataBitmarks, userBitmarks.healthAssetBitmarks));
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)));
     DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(await doGetAccountAccesses()));
     await checkAppNeedResetLocalData(appInfo);
 
@@ -539,6 +546,7 @@ const getGrantedAccessAccountSelected = () => {
 
 const doSelectAccountAccess = async (accountNumber) => {
   if (accountNumber === userInformation.bitmarkAccountNumber) {
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)));
     grantedAccessAccountSelected = null;
     return true;
   }

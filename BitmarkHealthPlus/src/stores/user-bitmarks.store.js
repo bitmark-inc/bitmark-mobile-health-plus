@@ -5,7 +5,6 @@ import { merge } from 'lodash';
 const ACTION_TYPES = {
   RESET: 'RESET',
   INIT: 'INIT',
-  UPDATE_BITMARKS: 'UPDATE_BITMARKS',
   UPDATE_BITMARK_TYPE: 'UPDATE_BITMARK_TYPE',
 };
 
@@ -13,11 +12,8 @@ const UserBitmarksActions = {
   reset: () => {
     return { type: ACTION_TYPES.RESET, };
   },
-  initBitmarks: (healthDataBitmarks, healthAssetBitmarks, bitmarkType) => {
+  initBitmarks: ({ healthDataBitmarks, healthAssetBitmarks, bitmarkType }) => {
     return { type: ACTION_TYPES.INIT, healthDataBitmarks, healthAssetBitmarks, bitmarkType };
-  },
-  updateBitmarks: (healthDataBitmarks, healthAssetBitmarks) => {
-    return { type: ACTION_TYPES.UPDATE_BITMARKS, healthDataBitmarks, healthAssetBitmarks };
   },
   updateBitmarkType: (bitmarkType) => {
     return { type: ACTION_TYPES.UPDATE_BITMARK_TYPE, bitmarkType };
@@ -36,11 +32,6 @@ const data = (state = initialState, action) => {
       state.healthAssetBitmarks = action.healthAssetBitmarks || state.healthAssetBitmarks;
       state.bitmarkType = action.bitmarkType || action.bitmarkType;
       return merge({}, state);
-    case ACTION_TYPES.UPDATE_BITMARKS:
-
-      state.healthDataBitmarks = action.healthDataBitmarks || state.healthDataBitmarks;
-      state.healthAssetBitmarks = action.healthAssetBitmarks || state.healthAssetBitmarks;
-      return state;
     case ACTION_TYPES.UPDATE_BITMARK_TYPE:
       state.bitmarkType = action.bitmarkType || action.bitmarkType;
       return merge({}, state);
