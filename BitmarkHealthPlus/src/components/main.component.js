@@ -139,7 +139,11 @@ class MainEventsHandlerComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
-      i18n.locale = DeviceInfo.getDeviceLocale();
+      if (config.network === config.NETWORKS.livenet) {
+        i18n.locale = 'en';
+      } else {
+        i18n.locale = DeviceInfo.getDeviceLocale();
+      }
       this.doTryConnectInternet();
     }
     if (this.appState.match(/active/) && nextAppState !== 'active') {

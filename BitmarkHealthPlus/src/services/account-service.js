@@ -85,7 +85,7 @@ let doRegisterNotificationInfo = async (accountNumber, token) => {
   }
   let client = 'healthplus';
   client = DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse' ? 'healthplusinhouse' : client;
-  let intercomUserId = `HealthPlus_${sha3_256(intercomUserId)}`;
+  let intercomUserId = `HealthPlus_${sha3_256(accountNumber)}`;
   return await AccountModel.doRegisterNotificationInfo(accountNumber, signatureData.timestamp, signatureData.signature, Platform.OS, token, client, intercomUserId);
 };
 
