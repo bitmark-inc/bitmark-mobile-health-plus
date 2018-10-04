@@ -87,7 +87,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         if (data && data.assets && data.bitmarks && data.assets.length > 0 && data.bitmarks.length > 0) {
           data.assets.forEach(asset => {
             let exist = totalAssets.findIndex(as => as.id == asset.id) >= 0;
-            if ((grantedAccessAccountSelected && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[asset.id] && !exist) ||
+            if ((grantedAccessAccountSelected && grantedAccessAccountSelected.grantor === bitmarkAccountNumber && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[asset.id] && !exist) ||
               (!grantedAccessAccountSelected && !exist)) {
               totalAssets.push(asset);
             }
@@ -95,7 +95,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           data.bitmarks.forEach(bitmark => {
             lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
             let exist = totalBitmarks.findIndex(b => b.id == bitmark.id) >= 0;
-            if ((grantedAccessAccountSelected && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[bitmark.asset_id] && !exist) ||
+            if ((grantedAccessAccountSelected && grantedAccessAccountSelected.grantor === bitmarkAccountNumber && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[bitmark.asset_id] && !exist) ||
               (!grantedAccessAccountSelected && !exist)) {
               totalBitmarks.push(bitmark);
             }
