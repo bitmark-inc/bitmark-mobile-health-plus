@@ -347,12 +347,18 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await FileUtil.mkdir(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
 
     configNotification();
-    Intercom.reset().then(() => {
+    if (!userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
-      return Intercom.registerIdentifiedUser({ userId: intercomUserId })
-    }).catch(error => {
-      console.log('registerIdentifiedUser error :', error);
-    });
+      Intercom.reset().then(() => {
+
+        return Intercom.registerIdentifiedUser({ userId: intercomUserId })
+      }).then(() => {
+        userInformation.intercomUserId = intercomUserId;
+        return UserModel.doUpdateUserInfo(userInformation);
+      }).catch(error => {
+        console.log('registerIdentifiedUser error :', error);
+      });
+    }
 
     if (!(justCreatedBitmarkAccount && CommonModel.getFaceTouchSessionId())) {
       await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp'));
