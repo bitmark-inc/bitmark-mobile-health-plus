@@ -28,7 +28,7 @@ axios.get(url).then(response => {
       } else {
         jsonData['id'][componentName + '_' + items[0]] = componentName + '_' + items[0];
         for (let itemIndex = 1; itemIndex < items.length; itemIndex++) {
-          jsonData[languages[itemIndex - 1]][componentName + '_' + items[0]] = items[itemIndex] || componentName + '_' + items[0];
+          jsonData[languages[itemIndex - 1]][componentName + '_' + items[0]] = items[itemIndex] || (componentName + '_' + items[0]);
         }
       }
     }
