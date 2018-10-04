@@ -26,7 +26,6 @@ export class BitmarkDetailComponent extends Component {
       content: '',
     }
 
-    this.handerChangeUserDataBitmarks = this.handerChangeUserDataBitmarks.bind(this);
     if (this.props.bitmark) {
       let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
       if (this.props.bitmarkType === 'bitmark_health_data') {
