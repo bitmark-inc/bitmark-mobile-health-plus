@@ -98,7 +98,6 @@ export class LoginComponent extends Component {
 
 
   onChangeText(index, text) {
-    console.log('onChangeText :', index, text);
     text = text ? text.trim() : '';
     this.doFilter(text);
     if (index < 12) {
@@ -113,7 +112,6 @@ export class LoginComponent extends Component {
     this.checkStatusInputting();
   }
   onFocus(index) {
-    console.log('index :', index);
     let text = index < 12 ? this.state.smallerList[index].word : this.state.biggerList[index - 12].word;
     this.setState({
       selectedIndex: index,
