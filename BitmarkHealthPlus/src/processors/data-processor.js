@@ -413,7 +413,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       }
     }
 
-    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber)));
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks((await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber)) || {}));
     DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(await doGetAccountAccesses()));
     await checkAppNeedResetLocalData(appInfo);
 
@@ -583,7 +583,7 @@ const getGrantedAccessAccountSelected = () => {
 
 const doSelectAccountAccess = async (accountNumber) => {
   if (accountNumber === userInformation.bitmarkAccountNumber) {
-    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)));
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks((await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {}));
     grantedAccessAccountSelected = null;
     return true;
   }
