@@ -23,7 +23,7 @@ class BitmarkSDK: NSObject {
       let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(network: network)
       try KeychainUtil.saveCore(account.core)
-      _ = try account.registerPublicEncryptionKey()
+      _ = try? account.registerPublicEncryptionKey()
       let sessionId = AccountSession.shared.addSessionForAccount(account)
       callback([true, sessionId])
     }
@@ -54,7 +54,7 @@ class BitmarkSDK: NSObject {
       }
       
       try KeychainUtil.saveCore(account.core)
-      _ = try account.registerPublicEncryptionKey()
+      _ = try? account.registerPublicEncryptionKey()
       let sessionId = AccountSession.shared.addSessionForAccount(account)
       callback([true, sessionId])
     }
