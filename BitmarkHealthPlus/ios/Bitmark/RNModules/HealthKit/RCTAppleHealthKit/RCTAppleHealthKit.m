@@ -394,7 +394,7 @@ RCT_EXPORT_METHOD(getInfo:(NSDictionary *)input callback:(RCTResponseSenderBlock
         [self.healthStore requestAuthorizationToShareTypes:writeDataTypes readTypes:readDataTypes completion:^(BOOL success, NSError *error) {
             if (!success) {
                 NSString *errMsg = [NSString stringWithFormat:@"Error with HealthKit authorization: %@", error];
-                callback(@[RCTMakeError(errMsg, nil, nil)]);
+                callback(@[RCTMakeError(errMsg, nil, nil), [NSNumber numberWithInteger:error.code]]);
                 return;
             } else {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
