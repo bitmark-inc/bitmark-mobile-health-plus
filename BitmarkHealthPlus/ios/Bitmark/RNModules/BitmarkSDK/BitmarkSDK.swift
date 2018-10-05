@@ -13,9 +13,7 @@ import KeychainAccess
 @objc(BitmarkSDK)
 class BitmarkSDK: NSObject {
   
-  enum BitmarkSDKError: Error {
-    case accountNotFound
-  }
+  static let accountNotFound = "Cannot find account associated with that session id"
   
   @objc(newAccount::)
   func newAccount(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
@@ -102,8 +100,8 @@ class BitmarkSDK: NSObject {
       callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
     }
     catch let e {
-      if let error = e as? BitmarkSDKError,
-        error == BitmarkSDKError.accountNotFound {
+      if let error = e as? String,
+        error == BitmarkSDK.accountNotFound {
         callback([true])
         return
       }
@@ -543,7 +541,7 @@ extension BitmarkSDK {
   
   static func getAccount(sessionId: String) throws -> Account {
     guard let account = AccountSession.shared.getAccount(sessionId: sessionId) else {
-      throw BitmarkSDKError.accountNotFound
+      throw accountNotFound
     }
     
     return account
