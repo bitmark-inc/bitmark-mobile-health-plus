@@ -67,3 +67,4 @@ export { config, };
 
 // react-native run-ios --device "Bitmark’s iPhone" --scheme 'BitmarkHealthPlus dev'
 // react-native run-ios --device "iPhone 5 testing" --scheme 'BitmarkHealthPlus dev'
+// react-native run-ios --device "Bin’s iPhone" --scheme 'BitmarkHealthPlus dev'

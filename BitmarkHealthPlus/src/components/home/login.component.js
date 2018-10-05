@@ -53,7 +53,7 @@ export class LoginComponent extends Component {
       keyboardExternalOpacity: new Animated.Value(0),
       keyboardExternalDataSource: dictionary24Words,
     };
-    setTimeout(this.checkStatusInputting.bind(this), 200);
+    // setTimeout(this.checkStatusInputting.bind(this), 200);
   }
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));

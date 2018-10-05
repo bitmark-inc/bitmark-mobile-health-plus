@@ -333,7 +333,7 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 
-const doOpenApp = async (justCreatedBitmarkAccount) => {
+const doOpenApp = async () => {
   // await UserModel.doRemoveUserInfo();
   userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
@@ -359,11 +359,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         console.log('registerIdentifiedUser error :', error);
       });
     }
-
-    if (!(justCreatedBitmarkAccount && CommonModel.getFaceTouchSessionId())) {
-      await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp'));
-    }
-    console.log('CommonModel.getFaceTouchSessionId() :', CommonModel.getFaceTouchSessionId());
 
     let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);

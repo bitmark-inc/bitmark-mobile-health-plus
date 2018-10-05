@@ -46,12 +46,14 @@ class MainEventsHandlerComponent extends Component {
     this.doTryConnectInternet = this.doTryConnectInternet.bind(this);
     this.handleDeepLink = this.handleDeepLink.bind(this);
     this.displayEmptyDataSource = this.displayEmptyDataSource.bind(this);
+    this.doRefresh = this.doRefresh.bind(this);
 
     this.state = {
       processingCount: false,
       submitting: null,
       networkStatus: true,
       emptyDataSource: false,
+      passTouchFaceId: true,
     };
     this.appState = AppState.currentState;
   }
@@ -67,7 +69,7 @@ class MainEventsHandlerComponent extends Component {
     NetInfo.isConnected.fetch().then().done(() => {
       NetInfo.isConnected.addEventListener('connectionChange', this.handleNetworkChange);
     });
-
+    EventEmitterService.on(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
     EventEmitterService.on(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
@@ -81,11 +83,20 @@ class MainEventsHandlerComponent extends Component {
     AppState.removeEventListener('change', this.handleAppStateChange);
     Linking.removeListener('url', this.handleDeepLink);
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleNetworkChange);
-
+    EventEmitterService.remove(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
+  }
+
+  async doRefresh() {
+    let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+    console.log('passTouchFaceId :', passTouchFaceId);
+    this.setState({ passTouchFaceId });
+    if (passTouchFaceId) {
+      EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus);
+    }
   }
 
   handleDeepLink(event) {
@@ -133,8 +144,20 @@ class MainEventsHandlerComponent extends Component {
   }
 
   handleNetworkChange(networkStatus) {
-    EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkStatus);
     this.setState({ networkStatus });
+    if (networkStatus) {
+      UserModel.doTryGetCurrentUser().then(async (userInformation) => {
+        if (userInformation && userInformation.bitmarkAccountNumber) {
+          let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+          this.setState({ passTouchFaceId });
+          if (passTouchFaceId) {
+            EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkStatus);
+          }
+        } else {
+          EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkStatus);
+        }
+      });
+    }
   }
 
   handleAppStateChange = (nextAppState) => {
@@ -310,7 +333,7 @@ class MainEventsHandlerComponent extends Component {
 
   render() {
     let styles = {};
-    if (!this.state.networkStatus || this.state.processingCount || this.state.emptyDataSource ||
+    if (!this.state.networkStatus || this.state.processingCount || this.state.emptyDataSource || !this.state.passTouchFaceId ||
       (!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message) ||
       (!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message))) {
       styles.height = '100%';
@@ -318,6 +341,26 @@ class MainEventsHandlerComponent extends Component {
     return (
       <View style={[{ position: 'absolute', width: '100%', top: 0, left: 0, zIndex: constants.zIndex.dialog }, styles]}>
         {!this.state.networkStatus && <BitmarkInternetOffComponent tryConnectInternet={this.doTryConnectInternet} />}
+        {!this.state.passTouchFaceId && <BitmarkDialogComponent dialogStyle={{
+          minHeight: 0, backgroundColor: 'rgba(256,256,256, 0.7)', flex: 1, width: '100%',
+
+        }}>
+          <TouchableOpacity style={{ flex: 1, justifyContent: 'center', }} onPress={async () => {
+            let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+            console.log('passTouchFaceId :', passTouchFaceId);
+            this.setState({ passTouchFaceId });
+            if (passTouchFaceId) {
+              EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus);
+            }
+          }}>
+            <Text style={{
+              width: convertWidth(300),
+              color: 'white', fontWeight: '900', fontSize: 16,
+              backgroundColor: '#FF4444', padding: 10,
+              textAlign: 'center',
+            }}>PLEASE AUTHORIZE</Text>
+          </TouchableOpacity>
+        </BitmarkDialogComponent>}
         {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
         {!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message && <DefaultIndicatorComponent />}
         {!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message) && <BitmarkIndicatorComponent
@@ -392,12 +435,12 @@ export class MainComponent extends Component {
   }
 
   componentDidMount() {
-    EventEmitterService.on(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
+
     EventEmitterService.on(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
     isMainComponentMounted = true;
   }
   componentWillUnmount() {
-    EventEmitterService.remove(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
+
     EventEmitterService.remove(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
     isMainComponentMounted = false;
   }
@@ -425,7 +468,6 @@ export class MainComponent extends Component {
     }).catch(error => {
       console.log('doOpenApp error:', error);
     });
-    // this.doRefresh();
   }
   doRefresh(justCreatedBitmarkAccount) {
     return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
@@ -436,7 +478,7 @@ export class MainComponent extends Component {
       if (user && user.bitmarkAccountNumber) {
         CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
           if (ok) {
-            AppProcessor.doStartBackgroundProcess(justCreatedBitmarkAccount);
+            AppProcessor.doStartBackgroundProcess();
           } else {
             if (!this.requiringTouchId) {
               this.requiringTouchId = true;

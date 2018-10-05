@@ -110,13 +110,21 @@ AppleHealthKitModel.initHealthKit = (readDataType) => {
       }
       permissions.read = readDataType;
     }
-    AppleHealthKit.initHealthKit({ permissions: permissions }, (error, response) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(response);
-      }
-    });
+
+    let tryInitHealthKit = () => {
+      AppleHealthKit.initHealthKit({ permissions: permissions }, (error, response) => {
+        if (error) {
+          if (response && response === 5) {
+            tryInitHealthKit();
+          } else {
+            reject(error, response);
+          }
+        } else {
+          resolve(response);
+        }
+      });
+    }
+    tryInitHealthKit();
   });
 };
 
