@@ -57,7 +57,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your camera.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Touch/Face ID or a passcode is required to authorize your transactions.</string>
+	<string>info_plist_touch_face_id</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>

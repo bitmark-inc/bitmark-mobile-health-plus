@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  BitmarkHealthPlus
+
+  Created by Anh Nguyen on 10/5/18.
+  Copyright © 2018 Facebook. All rights reserved.
+*/
+
+"info_plist_touch_face_id" = "Touch/Face ID or a passcode is required to authorize your transactions";
+"notification_intercom_new_messages" = "You have new messages from our support team. Tap to view.";
+

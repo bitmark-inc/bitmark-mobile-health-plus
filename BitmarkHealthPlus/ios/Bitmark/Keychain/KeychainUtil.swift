@@ -52,7 +52,7 @@ struct KeychainUtil {
   
   static func saveCore(_ core: Data) throws {
     try DispatchQueue.main.sync {
-      return try getKeychain(reason: "Touch/Face ID or a passcode is required to authorize your transactions.").set(core, key: bitmarkSeedCoreKey)
+      return try getKeychain(reason: NSLocalizedString("info_plist_touch_face_id", comment: "")).set(core, key: bitmarkSeedCoreKey)
     }
   }
   

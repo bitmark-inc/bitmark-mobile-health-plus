@@ -5,7 +5,6 @@ import (
 
 	"github.com/bitmark-inc/mobile-app/mobile-server/pushnotification"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 // A ConversationMessage is the message that started the conversation rendered for presentation
@@ -38,9 +37,6 @@ type intercomUser struct {
 }
 
 func (s *Server) intercomWebhook(c *gin.Context) {
-	header := c.Request.Header
-	log.Debug("Intercom request header: ", header)
-
 	var req struct {
 		Data struct {
 			Item struct {
@@ -62,13 +58,16 @@ func (s *Server) intercomWebhook(c *gin.Context) {
 		return
 	}
 
+	locKey := "notification_intercom_new_messages"
+
 	go pushnotification.PushByIntercomUserID(c.Copy(), req.Data.Item.User.UserID, &pushnotification.PushInfo{
 		Title:   "",
-		Message: "You have new messages from our supporter. Tap to view.",
+		Message: "You have new messages from Bitmark support team. Tap to view.",
 		Data: &map[string]interface{}{
 			"event": "intercom_reply",
 		},
 		CollapseID: "intercom",
+		LocKey:     &locKey,
 	}, s.pushStore, s.pushAPIClient)
 
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
