@@ -3,7 +3,7 @@
 //  Bitmark
 //
 //  Created by Anh Nguyen on 1/26/18.
-//  Copyright © 2018 Facebook. All rights reserved.
+//  Copyright © 2018 Bitmark Inc. All rights reserved
 //
 
 import Foundation
