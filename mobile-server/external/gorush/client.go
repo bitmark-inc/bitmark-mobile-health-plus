@@ -50,7 +50,7 @@ func New(pushClients map[string]config.PushServerInfo) *Client {
 	}
 }
 
-func (c *Client) Send(ctx context.Context, title, message, source, collapseID string, receivers map[string]map[string][]string, data *map[string]interface{}, locKey *string, locArgs []string, badge int, silent bool) error {
+func (c *Client) Send(ctx context.Context, title, message, source, collapseID, locKey string, locArgs []string, receivers map[string]map[string][]string, data *map[string]interface{}, badge int, silent bool) error {
 	var err error
 	for client, payloads := range receivers {
 
@@ -68,6 +68,10 @@ func (c *Client) Send(ctx context.Context, title, message, source, collapseID st
 		if !ok {
 			log.Error("Cannot find client matches with: ", client)
 			continue
+		}
+
+		if len(locKey) > 0 {
+			locKey = "notification_" + locKey
 		}
 
 		for platform, tokens := range payloads {

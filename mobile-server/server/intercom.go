@@ -58,7 +58,7 @@ func (s *Server) intercomWebhook(c *gin.Context) {
 		return
 	}
 
-	locKey := "notification_intercom_new_messages"
+	locKey := "intercom_new_messages"
 
 	go pushnotification.PushByIntercomUserID(c.Copy(), req.Data.Item.User.UserID, &pushnotification.PushInfo{
 		Title:   "",
@@ -67,7 +67,7 @@ func (s *Server) intercomWebhook(c *gin.Context) {
 			"event": "intercom_reply",
 		},
 		CollapseID: "intercom",
-		LocKey:     &locKey,
+		LocKey:     locKey,
 	}, s.pushStore, s.pushAPIClient)
 
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})

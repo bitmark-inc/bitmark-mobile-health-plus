@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 
 	"github.com/nsqio/go-nsq"
+	uuid "github.com/satori/go.uuid"
 )
 
 type NotifyClient struct {
@@ -40,6 +41,7 @@ func (nc *NotifyClient) Add(topic, channel string, handler nsq.Handler) error {
 	config.TlsV1 = true
 	config.TlsConfig = tlsConfig
 	config.MaxAttempts = 30
+	config.ClientID = uuid.NewV4().String()
 
 	q, err := nsq.NewConsumer(topic, channel, config)
 	if err != nil {
