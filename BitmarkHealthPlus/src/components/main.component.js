@@ -91,10 +91,13 @@ class MainEventsHandlerComponent extends Component {
   }
 
   async doRefresh(justCreatedBitmarkAccount) {
-    let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
-    console.log('passTouchFaceId :', passTouchFaceId);
-    this.setState({ passTouchFaceId });
-    if (passTouchFaceId && this.state.networkStatus) {
+    if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
+      let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+      this.setState({ passTouchFaceId });
+      if (passTouchFaceId && this.state.networkStatus) {
+        EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
+      }
+    } else if (this.state.networkStatus) {
       EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
     }
   }
