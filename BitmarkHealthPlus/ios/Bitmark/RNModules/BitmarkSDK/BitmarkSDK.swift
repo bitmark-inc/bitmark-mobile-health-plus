@@ -252,7 +252,7 @@ class BitmarkSDK: NSObject {
         return
       }
       
-      let assetid = fingerprintData.sha3(.sha512).hexEncodedString
+      let assetid = fingerprintData.sha3(length: 512).hexEncodedString
       callback([true, assetid, fingerprint])
     }
     catch let e {

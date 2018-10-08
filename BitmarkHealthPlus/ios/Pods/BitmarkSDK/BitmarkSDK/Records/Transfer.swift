@@ -110,7 +110,7 @@ public struct Transfer {
             self.isSigned = true
             
             recordPacked = BinaryPacking.append(toData: recordPacked, withData: self.signature)
-            self.txId = recordPacked.sha3(.sha256).hexEncodedString
+            self.txId = recordPacked.sha3(length: 256).hexEncodedString
         }
         catch {
             resetSignState()

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CryptoSwift
 import TweetNacl
 
 public struct FileUtil {
@@ -19,9 +18,8 @@ public struct FileUtil {
     
     public struct Fingerprint {
         public static func computeFingerprint(data: Data) -> String {
-            let sha3 = SHA3(variant: .sha512)
-            let sha3Data = sha3.calculate(for: [UInt8](data))
-            return "01" + Data(bytes: sha3Data).hexEncodedString
+            let sha3Data = data.sha3(length: 512)
+            return "01" + sha3Data.hexEncodedString
         }
     }
 }

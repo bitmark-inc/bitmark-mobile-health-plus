@@ -19,7 +19,7 @@ public struct AuthKey: AsymmetricKey {
     public let kif: String
     
     public init(fromKIF kifString: String) throws {
-        guard let kifBuffer = Base58.decode(kifString) else {
+        guard let kifBuffer = kifString.base58DecodedData else {
             throw(BMError("Can not convert base58"))
         }
         self.kif = kifString
@@ -61,7 +61,7 @@ public struct AuthKey: AsymmetricKey {
         
         // check checksum
         let checksumData = kifBuffer.slice(start: 0, end: kifLength - Config.checksumLength)
-        let checksum = checksumData.sha3(.sha256).slice(start: 0, end: Config.checksumLength)
+        let checksum = checksumData.sha3(length: 256).slice(start: 0, end: Config.checksumLength)
         
         if checksum != kifBuffer.slice(start: kifLength - Config.checksumLength, end: kifLength) {
             throw(BMError("Private key error: checksum mismatch"))
@@ -104,12 +104,12 @@ public struct AuthKey: AsymmetricKey {
         keyVariantVal = keyVariantVal << 1 | keyPartVal
         let keyVariantData = Data(bytes: [keyVariantVal])
         
-        var checksum = keyVariantData.concating(data: seed).sha3(.sha256)
+        var checksum = keyVariantData.concating(data: seed).sha3(length: 256)
         checksum = checksum.slice(start: 0, end: Config.checksumLength)
         let kifData = keyVariantData + seed + checksum
         
         // Set data
-        self.kif = Base58.encode(kifData)
+        self.kif = kifData.base58EncodedString
         self.network = network
         self.type = type
         self.privateKey = keyPair.privateKey

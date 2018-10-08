@@ -16,25 +16,25 @@
     "git": "https://github.com/bitmark-inc/bitmark-sdk-swift.git",
     "tag": "0.0.5"
   },
-  "source_files": "BitmarkSDK/**/*.{h,swift}",
+  "source_files": "BitmarkSDK/**/*.{h,c,swift}",
   "ios": {
     "vendored_libraries": "BitmarkSDK/libsodium/libsodium-ios.a"
   },
   "osx": {
     "vendored_libraries": "BitmarkSDK/libsodium/libsodium-osx.a"
   },
-  "private_header_files": "BitmarkSDK/libsodium/*.h",
-  "preserve_paths": "BitmarkSDK/libsodium/module.modulemap",
+  "private_header_files": [
+    "BitmarkSDK/libsodium/*.h",
+    "BitmarkSDK/tiny_sha3/*.h"
+  ],
+  "preserve_paths": [
+    "BitmarkSDK/libsodium/module.modulemap",
+    "BitmarkSDK/tiny_sha3/module.modulemap"
+  ],
   "pod_target_xcconfig": {
-    "SWIFT_INCLUDE_PATHS": "$(PODS_TARGET_SRCROOT)/BitmarkSDK/libsodium"
+    "SWIFT_INCLUDE_PATHS": "$(PODS_TARGET_SRCROOT)/BitmarkSDK/libsodium $(PODS_TARGET_SRCROOT)/BitmarkSDK/tiny_sha3"
   },
   "dependencies": {
-    "BigInt": [
-
-    ],
-    "CryptoSwift": [
-
-    ],
     "TweetNacl": [
 
     ]

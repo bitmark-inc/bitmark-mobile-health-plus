@@ -72,7 +72,7 @@ public struct Issue {
         self.signature = try Ed25519.getSignature(message: recordPacked, privateKey: privateKey.privateKey)
         
         recordPacked = BinaryPacking.append(toData: recordPacked, withData: self.signature)
-        self.txId = recordPacked.sha3(.sha256).hexEncodedString
+        self.txId = recordPacked.sha3(length: 256).hexEncodedString
         self.isSigned = true
     }
 }

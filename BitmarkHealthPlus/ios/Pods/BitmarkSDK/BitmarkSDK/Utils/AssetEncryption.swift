@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CryptoSwift
 import TweetNacl
 
 struct AssetEncryption {

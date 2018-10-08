@@ -1,0 +1,4 @@
+module tinysha3 {
+    header "sha3.h"
+    export *
+}

@@ -2,94 +2,138 @@
 //  Base58.swift
 //  BitmarkSDK
 //
-//  Created by Anh Nguyen on 12/16/16.
-//  Copyright © 2016 Bitmark. All rights reserved.
+// Reference from https://github.com/BANKEX/web3swift/blob/master/web3swift/Convenience/Classes/Base58.swift
 //
 
 import Foundation
-import BigInt
 
-public class Base58 {
+struct Base58 {
+    static let base58Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
     
-    static let BTCAlphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-    
-    
-    static let bigRadix = BigUInt(58)
-    static let bigZero = BigUInt(0)
-    
-    public static func decode(_ b: String) -> Data? {
-        return decodeAlphabet(b, alphabet: BTCAlphabet)
-    }
-    
-    public static func encode(_ b: Data) -> String {
-        return encodeAlphabet(b, alphabet: BTCAlphabet)
-    }
-    
-    static func decodeAlphabet(_ b: String, alphabet: String) -> Data? {
-        var answer = BigUInt(0)
-        var j = BigUInt(1)
+    // Encode
+    static func base58FromBytes(_ bytes: [UInt8]) -> String {
+        var bytes = bytes
+        var zerosCount = 0
+        var length = 0
         
-        for ch in Array(b.reversed()) {
-            // Find the index of the letter ch in the alphabet.
-            if let charRange = alphabet.range(of: String(ch)) {
-                let letterIndex = alphabet.distance(from: alphabet.startIndex, to: charRange.lowerBound)
-                let idx = BigUInt(letterIndex)
-                var tmp1 = BigUInt(0)
-                
-                tmp1 = j * idx
-                
-                answer += tmp1
-                
-                j *= bigRadix
-            } else {
-                
-                return nil
+        for b in bytes {
+            if b != 0 { break }
+            zerosCount += 1
+        }
+        
+        bytes.removeFirst(zerosCount)
+        
+        let size = bytes.count * 138 / 100 + 1
+        
+        var base58: [UInt8] = Array(repeating: 0, count: size)
+        for b in bytes {
+            var carry = Int(b)
+            var i = 0
+            
+            for j in 0...base58.count-1 where carry != 0 || i < length {
+                carry += 256 * Int(base58[base58.count - j - 1])
+                base58[base58.count - j - 1] = UInt8(carry % 58)
+                carry /= 58
+                i += 1
             }
+            
+            assert(carry == 0)
+            
+            length = i
         }
         
+        // skip leading zeros
+        var zerosToRemove = 0
+        var str = ""
+        for b in base58 {
+            if b != 0 { break }
+            zerosToRemove += 1
+        }
+        base58.removeFirst(zerosToRemove)
         
-        /// Remove leading 1's
-        // Find the first character that isn't 1
-        let bArr = Array(b)
-        let zChar = Array(alphabet).first
-        var nz = 0
-        
-        for _ in 0 ..< b.count {
-            if bArr[nz] != zChar { break }
-            nz += 1
+        while 0 < zerosCount {
+            str = "\(str)1"
+            zerosCount -= 1
         }
         
-        let tmpval = [UInt8](answer.serialize())
-        var val = [UInt8](repeating: 0, count: nz)
-        val += tmpval
-        return Data(bytes: val)
+        for b in base58 {
+            str = "\(str)\(base58Alphabet[String.Index(encodedOffset: Int(b))])"
+        }
         
+        return str
     }
     
-    
-    static func encodeAlphabet(_ byteSlice: Data, alphabet: String) -> String {
-        var bytesAsIntBig = BigUInt(byteSlice)
-        let byteAlphabet = [UInt8](alphabet.utf8)
+    // Decode
+    static func bytesFromBase58(_ base58: String) -> [UInt8] {
+        // remove leading and trailing whitespaces
+        let string = base58.trimmingCharacters(in: CharacterSet.whitespaces)
         
-        var answer = [UInt8]()//(count: byteSlice.count*136/100, repeatedValue: 0)
+        guard !string.isEmpty else { return [] }
         
-        while bytesAsIntBig > bigZero {
-            let (quotient, modulus) = bytesAsIntBig.quotientAndRemainder(dividingBy: bigRadix)
-            
-            bytesAsIntBig = quotient
-            
-            // Make the String into an array of characters.
-            let intModulus = Int(modulus)
-            answer.insert(byteAlphabet[intModulus], at: 0)
+        var zerosCount = 0
+        var length = 0
+        for c in string {
+            if c != "1" { break }
+            zerosCount += 1
         }
         
-        // leading zero bytes
-        for ch in byteSlice {
-            if ch != 0 { break }
-            answer.insert(byteAlphabet[0], at: 0)
+        let size = string.lengthOfBytes(using: String.Encoding.utf8) * 733 / 1000 + 1 - zerosCount
+        var base58: [UInt8] = Array(repeating: 0, count: size)
+        for c in string where c != " " {
+            // search for base58 character
+            guard let base58Index = base58Alphabet.index(of: c) else { return [] }
+            
+            var carry = base58Index.encodedOffset
+            var i = 0
+            for j in 0...base58.count where carry != 0 || i < length {
+                carry += 58 * Int(base58[base58.count - j - 1])
+                base58[base58.count - j - 1] = UInt8(carry % 256)
+                carry /= 256
+                i += 1
+            }
+            
+            assert(carry == 0)
+            length = i
         }
         
-        return String(bytes: answer, encoding: String.Encoding.utf8)!
+        // skip leading zeros
+        var zerosToRemove = 0
+        
+        for b in base58 {
+            if b != 0 { break }
+            zerosToRemove += 1
+        }
+        base58.removeFirst(zerosToRemove)
+        
+        var result: [UInt8] = Array(repeating: 0, count: zerosCount)
+        for b in base58 {
+            result.append(b)
+        }
+        return result
     }
+}
 
+
+
+extension Data {
+    public var base58EncodedString: String {
+        guard !self.isEmpty else { return "" }
+        return Base58.base58FromBytes([UInt8](self))
+    }
+    
+    public var base58CheckEncodedString: String {
+        var bytes = self
+        let checksum = [UInt8](bytes.sha3(length: 256).sha3(length: 256)[0..<4])
+        
+        bytes.append(contentsOf: checksum)
+        
+        return Base58.base58FromBytes([UInt8](self))
+    }
+}
+
+extension String {
+    public var base58DecodedData: Data? {
+        let bytes = Base58.bytesFromBase58(self)
+        return Data(bytes)
+    }
 }
