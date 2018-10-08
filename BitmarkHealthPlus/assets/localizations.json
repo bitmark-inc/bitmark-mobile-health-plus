@@ -255,7 +255,7 @@
     "AccountPhraseComponent_errorTitle": "Error!",
     "AccountPhraseComponent_errorMessage": "Please try again!",
     "AccountPhraseComponent_successTitle": "Success!",
-    "AccountPhraseComponent_successMessage1": "You may now log out of your current account.'",
+    "AccountPhraseComponent_successMessage1": "You may now log out of your current account.",
     "AccountPhraseComponent_successMessage2": "Keep your written copy private in a secure and safe location.",
     "AccountPhraseComponent_bottomButtonText1": "NEXT",
     "AccountPhraseComponent_bottomButtonText2": "Test recover phrase",
