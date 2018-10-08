@@ -90,12 +90,12 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
   }
 
-  async doRefresh() {
+  async doRefresh(justCreatedBitmarkAccount) {
     let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
     console.log('passTouchFaceId :', passTouchFaceId);
     this.setState({ passTouchFaceId });
-    if (passTouchFaceId) {
-      EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus);
+    if (passTouchFaceId && this.state.networkStatus) {
+      EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
     }
   }
 
@@ -169,7 +169,9 @@ class MainEventsHandlerComponent extends Component {
       }
       this.doTryConnectInternet();
     }
-    if (this.appState.match(/active/) && nextAppState !== 'active') {
+    if (nextAppState.match(/background/) &&
+      DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
+      console.log('handleAppStateChange resetFaceTouchSessionId ======== ');
       CommonModel.resetFaceTouchSessionId();
     }
     this.appState = nextAppState;
@@ -345,14 +347,7 @@ class MainEventsHandlerComponent extends Component {
           minHeight: 0, backgroundColor: 'rgba(256,256,256, 0.7)', flex: 1, width: '100%',
 
         }}>
-          <TouchableOpacity style={{ flex: 1, justifyContent: 'center', }} onPress={async () => {
-            let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
-            console.log('passTouchFaceId :', passTouchFaceId);
-            this.setState({ passTouchFaceId });
-            if (passTouchFaceId) {
-              EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus);
-            }
-          }}>
+          <TouchableOpacity style={{ flex: 1, justifyContent: 'center', }} onPress={this.doRefresh}>
             <Text style={{
               width: convertWidth(300),
               color: 'white', fontWeight: '900', fontSize: 16,
@@ -452,7 +447,7 @@ export class MainComponent extends Component {
     return false;
   }
 
-  doOpenApp(networkStatus) {
+  doOpenApp(networkStatus, justCreatedBitmarkAccount) {
     if (!networkStatus) {
       return;
     }
@@ -464,7 +459,7 @@ export class MainComponent extends Component {
         }]);
         return;
       }
-      this.doRefresh();
+      this.doRefresh(justCreatedBitmarkAccount);
     }).catch(error => {
       console.log('doOpenApp error:', error);
     });
