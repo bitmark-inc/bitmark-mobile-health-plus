@@ -25,16 +25,19 @@ const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], bitmarkT
 const data = (state = initialState, action) => {
   switch (action.type) {
     case ACTION_TYPES.RESET:
-      state = initialState;
-      return merge({}, state);
-    case ACTION_TYPES.INIT:
-      state.healthDataBitmarks = action.healthDataBitmarks || state.healthDataBitmarks;
-      state.healthAssetBitmarks = action.healthAssetBitmarks || state.healthAssetBitmarks;
-      state.bitmarkType = action.bitmarkType || state.bitmarkType;
-      return merge({}, state);
-    case ACTION_TYPES.UPDATE_BITMARK_TYPE:
-      state.bitmarkType = action.bitmarkType || state.bitmarkType;
-      return merge({}, state);
+      return merge({}, initialState);
+    case ACTION_TYPES.INIT: {
+      let tempState = merge({}, state);
+      tempState.healthDataBitmarks = action.healthDataBitmarks || tempState.healthDataBitmarks;
+      tempState.healthAssetBitmarks = action.healthAssetBitmarks || tempState.healthAssetBitmarks;
+      tempState.bitmarkType = action.bitmarkType || tempState.bitmarkType;
+      return tempState;
+    }
+    case ACTION_TYPES.UPDATE_BITMARK_TYPE: {
+      let tempState = merge({}, state);
+      tempState.bitmarkType = action.bitmarkType || tempState.bitmarkType;
+      return tempState;
+    }
     default:
       return state;
   }

@@ -27,10 +27,12 @@ const data = (state = initialState, action) => {
   switch (action.type) {
     case ACTION_TYPES.RESET:
       return merge({}, initialState);
-    case ACTION_TYPES.INIT:
-      state.accesses.granted_from = action.accesses.granted_from || [];
-      state.accesses.granted_to = action.accesses.granted_to || [];
-      return merge({}, state);
+    case ACTION_TYPES.INIT: {
+      let tempState = merge({}, state);
+      tempState.accesses.granted_from = action.accesses.granted_from || [];
+      tempState.accesses.granted_to = action.accesses.granted_to || [];
+      return tempState;
+    }
     default:
       return state;
   }
