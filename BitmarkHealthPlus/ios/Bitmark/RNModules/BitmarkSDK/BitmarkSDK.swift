@@ -329,9 +329,9 @@ class BitmarkSDK: NSObject {
   func transferOneSignature(_ sessionId: String, _ bitmarkId: String, address: String, _ callback: @escaping RCTResponseSenderBlock) {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let success = try account.transferBitmark(bitmarkId: bitmarkId, toAccount: address)
+      try account.transferBitmark(bitmarkId: bitmarkId, toAccount: address)
       
-      callback([success])
+      callback([true])
     }
     catch let e {
       if let msg = e as? NSString {
