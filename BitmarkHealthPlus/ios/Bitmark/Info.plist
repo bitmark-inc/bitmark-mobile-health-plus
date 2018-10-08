@@ -55,13 +55,13 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your calendars.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use your camera.</string>
+	<string>info_plist_camera</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>info_plist_touch_face_id</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like access to your health data.</string>
+	<string>into_plist_health</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to your health data.</string>
+	<string>into_plist_health</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your location data.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -71,9 +71,9 @@
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to save photos to your photo.</string>
+	<string>into_plist_photo</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like access to your photo.</string>
+	<string>into_plist_photo</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use speech recognition.</string>
 	<key>ResearchKit-Font-Bold</key>
