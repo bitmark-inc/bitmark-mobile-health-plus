@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  BitmarkHealthPlus
+
+  Created by Anh Nguyen on 10/5/18.
+  Copyright © 2018 Facebook. All rights reserved.
+*/
+
+"info_plist_touch_face_id" = "info_plist_touch_face_id";
+"info_plist_camera" = "info_plist_camera";
+"into_plist_photo" = "into_plist_photo";
+"into_plist_health" = "into_plist_health";
+"notification_intercom_new_messages" = "notification_intercom_new_messages";
