@@ -35,6 +35,9 @@
 		58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
 		586D2E2521671BFA002A84B5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 586D2DE821671BFA002A84B5 /* Localizable.strings */; };
 		586D2E2621671BFA002A84B5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 586D2DE821671BFA002A84B5 /* Localizable.strings */; };
+		588E9D38216C643D00F0E5D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */; };
+		588E9D39216C643D00F0E5D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */; };
+		588E9D3D216C647E00F0E5D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */; };
 		588FE23D205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */; };
 		588FE23F205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E8205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m */; };
 		588FE241205FB45500937D78 /* RCTAppleHealthKit+Methods_Nutrition.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EA205FB45500937D78 /* RCTAppleHealthKit+Methods_Nutrition.m */; };
@@ -646,6 +649,9 @@
 		586D2DE921671BFA002A84B5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Bitmark/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		586D2E2721671C0F002A84B5 /* vi-VN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "vi-VN"; path = "Bitmark/vi-VN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		588E9D2B216C523000F0E5D9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "Bitmark/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		588E9D3A216C643D00F0E5D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		588E9D3C216C643F00F0E5D9 /* vi-VN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "vi-VN"; path = "vi-VN.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		588E9D3E216C648900F0E5D9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTAppleHealthKit+Methods_Body.m"; sourceTree = "<group>"; };
 		588FE1E6205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Results.h"; sourceTree = "<group>"; };
 		588FE1E7205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Environment.h"; sourceTree = "<group>"; };
@@ -971,6 +977,7 @@
 			isa = PBXGroup;
 			children = (
 				586D2DE821671BFA002A84B5 /* Localizable.strings */,
+				588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */,
 				58CB488F201EC5670058B364 /* Bitmark.entitlements */,
 				58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -2121,6 +2128,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				588E9D3D216C647E00F0E5D9 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2129,6 +2137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F150CA412023230B00C8FC17 /* AndaleMono.ttf in Resources */,
+				588E9D38216C643D00F0E5D9 /* InfoPlist.strings in Resources */,
 				588FE2A7205FB76900937D78 /* GMImagePicker.strings in Resources */,
 				588FE2BF205FB76900937D78 /* GMImagePicker.podspec in Resources */,
 				588FE2B3205FB76900937D78 /* GMVideoIcon.png in Resources */,
@@ -2152,6 +2161,7 @@
 				580FF1522146345A00B36DE7 /* Info-dev.plist in Resources */,
 				58908AC120A18A5A00C0064A /* GMImagePicker.strings in Resources */,
 				586D2E2621671BFA002A84B5 /* Localizable.strings in Resources */,
+				588E9D39216C643D00F0E5D9 /* InfoPlist.strings in Resources */,
 				58908AC220A18A5A00C0064A /* GMImagePicker.podspec in Resources */,
 				58908AC320A18A5A00C0064A /* GMVideoIcon.png in Resources */,
 				58908AC420A18A5A00C0064A /* ORKImagePickerStepViewController.xib in Resources */,
@@ -2477,6 +2487,17 @@
 				588E9D2B216C523000F0E5D9 /* zh-Hant */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				588E9D3A216C643D00F0E5D9 /* en */,
+				588E9D3C216C643F00F0E5D9 /* vi-VN */,
+				588E9D3E216C648900F0E5D9 /* zh-Hant */,
+			);
+			name = InfoPlist.strings;
+			path = Bitmark;
 			sourceTree = "<group>";
 		};
 		588FE282205FB76900937D78 /* GMImagePicker.strings */ = {

@@ -7,7 +7,4 @@
 */
 
 "info_plist_touch_face_id" = "Touch/Face ID or a passcode is required to authorize your transactions";
-"info_plist_camera" = "Bitmark Health + would like to access to your camera.";
-"into_plist_photo" = "Bitmark Health + would like to access to your photo library.";
-"into_plist_health" = "Bitmark Health + would like to access to your health data.";
 "notification_intercom_new_messages" = "You have new messages from our support team. Tap to view.";

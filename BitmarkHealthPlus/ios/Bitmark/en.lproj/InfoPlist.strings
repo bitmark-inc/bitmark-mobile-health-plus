@@ -1,0 +1,12 @@
+/* 
+  InfoPlist.strings
+  BitmarkHealthPlus
+
+  Created by Anh Nguyen on 10/9/18.
+  Copyright © 2018 Bitmark Inc. All rights reserved.
+*/
+
+"NSFaceIDUsageDescription" = "Touch/Face ID or a passcode is required to authorize your transactions";
+"NSCameraUsageDescription" = "Bitmark Health + would like to access to your camera.";
+"NSPhotoLibraryUsageDescription" = "Bitmark Health + would like to access to your photo library.";
+"NSHealthShareUsageDescription" = "Bitmark Health + would like to access to your health data.";

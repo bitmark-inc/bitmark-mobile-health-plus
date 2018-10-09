@@ -1,0 +1,12 @@
+/* 
+  InfoPlist.strings
+  BitmarkHealthPlus
+
+  Created by Anh Nguyen on 10/9/18.
+  Copyright © 2018 Bitmark Inc. All rights reserved.
+*/
+
+"NSFaceIDUsageDescription" = "info_plist_touch_face_id";
+"NSCameraUsageDescription" = "info_plist_camera";
+"NSPhotoLibraryUsageDescription" = "into_plist_photo";
+"NSHealthShareUsageDescription" = "into_plist_health";
