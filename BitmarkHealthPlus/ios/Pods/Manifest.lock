@@ -5,7 +5,7 @@ PODS:
     - HockeySDK/DefaultLib (= 5.1.2)
   - HockeySDK/DefaultLib (5.1.2)
   - Intercom (5.1.5)
-  - KeychainAccess (3.1.0)
+  - KeychainAccess (3.1.2)
   - ResearchKit (1.5.2)
   - TweetNacl (1.0.1)
 
@@ -42,7 +42,7 @@ SPEC CHECKSUMS:
   BitmarkSDK: 3234949ba38f292e9ac3bd5d13a8981b182990a1
   HockeySDK: 38b7e2726af1ea86ae97ce4b5de33ab0817e3500
   Intercom: 0a0ec9a30a12802c56ff02bb98ddf6f047035c68
-  KeychainAccess: 94c5540b32eabf7bc32bfb976a268e8ea05fd6da
+  KeychainAccess: b3816fddcf28aa29d94b10ec305cd52be14c472b
   ResearchKit: 76d9e3d4c1823d510f04d5ab1bf57bba568d59ff
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
