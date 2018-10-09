@@ -210,7 +210,8 @@
     "FaceTouchId_doLogout": "FaceTouchId_doLogout",
     "Notification_weeklyHealthDataNotification": "Notification_weeklyHealthDataNotification",
     "BitmarkService_doCheckMetadata1": "BitmarkService_doCheckMetadata1",
-    "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2"
+    "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2",
+    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -423,9 +424,10 @@
     "FaceTouchId_doLogout": "Your fingerprint signature is required.",
     "Notification_weeklyHealthDataNotification": "Your health data is ready to sign.",
     "BitmarkService_doCheckMetadata1": "Duplicated labels:",
-    "BitmarkService_doCheckMetadata2": "METADATA is too long (2048-BYTE LIMIT)!"
+    "BitmarkService_doCheckMetadata2": "METADATA is too long (2048-BYTE LIMIT)!",
+    "Native_notification_intercom_new_messages": "You have new messages from Bitmark support team. Tap to view."
   },
-  "cn": {
+  "zh": {
     "BitmarkInternetOffComponent_titleText": "BitmarkInternetOffComponent_titleText",
     "BitmarkInternetOffComponent_description": "BitmarkInternetOffComponent_description",
     "BitmarkInternetOffComponent_okButtonText": "BitmarkInternetOffComponent_okButtonText",
@@ -636,7 +638,8 @@
     "FaceTouchId_doLogout": "FaceTouchId_doLogout",
     "Notification_weeklyHealthDataNotification": "Notification_weeklyHealthDataNotification",
     "BitmarkService_doCheckMetadata1": "BitmarkService_doCheckMetadata1",
-    "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2"
+    "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2",
+    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "BitmarkInternetOffComponent_titleText",
@@ -849,6 +852,7 @@
     "FaceTouchId_doLogout": "FaceTouchId_doLogout",
     "Notification_weeklyHealthDataNotification": "Notification_weeklyHealthDataNotification",
     "BitmarkService_doCheckMetadata1": "BitmarkService_doCheckMetadata1",
-    "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2"
+    "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2",
+    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages"
   }
 }
