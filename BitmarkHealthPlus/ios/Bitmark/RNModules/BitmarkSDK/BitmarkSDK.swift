@@ -27,7 +27,7 @@ class BitmarkSDK: NSObject {
     }
     catch let e {
       if let status = e as? KeychainAccess.Status,
-        status == KeychainAccess.Status.userCanceled {
+        status == KeychainAccess.Status.userCanceled || status == KeychainAccess.Status.authFailed {
         callback([true])
       }
       else {
@@ -58,7 +58,7 @@ class BitmarkSDK: NSObject {
     }
     catch let e {
       if let status = e as? KeychainAccess.Status,
-        status == KeychainAccess.Status.userCanceled {
+        status == KeychainAccess.Status.userCanceled || status == KeychainAccess.Status.authFailed {
         callback([true])
       }
       else {
