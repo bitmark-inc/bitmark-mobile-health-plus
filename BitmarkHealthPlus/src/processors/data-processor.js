@@ -443,7 +443,10 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
   await runGetUserBitmarksInBackground();
 
-  await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_weekly_health_data' });
+  let userBitmarks = await doGetUserDataBitmarks();
+  if (!userBitmarks || !userBitmarks.healthDataBitmarks || userBitmarks.healthDataBitmarks.length === 0) {
+    await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_weekly_health_data' });
+  }
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
@@ -503,7 +506,10 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
   let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
-  await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_file' });
+  let userBitmarks = await doGetUserDataBitmarks();
+  if (!userBitmarks || !userBitmarks.healthAssetBitmarks || userBitmarks.healthAssetBitmarks.length === 0) {
+    await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_file' });
+  }
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
