@@ -92,14 +92,26 @@ const doEndNewFaceTouchSessionId = async () => {
   }
 };
 
-const doStartFaceTouchSessionId = async (touchFaceIdMessage) => {
-  await doEndNewFaceTouchSessionId();
-  if (!currentFaceTouchSessionId) {
+let queueStartFaceTouchSessionId = [];
+const doStartFaceTouchSessionId = (touchFaceIdMessage) => {
+  return new Promise((resolve, reject) => {
+    if (isRequestingSessionId) {
+      queueStartFaceTouchSessionId.push({ resolve, reject });
+      return;
+    }
     isRequestingSessionId = true;
-    currentFaceTouchSessionId = await BitmarkSDK.requestSession(config.bitmark_network, touchFaceIdMessage);
-  }
-  isRequestingSessionId = false;
-  return currentFaceTouchSessionId;
+    queueStartFaceTouchSessionId.push({ resolve, reject });
+    doEndNewFaceTouchSessionId().then(() => {
+      return BitmarkSDK.requestSession(config.bitmark_network, touchFaceIdMessage);
+    }).then((faceTouchSessionId) => {
+      currentFaceTouchSessionId = faceTouchSessionId;
+      queueStartFaceTouchSessionId.forEach(prm => prm.resolve(currentFaceTouchSessionId));
+      isRequestingSessionId = false;
+    }).catch(error => {
+      queueStartFaceTouchSessionId.forEach(prm => prm.reject(error));
+      isRequestingSessionId = false;
+    });
+  });
 };
 const setFaceTouchSessionId = (sessionId) => {
   currentFaceTouchSessionId = sessionId;
@@ -108,7 +120,7 @@ const setFaceTouchSessionId = (sessionId) => {
 const getFaceTouchSessionId = () => {
   return currentFaceTouchSessionId;
 };
-const resetFaceTouchSessionId = ()=> {
+const resetFaceTouchSessionId = () => {
   currentFaceTouchSessionId = null;
 };
 
