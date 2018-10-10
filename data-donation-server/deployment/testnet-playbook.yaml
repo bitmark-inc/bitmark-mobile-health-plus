@@ -1,6 +1,0 @@
-- hosts: all
-  vars_files:
-    - ./vars/testnet-global.yaml
-    - ./vars/testnet-enc.yaml
-  roles:
-    - data-donation

@@ -1,1 +1,0 @@
-export * from './local-property-transfer.component';
