@@ -1,6 +1,0 @@
-- hosts: all
-  vars_files:
-    - ./vars/devnet-global.yaml
-    - ./vars/devnet-enc.yaml
-  roles:
-    - data-donation

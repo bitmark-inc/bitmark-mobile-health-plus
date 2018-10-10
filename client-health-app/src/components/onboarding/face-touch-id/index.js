@@ -1,1 +1,0 @@
-export * from './face-touch-id.component';

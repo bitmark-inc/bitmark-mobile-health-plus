@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: data-donation-config
-type: Opaque
-data:
-  data-donation.json: "{{ lookup('template', 'data-donation-config.json') | to_nice_json(indent=2) | b64encode }}"

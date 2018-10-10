@@ -1,5 +1,0 @@
-network_slug: live
-bitmark_network: livenet
-aws_ssl_arn: arn:aws:acm:ap-northeast-1:083397868157:certificate/fcdf029f-8946-4a3b-afe7-4333bd0cda90
-package_root_prefix: /
-

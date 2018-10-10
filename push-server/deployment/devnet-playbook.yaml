@@ -1,6 +1,0 @@
-- hosts: all
-  vars_files:
-    - ./vars/devnet-enc.yaml
-    - ./vars/devnet-global.yaml
-  roles:
-    - gorush
