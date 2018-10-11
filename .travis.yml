@@ -1,0 +1,15 @@
+language: swift
+osx_image: xcode10
+xcode_sdk: iphonesimulator12.0
+branches:
+  only:
+    - master
+
+before_install:
+  - fastlane add_plugin latest_hockey_build_number
+
+install:
+
+script:
+  - fastlane ios beta-travis
+after_success:
