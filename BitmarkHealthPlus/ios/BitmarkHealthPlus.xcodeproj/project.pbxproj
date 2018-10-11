@@ -29,6 +29,94 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2D13B60C19A845D7B6A86936 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */; };
 		32B57ECB1D8A5A50E3D15BD3 /* Pods_BitmarkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */; };
+		5805EDEF216F31B900943FA5 /* RCTAppleHealthKit+TypesAndPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FD205FB45500937D78 /* RCTAppleHealthKit+TypesAndPermissions.m */; };
+		5805EDF0216F31B900943FA5 /* RCTAppleHealthKit+Methods_Results.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F7205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m */; };
+		5805EDF1216F31B900943FA5 /* RCTAppleHealthKit+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FB205FB45500937D78 /* RCTAppleHealthKit+Utils.m */; };
+		5805EDF2216F31B900943FA5 /* LocaleUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26A205FB71000937D78 /* LocaleUnit.m */; };
+		5805EDF3216F31B900943FA5 /* InternationalDiabeteRenussionTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE23B205FB45500937D78 /* InternationalDiabeteRenussionTask.m */; };
+		5805EDF4216F31B900943FA5 /* HKDevice+Exporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE202205FB45500937D78 /* HKDevice+Exporting.m */; };
+		5805EDF5216F31B900943FA5 /* RCTAppleHealthKit+Methods_Body.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */; };
+		5805EDF6216F31B900943FA5 /* StudyTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE2C7205FB78B00937D78 /* StudyTheme.m */; };
+		5805EDF7216F31B900943FA5 /* GMImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE290205FB76900937D78 /* GMImagePickerController.m */; };
+		5805EDF8216F31B900943FA5 /* PhotoExporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26D205FB71000937D78 /* PhotoExporting.m */; };
+		5805EDF9216F31B900943FA5 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F2205FB45500937D78 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m */; };
+		5805EDFA216F31B900943FA5 /* ORKImagePickerStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27D205FB76900937D78 /* ORKImagePickerStepViewController.m */; };
+		5805EDFB216F31B900943FA5 /* StudyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE2C4205FB78B00937D78 /* StudyHelper.m */; };
+		5805EDFC216F31B900943FA5 /* GMGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE299205FB76900937D78 /* GMGridViewCell.m */; };
+		5805EDFD216F31B900943FA5 /* NSDate+Computing.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE268205FB71000937D78 /* NSDate+Computing.m */; };
+		5805EDFE216F31B900943FA5 /* NSString+IdentitiesRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE26B205FB71000937D78 /* NSString+IdentitiesRemove.m */; };
+		5805EDFF216F31B900943FA5 /* RCTAppleHealthKit+Methods_Nutrition.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EA205FB45500937D78 /* RCTAppleHealthKit+Methods_Nutrition.m */; };
+		5805EE00216F31B900943FA5 /* TouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9510D20202AF70050A9D4 /* TouchID.m */; };
+		5805EE01216F31B900943FA5 /* RCTAppleHealthKit+Queries.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE201205FB45500937D78 /* RCTAppleHealthKit+Queries.m */; };
+		5805EE02216F31B900943FA5 /* GMAlbumsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE295205FB76900937D78 /* GMAlbumsViewCell.m */; };
+		5805EE03216F31B900943FA5 /* RCTAppleHealthKit+ExtraData.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1E8205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m */; };
+		5805EE04216F31B900943FA5 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EC205FB45500937D78 /* RCTAppleHealthKit+Methods_Sleep.m */; };
+		5805EE05216F31B900943FA5 /* WomenHealthStudy.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE23C205FB45500937D78 /* WomenHealthStudy.m */; };
+		5805EE06216F31B900943FA5 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F0205FB45500937D78 /* RCTAppleHealthKit+Methods_Vitals.m */; };
+		5805EE07216F31B900943FA5 /* NSDate+Converting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE269205FB71000937D78 /* NSDate+Converting.m */; };
+		5805EE08216F31B900943FA5 /* InternationalDiabeteRenussionStudy.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE237205FB45500937D78 /* InternationalDiabeteRenussionStudy.m */; };
+		5805EE09216F31B900943FA5 /* BitmarkSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FC1E55201B21CC00F60AF9 /* BitmarkSDK.swift */; };
+		5805EE0A216F31B900943FA5 /* RCTAppleHealthKit+Methods_Characteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1ED205FB45500937D78 /* RCTAppleHealthKit+Methods_Characteristic.m */; };
+		5805EE0B216F31B900943FA5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		5805EE0C216F31B900943FA5 /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
+		5805EE0D216F31B900943FA5 /* GMAlbumsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE293205FB76900937D78 /* GMAlbumsViewController.m */; };
+		5805EE0E216F31B900943FA5 /* ORKImagePickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE29D205FB76900937D78 /* ORKImagePickerCollectionViewCell.m */; };
+		5805EE0F216F31B900943FA5 /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
+		5805EE10216F31B900943FA5 /* RCTAppleHealthKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FE205FB45500937D78 /* RCTAppleHealthKit.m */; };
+		5805EE11216F31B900943FA5 /* HKSourceRevision+Exporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE204205FB45500937D78 /* HKSourceRevision+Exporting.m */; };
+		5805EE12216F31B900943FA5 /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
+		5805EE13216F31B900943FA5 /* RCTAppleHealthKit+Methods_Fitness.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EB205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m */; };
+		5805EE14216F31B900943FA5 /* ORKImagePickerStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27C205FB76900937D78 /* ORKImagePickerStep.m */; };
+		5805EE15216F31B900943FA5 /* ORKImagePickerStepResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE27B205FB76900937D78 /* ORKImagePickerStepResult.m */; };
+		5805EE16216F31B900943FA5 /* RCTAppleHealthKit+Methods_Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F6205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m */; };
+		5805EE17216F31B900943FA5 /* GMGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE291205FB76900937D78 /* GMGridViewController.m */; };
+		5805EE18216F31B900943FA5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		5805EE1A216F31B900943FA5 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F12EC138213938F5008E6F4C /* libRNCamera.a */; };
+		5805EE1B216F31B900943FA5 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F13CAAEC21410655001414A9 /* libReactNativePermissions.a */; };
+		5805EE1C216F31B900943FA5 /* libRNIntercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F13CAA992140BF8F001414A9 /* libRNIntercom.a */; };
+		5805EE1D216F31B900943FA5 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16DDBCD213926D100EE9FF9 /* libRNDeviceInfo.a */; };
+		5805EE1E216F31B900943FA5 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
+		5805EE1F216F31B900943FA5 /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
+		5805EE20216F31B900943FA5 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
+		5805EE21216F31B900943FA5 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
+		5805EE22216F31B900943FA5 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
+		5805EE23216F31B900943FA5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CF7207707BF008B16EE /* libz.tbd */; };
+		5805EE24216F31B900943FA5 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D09CC020770726008B16EE /* libCodePush.a */; };
+		5805EE25216F31B900943FA5 /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15C1D102063B9B6002DDF98 /* libRNZipArchive.a */; };
+		5805EE26216F31B900943FA5 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F18C03932049095000FA36E4 /* libRCTPushNotification.a */; };
+		5805EE27216F31B900943FA5 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15F68DE203D70DE00A5A582 /* libRNImagePicker.a */; };
+		5805EE28216F31B900943FA5 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		5805EE29216F31B900943FA5 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		5805EE2A216F31B900943FA5 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		5805EE2B216F31B900943FA5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5824028A21393018001206A2 /* CloudKit.framework */; };
+		5805EE2C216F31B900943FA5 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
+		5805EE2D216F31B900943FA5 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
+		5805EE2E216F31B900943FA5 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
+		5805EE2F216F31B900943FA5 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
+		5805EE30216F31B900943FA5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
+		5805EE31216F31B900943FA5 /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
+		5805EE32216F31B900943FA5 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		5805EE33216F31B900943FA5 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
+		5805EE34216F31B900943FA5 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
+		5805EE35216F31B900943FA5 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68EEEE1542C435DA913552D /* libRNFS.a */; };
+		5805EE36216F31B900943FA5 /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 295B8983183E4140AD6083BB /* libRNMail.a */; };
+		5805EE37216F31B900943FA5 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B46290362EA64E3A93EE362E /* libRCTVideo.a */; };
+		5805EE38216F31B900943FA5 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */; };
+		5805EE3A216F31B900943FA5 /* AndaleMono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F150CA152023230B00C8FC17 /* AndaleMono.ttf */; };
+		5805EE3B216F31B900943FA5 /* Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 580FF1512146345A00B36DE7 /* Info-dev.plist */; };
+		5805EE3C216F31B900943FA5 /* GMImagePicker.strings in Resources */ = {isa = PBXBuildFile; fileRef = 588FE282205FB76900937D78 /* GMImagePicker.strings */; };
+		5805EE3D216F31B900943FA5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 586D2DE821671BFA002A84B5 /* Localizable.strings */; };
+		5805EE3E216F31B900943FA5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */; };
+		5805EE3F216F31B900943FA5 /* GMImagePicker.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 588FE29B205FB76900937D78 /* GMImagePicker.podspec */; };
+		5805EE40216F31B900943FA5 /* GMVideoIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE292205FB76900937D78 /* GMVideoIcon.png */; };
+		5805EE41216F31B900943FA5 /* ORKImagePickerStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 588FE27A205FB76900937D78 /* ORKImagePickerStepViewController.xib */; };
+		5805EE42216F31B900943FA5 /* GMSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE297205FB76900937D78 /* GMSelected.png */; };
+		5805EE43216F31B900943FA5 /* GMVideoIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28E205FB76900937D78 /* GMVideoIcon@2x.png */; };
+		5805EE44216F31B900943FA5 /* GMEmptyFolder@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE294205FB76900937D78 /* GMEmptyFolder@1x.png */; };
+		5805EE45216F31B900943FA5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		5805EE46216F31B900943FA5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
+		5805EE47216F31B900943FA5 /* GMSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28C205FB76900937D78 /* GMSelected@2x.png */; };
+		5805EE48216F31B900943FA5 /* GMEmptyFolder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 588FE28D205FB76900937D78 /* GMEmptyFolder@2x.png */; };
 		580FF1522146345A00B36DE7 /* Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 580FF1512146345A00B36DE7 /* Info-dev.plist */; };
 		5824028B21393018001206A2 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5824028A21393018001206A2 /* CloudKit.framework */; };
 		58400A98202C013C00550ADB /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
@@ -641,6 +729,8 @@
 		3E2B6E48BB257498C8AA0F2F /* Pods-BitmarkHealthPlus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus.release.xcconfig"; sourceTree = "<group>"; };
 		51B7B1D26E8F8C51D6B1B579 /* Pods_BitmarkHealthPlusTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmarkHealthPlusTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		579C1381393E59B3042E29F2 /* Pods-Bitmark.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.release.xcconfig"; sourceTree = "<group>"; };
+		5805EE4F216F31B900943FA5 /* BitmarkHealthPlus beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitmarkHealthPlus beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5805EE8B216F31BB00943FA5 /* Info-beta.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-beta.plist"; path = "/Users/anhnguyen/Documents/projects/bitmark-mobile-health-plus/BitmarkHealthPlus/ios/Info-beta.plist"; sourceTree = "<absolute>"; };
 		580FF1512146345A00B36DE7 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		5824028A21393018001206A2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		5840099F20243AA700550ADB /* RNCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
@@ -828,6 +918,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5805EE19216F31B900943FA5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5805EE1A216F31B900943FA5 /* libRNCamera.a in Frameworks */,
+				5805EE1B216F31B900943FA5 /* libReactNativePermissions.a in Frameworks */,
+				5805EE1C216F31B900943FA5 /* libRNIntercom.a in Frameworks */,
+				5805EE1D216F31B900943FA5 /* libRNDeviceInfo.a in Frameworks */,
+				5805EE1E216F31B900943FA5 /* libRNExitApp.a in Frameworks */,
+				5805EE1F216F31B900943FA5 /* libReactNativeExceptionHandler.a in Frameworks */,
+				5805EE20216F31B900943FA5 /* libRNCookieManagerIOS.a in Frameworks */,
+				5805EE21216F31B900943FA5 /* libKCKeepAwake.a in Frameworks */,
+				5805EE22216F31B900943FA5 /* libRNDocumentPicker.a in Frameworks */,
+				5805EE23216F31B900943FA5 /* libz.tbd in Frameworks */,
+				5805EE24216F31B900943FA5 /* libCodePush.a in Frameworks */,
+				5805EE25216F31B900943FA5 /* libRNZipArchive.a in Frameworks */,
+				5805EE26216F31B900943FA5 /* libRCTPushNotification.a in Frameworks */,
+				5805EE27216F31B900943FA5 /* libRNImagePicker.a in Frameworks */,
+				5805EE28216F31B900943FA5 /* libRCTBlob.a in Frameworks */,
+				5805EE29216F31B900943FA5 /* libRCTAnimation.a in Frameworks */,
+				5805EE2A216F31B900943FA5 /* libReact.a in Frameworks */,
+				5805EE2B216F31B900943FA5 /* CloudKit.framework in Frameworks */,
+				5805EE29216F31B900943FA5 /* libRCTAnimation.a in Frameworks */,
+				5805EE2C216F31B900943FA5 /* libRCTActionSheet.a in Frameworks */,
+				5805EE2D216F31B900943FA5 /* libRCTImage.a in Frameworks */,
+				5805EE2E216F31B900943FA5 /* libRCTLinking.a in Frameworks */,
+				5805EE2F216F31B900943FA5 /* libRCTNetwork.a in Frameworks */,
+				5805EE30216F31B900943FA5 /* HealthKit.framework in Frameworks */,
+				5805EE31216F31B900943FA5 /* libRCTSettings.a in Frameworks */,
+				5805EE32216F31B900943FA5 /* libRCTText.a in Frameworks */,
+				5805EE33216F31B900943FA5 /* libRCTVibration.a in Frameworks */,
+				5805EE34216F31B900943FA5 /* libRCTWebSocket.a in Frameworks */,
+				5805EE35216F31B900943FA5 /* libRNFS.a in Frameworks */,
+				5805EE36216F31B900943FA5 /* libRNMail.a in Frameworks */,
+				5805EE37216F31B900943FA5 /* libRCTVideo.a in Frameworks */,
+				5805EE38216F31B900943FA5 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58908AA520A18A5A00C0064A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -987,6 +1116,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				580FF1512146345A00B36DE7 /* Info-dev.plist */,
+				5805EE8B216F31BB00943FA5 /* Info-beta.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				58CB4890201EC62E0058B364 /* Keychain */,
 				588FE278205FB76900937D78 /* ResearchKitUtils */,
@@ -1347,6 +1477,7 @@
 				13B07F961A680F5B00A75B9A /* BitmarkHealthPlus.app */,
 				00E356EE1AD99517003FC87E /* BitmarkHealthPlusTests.xctest */,
 				58908AD220A18A5A00C0064A /* BitmarkHealthPlus dev.app */,
+				5805EE4F216F31B900943FA5 /* BitmarkHealthPlus beta.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1507,6 +1638,27 @@
 			productReference = 13B07F961A680F5B00A75B9A /* BitmarkHealthPlus.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5805EDEC216F31B900943FA5 /* BitmarkHealthPlus beta */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5805EE4C216F31B900943FA5 /* Build configuration list for PBXNativeTarget "BitmarkHealthPlus beta" */;
+			buildPhases = (
+				5805EDED216F31B900943FA5 /* [CP] Check Pods Manifest.lock */,
+				5805EDEE216F31B900943FA5 /* Sources */,
+				5805EE19216F31B900943FA5 /* Frameworks */,
+				5805EE39216F31B900943FA5 /* Resources */,
+				5805EE49216F31B900943FA5 /* Bundle React Native code and images */,
+				5805EE4A216F31B900943FA5 /* [CP] Embed Pods Frameworks */,
+				5805EE4B216F31B900943FA5 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "BitmarkHealthPlus beta";
+			productName = "Hello World";
+			productReference = 5805EE4F216F31B900943FA5 /* BitmarkHealthPlus beta.app */;
+			productType = "com.apple.product-type.application";
+		};
 		58908A7820A18A5A00C0064A /* BitmarkHealthPlus dev */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58908ACF20A18A5A00C0064A /* Build configuration list for PBXNativeTarget "BitmarkHealthPlus dev" */;
@@ -1559,6 +1711,10 @@
 								enabled = 1;
 							};
 						};
+					};
+					5805EDEC216F31B900943FA5 = {
+						DevelopmentTeam = A52M7AQ8B2;
+						ProvisioningStyle = Manual;
 					};
 					58908A7820A18A5A00C0064A = {
 						DevelopmentTeam = A52M7AQ8B2;
@@ -1702,6 +1858,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* BitmarkHealthPlus */,
 				58908A7820A18A5A00C0064A /* BitmarkHealthPlus dev */,
+				5805EDEC216F31B900943FA5 /* BitmarkHealthPlus beta */,
 				00E356ED1AD99517003FC87E /* BitmarkHealthPlusTests */,
 			);
 		};
@@ -2153,6 +2310,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5805EE39216F31B900943FA5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5805EE3A216F31B900943FA5 /* AndaleMono.ttf in Resources */,
+				5805EE3B216F31B900943FA5 /* Info-dev.plist in Resources */,
+				5805EE3C216F31B900943FA5 /* GMImagePicker.strings in Resources */,
+				5805EE3D216F31B900943FA5 /* Localizable.strings in Resources */,
+				5805EE3E216F31B900943FA5 /* InfoPlist.strings in Resources */,
+				5805EE3F216F31B900943FA5 /* GMImagePicker.podspec in Resources */,
+				5805EE40216F31B900943FA5 /* GMVideoIcon.png in Resources */,
+				5805EE41216F31B900943FA5 /* ORKImagePickerStepViewController.xib in Resources */,
+				5805EE42216F31B900943FA5 /* GMSelected.png in Resources */,
+				5805EE43216F31B900943FA5 /* GMVideoIcon@2x.png in Resources */,
+				5805EE44216F31B900943FA5 /* GMEmptyFolder@1x.png in Resources */,
+				5805EE45216F31B900943FA5 /* Images.xcassets in Resources */,
+				5805EE46216F31B900943FA5 /* LaunchScreen.xib in Resources */,
+				5805EE47216F31B900943FA5 /* GMSelected@2x.png in Resources */,
+				5805EE48216F31B900943FA5 /* GMEmptyFolder@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58908ABF20A18A5A00C0064A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2208,6 +2387,84 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5805EDED216F31B900943FA5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BitmarkHealthPlus dev-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5805EE49216F31B900943FA5 /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		5805EE4A216F31B900943FA5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework",
+				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
+				"${BUILT_PRODUCTS_DIR}/ResearchKit/ResearchKit.framework",
+				"${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BitmarkSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ResearchKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TweetNacl.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5805EE4B216F31B900943FA5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-resources.sh",
+				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
+				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		58908A7920A18A5A00C0064A /* [CP] Check Pods Manifest.lock */ = {
@@ -2407,6 +2664,55 @@
 				588FE24D205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m in Sources */,
 				588FE2B1205FB76900937D78 /* GMGridViewController.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5805EDEE216F31B900943FA5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5805EDEF216F31B900943FA5 /* RCTAppleHealthKit+TypesAndPermissions.m in Sources */,
+				5805EDF0216F31B900943FA5 /* RCTAppleHealthKit+Methods_Results.m in Sources */,
+				5805EDF1216F31B900943FA5 /* RCTAppleHealthKit+Utils.m in Sources */,
+				5805EDF2216F31B900943FA5 /* LocaleUnit.m in Sources */,
+				5805EDF3216F31B900943FA5 /* InternationalDiabeteRenussionTask.m in Sources */,
+				5805EDF4216F31B900943FA5 /* HKDevice+Exporting.m in Sources */,
+				5805EDF5216F31B900943FA5 /* RCTAppleHealthKit+Methods_Body.m in Sources */,
+				5805EDF6216F31B900943FA5 /* StudyTheme.m in Sources */,
+				5805EDF7216F31B900943FA5 /* GMImagePickerController.m in Sources */,
+				5805EDF8216F31B900943FA5 /* PhotoExporting.m in Sources */,
+				5805EDF9216F31B900943FA5 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m in Sources */,
+				5805EDFA216F31B900943FA5 /* ORKImagePickerStepViewController.m in Sources */,
+				5805EDFB216F31B900943FA5 /* StudyHelper.m in Sources */,
+				5805EDFC216F31B900943FA5 /* GMGridViewCell.m in Sources */,
+				5805EDFD216F31B900943FA5 /* NSDate+Computing.m in Sources */,
+				5805EDFE216F31B900943FA5 /* NSString+IdentitiesRemove.m in Sources */,
+				5805EDFF216F31B900943FA5 /* RCTAppleHealthKit+Methods_Nutrition.m in Sources */,
+				5805EE00216F31B900943FA5 /* TouchID.m in Sources */,
+				5805EE01216F31B900943FA5 /* RCTAppleHealthKit+Queries.m in Sources */,
+				5805EE02216F31B900943FA5 /* GMAlbumsViewCell.m in Sources */,
+				5805EE03216F31B900943FA5 /* RCTAppleHealthKit+ExtraData.m in Sources */,
+				5805EE04216F31B900943FA5 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */,
+				5805EE05216F31B900943FA5 /* WomenHealthStudy.m in Sources */,
+				5805EE06216F31B900943FA5 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */,
+				5805EE07216F31B900943FA5 /* NSDate+Converting.m in Sources */,
+				5805EE08216F31B900943FA5 /* InternationalDiabeteRenussionStudy.m in Sources */,
+				5805EE09216F31B900943FA5 /* BitmarkSDK.swift in Sources */,
+				5805EE0A216F31B900943FA5 /* RCTAppleHealthKit+Methods_Characteristic.m in Sources */,
+				5805EE0B216F31B900943FA5 /* AppDelegate.m in Sources */,
+				5805EE0C216F31B900943FA5 /* BitmarkSDKBridge.m in Sources */,
+				5805EE0D216F31B900943FA5 /* GMAlbumsViewController.m in Sources */,
+				5805EE0E216F31B900943FA5 /* ORKImagePickerCollectionViewCell.m in Sources */,
+				5805EE0F216F31B900943FA5 /* KeychainUtil.swift in Sources */,
+				5805EE10216F31B900943FA5 /* RCTAppleHealthKit.m in Sources */,
+				5805EE11216F31B900943FA5 /* HKSourceRevision+Exporting.m in Sources */,
+				5805EE12216F31B900943FA5 /* AccountSession.swift in Sources */,
+				5805EE13216F31B900943FA5 /* RCTAppleHealthKit+Methods_Fitness.m in Sources */,
+				5805EE14216F31B900943FA5 /* ORKImagePickerStep.m in Sources */,
+				5805EE15216F31B900943FA5 /* ORKImagePickerStepResult.m in Sources */,
+				5805EE16216F31B900943FA5 /* RCTAppleHealthKit+Methods_Environment.m in Sources */,
+				5805EE17216F31B900943FA5 /* GMGridViewController.m in Sources */,
+				5805EE18216F31B900943FA5 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2647,6 +2953,88 @@
 			};
 			name = Release;
 		};
+		5805EE4D216F31B900943FA5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5AF2450BAB98F7F72FE124C1 /* Pods-BitmarkHealthPlus dev.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-beta";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-beta.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = A52M7AQ8B2;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"HOCKEYAPP=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
+					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Info-beta.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.beta;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "d33a3f18-e17d-4e43-9956-1ff9a756759f";
+				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse Development";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		5805EE4E216F31B900943FA5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AE5612127CD83F81EB75E2DE /* Pods-BitmarkHealthPlus dev.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-beta";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-beta.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A52M7AQ8B2;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"HOCKEYAPP=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
+					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Info-beta.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.beta;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "d8d34896-37b2-42fb-8942-ad0b914f9b50";
+				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Beta";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
 		58908AD020A18A5A00C0064A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5AF2450BAB98F7F72FE124C1 /* Pods-BitmarkHealthPlus dev.debug.xcconfig */;
@@ -2824,6 +3212,15 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5805EE4C216F31B900943FA5 /* Build configuration list for PBXNativeTarget "BitmarkHealthPlus beta" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5805EE4D216F31B900943FA5 /* Debug */,
+				5805EE4E216F31B900943FA5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
