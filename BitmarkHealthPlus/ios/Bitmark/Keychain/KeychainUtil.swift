@@ -48,20 +48,14 @@ struct KeychainUtil {
   }
   
   static func saveCore(_ core: Data) throws {
-    try DispatchQueue.main.sync {
-      return try getKeychain(reason: NSLocalizedString("info_plist_touch_face_id", comment: "")).set(core, key: bitmarkSeedCoreKey)
-    }
+    return try getKeychain(reason: NSLocalizedString("info_plist_touch_face_id", comment: "")).set(core, key: bitmarkSeedCoreKey)
   }
   
   static func getCore(reason: String) throws -> Data? {
-    return try DispatchQueue.main.sync {
-      return try getKeychain(reason: reason).getData(bitmarkSeedCoreKey)
-    }
+    return try getKeychain(reason: reason).getData(bitmarkSeedCoreKey)
   }
   
   static func clearCore() throws {
-    try DispatchQueue.main.sync {
-      return try getKeychain(reason: "Health + app would like to remove your account from keychain").remove(bitmarkSeedCoreKey)
-    }
+    return try getKeychain(reason: "Health + app would like to remove your account from keychain").remove(bitmarkSeedCoreKey)
   }
 }
