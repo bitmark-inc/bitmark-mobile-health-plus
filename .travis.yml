@@ -14,5 +14,5 @@ install:
   - fastlane add_plugin latest_hockey_build_number
 
 script:
-  - fastlane ios beta-travis
+  - fastlane ios betatravis
 after_success:

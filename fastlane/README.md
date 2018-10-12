@@ -16,14 +16,24 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## iOS
+### ios appstore
+```
+fastlane ios appstore
+```
+Push a new beta build to Hockeyapp
 ### ios beta
 ```
 fastlane ios beta
 ```
-Push a new beta build to Hockeyapp
-### ios enterprise
+
+### ios alpha
 ```
-fastlane ios enterprise
+fastlane ios alpha
+```
+
+### ios betatravis
+```
+fastlane ios betatravis
 ```
 
 

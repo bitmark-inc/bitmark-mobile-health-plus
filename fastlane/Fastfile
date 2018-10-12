@@ -11,16 +11,16 @@
 
 default_platform(:ios)
 
-reset_git_repo(
-  force: true,
-  skip_clean: true
-)
-git_pull
-sh "npm install"
-
 platform :ios do
   desc "Push a new beta build to Hockeyapp"
-  lane :appstore do
+
+  lane :buildappstore do
+    reset_git_repo(
+      force: true,
+      skip_clean: true
+    )
+    git_pull
+    sh "npm install"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -44,6 +44,12 @@ platform :ios do
     )
   end
   lane :beta do
+    reset_git_repo(
+      force: true,
+      skip_clean: true
+    )
+    git_pull
+    sh "npm install"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -66,6 +72,12 @@ platform :ios do
       )
   end
   lane :alpha do
+    reset_git_repo(
+      force: true,
+      skip_clean: true
+    )
+    git_pull
+    sh "npm install"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -87,7 +99,8 @@ platform :ios do
       api_token: ENV['HOCKEYAPP_KEY']
       )
   end
-  lane :beta-travis do
+  lane :betatravis do
+    sh "npm install"
     keychain_name = "ios-build.keychain"
     keychain_password = SecureRandom.base64
 
@@ -110,7 +123,7 @@ platform :ios do
     import_certificate(
       certificate_path: "fastlane/cer/enterprise.p12",
       certificate_password: ENV["KEY_PASSWORD"],
-      keychain_name: keychain_name
+      keychain_name: keychain_name,
       keychain_password: keychain_password
     )
     sigh(
