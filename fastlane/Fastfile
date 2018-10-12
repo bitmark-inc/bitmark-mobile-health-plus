@@ -137,7 +137,7 @@ platform :ios do
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
-      scheme: "BitmarkHealthPlus dev",
+      scheme: "BitmarkHealthPlus beta",
       include_bitcode: true
     )
     hockey(
