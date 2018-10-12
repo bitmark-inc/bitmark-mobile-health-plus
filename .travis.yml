@@ -8,9 +8,10 @@ branches:
     - master
 
 before_install:
-  - fastlane add_plugin latest_hockey_build_number
+  - gem install fastlane
 
 install:
+  - fastlane add_plugin latest_hockey_build_number
 
 script:
   - fastlane ios beta-travis
