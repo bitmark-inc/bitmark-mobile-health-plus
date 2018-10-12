@@ -10,12 +10,17 @@ for_lane :appstore do
 end
 
 for_lane :beta do
-    app_identifier "com.bitmark.healthplus.inhouse"
+    app_identifier "com.bitmark.healthplus.beta"
     team_id "A52M7AQ8B2" # Developer Portal Team ID
 end
 
 for_lane :alpha do
     app_identifier "com.bitmark.healthplus.inhouse"
+    team_id "A52M7AQ8B2" # Developer Portal Team ID
+end
+
+for_lane :betatravis do
+    app_identifier "com.bitmark.healthplus.beta"
     team_id "A52M7AQ8B2" # Developer Portal Team ID
 end
 

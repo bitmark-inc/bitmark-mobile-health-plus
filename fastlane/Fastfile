@@ -126,9 +126,6 @@ platform :ios do
       keychain_name: keychain_name,
       keychain_password: keychain_password
     )
-    sigh(
-      force: false
-    )
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
