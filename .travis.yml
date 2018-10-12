@@ -1,9 +1,13 @@
 language: swift
 osx_image: xcode10
 xcode_sdk: iphonesimulator12.0
+node_js: 
+  - "8"
 branches:
   only:
     - master
+
+before_script: cd BitmarkHealthPlus
 
 before_install:
   - fastlane add_plugin latest_hockey_build_number
