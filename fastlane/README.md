@@ -16,9 +16,9 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## iOS
-### ios appstore
+### ios buildappstore
 ```
-fastlane ios appstore
+fastlane ios buildappstore
 ```
 Push a new beta build to Hockeyapp
 ### ios beta
