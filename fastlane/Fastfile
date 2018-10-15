@@ -21,6 +21,8 @@ platform :ios do
     )
     git_pull
     sh "npm install"
+    sh "cd ../node_modules/react-native/scripts && ./ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -50,6 +52,8 @@ platform :ios do
     )
     git_pull
     sh "npm install"
+    sh "cd ../node_modules/react-native/scripts && ./ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -78,6 +82,8 @@ platform :ios do
     )
     git_pull
     sh "npm install"
+    sh "cd ../node_modules/react-native/scripts && ./ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -101,6 +107,8 @@ platform :ios do
   end
   lane :betatravis do
     sh "npm install"
+    sh "cd ../node_modules/react-native/scripts && ./ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     keychain_name = "ios-build.keychain"
     keychain_password = SecureRandom.base64
 
@@ -146,6 +154,8 @@ platform :ios do
   end
   lane :developtravis do
     sh "npm install"
+    sh "cd ../node_modules/react-native/scripts && ./ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     keychain_name = "ios-build.keychain"
     keychain_password = SecureRandom.base64
 
