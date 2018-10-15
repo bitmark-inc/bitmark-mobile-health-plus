@@ -8,6 +8,7 @@ branches:
     - master
 
 before_install:
+  - openssl aes-256-cbc -K $encrypted_5c13274db47d_key -iv $encrypted_5c13274db47d_iv -in github_deploy_key.enc -out github_deploy_key -d
   - gem install fastlane
 
 install:
