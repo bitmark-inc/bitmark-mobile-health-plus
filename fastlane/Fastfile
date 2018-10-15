@@ -120,6 +120,11 @@ platform :ios do
       add_to_search_list: true
     )
 
+    unlock_keychain(
+      path: keychain_name,
+      password: keychain_password
+    )
+
     match(
       app_identifier: 'com.bitmark.healthplus.beta',
       git_url: 'git@github.com:bitmark-inc/mobile-shared-certificate.git',
