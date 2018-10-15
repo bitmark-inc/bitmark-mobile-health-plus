@@ -144,4 +144,49 @@ platform :ios do
       api_token: ENV['HOCKEYAPP_KEY']
       )
   end
+  lane :developtravis do
+    sh "npm install"
+    keychain_name = "ios-build.keychain"
+    keychain_password = SecureRandom.base64
+
+    version_number = latest_hockey_build_number(
+      api_token: ENV['HOCKEYAPP_KEY']
+    ).to_i
+    increment_build_number(
+      xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
+      build_number: (version_number + 1).to_i
+    )
+    create_keychain(
+      name: keychain_name,
+      password: keychain_password,
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      add_to_search_list: true
+    )
+
+    unlock_keychain(
+      path: keychain_name,
+      password: keychain_password
+    )
+
+    match(
+      app_identifier: 'com.bitmark.healthplus.inhouse',
+      git_url: 'git@github.com:bitmark-inc/mobile-shared-certificate.git',
+      type: 'enterprise',
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      readonly: true
+    )
+
+    build_app(
+      export_options: {iCloudContainerEnvironment: 'Production'},
+      workspace: "ios/BitmarkHealthPlus.xcworkspace", 
+      scheme: "BitmarkHealthPlus dev",
+      include_bitcode: true
+    )
+    hockey(
+      api_token: ENV['HOCKEYAPP_KEY']
+      )
+  end
 end
