@@ -14,7 +14,7 @@ import { config } from '../../configs';
 
 export class GetStartComponent extends React.Component {
   static propTypes = {
-    passPhrase24Words: PropTypes.arrayOf(PropTypes.string),
+    phraseWords: PropTypes.arrayOf(PropTypes.string),
   };
   constructor(props) {
     super(props);
@@ -23,7 +23,7 @@ export class GetStartComponent extends React.Component {
 
     let requestHealthKitPermission = () => {
       AppProcessor.doRequireHealthKitPermission().then(() => {
-        Actions.touchFaceId({ passPhrase24Words: this.props.passPhrase24Words });
+        Actions.touchFaceId({ phraseWords: this.props.phraseWords });
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
         console.log('doRequireHealthKitPermission error :', error);

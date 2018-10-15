@@ -20,9 +20,9 @@ const BitmarkSDK = {
       });
     });
   },
-  newAccountFrom24Words: (phrase24Words, network) => {
+  newAccountFromPhraseWords: (phraseWords, network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFrom24Words(phrase24Words, network, (ok, result) => {
+      SwiftBitmarkSDK.newAccountFrom24Words(phraseWords, network, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
@@ -70,9 +70,9 @@ const BitmarkSDK = {
   },
   accountInfo: (sessionId) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.accountInfo(sessionId, (ok, result, phrase24Words) => {
+      SwiftBitmarkSDK.accountInfo(sessionId, (ok, result, phraseWords) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber: result, phrase24Words });
+          resolve({ bitmarkAccountNumber: result, phraseWords });
         } else {
           reject(newError(result, 'Can not get current account!'));
         }
@@ -209,11 +209,11 @@ const BitmarkSDK = {
   },
 
   // don use session di
-  try24Words: (phrase24Words, network) => {
+  tryPhraseWords: (phraseWords, network) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.try24Words(phrase24Words, network, (ok, result, phrase24Words) => {
+      SwiftBitmarkSDK.try24Words(phraseWords, network, (ok, result, phraseWords) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber: result, phrase24Words });
+          resolve({ bitmarkAccountNumber: result, phraseWords });
         } else {
           reject(newError(result, 'Can not try 24 words!'));
         }

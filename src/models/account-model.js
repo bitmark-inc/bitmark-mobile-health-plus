@@ -8,17 +8,17 @@ const doCreateAccount = async () => {
   return await BitmarkSDK.newAccount(config.bitmark_network);
 };
 
-const doLogin = async (phrase24Words) => {
+const doLogin = async (phraseWords) => {
   await CookieManager.clearAll();
-  return await BitmarkSDK.newAccountFrom24Words(phrase24Words, config.bitmark_network);
+  return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, config.bitmark_network);
 }
 
 const doGetCurrentAccount = async (touchFaceIdSession) => {
   return await BitmarkSDK.accountInfo(touchFaceIdSession);
 };
 
-const doCheck24Words = async (phrase24Words) => {
-  return await BitmarkSDK.try24Words(phrase24Words, config.bitmark_network);
+const doCheckPhraseWords = async (phraseWords) => {
+  return await BitmarkSDK.tryPhraseWords(phraseWords, config.bitmark_network);
 };
 
 const doLogout = async (jwt) => {
@@ -362,7 +362,7 @@ let doCancelGrantingAccess = (jwt, token) => {
 
 let AccountModel = {
   doGetCurrentAccount,
-  doCheck24Words,
+  doCheckPhraseWords,
   doCreateAccount,
   doLogin,
   doLogout,
