@@ -17,6 +17,7 @@ import { ScanAccessQRCodeComponent } from './scan-access-qr-code.component';
 import { ConfirmAccessComponent } from './confirm-access.component';
 import { RevokeAccessComponent } from './revoke-access.component';
 import { FullViewCaptureAssetComponent } from './full-view-capture-asset.component';
+import { EmailRecordComponent } from './email-record.component';
 
 
 // bitmarkHealthData
@@ -32,6 +33,7 @@ export class UserRouterComponent extends Component {
         <Stack hideNavBar={true} >
           <Scene key="user" component={UserComponent} initial={true} panHandlers={null} />
           <Scene key="bitmarkHealthData" component={BitmarkHealthDataComponent} panHandlers={null} />
+          <Scene key="emailRecords" component={EmailRecordComponent} panHandlers={null} />
           <Scene key="account" component={AccountComponent} />
           <Scene key="accountPhrase" component={AccountPhraseComponent} />
           <Scene key="support" component={SupportComponent} />

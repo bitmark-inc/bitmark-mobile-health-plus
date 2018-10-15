@@ -211,7 +211,14 @@
     "Notification_weeklyHealthDataNotification": "Notification_weeklyHealthDataNotification",
     "BitmarkService_doCheckMetadata1": "BitmarkService_doCheckMetadata1",
     "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2",
-    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages"
+    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages",
+    "EmailRecordComponent_title1": "EmailRecordComponent_title1",
+    "EmailRecordComponent_message1": "EmailRecordComponent_message1",
+    "EmailRecordComponent_acceptButtonText": "EmailRecordComponent_acceptButtonText",
+    "EmailRecordComponent_rejectButtonText": "EmailRecordComponent_rejectButtonText",
+    "EmailRecordComponent_title2": "EmailRecordComponent_title2",
+    "EmailRecordComponent_message2": "EmailRecordComponent_message2",
+    "EmailRecordComponent_viewButtonText": "EmailRecordComponent_viewButtonText"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -425,7 +432,14 @@
     "Notification_weeklyHealthDataNotification": "Your health data is ready to sign.",
     "BitmarkService_doCheckMetadata1": "Duplicated labels:",
     "BitmarkService_doCheckMetadata2": "METADATA is too long (2048-BYTE LIMIT)!",
-    "Native_notification_intercom_new_messages": "You have new messages from Bitmark support team. Tap to view."
+    "Native_notification_intercom_new_messages": "You have new messages from Bitmark support team. Tap to view.",
+    "EmailRecordComponent_title1": "Authorization required",
+    "EmailRecordComponent_message1": "{{email}} would like to add health record to your Bitmark Health+ account. Please review the record to decide if you wish to accept or reject it.",
+    "EmailRecordComponent_acceptButtonText": "Accept",
+    "EmailRecordComponent_rejectButtonText": "reject",
+    "EmailRecordComponent_title2": "Records have been added",
+    "EmailRecordComponent_message2": "Here is the list of added records:",
+    "EmailRecordComponent_viewButtonText": "view"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "BitmarkInternetOffComponent_titleText",
@@ -639,7 +653,14 @@
     "Notification_weeklyHealthDataNotification": "Notification_weeklyHealthDataNotification",
     "BitmarkService_doCheckMetadata1": "BitmarkService_doCheckMetadata1",
     "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2",
-    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages"
+    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages",
+    "EmailRecordComponent_title1": "EmailRecordComponent_title1",
+    "EmailRecordComponent_message1": "EmailRecordComponent_message1",
+    "EmailRecordComponent_acceptButtonText": "EmailRecordComponent_acceptButtonText",
+    "EmailRecordComponent_rejectButtonText": "EmailRecordComponent_rejectButtonText",
+    "EmailRecordComponent_title2": "EmailRecordComponent_title2",
+    "EmailRecordComponent_message2": "EmailRecordComponent_message2",
+    "EmailRecordComponent_viewButtonText": "EmailRecordComponent_viewButtonText"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "BitmarkInternetOffComponent_titleText",
@@ -853,6 +874,13 @@
     "Notification_weeklyHealthDataNotification": "Notification_weeklyHealthDataNotification",
     "BitmarkService_doCheckMetadata1": "BitmarkService_doCheckMetadata1",
     "BitmarkService_doCheckMetadata2": "BitmarkService_doCheckMetadata2",
-    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages"
+    "Native_notification_intercom_new_messages": "Native_notification_intercom_new_messages",
+    "EmailRecordComponent_title1": "EmailRecordComponent_title1",
+    "EmailRecordComponent_message1": "EmailRecordComponent_message1",
+    "EmailRecordComponent_acceptButtonText": "EmailRecordComponent_acceptButtonText",
+    "EmailRecordComponent_rejectButtonText": "EmailRecordComponent_rejectButtonText",
+    "EmailRecordComponent_title2": "EmailRecordComponent_title2",
+    "EmailRecordComponent_message2": "EmailRecordComponent_message2",
+    "EmailRecordComponent_viewButtonText": "EmailRecordComponent_viewButtonText"
   }
 }

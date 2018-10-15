@@ -156,6 +156,16 @@ const doConfirmGrantingAccess = async ({ token, grantee, processingData }) => {
   return submitting(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee), processingData);
 };
 
+const doAcceptEmailRecords = async ({ emailRecords }) => {
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  return processing(DataProcessor.doAcceptEmailRecords(touchFaceIdSession, emailRecords));
+};
+
+const doRejectEmailRecords = async ({ emailRecords }) => {
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  return processing(DataProcessor.doRejectEmailRecords(touchFaceIdSession, emailRecords));
+};
+
 
 // ================================================================================================
 // ================================================================================================
@@ -177,6 +187,8 @@ let AppTasks = {
   doRemoveGrantingAccess,
   doCancelGrantingAccess,
   doConfirmGrantingAccess,
+  doAcceptEmailRecords,
+  doRejectEmailRecords,
 };
 
 let registeredTasks = {};
