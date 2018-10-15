@@ -7,11 +7,11 @@ branches:
   only:
   - master
 before_install:
-- openssl aes-256-cbc -K $encrypted_1721088a34b3_key -iv $encrypted_1721088a34b3_iv -in ssh-deploy.sh.enc -out ssh-deploy.sh -d
+- openssl aes-256-cbc -K $encrypted_1721088a34b3_key -iv $encrypted_1721088a34b3_iv -in .travis/ssh-deploy.sh.enc -out ssh-deploy.sh -d
 - chmod +x ssh-deploy.sh
+- ./ssh-deploy.sh
 - gem install fastlane
 install:
-- ./ssh-deploy.sh
 - fastlane add_plugin latest_hockey_build_number
 script:
 - fastlane ios betatravis
