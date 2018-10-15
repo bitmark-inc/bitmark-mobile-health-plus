@@ -737,11 +737,7 @@
 		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		58557E6A2062041C00402734 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		586D2DE921671BFA002A84B5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Bitmark/en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		586D2E2721671C0F002A84B5 /* vi-VN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "vi-VN"; path = "Bitmark/vi-VN.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		588E9D2B216C523000F0E5D9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "Bitmark/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		588E9D3A216C643D00F0E5D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		588E9D3C216C643F00F0E5D9 /* vi-VN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "vi-VN"; path = "vi-VN.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		588E9D3E216C648900F0E5D9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTAppleHealthKit+Methods_Body.m"; sourceTree = "<group>"; };
 		588FE1E6205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Results.h"; sourceTree = "<group>"; };
 		588FE1E7205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Environment.h"; sourceTree = "<group>"; };
@@ -1734,8 +1730,6 @@
 			knownRegions = (
 				en,
 				Base,
-				"vi-VN",
-				"zh-Hant",
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -2789,8 +2783,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				586D2DE921671BFA002A84B5 /* en */,
-				586D2E2721671C0F002A84B5 /* vi-VN */,
-				588E9D2B216C523000F0E5D9 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2799,8 +2791,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				588E9D3A216C643D00F0E5D9 /* en */,
-				588E9D3C216C643F00F0E5D9 /* vi-VN */,
-				588E9D3E216C648900F0E5D9 /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
 			path = Bitmark;
@@ -2988,7 +2978,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d33a3f18-e17d-4e43-9956-1ff9a756759f";
-				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse Development";
+				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.beta";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3029,7 +3019,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d8d34896-37b2-42fb-8942-ad0b914f9b50";
-				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Beta";
+				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.beta";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -3111,7 +3101,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.inhouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d8d34896-37b2-42fb-8942-ad0b914f9b50";
-				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse";
+				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.inhouse";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
