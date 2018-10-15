@@ -2978,7 +2978,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d33a3f18-e17d-4e43-9956-1ff9a756759f";
-				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse Development";
+				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.beta";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3019,7 +3019,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d8d34896-37b2-42fb-8942-ad0b914f9b50";
-				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Beta";
+				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.beta";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -3101,7 +3101,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.inhouse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d8d34896-37b2-42fb-8942-ad0b914f9b50";
-				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse";
+				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.inhouse";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
