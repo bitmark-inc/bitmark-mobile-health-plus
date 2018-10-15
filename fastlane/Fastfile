@@ -185,8 +185,12 @@ platform :ios do
       scheme: "BitmarkHealthPlus dev",
       include_bitcode: true
     )
+
     hockey(
-      api_token: ENV['HOCKEYAPP_KEY']
+      api_token: ENV['HOCKEYAPP_KEY'],
+      notes: "branch: " + ENV['TRAVIS_PULL_REQUEST_BRANCH'] + "CI build: " + ENV['TRAVIS_JOB_WEB_URL'],
+      build_server_url: ENV['TRAVIS_JOB_WEB_URL'],
+      commit_sha: ENV['TRAVIS_PULL_REQUEST_SHA'],
       )
   end
 end
