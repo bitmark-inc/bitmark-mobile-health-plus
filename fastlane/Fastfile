@@ -120,20 +120,15 @@ platform :ios do
       add_to_search_list: true
     )
 
-    update_project_provisioning(
-      xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
-      profile: "fastlane/cer/Health_Plus_Beta.mobileprovision",
-      target_filter: ".*beta.*",
-      build_configuration: "Release",
-      code_signing_identity: "iPhone Development"
+    match(
+      app_identifier: 'com.bitmark.healthplus.beta',
+      git_url: 'https://github.com/bitmark-inc/mobile-shared-certificate',
+      type: 'enterprise',
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      readonly: true
     )
 
-    import_certificate(
-      certificate_path: "fastlane/cer/enterprise.p12",
-      certificate_password: ENV["KEY_PASSWORD"],
-      keychain_name: keychain_name,
-      keychain_password: keychain_password
-    )
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
