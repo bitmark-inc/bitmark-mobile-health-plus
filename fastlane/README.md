@@ -36,6 +36,11 @@ fastlane ios alpha
 fastlane ios betatravis
 ```
 
+### ios developtravis
+```
+fastlane ios developtravis
+```
+
 
 ----
 

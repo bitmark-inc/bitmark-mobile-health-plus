@@ -1,7 +1,7 @@
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/BitmarkSDK" "${PODS_CONFIGURATION_BUILD_DIR}/KeychainAccess" "${PODS_CONFIGURATION_BUILD_DIR}/ResearchKit" "${PODS_CONFIGURATION_BUILD_DIR}/TweetNacl" "${PODS_ROOT}/Intercom/Intercom"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/BitmarkSDK" "${PODS_CONFIGURATION_BUILD_DIR}/KeychainAccess" "${PODS_CONFIGURATION_BUILD_DIR}/TweetNacl" "${PODS_ROOT}/Intercom/Intercom"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-OTHER_CFLAGS = $(inherited) -iquote "${PODS_CONFIGURATION_BUILD_DIR}/BitmarkSDK/BitmarkSDK.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/KeychainAccess/KeychainAccess.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/ResearchKit/ResearchKit.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/TweetNacl/TweetNacl.framework/Headers"
+OTHER_CFLAGS = $(inherited) -iquote "${PODS_CONFIGURATION_BUILD_DIR}/BitmarkSDK/BitmarkSDK.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/KeychainAccess/KeychainAccess.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/TweetNacl/TweetNacl.framework/Headers"
 OTHER_LDFLAGS = $(inherited) -l"icucore" -l"xml2" -framework "Accelerate" -framework "AudioToolbox" -framework "CoreGraphics" -framework "Foundation" -framework "ImageIO" -framework "MobileCoreServices" -framework "Photos" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit" -framework "WebKit"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
