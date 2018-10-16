@@ -6,7 +6,6 @@ PODS:
   - HockeySDK/DefaultLib (5.1.2)
   - Intercom (5.1.5)
   - KeychainAccess (3.1.2)
-  - ResearchKit (1.5.2)
   - TesseractOCRiOS (4.0.0)
   - TweetNacl (1.0.1)
 
@@ -15,7 +14,6 @@ DEPENDENCIES:
   - HockeySDK
   - Intercom
   - KeychainAccess
-  - ResearchKit (from `https://github.com/bitmark-inc/ResearchKit.git`)
   - TesseractOCRiOS (from `https://github.com/gali8/Tesseract-OCR-iOS.git`)
 
 SPEC REPOS:
@@ -29,8 +27,6 @@ EXTERNAL SOURCES:
   BitmarkSDK:
     :branch: v1
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
-  ResearchKit:
-    :git: https://github.com/bitmark-inc/ResearchKit.git
   TesseractOCRiOS:
     :git: https://github.com/gali8/Tesseract-OCR-iOS.git
 
@@ -38,9 +34,6 @@ CHECKOUT OPTIONS:
   BitmarkSDK:
     :commit: 1c2f3b06373e865762e1a059bf215f1cdd330c90
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
-  ResearchKit:
-    :commit: 0b9690f4e586e7a5f4dfd655c7359f928c8e24ce
-    :git: https://github.com/bitmark-inc/ResearchKit.git
   TesseractOCRiOS:
     :commit: 14ff7d4e344d788b462ed993b56e94674df52ca9
     :git: https://github.com/gali8/Tesseract-OCR-iOS.git
@@ -50,10 +43,9 @@ SPEC CHECKSUMS:
   HockeySDK: 38b7e2726af1ea86ae97ce4b5de33ab0817e3500
   Intercom: 0a0ec9a30a12802c56ff02bb98ddf6f047035c68
   KeychainAccess: b3816fddcf28aa29d94b10ec305cd52be14c472b
-  ResearchKit: 76d9e3d4c1823d510f04d5ab1bf57bba568d59ff
   TesseractOCRiOS: 729989db3984bb60ba3addb053569b172d48c409
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
-PODFILE CHECKSUM: 1efad1f86eba63a5684dd590c3db7a654847acdb
+PODFILE CHECKSUM: 4ba2e35f8f149f68dcabb10a1d0f18cc4cd911ec
 
 COCOAPODS: 1.5.3

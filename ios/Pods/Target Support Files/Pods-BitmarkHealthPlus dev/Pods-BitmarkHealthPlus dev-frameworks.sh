@@ -145,14 +145,12 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/ResearchKit/ResearchKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/ResearchKit/ResearchKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework"
 fi
