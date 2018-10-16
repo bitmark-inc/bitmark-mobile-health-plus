@@ -21,6 +21,8 @@ platform :ios do
     )
     git_pull
     sh "npm install"
+    sh "cd ../node_modules/react-native && scripts/ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -50,6 +52,8 @@ platform :ios do
     )
     git_pull
     sh "npm install"
+    sh "cd ../node_modules/react-native && scripts/ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -78,6 +82,8 @@ platform :ios do
     )
     git_pull
     sh "npm install"
+    sh "cd ../node_modules/react-native && scripts/ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
     ).to_i
@@ -101,6 +107,8 @@ platform :ios do
   end
   lane :betatravis do
     sh "npm install"
+    sh "cd ../node_modules/react-native && scripts/ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     keychain_name = "ios-build.keychain"
     keychain_password = SecureRandom.base64
 
@@ -146,6 +154,8 @@ platform :ios do
   end
   lane :developtravis do
     sh "npm install"
+    sh "cd ../node_modules/react-native && scripts/ios-install-third-party.sh"
+    sh "cd ../node_modules/react-native/third-party/glog-0.3.4 && ../../scripts/ios-configure-glog.sh"
     keychain_name = "ios-build.keychain"
     keychain_password = SecureRandom.base64
 
@@ -188,9 +198,11 @@ platform :ios do
 
     hockey(
       api_token: ENV['HOCKEYAPP_KEY'],
-      notes: "branch: " + ENV['TRAVIS_PULL_REQUEST_BRANCH'] + "CI build: " + ENV['TRAVIS_JOB_WEB_URL'],
+      notes: "*Branch*: ```" + ENV['TRAVIS_PULL_REQUEST_BRANCH'] + "``` --- *CI build*: ```" + ENV['TRAVIS_JOB_WEB_URL'] + "```",
+      notes_type: "1",
       build_server_url: ENV['TRAVIS_JOB_WEB_URL'],
       commit_sha: ENV['TRAVIS_PULL_REQUEST_SHA'],
+      repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus",
       )
   end
 end
