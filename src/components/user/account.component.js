@@ -123,17 +123,6 @@ export class PrivateAccountComponent extends Component {
                 </View>
 
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
-
-                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => {
-                  Intercom.displayMessageComposer();
-                }}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText1')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText2')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
               </View>
 
               <View style={styles.accessArea}>
@@ -213,7 +202,19 @@ export class PrivateAccountComponent extends Component {
               </View>
               <View style={styles.aboutArea}>
                 <Text style={styles.aboutTitle}>{i18n.t('AccountComponent_aboutTitle')}</Text>
-                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={this.rateApp.bind(this)}>
+
+                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => {
+                  Intercom.displayMessageComposer();
+                }}>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText1')}</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText2')}</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[styles.rowButton]} onPress={this.rateApp.bind(this)}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText5')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
