@@ -730,7 +730,6 @@
 		51B7B1D26E8F8C51D6B1B579 /* Pods_BitmarkHealthPlusTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmarkHealthPlusTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		579C1381393E59B3042E29F2 /* Pods-Bitmark.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.release.xcconfig"; sourceTree = "<group>"; };
 		5805EE4F216F31B900943FA5 /* BitmarkHealthPlus beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitmarkHealthPlus beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5805EE8B216F31BB00943FA5 /* Info-beta.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-beta.plist"; path = "/Users/anhnguyen/Documents/projects/bitmark-mobile-health-plus/BitmarkHealthPlus/ios/Info-beta.plist"; sourceTree = "<absolute>"; };
 		580FF1512146345A00B36DE7 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		5824028A21393018001206A2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		5840099F20243AA700550ADB /* RNCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
@@ -820,6 +819,7 @@
 		588FE2C7205FB78B00937D78 /* StudyTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudyTheme.m; sourceTree = "<group>"; };
 		58908AD220A18A5A00C0064A /* BitmarkHealthPlus dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitmarkHealthPlus dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkSDKBridge.m; sourceTree = "<group>"; };
+		58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-beta.plist"; sourceTree = "<group>"; };
 		58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "Bitmark-beta.entitlements"; path = "Bitmark/Bitmark-beta.entitlements"; sourceTree = "<group>"; };
 		58C9510C20202AF70050A9D4 /* TouchID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchID.h; sourceTree = "<group>"; };
 		58C9510D20202AF70050A9D4 /* TouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchID.m; sourceTree = "<group>"; };
@@ -1112,7 +1112,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				580FF1512146345A00B36DE7 /* Info-dev.plist */,
-				5805EE8B216F31BB00943FA5 /* Info-beta.plist */,
+				58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				58CB4890201EC62E0058B364 /* Keychain */,
 				588FE278205FB76900937D78 /* ResearchKitUtils */,
