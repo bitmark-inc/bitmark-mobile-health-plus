@@ -5,7 +5,7 @@ import {
   StyleSheet,
 } from 'react-native'
 
-import { AppProcessor } from '../../processors';
+import { AppProcessor, DataProcessor } from '../../processors';
 import { EventEmitterService } from '../../services';
 import { Actions } from 'react-native-router-flux';
 import { convertWidth } from '../../utils';
@@ -13,9 +13,7 @@ import { constants } from '../../constants';
 import { config } from '../../configs';
 
 export class GetStartComponent extends React.Component {
-  static propTypes = {
-    passPhrase24Words: PropTypes.arrayOf(PropTypes.string),
-  };
+
   constructor(props) {
     super(props);
   }
@@ -23,7 +21,8 @@ export class GetStartComponent extends React.Component {
 
     let requestHealthKitPermission = () => {
       AppProcessor.doRequireHealthKitPermission().then(() => {
-        Actions.touchFaceId({ passPhrase24Words: this.props.passPhrase24Words });
+        DataProcessor.doReloadUserData();
+        Actions.pop();
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
         console.log('doRequireHealthKitPermission error :', error);
@@ -31,6 +30,11 @@ export class GetStartComponent extends React.Component {
     }
     return (
       <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.titleRow}>
+          <TouchableOpacity onPress={Actions.pop}>
+            <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
+          </TouchableOpacity>
+        </View>
         <View style={[styles.body]}>
           <View style={styles.swipePageContent}>
             <View style={styles.accessIconArea}>
@@ -57,13 +61,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingRight: convertWidth(36),
+    paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0) + 20,
+  },
+  closeIcon: {
+    width: convertWidth(20),
+    height: convertWidth(20),
+    resizeMode: 'contain',
+  },
+
   body: {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
     paddingLeft: convertWidth(50),
     paddingRight: convertWidth(50),
-    paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
   },
 
   swipePageContent: {

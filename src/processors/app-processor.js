@@ -117,7 +117,7 @@ const doReloadUserData = async () => {
 };
 
 const doRequireHealthKitPermission = async () => {
-  return await HealthKitService.initHealthKit();
+  return DataProcessor.doRequireHealthKitPermission();
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {

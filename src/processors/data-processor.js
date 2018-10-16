@@ -73,7 +73,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
 
-  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
+  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthData) {
     let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.createdAt);
     if (list && list.length > 0) {
       Actions.bitmarkHealthData({ list });
@@ -329,6 +329,13 @@ const doLogout = async () => {
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
 };
+
+const doRequireHealthKitPermission = async () => {
+  let result = await HealthKitService.initHealthKit();
+  userInformation.activeHealthData = true;
+  await UserModel.doUpdateUserInfo(userInformation);
+  return result;
+}
 
 const doDeactiveApplication = async () => {
   stopInterval();
@@ -730,6 +737,7 @@ const DataProcessor = {
   doStartBackgroundProcess,
   doReloadUserData,
 
+  doRequireHealthKitPermission,
   doDeactiveApplication,
   doBitmarkHealthData,
   doDownloadBitmark,
