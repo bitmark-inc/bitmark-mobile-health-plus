@@ -37,7 +37,7 @@ export class SupportComponent extends Component {
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.KnowYourRights.name })}>
-                <Text style={styles.rowButtonText}>{i18n.t('SupportComponent_rowButtonText3')}t</Text>
+                <Text style={styles.rowButtonText}>{i18n.t('SupportComponent_rowButtonText3')}</Text>
                 <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>
             </ScrollView>
