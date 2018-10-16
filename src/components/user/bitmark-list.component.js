@@ -79,7 +79,7 @@ class PrivateBitmarkListComponent extends Component {
               <View style={styles.titleRow}>
                 {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
                 {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText2')}</Text>}
-                <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
+                <TouchableOpacity style={styles.closeButton} onPress={Actions.user}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
                 </TouchableOpacity>
               </View>
