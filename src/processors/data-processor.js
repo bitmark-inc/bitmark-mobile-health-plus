@@ -47,11 +47,8 @@ const isHealthAssetBitmark = (asset) => {
     // For files
     if (asset.metadata['Source'] == 'Medical Records') return true;
 
-    let regResults = /HA((\d)*)/.exec(asset.name);
-    if (regResults && regResults.length > 1) {
-      let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HA' + randomNumber) === asset.name);
-    }
+    // For capture asset
+    if (asset.metadata['Source'] == 'Health Records' && asset.name.startsWith('HA')) return true;
   }
   return false;
 };

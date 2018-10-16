@@ -17,6 +17,12 @@
 		0E4065AB2091E23B005E1CBD /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
 		0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		0E617E4F20A2FAE4007A3A24 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
+		0E7371A921747877009022CC /* RNTextDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7371A821747877009022CC /* RNTextDetector.m */; };
+		0E7371AA21747877009022CC /* RNTextDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7371A821747877009022CC /* RNTextDetector.m */; };
+		0E7371AB21747877009022CC /* RNTextDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7371A821747877009022CC /* RNTextDetector.m */; };
+		0E7371AD217478D3009022CC /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0E7371AC217478D3009022CC /* tessdata */; };
+		0E7371AE217478D3009022CC /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0E7371AC217478D3009022CC /* tessdata */; };
+		0E7371AF217478D3009022CC /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0E7371AC217478D3009022CC /* tessdata */; };
 		0E7B97DE20EF56170064EEEC /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -29,7 +35,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2D13B60C19A845D7B6A86936 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */; };
 		32B57ECB1D8A5A50E3D15BD3 /* Pods_BitmarkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */; };
-		47FA2B8F2FD948DF91913489 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */; };
+		4065FF1DFA0EB426E2A2C958 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */; };
 		5805EDEF216F31B900943FA5 /* RCTAppleHealthKit+TypesAndPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FD205FB45500937D78 /* RCTAppleHealthKit+TypesAndPermissions.m */; };
 		5805EDF0216F31B900943FA5 /* RCTAppleHealthKit+Methods_Results.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F7205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m */; };
 		5805EDF1216F31B900943FA5 /* RCTAppleHealthKit+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FB205FB45500937D78 /* RCTAppleHealthKit+Utils.m */; };
@@ -642,6 +648,9 @@
 		00E356F21AD99517003FC87E /* BitmarkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkTests.m; sourceTree = "<group>"; };
 		0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNExitApp.xcodeproj; path = "../node_modules/react-native-exit-app/ios/RNExitApp.xcodeproj"; sourceTree = "<group>"; };
+		0E7371A721747877009022CC /* RNTextDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTextDetector.h; sourceTree = "<group>"; };
+		0E7371A821747877009022CC /* RNTextDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTextDetector.m; sourceTree = "<group>"; };
+		0E7371AC217478D3009022CC /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = Bitmark/tessdata; sourceTree = "<group>"; };
 		0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeExceptionHandler.xcodeproj; path = "../node_modules/react-native-exception-handler/ios/ReactNativeExceptionHandler.xcodeproj"; sourceTree = "<group>"; };
 		11AD9D90D3821D2E143D47FB /* Pods-BitmarkHealthPlusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlusTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlusTests/Pods-BitmarkHealthPlusTests.debug.xcconfig"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
@@ -654,9 +663,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Bitmark/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Bitmark/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		190739E074B9D6EB6B3A8951 /* Pods-BitmarkHealthPlus dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev.release.xcconfig"; sourceTree = "<group>"; };
 		1F5F6B1D2FFF2E6605394A96 /* Pods_Bitmark_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitmark_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		27201DCB81D67B55AD2AFFBD /* Pods-BitmarkHealthPlus dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev.debug.xcconfig"; sourceTree = "<group>"; };
 		295B8983183E4140AD6083BB /* libRNMail.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNMail.a; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E2B6E48BB257498C8AA0F2F /* Pods-BitmarkHealthPlus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus.release.xcconfig"; sourceTree = "<group>"; };
@@ -670,7 +677,11 @@
 		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		58557E6A2062041C00402734 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		586D2DE921671BFA002A84B5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Bitmark/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		586D2E2721671C0F002A84B5 /* vi-VN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "vi-VN"; path = "Bitmark/vi-VN.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		588E9D2B216C523000F0E5D9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "Bitmark/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		588E9D3A216C643D00F0E5D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		588E9D3C216C643F00F0E5D9 /* vi-VN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "vi-VN"; path = "vi-VN.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		588E9D3E216C648900F0E5D9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTAppleHealthKit+Methods_Body.m"; sourceTree = "<group>"; };
 		588FE1E6205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Results.h"; sourceTree = "<group>"; };
 		588FE1E7205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Environment.h"; sourceTree = "<group>"; };
@@ -738,10 +749,12 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B4296E8568A7CE81E4D31BF4 /* Pods-Bitmark.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.debug.xcconfig"; sourceTree = "<group>"; };
 		B46290362EA64E3A93EE362E /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
+		B5929BC86384EF6D95DD5FCB /* Pods-BitmarkHealthPlus dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev.debug.xcconfig"; sourceTree = "<group>"; };
 		B699513BD0B90FD6246B88A0 /* Pods-Bitmark beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark beta.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark beta/Pods-Bitmark beta.release.xcconfig"; sourceTree = "<group>"; };
 		CA19D843ECACE8B8F9F98E7E /* Pods-BitmarkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkTests/Pods-BitmarkTests.release.xcconfig"; sourceTree = "<group>"; };
 		D400D54DA2A09662699E58CF /* Pods_Bitmark_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitmark_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDF52A44890C0CADB5CC2CF /* Pods-Bitmark dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark dev/Pods-Bitmark dev.release.xcconfig"; sourceTree = "<group>"; };
+		DECFB6AF643DC95F93245574 /* Pods-BitmarkHealthPlus dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus dev.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev.release.xcconfig"; sourceTree = "<group>"; };
 		E3045E478EDA4BB795BE1653 /* RNMail.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNMail.xcodeproj; path = "../node_modules/react-native-mail/RNMail.xcodeproj"; sourceTree = "<group>"; };
 		E68EEEE1542C435DA913552D /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		F13CAA5E2140BF8F001414A9 /* RNIntercom.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNIntercom.xcodeproj; path = "../node_modules/react-native-intercom/iOS/RNIntercom.xcodeproj"; sourceTree = "<group>"; };
@@ -881,7 +894,7 @@
 				58908ABC20A18A5A00C0064A /* libRNMail.a in Frameworks */,
 				58908ABD20A18A5A00C0064A /* libRCTVideo.a in Frameworks */,
 				2D13B60C19A845D7B6A86936 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */,
-				47FA2B8F2FD948DF91913489 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */,
+				4065FF1DFA0EB426E2A2C958 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -963,6 +976,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0E7371A621747877009022CC /* RNTextDetector */ = {
+			isa = PBXGroup;
+			children = (
+				0E7371A721747877009022CC /* RNTextDetector.h */,
+				0E7371A821747877009022CC /* RNTextDetector.m */,
+			);
+			path = RNTextDetector;
+			sourceTree = "<group>";
+		};
 		0E7B97A220EF55C90064EEEC /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -994,6 +1016,7 @@
 		13B07FAE1A68108700A75B9A /* Bitmark */ = {
 			isa = PBXGroup;
 			children = (
+				0E7371AC217478D3009022CC /* tessdata */,
 				586D2DE821671BFA002A84B5 /* Localizable.strings */,
 				588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */,
 				58CB488F201EC5670058B364 /* Bitmark.entitlements */,
@@ -1179,6 +1202,7 @@
 		58FC1E27201B21AC00F60AF9 /* RNModules */ = {
 			isa = PBXGroup;
 			children = (
+				0E7371A621747877009022CC /* RNTextDetector */,
 				588FE1E3205FB45500937D78 /* HealthKit */,
 				58C9510B20202AF70050A9D4 /* TouchID */,
 				58FC1E53201B21B900F60AF9 /* BitmarkSDK */,
@@ -1301,8 +1325,8 @@
 				3E2B6E48BB257498C8AA0F2F /* Pods-BitmarkHealthPlus.release.xcconfig */,
 				11AD9D90D3821D2E143D47FB /* Pods-BitmarkHealthPlusTests.debug.xcconfig */,
 				6CDE85883F0412ACF79642A2 /* Pods-BitmarkHealthPlusTests.release.xcconfig */,
-				27201DCB81D67B55AD2AFFBD /* Pods-BitmarkHealthPlus dev.debug.xcconfig */,
-				190739E074B9D6EB6B3A8951 /* Pods-BitmarkHealthPlus dev.release.xcconfig */,
+				B5929BC86384EF6D95DD5FCB /* Pods-BitmarkHealthPlus dev.debug.xcconfig */,
+				DECFB6AF643DC95F93245574 /* Pods-BitmarkHealthPlus dev.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1535,6 +1559,8 @@
 			knownRegions = (
 				en,
 				Base,
+				"vi-VN",
+				"zh-Hant",
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -2094,6 +2120,7 @@
 			files = (
 				F150CA412023230B00C8FC17 /* AndaleMono.ttf in Resources */,
 				588E9D38216C643D00F0E5D9 /* InfoPlist.strings in Resources */,
+				0E7371AD217478D3009022CC /* tessdata in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				586D2E2521671BFA002A84B5 /* Localizable.strings in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
@@ -2105,6 +2132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5805EE3A216F31B900943FA5 /* AndaleMono.ttf in Resources */,
+				0E7371AF217478D3009022CC /* tessdata in Resources */,
 				5805EE3B216F31B900943FA5 /* Info-dev.plist in Resources */,
 				5805EE3D216F31B900943FA5 /* Localizable.strings in Resources */,
 				5805EE3E216F31B900943FA5 /* InfoPlist.strings in Resources */,
@@ -2118,6 +2146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58908AC020A18A5A00C0064A /* AndaleMono.ttf in Resources */,
+				0E7371AE217478D3009022CC /* tessdata in Resources */,
 				580FF1522146345A00B36DE7 /* Info-dev.plist in Resources */,
 				586D2E2621671BFA002A84B5 /* Localizable.strings in Resources */,
 				588E9D39216C643D00F0E5D9 /* InfoPlist.strings in Resources */,
@@ -2216,12 +2245,14 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
+				"${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework",
 				"${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BitmarkSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TesseractOCR.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TweetNacl.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2260,12 +2291,14 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
+				"${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework",
 				"${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BitmarkSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TesseractOCR.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TweetNacl.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2343,6 +2376,7 @@
 				588FE245205FB45500937D78 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */,
 				588FE249205FB45500937D78 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */,
 				588FE270205FB71000937D78 /* NSDate+Converting.m in Sources */,
+				0E7371A921747877009022CC /* RNTextDetector.m in Sources */,
 				58FC1E56201B21CC00F60AF9 /* BitmarkSDK.swift in Sources */,
 				588FE247205FB45500937D78 /* RCTAppleHealthKit+Methods_Characteristic.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
@@ -2378,6 +2412,7 @@
 				5805EE04216F31B900943FA5 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */,
 				5805EE06216F31B900943FA5 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */,
 				5805EE07216F31B900943FA5 /* NSDate+Converting.m in Sources */,
+				0E7371AB21747877009022CC /* RNTextDetector.m in Sources */,
 				5805EE09216F31B900943FA5 /* BitmarkSDK.swift in Sources */,
 				5805EE0A216F31B900943FA5 /* RCTAppleHealthKit+Methods_Characteristic.m in Sources */,
 				5805EE0B216F31B900943FA5 /* AppDelegate.m in Sources */,
@@ -2413,6 +2448,7 @@
 				58908A9020A18A5A00C0064A /* RCTAppleHealthKit+Methods_Sleep.m in Sources */,
 				58908A9220A18A5A00C0064A /* RCTAppleHealthKit+Methods_Vitals.m in Sources */,
 				58908A9320A18A5A00C0064A /* NSDate+Converting.m in Sources */,
+				0E7371AA21747877009022CC /* RNTextDetector.m in Sources */,
 				58908A9520A18A5A00C0064A /* BitmarkSDK.swift in Sources */,
 				58908A9620A18A5A00C0064A /* RCTAppleHealthKit+Methods_Characteristic.m in Sources */,
 				58908A9720A18A5A00C0064A /* AppDelegate.m in Sources */,
@@ -2451,6 +2487,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				586D2DE921671BFA002A84B5 /* en */,
+				586D2E2721671C0F002A84B5 /* vi-VN */,
+				588E9D2B216C523000F0E5D9 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2459,6 +2497,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				588E9D3A216C643D00F0E5D9 /* en */,
+				588E9D3C216C643F00F0E5D9 /* vi-VN */,
+				588E9D3E216C648900F0E5D9 /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
 			path = Bitmark;
@@ -2636,7 +2676,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bitmark.healthplus.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d33a3f18-e17d-4e43-9956-1ff9a756759f";
-				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.beta";
+				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2684,7 +2724,7 @@
 		};
 		58908AD020A18A5A00C0064A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 27201DCB81D67B55AD2AFFBD /* Pods-BitmarkHealthPlus dev.debug.xcconfig */;
+			baseConfigurationReference = B5929BC86384EF6D95DD5FCB /* Pods-BitmarkHealthPlus dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ENABLE_MODULES = YES;
@@ -2726,7 +2766,7 @@
 		};
 		58908AD120A18A5A00C0064A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 190739E074B9D6EB6B3A8951 /* Pods-BitmarkHealthPlus dev.release.xcconfig */;
+			baseConfigurationReference = DECFB6AF643DC95F93245574 /* Pods-BitmarkHealthPlus dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ENABLE_MODULES = YES;
