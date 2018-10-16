@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider, connect } from 'react-redux';
+import Permissions from 'react-native-permissions';
 import {
   StyleSheet,
   Linking,
@@ -26,6 +27,7 @@ export class PrivateAccountComponent extends Component {
   static propTypes = {
     accesses: PropTypes.shape({
       granted_to: PropTypes.array,
+      granted_from: PropTypes.array,
     })
   };
   constructor(props) {
@@ -66,19 +68,47 @@ export class PrivateAccountComponent extends Component {
     });
   }
 
+  scanQRCode() {
+    let displayAlert = () => {
+      Alert.alert(i18n.t('OtherAccountsComponent_alertTitle2'), i18n.t('OtherAccountsComponent_alertMessage2'), [{
+        text: i18n.t('OtherAccountsComponent_alertButton21'),
+        onPress: () => Linking.openURL('app-settings:')
+      }, {
+        text: i18n.t('OtherAccountsComponent_alertButton22'), style: 'cancel',
+      }]);
+    }
+    Permissions.check('camera').then(permission => {
+      if (permission === 'denied') {
+        displayAlert();
+      } else if (permission === 'undetermined') {
+        Permissions.request('camera').then(permission => {
+          if (permission === 'denied') {
+            displayAlert();
+          } else if (permission === 'authorized') {
+            Actions.scanAccessQRCode();
+          }
+        });
+      } else if (permission === 'authorized') {
+        Actions.scanAccessQRCode();
+      }
+    });
+  }
+
+
   render() {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
-            <View style={[styles.accountNumberTitleRow,]}>
-              <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
-              <TouchableOpacity onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
             <ScrollView>
               <View style={styles.accountNumberArea}>
+                <View style={[styles.accountNumberTitleRow,]}>
+                  <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
+                  <TouchableOpacity onPress={Actions.pop}>
+                    <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
+                  </TouchableOpacity>
+                </View>
+
                 <Text style={styles.accountNumberLabel}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
                 <TouchableOpacity onPress={() => {
                   Clipboard.setString(DataProcessor.getUserInformation().bitmarkAccountNumber);
@@ -106,26 +136,6 @@ export class PrivateAccountComponent extends Component {
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.securityArea}>
-                <Text style={styles.securityTitle} >{i18n.t('AccountComponent_securityTitle')}</Text>
-                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => Actions.accountPhrase()}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText3')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
-                  AppProcessor.doLogout().then(() => {
-                    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
-                  }).catch(error => {
-                    console.log('error :', error)
-                    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
-                  })
-                }}> */}
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText4')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-              </View>
-
               <View style={styles.accessArea}>
                 <Text style={styles.accessTitle}>{i18n.t('AccountComponent_accessTitle')}</Text>
                 <Text style={styles.accessDescription}>
@@ -148,6 +158,58 @@ export class PrivateAccountComponent extends Component {
                     </View>);
                   }}
                 />}
+
+                <TouchableOpacity style={styles.addGrandAccessButton} onPress={Actions.grantingAccess}>
+                  <Text style={styles.addGrandAccessButtonText}>+ {i18n.t('AccountComponent_addGrandAccessButtonText').toUpperCase()}</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.accessOtherAccountArea}>
+                <Text style={styles.accessOtherAccountTitle}>{i18n.t('AccountComponent_accessOtherAccountTitle')}</Text>
+                <Text style={styles.accessOtherAccountDescription}>
+                  {this.props.accesses['granted_from'] && this.props.accesses['granted_from'].length > 0 ? i18n.t('AccountComponent_accessOtherAccountDescription1') : i18n.t('AccountComponent_accessOtherAccountDescription2')}
+                </Text>
+                {this.props.accesses['granted_from'] && this.props.accesses['granted_from'].length > 0 && <FlatList
+                  style={{ marginTop: 12 }}
+                  keyExtractor={(item, index) => index}
+                  scrollEnabled={false}
+                  data={this.props.accesses['granted_from']}
+                  extraData={this.props}
+                  renderItem={({ item }) => {
+                    return (<View style={styles.accessOtherAccountAccountRow} >
+                      <Text style={styles.accessOtherAccountAccountNumber}>
+                        {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}
+                      </Text>
+                      <TouchableOpacity onPress={() => Actions.revokeAccess({ accessInfo: item })}>
+                        <Text style={styles.accessOtherAccountRevokeButtonText}>{i18n.t('AccountComponent_accessOtherAccountRevokeButtonText')}</Text>
+                      </TouchableOpacity>
+                    </View>);
+                  }}
+                />}
+
+                <TouchableOpacity style={styles.addOtherAccountButton} onPress={this.scanQRCode.bind(this)}>
+                  <Text style={styles.addOtherAccountButtonText}>+ {i18n.t('AccountComponent_addOtherAccountButtonText').toUpperCase()}</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.securityArea}>
+                <Text style={styles.securityTitle} >{i18n.t('AccountComponent_securityTitle')}</Text>
+                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => Actions.accountPhrase()}>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText3')}</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
+                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
+                  AppProcessor.doLogout().then(() => {
+                    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+                  }).catch(error => {
+                    console.log('error :', error)
+                    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
+                  })
+                }}> */}
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText4')}</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
               </View>
               <View style={styles.aboutArea}>
                 <Text style={styles.aboutTitle}>{i18n.t('AccountComponent_aboutTitle')}</Text>
@@ -199,9 +261,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: convertWidth(20),
-    paddingTop: convertWidth(15),
-    paddingBottom: 0,
   },
   accountNumberTitle: {
     fontFamily: 'Avenir Black',
@@ -267,7 +326,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#FF4444',
     padding: convertWidth(20),
-    paddingBottom: 45,
+    paddingBottom: 20,
   },
   accessTitle: {
     fontFamily: 'Avenir Black',
@@ -294,6 +353,68 @@ const styles = StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 14,
     color: '#FF003C',
+  },
+  addGrandAccessButton: {
+    marginTop: 29,
+    width: '100%',
+    height: 37,
+    backgroundColor: '#FF4444',
+
+    justifyContent: 'center',
+  },
+  addGrandAccessButtonText: {
+    fontFamily: 'Avenir Heavy',
+    fontWeight: '900',
+    fontSize: 16,
+    color: 'white',
+    textAlign: 'center',
+  },
+  accessOtherAccountArea: {
+    borderTopWidth: 1,
+    borderColor: '#FF4444',
+    padding: convertWidth(20),
+    paddingBottom: 20,
+  },
+  accessOtherAccountTitle: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 34,
+  },
+  accessOtherAccountDescription: {
+    fontFamily: 'Avenir Book',
+    fontWeight: '300',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  accessOtherAccountAccountRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+  },
+  accessOtherAccountAccountNumber: {
+    fontFamily: 'Andale Mono',
+    fontSize: 14,
+    color: '#0060F2',
+  },
+  accessOtherAccountRevokeButtonText: {
+    fontFamily: 'Andale Mono',
+    fontSize: 14,
+    color: '#FF003C',
+  },
+  addOtherAccountButton: {
+    marginTop: 29,
+    width: '100%',
+    height: 37,
+    backgroundColor: '#FF4444',
+
+    justifyContent: 'center',
+  },
+  addOtherAccountButtonText: {
+    fontFamily: 'Avenir Heavy',
+    fontWeight: '900',
+    fontSize: 16,
+    color: 'white',
+    textAlign: 'center',
   },
 
   aboutArea: {

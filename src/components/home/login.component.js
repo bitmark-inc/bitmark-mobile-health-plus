@@ -215,7 +215,7 @@ export class LoginComponent extends Component {
     }
     this.doCheck24Word().then((result) => {
       if (result) {
-        Actions.getStart({ passPhrase24Words: result });
+        Actions.touchFaceId({ passPhrase24Words: result });
       }
     });
   }

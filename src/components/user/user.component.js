@@ -28,10 +28,6 @@ class PrivateUserComponent extends Component {
   };
   constructor(props) {
     super(props);
-
-    this.state = {
-      isDisplayingAccountNumber: true,
-    }
   }
 
   addRecord() {
@@ -147,13 +143,16 @@ class PrivateUserComponent extends Component {
             {i18n.t('UserComponent_accountNumberDisplayText', { accountNumber: '[' + accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) + ']' })}
           </Text>
         </TouchableOpacity>}
-        <SafeAreaView style={[styles.bodySafeView, { backgroundColor: this.state.isDisplayingAccountNumber ? 'white' : 'rgba(0,0,0,0.25)', }]}>
+        <SafeAreaView style={[styles.bodySafeView,]}>
           <View style={styles.body}>
-            <TouchableOpacity style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} onPress={() => this.setState({ isDisplayingAccountNumber: true })} activeOpacity={1}>
+            <View style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} >
               <View style={styles.dataArea}>
-                <TouchableOpacity style={{ flex: 1 }} disabled={this.props.healthDataBitmarks.length === 0 || !this.state.isDisplayingAccountNumber} onPress={() => {
-                  this.setState({ isDisplayingAccountNumber: true });
-                  Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' })
+                <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                  if (!DataProcessor.getUserInformation().activeHealthData) {
+                    Actions.getStart();
+                  } else {
+                    Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' });
+                  }
                 }}>
                   <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.props.healthDataBitmarks.length} </Text>
                     {i18n.t('UserComponent_dataTitle1', { s: this.props.healthDataBitmarks.length !== 1 ? 's' : '' })}
@@ -161,45 +160,24 @@ class PrivateUserComponent extends Component {
                 </TouchableOpacity>
               </View>
               <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60), }]}>
-                <TouchableOpacity style={{ flex: 1 }} disabled={this.props.healthAssetBitmarks.length === 0 || !this.state.isDisplayingAccountNumber} onPress={() => {
-                  this.setState({ isDisplayingAccountNumber: true });
+                <TouchableOpacity style={{ flex: 1 }} disabled={this.props.healthAssetBitmarks.length === 0} onPress={() => {
                   Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })
                 }}>
                   <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.props.healthAssetBitmarks.length} </Text>
                     {i18n.t('UserComponent_dataTitle2', { s: this.props.healthAssetBitmarks.length !== 1 ? 's' : '' })}
                   </Text>
                 </TouchableOpacity>
-                {this.state.isDisplayingAccountNumber && isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.addRecord.bind(this)}>
+                {isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.addRecord.bind(this)}>
                   <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
                   <Text style={styles.addHealthRecordButtonText} > {i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>}
               </View>
-            </TouchableOpacity>
-            {isCurrentUser && <View style={[styles.accountArea, this.state.isDisplayingAccountNumber ? {} : { borderTopWidth: 0, }]}>
-              <TouchableOpacity style={styles.accountButton} onPress={() => this.setState({ isDisplayingAccountNumber: !this.state.isDisplayingAccountNumber })}>
+            </View>
+            {isCurrentUser && <View style={[styles.accountArea]}>
+              <TouchableOpacity style={styles.accountButton} onPress={Actions.account}>
                 <Text style={styles.accountButtonText}>
-                  {this.state.isDisplayingAccountNumber ? i18n.t('UserComponent_accountButtonText1') : ''}
+                  {i18n.t('UserComponent_accountButtonText1')}
                 </Text>
-              </TouchableOpacity>
-            </View>}
-            {!this.state.isDisplayingAccountNumber && !DataProcessor.getAccountAccessSelected() && <View style={styles.overlapButtonsArea}>
-              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444' }]} onPress={() => {
-                this.setState({ isDisplayingAccountNumber: true });
-                Actions.account();
-              }}>
-                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>{i18n.t('UserComponent_accountButtonText2')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={() => {
-                this.setState({ isDisplayingAccountNumber: true });
-                Actions.grantingAccess();
-              }}>
-                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>{i18n.t('UserComponent_accountButtonText3')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.accountButton, { height: 45, width: '100%', backgroundColor: '#FF4444', marginTop: 1 }]} onPress={() => {
-                this.setState({ isDisplayingAccountNumber: true });
-                Actions.otherAccounts();
-              }}>
-                <Text style={[styles.accountButtonText, { color: 'white', fontWeight: '400', }]}>{i18n.t('UserComponent_accountButtonText4')}</Text>
               </TouchableOpacity>
             </View>}
           </View>
