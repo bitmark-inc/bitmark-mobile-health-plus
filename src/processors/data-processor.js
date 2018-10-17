@@ -137,6 +137,19 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           }
         }
       });
+
+      let compareFunction = (a, b) => {
+        if (a.status === 'pending') {
+          return 1;
+        }
+        if (b.status === 'pending') {
+          return 1;
+        }
+        return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
+      }
+      healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
+      healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
+
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
       return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
