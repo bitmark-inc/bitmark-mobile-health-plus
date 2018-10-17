@@ -92,7 +92,10 @@ class MainEventsHandlerComponent extends Component {
 
   async doRefresh(justCreatedBitmarkAccount) {
     if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
-      let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+      let passTouchFaceId = !!CommonModel.getFaceTouchSessionId();
+      if (!passTouchFaceId) {
+        passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+      }
       this.setState({ passTouchFaceId });
       if (passTouchFaceId && this.state.networkStatus) {
         EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
@@ -424,7 +427,7 @@ export class MainComponent extends Component {
     super(props);
 
     this.doOpenApp = this.doOpenApp.bind(this);
-    this.doRefresh = this.doRefresh.bind(this);
+    this.doAppRefresh = this.doAppRefresh.bind(this);
 
     this.state = {
       user: null,
@@ -462,12 +465,12 @@ export class MainComponent extends Component {
         }]);
         return;
       }
-      this.doRefresh(justCreatedBitmarkAccount);
+      this.doAppRefresh(justCreatedBitmarkAccount);
     }).catch(error => {
       console.log('doOpenApp error:', error);
     });
   }
-  doRefresh(justCreatedBitmarkAccount) {
+  doAppRefresh(justCreatedBitmarkAccount) {
     return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
       console.log('doOpenApp user:', user);
       if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
@@ -493,7 +496,7 @@ export class MainComponent extends Component {
         });
       }
     }).catch(error => {
-      console.log('doRefresh error:', error);
+      console.log('doAppRefresh error:', error);
     });
   }
 
