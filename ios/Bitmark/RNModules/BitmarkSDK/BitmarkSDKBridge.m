@@ -10,7 +10,7 @@
 
 @interface RCT_EXTERN_MODULE(BitmarkSDK, NSObject)
 
-RCT_EXTERN_METHOD(newAccount:(NSString)network:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(newAccount:(NSString *)network:(NSString *)version:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(removeAccount:(RCTResponseSenderBlock)callback)
 
 RCT_EXTERN_METHOD(requestSession:(NSString)network:(NSString)reason:(RCTResponseSenderBlock)callback)
