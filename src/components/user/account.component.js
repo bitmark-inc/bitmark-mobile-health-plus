@@ -18,9 +18,10 @@ import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
+import { EventEmitterService } from '../../services';
 import {
   DataProcessor,
-  // AppProcessor
+  AppProcessor
 } from '../../processors';
 import { DataAccountAccessesStore } from '../../stores';
 export class PrivateAccountComponent extends Component {
@@ -94,12 +95,32 @@ export class PrivateAccountComponent extends Component {
     });
   }
 
+  selectAccount(accountNumber) {
+    AppProcessor.doSelectAccountAccess(accountNumber).then(result => {
+      if (result === true) {
+        Actions.reset('user');
+      } else if (result === false) {
+        Alert.alert('', i18n.t('OtherAccountsComponent_alertMessage1'), [{
+          text: 'OK', style: 'cancel',
+        }]);
+      }
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
+  }
 
   render() {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
+            <View style={[styles.accountNumberTitleRow,]}>
+              <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
+              <TouchableOpacity onPress={Actions.pop}>
+                <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
+              </TouchableOpacity>
+            </View>
+
             <ScrollView>
               <View style={styles.accountNumberArea}>
                 <View style={[styles.accountNumberTitleRow,]}>
@@ -165,14 +186,12 @@ export class PrivateAccountComponent extends Component {
                   data={this.props.accesses['granted_from']}
                   extraData={this.props}
                   renderItem={({ item }) => {
-                    return (<View style={styles.accessOtherAccountAccountRow} >
+                    return (<TouchableOpacity style={styles.accessOtherAccountAccountRow} onPress={() => this.selectAccount.bind(this)(item.grantor)} >
                       <Text style={styles.accessOtherAccountAccountNumber}>
                         {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}
                       </Text>
-                      <TouchableOpacity onPress={() => Actions.revokeAccess({ accessInfo: item })}>
-                        <Text style={styles.accessOtherAccountRevokeButtonText}>{i18n.t('AccountComponent_accessOtherAccountRevokeButtonText')}</Text>
-                      </TouchableOpacity>
-                    </View>);
+                      <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                    </TouchableOpacity>);
                   }}
                 />}
 
@@ -262,6 +281,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: convertWidth(20),
+    paddingTop: convertWidth(15),
   },
   accountNumberTitle: {
     fontFamily: 'Avenir Black',
@@ -396,11 +417,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 14,
     color: '#0060F2',
-  },
-  accessOtherAccountRevokeButtonText: {
-    fontFamily: 'Andale Mono',
-    fontSize: 14,
-    color: '#FF003C',
   },
   addOtherAccountButton: {
     marginTop: 29,

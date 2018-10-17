@@ -272,16 +272,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#FF1F1F'
   },
-  overlapButtonsArea: {
-    width: '100%',
-    borderColor: '#FF1829', borderTopWidth: 0, borderWidth: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: convertWidth(16),
-    marginLeft: convertWidth(16),
-  },
 });
 
 const StoreUserComponent = connect(

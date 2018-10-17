@@ -21,9 +21,6 @@ import { AssetNameInform } from "./asset-name-inform.component";
 import { GetStartComponent } from './get-start.component';
 
 
-// bitmarkHealthData
-
-
 export class UserRouterComponent extends Component {
   componentDidMount() {
     Actions.refresh();
@@ -47,7 +44,7 @@ export class UserRouterComponent extends Component {
           <Scene key="confirmAccess" component={ConfirmAccessComponent} />
           <Scene key="revokeAccess" component={RevokeAccessComponent} />
           <Scene key="fullViewCaptureAsset" component={FullViewCaptureAssetComponent} />
-          <Scene key="assetNameInform" component={AssetNameInform}/>
+          <Scene key="assetNameInform" component={AssetNameInform} />
           <Scene key="getStart" component={GetStartComponent} />
         </Stack>
       </Router>
