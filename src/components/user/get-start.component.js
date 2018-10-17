@@ -19,6 +19,7 @@ export class GetStartComponent extends React.Component {
   render() {
 
     let requestHealthKitPermission = () => {
+      Actions.pop();
       AppProcessor.doRequireHealthKitPermission().then(() => {
         DataProcessor.doReloadUserData();
         Actions.pop();

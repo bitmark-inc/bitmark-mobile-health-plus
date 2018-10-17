@@ -411,11 +411,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#0060F2',
   },
-  accessOtherAccountRevokeButtonText: {
-    fontFamily: 'Andale Mono',
-    fontSize: 14,
-    color: '#FF003C',
-  },
   addOtherAccountButton: {
     marginTop: 29,
     width: '100%',

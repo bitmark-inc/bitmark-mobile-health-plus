@@ -150,17 +150,16 @@ const styles = StyleSheet.create({
     padding: convertWidth(20),
     paddingTop: 0,
     paddingRight: 0,
+    width: '100%',
   },
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
+    flex: 1,
   },
   closeButton: {
-    paddingTop: convertWidth(26),
-    paddingBottom: convertWidth(26),
-    paddingRight: convertWidth(24),
-    paddingLeft: convertWidth(50),
+    padding: 24,
   },
   closeIcon: {
     width: convertWidth(20),
@@ -169,9 +168,7 @@ const styles = StyleSheet.create({
   },
 
   bitmarkList: {
-    marginTop: 30,
     padding: convertWidth(26),
-    paddingTop: convertWidth(15),
   },
   bitmarkRow: {
     flexDirection: 'row',
