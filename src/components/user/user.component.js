@@ -148,6 +148,7 @@ class PrivateUserComponent extends Component {
             <View style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} >
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                  console.log('DataProcessor.getUserInformation() :', DataProcessor.getUserInformation());
                   if (!DataProcessor.getUserInformation().activeHealthData) {
                     Actions.getStart();
                   } else {
@@ -271,16 +272,6 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 16,
     color: '#FF1F1F'
-  },
-  overlapButtonsArea: {
-    width: '100%',
-    borderColor: '#FF1829', borderTopWidth: 0, borderWidth: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: convertWidth(16),
-    marginLeft: convertWidth(16),
   },
 });
 
