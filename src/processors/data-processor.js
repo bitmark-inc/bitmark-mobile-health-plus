@@ -442,7 +442,14 @@ const doOpenApp = async () => {
       }
     }
 
-    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks((await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber)) || {}));
+    let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
+
+    if (!grantedAccessAccountSelected && !userInformation.activeHealthData &&
+      userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
+      await runPromiseWithoutError(doRequireHealthKitPermission());
+    }
+
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(userBitmarks || {}));
     DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(await doGetAccountAccesses()));
     await checkAppNeedResetLocalData(appInfo);
 
