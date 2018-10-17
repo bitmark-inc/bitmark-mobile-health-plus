@@ -1,10 +1,10 @@
 import moment from 'moment';
+import randomString from 'random-string';
 import {
   AppleHealthKitModel,
   BitmarkModel,
 } from '../models';
 import { FileUtil } from '../utils';
-import randomString from 'random-string';
 
 let allDataTypes = [
   'ActiveEnergyBurned',
