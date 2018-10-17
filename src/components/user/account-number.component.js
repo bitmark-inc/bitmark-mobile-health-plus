@@ -5,8 +5,7 @@ import {
   Linking,
 } from 'react-native'
 
-import { AppProcessor, DataProcessor } from '../../processors';
-import { EventEmitterService } from '../../services';
+import { DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
@@ -19,15 +18,6 @@ export class AccountNumberComponent extends React.Component {
   }
   render() {
 
-    let requestHealthKitPermission = () => {
-      AppProcessor.doRequireHealthKitPermission().then(() => {
-        DataProcessor.doReloadUserData();
-        Actions.pop();
-      }).catch(error => {
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-        console.log('doRequireHealthKitPermission error :', error);
-      });
-    }
     return (<View style={{ flex: 1, }}>
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.body}>
