@@ -32,16 +32,16 @@ const getLanguageForTextDetector = () => {
 };
 
 const sanitizeTextDetectorResponse = (visionResp) => {
-  const notContainsSepecicalCharcter = (str) => {
-    const blacklistCharactors = '1234567890\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~'.split('');
+  const notContainsSepecicalCharacter = (str) => {
+    const blacklistCharacters = '1234567890\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§'.split('');
     let strCharactors = str.split('').filter(item => item !== ' ');
 
-    return intersection(blacklistCharactors, strCharactors).length == 0;
+    return intersection(blacklistCharacters, strCharactors).length == 0;
   };
 
   return visionResp.filter(item => {
     let text = item.text.trim();
-    return text.trim() && text.length > 3 && notContainsSepecicalCharcter(text);
+    return text.trim() && text.length > 3 && notContainsSepecicalCharacter(text);
   })
 };
 
