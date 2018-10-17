@@ -444,7 +444,7 @@ const getNextSunday11AM = () => {
 };
 
 const doDeterminedHKPermission = async () => {
-  return await AppleHealthKitModel.doDeterminedHKPermission(allDataTypes);
+  return await AppleHealthKitModel.getDeterminedHKPermission(allDataTypes);
 };
 
 const HealthKitService = {
