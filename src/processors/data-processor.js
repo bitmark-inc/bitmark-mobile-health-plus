@@ -73,7 +73,8 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
 
-  if (!userInformation.activeHealthData && healthDataBitmarks && healthDataBitmarks.length > 0) {
+  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber &&
+    !userInformation.activeHealthData && healthDataBitmarks && healthDataBitmarks.length > 0) {
     await runPromiseWithoutError(doRequireHealthKitPermission());
   }
 
