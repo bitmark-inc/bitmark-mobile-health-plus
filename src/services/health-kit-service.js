@@ -268,7 +268,7 @@ const tryGetHealthDataOfType = (type, startDate, endDate) => {
 }
 
 const doGetHealthKitData = async (listTypes, startDate, endDate) => {
-  let determinedTypes = await AppleHealthKitModel.doDeterminedHKPermission(listTypes);
+  let determinedTypes = await AppleHealthKitModel.getDeterminedHKPermission(listTypes);
   let mapData = {};
   for (let type of determinedTypes.permissions.read) {
     mapData[type] = await tryGetHealthDataOfType(type, startDate, endDate);
