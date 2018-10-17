@@ -3,6 +3,11 @@ osx_image: xcode10
 xcode_sdk: iphonesimulator12.0
 node_js:
 - '8'
+branches:
+  only:
+  - devel
+  - ux-loop
+  - master
 before_install:
 - openssl aes-256-cbc -K $encrypted_1721088a34b3_key -iv $encrypted_1721088a34b3_iv -in .travis/ssh-deploy.sh.enc -out ssh-deploy.sh -d
 - chmod +x ssh-deploy.sh
@@ -11,5 +16,10 @@ before_install:
 install:
 - fastlane add_plugin latest_hockey_build_number
 script:
-- fastlane ios developtravis
+- |
+    if [ $TRAVIS_BRANCH == "master" ]; then
+      fastlane ios betatravis
+    elif [ $TRAVIS_BRANCH == "devel" || $TRAVIS_BRANCH == "ux-loop" ]; then
+      fastlane ios developtravis
+    fi
 after_success: 
