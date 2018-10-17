@@ -79,7 +79,7 @@ class PrivateBitmarkListComponent extends Component {
               <View style={styles.titleRow}>
                 {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
                 {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText2')}</Text>}
-                <TouchableOpacity onPress={Actions.pop}>
+                <TouchableOpacity style={styles.closeButton} onPress={() => Actions.reset('user')}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
                 </TouchableOpacity>
               </View>
@@ -141,19 +141,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#FF4444",
     width: "100%",
-    padding: convertWidth(20),
-    paddingTop: convertWidth(15),
   },
 
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    padding: convertWidth(20),
+    paddingTop: 0,
+    paddingRight: 0,
   },
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
+  },
+  closeButton: {
+    paddingTop: convertWidth(26),
+    paddingBottom: convertWidth(26),
+    paddingRight: convertWidth(24),
+    paddingLeft: convertWidth(50),
   },
   closeIcon: {
     width: convertWidth(20),
@@ -162,8 +169,9 @@ const styles = StyleSheet.create({
   },
 
   bitmarkList: {
-    padding: convertWidth(6),
     marginTop: 30,
+    padding: convertWidth(26),
+    paddingTop: convertWidth(15),
   },
   bitmarkRow: {
     flexDirection: 'row',

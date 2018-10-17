@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import DeviceInfo from 'react-native-device-info';
 // import PropTypes from 'prop-types';
 import {
   StyleSheet,
@@ -34,10 +35,13 @@ export class GrantingAccessComponent extends Component {
 
   sendEmail() {
     runPromiseWithoutError(DataProcessor.doTrackEvent({ eventName: 'health_plus_user_first_time_share_grant_access' }));
+    let clientName = 'healthplus';
+    clientName = (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse') ? 'healthplusinhouse' :
+      (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') ? 'healthplusbeta' : clientName;
     Mailer.mail({
       subject: i18n.t('GrantingAccessComponent_subject'),
       recipients: [],
-      body: i18n.t('GrantingAccessComponent_body', { token: this.state.token, appLink: config.appLink }),
+      body: i18n.t('GrantingAccessComponent_body', { token: this.state.token, appLink: config.appLink, clientName }),
       isHTML: true,
     }, (error) => {
       if (error) {
