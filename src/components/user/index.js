@@ -19,6 +19,8 @@ import { RevokeAccessComponent } from './revoke-access.component';
 import { FullViewCaptureAssetComponent } from './full-view-capture-asset.component';
 import { AssetNameInform } from "./asset-name-inform.component";
 import { GetStartComponent } from './get-start.component';
+import { AccountNumberComponent } from './account-number.component';
+
 
 
 export class UserRouterComponent extends Component {
@@ -46,6 +48,8 @@ export class UserRouterComponent extends Component {
           <Scene key="fullViewCaptureAsset" component={FullViewCaptureAssetComponent} />
           <Scene key="assetNameInform" component={AssetNameInform} />
           <Scene key="getStart" component={GetStartComponent} />
+          <Scene key="accountNumber" component={AccountNumberComponent} />
+
         </Stack>
       </Router>
     );

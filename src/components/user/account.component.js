@@ -34,7 +34,7 @@ export class PrivateAccountComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accountNumberCopyText: '',
+      accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText'),
     };
   }
 
@@ -123,20 +123,19 @@ export class PrivateAccountComponent extends Component {
 
             <ScrollView>
               <View style={styles.accountNumberArea}>
-                <Text style={styles.accountNumberLabel}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
-                <TouchableOpacity onPress={() => {
-                  Clipboard.setString(DataProcessor.getUserInformation().bitmarkAccountNumber);
-                  this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
-                  setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
-                }}>
-                  <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}</Text>
-                </TouchableOpacity>
-                <View style={styles.accountNumberValueBar}></View>
-                <View style={[styles.accountNumberCopiedArea, this.state.accountNumberCopyText ? {} : { backgroundColor: 'white' }]}>
-                  <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
-                </View>
-
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
+                <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}@bitmarkhealth.com</Text>
+                <TouchableOpacity style={[styles.accountNumberCopiedArea]} onPress={() => {
+                  Clipboard.setString(`${DataProcessor.getUserInformation().bitmarkAccountNumber}@bitmarkhealth.com`);
+                  this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
+                  setTimeout(() => { this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText') }) }, 1000);
+                }}>
+                  <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={Actions.accountNumber}>
+                  <Text style={[styles.accountNumberLabel, styles.rowButtonText]}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
               </View>
 
               <View style={styles.accessArea}>
@@ -151,7 +150,7 @@ export class PrivateAccountComponent extends Component {
                   data={this.props.accesses['granted_to']}
                   extraData={this.props}
                   renderItem={({ item }) => {
-                    return (<View style={styles.accessAccountRow} >
+                    return (<View style={styles.accessAccountRow}>
                       <Text style={styles.accessAccountNumber}>
                         {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}
                       </Text>
@@ -267,7 +266,6 @@ const styles = StyleSheet.create({
   accountNumberArea: {
     flexDirection: 'column',
     padding: convertWidth(20),
-    paddingTop: convertWidth(15),
     paddingBottom: 45,
   },
   accountNumberTitleRow: {
@@ -275,6 +273,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: convertWidth(20),
+    paddingBottom: 0,
     paddingTop: convertWidth(15),
   },
   accountNumberTitle: {
@@ -287,35 +286,28 @@ const styles = StyleSheet.create({
     height: convertWidth(20),
     resizeMode: 'contain',
   },
+  accountNumberValue: {
+    fontFamily: 'Andale Mono',
+    fontSize: 14,
+    marginTop: 15,
+    color: '#FF1F1F'
+  },
   accountNumberLabel: {
     fontFamily: 'Avenir Medium',
     fontSize: 16,
     color: '#6D6D72',
   },
-  accountNumberValue: {
-    fontFamily: 'Andale Mono',
-    fontSize: 10,
-    marginTop: 5,
-    color: '#FF1F1F'
-  },
-  accountNumberValueBar: {
-    marginTop: 4,
-    borderBottomWidth: 1,
-    width: '100%',
-    borderColor: '#FF1F1F',
-  },
   accountNumberCopiedArea: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     marginTop: 8,
     minHeight: 21,
   },
   accountNumberCopiedText: {
-    fontFamily: 'Avenir Light',
-    fontWeight: '300',
+    fontFamily: 'Avenir Medium',
+    fontWeight: '600',
     fontSize: 14,
-    color: 'white',
+    color: '#0064FC',
+    marginTop: 5,
   },
   accountNumberDescription: {
     marginTop: 12,
