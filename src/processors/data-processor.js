@@ -21,7 +21,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil } from '../utils';
+import { FileUtil, runPromiseWithoutError } from '../utils';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -71,6 +71,10 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     storeState.healthDataBitmarks = healthDataBitmarks;
     storeState.healthAssetBitmarks = healthAssetBitmarks;
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
+  }
+
+  if (!userInformation.activeHealthData && healthDataBitmarks && healthDataBitmarks.length > 0) {
+    await runPromiseWithoutError(doRequireHealthKitPermission());
   }
 
   if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthData) {
@@ -258,12 +262,6 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
     await AccountService.doCheckNotificationPermission();
   }
-  if (justCreatedBitmarkAccount) {
-    let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
-    if (emptyHealthKitData) {
-      EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
-    }
-  }
   return userInformation;
 };
 
@@ -334,6 +332,11 @@ const doRequireHealthKitPermission = async () => {
   let result = await HealthKitService.initHealthKit();
   userInformation.activeHealthData = true;
   await UserModel.doUpdateUserInfo(userInformation);
+
+  let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
+  if (emptyHealthKitData) {
+    EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
+  }
   return result;
 }
 
@@ -344,6 +347,7 @@ const doDeactiveApplication = async () => {
 const doOpenApp = async () => {
   // await UserModel.doRemoveUserInfo();
   userInformation = await UserModel.doTryGetCurrentUser();
+  userInformation.activeHealthData = false;
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 

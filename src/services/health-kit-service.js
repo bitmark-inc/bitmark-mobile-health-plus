@@ -1,10 +1,10 @@
 import moment from 'moment';
+import randomString from 'random-string';
 import {
   AppleHealthKitModel,
   BitmarkModel,
 } from '../models';
 import { FileUtil } from '../utils';
-import randomString from 'random-string';
 
 let allDataTypes = [
   'ActiveEnergyBurned',
@@ -268,7 +268,7 @@ const tryGetHealthDataOfType = (type, startDate, endDate) => {
 }
 
 const doGetHealthKitData = async (listTypes, startDate, endDate) => {
-  let determinedTypes = await AppleHealthKitModel.getDeterminedHKPermission(listTypes);
+  let determinedTypes = await AppleHealthKitModel.doDeterminedHKPermission(listTypes);
   let mapData = {};
   for (let type of determinedTypes.permissions.read) {
     mapData[type] = await tryGetHealthDataOfType(type, startDate, endDate);
@@ -443,6 +443,10 @@ const getNextSunday11AM = () => {
   return timeSendNotification;
 };
 
+const doDeterminedHKPermission = async () => {
+  return await AppleHealthKitModel.getDeterminedHKPermission(allDataTypes);
+};
+
 const HealthKitService = {
   initHealthKit,
   doBitmarkHealthData,
@@ -450,6 +454,7 @@ const HealthKitService = {
   doCheckEmptyDataSource,
   doCheckBitmarkHealthDataTask,
   getNextSunday11AM,
+  doDeterminedHKPermission,
 };
 
 export { HealthKitService };
