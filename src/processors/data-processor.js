@@ -347,7 +347,6 @@ const doDeactiveApplication = async () => {
 const doOpenApp = async () => {
   // await UserModel.doRemoveUserInfo();
   userInformation = await UserModel.doTryGetCurrentUser();
-  userInformation.activeHealthData = false;
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 

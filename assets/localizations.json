@@ -358,7 +358,7 @@
     "GrantingAccessComponent_messageEmail": "You can also email a http://abc.",
     "GrantingAccessComponent_title": "Waiting confirmation...",
     "GrantingAccessComponent_subject": "Access my Bitmark Health account",
-    "GrantingAccessComponent_body": "        Hi\n        <br/>\n        <br/>\n        I would like you to view my health records and data. Here’s a direct link:\n        <br/>\n        <br/>\n        <a href=\"{{clientName}}://granting-access/{{token}}\">healthplus://granting-access/{{token}}</a>\n        <br/>\n        <br/>\n        Please install <a href=\"{{appLink}}\">Bitmark Health+</a> app and sign in before clicking the link.`,",
+    "GrantingAccessComponent_body": "        Hi\n        <br/>\n        <br/>\n        I would like you to view my health records and data. Here’s a direct link:\n        <br/>\n        <br/>\n        <a href=\"{{clientName}}://granting-access/{{token}}\">healthplus://granting-access/{{token}}</a>\n        <br/>\n        <br/>\n        Please install <a href=\"{{appLink}}\">Bitmark Health+</a> app and sign in before clicking the link.",
     "GrantingAccessComponent_alertTitle": "Error",
     "GrantingAccessComponent_alertMessage": "Could not send mail. Please send a mail to support@bitmark.com",
     "OtherAccountsComponent_title": "View other accounts",
