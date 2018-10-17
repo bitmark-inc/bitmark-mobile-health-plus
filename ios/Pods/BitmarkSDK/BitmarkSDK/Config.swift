@@ -80,13 +80,21 @@ public struct Config {
         static let bitcoin = 0x01
     }
     
-    public struct SeedConfig {
+    public struct SeedConfigV1 {
         public static let magicNumber: [UInt8] = [0x5a, 0xfe]
         public static let length = 32
         public static let checksumLength = 4
         public static let pKeyNonceLength = 24
         public static let pKeyCounterLength = 16
-        public static let version = 0x01
+        public static let versionByte = 0x01
         public static let networkLength = 1
     }
+    
+    public struct SeedConfigV2 {
+        public static let magicNumber: [UInt8] = [0x5a, 0xfe, 0x02]
+        public static let coreLength = 16
+        public static let seedLength = 17
+        public static let checksumLength = 4
+    }
+
 }

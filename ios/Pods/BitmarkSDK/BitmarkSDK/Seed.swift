@@ -9,73 +9,90 @@
 import Foundation
 import TweetNacl
 
-public struct Seed {
-    
-    public enum SeedError: Error {
-        case randomError
-        case wrongBase58
-        case checksumFailed
-        case wrongMagicNumber
-        case wrongVersion
-        case wrongSeedLength
-        case wrongNetwork
-    }
-    
+public enum SeedError: Error {
+    case randomError
+    case wrongBase58
+    case checksumFailed
+    case wrongMagicNumber
+    case wrongVersion
+    case wrongSeedLength
+    case wrongNetwork
+}
+
+public enum SeedVersion {
+    case v1
+    case v2
+}
+
+public protocol Seedable {
+    init(network: Network) throws
+    init(core: Data, network: Network) throws
+    init(fromBase58 base58String: String) throws
+    init(fromRecoveryPhrase recoveryPhrase: [String]) throws
+    var base58String: String { get }
+    var recoveryPhrase: [String] { get }
+    var network: Network { get }
+    var version: SeedVersion { get }
+    var core: Data { get }
+    func getAuthKeyData() throws -> Data
+    func getEncKeyData() throws -> Data
+}
+
+public struct SeedV1: Seedable {
     public let core: Data
     public let network: Network
-    public let version: Int
+    public let version: SeedVersion
     
-    public init(version: Int = Config.SeedConfig.version, network: Network = Network.livenet) throws {
-        let core = Common.randomBytes(length: Config.SeedConfig.length)
-        
-        try self.init(core: core, version: version, network: network)
+    public init(network: Network) throws {
+        let core = Common.randomBytes(length: Config.SeedConfigV1.length)
+        try self.init(core: core, network: network)
     }
     
-    public init(core: Data, version: Int = Config.SeedConfig.version, network: Network = Network.livenet) throws {
-        if version != Config.SeedConfig.version {
-            throw(SeedError.wrongVersion)
+    public init(core: Data, network: Network) throws {
+        if core.count != Config.SeedConfigV1.length {
+            throw(SeedError.wrongSeedLength)
         }
         
         self.core = core
         self.network = network
-        self.version = version
+        self.version = .v1
     }
     
-    public init(fromBase58 base58String: String, version: Int = Config.SeedConfig.version) throws {
+    public init(fromBase58 base58String: String) throws {
         guard let codeBuffer = base58String.base58DecodedData else {
             throw(SeedError.wrongBase58)
         }
         
-        let checksum = codeBuffer.slice(start: codeBuffer.count - Config.SeedConfig.checksumLength, end: codeBuffer.count)
-        let rest = codeBuffer.slice(start: 0, end: codeBuffer.count - Config.SeedConfig.checksumLength)
+        let checksum = codeBuffer.slice(start: codeBuffer.count - Config.SeedConfigV1.checksumLength, end: codeBuffer.count)
+        let rest = codeBuffer.slice(start: 0, end: codeBuffer.count - Config.SeedConfigV1.checksumLength)
         
         // Verify the checksum
-        let checksumVerification = rest.sha3(length: 256).slice(start: 0, end: Config.SeedConfig.checksumLength)
+        let checksumVerification = rest.sha3(length: 256).slice(start: 0, end: Config.SeedConfigV1.checksumLength)
         if checksum != checksumVerification {
             throw SeedError.checksumFailed
         }
         
         // Verify magic number
-        let magicNumber = rest.slice(start: 0, end: Config.SeedConfig.magicNumber.count)
-        if magicNumber != Data(bytes: Config.SeedConfig.magicNumber) {
+        let magicNumber = rest.slice(start: 0, end: Config.SeedConfigV1.magicNumber.count)
+        if magicNumber != Data(bytes: Config.SeedConfigV1.magicNumber) {
             throw SeedError.wrongMagicNumber
         }
         
-        let seedVersionEncoded = Data.varintFrom(Config.SeedConfig.version)
+        let seedVersionEncoded = Data.varintFrom(Config.SeedConfigV1.versionByte)
         
         // Verify version
-        let versionData = rest.slice(start: Config.SeedConfig.magicNumber.count, end: Config.SeedConfig.magicNumber.count + seedVersionEncoded.count)
+        let versionData = rest.slice(start: Config.SeedConfigV1.magicNumber.count, end: Config.SeedConfigV1.magicNumber.count + seedVersionEncoded.count)
         guard let versionValue = versionData.toVarint64() else {
             throw SeedError.wrongVersion
         }
         
-        if versionValue != version {
+        if versionValue != Config.SeedConfigV1.versionByte {
             throw SeedError.wrongVersion
         }
         
         // Verify current network
-        let networkData = rest.slice(start: Config.SeedConfig.magicNumber.count + seedVersionEncoded.count,
-                                 end: Config.SeedConfig.magicNumber.count + seedVersionEncoded.count + Config.SeedConfig.networkLength)
+        let networkData = rest.slice(start: Config.SeedConfigV1.magicNumber.count + seedVersionEncoded.count,
+                                     end: Config.SeedConfigV1.magicNumber.count + seedVersionEncoded.count + Config.SeedConfigV1.networkLength)
         
         guard let networkValue = networkData.toVarint64() else {
             throw SeedError.wrongNetwork
@@ -86,39 +103,239 @@ public struct Seed {
         }
         
         // Get seed
-        let core = rest.slice(start: Config.SeedConfig.magicNumber.count + seedVersionEncoded.count + Config.SeedConfig.networkLength,
+        let core = rest.slice(start: Config.SeedConfigV1.magicNumber.count + seedVersionEncoded.count + Config.SeedConfigV1.networkLength,
                               end: rest.count)
-        if core.count != Config.SeedConfig.length {
+        if core.count != Config.SeedConfigV1.length {
             throw SeedError.wrongSeedLength
         }
         
         self.core = core
         self.network = network
-        self.version = version
+        self.version = .v1
+    }
+    
+    public init(fromRecoveryPhrase recoveryPhrase: [String]) throws {
+        let bytes = try RecoverPhrase.V1.recoverSeed(fromPhrase: recoveryPhrase)
+        let networkByte = bytes[0]
+        let network = networkByte == Network.livenet.addressValue ? Network.livenet : Network.testnet
+        let coreBytes = bytes.subdata(in: 1..<33)
+        self.core = coreBytes
+        self.network = network
+        self.version = .v1
     }
     
     public var base58String: String {
         // Contruct parts
-        let magicNumber = Data(bytes: Config.SeedConfig.magicNumber)
+        let magicNumber = Data(bytes: Config.SeedConfigV1.magicNumber)
         let currentNetwork = Data.varintFrom(self.network.addressValue)
-        let seedVersionEncoded = Data.varintFrom(self.version)
+        let seedVersionEncoded = Data.varintFrom(Config.SeedConfigV1.versionByte)
         var exportedSeed = magicNumber + seedVersionEncoded + currentNetwork + self.core
         
         // Add checksum
-        let checksum = exportedSeed.sha3(length: 256).slice(start: 0, end: Config.SeedConfig.checksumLength)
+        let checksum = exportedSeed.sha3(length: 256).slice(start: 0, end: Config.SeedConfigV1.checksumLength)
         exportedSeed += checksum
         return exportedSeed.base58EncodedString
     }
-}
-
-extension Seed: RawRepresentable {
-    public typealias RawValue = String
     
-    public init?(rawValue: String) {
-        try? self.init(fromBase58: rawValue)
+    public var recoveryPhrase: [String] {
+        var data = Data(bytes: [UInt8(truncatingIfNeeded: network.addressValue)])
+        data.append(core)
+        return try! RecoverPhrase.V1.createPhrase(fromData: data)
     }
     
-    public var rawValue: String {
-        return base58String
+    public func getAuthKeyData() throws -> Data {
+        return try SeedV1.derive(core: core, indexData: "000000000000000000000000000003e7".hexDecodedData)
+    }
+    
+    public func getEncKeyData() throws -> Data {
+        return try SeedV1.derive(core: core, indexData: "000000000000000000000000000003e8".hexDecodedData)
+    }
+}
+
+extension SeedV1 {
+    private static func derive(core: Data, indexData: Data) throws -> Data {
+        let nonce = Data(count: 24)
+        return try NaclSecretBox.secretBox(message: indexData, nonce: nonce, key: core)
+    }
+}
+
+public struct SeedV2: Seedable {
+    public let core: Data
+    public let network: Network
+    public let version: SeedVersion
+    
+    public init(network: Network) throws {
+        var bytes = [UInt8](Common.randomBytes(length: Config.SeedConfigV2.coreLength))
+        
+        // extend to 132 bits
+        bytes.append(bytes[15] & 0xf0) // bits 7654xxxx  where x=zero
+        
+        // encode test/live flag
+        var mode = bytes[0] & 0x80 | bytes[1] & 0x40 | bytes[2] & 0x20 | bytes[3] & 0x10
+        if network == .testnet {
+            mode = mode ^ 0xf0
+        }
+        bytes[15] = mode | bytes[15] & 0x0f
+        
+        try self.init(core: Data(bytes: bytes), network: network)
+    }
+    
+    public init(core: Data, network: Network) throws {
+        // this ensures last nibble is zeroed
+        if 0 != core[16] & 0x0f {
+            throw(SeedError.wrongSeedLength)
+        }
+        
+        var parsedNetwork: Network
+        
+        let mode = core[0] & 0x80 | core[1] & 0x40 | core[2] & 0x20 | core[3] & 0x10
+        if mode == core[15] & 0xf0 {
+            parsedNetwork = .livenet
+        } else if mode == core[15] & 0xf0 ^ 0xf0 {
+            parsedNetwork = .testnet
+        } else {
+            throw(SeedError.wrongNetwork)
+        }
+        
+        self.core = core
+        self.network = parsedNetwork
+        self.version = .v2
+    }
+    
+    public init(fromRecoveryPhrase recoveryPhrase: [String]) throws {
+        let bytes = try RecoverPhrase.V2.recoverSeed(fromPhrase: recoveryPhrase)
+        let networkByte = bytes[0]
+        let network = networkByte == Network.livenet.addressValue ? Network.livenet : Network.testnet
+        let coreBytes = bytes.subdata(in: 1..<33)
+        self.core = coreBytes
+        self.network = network
+        self.version = .v1
+    }
+    
+    public init(fromBase58 base58String: String) throws {
+        guard let seed = base58String.base58DecodedData else {
+            throw(SeedError.wrongBase58)
+        }
+        
+        // Compute seed length
+        let keyLength = seed.count - Config.SeedConfigV2.magicNumber.count - Config.SeedConfigV2.checksumLength
+        if keyLength != Config.SeedConfigV2.seedLength {
+            throw SeedError.wrongSeedLength
+        }
+        
+        // Check seed header
+        if Config.SeedConfigV2.magicNumber != [UInt8](seed.subdata(in: 0..<Config.SeedConfigV2.magicNumber.count)) {
+            throw SeedError.wrongMagicNumber
+        }
+        
+        // Checksum
+        let checksumStart = seed.count - Config.SeedConfigV2.checksumLength
+        let core = seed.subdata(in: 0..<checksumStart)
+        let checksum = core.sha3(length: 256)
+        if checksum.count != Config.SeedConfigV2.checksumLength {
+            throw SeedError.checksumFailed
+        }
+        
+        self.core = core
+        self.network = .testnet
+        self.version = .v2
+    }
+    
+    public var base58String: String {
+        // Contruct parts
+        let magicNumber = Data(bytes: Config.SeedConfigV2.magicNumber)
+        var exportedSeed = magicNumber + self.core
+        
+        // Add checksum
+        let checksum = exportedSeed.sha3(length: 256).slice(start: 0, end: Config.SeedConfigV2.checksumLength)
+        exportedSeed += checksum
+        return exportedSeed.base58EncodedString
+    }
+    
+    public var recoveryPhrase: [String] {
+        return try! RecoverPhrase.V2.createPhrase(fromData: core)
+    }
+    
+    public func getAuthKeyData() throws -> Data {
+        let (result, _) = try SeedV2.seedToKeys(seed: core, keyCount: 1, keySize: 32)
+        return result.first!
+    }
+    
+    public func getEncKeyData() throws -> Data {
+        let (result, _) = try SeedV2.seedToKeys(seed: core, keyCount: 2, keySize: 32)
+        return result[1]
+    }
+}
+
+extension SeedV2 {
+    internal static func seedToKeys(seed: Data, keyCount: Int, keySize: Int) throws -> ([Data], Network) {
+        if seed.count != Config.SeedConfigV2.seedLength {
+            throw("Invalid seed v2 length")
+        }
+        
+        let bytes = [UInt8](seed)
+        let network: Network
+        let mode = bytes[0] & 0x80 | bytes[1] & 0x40 | bytes[2] & 0x20 | bytes[3] & 0x10
+        if mode == bytes[15]&0xf0 {
+            network = .livenet
+        } else if mode == seed[15]&0xf0^0xf0 {
+            network = .testnet
+        } else {
+            throw("network flag not found")
+        }
+        
+        let hash = SHA3Compute.computeSHAKE256(data: seed, repeatCount: 4, length: keySize, count: keyCount)
+        var results = [Data]()
+        if keyCount * keySize > hash.count {
+            throw("Exceed length limit")
+        }
+        for i in 0..<keyCount {
+            let start = i * keySize
+            let end = start + keySize
+            results.append(hash.subdata(in: start..<end))
+        }
+        
+        return (results, network)
+    }
+}
+
+public struct Seed {
+    
+    public static func fromBase58(network: Network, version: SeedVersion) throws -> Seedable {
+        switch version {
+        case .v1:
+            return try SeedV1(network: network)
+        case .v2:
+            return try SeedV2(network: network)
+        }
+    }
+    
+    public static func fromBase58(_ base58: String, version: SeedVersion) throws -> Seedable {
+        switch version {
+        case .v1:
+            return try SeedV1(fromBase58: base58)
+        case .v2:
+            return try SeedV2(fromBase58: base58)
+        }
+    }
+    
+    public static func fromCore(_ core: Data, version: SeedVersion, network: Network) throws -> Seedable {
+        switch version {
+        case .v1:
+            return try SeedV1(core: core, network: network)
+        case .v2:
+            return try SeedV2(core: core, network: network)
+        }
+    }
+    
+    public static func fromRecoveryPhrase(_ recoveryPhrase: [String]) throws -> Seedable {
+        switch recoveryPhrase.count {
+        case 24:
+            return try SeedV1(fromRecoveryPhrase: recoveryPhrase)
+        case 12:
+            return try SeedV2(fromRecoveryPhrase: recoveryPhrase)
+        default:
+            throw("Invalid recovery phrase length")
+        }
     }
 }
