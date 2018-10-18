@@ -191,6 +191,9 @@ const runGetAccountAccessesInBackground = () => {
 
 let queueGetEmailRecords = [];
 const doCheckNewEmailRecords = async (emailIssueRequests) => {
+  if (!emailIssueRequests) {
+    return;
+  }
 
   let doDownloadAndDetectAsset = (attachmentId, filePath) => {
     return new Promise((resolve) => {
@@ -238,7 +241,7 @@ const runGetEmailRecordsInBackground = () => {
     if (queueGetEmailRecords.length > 1) {
       return;
     }
-    AccountService.doGetAllGrantedAccess(userInformation.bitmarkAccountNumber, jwt).then(emailIssueRequests => {
+    AccountModel.doGetAllEmailRecords(userInformation.bitmarkAccountNumber, jwt).then(emailIssueRequests => {
       queueGetEmailRecords.forEach(queueResolve => queueResolve(emailIssueRequests));
       queueGetEmailRecords = [];
       doCheckNewEmailRecords(emailIssueRequests);
