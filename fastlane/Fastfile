@@ -149,7 +149,8 @@ platform :ios do
       include_bitcode: true
     )
     hockey(
-      api_token: ENV['HOCKEYAPP_KEY']
+      api_token: ENV['HOCKEYAPP_KEY'],
+      tags: "internal_testers",
       )
   end
   lane :developtravis do

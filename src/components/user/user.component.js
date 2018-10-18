@@ -97,7 +97,7 @@ class PrivateUserComponent extends Component {
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file', 1, () => Actions.pop());
+      issue(filePath, assetName, metadataList, 'file');
     });
   }
 
@@ -148,6 +148,7 @@ class PrivateUserComponent extends Component {
             <View style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} >
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+
                   if (isCurrentUser && !DataProcessor.getUserInformation().activeHealthData) {
                     Actions.getStart();
                   } else {
