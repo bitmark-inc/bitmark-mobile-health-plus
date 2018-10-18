@@ -22,8 +22,8 @@ public struct Account {
     // MARK:- Basic init
     
     public init(keyType: KeyType = KeyType.ed25519, version: SeedVersion, network: Network = Network.livenet) throws {
-        let core = Common.randomBytes(length: keyType.seedLength)
-        try self.init(core: core, version: version, network: network)
+        let seed = try Seed.fromBase58(network: network, version: version)
+        try self.init(fromSeed: seed, version: version)
     }
     
     public init(core: Data, version: SeedVersion, network: Network = Network.livenet) throws {

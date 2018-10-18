@@ -148,6 +148,14 @@ public struct RecoverPhrase {
                 remainer &= masks[Int(bits)]
             }
             
+            // check that the whole 16 bytes are converted and the final nibble remains to be packed
+            if 4 != bits || 16 != dataBytes.count {
+                throw RecoverPhraseError.invalidLength
+            }
+            
+            // justify final 4 bits to high nibble, low nibble is zero
+            dataBytes.append(UInt8(truncatingIfNeeded: remainer << 4))
+            
             return Data(bytes: dataBytes)
         }
     }

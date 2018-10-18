@@ -33,6 +33,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		27B99B2AF738639D7090164F /* Pods_BitmarkHealthPlus_beta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B3771847AAE137FEBA31B5 /* Pods_BitmarkHealthPlus_beta.framework */; };
 		2D13B60C19A845D7B6A86936 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */; };
 		32B57ECB1D8A5A50E3D15BD3 /* Pods_BitmarkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D37BEA60EA466916E1CAF1C /* Pods_BitmarkTests.framework */; };
 		4065FF1DFA0EB426E2A2C958 /* Pods_BitmarkHealthPlus_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */; };
@@ -736,8 +737,10 @@
 		5DC7D46BBC681E6294ED31F4 /* Pods_BitmarkHealthPlus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmarkHealthPlus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		64DCCF0E838787F5DD5E77AE /* Pods_Bitmark.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitmark.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		652993DF08B9642DEFD81036 /* Pods-BitmarkHealthPlus beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus beta.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta.release.xcconfig"; sourceTree = "<group>"; };
 		6CDE85883F0412ACF79642A2 /* Pods-BitmarkHealthPlusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlusTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlusTests/Pods-BitmarkHealthPlusTests.release.xcconfig"; sourceTree = "<group>"; };
 		7006CB495F6551DC0B00B8E8 /* Pods-Bitmark dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark dev.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark dev/Pods-Bitmark dev.debug.xcconfig"; sourceTree = "<group>"; };
+		72B3771847AAE137FEBA31B5 /* Pods_BitmarkHealthPlus_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmarkHealthPlus_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		736D5408270648A18B3C4012 /* Pods-Bitmark beta.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark beta.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark beta/Pods-Bitmark beta.debug.xcconfig"; sourceTree = "<group>"; };
 		75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmarkHealthPlus_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -745,6 +748,7 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8AFB9A7952839B858BFD9FBE /* Pods-BitmarkTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkTests/Pods-BitmarkTests.debug.xcconfig"; sourceTree = "<group>"; };
 		95DEB239B3AADF83EBA0D295 /* Pods-BitmarkHealthPlus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus.debug.xcconfig"; sourceTree = "<group>"; };
+		9C369D0A3AC2736BB79CF8A4 /* Pods-BitmarkHealthPlus beta.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlus beta.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta.debug.xcconfig"; sourceTree = "<group>"; };
 		A2D3611775A644B7B648A041 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B4296E8568A7CE81E4D31BF4 /* Pods-Bitmark.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.debug.xcconfig"; sourceTree = "<group>"; };
@@ -855,6 +859,7 @@
 				5805EE35216F31B900943FA5 /* libRNFS.a in Frameworks */,
 				5805EE36216F31B900943FA5 /* libRNMail.a in Frameworks */,
 				5805EE37216F31B900943FA5 /* libRCTVideo.a in Frameworks */,
+				27B99B2AF738639D7090164F /* Pods_BitmarkHealthPlus_beta.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1075,6 +1080,7 @@
 				5DC7D46BBC681E6294ED31F4 /* Pods_BitmarkHealthPlus.framework */,
 				75747B67E1F42E38A0C551B9 /* Pods_BitmarkHealthPlus_dev.framework */,
 				51B7B1D26E8F8C51D6B1B579 /* Pods_BitmarkHealthPlusTests.framework */,
+				72B3771847AAE137FEBA31B5 /* Pods_BitmarkHealthPlus_beta.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1327,6 +1333,8 @@
 				6CDE85883F0412ACF79642A2 /* Pods-BitmarkHealthPlusTests.release.xcconfig */,
 				B5929BC86384EF6D95DD5FCB /* Pods-BitmarkHealthPlus dev.debug.xcconfig */,
 				DECFB6AF643DC95F93245574 /* Pods-BitmarkHealthPlus dev.release.xcconfig */,
+				9C369D0A3AC2736BB79CF8A4 /* Pods-BitmarkHealthPlus beta.debug.xcconfig */,
+				652993DF08B9642DEFD81036 /* Pods-BitmarkHealthPlus beta.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1470,10 +1478,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5805EE4C216F31B900943FA5 /* Build configuration list for PBXNativeTarget "BitmarkHealthPlus beta" */;
 			buildPhases = (
+				9815466575644A08B663C41D /* [CP] Check Pods Manifest.lock */,
 				5805EDEE216F31B900943FA5 /* Sources */,
 				5805EE19216F31B900943FA5 /* Frameworks */,
 				5805EE39216F31B900943FA5 /* Resources */,
 				5805EE49216F31B900943FA5 /* Bundle React Native code and images */,
+				1E657644AE179CF15219F91E /* [CP] Embed Pods Frameworks */,
+				F3D3CDB1FE81BF139CC217F2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2172,6 +2183,34 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		1E657644AE179CF15219F91E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BitmarkSDK/BitmarkSDK.framework",
+				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
+				"${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework",
+				"${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BitmarkSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TesseractOCR.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TweetNacl.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		521CEE845EEDD5CD3230D01F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2306,6 +2345,28 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		9815466575644A08B663C41D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BitmarkHealthPlus beta-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		D4DA50A7A9F24FB7689D49B4 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2324,6 +2385,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F3D3CDB1FE81BF139CC217F2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta-resources.sh",
+				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
+				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FB242BC11C4777CE29CD187B /* [CP] Check Pods Manifest.lock */ = {
@@ -2644,6 +2731,7 @@
 		};
 		5805EE4D216F31B900943FA5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C369D0A3AC2736BB79CF8A4 /* Pods-BitmarkHealthPlus beta.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-beta";
 				CLANG_ENABLE_MODULES = YES;
@@ -2685,6 +2773,7 @@
 		};
 		5805EE4E216F31B900943FA5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 652993DF08B9642DEFD81036 /* Pods-BitmarkHealthPlus beta.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-beta";
 				CLANG_ENABLE_MODULES = YES;
