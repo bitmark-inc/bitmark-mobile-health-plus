@@ -21,7 +21,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil } from '../utils';
+import { FileUtil, runPromiseWithoutError } from '../utils';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -47,11 +47,8 @@ const isHealthAssetBitmark = (asset) => {
     // For files
     if (asset.metadata['Source'] == 'Medical Records') return true;
 
-    let regResults = /HA((\d)*)/.exec(asset.name);
-    if (regResults && regResults.length > 1) {
-      let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HA' + randomNumber) === asset.name);
-    }
+    // For capture asset
+    if (asset.metadata['Source'] == 'Health Records' && asset.name.startsWith('HA')) return true;
   }
   return false;
 };
@@ -73,7 +70,12 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
 
-  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
+  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber &&
+    !userInformation.activeHealthData && healthDataBitmarks && healthDataBitmarks.length > 0) {
+    await runPromiseWithoutError(doRequireHealthKitPermission());
+  }
+
+  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthData) {
     let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.createdAt);
     if (list && list.length > 0) {
       Actions.bitmarkHealthData({ list });
@@ -133,6 +135,19 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           }
         }
       });
+
+      let compareFunction = (a, b) => {
+        if (a.status === 'pending') {
+          return 1;
+        }
+        if (b.status === 'pending') {
+          return 1;
+        }
+        return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
+      }
+      healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
+      healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
+
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
       return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
@@ -258,12 +273,6 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
     await AccountService.doCheckNotificationPermission();
   }
-  if (justCreatedBitmarkAccount) {
-    let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
-    if (emptyHealthKitData) {
-      EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
-    }
-  }
   return userInformation;
 };
 
@@ -329,6 +338,18 @@ const doLogout = async () => {
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
 };
+
+const doRequireHealthKitPermission = async () => {
+  let result = await HealthKitService.initHealthKit();
+  userInformation.activeHealthData = true;
+  await UserModel.doUpdateUserInfo(userInformation);
+
+  let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
+  if (emptyHealthKitData) {
+    EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
+  }
+  return result;
+}
 
 const doDeactiveApplication = async () => {
   stopInterval();
@@ -419,7 +440,14 @@ const doOpenApp = async () => {
       }
     }
 
-    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks((await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber)) || {}));
+    let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
+
+    if (!grantedAccessAccountSelected && !userInformation.activeHealthData &&
+      userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
+      await runPromiseWithoutError(doRequireHealthKitPermission());
+    }
+
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(userBitmarks || {}));
     DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(await doGetAccountAccesses()));
     await checkAppNeedResetLocalData(appInfo);
 
@@ -730,6 +758,7 @@ const DataProcessor = {
   doStartBackgroundProcess,
   doReloadUserData,
 
+  doRequireHealthKitPermission,
   doDeactiveApplication,
   doBitmarkHealthData,
   doDownloadBitmark,

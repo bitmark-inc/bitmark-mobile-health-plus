@@ -79,8 +79,6 @@ export class AccountPhraseComponent extends Component {
         biggerList.push({ word: phraseWords[index].word });
       }
     }
-    console.log('run1')
-
     while (countPreFill < numberWorldFilled) {
       let randomIndex = Math.floor(Math.random() * phraseWords.length);
       if (!phraseWords[randomIndex].selected) {
@@ -101,17 +99,12 @@ export class AccountPhraseComponent extends Component {
         remainIndex.push(index);
       }
     }
-    console.log('run2')
     randomWords = randomWords.sort((a, b) => a.word < b.word ? -1 : (a.word > b.word ? 1 : 0));
 
     randomWords.forEach(item => item.selected = null);
     smallerList.forEach(item => item.word = item.selected ? item.word : '');
     biggerList.forEach(item => item.word = item.selected ? item.word : '');
-    console.log('run3', randomWords,
-      phraseWords,
-      smallerList,
-      biggerList,
-      remainIndex)
+
     this.setState({
       step: STEPS.testing,
       randomWords,

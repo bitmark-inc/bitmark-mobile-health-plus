@@ -17,17 +17,17 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.7</string>
+	<string>1.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.bitmark.healthplus</string>
+			<string>com.bitmark.healthplus.beta</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>healthplus</string>
+				<string>healthplusbeta</string>
 			</array>
 		</dict>
 	</array>
@@ -57,7 +57,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Bitmark Health + would like to access to your camera.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Touch/Face ID or a passcode is required to authorize your transactions"</string>
+	<string>Touch/Face ID or a passcode is required to authorize your transactions&quot;</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Bitmark Health + would like to access to your health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>

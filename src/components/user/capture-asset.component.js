@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import randomString from "random-string";
 
-import { convertWidth, issue } from '../../utils';
+import { convertWidth, issue, populateAssetNameFromImage } from '../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
@@ -20,14 +20,15 @@ export class CaptureAssetComponent extends Component {
     super(props);
   }
 
-  issueFile() {
+  async issueFile() {
     let filePath = this.props.filePath;
     let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
     let metadataList = [];
     metadataList.push({ label: 'Source', value: 'Health Records' });
     metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
 
-    issue(filePath, assetName, metadataList, 'image');
+    assetName = await populateAssetNameFromImage(filePath, assetName);
+    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({assetName}));
   }
 
 

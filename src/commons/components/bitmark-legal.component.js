@@ -535,7 +535,7 @@ export class BitmarkLegalComponent extends React.Component {
               onPress={Actions.pop}>
               <Text style={[styles.lastBottomButtonText, { color: '#FF4444' }]}>DISAGREE</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), marginLeft: convertWidth(18) }]} onPress={Actions.getStart}>
+            <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), marginLeft: convertWidth(18) }]} onPress={Actions.touchFaceId}>
               <Text style={styles.lastBottomButtonText}>AGREE</Text>
             </TouchableOpacity>
           </View>}
