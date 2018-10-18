@@ -68,7 +68,7 @@ export class AccountPhraseComponent extends Component {
   }
   goToTest(phraseWords) {
     console.log('phraseWords :', phraseWords);
-    let numberWorldFilled = 20;
+    let numberWorldFilled = phraseWords.length - 4;
     let countPreFill = 0;
     let smallerList = [];
     let biggerList = [];
@@ -116,7 +116,6 @@ export class AccountPhraseComponent extends Component {
     });
   }
   selectRandomWord(item) {
-    console.log('selectingIndex :', this.state.selectingIndex, this.state.remainIndex);
     let randomWords = this.state.randomWords;
     let remainIndex = this.state.remainIndex;
 
@@ -133,7 +132,6 @@ export class AccountPhraseComponent extends Component {
     let testingResult = null;
     if (remainIndex.length === 1) {
       testingResult = true;
-      console.log(smallerList, biggerList, this.state.phraseWords);
 
       for (let index = 0; index < this.state.phraseWords.length; index++) {
         if ((index < (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== smallerList[index].word) ||
@@ -148,7 +146,6 @@ export class AccountPhraseComponent extends Component {
       selectingIndex = remainIndex[(tempIndex + 1) % remainIndex.length];
       remainIndex.splice(tempIndex, 1);
     }
-    console.log('selectingIndex :', selectingIndex, remainIndex);
     this.setState({ randomWords, smallerList, biggerList, remainIndex, selectingIndex, testingResult });
   }
 
@@ -166,7 +163,6 @@ export class AccountPhraseComponent extends Component {
         remainIndex.push(index);
       }
     }
-    console.log('remainIndex :', remainIndex);
     this.setState({
       testingResult: null,
       randomWords,
@@ -186,7 +182,6 @@ export class AccountPhraseComponent extends Component {
   }
 
   render() {
-    console.log('this.state', this.state);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
@@ -247,14 +242,13 @@ export class AccountPhraseComponent extends Component {
                     renderItem={({ item, index }) => {
                       return (
                         <View style={styles.recoveryPhraseSet}>
-                          <Text style={styles.recoveryPhraseIndex}>{index + 13}.</Text>
+                          <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
                           <Text style={styles.recoveryPhraseWord}>{item.word}</Text>
                         </View>
                       )
                     }}
                   />
                 </View>
-
               </ScrollView>
 
               <View style={styles.bottomButtonArea}>
@@ -268,7 +262,7 @@ export class AccountPhraseComponent extends Component {
             </View>}
 
             {this.state.step === STEPS.testing && <View style={{ flex: 1 }}>
-              <ScrollView style={styles.content}>
+              <ScrollView style={styles.content} contentContainerStyle={{ flexDirection: 'column', justifyContent: 'center', flexGrow: 1, }}>
                 <Text style={styles.phraseWordMessage}>
                   {this.props.isLogout ? i18n.t('AccountPhraseComponent_phraseWordMessage2')
                     : i18n.t('AccountPhraseComponent_phraseWordMessage3')}
@@ -279,7 +273,6 @@ export class AccountPhraseComponent extends Component {
                     scrollEnabled={false}
                     extraData={this.state}
                     renderItem={({ item, index }) => {
-                      console.log('render 1', item);
                       return (
                         <TouchableOpacity style={[styles.recoveryPhraseSet,]}
                           disabled={item.selected}
@@ -302,7 +295,6 @@ export class AccountPhraseComponent extends Component {
                     scrollEnabled={false}
                     extraData={this.state}
                     renderItem={({ item, index }) => {
-                      console.log('render 2', item);
                       return (
                         <TouchableOpacity style={[styles.recoveryPhraseSet,]}
                           disabled={item.selected}
@@ -321,12 +313,13 @@ export class AccountPhraseComponent extends Component {
                   />
                 </View>
 
-                {this.state.testingResult === null && <FlatList data={this.state.randomWords}
+                {this.state.testingResult === null && <FlatList
+                  data={this.state.randomWords}
                   keyExtractor={(item, index) => index + ''}
                   scrollEnabled={false}
                   horizontal={false}
                   numColumns={4}
-                  contentContainerStyle={{ flexDirection: 'column', paddingBottom: 20, }}
+                  contentContainerStyle={{ justifyContent: 'center', flex: 1, flexDirection: 'column', paddingBottom: 20, }}
                   extraData={this.state}
                   renderItem={({ item }) => {
                     return (

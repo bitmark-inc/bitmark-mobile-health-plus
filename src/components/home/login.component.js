@@ -16,7 +16,9 @@ const statuses = {
   inputting: 'inputting'
 };
 
-let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
+// let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
+
+let testWords = ["menu", "nurse", "episode", "first", "rapid", "write", "dad", "light", "hospital", "music", "brisk", "run"];
 
 export class LoginComponent extends Component {
   constructor(props) {

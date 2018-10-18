@@ -199,15 +199,15 @@ export class PrivateAccountComponent extends Component {
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText3')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
+                {/* <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
+                <TouchableOpacity style={styles.rowButton} onPress={() => {
                   AppProcessor.doLogout().then(() => {
                     EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
                   }).catch(error => {
                     console.log('error :', error)
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
-                }}> */}
+                }}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText4')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
