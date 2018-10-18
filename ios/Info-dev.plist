@@ -17,17 +17,17 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.8</string>
+	<string>1.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.bitmark.healthplus</string>
+			<string>com.bitmark.healthplus.inhouse</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>healthplus</string>
+				<string>healthplusinhouse</string>
 			</array>
 		</dict>
 	</array>
@@ -48,34 +48,34 @@
 			</dict>
 		</dict>
 	</dict>
-  <key>NSAppleMusicUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like access to your Apple Music data.</string>
-  <key>NSBluetoothPeripheralUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like access to your bluetooth.</string>
-  <key>NSCalendarsUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like access to your calendars.</string>
-  <key>NSCameraUsageDescription</key>
-  <string>Bitmark Health + would like to access to your camera.</string>
-  <key>NSFaceIDUsageDescription</key>
-  <string>Touch/Face ID or a passcode is required to authorize your transactions&quot;</string>
-  <key>NSHealthShareUsageDescription</key>
-  <string>Bitmark Health + would like to access to your health data.</string>
-  <key>NSHealthUpdateUsageDescription</key>
-  <string>Bitmark Health + would like to access to your health data.</string>
-  <key>NSLocationAlwaysUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like access to your location data.</string>
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Health + app would like to access your location for metric purpose.</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like to your microphone (for videos).</string>
-  <key>NSMotionUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
-  <key>NSPhotoLibraryAddUsageDescription</key>
-  <string>Bitmark Health + would like to access to your photo library.</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>Bitmark Health + would like to access to your photo library.</string>
-  <key>NSSpeechRecognitionUsageDescription</key>
-  <string>$(PRODUCT_NAME) would like to use speech recognition.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your Apple Music data.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your bluetooth.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your calendars.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Bitmark Health + would like to access to your camera.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Touch/Face ID or a passcode is required to authorize your transactions&quot;</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Bitmark Health + would like to access to your health data.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Bitmark Health + would like to access to your health data.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your location data.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Health + app would like to access your location for metric purpose.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to your microphone (for videos).</string>
+	<key>NSMotionUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Bitmark Health + would like to access to your photo library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Bitmark Health + would like to access to your photo library.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to use speech recognition.</string>
 	<key>ResearchKit-Font-Bold</key>
 	<string>Avenir-Black</string>
 	<key>ResearchKit-Font-Light</key>

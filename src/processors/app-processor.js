@@ -7,7 +7,6 @@ import { AccountService, EventEmitterService, TransactionService } from './../se
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';
 import { compareVersion } from '../utils';
-import { HealthKitService } from '../services/health-kit-service';
 
 registerTasks();
 // ================================================================================================
