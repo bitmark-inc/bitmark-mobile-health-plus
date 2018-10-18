@@ -148,7 +148,7 @@ class PrivateUserComponent extends Component {
             <View style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} >
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {
-                  console.log('DataProcessor.getUserInformation() :', DataProcessor.getUserInformation());
+
                   if (isCurrentUser && !DataProcessor.getUserInformation().activeHealthData) {
                     Actions.getStart();
                   } else {
