@@ -246,7 +246,7 @@
     "HomeComponent_buttonText1": "ACCESS EXISTING ACCOUNT",
     "HomeComponent_buttonText2": "CREATE NEW ACCOUNT",
     "LoginComponent_title": "Recovery Phrase SIGN-IN",
-    "LoginComponent_description": "Please type all 24 words of your recovery phrase in the exact sequence below:",
+    "LoginComponent_description": "Please type all {{number}} words of your recovery phrase in the exact sequence below:",
     "LoginComponent_resultTitle1": "Wrong Recovery Phrase!",
     "LoginComponent_resultMessage1": "Please try again!",
     "LoginComponent_resultTitle2": "Success!",
