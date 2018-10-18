@@ -9,9 +9,9 @@ const newError = (reason, defaultMessage) => {
 
 const BitmarkSDK = {
   // return session id
-  newAccount: (network) => {
+  newAccount: (network, version = 'v2') => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccount(network, (ok, result) => {
+      SwiftBitmarkSDK.newAccount(network, version, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
