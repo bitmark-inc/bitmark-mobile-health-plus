@@ -119,7 +119,12 @@ export class AccountPhraseComponent extends Component {
     let randomWords = this.state.randomWords;
     let remainIndex = this.state.remainIndex;
 
-    randomWords.forEach(it => it.selected = it.word === item.word ? true : it.selected);
+    for (let it of randomWords) {
+      if (!it.selected && it.word === item.word) {
+        it.selected = true;
+      }
+    }
+
     let smallerList = this.state.smallerList;
     let biggerList = this.state.biggerList;
     let selectingIndex = this.state.selectingIndex;
