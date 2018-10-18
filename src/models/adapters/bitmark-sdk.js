@@ -21,6 +21,7 @@ const BitmarkSDK = {
     });
   },
   newAccountFromPhraseWords: (phraseWords, network) => {
+    console.log('phraseWords :', phraseWords);
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.newAccountFrom24Words(phraseWords, network, (ok, result) => {
         if (ok) {
@@ -210,6 +211,7 @@ const BitmarkSDK = {
 
   // don use session di
   tryPhraseWords: (phraseWords, network) => {
+    console.log('phraseWords :', phraseWords);
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.try24Words(phraseWords, network, (ok, result, phraseWords) => {
         if (ok) {

@@ -16,7 +16,7 @@ const statuses = {
   inputting: 'inputting'
 };
 
-// let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
+let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 
 export class LoginComponent extends Component {
   constructor(props) {
@@ -25,18 +25,18 @@ export class LoginComponent extends Component {
     let smallerList = [];
     let biggerList = [];
     let numberPhraseWords = 12;
-    for (let index = 0; index < this.state.numberPhraseWords; index++) {
+    for (let index = 0; index < numberPhraseWords; index++) {
       if (index < (numberPhraseWords / 2)) {
         smallerList.push({
           key: index,
-          word: '',
-          // word: testWords[index],
+          // word: '',
+          word: testWords[index],
         });
       } else {
         biggerList.push({
           key: index,
-          word: '',
-          // word: testWords[index],
+          // word: '',
+          word: testWords[index],
         });
       }
     }
@@ -53,7 +53,7 @@ export class LoginComponent extends Component {
       keyboardExternalDataSource: dictionary12Words,
       numberPhraseWords,
     };
-    // setTimeout(this.checkStatusInputting.bind(this), 200);
+    setTimeout(this.checkStatusInputting.bind(this), 200);
   }
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
@@ -66,8 +66,9 @@ export class LoginComponent extends Component {
   }
 
   changeNumberPhraseWord() {
-    this.setState({ numberPhraseWords: this.state.numberPhraseWords === 12 ? 24 : 12 });
-    this.doReset();
+    let numberPhraseWords = this.state.numberPhraseWords === 12 ? 24 : 12
+    this.setState({ numberPhraseWords });
+    this.doReset(numberPhraseWords);
   }
 
   onKeyboardDidShow(keyboardEvent) {
@@ -192,11 +193,12 @@ export class LoginComponent extends Component {
     });
   }
 
-  doReset() {
+  doReset(numberPhraseWords) {
+    numberPhraseWords = numberPhraseWords || this.state.numberPhraseWords;
     let smallerList = [];
     let biggerList = [];
-    for (let index = 0; index < this.state.numberPhraseWords; index++) {
-      if (index < (this.state.numberPhraseWords / 2)) {
+    for (let index = 0; index < numberPhraseWords; index++) {
+      if (index < (numberPhraseWords / 2)) {
         smallerList.push({
           key: index,
           word: '',
@@ -213,7 +215,7 @@ export class LoginComponent extends Component {
       biggerList: biggerList,
       preCheckResult: null,
       selectedIndex: -1,
-      remainWordNumber: this.state.numberPhraseWords,
+      remainWordNumber: numberPhraseWords,
     });
   }
 
@@ -311,15 +313,14 @@ export class LoginComponent extends Component {
               </View>
 
               <View style={styles.submitButtonArea}>
+                <TouchableOpacity style={styles.switchFormMessageButton} onPress={this.changeNumberPhraseWord.bind(this)}>
+                  <Text style={[styles.switchFormMessage,]}>{i18n.t('LoginComponent_switchFormMessage', { number: this.state.numberPhraseWords })}</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn.bind(this)} disabled={this.state.remainWordNumber > 0}>
                   <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || i18n.t('LoginComponent_submitButtonText1')}</Text>
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-
-            <TouchableOpacity style={styles.switchFormMessageButton} onPress={this.changeNumberPhraseWord.bind(this)}>
-              <Text style={[styles.switchFormMessage,]}>{i18n.t('LoginComponent_switchFormMessage', { number: this.state.numberPhraseWords })}</Text>
-            </TouchableOpacity>
           </View>
         </View >
         {this.state.keyboardHeight > 0 &&
@@ -449,6 +450,19 @@ const styles = StyleSheet.create({
 
   submitButtonArea: {
     padding: 20,
+  },
+
+  switchFormMessageButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  switchFormMessage: {
+    width: convertWidth(240),
+    fontFamily: 'Avenir Medium',
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#0054FC',
+    marginBottom: 24,
   },
   submitButton: {
     height: constants.buttonHeight,

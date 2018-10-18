@@ -24,7 +24,7 @@ import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
 import { EventEmitterService } from '../services';
 import { UserModel, CommonModel } from '../models';
-import { FileUtil, convertWidth } from '../utils';
+import { FileUtil, convertWidth, runPromiseWithoutError } from '../utils';
 import { DataProcessor, AppProcessor } from '../processors';
 import { config } from '../configs';
 import { constants } from '../constants';
@@ -224,6 +224,8 @@ class MainEventsHandlerComponent extends Component {
     let hasCrashLog = await FileUtil.exists(CRASH_LOG_FILE_PATH);
 
     if (hasCrashLog) {
+      console.log(await runPromiseWithoutError(FileUtil.readFile(CRASH_LOG_FILE_PATH)));
+
       let title = i18n.t('MainComponent_alertTitle4');
       let message = i18n.t('MainComponent_alertMessage4');
 
