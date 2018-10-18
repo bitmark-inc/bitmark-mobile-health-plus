@@ -7,7 +7,6 @@ import { AccountService, EventEmitterService, TransactionService } from './../se
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';
 import { compareVersion } from '../utils';
-import { HealthKitService } from '../services/health-kit-service';
 
 registerTasks();
 // ================================================================================================
@@ -90,8 +89,8 @@ const doGetCurrentAccount = async (canUseCurrentTouchFaceId) => {
   return userInfo;
 };
 
-const doCheck24Words = async (phrase24Words) => {
-  return await AccountModel.doCheck24Words(phrase24Words);
+const doCheckPhraseWords = async (phraseWords) => {
+  return await AccountModel.doCheckPhraseWords(phraseWords);
 };
 
 const doGetTransferOfferDetail = async (transferOfferId) => {
@@ -127,8 +126,8 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 
 // ================================================================================================
 // ================================================================================================
-const doLogin = async (phrase24Words) => {
-  return executeTask('doLogin', { phrase24Words });
+const doLogin = async (phraseWords) => {
+  return executeTask('doLogin', { phraseWords });
 };
 
 const doLogout = async () => {
@@ -214,7 +213,7 @@ const doRejectEmailRecords = async (emailRecords) => {
 let AppProcessor = {
   doCreateNewAccount,
   doGetCurrentAccount,
-  doCheck24Words,
+  doCheckPhraseWords,
   doLogin,
   doLogout,
   doDeleteAccount,

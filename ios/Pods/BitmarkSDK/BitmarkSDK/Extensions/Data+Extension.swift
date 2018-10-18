@@ -30,7 +30,11 @@ public extension Data {
 
 public extension String {
     public var hexDecodedData: Data {
-        var hex = self
+        var str = self
+        if self.count % 2 == 1 {
+            str = str + "0"
+        }
+        var hex = str
         var data = Data()
         while(hex.count > 0) {
             let c: String = hex.substring(to: hex.index(hex.startIndex, offsetBy: 2))

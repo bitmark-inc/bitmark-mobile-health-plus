@@ -15,12 +15,12 @@ class BitmarkSDK: NSObject {
   
   static let accountNotFound = "Cannot find account associated with that session id"
   
-  @objc(newAccount::)
-  func newAccount(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(newAccount:::)
+  func newAccount(_ network: String, version: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let network = BitmarkSDK.networkWithName(name: network)
-      let account = try Account(network: network)
-      try KeychainUtil.saveCore(account.core)
+      let account = try Account(version: BitmarkSDK.versionFromString(version), network: network)
+      try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDK.stringFromVersion(account.seed.version))
       _ = try? account.registerPublicEncryptionKey()
       let sessionId = AccountSession.shared.addSessionForAccount(account)
       callback([true, sessionId])
@@ -40,8 +40,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(newAccountFrom24Words:::)
-  func newAccountFrom24Words(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(newAccountFromPhraseWords:::)
+  func newAccountFromPhraseWords(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(recoverPhrase: pharse)
@@ -51,7 +51,7 @@ class BitmarkSDK: NSObject {
         return
       }
       
-      try KeychainUtil.saveCore(account.core)
+      try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDK.stringFromVersion(account.seed.version))
       _ = try? account.registerPublicEncryptionKey()
       let sessionId = AccountSession.shared.addSessionForAccount(account)
       callback([true, sessionId])
@@ -71,8 +71,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(try24Words:::)
-  func try24Words(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(tryPhraseWords:::)
+  func tryPhraseWords(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(recoverPhrase: pharse)
@@ -97,7 +97,7 @@ class BitmarkSDK: NSObject {
   func accountInfo(_ sessionId: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      callback([true, account.accountNumber.string, try account.getRecoverPhrase()])
+      callback([true, account.accountNumber.string, account.getRecoverPhrase(), BitmarkSDK.stringFromVersion(account.seed.version)])
     }
     catch let e {
       if let error = e as? String,
@@ -545,5 +545,22 @@ extension BitmarkSDK {
     }
     
     return account
+  }
+  
+  static func versionFromString(_ version: String) -> SeedVersion {
+    if version == "v2" {
+      return SeedVersion.v2
+    } else {
+      return SeedVersion.v1
+    }
+  }
+  
+  static func stringFromVersion(_ version: SeedVersion) -> String {
+    switch version {
+    case .v1:
+      return "v1"
+    case .v2:
+      return "v2"
+    }
   }
 }

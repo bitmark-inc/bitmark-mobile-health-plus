@@ -32,31 +32,38 @@ const getLanguageForTextDetector = () => {
 };
 
 const sanitizeTextDetectorResponse = (visionResp) => {
-  const notContainsSepecicalCharcter = (str) => {
-    const blacklistCharactors = '1234567890\'!"#$%&/()={}[]+*-_:;<>‘.,`~'.split('');
+  const notContainsSepecicalCharacter = (str) => {
+    const blacklistCharacters = '1234567890\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§'.split('');
     let strCharactors = str.split('').filter(item => item !== ' ');
 
-    return intersection(blacklistCharactors, strCharactors).length == 0;
+    return intersection(blacklistCharacters, strCharactors).length == 0;
   };
 
   return visionResp.filter(item => {
     let text = item.text.trim();
-    return text.trim() && text.length > 3 && notContainsSepecicalCharcter(text);
+    return text.trim() && text.length > 3 && notContainsSepecicalCharacter(text);
   })
 };
 
 const calculateDocDimension = (visionResp) => {
-  let maxDocWidth = visionResp[0].bounding.left + visionResp[0].bounding.width;
-  let maxDocHeight = visionResp[0].bounding.top + visionResp[0].bounding.height;
+  let minLeft = visionResp[0].bounding.left;
+  let maxLeft = visionResp[0].bounding.left + visionResp[0].bounding.width;
+  let minTop = visionResp[0].bounding.top;
+  let maxTop = visionResp[0].bounding.top + visionResp[0].bounding.height;
 
   visionResp.forEach(item => {
-    if ((item.bounding.left + item.bounding.width) > maxDocWidth) maxDocWidth = item.bounding.left + item.bounding.width;
-    if ((item.bounding.top + item.bounding.height) > maxDocHeight) maxDocHeight = item.bounding.top + item.bounding.height;
+    if (item.bounding.left < minLeft) minLeft = item.bounding.left;
+    if ((item.bounding.left + item.bounding.width) > maxLeft) maxLeft = item.bounding.left + item.bounding.width;
+
+    if (item.bounding.top < minTop) minTop = item.bounding.top;
+    if ((item.bounding.top + item.bounding.height) > maxTop) maxTop = item.bounding.top + item.bounding.height;
   });
 
   return {
-    width: maxDocWidth,
-    height: maxDocHeight
+    width: maxLeft,
+    centerTextX: (minLeft + maxLeft) / 2,
+    height: maxTop,
+    centerTextY: (minTop + maxTop) / 2,
   };
 };
 
@@ -107,34 +114,27 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   if (visionResp && visionResp.length) {
     let potentialAssetNameItem;
     let demension = calculateDocDimension(visionResp);
-    let centerPointX = demension.width / 2;
+    let centerTextX = demension.centerTextX;
 
     visionResp = sanitizeTextDetectorResponse(visionResp);
-
-    const DETECTOR_SCORE = {
-      CENTER: 5,
-      TOP: 3,
-      HEIGHT: 1,
-      WIDTH: 1
-    };
 
     if (visionResp.length > 1) {
       // RULE 1: Choose top 5 items have highest score for next RULES
       let visionRespInOrder = visionResp.sort((item1, item2) => {
-        let centerScore1 = Math.abs((item1.bounding.left + item1.bounding.left + item1.bounding.width) / 2 - centerPointX) * DETECTOR_SCORE.CENTER;
-        let centerScore2 = Math.abs((item2.bounding.left + item2.bounding.left + item2.bounding.width) / 2 - centerPointX) * DETECTOR_SCORE.CENTER;
+        let centerAwayScore1 = Math.abs((item1.bounding.left + item1.bounding.left + item1.bounding.width) / 2 - centerTextX);
+        let centerAwayScore2 = Math.abs((item2.bounding.left + item2.bounding.left + item2.bounding.width) / 2 - centerTextX);
 
-        let topScore1 = item1.bounding.top * DETECTOR_SCORE.TOP;
-        let topScore2 = item2.bounding.top * DETECTOR_SCORE.TOP;
+        let topAwayScore1 = item1.bounding.top;
+        let topAwayScore2 = item2.bounding.top;
 
-        let heightScore1 = item1.bounding.height * DETECTOR_SCORE.HEIGHT;
-        let heightScore2 = item2.bounding.height * DETECTOR_SCORE.HEIGHT;
+        let sizeScore1 = item1.bounding.height * item1.bounding.width / item1.text.length;
+        let sizeScore2 = item2.bounding.height * item2.bounding.width / item2.text.length;
 
-        let widthScore1 = item1.bounding.width * DETECTOR_SCORE.WIDTH;
-        let widthScore2 = item2.bounding.width * DETECTOR_SCORE.WIDTH;
+        // Sort items in descending order by size/(top * center)
+        let sortScore1 = sizeScore1 / (topAwayScore1 * centerAwayScore1);
+        let sortScore2 = sizeScore2 / (topAwayScore2 * centerAwayScore2);
 
-        // Sort items in descending order by height/(width * top * center)
-        return heightScore2 / (widthScore2 * topScore2 * centerScore2) - heightScore1 / (widthScore1 * topScore1 * centerScore1);
+        return sortScore2 - sortScore1;
       });
 
       // Choose top 5 candidates for next RULES
@@ -187,8 +187,8 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
       potentialAssetNameItem = visionResp[0];
     }
 
-    if (potentialAssetNameItem && potentialAssetNameItem.text) {
-      assetName = 'HA_' + potentialAssetNameItem.text;
+    if (potentialAssetNameItem && potentialAssetNameItem.text.trim()) {
+      assetName = 'HA_' + potentialAssetNameItem.text.trim();
     }
   }
 

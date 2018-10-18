@@ -70,7 +70,8 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
 
-  if (!userInformation.activeHealthData && healthDataBitmarks && healthDataBitmarks.length > 0) {
+  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber &&
+    !userInformation.activeHealthData && healthDataBitmarks && healthDataBitmarks.length > 0) {
     await runPromiseWithoutError(doRequireHealthKitPermission());
   }
 
@@ -134,6 +135,19 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           }
         }
       });
+
+      let compareFunction = (a, b) => {
+        if (a.status === 'pending') {
+          return 1;
+        }
+        if (b.status === 'pending') {
+          return 1;
+        }
+        return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
+      }
+      healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
+      healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
+
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
       return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
@@ -365,6 +379,10 @@ const doLogin = async (touchFaceIdSession) => {
 };
 
 const doLogout = async () => {
+  let result = await AccountModel.doLogout(jwt);
+  if (!result) {
+    return null;
+  }
   if (userInformation.notificationUUID) {
     let signatureData = await CommonModel.doTryCreateSignatureData(i18n.t('FaceTouchId_doLogout'))
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
@@ -384,7 +402,6 @@ const doLogout = async () => {
     await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
   }
   CommonModel.resetFaceTouchSessionId();
-  await AccountModel.doLogout(jwt);
   await UserModel.doRemoveUserInfo();
   await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
   await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
@@ -396,6 +413,7 @@ const doLogout = async () => {
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
+  return true;
 };
 
 const doRequireHealthKitPermission = async () => {
@@ -499,7 +517,14 @@ const doOpenApp = async () => {
       }
     }
 
-    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks((await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber)) || {}));
+    let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
+
+    if (!grantedAccessAccountSelected && !userInformation.activeHealthData &&
+      userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
+      await runPromiseWithoutError(doRequireHealthKitPermission());
+    }
+
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(userBitmarks || {}));
     DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(await doGetAccountAccesses()));
     await checkAppNeedResetLocalData(appInfo);
 

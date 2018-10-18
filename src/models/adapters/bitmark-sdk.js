@@ -9,9 +9,9 @@ const newError = (reason, defaultMessage) => {
 
 const BitmarkSDK = {
   // return session id
-  newAccount: (network) => {
+  newAccount: (network, version = 'v2') => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccount(network, (ok, result) => {
+      SwiftBitmarkSDK.newAccount(network, version, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
@@ -20,9 +20,10 @@ const BitmarkSDK = {
       });
     });
   },
-  newAccountFrom24Words: (phrase24Words, network) => {
+  newAccountFromPhraseWords: (phraseWords, network) => {
+    console.log('phraseWords :', phraseWords);
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFrom24Words(phrase24Words, network, (ok, result) => {
+      SwiftBitmarkSDK.newAccountFromPhraseWords(phraseWords, network, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
@@ -70,9 +71,9 @@ const BitmarkSDK = {
   },
   accountInfo: (sessionId) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.accountInfo(sessionId, (ok, result, phrase24Words) => {
+      SwiftBitmarkSDK.accountInfo(sessionId, (ok, result, phraseWords) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber: result, phrase24Words });
+          resolve({ bitmarkAccountNumber: result, phraseWords });
         } else {
           reject(newError(result, 'Can not get current account!'));
         }
@@ -209,11 +210,12 @@ const BitmarkSDK = {
   },
 
   // don use session di
-  try24Words: (phrase24Words, network) => {
+  tryPhraseWords: (phraseWords, network) => {
+    console.log('phraseWords :', phraseWords);
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.try24Words(phrase24Words, network, (ok, result, phrase24Words) => {
+      SwiftBitmarkSDK.tryPhraseWords(phraseWords, network, (ok, result, phraseWords) => {
         if (ok) {
-          resolve({ bitmarkAccountNumber: result, phrase24Words });
+          resolve({ bitmarkAccountNumber: result, phraseWords });
         } else {
           reject(newError(result, 'Can not try 24 words!'));
         }

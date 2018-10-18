@@ -12,7 +12,7 @@ import { config } from '../../configs';
 
 export class NotificationComponent extends React.Component {
   static propTypes = {
-    passPhrase24Words: PropTypes.arrayOf(PropTypes.string),
+    phraseWords: PropTypes.arrayOf(PropTypes.string),
   };
   constructor(props) {
     super(props);

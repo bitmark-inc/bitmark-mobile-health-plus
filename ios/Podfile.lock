@@ -32,7 +32,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   BitmarkSDK:
-    :commit: 1c2f3b06373e865762e1a059bf215f1cdd330c90
+    :commit: 890df90d4ae8f5477f96fe1fdf40adfcacbf51bf
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
   TesseractOCRiOS:
     :commit: 14ff7d4e344d788b462ed993b56e94674df52ca9
@@ -46,6 +46,6 @@ SPEC CHECKSUMS:
   TesseractOCRiOS: 729989db3984bb60ba3addb053569b172d48c409
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
-PODFILE CHECKSUM: 4ba2e35f8f149f68dcabb10a1d0f18cc4cd911ec
+PODFILE CHECKSUM: 3b7d4193b0b8f7a33526807aab051cff9c66a598
 
 COCOAPODS: 1.5.3
