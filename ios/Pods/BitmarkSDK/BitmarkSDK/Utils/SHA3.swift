@@ -22,6 +22,18 @@ struct SHA3Compute {
         
         return output
     }
+    
+    static func computeSHAKE256(data: Data, repeatCount: Int, length: Int, count: Int) -> Data {
+        var output = Data(count: length * count)
+        
+        output.withUnsafeMutableBytes({ (outputPointer: UnsafeMutablePointer<UInt8>) -> Void in
+            return data.withUnsafeBytes({ (dataPointer: UnsafePointer<UInt8>) -> Void in
+                shake256(dataPointer, Int32(repeatCount), data.count, outputPointer, Int32(length), Int32(count))
+            })
+        })
+        
+        return output
+    }
 }
 
 public extension Data {

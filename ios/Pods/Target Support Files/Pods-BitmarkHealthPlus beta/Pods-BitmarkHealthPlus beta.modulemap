@@ -1,0 +1,6 @@
+framework module Pods_BitmarkHealthPlus_beta {
+  umbrella header "Pods-BitmarkHealthPlus beta-umbrella.h"
+
+  export *
+  module * { export * }
+}

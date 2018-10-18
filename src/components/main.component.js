@@ -24,7 +24,7 @@ import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
 import { EventEmitterService } from '../services';
 import { UserModel, CommonModel } from '../models';
-import { FileUtil, convertWidth } from '../utils';
+import { FileUtil, convertWidth, runPromiseWithoutError } from '../utils';
 import { DataProcessor, AppProcessor } from '../processors';
 import { config } from '../configs';
 import { constants } from '../constants';
@@ -92,7 +92,10 @@ class MainEventsHandlerComponent extends Component {
 
   async doRefresh(justCreatedBitmarkAccount) {
     if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
-      let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+      let passTouchFaceId = !!CommonModel.getFaceTouchSessionId();
+      if (!passTouchFaceId) {
+        passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+      }
       this.setState({ passTouchFaceId });
       if (passTouchFaceId && this.state.networkStatus) {
         EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
@@ -221,6 +224,8 @@ class MainEventsHandlerComponent extends Component {
     let hasCrashLog = await FileUtil.exists(CRASH_LOG_FILE_PATH);
 
     if (hasCrashLog) {
+      console.log(await runPromiseWithoutError(FileUtil.readFile(CRASH_LOG_FILE_PATH)));
+
       let title = i18n.t('MainComponent_alertTitle4');
       let message = i18n.t('MainComponent_alertMessage4');
 
@@ -424,7 +429,7 @@ export class MainComponent extends Component {
     super(props);
 
     this.doOpenApp = this.doOpenApp.bind(this);
-    this.doRefresh = this.doRefresh.bind(this);
+    this.doAppRefresh = this.doAppRefresh.bind(this);
 
     this.state = {
       user: null,
@@ -462,12 +467,12 @@ export class MainComponent extends Component {
         }]);
         return;
       }
-      this.doRefresh(justCreatedBitmarkAccount);
+      this.doAppRefresh(justCreatedBitmarkAccount);
     }).catch(error => {
       console.log('doOpenApp error:', error);
     });
   }
-  doRefresh(justCreatedBitmarkAccount) {
+  doAppRefresh(justCreatedBitmarkAccount) {
     return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
       console.log('doOpenApp user:', user);
       if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
@@ -493,7 +498,7 @@ export class MainComponent extends Component {
         });
       }
     }).catch(error => {
-      console.log('doRefresh error:', error);
+      console.log('doAppRefresh error:', error);
     });
   }
 

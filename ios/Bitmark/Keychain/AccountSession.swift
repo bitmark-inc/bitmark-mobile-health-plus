@@ -60,6 +60,6 @@ extension AccountSession {
       return nil
     }
     
-    return try Account(core: core, network: network)
+    return try Account(core: core, version: KeychainUtil.getAccountVersion(), network: network)
   }
 }

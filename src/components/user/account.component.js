@@ -152,7 +152,7 @@ export class PrivateAccountComponent extends Component {
                   renderItem={({ item }) => {
                     return (<View style={styles.accessAccountRow}>
                       <Text style={styles.accessAccountNumber}>
-                        {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}
+                        {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, item.grantee.length) + ']'}
                       </Text>
                       <TouchableOpacity onPress={() => Actions.revokeAccess({ accessInfo: item })}>
                         <Text style={styles.accessRevokeButtonText}>{i18n.t('AccountComponent_accessRevokeButtonText')}</Text>
@@ -180,7 +180,7 @@ export class PrivateAccountComponent extends Component {
                   renderItem={({ item }) => {
                     return (<TouchableOpacity style={styles.accessOtherAccountAccountRow} onPress={() => this.selectAccount.bind(this)(item.grantor)} >
                       <Text style={styles.accessOtherAccountAccountNumber}>
-                        {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}
+                        {'[' + item.grantor.substring(0, 4) + '...' + item.grantor.substring(item.grantor.length - 4, item.grantor.length) + ']'}
                       </Text>
                       <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                     </TouchableOpacity>);
@@ -200,10 +200,11 @@ export class PrivateAccountComponent extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
                   {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
-                  AppProcessor.doLogout().then(() => {
-                    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+                  AppProcessor.doLogout().then((result) => {
+                    if (result) {
+                      EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+                    }
                   }).catch(error => {
-                    console.log('error :', error)
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
                 }}> */}

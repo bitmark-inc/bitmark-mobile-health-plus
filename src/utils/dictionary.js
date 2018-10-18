@@ -1,4 +1,4 @@
-let dictionary24Words = ['abandon',
+let dictionaryPhraseWords = ['abandon',
   'ability',
   'able',
   'about',
@@ -2046,4 +2046,4 @@ let dictionary24Words = ['abandon',
   'zero',
   'zone',
   'zoo',];
-export { dictionary24Words };
+export { dictionaryPhraseWords };
