@@ -15,7 +15,7 @@ import { Actions } from 'react-native-router-flux';
 
 export class TouchFaceIdComponent extends React.Component {
   static propTypes = {
-    passPhrase24Words: PropTypes.arrayOf(PropTypes.string),
+    phraseWords: PropTypes.arrayOf(PropTypes.string),
   };
   constructor(props) {
     super(props);
@@ -53,10 +53,10 @@ export class TouchFaceIdComponent extends React.Component {
   }
 
   doContinue() {
-    let passPhrase24Words = this.props.passPhrase24Words;
+    let phraseWords = this.props.phraseWords;
     let promise;
-    if (passPhrase24Words) {
-      promise = AppProcessor.doLogin(passPhrase24Words);
+    if (phraseWords) {
+      promise = AppProcessor.doLogin(phraseWords);
     } else {
       promise = AppProcessor.doCreateNewAccount();
     }

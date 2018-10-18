@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   View, Text, Image, TouchableOpacity, SafeAreaView,
   StyleSheet,
@@ -12,6 +13,9 @@ import { constants } from '../../constants';
 import { config } from '../../configs';
 
 export class GetStartComponent extends React.Component {
+  static propTypes = {
+    phraseWords: PropTypes.arrayOf(PropTypes.string),
+  };
 
   constructor(props) {
     super(props);

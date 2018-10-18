@@ -5,7 +5,7 @@ import {
   Image, View, TouchableOpacity, Text, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Animated, SafeAreaView,
 } from 'react-native';
 
-import { convertWidth, dictionary24Words } from './../../utils';
+import { convertWidth, dictionary24Words, dictionary12Words } from './../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
 import { AppProcessor } from '../../processors';
@@ -18,15 +18,15 @@ const statuses = {
 
 // let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 
-
 export class LoginComponent extends Component {
   constructor(props) {
     super(props);
 
     let smallerList = [];
     let biggerList = [];
-    for (let index = 0; index < 24; index++) {
-      if (index < 12) {
+    let numberPhraseWords = 12;
+    for (let index = 0; index < this.state.numberPhraseWords; index++) {
+      if (index < (numberPhraseWords / 2)) {
         smallerList.push({
           key: index,
           word: '',
@@ -41,17 +41,17 @@ export class LoginComponent extends Component {
       }
     }
     this.inputtedRefs = {};
-
     this.state = {
       smallerList,
       biggerList,
       selectedIndex: -1,
-      remainWordNumber: 24,
+      remainWordNumber: numberPhraseWords,
       keyboardHeight: 0,
       preCheckResult: null,
       keyboardExternalBottom: new Animated.Value(0),
       keyboardExternalOpacity: new Animated.Value(0),
-      keyboardExternalDataSource: dictionary24Words,
+      keyboardExternalDataSource: dictionary12Words,
+      numberPhraseWords,
     };
     // setTimeout(this.checkStatusInputting.bind(this), 200);
   }
@@ -65,6 +65,10 @@ export class LoginComponent extends Component {
     this.keyboardDidHideListener.remove();
   }
 
+  changeNumberPhraseWord() {
+    this.setState({ numberPhraseWords: this.state.numberPhraseWords === 12 ? 24 : 12 });
+    this.doReset();
+  }
 
   onKeyboardDidShow(keyboardEvent) {
     let keyboardHeight = keyboardEvent.endCoordinates.height;
@@ -100,19 +104,19 @@ export class LoginComponent extends Component {
   onChangeText(index, text) {
     text = text ? text.trim() : '';
     this.doFilter(text);
-    if (index < 12) {
+    if (index < (this.state.numberPhraseWords / 2)) {
       let inputtedWords = this.state.smallerList;
       inputtedWords[index].word = text;
       this.setState({ smallerList: inputtedWords });
     } else {
       let inputtedWords = this.state.biggerList;
-      inputtedWords[index - 12].word = text;
+      inputtedWords[index - (this.state.numberPhraseWords / 2)].word = text;
       this.setState({ biggerList: inputtedWords });
     }
     this.checkStatusInputting();
   }
   onFocus(index) {
-    let text = index < 12 ? this.state.smallerList[index].word : this.state.biggerList[index - 12].word;
+    let text = index < (this.state.numberPhraseWords / 2) ? this.state.smallerList[index].word : this.state.biggerList[index - (this.state.numberPhraseWords / 2)].word;
     this.setState({
       selectedIndex: index,
       currentInputtedText: text,
@@ -128,10 +132,10 @@ export class LoginComponent extends Component {
     this.state.biggerList.forEach(item => {
       countNumberInputtedWord = countNumberInputtedWord + (item.word ? 1 : 0)
     });
-    let status = countNumberInputtedWord === 24 ? statuses.done : statuses.inputting;
+    let status = countNumberInputtedWord === this.state.numberPhraseWords ? statuses.done : statuses.inputting;
     this.setState({
       preCheckResult: null,
-      remainWordNumber: 24 - countNumberInputtedWord,
+      remainWordNumber: this.state.numberPhraseWords - countNumberInputtedWord,
       status,
     });
   }
@@ -147,37 +151,38 @@ export class LoginComponent extends Component {
     if (word) {
       word = word ? word.trim() : '';
       this.inputtedRefs[selectedIndex].focus();
-      if (selectedIndex < 12) {
+      if (selectedIndex < (this.state.numberPhraseWords / 2)) {
         let inputtedWords = this.state.smallerList;
         inputtedWords[selectedIndex].word = word;
         this.setState({ smallerList: inputtedWords });
       } else {
         let inputtedWords = this.state.biggerList;
-        inputtedWords[selectedIndex - 12].word = word;
+        inputtedWords[selectedIndex - (this.state.numberPhraseWords / 2)].word = word;
         this.setState({ biggerList: inputtedWords });
       }
     }
-    this.selectedIndex((selectedIndex + 1) % 24);
+    this.selectedIndex((selectedIndex + 1) % this.state.numberPhraseWords);
   }
 
   doFilter(text) {
-    let keyboardExternalDataSource = dictionary24Words.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
+    let dictionaryWords = this.state.numberPhraseWords === 12 ? dictionary12Words : dictionary24Words;
+    let keyboardExternalDataSource = dictionaryWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
     this.setState({ keyboardExternalDataSource, currentInputtedText: text });
   }
 
-  doCheck24Word() {
+  doCheckPhraseWords() {
     return new Promise((resolve) => {
       Keyboard.dismiss();
       if (this.state.remainWordNumber === 0) {
         let inputtedWords = [];
         this.state.smallerList.forEach(item => inputtedWords.push(item.word));
         this.state.biggerList.forEach(item => inputtedWords.push(item.word));
-        AppProcessor.doCheck24Words(inputtedWords).then(() => {
+        AppProcessor.doCheckPhraseWords(inputtedWords).then(() => {
           this.setState({ preCheckResult: i18n.t('LoginComponent_submitButtonText1') });
           resolve(inputtedWords);
         }).catch((error) => {
           resolve(false);
-          console.log('check24Words error: ', error);
+          console.log('doCheckPhraseWords error: ', error);
           this.setState({ preCheckResult: i18n.t('LoginComponent_submitButtonText2') });
         });
       } else {
@@ -187,33 +192,37 @@ export class LoginComponent extends Component {
     });
   }
 
+  doReset() {
+    let smallerList = [];
+    let biggerList = [];
+    for (let index = 0; index < this.state.numberPhraseWords; index++) {
+      if (index < (this.state.numberPhraseWords / 2)) {
+        smallerList.push({
+          key: index,
+          word: '',
+        });
+      } else {
+        biggerList.push({
+          key: index,
+          word: '',
+        });
+      }
+    }
+    this.setState({
+      smallerList: smallerList,
+      biggerList: biggerList,
+      preCheckResult: null,
+      selectedIndex: -1,
+      remainWordNumber: this.state.numberPhraseWords,
+    });
+  }
+
   doSignIn() {
     if (this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText2')) {
-      let smallerList = [];
-      let biggerList = [];
-      for (let index = 0; index < 24; index++) {
-        if (index < 12) {
-          smallerList.push({
-            key: index,
-            word: '',
-          });
-        } else {
-          biggerList.push({
-            key: index,
-            word: '',
-          });
-        }
-      }
-      this.setState({
-        smallerList: smallerList,
-        biggerList: biggerList,
-        preCheckResult: null,
-        selectedIndex: -1,
-        remainWordNumber: 24,
-      });
+      this.doReset();
       return;
     }
-    this.doCheck24Word().then((result) => {
+    this.doCheckPhraseWords().then((result) => {
       if (result) {
         Actions.touchFaceId({ passPhrase24Words: result });
       }
@@ -234,7 +243,7 @@ export class LoginComponent extends Component {
                       <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                     </TouchableOpacity>
                   </View>
-                  <Text style={styles.description}>{i18n.t('LoginComponent_description')}</Text>
+                  <Text style={styles.description}>{i18n.t('LoginComponent_description', { number: this.state.numberPhraseWords })}</Text>
                   <View style={styles.inputArea}>
                     <View style={styles.inputAreaHalf}>
                       <FlatList data={this.state.smallerList}
@@ -307,14 +316,18 @@ export class LoginComponent extends Component {
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
+
+            <TouchableOpacity style={styles.switchFormMessageButton} onPress={this.changeNumberPhraseWord.bind(this)}>
+              <Text style={[styles.switchFormMessage,]}>{i18n.t('LoginComponent_switchFormMessage', { number: this.state.numberPhraseWords })}</Text>
+            </TouchableOpacity>
           </View>
         </View >
         {this.state.keyboardHeight > 0 &&
           <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
-            <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 1) % 24)}>
+            <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 1) % this.state.numberPhraseWords)}>
               <Image style={styles.nextButtonImage} source={require('./../../../assets/imgs/arrow_down_enable.png')} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.prevButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 23) % 24)}>
+            <TouchableOpacity style={styles.prevButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + (this.state.numberPhraseWords - 1)) % this.state.numberPhraseWords)}>
               <Image style={styles.prevButtonImage} source={require('./../../../assets/imgs/arrow_up_enable.png')} />
             </TouchableOpacity>
             {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
@@ -331,7 +344,7 @@ export class LoginComponent extends Component {
                 }}
               />
             </View>}
-            <TouchableOpacity style={styles.doneButton} onPress={this.doCheck24Word.bind(this)} disabled={this.state.status !== statuses.done}>
+            <TouchableOpacity style={styles.doneButton} onPress={this.doCheckPhraseWords.bind(this)} disabled={this.state.status !== statuses.done}>
               <Text style={[styles.doneButtonText, { color: this.state.status === statuses.done ? '#0060F2' : 'gray' }]}>{i18n.t('LoginComponent_doneButtonText')}</Text>
             </TouchableOpacity>
           </Animated.View>}

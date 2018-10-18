@@ -89,8 +89,8 @@ const doGetCurrentAccount = async (canUseCurrentTouchFaceId) => {
   return userInfo;
 };
 
-const doCheck24Words = async (phrase24Words) => {
-  return await AccountModel.doCheck24Words(phrase24Words);
+const doCheckPhraseWords = async (phraseWords) => {
+  return await AccountModel.doCheckPhraseWords(phraseWords);
 };
 
 const doGetTransferOfferDetail = async (transferOfferId) => {
@@ -126,8 +126,8 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 
 // ================================================================================================
 // ================================================================================================
-const doLogin = async (phrase24Words) => {
-  return executeTask('doLogin', { phrase24Words });
+const doLogin = async (phraseWords) => {
+  return executeTask('doLogin', { phraseWords });
 };
 
 const doLogout = async () => {
@@ -205,7 +205,7 @@ const doConfirmGrantingAccess = async (token, grantee, processingData) => {
 let AppProcessor = {
   doCreateNewAccount,
   doGetCurrentAccount,
-  doCheck24Words,
+  doCheckPhraseWords,
   doLogin,
   doLogout,
   doDeleteAccount,
