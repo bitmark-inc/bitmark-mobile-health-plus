@@ -149,7 +149,7 @@ class PrivateUserComponent extends Component {
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {
                   console.log('DataProcessor.getUserInformation() :', DataProcessor.getUserInformation());
-                  if (!DataProcessor.getUserInformation().activeHealthData) {
+                  if (isCurrentUser && !DataProcessor.getUserInformation().activeHealthData) {
                     Actions.getStart();
                   } else {
                     Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' });
