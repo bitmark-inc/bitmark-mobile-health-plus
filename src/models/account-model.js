@@ -2,6 +2,7 @@ import CookieManager from 'react-native-cookies';
 import PushNotification from 'react-native-push-notification';
 import { BitmarkSDK } from './adapters';
 import { config } from '../configs';
+import { runPromiseWithoutError } from './../utils';
 
 const doCreateAccount = async () => {
   await CookieManager.clearAll();
@@ -22,9 +23,13 @@ const doCheckPhraseWords = async (phraseWords) => {
 };
 
 const doLogout = async (jwt) => {
+  let result = await runPromiseWithoutError(BitmarkSDK.removeAccount());
+  if (result && result.error) {
+    return null;
+  }
   await CookieManager.clearAll();
   await doDeleteAccount(jwt);
-  return await BitmarkSDK.removeAccount();
+  return true;
 };
 
 const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platform, token, client, intercom_user_id) => {

@@ -16,12 +16,12 @@ RCT_EXTERN_METHOD(removeAccount:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(requestSession:(NSString)network:(NSString)reason:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(disposeSession:(NSString)sessionId:(RCTResponseSenderBlock)callback)
 
-RCT_EXTERN_METHOD(try24Words:(NSArray<NSString *> *)pharse:(NSString *)network:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(tryPhraseWords:(NSArray<NSString *> *)pharse:(NSString *)network:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(accountInfo:(NSString)sessionId:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(registerAccessPublicKey:(NSString *)sessionId:(RCTResponseSenderBlock)callback)
 
 // TODO
-RCT_EXTERN_METHOD(newAccountFrom24Words:(NSArray<NSString *> *)pharse:(NSString *)network:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(newAccountFromPhraseWords:(NSArray<NSString *> *)pharse:(NSString *)network:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(issueFile:(NSString *)sessionId:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(getAssetInfo:(NSString *)filePath:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(issueThenTransferFile:(NSString *)sessionId:(NSDictionary *)input:(RCTResponseSenderBlock)callback)

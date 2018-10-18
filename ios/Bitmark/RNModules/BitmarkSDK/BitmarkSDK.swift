@@ -40,8 +40,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(newAccountFrom24Words:::)
-  func newAccountFrom24Words(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(newAccountFromPhraseWords:::)
+  func newAccountFromPhraseWords(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(recoverPhrase: pharse)
@@ -71,8 +71,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(try24Words:::)
-  func try24Words(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(tryPhraseWords:::)
+  func tryPhraseWords(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(recoverPhrase: pharse)

@@ -5,7 +5,7 @@ import {
   Image, View, TouchableOpacity, Text, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Animated, SafeAreaView,
 } from 'react-native';
 
-import { convertWidth, dictionary24Words, dictionary12Words } from './../../utils';
+import { convertWidth, dictionaryPhraseWords, dictionary12Words } from './../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
 import { AppProcessor } from '../../processors';
@@ -18,7 +18,7 @@ const statuses = {
 
 // let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 
-let testWords = ["menu", "nurse", "episode", "first", "rapid", "write", "dad", "light", "hospital", "music", "brisk", "run"];
+// let testWords = ["track", "occur", "mercy", "machine", "guitar", "occur", "main", "extra", "topic", "pen", "fatigue", "whale"];
 
 export class LoginComponent extends Component {
   constructor(props) {
@@ -31,14 +31,14 @@ export class LoginComponent extends Component {
       if (index < (numberPhraseWords / 2)) {
         smallerList.push({
           key: index,
-          // word: '',
-          word: testWords[index],
+          word: '',
+          // word: testWords[index],
         });
       } else {
         biggerList.push({
           key: index,
-          // word: '',
-          word: testWords[index],
+          word: '',
+          // word: testWords[index],
         });
       }
     }
@@ -55,7 +55,7 @@ export class LoginComponent extends Component {
       keyboardExternalDataSource: dictionary12Words,
       numberPhraseWords,
     };
-    setTimeout(this.checkStatusInputting.bind(this), 200);
+    // setTimeout(this.checkStatusInputting.bind(this), 200);
   }
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
@@ -168,7 +168,7 @@ export class LoginComponent extends Component {
   }
 
   doFilter(text) {
-    let dictionaryWords = this.state.numberPhraseWords === 12 ? dictionary12Words : dictionary24Words;
+    let dictionaryWords = this.state.numberPhraseWords === 12 ? dictionary12Words : dictionaryPhraseWords;
     let keyboardExternalDataSource = dictionaryWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
     this.setState({ keyboardExternalDataSource, currentInputtedText: text });
   }
@@ -228,7 +228,7 @@ export class LoginComponent extends Component {
     }
     this.doCheckPhraseWords().then((result) => {
       if (result) {
-        Actions.touchFaceId({ passPhrase24Words: result });
+        Actions.touchFaceId({ phraseWords: result });
       }
     });
   }

@@ -23,7 +23,7 @@ const BitmarkSDK = {
   newAccountFromPhraseWords: (phraseWords, network) => {
     console.log('phraseWords :', phraseWords);
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFrom24Words(phraseWords, network, (ok, result) => {
+      SwiftBitmarkSDK.newAccountFromPhraseWords(phraseWords, network, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
@@ -213,7 +213,7 @@ const BitmarkSDK = {
   tryPhraseWords: (phraseWords, network) => {
     console.log('phraseWords :', phraseWords);
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.try24Words(phraseWords, network, (ok, result, phraseWords) => {
+      SwiftBitmarkSDK.tryPhraseWords(phraseWords, network, (ok, result, phraseWords) => {
         if (ok) {
           resolve({ bitmarkAccountNumber: result, phraseWords });
         } else {

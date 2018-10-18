@@ -306,6 +306,10 @@ const doLogin = async (touchFaceIdSession) => {
 };
 
 const doLogout = async () => {
+  let result = await AccountModel.doLogout(jwt);
+  if (!result) {
+    return null;
+  }
   if (userInformation.notificationUUID) {
     let signatureData = await CommonModel.doTryCreateSignatureData(i18n.t('FaceTouchId_doLogout'))
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
@@ -325,7 +329,6 @@ const doLogout = async () => {
     await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
   }
   CommonModel.resetFaceTouchSessionId();
-  await AccountModel.doLogout(jwt);
   await UserModel.doRemoveUserInfo();
   await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
   await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
@@ -337,6 +340,7 @@ const doLogout = async () => {
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
+  return true;
 };
 
 const doRequireHealthKitPermission = async () => {
