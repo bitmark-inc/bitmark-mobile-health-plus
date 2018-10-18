@@ -97,7 +97,7 @@ class PrivateUserComponent extends Component {
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file');
+      issue(filePath, assetName, metadataList, 'file', 1, () => Actions.pop());
     });
   }
 
