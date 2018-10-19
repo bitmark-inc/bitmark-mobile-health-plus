@@ -151,21 +151,21 @@ let doGetAllGrantedAccess = async (accountNumber, jwt) => {
 };
 
 let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
-  // // let emailIssueRequests = await AccountModel.doGetAllEmailRecords(jwt);
+  let emailIssueRequests = await AccountModel.doGetAllEmailRecords(jwt);
 
-  let emailIssueRequests = [
-    {
-      "id": "2f05da53-4e34-4a02-96df-35092108f160",
-      "account_number": "eB8RZTonPwUUpBPD6kXPffWfjvztdCyy9Ah7FD94iJnPZ4sFYN",
-      "registrant": "Moise Domino <ngleanh.reg@gmail.com>",
-      "subject": "Medical report from Dr. Anh",
-      "download_url": "https://drop.test.bitmark.com/zips/z_20181018_084441_768e9d919c663af68f32eb6a8eb43985.ezip",
-      "aes_cipher": "aes-256-ofb",
-      "aes_key": "b3b11c127ced166a246adf650a804addb6e5379099b1f7f2bcbb9e58c91dae1f",
-      "aes_iv": "91055c52c036d7a67fa70ce3cf658a5b",
-      "created_at": "2018-10-18T08:44:41.593533Z"
-    }
-  ];
+  // let emailIssueRequests = [
+  //   {
+  //     "id": "2f05da53-4e34-4a02-96df-35092108f160",
+  //     "account_number": "eB8RZTonPwUUpBPD6kXPffWfjvztdCyy9Ah7FD94iJnPZ4sFYN",
+  //     "registrant": "Moise Domino <ngleanh.reg@gmail.com>",
+  //     "subject": "Medical report from Dr. Anh",
+  //     "download_url": "https://drop.test.bitmark.com/zips/z_20181018_084441_768e9d919c663af68f32eb6a8eb43985.ezip",
+  //     "aes_cipher": "aes-256-ofb",
+  //     "aes_key": "b3b11c127ced166a246adf650a804addb6e5379099b1f7f2bcbb9e58c91dae1f",
+  //     "aes_iv": "91055c52c036d7a67fa70ce3cf658a5b",
+  //     "created_at": "2018-10-18T08:44:41.593533Z"
+  //   }
+  // ];
   let result = {};
   if (emailIssueRequests && emailIssueRequests.length > 0) {
     for (let emailIssueRequest of emailIssueRequests) {
