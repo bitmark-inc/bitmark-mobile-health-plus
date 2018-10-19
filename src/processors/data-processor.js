@@ -22,7 +22,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, runPromiseWithoutError, populateAssetNameFromImage } from '../utils';
+import { FileUtil, runPromiseWithoutError, populateAssetNameFromImage, populateAssetNameFromPdf } from '../utils';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -198,7 +198,13 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
   if (Object.keys(mapEmailRecords).length > 0) {
     for (let fromEmail in mapEmailRecords) {
       for (let item of mapEmailRecords[fromEmail].list) {
-        item.assetName = await populateAssetNameFromImage(item.filePath, `HA${randomString({ length: 8, numeric: true, letters: false, })}`);
+
+        if (item.filePath.endsWith('.pdf')) {
+          item.assetName = await populateAssetNameFromPdf(item.filePath, `HA${randomString({ length: 8, numeric: true, letters: false, })}`);
+        } else {
+          item.assetName = await populateAssetNameFromImage(item.filePath, `HA${randomString({ length: 8, numeric: true, letters: false, })}`);
+        }
+
         let metadataList = [];
         metadataList.push({ label: 'Source', value: 'Medical Records' });
         metadataList.push({ label: 'Saved Time', value: new Date(item.createdAt).toISOString() });

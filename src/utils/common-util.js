@@ -72,12 +72,12 @@ const calculateDocDimension = (visionResp) => {
 const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
   if (assetName.length > 64) assetName = assetName.substring(0, 64);
 
-  AppProcessor.doCheckFileToIssue(filePath).then(({asset}) => {
+  AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
     if (asset && asset.name) {
 
       let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
-        ? i18n.t('CaptureAssetComponent_alertMessage11', {type})
-        : i18n.t('CaptureAssetComponent_alertMessage12', {type});
+        ? i18n.t('CaptureAssetComponent_alertMessage11', { type })
+        : i18n.t('CaptureAssetComponent_alertMessage12', { type });
 
 
       Alert.alert('', message, [{
@@ -98,7 +98,7 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
     }
   }).catch(error => {
     console.log('Check file error :', error);
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
   });
 };
 
@@ -201,16 +201,16 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
 };
 
 const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
-  EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+
   let assetName = defaultAssetName;
   console.log('populateAssetFromPDF...');
 
-  let detectedTexts = await PDFScanner.pdfScan(filePath);
+  let detectedTexts = await runPromiseWithoutError(PDFScanner.pdfScan(filePath));
   console.log('detectedTexts:', detectedTexts);
 
-  if (detectedTexts && detectedTexts.length) {
+  if (detectedTexts && !detectedTexts.error && detectedTexts.length) {
     detectedTexts = detectedTexts.map(text => {
-      return {text: text.trim()}
+      return { text: text.trim() }
     });
 
     detectedTexts = sanitizeTextDetectorResponse(detectedTexts);
@@ -225,11 +225,8 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
       assetName = 'HA_' + potentialAssetNameItem.text.trim();
     }
   }
-
   console.log('assetName:', assetName);
-  EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-
   return assetName;
 };
 
-export {issue, populateAssetNameFromImage, populateAssetNameFromPdf}
+export { issue, populateAssetNameFromImage, populateAssetNameFromPdf }
