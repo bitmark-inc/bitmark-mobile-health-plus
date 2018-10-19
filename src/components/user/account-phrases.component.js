@@ -307,7 +307,7 @@ export class AccountPhraseComponent extends Component {
                           disabled={item.selected}
                           onPress={() => this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) })}
                         >
-                          <Text style={styles.recoveryPhraseIndex}>{index + 13}.</Text>
+                          <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
                           <Text style={[styles.recoveryPhraseWord, {
                             color: item.selected ? '#828282' : '#FF4444',
                             backgroundColor: item.word ? 'white' : '#F5F5F5',

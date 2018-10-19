@@ -315,7 +315,7 @@ export class LoginComponent extends Component {
 
               <View style={styles.submitButtonArea}>
                 <TouchableOpacity style={styles.switchFormMessageButton} onPress={this.changeNumberPhraseWord.bind(this)}>
-                  <Text style={[styles.switchFormMessage,]}>{i18n.t('LoginComponent_switchFormMessage', { number: this.state.numberPhraseWords })}</Text>
+                  <Text style={[styles.switchFormMessage,]}>{i18n.t('LoginComponent_switchFormMessage', { number: this.state.numberPhraseWords === 12 ? 24 : 12 })}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn.bind(this)} disabled={this.state.remainWordNumber > 0}>
                   <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || i18n.t('LoginComponent_submitButtonText1')}</Text>
