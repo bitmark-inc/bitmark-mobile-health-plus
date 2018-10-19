@@ -1,7 +1,7 @@
 import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
-import CryptoJS from 'crypto-js';
+import aesjs from 'aes-js';
 
 import { AccountModel, CommonModel, BitmarkSDK, UserModel } from './../models';
 import { config } from '../configs';
@@ -151,7 +151,7 @@ let doGetAllGrantedAccess = async (accountNumber, jwt) => {
 };
 
 let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
-  // let emailIssueRequests = await AccountModel.doGetAllEmailRecords(jwt);
+  // // let emailIssueRequests = await AccountModel.doGetAllEmailRecords(jwt);
 
   let emailIssueRequests = [
     {
@@ -166,41 +166,48 @@ let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
       "created_at": "2018-10-18T08:44:41.593533Z"
     }
   ];
+  let result = {};
   if (emailIssueRequests && emailIssueRequests.length > 0) {
     for (let emailIssueRequest of emailIssueRequests) {
-      // console.log('run1');
       let folderPath = `${FileUtil.CacheDirectory}/${bitmarkAccountNumber}/email_records/${emailIssueRequest.id}`;
       await FileUtil.mkdir(folderPath);
       let unzipFolder = `${folderPath}/${emailIssueRequest.subject}`;
       await FileUtil.mkdir(unzipFolder);
 
-      // console.log('run2', folderPath, unzipFolder);
+      let encryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_encrypted.zip`;
+      await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
 
-      // let encryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_encrypted.zip`;
-      // await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
-      // console.log('run3', encryptedFilePath);
+      let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
 
-      // let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
-      // console.log('run31', contentEncryptedFile);
+      let keyInByte = Buffer.from(emailIssueRequest.aes_key, 'hex');
+      let ivInByte = Buffer.from(emailIssueRequest.aes_iv, 'hex');
+      let contentEncryptedFileInBytes = Buffer.from(contentEncryptedFile, 'base64');
 
-      // let contentDecryptedFile = CryptoJS.AES.decrypt(contentEncryptedFile, emailIssueRequest.aes_key, {
-      //   iv: emailIssueRequest.aes_iv,
-      //   mode: CryptoJS.mode.OFB
-      // }).toString(CryptoJS.enc.Base64);
-      // console.log('run4', contentDecryptedFile);
+      let aesOfbDecrypt = new aesjs.ModeOfOperation.ofb(keyInByte, ivInByte);
+      let contentDecryptedFileInBytes = aesOfbDecrypt.decrypt(contentEncryptedFileInBytes);
 
-      // let decryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_decrypted.zip`;
-      // await FileUtil.writeFile(decryptedFilePath, contentDecryptedFile, 'base64');
-      // console.log('run5', decryptedFilePath);
-      let decryptedFilePath = '/Users/binle/Workspace/src/github.com/bitmark-inc/bitmark-mobile-health-plus/test/file.zip';
-
+      let decryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_decrypted.zip`;
+      await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
       await FileUtil.unzip(decryptedFilePath, unzipFolder);
 
-      console.log('run6');
+      let list = await FileUtil.readDir(`${unzipFolder}/data`);
+      if (list && list.length > 0) {
+        result[emailIssueRequest.registrant] = result[emailIssueRequest.registrant] || {};
+        result[emailIssueRequest.registrant].ids = result[emailIssueRequest.registrant].ids || [];
+        result[emailIssueRequest.registrant].list = result[emailIssueRequest.registrant].list || [];
+
+        result[emailIssueRequest.registrant].ids.push(emailIssueRequest.id);
+        for (let filename of list) {
+          result[emailIssueRequest.registrant].list.push({
+            filePath: `${unzipFolder}/data/${filename}`,
+            createdAt: emailIssueRequest.created_at,
+          });
+        }
+      }
     }
   }
+  return result;
 };
-
 
 let AccountService = {
   doGetCurrentAccount,

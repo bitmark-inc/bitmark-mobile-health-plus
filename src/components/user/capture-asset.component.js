@@ -10,6 +10,7 @@ import { convertWidth, issue, populateAssetNameFromImage } from '../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
+import { EventEmitterService } from '../../services';
 
 export class CaptureAssetComponent extends Component {
   static propTypes = {
@@ -27,8 +28,10 @@ export class CaptureAssetComponent extends Component {
     metadataList.push({ label: 'Source', value: 'Health Records' });
     metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
 
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
     assetName = await populateAssetNameFromImage(filePath, assetName);
-    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({assetName}));
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetName }));
   }
 
 

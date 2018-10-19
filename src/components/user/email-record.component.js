@@ -24,7 +24,7 @@ export class EmailRecordComponent extends Component {
     let emailAddress = Object.keys(this.props.mapEmailRecords);
     this.state = {
       emailAddress,
-      index: 0,
+      emailIndex: 0,
       selectedEmail: emailAddress[0],
       acceptedList: [],
       step: 'authorization',
@@ -35,39 +35,41 @@ export class EmailRecordComponent extends Component {
     AppProcessor.doAcceptEmailRecords(this.props.mapEmailRecords[this.state.selectedEmail]).then(() => {
       let acceptedList = this.state.acceptedList;
       acceptedList = acceptedList.concat(this.props.mapEmailRecords[this.state.selectedEmail]);
-      if (this.state.index < this.state.emailAddress.length) {
+      if (this.state.emailIndex < this.state.emailAddress.length - 1) {
         this.setState({
-          selectedEmail: this.state.emailAddress[this.state.index + 1],
-          index: this.state.index + 1,
+          selectedEmail: this.state.emailAddress[this.state.emailIndex + 1],
+          emailIndex: this.state.emailIndex + 1,
           acceptedList
         });
       } else {
         this.setState({ step: 'result', acceptedList });
       }
     }).catch(error => {
+      console.log('error :', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
   doReject() {
     AppProcessor.doRejectEmailRecords(this.props.mapEmailRecords[this.state.selectedEmail]).then(() => {
-      if (this.state.selectedEmail < this.props.mapEmailRecords.length) {
+      if (this.state.emailIndex < this.state.emailAddress.length - 1) {
         this.setState({
-          selectedEmail: this.state.emailAddress[this.state.index + 1],
-          index: this.state.index + 1,
+          selectedEmail: this.state.emailAddress[this.state.emailIndex + 1],
+          emailIndex: this.state.emailIndex + 1,
         });
       } else {
         if (this.state.acceptedList.length === 0) {
-          return Actions.pop();
+          return Actions.reset('user');
         }
         this.setState({ step: 'result' });
       }
     }).catch(error => {
+      console.log('error :', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
   render() {
-    console.log('state :', this.state);
+    console.log('this :', this.state, this.props);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
@@ -76,11 +78,11 @@ export class EmailRecordComponent extends Component {
               <Text style={styles.title}>{i18n.t('EmailRecordComponent_title1')}</Text>
               <Text style={styles.message}>{i18n.t('EmailRecordComponent_message1', { email: this.state.selectedEmail })}</Text>
 
-              <FlatList data={this.props.mapEmailRecords[this.state.selectedEmail]}
+              <FlatList data={this.props.mapEmailRecords[this.state.selectedEmail].list}
                 keyExtractor={(item, index) => index + ''}
                 renderItem={({ item, index }) => {
                   return (
-                    <TouchableOpacity key={index}>
+                    <TouchableOpacity key={index} onPress={() => Actions.fullViewCaptureAsset({ filePath: item.filePath, title: item.assetName })}>
                       <Text style={styles.emailRecordItem}>- {item.assetName}</Text>
                     </TouchableOpacity>
                   )
@@ -116,7 +118,7 @@ export class EmailRecordComponent extends Component {
             </View>
             <View style={styles.buttonArea}>
               <TouchableOpacity style={styles.viewButton} onPress={() => {
-                Actions.pop();
+                Actions.reset('user');
                 Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
               }} >
                 <Text style={styles.viewButtonText}>{i18n.t('EmailRecordComponent_viewButtonText').toUpperCase()}</Text>

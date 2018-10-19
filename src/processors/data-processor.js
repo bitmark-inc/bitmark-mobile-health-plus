@@ -5,6 +5,7 @@ import { merge } from 'lodash';
 import { Actions } from 'react-native-router-flux';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
+import randomString from 'random-string';
 const {
   PushNotificationIOS,
 } = ReactNative;
@@ -21,7 +22,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, runPromiseWithoutError } from '../utils';
+import { FileUtil, runPromiseWithoutError, populateAssetNameFromImage } from '../utils';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -190,36 +191,23 @@ const runGetAccountAccessesInBackground = () => {
 };
 
 let queueGetEmailRecords = [];
-// const doCheckNewEmailRecords = async (emailIssueRequests) => {
-//   if (!emailIssueRequests) {
-//     return;
-//   }
-
-//   let mapEmailRecords = {};
-//   let exist = false;
-//   for (let emailIssueRequest of emailIssueRequests) {
-//     if (emailIssueRequest.from && emailIssueRequest.attachments && emailIssueRequest.attachments.length > 0) {
-//       mapEmailRecords[emailIssueRequest.from] = mapEmailRecords[emailIssueRequest.from] || [];
-
-//       for (let attachment of emailIssueRequest.attachments) {
-//         let filePath = `${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${emailIssueRequest.from}/${attachment.id}/${attachment.filename}`;
-//         let { assetName, metadata } = await doDownloadAndDetectAsset(attachment.id, filePath);
-
-//         if (assetName && metadata) {
-//           exist = true;
-//           mapEmailRecords[emailIssueRequest.from].push({
-//             id: emailIssueRequest.id,
-//             assetName, metadata, filePath
-//           });
-//         }
-//       }
-//     }
-//   }
-
-//   if (exist) {
-//     Actions.emailRecords({ mapEmailRecords });
-//   }
-// };
+const doCheckNewEmailRecords = async (mapEmailRecords) => {
+  if (!mapEmailRecords) {
+    return;
+  }
+  if (Object.keys(mapEmailRecords).length > 0) {
+    for (let fromEmail in mapEmailRecords) {
+      for (let item of mapEmailRecords[fromEmail].list) {
+        item.assetName = await populateAssetNameFromImage(item.filePath, `HA${randomString({ length: 8, numeric: true, letters: false, })}`);
+        item.metadata = {
+          'Source': 'Medical Records',
+          'Saved Time': new Date(item.createdAt).toISOString()
+        }
+      }
+    }
+    Actions.emailRecords({ mapEmailRecords });
+  }
+};
 const runGetEmailRecordsInBackground = () => {
   return new Promise((resolve) => {
     queueGetEmailRecords = queueGetEmailRecords || [];
@@ -230,7 +218,7 @@ const runGetEmailRecordsInBackground = () => {
     AccountService.doGetAllEmailRecords(userInformation.bitmarkAccountNumber, jwt).then(emailIssueRequests => {
       queueGetEmailRecords.forEach(queueResolve => queueResolve(emailIssueRequests));
       queueGetEmailRecords = [];
-      // doCheckNewEmailRecords(emailIssueRequests);
+      doCheckNewEmailRecords(emailIssueRequests);
     }).catch(error => {
       queueGetEmailRecords.forEach(queueResolve => queueResolve());
       queueGetEmailRecords = [];
@@ -252,17 +240,6 @@ const runOnBackground = async () => {
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
     }
     await runGetEmailRecordsInBackground();
-    // setTimeout(() => {
-    //   Actions.emailRecords({
-    //     mapEmailRecords: {
-    //       'bachlx@bitmark.com': [{
-    //         assetName: 'test',
-    //         metadata: {},
-    //         filePath: '',
-    //       }]
-    //     }
-    //   });
-    // }, 3000);
   }
 };
 // ================================================================================================================================================
@@ -816,24 +793,21 @@ const doTrackEvent = async ({ appInfo, eventName }) => {
   }
 };
 
-const doAcceptEmailRecords = async (touchFaceIdSession, emailRecords) => {
-  let mapFinishedIds = {};
-  for (let emailRecord of emailRecords) {
-    await doIssueFile(touchFaceIdSession, emailRecord.filePath, emailRecord.assetName, emailRecord.metadata, 1);
-    await FileUtil.removeSafe(emailRecord.filePath);
-    if (!mapFinishedIds[emailRecord.id]) {
-      await AccountModel.doDeleteEmailRecord(emailRecord.id);
-    }
+const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
+  for (let item of emailRecord.list) {
+    await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+  }
+  for (let id of emailRecord.ids) {
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
+    await AccountModel.doDeleteEmailRecord(jwt, id);
   }
 };
 
-const doRejectEmailRecords = async (touchFaceIdSession, emailRecords) => {
-  let mapFinishedIds = {};
-  for (let emailRecord of emailRecords) {
-    await FileUtil.removeSafe(emailRecord.filePath);
-    if (!mapFinishedIds[emailRecord.id]) {
-      await AccountModel.doDeleteEmailRecord(emailRecord.id);
-    }
+const doRejectEmailRecords = async (emailRecord) => {
+  console.log('doRejectEmailRecords :', emailRecord);
+  for (let id of emailRecord.ids) {
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
+    await AccountModel.doDeleteEmailRecord(jwt, id);
   }
 };
 

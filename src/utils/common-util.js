@@ -1,11 +1,12 @@
-import {FileUtil} from "./index";
-import {AppProcessor, DataProcessor} from "../processors";
-import {Alert} from "react-native";
-import {EventEmitterService} from "../services";
+import { FileUtil } from "./index";
+import { AppProcessor, DataProcessor } from "../processors";
+import { Alert } from "react-native";
+import { EventEmitterService } from "../services";
 import RNTextDetector from "../models/adapters/react-native-text-detector";
 import DeviceInfo from "react-native-device-info/deviceinfo";
 import i18n from "i18n-js";
-import {intersection} from "lodash";
+import { intersection } from "lodash";
+import { runPromiseWithoutError } from "./helper";
 
 const convertToPascalCase = (str) => {
   return str.replace(/(\w)(\w*)/g,
@@ -68,12 +69,12 @@ const calculateDocDimension = (visionResp) => {
 };
 
 const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
-  AppProcessor.doCheckFileToIssue(filePath).then(({asset}) => {
+  AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
     if (asset && asset.name) {
 
       let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
-        ? i18n.t('CaptureAssetComponent_alertMessage11', {type})
-        : i18n.t('CaptureAssetComponent_alertMessage12', {type});
+        ? i18n.t('CaptureAssetComponent_alertMessage11', { type })
+        : i18n.t('CaptureAssetComponent_alertMessage12', { type });
 
 
       Alert.alert('', message, [{
@@ -94,24 +95,21 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
     }
   }).catch(error => {
     console.log('Check file error :', error);
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
   });
 };
 
 const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
-  EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+
   let assetName = defaultAssetName;
-  console.log('populateAssetFromImage...');
 
   filePath = 'file://' + filePath;
-  let visionResp = await RNTextDetector.detectFromUri({
+  let visionResp = await runPromiseWithoutError(RNTextDetector.detectFromUri({
     imagePath: filePath,
     language: getLanguageForTextDetector()
-  });
+  }));
 
-  console.log('visionResp', visionResp);
-
-  if (visionResp && visionResp.length) {
+  if (visionResp && !visionResp.error && visionResp.length) {
     let potentialAssetNameItem;
     let demension = calculateDocDimension(visionResp);
     let centerTextX = demension.centerTextX;
@@ -193,9 +191,7 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   }
 
   console.log('assetName:', assetName);
-  EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-
   return assetName;
 };
 
-export {issue, populateAssetNameFromImage}
+export { issue, populateAssetNameFromImage }
