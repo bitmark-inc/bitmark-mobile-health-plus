@@ -199,10 +199,10 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
     for (let fromEmail in mapEmailRecords) {
       for (let item of mapEmailRecords[fromEmail].list) {
         item.assetName = await populateAssetNameFromImage(item.filePath, `HA${randomString({ length: 8, numeric: true, letters: false, })}`);
-        item.metadata = {
-          'Source': 'Medical Records',
-          'Saved Time': new Date(item.createdAt).toISOString()
-        }
+        let metadataList = [];
+        metadataList.push({ label: 'Source', value: 'Medical Records' });
+        metadataList.push({ label: 'Saved Time', value: new Date(item.createdAt).toISOString() });
+        item.metadata = metadataList;
       }
     }
     Actions.emailRecords({ mapEmailRecords });

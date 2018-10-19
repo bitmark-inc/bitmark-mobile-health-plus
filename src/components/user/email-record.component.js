@@ -34,7 +34,7 @@ export class EmailRecordComponent extends Component {
   doAccept() {
     AppProcessor.doAcceptEmailRecords(this.props.mapEmailRecords[this.state.selectedEmail]).then(() => {
       let acceptedList = this.state.acceptedList;
-      acceptedList = acceptedList.concat(this.props.mapEmailRecords[this.state.selectedEmail]);
+      acceptedList = acceptedList.concat(this.props.mapEmailRecords[this.state.selectedEmail].list);
       if (this.state.emailIndex < this.state.emailAddress.length - 1) {
         this.setState({
           selectedEmail: this.state.emailAddress[this.state.emailIndex + 1],
