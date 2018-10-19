@@ -186,6 +186,9 @@
 		58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		58C9513920202AF80050A9D4 /* TouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9510D20202AF70050A9D4 /* TouchID.m */; };
 		58CB4892201EC63A0058B364 /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
+		58DBAEEF217984C2005B0E32 /* PDFScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DBAEEE217984C2005B0E32 /* PDFScanner.m */; };
+		58DBAEF0217984C2005B0E32 /* PDFScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DBAEEE217984C2005B0E32 /* PDFScanner.m */; };
+		58DBAEF1217984C2005B0E32 /* PDFScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DBAEEE217984C2005B0E32 /* PDFScanner.m */; };
 		58FC1E56201B21CC00F60AF9 /* BitmarkSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FC1E55201B21CC00F60AF9 /* BitmarkSDK.swift */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		72A0ED28C921482083D1D737 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68EEEE1542C435DA913552D /* libRNFS.a */; };
@@ -732,6 +735,8 @@
 		58C9510D20202AF70050A9D4 /* TouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchID.m; sourceTree = "<group>"; };
 		58CB488F201EC5670058B364 /* Bitmark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Bitmark.entitlements; path = Bitmark/Bitmark.entitlements; sourceTree = "<group>"; };
 		58CB4891201EC63A0058B364 /* KeychainUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainUtil.swift; sourceTree = "<group>"; };
+		58DBAEED217984C2005B0E32 /* PDFScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFScanner.h; sourceTree = "<group>"; };
+		58DBAEEE217984C2005B0E32 /* PDFScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFScanner.m; sourceTree = "<group>"; };
 		58FC1E54201B21CC00F60AF9 /* Bitmark-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bitmark-Bridging-Header.h"; sourceTree = "<group>"; };
 		58FC1E55201B21CC00F60AF9 /* BitmarkSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmarkSDK.swift; sourceTree = "<group>"; };
 		5DC7D46BBC681E6294ED31F4 /* Pods_BitmarkHealthPlus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmarkHealthPlus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1178,6 +1183,15 @@
 			path = Bitmark/Keychain;
 			sourceTree = "<group>";
 		};
+		58DBAEB121798495005B0E32 /* PDFScanner */ = {
+			isa = PBXGroup;
+			children = (
+				58DBAEED217984C2005B0E32 /* PDFScanner.h */,
+				58DBAEEE217984C2005B0E32 /* PDFScanner.m */,
+			);
+			path = PDFScanner;
+			sourceTree = "<group>";
+		};
 		58FC1DC8201B14CB00F60AF9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1208,6 +1222,7 @@
 		58FC1E27201B21AC00F60AF9 /* RNModules */ = {
 			isa = PBXGroup;
 			children = (
+				58DBAEB121798495005B0E32 /* PDFScanner */,
 				0E7371A621747877009022CC /* RNTextDetector */,
 				588FE1E3205FB45500937D78 /* HealthKit */,
 				58C9510B20202AF70050A9D4 /* TouchID */,
@@ -2461,6 +2476,7 @@
 				588FE257205FB45500937D78 /* RCTAppleHealthKit+Queries.m in Sources */,
 				588FE23F205FB45500937D78 /* RCTAppleHealthKit+ExtraData.m in Sources */,
 				588FE245205FB45500937D78 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */,
+				58DBAEEF217984C2005B0E32 /* PDFScanner.m in Sources */,
 				588FE249205FB45500937D78 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */,
 				588FE270205FB71000937D78 /* NSDate+Converting.m in Sources */,
 				0E7371A921747877009022CC /* RNTextDetector.m in Sources */,
@@ -2497,6 +2513,7 @@
 				5805EE01216F31B900943FA5 /* RCTAppleHealthKit+Queries.m in Sources */,
 				5805EE03216F31B900943FA5 /* RCTAppleHealthKit+ExtraData.m in Sources */,
 				5805EE04216F31B900943FA5 /* RCTAppleHealthKit+Methods_Sleep.m in Sources */,
+				58DBAEF1217984C2005B0E32 /* PDFScanner.m in Sources */,
 				5805EE06216F31B900943FA5 /* RCTAppleHealthKit+Methods_Vitals.m in Sources */,
 				5805EE07216F31B900943FA5 /* NSDate+Converting.m in Sources */,
 				0E7371AB21747877009022CC /* RNTextDetector.m in Sources */,
@@ -2533,6 +2550,7 @@
 				58908A8D20A18A5A00C0064A /* RCTAppleHealthKit+Queries.m in Sources */,
 				58908A8F20A18A5A00C0064A /* RCTAppleHealthKit+ExtraData.m in Sources */,
 				58908A9020A18A5A00C0064A /* RCTAppleHealthKit+Methods_Sleep.m in Sources */,
+				58DBAEF0217984C2005B0E32 /* PDFScanner.m in Sources */,
 				58908A9220A18A5A00C0064A /* RCTAppleHealthKit+Methods_Vitals.m in Sources */,
 				58908A9320A18A5A00C0064A /* NSDate+Converting.m in Sources */,
 				0E7371AA21747877009022CC /* RNTextDetector.m in Sources */,
