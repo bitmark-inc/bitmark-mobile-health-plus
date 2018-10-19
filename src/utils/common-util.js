@@ -69,12 +69,14 @@ const calculateDocDimension = (visionResp) => {
 };
 
 const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
-  AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
+  if (assetName.length > 64) assetName = assetName.substring(0, 64);
+
+  AppProcessor.doCheckFileToIssue(filePath).then(({asset}) => {
     if (asset && asset.name) {
 
       let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
-        ? i18n.t('CaptureAssetComponent_alertMessage11', { type })
-        : i18n.t('CaptureAssetComponent_alertMessage12', { type });
+        ? i18n.t('CaptureAssetComponent_alertMessage11', {type})
+        : i18n.t('CaptureAssetComponent_alertMessage12', {type});
 
 
       Alert.alert('', message, [{
@@ -95,7 +97,7 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
     }
   }).catch(error => {
     console.log('Check file error :', error);
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
   });
 };
 
