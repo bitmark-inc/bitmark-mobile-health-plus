@@ -190,50 +190,36 @@ const runGetAccountAccessesInBackground = () => {
 };
 
 let queueGetEmailRecords = [];
-const doCheckNewEmailRecords = async (emailIssueRequests) => {
-  if (!emailIssueRequests) {
-    return;
-  }
+// const doCheckNewEmailRecords = async (emailIssueRequests) => {
+//   if (!emailIssueRequests) {
+//     return;
+//   }
 
-  let doDownloadAndDetectAsset = (attachmentId, filePath) => {
-    return new Promise((resolve) => {
-      AccountModel.doDownloadEmailRecordAttachment(jwt, attachmentId, filePath).then(() => {
-        //TODO detect asset name,
-        let assetName, metadata;
+//   let mapEmailRecords = {};
+//   let exist = false;
+//   for (let emailIssueRequest of emailIssueRequests) {
+//     if (emailIssueRequest.from && emailIssueRequest.attachments && emailIssueRequest.attachments.length > 0) {
+//       mapEmailRecords[emailIssueRequest.from] = mapEmailRecords[emailIssueRequest.from] || [];
 
-        resolve({ assetName, metadata });
-      }).catch(error => {
-        console.log('download or detect asset for attachment file error :', error);
-        resolve({});
-      });
-    });
-  }
+//       for (let attachment of emailIssueRequest.attachments) {
+//         let filePath = `${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${emailIssueRequest.from}/${attachment.id}/${attachment.filename}`;
+//         let { assetName, metadata } = await doDownloadAndDetectAsset(attachment.id, filePath);
 
-  let mapEmailRecords = {};
-  let exist = false;
-  for (let emailIssueRequest of emailIssueRequests) {
-    if (emailIssueRequest.from && emailIssueRequest.attachments && emailIssueRequest.attachments.length > 0) {
-      mapEmailRecords[emailIssueRequest.from] = mapEmailRecords[emailIssueRequest.from] || [];
+//         if (assetName && metadata) {
+//           exist = true;
+//           mapEmailRecords[emailIssueRequest.from].push({
+//             id: emailIssueRequest.id,
+//             assetName, metadata, filePath
+//           });
+//         }
+//       }
+//     }
+//   }
 
-      for (let attachment of emailIssueRequest.attachments) {
-        let filePath = `${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${emailIssueRequest.from}/${attachment.id}/${attachment.filename}`;
-        let { assetName, metadata } = await doDownloadAndDetectAsset(attachment.id, filePath);
-
-        if (assetName && metadata) {
-          exist = true;
-          mapEmailRecords[emailIssueRequest.from].push({
-            id: emailIssueRequest.id,
-            assetName, metadata, filePath
-          });
-        }
-      }
-    }
-  }
-
-  if (exist) {
-    Actions.emailRecords({ mapEmailRecords });
-  }
-};
+//   if (exist) {
+//     Actions.emailRecords({ mapEmailRecords });
+//   }
+// };
 const runGetEmailRecordsInBackground = () => {
   return new Promise((resolve) => {
     queueGetEmailRecords = queueGetEmailRecords || [];
@@ -241,10 +227,10 @@ const runGetEmailRecordsInBackground = () => {
     if (queueGetEmailRecords.length > 1) {
       return;
     }
-    AccountModel.doGetAllEmailRecords(userInformation.bitmarkAccountNumber, jwt).then(emailIssueRequests => {
+    AccountService.doGetAllEmailRecords(userInformation.bitmarkAccountNumber, jwt).then(emailIssueRequests => {
       queueGetEmailRecords.forEach(queueResolve => queueResolve(emailIssueRequests));
       queueGetEmailRecords = [];
-      doCheckNewEmailRecords(emailIssueRequests);
+      // doCheckNewEmailRecords(emailIssueRequests);
     }).catch(error => {
       queueGetEmailRecords.forEach(queueResolve => queueResolve());
       queueGetEmailRecords = [];

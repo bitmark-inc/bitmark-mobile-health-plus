@@ -1,8 +1,11 @@
-import { AccountModel, CommonModel, BitmarkSDK, UserModel } from './../models';
-import { config } from '../configs';
 import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
+import CryptoJS from 'crypto-js';
+
+import { AccountModel, CommonModel, BitmarkSDK, UserModel } from './../models';
+import { config } from '../configs';
+import { FileUtil } from './../utils';
 const {
   PushNotificationIOS,
   Platform,
@@ -147,6 +150,57 @@ let doGetAllGrantedAccess = async (accountNumber, jwt) => {
   return { waiting, granted_from, granted_to };
 };
 
+let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
+  // let emailIssueRequests = await AccountModel.doGetAllEmailRecords(jwt);
+
+  let emailIssueRequests = [
+    {
+      "id": "2f05da53-4e34-4a02-96df-35092108f160",
+      "account_number": "eB8RZTonPwUUpBPD6kXPffWfjvztdCyy9Ah7FD94iJnPZ4sFYN",
+      "registrant": "Moise Domino <ngleanh.reg@gmail.com>",
+      "subject": "Medical report from Dr. Anh",
+      "download_url": "https://drop.test.bitmark.com/zips/z_20181018_084441_768e9d919c663af68f32eb6a8eb43985.ezip",
+      "aes_cipher": "aes-256-ofb",
+      "aes_key": "b3b11c127ced166a246adf650a804addb6e5379099b1f7f2bcbb9e58c91dae1f",
+      "aes_iv": "91055c52c036d7a67fa70ce3cf658a5b",
+      "created_at": "2018-10-18T08:44:41.593533Z"
+    }
+  ];
+  if (emailIssueRequests && emailIssueRequests.length > 0) {
+    for (let emailIssueRequest of emailIssueRequests) {
+      // console.log('run1');
+      let folderPath = `${FileUtil.CacheDirectory}/${bitmarkAccountNumber}/email_records/${emailIssueRequest.id}`;
+      await FileUtil.mkdir(folderPath);
+      let unzipFolder = `${folderPath}/${emailIssueRequest.subject}`;
+      await FileUtil.mkdir(unzipFolder);
+
+      // console.log('run2', folderPath, unzipFolder);
+
+      // let encryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_encrypted.zip`;
+      // await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
+      // console.log('run3', encryptedFilePath);
+
+      // let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
+      // console.log('run31', contentEncryptedFile);
+
+      // let contentDecryptedFile = CryptoJS.AES.decrypt(contentEncryptedFile, emailIssueRequest.aes_key, {
+      //   iv: emailIssueRequest.aes_iv,
+      //   mode: CryptoJS.mode.OFB
+      // }).toString(CryptoJS.enc.Base64);
+      // console.log('run4', contentDecryptedFile);
+
+      // let decryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_decrypted.zip`;
+      // await FileUtil.writeFile(decryptedFilePath, contentDecryptedFile, 'base64');
+      // console.log('run5', decryptedFilePath);
+      let decryptedFilePath = '/Users/binle/Workspace/src/github.com/bitmark-inc/bitmark-mobile-health-plus/test/file.zip';
+
+      await FileUtil.unzip(decryptedFilePath, unzipFolder);
+
+      console.log('run6');
+    }
+  }
+};
+
 
 let AccountService = {
   doGetCurrentAccount,
@@ -162,6 +216,7 @@ let AccountService = {
   doRegisterNotificationInfo,
   doTryDeregisterNotificationInfo,
   doGetAllGrantedAccess,
+  doGetAllEmailRecords,
 };
 
 export { AccountService };
