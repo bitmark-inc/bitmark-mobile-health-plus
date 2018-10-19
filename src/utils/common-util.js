@@ -102,7 +102,6 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
 };
 
 const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
-
   let assetName = defaultAssetName;
 
   filePath = 'file://' + filePath;
@@ -196,4 +195,17 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   return assetName;
 };
 
-export { issue, populateAssetNameFromImage }
+const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
+  EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+  let assetName = defaultAssetName;
+  console.log('populateAssetFromPDF...');
+
+  filePath = 'file://' + filePath;
+
+  console.log('assetName:', assetName);
+  EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+
+  return assetName;
+};
+
+export {issue, populateAssetNameFromImage, populateAssetNameFromPdf}

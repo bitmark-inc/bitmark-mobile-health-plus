@@ -18,7 +18,7 @@ import { constants } from '../../constants';
 import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
-import { issue } from "../../utils";
+import { issue, populateAssetNameFromPdf } from "../../utils";
 import { UserBitmarksStore } from '../../stores';
 
 class PrivateUserComponent extends Component {
@@ -85,7 +85,7 @@ class PrivateUserComponent extends Component {
       }
 
       if (response.fileSize > constants.ISSUE_FILE_SIZE_LIMIT_IN_MB * 1024 * 1024) {
-        Alert.alert('Error', i18n.t('UserComponent_maxFileSize', { size: constants.ISSUE_FILE_SIZE_LIMIT_IN_MB }));
+        Alert.alert('Error', i18n.t('UserComponent_maxFileSize', {size: constants.ISSUE_FILE_SIZE_LIMIT_IN_MB}));
         return;
       }
 
@@ -93,11 +93,18 @@ class PrivateUserComponent extends Component {
 
       let filePath = info.filePath;
       let assetName = response.fileName;
-      let metadataList = [];
-      metadataList.push({ label: 'Source', value: 'Medical Records' });
-      metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file', 1, () => Actions.pop());
+      let isPdfFile = false;
+      if (filePath.endsWith('.pdf') || filePath.endsWith('.PDF')) {
+        isPdfFile = true;
+        assetName = await populateAssetNameFromPdf(filePath, assetName);
+      }
+
+      let metadataList = [];
+      metadataList.push({label: 'Source', value: 'Medical Records'});
+      metadataList.push({label: 'Saved Time', value: new Date(info.timestamp).toISOString()});
+
+      issue(filePath, assetName, metadataList, 'file', 1, () => isPdfFile ? Actions.assetNameInform({assetName}) : Actions.pop());
     });
   }
 
