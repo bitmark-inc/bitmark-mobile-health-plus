@@ -198,6 +198,14 @@ const doConfirmGrantingAccess = async (token, grantee, processingData) => {
   return executeTask('doConfirmGrantingAccess', { token, grantee, processingData });
 };
 
+const doAcceptEmailRecords = async (emailRecord) => {
+  return executeTask('doAcceptEmailRecords', { emailRecord });
+};
+
+const doRejectEmailRecords = async (emailRecord) => {
+  return executeTask('doRejectEmailRecords', { emailRecord });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -230,6 +238,8 @@ let AppProcessor = {
   doRemoveGrantingAccess,
   doCancelGrantingAccess,
   doConfirmGrantingAccess,
+  doAcceptEmailRecords,
+  doRejectEmailRecords,
 }
 
 export {

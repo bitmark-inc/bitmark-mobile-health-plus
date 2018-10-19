@@ -49,8 +49,11 @@ const FileUtil = {
   readDir: async (folderPath) => {
     return await RNFS.readdir(folderPath);
   },
-  readFile: async (filePath) => {
-    return await RNFS.readFile(filePath);
+  readFile: async (filePath, encoding) => {
+    return await RNFS.readFile(filePath, encoding);
+  },
+  writeFile: async (filePath, content, encoding) => {
+    return await RNFS.writeFile(filePath, content, encoding);
   },
 
   zip: async (inputPath, outputPath) => {

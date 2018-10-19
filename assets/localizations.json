@@ -54,6 +54,7 @@
     "AccountComponent_accountNumberTitle": "AccountComponent_accountNumberTitle",
     "AccountComponent_accountNumberLabel": "AccountComponent_accountNumberLabel",
     "AccountComponent_accountNumberCopiedText": "AccountComponent_accountNumberCopiedText",
+    "AccountComponent_accountNumberCopyText": "AccountComponent_accountNumberCopyText",
     "AccountComponent_accountNumberDescription": "AccountComponent_accountNumberDescription",
     "AccountComponent_rowButtonText1": "AccountComponent_rowButtonText1",
     "AccountComponent_rowButtonText2": "AccountComponent_rowButtonText2",
@@ -283,9 +284,10 @@
     "AccountPhraseComponent_bottomButtonText5": "done",
     "AccountPhraseComponent_bottomButtonText6": "retry",
     "AccountComponent_accountNumberTitle": "Account",
-    "AccountComponent_accountNumberLabel": "Account number",
-    "AccountComponent_accountNumberCopiedText": "Account number copied!",
-    "AccountComponent_accountNumberDescription": "To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.",
+    "AccountComponent_accountNumberLabel": "View your account number",
+    "AccountComponent_accountNumberCopiedText": "Copied",
+    "AccountComponent_accountNumberCopyText": "Copy",
+    "AccountComponent_accountNumberDescription": "Others can send you health records at the following email address:",
     "AccountComponent_rowButtonText1": "Help and feedback",
     "AccountComponent_rowButtonText2": "Legal",
     "AccountComponent_securityTitle": "Security",
@@ -459,7 +461,11 @@
     "EmailRecordComponent_viewButtonText": "view",
     "AssetNameInform_headerText": "Your record has been added",
     "AssetNameInform_description": "We have automatically generated the following name  for your record:",
-    "AssetNameInform_view": "VIEW"
+    "AccountNumberComponent_titleText": "Account\nnumber",
+    "AccountNumberComponent_description": "To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.",
+    "AccountNumberComponent_fullAccountNumberLabel": "Full account number:",
+    "AccountNumberComponent_shortAccountNumberLabel": "Shorten account number:",
+    "AccountNumberComponent_viewOnRegistryButtonText": "View this account on blockchain"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "BitmarkInternetOffComponent_titleText",
@@ -516,6 +522,7 @@
     "AccountComponent_accountNumberTitle": "AccountComponent_accountNumberTitle",
     "AccountComponent_accountNumberLabel": "AccountComponent_accountNumberLabel",
     "AccountComponent_accountNumberCopiedText": "AccountComponent_accountNumberCopiedText",
+    "AccountComponent_accountNumberCopyText": "AccountComponent_accountNumberCopyText",
     "AccountComponent_accountNumberDescription": "AccountComponent_accountNumberDescription",
     "AccountComponent_rowButtonText1": "AccountComponent_rowButtonText1",
     "AccountComponent_rowButtonText2": "AccountComponent_rowButtonText2",
@@ -690,7 +697,12 @@
     "EmailRecordComponent_viewButtonText": "EmailRecordComponent_viewButtonText",
     "AssetNameInform_headerText": "AssetNameInform_headerText",
     "AssetNameInform_description": "AssetNameInform_description",
-    "AssetNameInform_view": "AssetNameInform_view"
+    "AssetNameInform_view": "AssetNameInform_view",
+    "AccountNumberComponent_titleText": "AccountNumberComponent_titleText",
+    "AccountNumberComponent_description": "AccountNumberComponent_description",
+    "AccountNumberComponent_fullAccountNumberLabel": "AccountNumberComponent_fullAccountNumberLabel",
+    "AccountNumberComponent_shortAccountNumberLabel": "AccountNumberComponent_shortAccountNumberLabel",
+    "AccountNumberComponent_viewOnRegistryButtonText": "AccountNumberComponent_viewOnRegistryButtonText"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "BitmarkInternetOffComponent_titleText",
@@ -746,6 +758,7 @@
     "AccountPhraseComponent_bottomButtonText6": "AccountPhraseComponent_bottomButtonText6",
     "AccountComponent_accountNumberTitle": "AccountComponent_accountNumberTitle",
     "AccountComponent_accountNumberLabel": "AccountComponent_accountNumberLabel",
+    "AccountComponent_accountNumberCopiedText": "AccountComponent_accountNumberCopiedText",
     "AccountComponent_accountNumberCopiedText": "AccountComponent_accountNumberCopiedText",
     "AccountComponent_accountNumberDescription": "AccountComponent_accountNumberDescription",
     "AccountComponent_rowButtonText1": "AccountComponent_rowButtonText1",
@@ -921,6 +934,11 @@
     "EmailRecordComponent_viewButtonText": "EmailRecordComponent_viewButtonText",
     "AssetNameInform_headerText": "AssetNameInform_headerText",
     "AssetNameInform_description": "AssetNameInform_description",
-    "AssetNameInform_view": "AssetNameInform_view"
+    "AssetNameInform_view": "AssetNameInform_view",
+    "AccountNumberComponent_titleText": "AccountNumberComponent_titleText",
+    "AccountNumberComponent_description": "AccountNumberComponent_description",
+    "AccountNumberComponent_fullAccountNumberLabel": "AccountNumberComponent_fullAccountNumberLabel",
+    "AccountNumberComponent_shortAccountNumberLabel": "AccountNumberComponent_shortAccountNumberLabel",
+    "AccountNumberComponent_viewOnRegistryButtonText": "AccountNumberComponent_viewOnRegistryButtonText"
   }
 }

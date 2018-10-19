@@ -17,8 +17,11 @@ import { ScanAccessQRCodeComponent } from './scan-access-qr-code.component';
 import { ConfirmAccessComponent } from './confirm-access.component';
 import { RevokeAccessComponent } from './revoke-access.component';
 import { FullViewCaptureAssetComponent } from './full-view-capture-asset.component';
+import { EmailRecordComponent } from './email-record.component';
 import { AssetNameInform } from "./asset-name-inform.component";
 import { GetStartComponent } from './get-start.component';
+import { AccountNumberComponent } from './account-number.component';
+
 
 
 export class UserRouterComponent extends Component {
@@ -31,6 +34,7 @@ export class UserRouterComponent extends Component {
         <Stack hideNavBar={true} >
           <Scene key="user" component={UserComponent} initial={true} panHandlers={null} />
           <Scene key="bitmarkHealthData" component={BitmarkHealthDataComponent} panHandlers={null} />
+          <Scene key="emailRecords" component={EmailRecordComponent} panHandlers={null} />
           <Scene key="account" component={AccountComponent} />
           <Scene key="accountPhrase" component={AccountPhraseComponent} />
           <Scene key="support" component={SupportComponent} />
@@ -46,6 +50,8 @@ export class UserRouterComponent extends Component {
           <Scene key="fullViewCaptureAsset" component={FullViewCaptureAssetComponent} />
           <Scene key="assetNameInform" component={AssetNameInform} />
           <Scene key="getStart" component={GetStartComponent} />
+          <Scene key="accountNumber" component={AccountNumberComponent} />
+
         </Stack>
       </Router>
     );

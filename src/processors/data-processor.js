@@ -5,6 +5,7 @@ import { merge } from 'lodash';
 import { Actions } from 'react-native-router-flux';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
+import randomString from 'random-string';
 const {
   PushNotificationIOS,
 } = ReactNative;
@@ -21,7 +22,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, runPromiseWithoutError } from '../utils';
+import { FileUtil, runPromiseWithoutError, populateAssetNameFromImage } from '../utils';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -189,6 +190,43 @@ const runGetAccountAccessesInBackground = () => {
   });
 };
 
+let queueGetEmailRecords = [];
+const doCheckNewEmailRecords = async (mapEmailRecords) => {
+  if (!mapEmailRecords) {
+    return;
+  }
+  if (Object.keys(mapEmailRecords).length > 0) {
+    for (let fromEmail in mapEmailRecords) {
+      for (let item of mapEmailRecords[fromEmail].list) {
+        item.assetName = await populateAssetNameFromImage(item.filePath, `HA${randomString({ length: 8, numeric: true, letters: false, })}`);
+        let metadataList = [];
+        metadataList.push({ label: 'Source', value: 'Medical Records' });
+        metadataList.push({ label: 'Saved Time', value: new Date(item.createdAt).toISOString() });
+        item.metadata = metadataList;
+      }
+    }
+    Actions.emailRecords({ mapEmailRecords });
+  }
+};
+const runGetEmailRecordsInBackground = () => {
+  return new Promise((resolve) => {
+    queueGetEmailRecords = queueGetEmailRecords || [];
+    queueGetEmailRecords.push(resolve);
+    if (queueGetEmailRecords.length > 1) {
+      return;
+    }
+    AccountService.doGetAllEmailRecords(userInformation.bitmarkAccountNumber, jwt).then(emailIssueRequests => {
+      queueGetEmailRecords.forEach(queueResolve => queueResolve(emailIssueRequests));
+      queueGetEmailRecords = [];
+      doCheckNewEmailRecords(emailIssueRequests);
+    }).catch(error => {
+      queueGetEmailRecords.forEach(queueResolve => queueResolve());
+      queueGetEmailRecords = [];
+      console.log(' runGetEmailRecordsInBackground error:', error);
+    });
+  });
+};
+
 const runOnBackground = async () => {
   let userInfo = await UserModel.doTryGetCurrentUser();
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
@@ -201,6 +239,7 @@ const runOnBackground = async () => {
     if (grantedAccessAccountSelected) {
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
     }
+    await runGetEmailRecordsInBackground();
   }
 };
 // ================================================================================================================================================
@@ -754,6 +793,25 @@ const doTrackEvent = async ({ appInfo, eventName }) => {
   }
 };
 
+const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
+  for (let item of emailRecord.list) {
+    await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+  }
+  for (let id of emailRecord.ids) {
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
+    await AccountModel.doDeleteEmailRecord(jwt, id);
+  }
+};
+
+const doRejectEmailRecords = async (emailRecord) => {
+  console.log('doRejectEmailRecords :', emailRecord);
+  for (let id of emailRecord.ids) {
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
+    await AccountModel.doDeleteEmailRecord(jwt, id);
+  }
+};
+
+
 const DataProcessor = {
   doOpenApp,
   doCreateAccount,
@@ -787,6 +845,8 @@ const DataProcessor = {
   doDownloadHealthDataBitmark,
   doDeleteAccount,
   doTrackEvent,
+  doAcceptEmailRecords,
+  doRejectEmailRecords,
 };
 
 export { DataProcessor };
