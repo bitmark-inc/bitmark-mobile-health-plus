@@ -49,6 +49,7 @@ void arrayCallback(CGPDFScannerRef inScanner, void *userInfo) {
   PDFScanner *parser = (__bridge PDFScanner *)userInfo;
   CGPDFArrayRef array;
   bool success = CGPDFScannerPopArray(inScanner, &array);
+  NSMutableString *finalString = [NSMutableString string];
   for (size_t n = 0; n < CGPDFArrayGetCount(array); n += 2) {
     if (n >= CGPDFArrayGetCount(array)) {
       continue;
@@ -57,9 +58,10 @@ void arrayCallback(CGPDFScannerRef inScanner, void *userInfo) {
     success = CGPDFArrayGetString(array, n, &pdfString);
     if (success) {
       NSString *string = (__bridge_transfer NSString *)CGPDFStringCopyTextString(pdfString);
-      [parser.pageStrings addObject:string];
+      [finalString appendString:string];
     }
   }
+  [parser.pageStrings addObject:finalString];
 }
 
 void stringCallback(CGPDFScannerRef inScanner, void *userInfo) {

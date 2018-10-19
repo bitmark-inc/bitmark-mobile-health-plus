@@ -13,6 +13,10 @@
 void arrayCallback(CGPDFScannerRef inScanner, void *userInfo);
 void stringCallback(CGPDFScannerRef inScanner, void *userInfo);
 
+typedef void (^PDFStringParserPageCallback)(NSArray<NSString *> *pageString);
+
 @interface PDFScanner : NSObject <RCTBridgeModule>
+
+- (void)pdfScanDummy:(NSString *)filePath callback:(PDFStringParserPageCallback)callback;
 
 @end
