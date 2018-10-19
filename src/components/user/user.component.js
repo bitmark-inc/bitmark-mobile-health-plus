@@ -18,7 +18,7 @@ import { constants } from '../../constants';
 import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
-import { issue, populateAssetNameFromPdf } from "../../utils";
+import { issue, populateAssetNameFromImage, populateAssetNameFromPdf } from "../../utils";
 import { UserBitmarksStore } from '../../stores';
 
 class PrivateUserComponent extends Component {
@@ -94,11 +94,19 @@ class PrivateUserComponent extends Component {
       let filePath = info.filePath;
       let assetName = response.fileName;
 
-      let isPdfFile = false;
-      if (filePath.endsWith('.pdf') || filePath.endsWith('.PDF')) {
-        isPdfFile = true;
+      let willDetectAssetNameAutomatically = false;
+      const pdfExtensions = ['PDF'];
+      const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
+      let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+      if (pdfExtensions.includes(fileExtension.toUpperCase())) {
+        willDetectAssetNameAutomatically = true;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
         assetName = await populateAssetNameFromPdf(filePath, assetName);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+      } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
+        willDetectAssetNameAutomatically = true;
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+        assetName = await populateAssetNameFromImage(filePath, assetName);
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       }
 
@@ -106,7 +114,7 @@ class PrivateUserComponent extends Component {
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file', 1, () => isPdfFile ? Actions.assetNameInform({ assetName }) : Actions.pop());
+      issue(filePath, assetName, metadataList, 'file', 1, () => willDetectAssetNameAutomatically ? Actions.assetNameInform({ assetName }) : Actions.pop());
     });
   }
 
