@@ -5,7 +5,7 @@ import {
   Image, View, TouchableOpacity, Text, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Animated, SafeAreaView,
 } from 'react-native';
 
-import { convertWidth, dictionaryPhraseWords, dictionary12Words } from './../../utils';
+import { convertWidth, dictionaryPhraseWords } from './../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
 import { AppProcessor } from '../../processors';
@@ -52,7 +52,7 @@ export class LoginComponent extends Component {
       preCheckResult: null,
       keyboardExternalBottom: new Animated.Value(0),
       keyboardExternalOpacity: new Animated.Value(0),
-      keyboardExternalDataSource: dictionary12Words,
+      keyboardExternalDataSource: dictionaryPhraseWords,
       numberPhraseWords,
     };
     // setTimeout(this.checkStatusInputting.bind(this), 200);
@@ -168,8 +168,7 @@ export class LoginComponent extends Component {
   }
 
   doFilter(text) {
-    let dictionaryWords = this.state.numberPhraseWords === 12 ? dictionary12Words : dictionaryPhraseWords;
-    let keyboardExternalDataSource = dictionaryWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
+    let keyboardExternalDataSource = dictionaryPhraseWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
     this.setState({ keyboardExternalDataSource, currentInputtedText: text });
   }
 
