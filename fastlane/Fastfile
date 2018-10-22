@@ -150,6 +150,7 @@ platform :ios do
     )
     hockey(
       api_token: ENV['HOCKEYAPP_KEY'],
+      release_type: "2",
       tags: "internal_testers",
       )
   end
