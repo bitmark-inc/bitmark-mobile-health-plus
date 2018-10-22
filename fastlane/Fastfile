@@ -69,6 +69,7 @@ platform :ios do
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus beta",
+      clean: true,
       include_bitcode: false
     )
     hockey(
