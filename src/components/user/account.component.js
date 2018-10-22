@@ -110,6 +110,9 @@ export class PrivateAccountComponent extends Component {
   }
 
   render() {
+    let emailAddress = config.network === config.NETWORKS.livenet
+      ? `${DataProcessor.getUserInformation().bitmarkAccountNumber}@drop.bitmark.com`
+      : `${DataProcessor.getUserInformation().bitmarkAccountNumber}@drop.test.bitmark.com`;
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
@@ -124,9 +127,9 @@ export class PrivateAccountComponent extends Component {
             <ScrollView>
               <View style={styles.accountNumberArea}>
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
-                <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}@bitmarkhealth.com</Text>
+                <Text style={styles.accountNumberValue}>emailAddress</Text>
                 <TouchableOpacity style={[styles.accountNumberCopiedArea]} onPress={() => {
-                  Clipboard.setString(`${DataProcessor.getUserInformation().bitmarkAccountNumber}@bitmarkhealth.com`);
+                  Clipboard.setString(emailAddress);
                   this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
                   setTimeout(() => { this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText') }) }, 1000);
                 }}>
