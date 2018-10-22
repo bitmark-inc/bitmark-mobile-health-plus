@@ -10,14 +10,15 @@
 
 @interface RCT_EXTERN_MODULE(BitmarkSDK, NSObject)
 
-RCT_EXTERN_METHOD(newAccount:(NSString)network:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(migrateOldKeychain:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(newAccount:(NSString *)network:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(removeAccount:(RCTResponseSenderBlock)callback)
 
-RCT_EXTERN_METHOD(requestSession:(NSString)network:(NSString)reason:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(disposeSession:(NSString)sessionId:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(requestSession:(NSString *)network:(NSString *)reason:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(disposeSession:(NSString *)sessionId:(RCTResponseSenderBlock)callback)
 
 RCT_EXTERN_METHOD(try24Words:(NSArray<NSString *> *)pharse:(NSString *)network:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(accountInfo:(NSString)sessionId:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(accountInfo:(NSString *)sessionId:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(registerAccessPublicKey:(NSString *)sessionId:(RCTResponseSenderBlock)callback)
 
 // TODO

@@ -15,6 +15,20 @@ class BitmarkSDK: NSObject {
   
   static let accountNotFound = "Cannot find account associated with that session id"
   
+  @objc(migrateOldKeychain:)
+  func migrateOldKeychain(_ callback: @escaping RCTResponseSenderBlock) -> Void {
+    do {
+      try KeychainUtil.migrateNewKeychain()
+    }
+    catch let e {
+      if let msg = e as? NSString {
+        callback([false, msg])
+      } else {
+        callback([false])
+      }
+    }
+  }
+  
   @objc(newAccount::)
   func newAccount(_ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {

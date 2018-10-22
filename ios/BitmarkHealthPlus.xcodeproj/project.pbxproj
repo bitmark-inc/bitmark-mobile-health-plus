@@ -736,6 +736,8 @@
 		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		58557E6A2062041C00402734 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		586D2DE921671BFA002A84B5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Bitmark/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		587CADE72179E9F6004E0920 /* Bitmark-dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Bitmark-dev.entitlements"; path = "Bitmark/Bitmark-dev.entitlements"; sourceTree = "<group>"; };
+		587CADE82179EA3C004E0920 /* BitmarkHealthPlus dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "BitmarkHealthPlus dev.entitlements"; sourceTree = "<group>"; };
 		588E9D3A216C643D00F0E5D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		588FE1E5205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTAppleHealthKit+Methods_Body.m"; sourceTree = "<group>"; };
 		588FE1E6205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTAppleHealthKit+Methods_Results.h"; sourceTree = "<group>"; };
@@ -1104,6 +1106,7 @@
 				586D2DE821671BFA002A84B5 /* Localizable.strings */,
 				588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */,
 				58CB488F201EC5670058B364 /* Bitmark.entitlements */,
+				587CADE72179E9F6004E0920 /* Bitmark-dev.entitlements */,
 				58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				58FC1E54201B21CC00F60AF9 /* Bitmark-Bridging-Header.h */,
@@ -1453,6 +1456,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				587CADE82179EA3C004E0920 /* BitmarkHealthPlus dev.entitlements */,
 				F150CA152023230B00C8FC17 /* AndaleMono.ttf */,
 				13B07FAE1A68108700A75B9A /* Bitmark */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -1711,11 +1715,19 @@
 					5805EDEC216F31B900943FA5 = {
 						DevelopmentTeam = A52M7AQ8B2;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					58908A7820A18A5A00C0064A = {
 						DevelopmentTeam = A52M7AQ8B2;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
 								enabled = 1;
 							};
@@ -3031,7 +3043,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-beta.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "BitmarkHealthPlus dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -3073,7 +3085,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-beta.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "BitmarkHealthPlus dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
