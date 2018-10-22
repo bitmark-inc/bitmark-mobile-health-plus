@@ -453,7 +453,7 @@
     "BitmarkService_doCheckMetadata2": "METADATA is too long (2048-BYTE LIMIT)!",
     "Native_notification_intercom_new_messages": "You have new messages from Bitmark support team. Tap to view.",
     "EmailRecordComponent_title1": "Authorization required",
-    "EmailRecordComponent_message1": "{{email}} would like to add health record to your Bitmark Health+ account. Please review the record to decide if you wish to accept or reject it.",
+    "EmailRecordComponent_message1": "{{email}} would like to add medical records to your Bitmark Health account. Please review the records to decide if you wish to accept or reject them.",
     "EmailRecordComponent_acceptButtonText": "Accept",
     "EmailRecordComponent_rejectButtonText": "reject",
     "EmailRecordComponent_title2": "Records have been added",
