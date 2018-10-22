@@ -127,7 +127,7 @@ export class PrivateAccountComponent extends Component {
             <ScrollView>
               <View style={styles.accountNumberArea}>
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
-                <Text style={styles.accountNumberValue}>emailAddress</Text>
+                <Text style={styles.accountNumberValue}>{emailAddress}</Text>
                 <TouchableOpacity style={[styles.accountNumberCopiedArea]} onPress={() => {
                   Clipboard.setString(emailAddress);
                   this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
