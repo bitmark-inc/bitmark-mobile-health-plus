@@ -42,7 +42,7 @@ const sanitizeTextDetectorResponse = (detectedItems) => {
   };
 
   return detectedItems.filter(item => {
-    let text = item.text.trim();
+    let text = text ? item.text.trim() : text;
     return text && text.length > 3 && notContainsSepecicalCharacter(text);
   })
 };
@@ -210,7 +210,7 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
 
   if (detectedTexts && !detectedTexts.error && detectedTexts.length) {
     detectedTexts = detectedTexts.map(text => {
-      return { text: text.trim() }
+      return { text: text ? text.trim() : text }
     });
 
     detectedTexts = sanitizeTextDetectorResponse(detectedTexts);

@@ -30,6 +30,7 @@ let jwt;
 let websocket;
 let isLoadingData = false;
 let notificationUUID;
+let isDisplayingEmailRecord = false;
 
 const isHealthDataBitmark = (asset) => {
   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
@@ -193,6 +194,7 @@ const runGetAccountAccessesInBackground = () => {
 let queueGetEmailRecords = [];
 const doCheckNewEmailRecords = async (mapEmailRecords) => {
   if (!mapEmailRecords) {
+    isDisplayingEmailRecord = false;
     return;
   }
   if (Object.keys(mapEmailRecords).length > 0) {
@@ -217,7 +219,12 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
         item.metadata = metadataList;
       }
     }
-    Actions.emailRecords({ mapEmailRecords });
+    if (!isDisplayingEmailRecord) {
+      isDisplayingEmailRecord = true;
+      Actions.emailRecords({ mapEmailRecords });
+    }
+  } else {
+    isDisplayingEmailRecord = false;
   }
 };
 const runGetEmailRecordsInBackground = () => {

@@ -157,7 +157,7 @@ let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
   //   {
   //     "id": "2f05da53-4e34-4a02-96df-35092108f160",
   //     "account_number": "eB8RZTonPwUUpBPD6kXPffWfjvztdCyy9Ah7FD94iJnPZ4sFYN",
-  //     "registrant": "Moise Domino <ngleanh.reg@gmail.com>",
+  //     "sender": "Moise Domino <ngleanh.reg@gmail.com>",
   //     "subject": "Medical report from Dr. Anh",
   //     "download_url": "https://drop.test.bitmark.com/zips/z_20181018_084441_768e9d919c663af68f32eb6a8eb43985.ezip",
   //     "aes_cipher": "aes-256-ofb",
@@ -192,13 +192,13 @@ let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
 
       let list = await FileUtil.readDir(`${unzipFolder}/data`);
       if (list && list.length > 0) {
-        result[emailIssueRequest.registrant] = result[emailIssueRequest.registrant] || {};
-        result[emailIssueRequest.registrant].ids = result[emailIssueRequest.registrant].ids || [];
-        result[emailIssueRequest.registrant].list = result[emailIssueRequest.registrant].list || [];
+        result[emailIssueRequest.sender] = result[emailIssueRequest.sender] || {};
+        result[emailIssueRequest.sender].ids = result[emailIssueRequest.sender].ids || [];
+        result[emailIssueRequest.sender].list = result[emailIssueRequest.sender].list || [];
 
-        result[emailIssueRequest.registrant].ids.push(emailIssueRequest.id);
+        result[emailIssueRequest.sender].ids.push(emailIssueRequest.id);
         for (let filename of list) {
-          result[emailIssueRequest.registrant].list.push({
+          result[emailIssueRequest.sender].list.push({
             filePath: `${unzipFolder}/data/${filename}`,
             createdAt: emailIssueRequest.created_at,
           });
