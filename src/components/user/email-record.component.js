@@ -82,7 +82,13 @@ export class EmailRecordComponent extends Component {
                 keyExtractor={(item, index) => index + ''}
                 renderItem={({ item, index }) => {
                   return (
-                    <TouchableOpacity key={index} onPress={() => Actions.fullViewCaptureAsset({ filePath: item.filePath, title: item.assetName })}>
+                    <TouchableOpacity key={index} onPress={() => {
+                      const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
+                      let fileExtension = item.filePath.substring(item.filePath.lastIndexOf('.') + 1);
+                      if (imageExtensions.includes(fileExtension.toUpperCase())) {
+                        Actions.fullViewCaptureAsset({ filePath: item.filePath, title: item.assetName });
+                      }
+                    }}>
                       <Text style={styles.emailRecordItem}>- {item.assetName}</Text>
                     </TouchableOpacity>
                   )

@@ -42,7 +42,7 @@ const sanitizeTextDetectorResponse = (detectedItems) => {
   };
 
   return detectedItems.filter(item => {
-    let text = text ? item.text.trim() : text;
+    let text = item.text ? item.text.trim() : item.text;
     return text && text.length > 3 && notContainsSepecicalCharacter(text);
   })
 };
