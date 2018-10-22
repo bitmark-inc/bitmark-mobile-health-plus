@@ -114,15 +114,16 @@ export class PrivateAccountComponent extends Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
-            <View style={[styles.accountNumberTitleRow,]}>
-              <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
-              <TouchableOpacity onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
+
 
             <ScrollView>
               <View style={styles.accountNumberArea}>
+                <View style={[styles.accountNumberTitleRow,]}>
+                  <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
+                  <TouchableOpacity onPress={Actions.pop}>
+                    <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
+                  </TouchableOpacity>
+                </View>
                 <Text style={styles.accountNumberLabel}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
                 <TouchableOpacity onPress={() => {
                   Clipboard.setString(DataProcessor.getUserInformation().bitmarkAccountNumber);
@@ -274,8 +275,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: convertWidth(20),
-    paddingTop: convertWidth(15),
+    paddingBottom: convertWidth(10),
   },
   accountNumberTitle: {
     fontFamily: 'Avenir Black',

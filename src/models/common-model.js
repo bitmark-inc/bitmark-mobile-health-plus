@@ -208,6 +208,7 @@ const doTrackEvent = (tags, fields) => {
       }
       resolve(data);
     }).catch((error) => {
+      resolve();
       console.log('doTrackEvent error :', error);
     });
   });
