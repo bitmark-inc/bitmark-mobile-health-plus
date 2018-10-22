@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet,
+  StyleSheet, Alert,
   View, TouchableOpacity, Text, SafeAreaView, FlatList,
 } from 'react-native';
 
@@ -87,6 +87,8 @@ export class EmailRecordComponent extends Component {
                       let fileExtension = item.filePath.substring(item.filePath.lastIndexOf('.') + 1);
                       if (imageExtensions.includes(fileExtension.toUpperCase())) {
                         Actions.fullViewCaptureAsset({ filePath: item.filePath, title: item.assetName });
+                      } else {
+                        Alert.alert('Preview of this file format is not supported.');
                       }
                     }}>
                       <Text style={styles.emailRecordItem}>- {item.assetName}</Text>
