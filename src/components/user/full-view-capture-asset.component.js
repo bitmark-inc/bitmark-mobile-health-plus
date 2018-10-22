@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from "moment";
+import ImageZoom from 'react-native-image-pan-zoom';
+
 import {
-  StyleSheet,
-  Image, View, SafeAreaView, TouchableOpacity, Text,
+  StyleSheet, Dimensions,
+  Image, View, TouchableOpacity, Text,
 } from 'react-native';
 
 import { convertWidth, } from '../../utils';
 import { config } from '../../configs';
-import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
 
 export class FullViewCaptureAssetComponent extends Component {
@@ -22,21 +23,25 @@ export class FullViewCaptureAssetComponent extends Component {
 
   render() {
     return (
-      <SafeAreaView style={[styles.bodySafeView]}>
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <View style={styles.titleRow}>
-              <Text style={styles.titleText}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
-              <TouchableOpacity onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.content}>
-              <Image style={styles.bitmarkImage} source={{ uri: this.props.filePath }} />
-            </View>
+      <View style={[styles.bodySafeView]}>
+        <View style={styles.bodyContent}>
+          <View style={styles.titleRow}>
+            <Text style={styles.titleText}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
+            <TouchableOpacity onPress={Actions.pop}>
+              <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.content}>
+            <ImageZoom
+              cropWidth={Dimensions.get('window').width}
+              cropHeight={Dimensions.get('window').height}
+              imageWidth={Dimensions.get('window').width}
+              imageHeight={Dimensions.get('window').height}>
+              <Image style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height, resizeMode: 'contain' }} source={{ uri: this.props.filePath }} />
+            </ImageZoom>
           </View>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 }
@@ -46,30 +51,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
   },
-  body: {
-    padding: convertWidth(16),
-    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    flex: 1,
-  },
+
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: "#FF4444",
-    width: "100%",
-    padding: convertWidth(20),
+    width: convertWidth(375),
   },
 
   titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    paddingTop: (config.isIPhoneX ? 44 : 0),
+    paddingLeft: convertWidth(20), paddingRight: convertWidth(20),
+    position: 'absolute', top: 0, width: convertWidth(375),
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    height: 44 + (config.isIPhoneX ? 44 : 0),
+    zIndex: 1,
+    backgroundColor: 'black',
   },
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 18,
+    fontSize: 24,
     color: 'white',
+    flex: 1,
   },
   closeIcon: {
     width: convertWidth(21),
@@ -80,10 +83,5 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingTop: 40,
-  },
-
-  bitmarkImage: {
-    height: '100%',
-    resizeMode: 'contain',
   },
 });

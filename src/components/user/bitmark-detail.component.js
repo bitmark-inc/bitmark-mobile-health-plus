@@ -109,17 +109,7 @@ export class BitmarkDetailComponent extends Component {
               </View>
               <View style={styles.content}>
                 <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
-                  <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle1')}</Text>
-                  <Text style={styles.metadataMessage}>{i18n.t('BitmarkDetailComponent_metadataMessage')}</Text>
-                  <View style={styles.metadataRow}>
-                    <Text style={styles.metadataLabel}>{i18n.t('BitmarkDetailComponent_metadataLabel1').toUpperCase()}</Text>
-                    <Text style={styles.metadataValue}>{moment(this.props.bitmark.asset.metadata['Saved Time']).format('YYYY MMM DD hh:mm:ss').toUpperCase()}</Text>
-                  </View>
-                  <View style={styles.metadataRow}>
-                    <Text style={styles.metadataLabel}>{i18n.t('BitmarkDetailComponent_metadataLabel2').toUpperCase()}</Text>
-                    <Text style={styles.metadataValue}>{this.props.bitmark.asset.metadata['Source'].toUpperCase()}</Text>
-                  </View>
-                  <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>
+                  {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>}
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                     <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({ filePath: this.state.filePath, bitmark: this.props.bitmark })}>
                       <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} /></TouchableOpacity>}
@@ -182,7 +172,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 36,
+    fontSize: 24,
   },
   closeButton: {
     paddingTop: convertWidth(26),
@@ -206,33 +196,9 @@ const styles = StyleSheet.create({
   },
   metadataTitle: {
     fontFamily: 'Avenir Medium',
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 16,
     marginTop: 21,
-  },
-  metadataMessage: {
-    fontFamily: 'Avenir Medium',
-    fontWeight: '300',
-    fontSize: 14,
-    color: '#999999',
-    marginTop: 4,
-    marginBottom: 24,
-  },
-
-  metadataRow: {
-    flexDirection: 'row',
-  },
-  metadataLabel: {
-    fontFamily: 'Avenir Medium',
-    fontWeight: '300',
-    fontSize: 14,
-    color: '#999999'
-  },
-  metadataValue: {
-    fontFamily: 'Avenir Medium',
-    fontWeight: '300',
-    fontSize: 14,
-    color: '#999999'
   },
 
   bitmarkImageArea: {

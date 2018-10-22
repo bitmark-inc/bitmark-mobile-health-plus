@@ -206,6 +206,7 @@ const doTrackEvent = (tags, fields) => {
       if (statusCode >= 400) {
         console.log('doTrackEvent error :', data);
       }
+      console.log('doTrackEvent success :', { tags, fields, data });
       resolve(data);
     }).catch((error) => {
       resolve();
