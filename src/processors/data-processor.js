@@ -199,10 +199,16 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
     for (let fromEmail in mapEmailRecords) {
       for (let item of mapEmailRecords[fromEmail].list) {
 
-        if (item.filePath.endsWith('.pdf')) {
-          item.assetName = await populateAssetNameFromPdf(item.filePath, `HA${randomString({ length: 8, numeric: true, letters: false, })}`);
+        const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
+        const pdfExtensions = ['PDF'];
+        let fileExtension = item.filePath.substring(item.filePath.lastIndexOf('.') + 1);
+        let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+        if (pdfExtensions.includes(fileExtension.toUpperCase())) {
+          item.assetName = await populateAssetNameFromPdf(item.filePath, defaultAssetName);
+        } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
+          item.assetName = await populateAssetNameFromImage(item.filePath, defaultAssetName);
         } else {
-          item.assetName = await populateAssetNameFromImage(item.filePath, `HA${randomString({ length: 8, numeric: true, letters: false, })}`);
+          item.assetName = defaultAssetName;
         }
 
         let metadataList = [];
