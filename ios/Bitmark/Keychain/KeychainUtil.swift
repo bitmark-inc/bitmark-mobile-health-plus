@@ -11,27 +11,40 @@ import KeychainAccess
 
 struct KeychainUtil {
 
-  private static let bitmarkSeedCoreKey = "bitmark_account"
-  
+  private static let bitmarkSeedCoreKey = "bitmark_core"
   
   static func getKeychain(reason: String) throws -> Keychain {
+//    #if (arch(i386) || arch(x86_64)) && os(iOS)
+//      let semaphore = DispatchSemaphore(value: 0)
+//      var cancel = false
+//      
+//      let alert = UIAlertController(title: "Keychain access request", message: reason, preferredStyle: .alert)
+//      alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+//        semaphore.signal()
+//      }))
+//      alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+//        cancel = true
+//        semaphore.signal()
+//      }))
+//    
+//      UIApplication.shared.delegate?.window??.rootViewController?.present(alert, animated: true, completion: nil)
+//    
+//      _ = semaphore.wait(timeout: .distantFuture)
+//    
+//      alert.dismiss(animated: true, completion: nil)
+//      
+//      if cancel {
+//        throw KeychainAccess.Status.userCanceled
+//      }
+//    #endif
+    
     guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
         throw("Cannot get app information")
     }
-    
-    // Parse bundle id
-    let components = bundleIdentifier.split(separator: ".")
-    var version = "appstore"
-    if components.count == 4 {
-      version = String(components[3])
-    }
-    
-    let appIdentifierPrefix =
-      Bundle.main.infoDictionary!["AppIdentifierPrefix"] as! String
 
-    return Keychain(service: "com.bitmark.keychain" + "." + version, accessGroup: appIdentifierPrefix + "shared")
-            .accessibility(.always)
-            .synchronizable(true)
+    return Keychain(service: bundleIdentifier) // Z5CE7A3A7N is the app prefix
+            .accessibility(.whenPasscodeSetThisDeviceOnly, authenticationPolicy: .userPresence)
+            .authenticationPrompt(reason)
   }
   
   static func saveCore(_ core: Data) throws {
@@ -45,39 +58,4 @@ struct KeychainUtil {
   static func clearCore() throws {
     return try getKeychain(reason: "Health + app would like to remove your account from keychain").remove(bitmarkSeedCoreKey)
   }
-  
-  static func migrateNewKeychain() throws {
-    if !contains("bitmark_core") {
-      return
-    }
-    
-    guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
-      throw("Cannot get app information")
-    }
-    
-    let oldKeychain = Keychain(service: bundleIdentifier) // Z5CE7A3A7N is the app prefix
-      .accessibility(.whenPasscodeSetThisDeviceOnly, authenticationPolicy: .userPresence)
-      .authenticationPrompt("We will remove touch / faceid prompt out of the app. Please confirm with your touch / faceid at the last time to do that action.")
-    
-    guard let core = try oldKeychain.getData(bitmarkSeedCoreKey) else {
-      return
-    }
-    
-    try oldKeychain.remove(bitmarkSeedCoreKey)
-    try saveCore(core)
-  }
-  
-  static func contains(_ key: String) -> Bool {    let keychainQuery: [AnyHashable: Any] = [
-      kSecClass as AnyHashable: kSecClassGenericPassword,
-      kSecAttrService as AnyHashable: Bundle.main.bundleIdentifier!,
-      kSecAttrAccount as AnyHashable: key,
-      kSecUseAuthenticationUI as AnyHashable: kSecUseAuthenticationUIFail
-    ]
-    
-    var result: AnyObject?
-    let status = SecItemCopyMatching(keychainQuery as CFDictionary, &result)
-    
-    return status == errSecInteractionNotAllowed
-  }
-
 }
