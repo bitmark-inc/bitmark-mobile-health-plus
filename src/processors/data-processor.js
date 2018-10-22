@@ -191,13 +191,20 @@ const runGetAccountAccessesInBackground = () => {
   });
 };
 
+const finishedDisplayEmailRecords = () => {
+  isDisplayingEmailRecord = false;
+};
 let queueGetEmailRecords = [];
 const doCheckNewEmailRecords = async (mapEmailRecords) => {
+  console.log('mapEmailRecords :', mapEmailRecords);
   if (!mapEmailRecords) {
     isDisplayingEmailRecord = false;
     return;
   }
   if (Object.keys(mapEmailRecords).length > 0) {
+    if (isDisplayingEmailRecord) {
+      return;
+    }
     for (let fromEmail in mapEmailRecords) {
       for (let item of mapEmailRecords[fromEmail].list) {
 
@@ -219,10 +226,8 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
         item.metadata = metadataList;
       }
     }
-    if (!isDisplayingEmailRecord) {
-      isDisplayingEmailRecord = true;
-      Actions.emailRecords({ mapEmailRecords });
-    }
+    isDisplayingEmailRecord = true;
+    Actions.emailRecords({ mapEmailRecords });
   } else {
     isDisplayingEmailRecord = false;
   }
@@ -258,7 +263,9 @@ const runOnBackground = async () => {
     if (grantedAccessAccountSelected) {
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
     }
-    await runGetEmailRecordsInBackground();
+    if (isDisplayingEmailRecord) {
+      await runGetEmailRecordsInBackground();
+    }
   }
 };
 // ================================================================================================================================================
@@ -850,6 +857,7 @@ const DataProcessor = {
   getApplicationVersion,
   getApplicationBuildNumber,
   getUserInformation,
+  finishedDisplayEmailRecords,
   isAppLoadingData: () => isLoadingData,
 
   doGrantingAccess,
