@@ -9,11 +9,19 @@ import i18n from "i18n-js";
 import { intersection } from "lodash";
 import { runPromiseWithoutError } from "./helper";
 
-const convertToPascalCase = (str) => {
-  return str.replace(/(\w)(\w*)/g,
+const isPascalCase = (str) => {
+  let pascalCase1 = str.replace(/(\w)(\w*)/g,
     function (g0, g1, g2) {
       return g1.toUpperCase() + g2.toLowerCase();
     });
+
+  let pascalCase2 =
+    str.replace(/(\w)(\w*)/g,
+      function (g0, g1, g2) {
+        return g1 + g2.toLowerCase();
+      });
+
+  return pascalCase1 === pascalCase2;
 };
 
 const getLanguageForTextDetector = () => {
@@ -120,7 +128,7 @@ const detectAssetNameByCommonRules = (texts) => {
   // Note: This rule can not apply for Chinese or any languages which don't have capital letters
   if (!potentialAssetNameItem) {
     for (let i = 0; i < texts.length; i++) {
-      if (texts[i].text && (convertToPascalCase(texts[i].text) === texts[i].text)) {
+      if (texts[i].text && isPascalCase(texts[i].text)) {
         potentialAssetNameItem = texts[i];
         break;
       }
