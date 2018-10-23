@@ -61,7 +61,7 @@ export class PrivateAccountComponent extends Component {
     Mailer.mail({
       subject: i18n.t('AccountComponent_subject'),
       recipients: ['support@bitmark.com'],
-      body: 'Health+ version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
+      body: 'Bitmark Health version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
     }, (error) => {
       if (error) {
         Alert.alert(i18n.t('AccountComponent_alertTitle3'), i18n.t('AccountComponent_alertMessage3'));
