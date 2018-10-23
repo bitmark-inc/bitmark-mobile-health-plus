@@ -355,7 +355,6 @@ const doCreateAccount = async (touchFaceIdSession) => {
       console.log('DataProcessor doRegisterNotificationInfo error:', error);
     });
   }
-  await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await CommonModel.doTrackEvent({
     event_name: 'health_plus_create_new_account',
     account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
@@ -365,7 +364,8 @@ const doCreateAccount = async (touchFaceIdSession) => {
 
 const doLogin = async (touchFaceIdSession) => {
   userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
-
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await checkAppNeedResetLocalData();
   return userInformation;
 };

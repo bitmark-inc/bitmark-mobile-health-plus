@@ -86,7 +86,7 @@ const doDeregisterNotificationInfo = (accountNumber, timestamp, signature, token
 const doTryRegisterAccount = (accountNumber, timestamp, signature) => {
   return new Promise((resolve) => {
     let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/events/register-account`;
+    let tempURL = `${config.mobile_server_url}/api/accounts`;
     fetch(tempURL, {
       method: 'POST',
       headers: {
