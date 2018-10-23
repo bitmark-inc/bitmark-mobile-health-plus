@@ -238,7 +238,9 @@ const runOnBackground = async () => {
     if (grantedAccessAccountSelected) {
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
     }
-    await runGetEmailRecordsInBackground();
+    if (!isDisplayingEmailRecord) {
+      await runGetEmailRecordsInBackground();
+    }
   }
 };
 // ================================================================================================================================================
