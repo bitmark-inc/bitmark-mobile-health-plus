@@ -71,7 +71,7 @@ export class EmailRecordComponent extends Component {
     });
   }
   doReject() {
-    AppProcessor.doRejectEmailRecords(this.props.mapEmailRecords[this.state.selectedEmail]).then(() => {
+    AppProcessor.doRejectEmailRecords({ list: this.state.list, ids: this.state.ids }).then(() => {
       if (this.state.emailIndex < this.state.emailAddress.length - 1) {
         this.setState({
           selectedEmail: this.state.emailAddress[this.state.emailIndex + 1],
