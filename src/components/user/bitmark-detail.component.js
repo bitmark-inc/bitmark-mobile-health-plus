@@ -56,7 +56,6 @@ export class BitmarkDetailComponent extends Component {
         runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, {
           indicator: true, title: i18n.t('BitmarkDetailComponent_title')
         })).then(result => {
-          console.log('result :', result);
           if (result && result.error) {
             EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
             // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
@@ -107,7 +106,7 @@ export class BitmarkDetailComponent extends Component {
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
               </View>
-              <View style={styles.content}>
+              <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
                 <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
                   {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>}
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
@@ -166,6 +165,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: convertWidth(20),
+    paddingBottom: 0,
     paddingTop: 0,
     paddingRight: 0,
   },
@@ -203,9 +203,12 @@ const styles = StyleSheet.create({
 
   bitmarkImageArea: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
   },
   bitmarkImage: {
     height: '100%',
+    width: '100%',
     resizeMode: 'contain',
   },
   bitmarkContent: {
