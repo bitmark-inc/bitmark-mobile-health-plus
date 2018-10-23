@@ -10,7 +10,7 @@ import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
-import { AppProcessor } from './../../processors';
+import { AppProcessor, DataProcessor } from './../../processors';
 import { EventEmitterService } from './../../services';
 
 export class EmailRecordComponent extends Component {
@@ -126,6 +126,7 @@ export class EmailRecordComponent extends Component {
             </View>
             <View style={styles.buttonArea}>
               <TouchableOpacity style={styles.viewButton} onPress={() => {
+                DataProcessor.finishedDisplayEmailRecords();
                 Actions.reset('user');
                 Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
               }} >
