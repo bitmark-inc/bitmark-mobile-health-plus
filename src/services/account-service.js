@@ -156,10 +156,10 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
   for (let emailIssueRequest of emailIssueRequestsFromAnEmail) {
     let folderPath = `${FileUtil.CacheDirectory}/${bitmarkAccountNumber}/email_records/${emailIssueRequest.id}`;
     await FileUtil.mkdir(folderPath);
-    let unzipFolder = `${folderPath}/${emailIssueRequest.subject}`;
+    let unzipFolder = `${folderPath}/temp_email_records`;
     await FileUtil.mkdir(unzipFolder);
 
-    let encryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_encrypted.zip`;
+    let encryptedFilePath = `${folderPath}/temp_email_records_encrypted.zip`;
     await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
 
     let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
@@ -171,7 +171,7 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
     let aesOfbDecrypt = new aesjs.ModeOfOperation.ofb(keyInByte, ivInByte);
     let contentDecryptedFileInBytes = aesOfbDecrypt.decrypt(contentEncryptedFileInBytes);
 
-    let decryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_decrypted.zip`;
+    let decryptedFilePath = `${folderPath}/temp_email_records_decrypted.zip`;
     await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
     await FileUtil.unzip(decryptedFilePath, unzipFolder);
 

@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
 
   bitmarkImage: {
     height: '100%',
+    width: '100%',
     resizeMode: 'contain',
   },
 });
