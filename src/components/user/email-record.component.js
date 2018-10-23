@@ -66,6 +66,7 @@ export class EmailRecordComponent extends Component {
         if (acceptedList.length > 0) {
           this.setState({ step: EmailRecordComponent.STEPS.view, acceptedList });
         } else {
+          DataProcessor.finishedDisplayEmailRecords();
           return Actions.reset('user');
         }
       }
@@ -83,6 +84,7 @@ export class EmailRecordComponent extends Component {
         });
       } else {
         if (this.state.acceptedList.length === 0) {
+          DataProcessor.finishedDisplayEmailRecords();
           return Actions.reset('user');
         }
         this.setState({ step: EmailRecordComponent.STEPS.view });
