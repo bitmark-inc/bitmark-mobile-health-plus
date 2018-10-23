@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: convertWidth(26),
-    paddingTop: convertWidth(15),
+    paddingTop: convertWidth(0),
   },
   contentScroll: {
     flexDirection: 'column',
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Medium',
     fontWeight: '600',
     fontSize: 16,
-    marginTop: 21,
+    marginTop: 5,
   },
 
   bitmarkImageArea: {

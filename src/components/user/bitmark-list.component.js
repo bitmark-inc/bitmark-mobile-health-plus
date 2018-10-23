@@ -91,8 +91,8 @@ class PrivateBitmarkListComponent extends Component {
                   data={this.props.bitmarkType === 'bitmark_health_data' ? this.props.healthDataBitmarks :
                     (this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.healthAssetBitmarks : [])}
                   extraData={this.props}
-                  renderItem={({ item }) => {
-                    return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => isFileRecord(item) ? this.downloadBitmark.bind(this)(item.id, item.asset.id, item.asset.name) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
+                  renderItem={({ item, index }) => {
+                    return (<TouchableOpacity style={[styles.bitmarkRow, { marginTop: index === 0 ? 5 : 15 }]} onPress={() => isFileRecord(item) ? this.downloadBitmark.bind(this)(item.id, item.asset.id, item.asset.name) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)} disabled={item.status === 'pending'}>
                       <Text style={styles.bitmarkRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
                       {item.status === 'confirmed' && <Image style={styles.bitmarkRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
                       {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
@@ -159,16 +159,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   closeButton: {
-    padding: 24,
+    paddingTop: convertWidth(26),
+    paddingBottom: convertWidth(26),
+    paddingRight: convertWidth(24),
+    paddingLeft: convertWidth(50),
   },
   closeIcon: {
-    width: convertWidth(20),
-    height: convertWidth(20),
+    width: convertWidth(21),
+    height: convertWidth(21),
     resizeMode: 'contain',
   },
 
   bitmarkList: {
     padding: convertWidth(26),
+    paddingTop: 0,
   },
   bitmarkRow: {
     flexDirection: 'row',

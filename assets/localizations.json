@@ -332,7 +332,7 @@
     "BitmarkHealthDataComponent_alertTitle": "Encrypting and protecting your health data...",
     "BitmarkListComponent_accountNumberDisplayText": "Viewing [{{accountNumber}}], tap here to cancel.",
     "BitmarkListComponent_titleText1": "Health data",
-    "BitmarkListComponent_titleText2": "Health records",
+    "BitmarkListComponent_titleText2": "Medical records",
     "BitmarkListComponent_bitmarkPending": "Registering ownership...",
     "BitmarkListComponent_downloadTitle": "Preparing to export...",
     "BitmarkListComponent_downloadMessage": "Downloading \"{{fileName}}\"...",
