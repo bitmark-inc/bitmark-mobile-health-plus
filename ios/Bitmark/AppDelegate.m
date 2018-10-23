@@ -46,7 +46,9 @@
 #ifdef HOCKEYAPP
   NSString *hockeyAppID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HockeyAppID"];
   [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyAppID];
+#ifdef HOCKEYAPP_UPDATE
   [[BITHockeyManager sharedHockeyManager].updateManager setUpdateSetting:BITUpdateCheckStartup];
+#endif
   [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAutoSend];
   [[BITHockeyManager sharedHockeyManager] startManager];
   [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];

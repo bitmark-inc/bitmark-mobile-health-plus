@@ -2763,7 +2763,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"HOCKEYAPP=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2805,6 +2804,7 @@
 					"$(inherited)",
 					"COCOAPODS=1",
 					"HOCKEYAPP=1",
+					"HOCKEYAPP_UPDATE=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2845,7 +2845,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"HOCKEYAPP=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
