@@ -5,7 +5,6 @@ import { merge } from 'lodash';
 import { Actions } from 'react-native-router-flux';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
-import randomString from 'random-string';
 const {
   PushNotificationIOS,
 } = ReactNative;
@@ -22,7 +21,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, runPromiseWithoutError, populateAssetNameFromImage, populateAssetNameFromPdf } from '../utils';
+import { FileUtil, runPromiseWithoutError } from '../utils';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -201,31 +200,7 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
     isDisplayingEmailRecord = false;
     return;
   }
-  if (Object.keys(mapEmailRecords).length > 0) {
-    if (isDisplayingEmailRecord) {
-      return;
-    }
-    for (let fromEmail in mapEmailRecords) {
-      for (let item of mapEmailRecords[fromEmail].list) {
-
-        const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-        const pdfExtensions = ['PDF'];
-        let fileExtension = item.filePath.substring(item.filePath.lastIndexOf('.') + 1);
-        let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
-        if (pdfExtensions.includes(fileExtension.toUpperCase())) {
-          item.assetName = await populateAssetNameFromPdf(item.filePath, defaultAssetName);
-        } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
-          item.assetName = await populateAssetNameFromImage(item.filePath, defaultAssetName);
-        } else {
-          item.assetName = defaultAssetName;
-        }
-
-        let metadataList = [];
-        metadataList.push({ label: 'Source', value: 'Medical Records' });
-        metadataList.push({ label: 'Saved Time', value: new Date(item.createdAt).toISOString() });
-        item.metadata = metadataList;
-      }
-    }
+  if (Object.keys(mapEmailRecords).length > 0 && !isDisplayingEmailRecord) {
     isDisplayingEmailRecord = true;
     Actions.emailRecords({ mapEmailRecords });
   } else {
@@ -263,7 +238,7 @@ const runOnBackground = async () => {
     if (grantedAccessAccountSelected) {
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
     }
-    if (isDisplayingEmailRecord) {
+    if (!isDisplayingEmailRecord) {
       await runGetEmailRecordsInBackground();
     }
   }
@@ -821,7 +796,9 @@ const doTrackEvent = async ({ appInfo, eventName }) => {
 
 const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
   for (let item of emailRecord.list) {
-    await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+    if (!item.existingAsset) {
+      await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+    }
   }
   for (let id of emailRecord.ids) {
     await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);

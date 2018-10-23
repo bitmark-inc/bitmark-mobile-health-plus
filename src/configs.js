@@ -57,7 +57,7 @@ export { config, };
 
 
 // testnet
-// code-push release-react 'BitmarkHealthPlus' ios --pre "BitmarkHealthPlus dev" --mandatory true  --targetBinaryVersion "1.0.0"
+// code-push release-react 'BitmarkHealthPlus' ios --pre "BitmarkHealthPlus dev" --mandatory true  --targetBinaryVersion "1.0.9"
 // code-push release-react 'BitmarkHealthPlus' ios --pre "BitmarkHealthPlus dev" -m --description "update code" --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.0.0.map" [--targetBinaryVersion "~1.0.0"]
 
 // livenet

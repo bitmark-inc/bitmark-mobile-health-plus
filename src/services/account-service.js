@@ -2,10 +2,11 @@ import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
 import aesjs from 'aes-js';
+import randomString from 'random-string';
 
-import { AccountModel, CommonModel, BitmarkSDK, UserModel } from './../models';
+import { AccountModel, CommonModel, BitmarkSDK, UserModel, BitmarkModel } from './../models';
 import { config } from '../configs';
-import { FileUtil } from './../utils';
+import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage } from './../utils';
 const {
   PushNotificationIOS,
   Platform,
@@ -150,6 +151,74 @@ let doGetAllGrantedAccess = async (accountNumber, jwt) => {
   return { waiting, granted_from, granted_to };
 };
 
+let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromAnEmail) => {
+  let results = { ids: [], list: [] };
+  for (let emailIssueRequest of emailIssueRequestsFromAnEmail) {
+    let folderPath = `${FileUtil.CacheDirectory}/${bitmarkAccountNumber}/email_records/${emailIssueRequest.id}`;
+    await FileUtil.mkdir(folderPath);
+    let unzipFolder = `${folderPath}/${emailIssueRequest.subject}`;
+    await FileUtil.mkdir(unzipFolder);
+
+    let encryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_encrypted.zip`;
+    await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
+
+    let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
+
+    let keyInByte = Buffer.from(emailIssueRequest.aes_key, 'hex');
+    let ivInByte = Buffer.from(emailIssueRequest.aes_iv, 'hex');
+    let contentEncryptedFileInBytes = Buffer.from(contentEncryptedFile, 'base64');
+
+    let aesOfbDecrypt = new aesjs.ModeOfOperation.ofb(keyInByte, ivInByte);
+    let contentDecryptedFileInBytes = aesOfbDecrypt.decrypt(contentEncryptedFileInBytes);
+
+    let decryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_decrypted.zip`;
+    await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
+    await FileUtil.unzip(decryptedFilePath, unzipFolder);
+
+    let list = await FileUtil.readDir(`${unzipFolder}/data`);
+    if (list && list.length > 0) {
+      results.ids.push(emailIssueRequest.id);
+      for (let filename of list) {
+        let filePath = `${unzipFolder}/data/${filename}`;
+
+        let assetName;
+        let existingAsset = false;
+        let metadataList = [];
+        let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
+        let assetInformation = await BitmarkModel.doGetAssetInformation(assetInfo.id);
+        if (assetInformation) {
+          existingAsset = true;
+          assetName = assetInformation.name;
+        } else {
+
+          let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+          let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+
+          const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
+          const pdfExtensions = ['PDF'];
+          if (pdfExtensions.includes(fileExtension.toUpperCase())) {
+            assetName = await populateAssetNameFromPdf(filePath, defaultAssetName);
+          } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
+            assetName = await populateAssetNameFromImage(filePath, defaultAssetName);
+          } else {
+            assetName = defaultAssetName;
+          }
+          metadataList.push({ label: 'Source', value: 'Medical Records' });
+          metadataList.push({ label: 'Saved Time', value: new Date(emailIssueRequest.created_at).toISOString() });
+        }
+
+        results.list.push({
+          filePath, assetName,
+          metadata: metadataList,
+          existingAsset,
+        });
+      }
+    }
+  }
+  return results;
+};
+
+
 let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
   let emailIssueRequests = await AccountModel.doGetAllEmailRecords(jwt);
 
@@ -169,41 +238,8 @@ let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
   let result = {};
   if (emailIssueRequests && emailIssueRequests.length > 0) {
     for (let emailIssueRequest of emailIssueRequests) {
-      let folderPath = `${FileUtil.CacheDirectory}/${bitmarkAccountNumber}/email_records/${emailIssueRequest.id}`;
-      await FileUtil.mkdir(folderPath);
-      let unzipFolder = `${folderPath}/${emailIssueRequest.subject}`;
-      await FileUtil.mkdir(unzipFolder);
-
-      let encryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_encrypted.zip`;
-      await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
-
-      let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
-
-      let keyInByte = Buffer.from(emailIssueRequest.aes_key, 'hex');
-      let ivInByte = Buffer.from(emailIssueRequest.aes_iv, 'hex');
-      let contentEncryptedFileInBytes = Buffer.from(contentEncryptedFile, 'base64');
-
-      let aesOfbDecrypt = new aesjs.ModeOfOperation.ofb(keyInByte, ivInByte);
-      let contentDecryptedFileInBytes = aesOfbDecrypt.decrypt(contentEncryptedFileInBytes);
-
-      let decryptedFilePath = `${folderPath}/${emailIssueRequest.subject}_decrypted.zip`;
-      await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
-      await FileUtil.unzip(decryptedFilePath, unzipFolder);
-
-      let list = await FileUtil.readDir(`${unzipFolder}/data`);
-      if (list && list.length > 0) {
-        result[emailIssueRequest.sender] = result[emailIssueRequest.sender] || {};
-        result[emailIssueRequest.sender].ids = result[emailIssueRequest.sender].ids || [];
-        result[emailIssueRequest.sender].list = result[emailIssueRequest.sender].list || [];
-
-        result[emailIssueRequest.sender].ids.push(emailIssueRequest.id);
-        for (let filename of list) {
-          result[emailIssueRequest.sender].list.push({
-            filePath: `${unzipFolder}/data/${filename}`,
-            createdAt: emailIssueRequest.created_at,
-          });
-        }
-      }
+      result[emailIssueRequest.sender] = result[emailIssueRequest.sender] || [];
+      result[emailIssueRequest.sender].push(emailIssueRequest);
     }
   }
   return result;
@@ -224,6 +260,7 @@ let AccountService = {
   doTryDeregisterNotificationInfo,
   doGetAllGrantedAccess,
   doGetAllEmailRecords,
+  doProcessEmailRecords,
 };
 
 export { AccountService };
