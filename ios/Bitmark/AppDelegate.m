@@ -43,7 +43,7 @@
                                                    launchOptions:launchOptions];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
   
-#if defined(HOCKEYAPP) & !defined(DEBUG)
+#ifdef HOCKEYAPP
   NSString *hockeyAppID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HockeyAppID"];
   [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyAppID];
   [[BITHockeyManager sharedHockeyManager].updateManager setUpdateSetting:BITUpdateCheckStartup];
