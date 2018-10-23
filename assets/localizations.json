@@ -388,7 +388,7 @@
     "SupportComponent_rowButtonText3": "Know your rights",
     "UserComponent_accountNumberDisplayText": "Viewing {{accountNumber}}, tap here to cancel.",
     "UserComponent_dataTitle1": "Week{{s}} of health data",
-    "UserComponent_dataTitle2": "Health record{{s}}",
+    "UserComponent_dataTitle2": "Medical record{{s}}",
     "UserComponent_addHealthRecordButtonText": "Add records",
     "UserComponent_accountButtonText1": "ACCOUNT",
     "UserComponent_accountButtonText2": "ACCOUNT SETTINGS",
