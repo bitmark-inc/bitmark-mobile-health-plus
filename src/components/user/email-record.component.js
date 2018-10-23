@@ -63,7 +63,11 @@ export class EmailRecordComponent extends Component {
         });
         this.processEmailRecordsFromAnEmail(this.state.emailAddress[this.state.emailIndex + 1]);
       } else {
-        this.setState({ step: EmailRecordComponent.STEPS.view, acceptedList });
+        if (acceptedList.length > 0) {
+          this.setState({ step: EmailRecordComponent.STEPS.view, acceptedList });
+        } else {
+          return Actions.reset('user');
+        }
       }
     }).catch(error => {
       console.log('error :', error);
@@ -81,7 +85,7 @@ export class EmailRecordComponent extends Component {
         if (this.state.acceptedList.length === 0) {
           return Actions.reset('user');
         }
-        this.setState({ step: 'result' });
+        this.setState({ step: EmailRecordComponent.STEPS.view });
       }
     }).catch(error => {
       console.log('error :', error);
