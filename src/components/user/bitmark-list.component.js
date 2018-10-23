@@ -86,6 +86,7 @@ class PrivateBitmarkListComponent extends Component {
 
               <ScrollView style={styles.bitmarkList}>
                 <FlatList
+                  style={{ marginBottom: 50, }}
                   keyExtractor={(item) => item.id}
                   scrollEnabled={false}
                   data={this.props.bitmarkType === 'bitmark_health_data' ? this.props.healthDataBitmarks :
