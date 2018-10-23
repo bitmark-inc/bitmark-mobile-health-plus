@@ -88,7 +88,7 @@ export class ConfirmAccessComponent extends Component {
             </View>
             <View style={styles.content}>
               <Text style={styles.message}>
-                {i18n.t('ConfirmAccessComponent_message2')}
+                {i18n.t('ConfirmAccessComponent_message2', { accountNumber: '[' + grantee.substring(0, 4) + '...' + grantee.substring(grantee.length - 5, grantee.length) + ']' })}
               </Text>
             </View>
             <View style={styles.bottomButtonArea}>
