@@ -251,9 +251,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   existingAssetMessage: {
-    fontFamily: 'Avenir Light',
+    fontFamily: 'Avenir Medium',
     fontWeight: '300',
-    fontSize: 14,
+    fontSize: 16,
     marginTop: 20,
   },
 

@@ -179,39 +179,40 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
     if (list && list.length > 0) {
       results.ids.push(emailIssueRequest.id);
       for (let filename of list) {
-        let filePath = `${unzipFolder}/data/${filename}`;
-
-        let assetName;
-        let existingAsset = false;
-        let metadataList = [];
-        let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
-        let assetInformation = await BitmarkModel.doGetAssetInformation(assetInfo.id);
-        if (assetInformation) {
-          existingAsset = true;
-          assetName = assetInformation.name;
-        } else {
-
-          let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
-          let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
-
-          const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-          const pdfExtensions = ['PDF'];
-          if (pdfExtensions.includes(fileExtension.toUpperCase())) {
-            assetName = await populateAssetNameFromPdf(filePath, defaultAssetName);
-          } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
-            assetName = await populateAssetNameFromImage(filePath, defaultAssetName);
+        if (!filename.toLowerCase().endsWith('.desc')) {
+          let filePath = `${unzipFolder}/data/${filename}`;
+          let assetName;
+          let existingAsset = false;
+          let metadataList = [];
+          let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
+          let assetInformation = await BitmarkModel.doGetAssetInformation(assetInfo.id);
+          if (assetInformation) {
+            existingAsset = true;
+            assetName = assetInformation.name;
           } else {
-            assetName = defaultAssetName;
-          }
-          metadataList.push({ label: 'Source', value: 'Medical Records' });
-          metadataList.push({ label: 'Saved Time', value: new Date(emailIssueRequest.created_at).toISOString() });
-        }
 
-        results.list.push({
-          filePath, assetName,
-          metadata: metadataList,
-          existingAsset,
-        });
+            let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+            let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+
+            const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
+            const pdfExtensions = ['PDF'];
+            if (pdfExtensions.includes(fileExtension.toUpperCase())) {
+              assetName = await populateAssetNameFromPdf(filePath, defaultAssetName);
+            } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
+              assetName = await populateAssetNameFromImage(filePath, defaultAssetName);
+            } else {
+              assetName = defaultAssetName;
+            }
+            metadataList.push({ label: 'Source', value: 'Medical Records' });
+            metadataList.push({ label: 'Saved Time', value: new Date(emailIssueRequest.created_at).toISOString() });
+          }
+
+          results.list.push({
+            filePath, assetName,
+            metadata: metadataList,
+            existingAsset,
+          });
+        }
       }
     }
   }
