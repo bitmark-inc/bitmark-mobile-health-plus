@@ -73,9 +73,9 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
   }
   await FileUtil.removeSafe(tempFolder);
 
-  let encryptedAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
-  await FileUtil.mkdir(encryptedAssetFolder);
-  await FileUtil.create(`${encryptedAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
+  let sessionAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
+  await FileUtil.mkdir(sessionAssetFolder);
+  await FileUtil.create(`${sessionAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
 
   let results = [];
   issueResult.bitmarkIds.forEach(id => {

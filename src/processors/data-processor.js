@@ -122,9 +122,10 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       }
       return { bitmarks: totalBitmarks, assets: totalAssets };
     };
-    doGetAllBitmarks().then(({ assets, bitmarks }) => {
+    doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
       let healthDataBitmarks = [], healthAssetBitmarks = [];
-      bitmarks.forEach(async (bitmark) => {
+      for (let bitmark of bitmarks) {
+
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
           if (isHealthDataBitmark(asset)) {
@@ -138,7 +139,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
             healthAssetBitmarks.push(bitmark);
           }
         }
-      });
+      }
 
       let compareFunction = (a, b) => {
         if (a.status === 'pending') {
@@ -880,9 +881,8 @@ const doMigrateFilesToLocalStorage = async () => {
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
-  console.log('detectLocalAssetFilePath =====================================');
   let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}/${assetId}`;
-  let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(existAssetFolder));
+  let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
   if (!existAssetFolder || existAssetFolder.error) {
     return null;
   }

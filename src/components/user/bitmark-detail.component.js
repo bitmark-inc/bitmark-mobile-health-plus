@@ -7,7 +7,7 @@ import {
   Image, View, SafeAreaView, TouchableOpacity, Text, ScrollView,
 } from 'react-native';
 
-import { convertWidth, runPromiseWithoutError, } from './../../utils';
+import { convertWidth, runPromiseWithoutError, FileUtil, } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
@@ -22,53 +22,67 @@ export class BitmarkDetailComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filePath: '',
+      filePath: this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.bitmark.asset.filePath : '',
       content: '',
     }
 
     if (this.props.bitmark) {
-      let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
       if (this.props.bitmarkType === 'bitmark_health_data') {
-        let id = this.props.bitmark.id;
-        if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
-          let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
-          id = grantedInfo.ids[this.props.bitmark.asset_id];
-        }
-        runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, this.props.bitmark.asset_id, {
-          indicator: true, title: i18n.t('BitmarkDetailComponent_title')
-        })).then(result => {
-          console.log('result :', result);
+        runPromiseWithoutError(FileUtil.readFile(this.props.bitmark.asset.filePath)).then(result => {
           if (result && result.error) {
+            console.log('error:', result.error);
             EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
-            // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
-            //   text: 'OK', onPress: Actions.pop
-            // }]);
             return;
           }
           this.setState({ content: JSON.stringify(JSON.parse(result), null, 2) });
         });
-      } else if (this.props.bitmarkType === 'bitmark_health_issuance') {
-        let id = this.props.bitmark.id;
-        if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
-          let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
-          id = grantedInfo.ids[this.props.bitmark.asset_id];
-        }
-        runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, this.props.bitmark.asset_id, {
-          indicator: true, title: i18n.t('BitmarkDetailComponent_title')
-        })).then(result => {
-          console.log('result :', result);
-          if (result && result.error) {
-            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
-            // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
-            //   text: 'OK', onPress: Actions.pop
-            // }]);
-            return;
-          }
-          this.setState({ filePath: result });
-        });
-      } else {
+      } else if (this.props.bitmarkType !== 'bitmark_health_issuance') {
         Actions.pop();
       }
+
+
+      // let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+      // if (this.props.bitmarkType === 'bitmark_health_data') {
+      //   let id = this.props.bitmark.id;
+      //   if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+      //     let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
+      //     id = grantedInfo.ids[this.props.bitmark.asset_id];
+      //   }
+      //   runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, this.props.bitmark.asset_id, {
+      //     indicator: true, title: i18n.t('BitmarkDetailComponent_title')
+      //   })).then(result => {
+      //     console.log('result :', result);
+      //     if (result && result.error) {
+      //       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
+      //       // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+      //       //   text: 'OK', onPress: Actions.pop
+      //       // }]);
+      //       return;
+      //     }
+      //     this.setState({ content: JSON.stringify(JSON.parse(result), null, 2) });
+      //   });
+      // } else if (this.props.bitmarkType === 'bitmark_health_issuance') {
+      //   let id = this.props.bitmark.id;
+      //   if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+      //     let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
+      //     id = grantedInfo.ids[this.props.bitmark.asset_id];
+      //   }
+      //   runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, this.props.bitmark.asset_id, {
+      //     indicator: true, title: i18n.t('BitmarkDetailComponent_title')
+      //   })).then(result => {
+      //     console.log('result :', result);
+      //     if (result && result.error) {
+      //       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
+      //       // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+      //       //   text: 'OK', onPress: Actions.pop
+      //       // }]);
+      //       return;
+      //     }
+      //     this.setState({ filePath: result });
+      //   });
+      // } else {
+      //   Actions.pop();
+      // }
     } else {
       Alert.alert(i18n.t('BitmarkDetailComponent_alertTitle1'), i18n.t('BitmarkDetailComponent_alertMessage1'), [{
         text: 'OK', onPress: Actions.pop
@@ -91,7 +105,7 @@ export class BitmarkDetailComponent extends Component {
     let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
     console.log('this.state :', this.state, this.props)
     return (
-      <View style={{ flex: 1, }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
           <Text style={styles.accountNumberDisplayText}>
             {i18n.t('BitmarkDetailComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
@@ -101,8 +115,8 @@ export class BitmarkDetailComponent extends Component {
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
-                {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText]}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
-                {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
+                {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText]}>{this.props.bitmark.asset.created_at ? moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase() : ''}</Text>}
+                {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{this.props.bitmark.asset.created_at ? moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase() : ''}</Text>}
                 <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
