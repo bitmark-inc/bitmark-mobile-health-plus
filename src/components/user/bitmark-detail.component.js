@@ -110,7 +110,10 @@ export class BitmarkDetailComponent extends Component {
                 <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
                   {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>}
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
-                    <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({ filePath: this.state.filePath, bitmark: this.props.bitmark })}>
+                    <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({
+                      filePath: this.state.filePath,
+                      title: moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()
+                    })}>
                       <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} /></TouchableOpacity>}
                   {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, paddingBottom: 30, }}>
                     <Text >{this.state.content}</Text>

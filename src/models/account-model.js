@@ -2,29 +2,34 @@ import CookieManager from 'react-native-cookies';
 import PushNotification from 'react-native-push-notification';
 import { BitmarkSDK } from './adapters';
 import { config } from '../configs';
+import { FileUtil, runPromiseWithoutError } from './../utils';
 
 const doCreateAccount = async () => {
   await CookieManager.clearAll();
   return await BitmarkSDK.newAccount(config.bitmark_network);
 };
 
-const doLogin = async (phrase24Words) => {
+const doLogin = async (phraseWords) => {
   await CookieManager.clearAll();
-  return await BitmarkSDK.newAccountFrom24Words(phrase24Words, config.bitmark_network);
+  return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, config.bitmark_network);
 }
 
 const doGetCurrentAccount = async (touchFaceIdSession) => {
   return await BitmarkSDK.accountInfo(touchFaceIdSession);
 };
 
-const doCheck24Words = async (phrase24Words) => {
-  return await BitmarkSDK.try24Words(phrase24Words, config.bitmark_network);
+const doCheckPhraseWords = async (phraseWords) => {
+  return await BitmarkSDK.tryPhraseWords(phraseWords, config.bitmark_network);
 };
 
 const doLogout = async (jwt) => {
+  let result = await runPromiseWithoutError(BitmarkSDK.removeAccount());
+  if (result && result.error) {
+    return null;
+  }
   await CookieManager.clearAll();
   await doDeleteAccount(jwt);
-  return await BitmarkSDK.removeAccount();
+  return true;
 };
 
 const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platform, token, client, intercom_user_id) => {
@@ -81,7 +86,7 @@ const doDeregisterNotificationInfo = (accountNumber, timestamp, signature, token
 const doTryRegisterAccount = (accountNumber, timestamp, signature) => {
   return new Promise((resolve) => {
     let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/events/register-account`;
+    let tempURL = `${config.mobile_server_url}/api/accounts`;
     fetch(tempURL, {
       method: 'POST',
       headers: {
@@ -359,10 +364,62 @@ let doCancelGrantingAccess = (jwt, token) => {
   });
 };
 
+let doGetAllEmailRecords = (jwt) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/email_issue_requests`;
+    fetch(tempURL, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
+      }
+      resolve(data.email_issue_requests);
+    }).catch(reject);
+  });
+};
+
+let doDownloadEmailRecordAttachment = async (jwt, attachmentId, filePath) => {
+  return await FileUtil.downloadFile(`${config.mobile_server_url}/api/email_issue_requests/attachments/${attachmentId}/download`, filePath, {
+    Authorization: 'Bearer ' + jwt,
+  });
+};
+
+let doDeleteEmailRecord = (jwt, id) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/email_issue_requests/${id}`;
+    fetch(tempURL, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 
 let AccountModel = {
   doGetCurrentAccount,
-  doCheck24Words,
+  doCheckPhraseWords,
   doCreateAccount,
   doLogin,
   doLogout,
@@ -385,6 +442,9 @@ let AccountModel = {
   doRevokeGrantingAccess,
   doRemoveGrantingAccess,
   doCancelGrantingAccess,
+  doGetAllEmailRecords,
+  doDownloadEmailRecordAttachment,
+  doDeleteEmailRecord,
 }
 
 export {

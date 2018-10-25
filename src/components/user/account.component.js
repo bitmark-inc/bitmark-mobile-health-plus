@@ -8,7 +8,7 @@ import {
   Alert,
   Share,
   Clipboard,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList,
+  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 
@@ -34,7 +34,7 @@ export class PrivateAccountComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accountNumberCopyText: '',
+      accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText'),
     };
   }
 
@@ -110,6 +110,9 @@ export class PrivateAccountComponent extends Component {
   }
 
   render() {
+    let emailAddress = config.network === config.NETWORKS.livenet
+      ? `${DataProcessor.getUserInformation().bitmarkAccountNumber}@health.bitmark.com`
+      : `${DataProcessor.getUserInformation().bitmarkAccountNumber}@drop.test.bitmark.com`;
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
@@ -118,26 +121,19 @@ export class PrivateAccountComponent extends Component {
 
             <ScrollView>
               <View style={styles.accountNumberArea}>
-                <View style={[styles.accountNumberTitleRow,]}>
-                  <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
-                  <TouchableOpacity onPress={Actions.pop}>
-                    <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.accountNumberLabel}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
-                <TouchableOpacity onPress={() => {
-                  Clipboard.setString(DataProcessor.getUserInformation().bitmarkAccountNumber);
-                  this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
-                  setTimeout(() => { this.setState({ accountNumberCopyText: '' }) }, 1000);
-                }}>
-                  <Text style={styles.accountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}</Text>
-                </TouchableOpacity>
-                <View style={styles.accountNumberValueBar}></View>
-                <View style={[styles.accountNumberCopiedArea, this.state.accountNumberCopyText ? {} : { backgroundColor: 'white' }]}>
-                  <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
-                </View>
-
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
+                <Text style={styles.accountNumberValue}>{emailAddress}</Text>
+                <TouchableOpacity style={[styles.accountNumberCopiedArea]} onPress={() => {
+                  Clipboard.setString(emailAddress);
+                  this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
+                  setTimeout(() => { this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText') }) }, 1000);
+                }}>
+                  <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={Actions.accountNumber}>
+                  <Text style={[styles.accountNumberLabel, styles.rowButtonText]}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
               </View>
 
               {/* <View style={styles.accessArea}>
@@ -152,7 +148,7 @@ export class PrivateAccountComponent extends Component {
                   data={this.props.accesses['granted_to']}
                   extraData={this.props}
                   renderItem={({ item }) => {
-                    return (<View style={styles.accessAccountRow} >
+                    return (<View style={styles.accessAccountRow}>
                       <Text style={styles.accessAccountNumber}>
                         {'[' + item.grantee.substring(0, 4) + '...' + item.grantee.substring(item.grantee.length - 4, item.grantee.length) + ']'}
                       </Text>
@@ -202,10 +198,11 @@ export class PrivateAccountComponent extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
                   {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
-                  AppProcessor.doLogout().then(() => {
-                    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+                  AppProcessor.doLogout().then((result) => {
+                    if (result) {
+                      EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+                    }
                   }).catch(error => {
-                    console.log('error :', error)
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
                 }}> */}
@@ -268,54 +265,30 @@ const styles = StyleSheet.create({
   accountNumberArea: {
     flexDirection: 'column',
     padding: convertWidth(20),
-    paddingTop: convertWidth(15),
     paddingBottom: 45,
   },
-  accountNumberTitleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: convertWidth(10),
-  },
-  accountNumberTitle: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 36,
-  },
-  closeIcon: {
-    width: convertWidth(20),
-    height: convertWidth(20),
-    resizeMode: 'contain',
+  accountNumberValue: {
+    fontFamily: 'Andale Mono',
+    fontSize: 14,
+    marginTop: 15,
+    color: '#FF1F1F'
   },
   accountNumberLabel: {
     fontFamily: 'Avenir Medium',
     fontSize: 16,
     color: '#6D6D72',
   },
-  accountNumberValue: {
-    fontFamily: 'Andale Mono',
-    fontSize: 10,
-    marginTop: 5,
-    color: '#FF1F1F'
-  },
-  accountNumberValueBar: {
-    marginTop: 4,
-    borderBottomWidth: 1,
-    width: '100%',
-    borderColor: '#FF1F1F',
-  },
   accountNumberCopiedArea: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     marginTop: 8,
     minHeight: 21,
   },
   accountNumberCopiedText: {
-    fontFamily: 'Avenir Light',
-    fontWeight: '300',
+    fontFamily: 'Avenir Medium',
+    fontWeight: '600',
     fontSize: 14,
-    color: 'white',
+    color: '#0064FC',
+    marginTop: 5,
   },
   accountNumberDescription: {
     marginTop: 12,
@@ -337,95 +310,95 @@ const styles = StyleSheet.create({
   },
 
 
-  accessArea: {
-    borderTopWidth: 1,
-    borderColor: '#FF4444',
-    padding: convertWidth(20),
-    paddingBottom: 20,
-  },
-  accessTitle: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 34,
-  },
-  accessDescription: {
-    fontFamily: 'Avenir Book',
-    fontWeight: '300',
-    fontSize: 16,
-    marginTop: 10,
-  },
-  accessAccountRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  accessAccountNumber: {
-    fontFamily: 'Andale Mono',
-    fontSize: 14,
-    color: '#0060F2',
-  },
-  accessRevokeButtonText: {
-    fontFamily: 'Andale Mono',
-    fontSize: 14,
-    color: '#FF003C',
-  },
-  addGrandAccessButton: {
-    marginTop: 29,
-    width: '100%',
-    height: 37,
-    backgroundColor: '#FF4444',
+  // accessArea: {
+  //   borderTopWidth: 1,
+  //   borderColor: '#FF4444',
+  //   padding: convertWidth(20),
+  //   paddingBottom: 20,
+  // },
+  // accessTitle: {
+  //   fontFamily: 'Avenir Black',
+  //   fontWeight: '900',
+  //   fontSize: 34,
+  // },
+  // accessDescription: {
+  //   fontFamily: 'Avenir Book',
+  //   fontWeight: '300',
+  //   fontSize: 16,
+  //   marginTop: 10,
+  // },
+  // accessAccountRow: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   marginTop: 12,
+  // },
+  // accessAccountNumber: {
+  //   fontFamily: 'Andale Mono',
+  //   fontSize: 14,
+  //   color: '#0060F2',
+  // },
+  // accessRevokeButtonText: {
+  //   fontFamily: 'Andale Mono',
+  //   fontSize: 14,
+  //   color: '#FF003C',
+  // },
+  // addGrandAccessButton: {
+  //   marginTop: 29,
+  //   width: '100%',
+  //   height: 37,
+  //   backgroundColor: '#FF4444',
 
-    justifyContent: 'center',
-  },
-  addGrandAccessButtonText: {
-    fontFamily: 'Avenir Heavy',
-    fontWeight: '900',
-    fontSize: 16,
-    color: 'white',
-    textAlign: 'center',
-  },
-  accessOtherAccountArea: {
-    borderTopWidth: 1,
-    borderColor: '#FF4444',
-    padding: convertWidth(20),
-    paddingBottom: 20,
-  },
-  accessOtherAccountTitle: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 34,
-  },
-  accessOtherAccountDescription: {
-    fontFamily: 'Avenir Book',
-    fontWeight: '300',
-    fontSize: 16,
-    marginTop: 10,
-  },
-  accessOtherAccountAccountRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  accessOtherAccountAccountNumber: {
-    fontFamily: 'Andale Mono',
-    fontSize: 14,
-    color: '#0060F2',
-  },
-  addOtherAccountButton: {
-    marginTop: 29,
-    width: '100%',
-    height: 37,
-    backgroundColor: '#FF4444',
+  //   justifyContent: 'center',
+  // },
+  // addGrandAccessButtonText: {
+  //   fontFamily: 'Avenir Heavy',
+  //   fontWeight: '900',
+  //   fontSize: 16,
+  //   color: 'white',
+  //   textAlign: 'center',
+  // },
+  // accessOtherAccountArea: {
+  //   borderTopWidth: 1,
+  //   borderColor: '#FF4444',
+  //   padding: convertWidth(20),
+  //   paddingBottom: 20,
+  // },
+  // accessOtherAccountTitle: {
+  //   fontFamily: 'Avenir Black',
+  //   fontWeight: '900',
+  //   fontSize: 34,
+  // },
+  // accessOtherAccountDescription: {
+  //   fontFamily: 'Avenir Book',
+  //   fontWeight: '300',
+  //   fontSize: 16,
+  //   marginTop: 10,
+  // },
+  // accessOtherAccountAccountRow: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   marginTop: 12,
+  // },
+  // accessOtherAccountAccountNumber: {
+  //   fontFamily: 'Andale Mono',
+  //   fontSize: 14,
+  //   color: '#0060F2',
+  // },
+  // addOtherAccountButton: {
+  //   marginTop: 29,
+  //   width: '100%',
+  //   height: 37,
+  //   backgroundColor: '#FF4444',
 
-    justifyContent: 'center',
-  },
-  addOtherAccountButtonText: {
-    fontFamily: 'Avenir Heavy',
-    fontWeight: '900',
-    fontSize: 16,
-    color: 'white',
-    textAlign: 'center',
-  },
+  //   justifyContent: 'center',
+  // },
+  // addOtherAccountButtonText: {
+  //   fontFamily: 'Avenir Heavy',
+  //   fontWeight: '900',
+  //   fontSize: 16,
+  //   color: 'white',
+  //   textAlign: 'center',
+  // },
 
   aboutArea: {
     borderTopWidth: 1,

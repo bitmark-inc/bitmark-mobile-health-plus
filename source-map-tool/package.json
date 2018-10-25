@@ -1,0 +1,17 @@
+{
+  "name": "get-error-crash-log-tool",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "keywords": [
+    "Node"
+  ],
+  "author": "dungle",
+  "license": "ISC",
+  "dependencies": {
+    "source-map": "^0.7.3",
+    "stacktrace-js": "^2.0.0"
+  }
+}

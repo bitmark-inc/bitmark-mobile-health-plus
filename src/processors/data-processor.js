@@ -29,6 +29,7 @@ let jwt;
 let websocket;
 let isLoadingData = false;
 let notificationUUID;
+let isDisplayingEmailRecord = false;
 
 const isHealthDataBitmark = (asset) => {
   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
@@ -47,11 +48,8 @@ const isHealthAssetBitmark = (asset) => {
     // For files
     if (asset.metadata['Source'] == 'Medical Records') return true;
 
-    let regResults = /HA((\d)*)/.exec(asset.name);
-    if (regResults && regResults.length > 1) {
-      let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HA' + randomNumber) === asset.name);
-    }
+    // For capture asset
+    if (asset.metadata['Source'] == 'Health Records' && asset.name.startsWith('HA')) return true;
   }
   return false;
 };
@@ -192,6 +190,42 @@ const runGetAccountAccessesInBackground = () => {
   });
 };
 
+const finishedDisplayEmailRecords = () => {
+  isDisplayingEmailRecord = false;
+};
+let queueGetEmailRecords = [];
+const doCheckNewEmailRecords = async (mapEmailRecords) => {
+  console.log('mapEmailRecords :', mapEmailRecords);
+  if (!mapEmailRecords) {
+    isDisplayingEmailRecord = false;
+    return;
+  }
+  if (Object.keys(mapEmailRecords).length > 0 && !isDisplayingEmailRecord) {
+    isDisplayingEmailRecord = true;
+    Actions.emailRecords({ mapEmailRecords });
+  } else {
+    isDisplayingEmailRecord = false;
+  }
+};
+const runGetEmailRecordsInBackground = () => {
+  return new Promise((resolve) => {
+    queueGetEmailRecords = queueGetEmailRecords || [];
+    queueGetEmailRecords.push(resolve);
+    if (queueGetEmailRecords.length > 1) {
+      return;
+    }
+    AccountService.doGetAllEmailRecords(userInformation.bitmarkAccountNumber, jwt).then(emailIssueRequests => {
+      queueGetEmailRecords.forEach(queueResolve => queueResolve(emailIssueRequests));
+      queueGetEmailRecords = [];
+      doCheckNewEmailRecords(emailIssueRequests);
+    }).catch(error => {
+      queueGetEmailRecords.forEach(queueResolve => queueResolve());
+      queueGetEmailRecords = [];
+      console.log(' runGetEmailRecordsInBackground error:', error);
+    });
+  });
+};
+
 const runOnBackground = async () => {
   let userInfo = await UserModel.doTryGetCurrentUser();
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
@@ -203,6 +237,9 @@ const runOnBackground = async () => {
     await runGetAccountAccessesInBackground();
     if (grantedAccessAccountSelected) {
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
+    }
+    if (!isDisplayingEmailRecord) {
+      await runGetEmailRecordsInBackground();
     }
   }
 };
@@ -293,7 +330,6 @@ const doCreateAccount = async (touchFaceIdSession) => {
       console.log('DataProcessor doRegisterNotificationInfo error:', error);
     });
   }
-  await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await CommonModel.doTrackEvent({
     event_name: 'health_plus_create_new_account',
     account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
@@ -303,12 +339,17 @@ const doCreateAccount = async (touchFaceIdSession) => {
 
 const doLogin = async (touchFaceIdSession) => {
   userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
-
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await checkAppNeedResetLocalData();
   return userInformation;
 };
 
 const doLogout = async () => {
+  let result = await AccountModel.doLogout(jwt);
+  if (!result) {
+    return null;
+  }
   if (userInformation.notificationUUID) {
     let signatureData = await CommonModel.doTryCreateSignatureData(i18n.t('FaceTouchId_doLogout'))
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
@@ -328,7 +369,6 @@ const doLogout = async () => {
     await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
   }
   CommonModel.resetFaceTouchSessionId();
-  await AccountModel.doLogout(jwt);
   await UserModel.doRemoveUserInfo();
   await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
   await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
@@ -340,6 +380,7 @@ const doLogout = async () => {
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
+  return true;
 };
 
 const doRequireHealthKitPermission = async () => {
@@ -753,6 +794,27 @@ const doTrackEvent = async ({ appInfo, eventName }) => {
   }
 };
 
+const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
+  for (let item of emailRecord.list) {
+    if (!item.existingAsset) {
+      await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+    }
+  }
+  for (let id of emailRecord.ids) {
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
+    await AccountModel.doDeleteEmailRecord(jwt, id);
+  }
+};
+
+const doRejectEmailRecords = async (emailRecord) => {
+  console.log('doRejectEmailRecords :', emailRecord);
+  for (let id of emailRecord.ids) {
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
+    await AccountModel.doDeleteEmailRecord(jwt, id);
+  }
+};
+
+
 const DataProcessor = {
   doOpenApp,
   doCreateAccount,
@@ -772,6 +834,7 @@ const DataProcessor = {
   getApplicationVersion,
   getApplicationBuildNumber,
   getUserInformation,
+  finishedDisplayEmailRecords,
   isAppLoadingData: () => isLoadingData,
 
   doGrantingAccess,
@@ -786,6 +849,8 @@ const DataProcessor = {
   doDownloadHealthDataBitmark,
   doDeleteAccount,
   doTrackEvent,
+  doAcceptEmailRecords,
+  doRejectEmailRecords,
 };
 
 export { DataProcessor };

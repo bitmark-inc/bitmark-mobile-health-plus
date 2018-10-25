@@ -225,6 +225,8 @@ class MainEventsHandlerComponent extends Component {
     let hasCrashLog = await FileUtil.exists(CRASH_LOG_FILE_PATH);
 
     if (hasCrashLog) {
+      console.log(await runPromiseWithoutError(FileUtil.readFile(CRASH_LOG_FILE_PATH)));
+
       let title = i18n.t('MainComponent_alertTitle4');
       let message = i18n.t('MainComponent_alertMessage4');
 

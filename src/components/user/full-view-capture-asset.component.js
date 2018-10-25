@@ -9,13 +9,12 @@ import {
 } from 'react-native';
 
 import { convertWidth, } from '../../utils';
-import { config } from '../../configs';
 import { Actions } from 'react-native-router-flux';
 
 export class FullViewCaptureAssetComponent extends Component {
   static propTypes = {
     filePath: PropTypes.string,
-    bitmark: PropTypes.any,
+    title: PropTypes.string,
   };
   constructor(props) {
     super(props);
@@ -39,6 +38,7 @@ export class FullViewCaptureAssetComponent extends Component {
               imageHeight={Dimensions.get('window').height}>
               <Image style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height, resizeMode: 'contain' }} source={{ uri: this.props.filePath }} />
             </ImageZoom>
+
           </View>
         </View>
       </View>
@@ -55,31 +55,29 @@ const styles = StyleSheet.create({
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    width: convertWidth(375),
+
+    width: "100%",
+    padding: convertWidth(20),
   },
 
   titleRow: {
-    paddingTop: (config.isIPhoneX ? 44 : 0),
-    paddingLeft: convertWidth(20), paddingRight: convertWidth(20),
-    position: 'absolute', top: 0, width: convertWidth(375),
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    height: 44 + (config.isIPhoneX ? 44 : 0),
-    zIndex: 1,
-    backgroundColor: 'black',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
     color: 'white',
-    flex: 1,
+    paddingRight: 15,
   },
   closeIcon: {
     width: convertWidth(21),
     height: convertWidth(21),
     resizeMode: 'contain',
+    marginTop: 3,
   },
-
   content: {
     flex: 1,
     paddingTop: 40,
