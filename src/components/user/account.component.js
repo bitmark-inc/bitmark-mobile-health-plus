@@ -111,7 +111,7 @@ export class PrivateAccountComponent extends Component {
 
   render() {
     let emailAddress = config.network === config.NETWORKS.livenet
-      ? `${DataProcessor.getUserInformation().bitmarkAccountNumber}@drop.bitmark.com`
+      ? `${DataProcessor.getUserInformation().bitmarkAccountNumber}@health.bitmark.com`
       : `${DataProcessor.getUserInformation().bitmarkAccountNumber}@drop.test.bitmark.com`;
     return (
       <SafeAreaView style={styles.bodySafeView}>
