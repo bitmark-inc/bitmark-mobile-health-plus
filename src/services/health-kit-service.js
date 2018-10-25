@@ -353,16 +353,29 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
       randomId,
     };
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
-    let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, healthData.assetName, healthData.assetMetadata, 1);
+
+    let tempFolder = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/temp_${randomString({ length: 8, numeric: true, letters: false, }) + moment().toDate().getTime()}`;
+    let tempFolderDownloaded = `${tempFolder}/downloaded`;
+    await FileUtil.mkdir(tempFolder);
+    await FileUtil.mkdir(tempFolderDownloaded);
+
+    let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, tempFolderDownloaded, filePath, healthData.assetName, healthData.assetMetadata, 1);
     await FileUtil.remove(filePath);
 
-    let encryptedAssetFolder = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + issueResult.assetId;
-    console.log('encryptedAssetFolder :', encryptedAssetFolder);
-    await FileUtil.mkdir(encryptedAssetFolder);
-    await FileUtil.create(encryptedAssetFolder + '/session_data.txt', JSON.stringify(issueResult.sessionData));
+    let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/${issueResult.assetId}`;
+    let downloadedFolder = `${assetFolderPath}/downloaded`;
+    await FileUtil.mkdir(assetFolderPath);
+    await FileUtil.mkdir(downloadedFolder);
+    let list = await FileUtil.readDir(tempFolderDownloaded);
+    for (let filename of list) {
+      await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
+    }
+    await FileUtil.removeSafe(tempFolder);
 
-    let desEncryptedFilePath = encryptedAssetFolder + issueResult.encryptedFilePath.substring(issueResult.encryptedFilePath.lastIndexOf('/'), issueResult.encryptedFilePath.length);
-    await FileUtil.moveFileSafe(issueResult.encryptedFilePath.replace('file://', ''), desEncryptedFilePath);
+    let encryptedAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
+    await FileUtil.mkdir(encryptedAssetFolder);
+    await FileUtil.create(`${encryptedAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
+
     issueResult.bitmarkIds.forEach(id => {
       results.push({ id, sessionData: issueResult.sessionData });
     });

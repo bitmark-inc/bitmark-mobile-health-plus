@@ -145,11 +145,11 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublic
 const doBitmarkHealthData = async (list, processingData) => {
   return executeTask('doBitmarkHealthData', { list, processingData });
 };
-const doDownloadBitmark = async (bitmarkIdOrGrantedId, processingData) => {
-  return executeTask('doDownloadBitmark', { bitmarkIdOrGrantedId, processingData });
+const doDownloadBitmark = async (bitmarkIdOrGrantedId, assetId, processingData) => {
+  return executeTask('doDownloadBitmark', { bitmarkIdOrGrantedId, assetId, processingData });
 };
-const doDownloadHealthDataBitmark = async (bitmarkIdOrGrantedId, processingData) => {
-  return executeTask('doDownloadHealthDataBitmark', { bitmarkIdOrGrantedId, processingData });
+const doDownloadHealthDataBitmark = async (bitmarkIdOrGrantedId, assetId, processingData) => {
+  return executeTask('doDownloadHealthDataBitmark', { bitmarkIdOrGrantedId, assetId, processingData });
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {

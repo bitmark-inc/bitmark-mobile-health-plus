@@ -6,7 +6,7 @@ import randomString from 'random-string';
 
 import { AccountModel, CommonModel, BitmarkSDK, UserModel, BitmarkModel } from './../models';
 import { config } from '../configs';
-import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage } from './../utils';
+import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError } from './../utils';
 const {
   PushNotificationIOS,
   Platform,
@@ -175,8 +175,8 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
     await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
     await FileUtil.unzip(decryptedFilePath, unzipFolder);
 
-    let existDataFolder = await FileUtil.exists(`${unzipFolder}/data`);
-    if (existDataFolder) {
+    let existDataFolder = await runPromiseWithoutError(FileUtil.exists(`${unzipFolder}/data`));
+    if (existDataFolder && !existDataFolder.error) {
       let list = await FileUtil.readDir(`${unzipFolder}/data`);
       if (list && list.length > 0) {
         results.ids.push(emailIssueRequest.id);
@@ -248,8 +248,6 @@ let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
   }
   return result;
 };
-
-
 
 let AccountService = {
   doGetCurrentAccount,

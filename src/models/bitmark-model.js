@@ -238,8 +238,8 @@ const doCheckMetadata = async (metadata) => {
   return await BitmarkSDK.validateMetadata(metadata);
 };
 
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset) => {
-  let result = await BitmarkSDK.issueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
+const doIssueFile = async (touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity, isPublicAsset) => {
+  let result = await BitmarkSDK.issueFile(touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity, isPublicAsset);
   return result;
 };
 

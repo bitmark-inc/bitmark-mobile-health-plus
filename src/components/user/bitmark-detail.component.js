@@ -34,7 +34,7 @@ export class BitmarkDetailComponent extends Component {
           let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
           id = grantedInfo.ids[this.props.bitmark.asset_id];
         }
-        runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, {
+        runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, this.props.bitmark.asset_id, {
           indicator: true, title: i18n.t('BitmarkDetailComponent_title')
         })).then(result => {
           console.log('result :', result);
@@ -53,7 +53,7 @@ export class BitmarkDetailComponent extends Component {
           let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
           id = grantedInfo.ids[this.props.bitmark.asset_id];
         }
-        runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, {
+        runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, this.props.bitmark.asset_id, {
           indicator: true, title: i18n.t('BitmarkDetailComponent_title')
         })).then(result => {
           console.log('result :', result);
