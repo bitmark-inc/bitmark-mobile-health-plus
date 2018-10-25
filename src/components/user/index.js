@@ -18,6 +18,7 @@ import { ConfirmAccessComponent } from './confirm-access.component';
 import { RevokeAccessComponent } from './revoke-access.component';
 import { FullViewCaptureAssetComponent } from './full-view-capture-asset.component';
 import { GetStartComponent } from './get-start.component';
+import { AddRecordComponent } from './add-record.component';
 
 
 // bitmarkHealthData
@@ -47,6 +48,7 @@ export class UserRouterComponent extends Component {
           <Scene key="revokeAccess" component={RevokeAccessComponent} />
           <Scene key="fullViewCaptureAsset" component={FullViewCaptureAssetComponent} />
           <Scene key="getStart" component={GetStartComponent} />
+          <Scene key="addRecord" component={AddRecordComponent} />
         </Stack>
       </Router>
     );

@@ -22,9 +22,9 @@ import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-e
 import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent, } from '../commons'
 import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
-import { EventEmitterService } from '../services';
+import { EventEmitterService, AccountService } from '../services';
 import { UserModel, CommonModel } from '../models';
-import { FileUtil, convertWidth } from '../utils';
+import { FileUtil, convertWidth, runPromiseWithoutError } from '../utils';
 import { DataProcessor, AppProcessor } from '../processors';
 import { config } from '../configs';
 import { constants } from '../constants';
@@ -75,6 +75,7 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
 
+    runPromiseWithoutError(AccountService.doRequestNotificationPermissions());
     // Handle Crashes
     this.checkAndShowCrashLog();
     this.registerCrashHandler();

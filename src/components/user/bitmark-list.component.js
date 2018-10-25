@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 36,
+    fontSize: 24,
     flex: 1,
   },
   closeButton: {
