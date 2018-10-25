@@ -165,6 +165,10 @@ const doRejectEmailRecords = async ({ emailRecord }) => {
   return processing(DataProcessor.doRejectEmailRecords(emailRecord));
 };
 
+const doMigrateFilesToLocalStorage = async () => {
+  return processing(DataProcessor.doMigrateFilesToLocalStorage());
+};
+
 
 // ================================================================================================
 // ================================================================================================
@@ -188,6 +192,7 @@ let AppTasks = {
   doConfirmGrantingAccess,
   doAcceptEmailRecords,
   doRejectEmailRecords,
+  doMigrateFilesToLocalStorage,
 };
 
 let registeredTasks = {};

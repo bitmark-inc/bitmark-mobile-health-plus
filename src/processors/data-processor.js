@@ -123,14 +123,16 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     };
     doGetAllBitmarks().then(({ assets, bitmarks }) => {
       let healthDataBitmarks = [], healthAssetBitmarks = [];
-      bitmarks.forEach(bitmark => {
+      bitmarks.forEach(async (bitmark) => {
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
           if (isHealthDataBitmark(asset)) {
+            asset.filePath = await detectLocalAssetFilePath(asset.id);
             bitmark.asset = asset;
             healthDataBitmarks.push(bitmark);
           }
           if (isHealthAssetBitmark(asset)) {
+            asset.filePath = await detectLocalAssetFilePath(asset.id);
             bitmark.asset = asset;
             healthAssetBitmarks.push(bitmark);
           }
@@ -409,8 +411,10 @@ const doOpenApp = async () => {
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
-    await FileUtil.mkdir(FileUtil.DocumentDirectory + '/encrypted_' + userInformation.bitmarkAccountNumber);
     await FileUtil.mkdir(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
+
+    await FileUtil.mkdir(FileUtil.DocumentDirectory + '/assets-session-data/' + userInformation.bitmarkAccountNumber);
+    await FileUtil.mkdir(FileUtil.DocumentDirectory + '/assets/' + userInformation.bitmarkAccountNumber);
 
     configNotification();
     if (!userInformation.intercomUserId) {
@@ -482,6 +486,11 @@ const doOpenApp = async () => {
         appInfo.lastTimeOpen = currentTime.toDate().getTime();
         await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
       }
+    }
+
+    let didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
+    if (!didMigrationFileToLocalStorage) {
+      EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
     }
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
@@ -705,7 +714,7 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
     let body = { items: [] };
 
     let doGetSessionData = async (bitmarkAccountNumber, assetId) => {
-      let filePath = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + assetId + '/session_data.txt';
+      let filePath = FileUtil.DocumentDirectory + '/assets-session-data/' + bitmarkAccountNumber + '/' + assetId + '/session_data.txt';
       let exist = await FileUtil.exists(filePath);
       if (exist) {
         let content = await FileUtil.readFile(filePath);
@@ -807,11 +816,67 @@ const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
 };
 
 const doRejectEmailRecords = async (emailRecord) => {
-  console.log('doRejectEmailRecords :', emailRecord);
   for (let id of emailRecord.ids) {
     await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
     await AccountModel.doDeleteEmailRecord(jwt, id);
   }
+};
+
+const doMigrateFilesToLocalStorage = async () => {
+  await runGetUserBitmarksInBackground();
+  await runGetAccountAccessesInBackground();
+
+  let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
+  userBitmarks = userBitmarks || {};
+  let bitmarks = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []);
+
+  for (let bitmark of bitmarks) {
+    let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}/${bitmark.asset_id}`;
+    let existAssetFolder = await FileUtil.exists(existAssetFolder);
+    let needDownload = false;
+    if (!existAssetFolder) {
+      needDownload = true;
+    } else {
+      let list = await FileUtil.readDir(assetFolderPath);
+      if (list.length === 0) {
+        needDownload = true;
+      } else {
+        needDownload = list.findIndex(filename => filename.startsWith('downloading')) >= 0;
+      }
+    }
+    if (needDownload) {
+      await FileUtil.mkdir(assetFolderPath);
+      let downloadingFolderPath = `${assetFolderPath}/downloading`;
+      await FileUtil.mkdir(downloadingFolderPath);
+      // TODO download
+      let filePathAfterDownloading;
+
+      let downloadedFolderPath = `${assetFolderPath}/downloaded`;
+      let downloadedFilePath = `${downloadedFolderPath}${filePathAfterDownloading.substring(filePathAfterDownloading.lastIndexOf('/'), filePathAfterDownloading.length)}`;
+      await FileUtil.mkdir(downloadingFolderPath);
+      await FileUtil.copyFile(filePathAfterDownloading, downloadedFilePath);
+      await FileUtil.removeSafe(downloadingFolderPath);
+      bitmark.asset.filePath = `${downloadedFilePath}`;
+    } else {
+      let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
+      bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
+    }
+  }
+};
+
+const detectLocalAssetFilePath = async (assetId) => {
+  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}/${assetId}`;
+  let existAssetFolder = await FileUtil.exists(existAssetFolder);
+  if (!existAssetFolder) {
+    return null;
+  }
+  let downloadedFolder = `${assetFolderPath}/downloaded`;
+  let existDownloadedFolder = await FileUtil.exists(downloadedFolder);
+  if (!existDownloadedFolder) {
+    return null;
+  }
+  let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
+  return `${assetFolderPath}/downloaded/${list[0]}`;
 };
 
 
@@ -851,6 +916,9 @@ const DataProcessor = {
   doTrackEvent,
   doAcceptEmailRecords,
   doRejectEmailRecords,
+
+  doMigrateFilesToLocalStorage,
+  detectLocalAssetFilePath,
 };
 
 export { DataProcessor };

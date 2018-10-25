@@ -417,6 +417,55 @@ let doDeleteEmailRecord = (jwt, id) => {
 };
 
 
+const doCheckMigration = (jwt) => {
+  return new Promise((resolve) => {
+    resolve(false);
+    // let statusCode;
+    // let tempURL = `${config.mobile_server_url}/api/accounts/migration`;
+    // fetch(tempURL, {
+    //   method: 'GET',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //     Authorization: 'Bearer ' + jwt,
+    //   },
+    // }).then((response) => {
+    //   statusCode = response.status;
+    //   return response.json();
+    // }).then((data) => {
+    //   if (statusCode >= 400) {
+    //     return resolve();
+    //   }
+    //   resolve(data);
+    // }).catch(() => resolve());
+  });
+};
+
+const doMarkMigration = (jwt) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/accounts/migration`;
+    fetch(tempURL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return resolve();
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+
+
 let AccountModel = {
   doGetCurrentAccount,
   doCheckPhraseWords,
@@ -445,6 +494,9 @@ let AccountModel = {
   doGetAllEmailRecords,
   doDownloadEmailRecordAttachment,
   doDeleteEmailRecord,
+
+  doCheckMigration,
+  doMarkMigration,
 }
 
 export {

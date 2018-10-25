@@ -47,6 +47,7 @@ class MainEventsHandlerComponent extends Component {
     this.handleDeepLink = this.handleDeepLink.bind(this);
     this.displayEmptyDataSource = this.displayEmptyDataSource.bind(this);
     this.doRefresh = this.doRefresh.bind(this);
+    this.migrationFilesToLocalStorage = this.migrationFilesToLocalStorage.bind(this);
 
     this.state = {
       processingCount: false,
@@ -74,6 +75,7 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
+    EventEmitterService.on(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
 
     // Handle Crashes
     this.checkAndShowCrashLog();
@@ -87,7 +89,15 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
-    EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
+    EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
+    EventEmitterService.remove(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
+  }
+
+  migrationFilesToLocalStorage() {
+    AppProcessor.doMigrateFilesToLocalStorage().catch(error => {
+      console.log('doMigrateFilesToLocalStorage error:', error);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
   }
 
   async doRefresh(justCreatedBitmarkAccount) {
@@ -470,6 +480,7 @@ export class MainComponent extends Component {
       this.doAppRefresh(justCreatedBitmarkAccount);
     }).catch(error => {
       console.log('doOpenApp error:', error);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
   doAppRefresh(justCreatedBitmarkAccount) {
@@ -499,6 +510,7 @@ export class MainComponent extends Component {
       }
     }).catch(error => {
       console.log('doAppRefresh error:', error);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 

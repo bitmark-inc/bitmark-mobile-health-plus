@@ -11,6 +11,7 @@ let EventEmitterService = {
     APP_LOADING_DATA: 'app-load-fist-data',
     APP_RECEIVED_NOTIFICATION: 'app-received-notification',
     APP_TASK: 'app-task:',
+    APP_MIGRATION_FILE_LOCAL_STORAGE: 'app-migration:file-local-storage',
 
     CHANGE_USER_INFO: 'change-user-info',
 
