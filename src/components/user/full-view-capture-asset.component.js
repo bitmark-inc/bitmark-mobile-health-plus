@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from "moment";
 import {
   StyleSheet,
   Image, View, SafeAreaView, TouchableOpacity, Text,
@@ -14,7 +13,7 @@ import { Actions } from 'react-native-router-flux';
 export class FullViewCaptureAssetComponent extends Component {
   static propTypes = {
     filePath: PropTypes.string,
-    bitmark: PropTypes.any,
+    title: PropTypes.string,
   };
   constructor(props) {
     super(props);
@@ -26,7 +25,7 @@ export class FullViewCaptureAssetComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
-              <Text style={styles.titleText}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
+              <Text style={styles.titleText}>{this.props.title}</Text>
               <TouchableOpacity onPress={Actions.pop}>
                 <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />
               </TouchableOpacity>
@@ -54,15 +53,13 @@ const styles = StyleSheet.create({
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: "#FF4444",
     width: "100%",
     padding: convertWidth(20),
   },
 
   titleRow: {
+    width: '100%',
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
   },
   titleText: {
@@ -70,11 +67,13 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontSize: 18,
     color: 'white',
+    paddingRight: 15,
   },
   closeIcon: {
     width: convertWidth(21),
     height: convertWidth(21),
     resizeMode: 'contain',
+    marginTop: 3,
   },
 
   content: {
@@ -84,6 +83,7 @@ const styles = StyleSheet.create({
 
   bitmarkImage: {
     height: '100%',
+    width: '100%',
     resizeMode: 'contain',
   },
 });

@@ -58,11 +58,11 @@ let submitting = (promise, processingData) => {
 // ================================================================================================
 // ================================================================================================
 
-const doLogin = async ({ phrase24Words }) => {
+const doLogin = async ({ phraseWords }) => {
   if (Platform.OS === 'ios' && config.isIPhoneX) {
     await FaceTouchId.authenticate();
   }
-  let touchFaceIdSession = await AccountModel.doLogin(phrase24Words);
+  let touchFaceIdSession = await AccountModel.doLogin(phraseWords);
   if (!touchFaceIdSession) {
     return null;
   }
@@ -156,6 +156,15 @@ const doConfirmGrantingAccess = async ({ token, grantee, processingData }) => {
   return submitting(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee), processingData);
 };
 
+const doAcceptEmailRecords = async ({ emailRecord }) => {
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  return processing(DataProcessor.doAcceptEmailRecords(touchFaceIdSession, emailRecord));
+};
+
+const doRejectEmailRecords = async ({ emailRecord }) => {
+  return processing(DataProcessor.doRejectEmailRecords(emailRecord));
+};
+
 
 // ================================================================================================
 // ================================================================================================
@@ -177,6 +186,8 @@ let AppTasks = {
   doRemoveGrantingAccess,
   doCancelGrantingAccess,
   doConfirmGrantingAccess,
+  doAcceptEmailRecords,
+  doRejectEmailRecords,
 };
 
 let registeredTasks = {};

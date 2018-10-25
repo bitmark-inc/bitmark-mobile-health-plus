@@ -163,6 +163,23 @@ void *sha3(const void *in, size_t inlen, void *md, int mdlen)
     return md;
 }
 
+// compute a SHA-3 hash (md) of given byte length from "in"
+
+void *shake256(const void *in, int incount, size_t inlen, void *md, int mdlen, int mdcount)
+{
+    sha3_ctx_t sha3;
+    shake256_init(&sha3);
+    
+    int i;
+    for (i = 0; i < incount; i++) {
+        shake_update(&sha3, in, inlen);
+    }
+    shake_xof(&sha3);
+    shake_out(&sha3, md, mdlen*mdcount);
+    
+    return md;
+}
+
 // SHAKE128 and SHAKE256 extensible-output functionality
 
 void shake_xof(sha3_ctx_t *c)

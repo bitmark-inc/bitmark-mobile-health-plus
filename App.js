@@ -6,6 +6,7 @@ import { Text } from 'react-native';
 import codePush from "react-native-code-push";
 import DeviceInfo from 'react-native-device-info';
 import i18n from 'i18n-js';
+import { Buffer } from 'safe-buffer';
 import {
   // MainComponent,
   CodePushComponent
@@ -23,6 +24,7 @@ if (config.network === config.NETWORKS.livenet) {
 i18n.fallbacks = true;
 i18n.translations = require('./assets/localizations.json');
 global.i18n = i18n;
+global.Buffer = global.Buffer || Buffer;
 
 let CodePushMainAppComponent = codePush({
   updateDialog: {
