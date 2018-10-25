@@ -25,7 +25,7 @@ export class AddRecordComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.titleRow}>
-              <Text style={styles.titleText}>Medical records</Text>
+              <Text style={styles.titleText}>{i18n.t('AddRecordComponent_titleText')}</Text>
               <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
                 <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
               </TouchableOpacity>
@@ -36,7 +36,7 @@ export class AddRecordComponent extends Component {
                 linkText={() => '+ Add record'}
               >
                 <Text style={styles.message}>
-                  You have no medical records now. {'\n'}Tap on "http://abc" button to add your first medical record.
+                  {i18n.t('AddRecordComponent_message')}
                 </Text>
               </Hyperlink>
               <View style={{ flex: 1, padding: 30 }}>
@@ -45,7 +45,7 @@ export class AddRecordComponent extends Component {
             </View>
             <View style={styles.bottomButtonArea}>
               <TouchableOpacity style={[styles.bottomButton]} onPress={this.props.addRecord}>
-                <Text style={[styles.bottomButtonText]}>{i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase().toUpperCase()}</Text>
+                <Text style={[styles.bottomButtonText]}>{i18n.t('AddRecordComponent_bottomButtonText').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>
