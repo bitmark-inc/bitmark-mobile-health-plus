@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.10</string>
+	<string>1.1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -35,8 +35,8 @@
 	<string>1</string>
 	<key>CodePushDeploymentKey</key>
 	<string></string>
-  <key>HockeyAppID</key>
-  <string>953845cde6b940cea3adac0ff1103f8c</string>
+	<key>HockeyAppID</key>
+	<string>953845cde6b940cea3adac0ff1103f8c</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -59,7 +59,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Bitmark Health + would like to access to your camera.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Touch/Face ID or a passcode is required to authorize your transactions&quot;</string>
+	<string>Touch/Face ID or a passcode is required to authorize your transactions.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Bitmark Health + would like to access to your health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>
