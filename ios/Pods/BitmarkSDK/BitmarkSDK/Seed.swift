@@ -203,11 +203,19 @@ public struct SeedV2: Seedable {
     }
     
     public init(fromRecoveryPhrase recoveryPhrase: [String]) throws {
-        let bytes = try RecoverPhrase.V2.recoverSeed(fromPhrase: recoveryPhrase)
-        let networkByte = bytes[0]
-        let network = networkByte == Network.livenet.addressValue ? Network.livenet : Network.testnet
-        self.core = bytes
-        self.network = network
+        let core = try RecoverPhrase.V2.recoverSeed(fromPhrase: recoveryPhrase)
+        var parsedNetwork: Network
+        
+        let mode = core[0] & 0x80 | core[1] & 0x40 | core[2] & 0x20 | core[3] & 0x10
+        if mode == core[15] & 0xf0 {
+            parsedNetwork = .livenet
+        } else if mode == core[15] & 0xf0 ^ 0xf0 {
+            parsedNetwork = .testnet
+        } else {
+            throw(SeedError.wrongNetwork)
+        }
+        self.core = core
+        self.network = parsedNetwork
         self.version = .v2
     }
     
