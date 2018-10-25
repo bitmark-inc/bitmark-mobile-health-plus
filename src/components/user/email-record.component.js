@@ -37,7 +37,10 @@ export class EmailRecordComponent extends Component {
       list: [],
       ids: []
     };
-    this.processEmailRecordsFromAnEmail(emailAddress[0]);
+  }
+
+  componentDidMount() {
+    this.processEmailRecordsFromAnEmail(this.state.selectedEmail);
   }
 
   async processEmailRecordsFromAnEmail(selectedEmail) {
