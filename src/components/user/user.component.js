@@ -180,20 +180,18 @@ class PrivateUserComponent extends Component {
                 </TouchableOpacity>
               </View>
               <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60), }]}>
-                <TouchableOpacity style={{ flex: 1 }} disabled={this.props.healthAssetBitmarks.length === 0} onPress={() => {
-                  Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })
+                <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                  if (this.props.healthAssetBitmarks.length === 0) {
+                    Actions.addRecord({ addRecord: this.addRecord.bind(this) });
+                  } else {
+                    Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
+                  }
                 }}>
                   <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.props.healthAssetBitmarks.length} </Text>
                     {i18n.t('UserComponent_dataTitle2', { s: this.props.healthAssetBitmarks.length !== 1 ? 's' : '' })}
                   </Text>
                 </TouchableOpacity>
-                {isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={() => {
-                  if (this.props.healthAssetBitmarks.length === 0) {
-                    Actions.addRecord({ addRecord: this.addRecord.bind(this) });
-                  } else {
-                    this.addRecord.bind(this)();
-                  }
-                }}>
+                {isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.addRecord.bind(this)}>
                   <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
                   <Text style={styles.addHealthRecordButtonText} > {i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>}

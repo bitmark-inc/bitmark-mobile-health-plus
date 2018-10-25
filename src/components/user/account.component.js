@@ -121,6 +121,13 @@ export class PrivateAccountComponent extends Component {
 
             <ScrollView>
               <View style={styles.accountNumberArea}>
+                <View style={[styles.accountNumberTitleRow,]}>
+                  <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
+                  <TouchableOpacity onPress={Actions.pop}>
+                    <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
+                  </TouchableOpacity>
+                </View>
+
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
                 <Text style={styles.accountNumberValue}>{emailAddress}</Text>
                 <TouchableOpacity style={[styles.accountNumberCopiedArea]} onPress={() => {
@@ -196,8 +203,8 @@ export class PrivateAccountComponent extends Component {
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText3')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
+                {/* <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
+                <TouchableOpacity style={styles.rowButton} onPress={() => {
                   AppProcessor.doLogout().then((result) => {
                     if (result) {
                       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
@@ -205,7 +212,7 @@ export class PrivateAccountComponent extends Component {
                   }).catch(error => {
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
-                }}> */}
+                }}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText4')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
@@ -266,6 +273,22 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: convertWidth(20),
     paddingBottom: 45,
+  },
+  accountNumberTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: convertWidth(10),
+  },
+  accountNumberTitle: {
+    fontFamily: 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 36,
+  },
+  closeIcon: {
+    width: convertWidth(20),
+    height: convertWidth(20),
+    resizeMode: 'contain',
   },
   accountNumberValue: {
     fontFamily: 'Andale Mono',
