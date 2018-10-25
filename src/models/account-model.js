@@ -419,32 +419,31 @@ let doDeleteEmailRecord = (jwt, id) => {
 
 const doCheckMigration = (jwt) => {
   return new Promise((resolve) => {
-    resolve(false);
-    // let statusCode;
-    // let tempURL = `${config.mobile_server_url}/api/accounts/migration`;
-    // fetch(tempURL, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json',
-    //     Authorization: 'Bearer ' + jwt,
-    //   },
-    // }).then((response) => {
-    //   statusCode = response.status;
-    //   return response.json();
-    // }).then((data) => {
-    //   if (statusCode >= 400) {
-    //     return resolve();
-    //   }
-    //   resolve(data);
-    // }).catch(() => resolve());
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/accounts/metadata`;
+    fetch(tempURL, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return resolve(data.metadata.bitmarks_migrated);
+      }
+      resolve(data);
+    }).catch(() => resolve());
   });
 };
 
 const doMarkMigration = (jwt) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/accounts/migration`;
+    let tempURL = `${config.mobile_server_url}/api/accounts/metadata`;
     fetch(tempURL, {
       method: 'POST',
       headers: {
@@ -452,6 +451,9 @@ const doMarkMigration = (jwt) => {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + jwt,
       },
+      body: JSON.stringify({
+        metadata: { bitmarks_migrated: true },
+      })
     }).then((response) => {
       statusCode = response.status;
       return response.json();
