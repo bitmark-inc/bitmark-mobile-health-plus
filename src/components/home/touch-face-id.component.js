@@ -11,7 +11,7 @@ import { AppProcessor } from '../../processors';
 import { CommonModel } from '../../models';
 import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
-import { Actions } from 'react-native-router-flux';
+import { EventEmitterService } from '../../services';
 
 export class TouchFaceIdComponent extends React.Component {
   static propTypes = {
@@ -61,9 +61,8 @@ export class TouchFaceIdComponent extends React.Component {
       promise = AppProcessor.doCreateNewAccount();
     }
     promise.then((user) => {
-      console.log('user :', user);
       if (user) {
-        Actions.notification();
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, true);
       }
     }).catch(error => {
       console.log('error :', error);

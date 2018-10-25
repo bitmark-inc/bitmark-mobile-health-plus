@@ -140,7 +140,7 @@ export class PrivateAccountComponent extends Component {
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
               </View>
 
-              <View style={styles.accessArea}>
+              {/* <View style={styles.accessArea}>
                 <Text style={styles.accessTitle}>{i18n.t('AccountComponent_accessTitle')}</Text>
                 <Text style={styles.accessDescription}>
                   {this.props.accesses['granted_to'] && this.props.accesses['granted_to'].length > 0 ? i18n.t('AccountComponent_accessDescription1') : i18n.t('AccountComponent_accessDescription2')}
@@ -192,7 +192,7 @@ export class PrivateAccountComponent extends Component {
                 <TouchableOpacity style={styles.addOtherAccountButton} onPress={this.scanQRCode.bind(this)}>
                   <Text style={styles.addOtherAccountButtonText}>+ {i18n.t('AccountComponent_addOtherAccountButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
 
               <View style={styles.securityArea}>
                 <Text style={styles.securityTitle} >{i18n.t('AccountComponent_securityTitle')}</Text>
