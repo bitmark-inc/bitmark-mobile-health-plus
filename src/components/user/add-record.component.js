@@ -132,11 +132,11 @@ export class AddRecordComponent extends Component {
             </View>
 
             <View style={{ flex: 1, padding: 20 }}>
-              <Hyperlink linkStyle={{ color: '#FF4444' }}
+              <Hyperlink linkStyle={{ color: 'black' }}
                 linkText={() => '+ Add record'}
               >
                 <Text style={styles.message}>
-                  You have no medical records now. {'\n'}Tap on  http://abc button to add your first medical record.
+                  You have no medical records now. {'\n'}Tap on "http://abc" button to add your first medical record.
                 </Text>
               </Hyperlink>
               <View style={{ flex: 1, padding: 30 }}>
