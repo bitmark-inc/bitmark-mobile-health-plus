@@ -144,8 +144,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(issueFile:::)
-  func issueFile(_ sessionId: String, _ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(issueFile::::)
+  func issueFile(_ sessionId: String, _ input: [String: Any], localFolderPath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let fileURL = input["url"] as! String
@@ -163,16 +163,14 @@ class BitmarkSDK: NSObject {
       let issues = result.0
       let issueIds = issues.map {$0.txId! }
       
-      if let sessionData = result.2,
-        let encryptedData = result.3 {
+      if let sessionData = result.2{
+        let url = URL(fileURLWithPath: fileURL)
+        let filename = url.lastPathComponent
+        let saveFileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
+        let assetFile = try Data(contentsOf: URL(fileURLWithPath: fileURL))
+        try assetFile.saveFileLocally(url: saveFileURL)
         
-        let filename = UUID().uuidString
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentsDirectory = paths[0]
-        let filePath = documentsDirectory.appendingPathComponent(filename)
-        try encryptedData.write(to: filePath, options: .atomic)
-        
-        callback([true, issueIds, result.1.id!, sessionData, filePath.absoluteString])
+        callback([true, issueIds, result.1.id!, sessionData, localFolderPath])
       } else {
         callback([true, issueIds])
       }
@@ -186,8 +184,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(downloadBitmark:::)
-  func downloadBitmark(_ sessionId: String, _ bitmarkId: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(downloadBitmark::::)
+  func downloadBitmark(_ sessionId: String, _ bitmarkId: String, localFolderPath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let (f, d) = try account.downloadAsset(bitmarkId: bitmarkId)
@@ -197,12 +195,9 @@ class BitmarkSDK: NSObject {
           return
       }
       
-      let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-      let documentsDirectory = paths[0]
-      let filePath = documentsDirectory.appendingPathComponent(filename)
-      try data.write(to: filePath)
-      
-      callback([true, filePath.absoluteString])
+      let fileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
+      try data.saveFileLocally(url: fileURL)
+      callback([true, localFolderPath])
     }
     catch let e {
       if let msg = e as? NSString {
@@ -213,8 +208,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(downloadBitmarkWithGrantId:::)
-  func downloadBitmarkWithGrantId(_ sessionId: String, _ grantID: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(downloadBitmarkWithGrantId::::)
+  func downloadBitmarkWithGrantId(_ sessionId: String, _ grantID: String, localFolderPath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let (f, d) = try account.downloadAssetGrant(grantId: grantID)
@@ -224,12 +219,9 @@ class BitmarkSDK: NSObject {
           return
       }
       
-      let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-      let documentsDirectory = paths[0]
-      let filePath = documentsDirectory.appendingPathComponent(filename)
-      try data.write(to: filePath)
-      
-      callback([true, filePath.absoluteString])
+      let fileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
+      try data.saveFileLocally(url: fileURL)
+      callback([true, localFolderPath])
     }
     catch let e {
       if let msg = e as? NSString {
@@ -264,8 +256,8 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(issueThenTransferFile:::)
-  func issueThenTransferFile(_ sessionId: String, _ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(issueThenTransferFile::::)
+  func issueThenTransferFile(_ sessionId: String, _ input: [String: Any], localFolderPath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
     do {
       let account = try BitmarkSDK.getAccount(sessionId: sessionId)
       let fileURL = input["url"] as! String
@@ -280,6 +272,13 @@ class BitmarkSDK: NSObject {
                                                             propertyMetadata: metadata,
                                                             toAccount: receiver,
                                                             extraInfo: extraInfo)
+      
+      let url = URL(fileURLWithPath: fileURL)
+      let filename = url.lastPathComponent
+      let saveFileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
+      let assetFile = try Data(contentsOf: URL(fileURLWithPath: fileURL))
+      try assetFile.saveFileLocally(url: saveFileURL)
+      
       callback([true, bitmarkId])
     }
     catch let e {
@@ -521,6 +520,12 @@ class BitmarkSDK: NSObject {
         callback([false])
       }
     }
+  }
+}
+
+extension Data {
+  func saveFileLocally(url: URL) throws {
+    try self.write(to: url, options: [.completeFileProtection, .atomic])
   }
 }
 
