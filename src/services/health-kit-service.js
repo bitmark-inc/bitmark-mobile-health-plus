@@ -373,9 +373,9 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     await FileUtil.removeSafe(tempFolder);
 
     let listFiles = await FileUtil.readDir(downloadedFolder);
-    let accountFilePath = `${downloadedFolder}/${listFiles[0]}`;
-    await FileUtil.unzip(accountFilePath, downloadedFolder);
-    await FileUtil.removeSafe(accountFilePath);
+    let zipFilePath = `${downloadedFolder}/${listFiles[0]}`;
+    await FileUtil.unzip(zipFilePath, downloadedFolder);
+    await FileUtil.removeSafe(zipFilePath);
 
     let encryptedAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
     await FileUtil.mkdir(encryptedAssetFolder);

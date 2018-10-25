@@ -433,9 +433,9 @@ const doCheckMigration = (jwt) => {
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
-        return resolve(data.metadata.bitmarks_migrated);
+        return resolve();
       }
-      resolve(data);
+      resolve(data.metadata.bitmarks_migrated);
     }).catch(() => resolve());
   });
 };
@@ -445,7 +445,7 @@ const doMarkMigration = (jwt) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/accounts/metadata`;
     fetch(tempURL, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
