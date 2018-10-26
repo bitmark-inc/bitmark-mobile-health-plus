@@ -5,7 +5,7 @@ import {
   View, TouchableOpacity, Text, SafeAreaView, FlatList,
 } from 'react-native';
 
-
+import KeepAwake from 'react-native-keep-awake';
 import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
@@ -42,7 +42,9 @@ export class EmailRecordComponent extends Component {
 
   async processEmailRecordsFromAnEmail(selectedEmail) {
     this.setState({ processing: true });
+    KeepAwake.activate();
     let results = await AccountService.doProcessEmailRecords(DataProcessor.getUserInformation().bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
+    KeepAwake.deactivate();
     console.log({ results });
     this.setState({
       list: results.list || [],
