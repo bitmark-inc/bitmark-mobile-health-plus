@@ -23,7 +23,7 @@ export class RecordImagesComponent extends Component {
 
   async continue() {
     if (this.state.type === 'combine') {
-      Actions.orderCombineRecordImage({ images: this.props.images, issueImage: this.props.issueImage });
+      Actions.orderCombineImages({ images: this.props.images, issueImage: this.props.issueImage });
     } else {
       for (let imageInfo of this.props.images) {
         let filePath = imageInfo.uri.replace('file://', '');

@@ -48,6 +48,7 @@ class PrivateUserComponent extends Component {
   }
 
   onTakePhoto() {
+    // Actions.orderCombineImages();
     Actions.captureMultipleImages();
 
     // ImagePicker.launchCamera({}, (response) => {

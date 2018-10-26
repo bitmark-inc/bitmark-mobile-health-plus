@@ -48,7 +48,6 @@ export class EmailRecordComponent extends Component {
     KeepAwake.activate();
     let results = await AppProcessor.doProcessEmailRecords(DataProcessor.getUserInformation().bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
     KeepAwake.deactivate();
-    console.log({ results });
     this.setState({
       list: results.list || [],
       ids: results.ids || [],

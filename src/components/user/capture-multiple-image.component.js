@@ -42,9 +42,9 @@ export class CaptureMultipleImagesComponent extends Component {
 
 
       if (this.state.selectedIndex < 0 || this.state.selectedIndex === images.length) {
-        images.push({ uri: data.uri, createdAt: moment.toDate().toISOString() });
+        images.push({ uri: data.uri, createdAt: moment().toDate().toISOString() });
       } else {
-        images.splice(selectedIndex, 0, { uri: data.uri, createdAt: moment.toDate().toISOString() });
+        images.splice(selectedIndex, 0, { uri: data.uri, createdAt: moment().toDate().toISOString() });
       }
       this.setState({
         images,

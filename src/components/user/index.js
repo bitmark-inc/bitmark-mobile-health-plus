@@ -24,6 +24,7 @@ import { AccountNumberComponent } from './account-number.component';
 import { LocalStorageMigrationComponent } from './local-storeage-migration.component';
 import { CaptureMultipleImagesComponent } from './capture-multiple-image.component';
 import { RecordImagesComponent } from './record-images.component';
+import { OrderCombineImagesComponent } from './order-combine-images.component';
 
 
 
@@ -57,6 +58,8 @@ export class UserRouterComponent extends Component {
           <Scene key="localStorageMigration" component={LocalStorageMigrationComponent} />
           <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} />
           <Scene key="recordImages" component={RecordImagesComponent} />
+          <Scene key="orderCombineImages" component={OrderCombineImagesComponent} />
+
 
         </Stack>
       </Router>
