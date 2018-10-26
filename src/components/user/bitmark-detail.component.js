@@ -115,8 +115,7 @@ export class BitmarkDetailComponent extends Component {
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
-                {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText]}>{this.props.bitmark.asset.created_at ? moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase() : ''}</Text>}
-                {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{this.props.bitmark.asset.created_at ? moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase() : ''}</Text>}
+                <Text style={styles.titleText}>{this.props.bitmark.asset.name}</Text>
                 <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
