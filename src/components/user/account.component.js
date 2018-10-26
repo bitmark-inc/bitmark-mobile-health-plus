@@ -8,7 +8,7 @@ import {
   Alert,
   Share,
   Clipboard,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList,
+  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 
@@ -141,7 +141,7 @@ export class PrivateAccountComponent extends Component {
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.accessArea}>
+              {/* <View style={styles.accessArea}>
                 <Text style={styles.accessTitle}>{i18n.t('AccountComponent_accessTitle')}</Text>
                 <Text style={styles.accessDescription}>
                   {this.props.accesses['granted_to'] && this.props.accesses['granted_to'].length > 0 ? i18n.t('AccountComponent_accessDescription1') : i18n.t('AccountComponent_accessDescription2')}
@@ -193,7 +193,7 @@ export class PrivateAccountComponent extends Component {
                 <TouchableOpacity style={styles.addOtherAccountButton} onPress={this.scanQRCode.bind(this)}>
                   <Text style={styles.addOtherAccountButtonText}>+ {i18n.t('AccountComponent_addOtherAccountButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
 
               <View style={styles.securityArea}>
                 <Text style={styles.securityTitle} >{i18n.t('AccountComponent_securityTitle')}</Text>
@@ -333,95 +333,95 @@ const styles = StyleSheet.create({
   },
 
 
-  accessArea: {
-    borderTopWidth: 1,
-    borderColor: '#FF4444',
-    padding: convertWidth(20),
-    paddingBottom: 20,
-  },
-  accessTitle: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 34,
-  },
-  accessDescription: {
-    fontFamily: 'Avenir Book',
-    fontWeight: '300',
-    fontSize: 16,
-    marginTop: 10,
-  },
-  accessAccountRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  accessAccountNumber: {
-    fontFamily: 'Andale Mono',
-    fontSize: 14,
-    color: '#0060F2',
-  },
-  accessRevokeButtonText: {
-    fontFamily: 'Andale Mono',
-    fontSize: 14,
-    color: '#FF003C',
-  },
-  addGrandAccessButton: {
-    marginTop: 29,
-    width: '100%',
-    height: 37,
-    backgroundColor: '#FF4444',
+  // accessArea: {
+  //   borderTopWidth: 1,
+  //   borderColor: '#FF4444',
+  //   padding: convertWidth(20),
+  //   paddingBottom: 20,
+  // },
+  // accessTitle: {
+  //   fontFamily: 'Avenir Black',
+  //   fontWeight: '900',
+  //   fontSize: 34,
+  // },
+  // accessDescription: {
+  //   fontFamily: 'Avenir Book',
+  //   fontWeight: '300',
+  //   fontSize: 16,
+  //   marginTop: 10,
+  // },
+  // accessAccountRow: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   marginTop: 12,
+  // },
+  // accessAccountNumber: {
+  //   fontFamily: 'Andale Mono',
+  //   fontSize: 14,
+  //   color: '#0060F2',
+  // },
+  // accessRevokeButtonText: {
+  //   fontFamily: 'Andale Mono',
+  //   fontSize: 14,
+  //   color: '#FF003C',
+  // },
+  // addGrandAccessButton: {
+  //   marginTop: 29,
+  //   width: '100%',
+  //   height: 37,
+  //   backgroundColor: '#FF4444',
 
-    justifyContent: 'center',
-  },
-  addGrandAccessButtonText: {
-    fontFamily: 'Avenir Heavy',
-    fontWeight: '900',
-    fontSize: 16,
-    color: 'white',
-    textAlign: 'center',
-  },
-  accessOtherAccountArea: {
-    borderTopWidth: 1,
-    borderColor: '#FF4444',
-    padding: convertWidth(20),
-    paddingBottom: 20,
-  },
-  accessOtherAccountTitle: {
-    fontFamily: 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 34,
-  },
-  accessOtherAccountDescription: {
-    fontFamily: 'Avenir Book',
-    fontWeight: '300',
-    fontSize: 16,
-    marginTop: 10,
-  },
-  accessOtherAccountAccountRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  accessOtherAccountAccountNumber: {
-    fontFamily: 'Andale Mono',
-    fontSize: 14,
-    color: '#0060F2',
-  },
-  addOtherAccountButton: {
-    marginTop: 29,
-    width: '100%',
-    height: 37,
-    backgroundColor: '#FF4444',
+  //   justifyContent: 'center',
+  // },
+  // addGrandAccessButtonText: {
+  //   fontFamily: 'Avenir Heavy',
+  //   fontWeight: '900',
+  //   fontSize: 16,
+  //   color: 'white',
+  //   textAlign: 'center',
+  // },
+  // accessOtherAccountArea: {
+  //   borderTopWidth: 1,
+  //   borderColor: '#FF4444',
+  //   padding: convertWidth(20),
+  //   paddingBottom: 20,
+  // },
+  // accessOtherAccountTitle: {
+  //   fontFamily: 'Avenir Black',
+  //   fontWeight: '900',
+  //   fontSize: 34,
+  // },
+  // accessOtherAccountDescription: {
+  //   fontFamily: 'Avenir Book',
+  //   fontWeight: '300',
+  //   fontSize: 16,
+  //   marginTop: 10,
+  // },
+  // accessOtherAccountAccountRow: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   marginTop: 12,
+  // },
+  // accessOtherAccountAccountNumber: {
+  //   fontFamily: 'Andale Mono',
+  //   fontSize: 14,
+  //   color: '#0060F2',
+  // },
+  // addOtherAccountButton: {
+  //   marginTop: 29,
+  //   width: '100%',
+  //   height: 37,
+  //   backgroundColor: '#FF4444',
 
-    justifyContent: 'center',
-  },
-  addOtherAccountButtonText: {
-    fontFamily: 'Avenir Heavy',
-    fontWeight: '900',
-    fontSize: 16,
-    color: 'white',
-    textAlign: 'center',
-  },
+  //   justifyContent: 'center',
+  // },
+  // addOtherAccountButtonText: {
+  //   fontFamily: 'Avenir Heavy',
+  //   fontWeight: '900',
+  //   fontSize: 16,
+  //   color: 'white',
+  //   textAlign: 'center',
+  // },
 
   aboutArea: {
     borderTopWidth: 1,
