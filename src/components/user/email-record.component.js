@@ -11,7 +11,7 @@ import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 import { AppProcessor, DataProcessor } from './../../processors';
-import { EventEmitterService, AccountService } from './../../services';
+import { EventEmitterService } from './../../services';
 
 export class EmailRecordComponent extends Component {
   static propTypes = {
@@ -43,7 +43,7 @@ export class EmailRecordComponent extends Component {
   async processEmailRecordsFromAnEmail(selectedEmail) {
     this.setState({ processing: true });
     KeepAwake.activate();
-    let results = await AccountService.doProcessEmailRecords(DataProcessor.getUserInformation().bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
+    let results = await AppProcessor.doProcessEmailRecords(DataProcessor.getUserInformation().bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
     KeepAwake.deactivate();
     console.log({ results });
     this.setState({

@@ -205,6 +205,9 @@ const doAcceptEmailRecords = async (emailRecord) => {
 const doRejectEmailRecords = async (emailRecord) => {
   return executeTask('doRejectEmailRecords', { emailRecord });
 };
+const doProcessEmailRecords = (bitmarkAccountNumber, emailIssueRequestsFromAnEmail) => {
+  return executeTask('doProcessEmailRecords', { bitmarkAccountNumber, emailIssueRequestsFromAnEmail });
+};
 
 // ================================================================================================
 // ================================================================================================
@@ -240,6 +243,8 @@ let AppProcessor = {
   doConfirmGrantingAccess,
   doAcceptEmailRecords,
   doRejectEmailRecords,
+
+  doProcessEmailRecords,
 }
 
 export {

@@ -2,7 +2,7 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 
 import { CommonModel, AccountModel, FaceTouchId, } from './../models';
-import { EventEmitterService, BitmarkService, } from './../services'
+import { EventEmitterService, BitmarkService, AccountService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';
 import { FileUtil } from '../utils';
@@ -165,6 +165,10 @@ const doRejectEmailRecords = async ({ emailRecord }) => {
   return processing(DataProcessor.doRejectEmailRecords(emailRecord));
 };
 
+const doProcessEmailRecords = async ({ bitmarkAccountNumber, emailIssueRequestsFromAnEmail }) => {
+  return AccountService.doProcessEmailRecords(bitmarkAccountNumber, emailIssueRequestsFromAnEmail);
+};
+
 
 // ================================================================================================
 // ================================================================================================
@@ -188,6 +192,7 @@ let AppTasks = {
   doConfirmGrantingAccess,
   doAcceptEmailRecords,
   doRejectEmailRecords,
+  doProcessEmailRecords,
 };
 
 let registeredTasks = {};
