@@ -160,8 +160,11 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
     await FileUtil.mkdir(unzipFolder);
 
     let encryptedFilePath = `${folderPath}/temp_email_records_encrypted.zip`;
+    let start = Date.now();
     await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
+    console.log('download time:', (Date.now() - start) / 1000);
 
+    start = Date.now();
     let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
 
     let keyInByte = Buffer.from(emailIssueRequest.aes_key, 'hex');
@@ -173,10 +176,14 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
 
     let decryptedFilePath = `${folderPath}/temp_email_records_decrypted.zip`;
     await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
+    console.log('decrypt time:', (Date.now() - start) / 1000);
+    start = Date.now();
     await FileUtil.unzip(decryptedFilePath, unzipFolder);
+    console.log('unzip time:', (Date.now() - start) / 1000);
 
     let existDataFolder = await runPromiseWithoutError(FileUtil.exists(`${unzipFolder}/data`));
     if (existDataFolder && !existDataFolder.error) {
+      start = Date.now();
       let list = await FileUtil.readDir(`${unzipFolder}/data`);
       if (list && list.length > 0) {
         results.ids.push(emailIssueRequest.id);
@@ -217,6 +224,7 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
           }
         }
       }
+      console.log('detect asset time:', (Date.now() - start) / 1000);
     }
   }
   return results;

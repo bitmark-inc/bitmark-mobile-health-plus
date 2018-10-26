@@ -16,7 +16,7 @@ const statuses = {
   inputting: 'inputting'
 };
 
-// let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
+let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 
 // let testWords = ["track", "occur", "mercy", "machine", "guitar", "occur", "main", "extra", "topic", "pen", "fatigue", "whale"];
 
@@ -26,19 +26,19 @@ export class LoginComponent extends Component {
 
     let smallerList = [];
     let biggerList = [];
-    let numberPhraseWords = 12;
+    let numberPhraseWords = 24;
     for (let index = 0; index < numberPhraseWords; index++) {
       if (index < (numberPhraseWords / 2)) {
         smallerList.push({
           key: index,
-          word: '',
-          // word: testWords[index],
+          // word: '',
+          word: testWords[index],
         });
       } else {
         biggerList.push({
           key: index,
-          word: '',
-          // word: testWords[index],
+          // word: '',
+          word: testWords[index],
         });
       }
     }

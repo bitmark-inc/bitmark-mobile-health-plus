@@ -23,6 +23,7 @@ import { GetStartComponent } from './get-start.component';
 import { AccountNumberComponent } from './account-number.component';
 import { LocalStorageMigrationComponent } from './local-storeage-migration.component';
 import { CaptureMultipleImagesComponent } from './capture-multiple-image.component';
+import { RecordImagesComponent } from './record-images.component';
 
 
 
@@ -55,6 +56,7 @@ export class UserRouterComponent extends Component {
           <Scene key="accountNumber" component={AccountNumberComponent} />
           <Scene key="localStorageMigration" component={LocalStorageMigrationComponent} />
           <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} />
+          <Scene key="recordImages" component={RecordImagesComponent} />
 
         </Stack>
       </Router>

@@ -1,65 +1,185 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { RNCamera } from 'react-native-camera';
-
+import Swiper from 'react-native-swiper';
+import moment from 'moment';
 import {
   StyleSheet,
   View, TouchableOpacity, Text, Image,
 } from 'react-native';
-import { convertWidth } from '../../utils';
+import { convertWidth, populateAssetNameFromImage, issue } from '../../utils';
 import { config } from '../../configs';
-import { constants } from '../../constants';
+import { Actions } from 'react-native-router-flux';
+import { EventEmitterService } from '../../services';
+import randomString from 'random-string';
 
 export class CaptureMultipleImagesComponent extends Component {
   static propTypes = {
 
   };
+  static STEP = {
+    capture: 'capture',
+    detail: 'detail',
+    list: 'list',
+  }
   constructor(props) {
     super(props);
+    this.issueImage = this.issueImage.bind(this);
     this.state = {
-      isCapturing: true,
+      step: CaptureMultipleImagesComponent.STEP.capture,
       images: [],
-      selectedIndex: 0,
+      selectedIndex: -1,
     };
+  }
+
+  async captureImage() {
+    if (this.cameraRef) {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+      const options = { base64: true };
+      const data = await this.cameraRef.takePictureAsync(options);
+      let images = this.state.images;
+      let selectedIndex = this.state.selectedIndex < 0 ? images.length : this.state.selectedIndex;
+
+
+      if (this.state.selectedIndex < 0 || this.state.selectedIndex === images.length) {
+        images.push({ uri: data.uri, createdAt: moment.toDate().toISOString() });
+      } else {
+        images.splice(selectedIndex, 0, { uri: data.uri, createdAt: moment.toDate().toISOString() });
+      }
+      this.setState({
+        images,
+        selectedIndex,
+        step: CaptureMultipleImagesComponent.STEP.detail
+      });
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+    }
+  }
+
+  saveImages() {
+    if (this.state.images.length > 1) {
+      Actions.recordImages({ images: this.state.images, issueImage: this.issueImage });
+    } else {
+      this.issueImage(this.state.images[0].uri.replace('file://', ''), this.state.images[0].createdAt);
+    }
+  }
+
+  retakeImage() {
+    let images = this.state.images;
+    images.splice(this.state.selectedIndex, 1);
+    this.setState({
+      images,
+      step: CaptureMultipleImagesComponent.STEP.capture,
+    });
+  }
+
+  keepImage() {
+    this.setState({
+      selectedIndex: - 1,
+      step: CaptureMultipleImagesComponent.STEP.capture,
+    });
+  }
+  viewImages() {
+    this.setState({
+      step: CaptureMultipleImagesComponent.STEP.list,
+    });
+  }
+
+  async issueImage(filePath, createdAt) {
+    let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+    let metadataList = [];
+    metadataList.push({ label: 'Source', value: 'Health Records' });
+    metadataList.push({ label: 'Saved Time', value: createdAt });
+    assetName = await populateAssetNameFromImage(filePath, assetName);
+    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetName }));
   }
 
   render() {
     return (
-      <View style={styles.body}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.button} disabled={!this.state.isCapturing}>
-            {this.state.isCapturing && <Text style={styles.buttonText}>Cancel</Text>}
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0}>
-            {this.state.images.length > 0 && <Text style={styles.buttonText}>Save</Text>}
-          </TouchableOpacity>
-        </View>
-        <RNCamera
-          ref={(ref) => this.cameraRef = ref}
-          style={styles.camera}
-          type={RNCamera.Constants.Type.back}
-        />
-        {!this.state.isCapturing && <View style={styles.footer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Retake</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Kepp Retake</Text>
-          </TouchableOpacity>
+      <View style={{ flex: 1 }}>
+        {this.state.step === CaptureMultipleImagesComponent.STEP.capture && <View style={styles.body}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.button} onPress={Actions.pop}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save({this.state.images.length})</Text>}
+            </TouchableOpacity>
+          </View>
+          <RNCamera
+            ref={(ref) => this.cameraRef = ref}
+            style={styles.camera}
+            type={RNCamera.Constants.Type.back}
+          />
+          <View style={styles.footer}>
+            <TouchableOpacity style={[styles.button, { width: '33%', }]} disabled={this.state.images.length === 0} onPress={this.viewImages.bind(this)}>
+              {this.state.images.length > 0 && <Image style={styles.captureIcon} source={{ uri: this.state.images[this.state.images.length - 1].uri }} />}
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, { width: '33%', alignItems: 'center', justifyContent: 'center' }]} onPress={this.captureImage.bind(this)}>
+              <Image style={styles.captureIcon} source={require('./.././../../assets/imgs/capture-image-icon.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, { width: '33%', justifyContent: 'flex-end' }]}>
+            </TouchableOpacity>
+          </View>
         </View>}
 
-        {!!this.state.isCapturing && <View style={styles.footer}>
-          <TouchableOpacity style={[styles.button, { width: '33%', }]}>
-            {this.state.images.length > 0 && <Image style={styles.captureIcon} source={{ uri: this.state.images[this.state.images.length - 1] }} />}
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, { width: '33%', alignItems: 'center', justifyContent: 'center' }]}>
-            <Image style={styles.captureIcon} source={require('./.././../../assets/imgs/capture-image-icon.png')} />
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, { width: '33%', justifyContent: 'flex-end' }]}>
-            <Text style={styles.buttonText}>Done</Text>
-          </TouchableOpacity>
+
+
+        {this.state.step === CaptureMultipleImagesComponent.STEP.detail && <View style={styles.body}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.button} disabled={true}>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save({this.state.images.length})</Text>}
+            </TouchableOpacity>
+          </View>
+          <View style={styles.imageArea}>
+            <Image style={styles.imageDetail} source={{ uri: this.state.images[this.state.selectedIndex].uri }} />
+          </View>
+          <View style={styles.footer}>
+            <TouchableOpacity style={styles.button} onPress={this.retakeImage.bind(this)}>
+              <Text style={styles.buttonText}>Retake</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={this.keepImage.bind(this)}>
+              <Text style={styles.buttonText}>Kepp Retake</Text>
+            </TouchableOpacity>
+          </View>
         </View>}
 
+        {this.state.step === CaptureMultipleImagesComponent.STEP.list && <View style={styles.body}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.button} disabled={true}>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save({this.state.images.length})</Text>}
+            </TouchableOpacity>
+          </View>
+          <Swiper
+            loop={false}
+            scrollEnabled={true}
+            renderPagination={(index, total) => {
+              return (<View style={styles.pagination}>
+                <Text style={styles.paginationText}>{index + 1}/{total}</Text>
+              </View>)
+            }}
+            onIndexChanged={(selectedIndex) => this.setState({ selectedIndex })
+            }
+          >
+            {this.state.images.map((item, index) => {
+              return (<View style={styles.imageArea} key={index}>
+                <Image style={styles.imageDetail} source={{ uri: item }} />
+              </View>)
+            })}
+          </Swiper>
+
+          <View style={styles.footer}>
+            <TouchableOpacity style={styles.button} onPress={this.retakeImage.bind(this)}>
+              <Text style={styles.buttonText}>Retake</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={this.keepImage.bind(this)}>
+              <Text style={styles.buttonText}>Kepp Retake</Text>
+            </TouchableOpacity>
+          </View>
+        </View>}
       </View>
     );
   }
@@ -80,6 +200,23 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: 'red',
     flex: 1,
     width: '100%',
+  },
+  imageArea: {
+    flex: 1,
+    width: '100%',
+  },
+  imageDetail: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  pagination: {
+    position: 'absolute', top: -10,
+    justifyContent: 'center', alignItems: 'center',
+    width: '100%',
+  },
+  paginationText: {
+    fontSize: 18, fontWeight: '900', fontFamily: 'Avenir Black', color: 'white',
   },
   footer: {
     padding: 20, paddingTop: 40, paddingBottom: 40,
