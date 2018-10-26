@@ -2,7 +2,7 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 
 import { CommonModel, AccountModel, FaceTouchId, } from './../models';
-import { EventEmitterService, BitmarkService, } from './../services'
+import { EventEmitterService, BitmarkService, AccountService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';
 import { FileUtil } from '../utils';
@@ -167,6 +167,9 @@ const doRejectEmailRecords = async ({ emailRecord }) => {
 
 const doMigrateFilesToLocalStorage = async () => {
   return processing(DataProcessor.doMigrateFilesToLocalStorage());
+}
+const doProcessEmailRecords = async ({ bitmarkAccountNumber, emailIssueRequestsFromAnEmail }) => {
+  return AccountService.doProcessEmailRecords(bitmarkAccountNumber, emailIssueRequestsFromAnEmail);
 };
 
 
@@ -193,6 +196,7 @@ let AppTasks = {
   doAcceptEmailRecords,
   doRejectEmailRecords,
   doMigrateFilesToLocalStorage,
+  doProcessEmailRecords,
 };
 
 let registeredTasks = {};
