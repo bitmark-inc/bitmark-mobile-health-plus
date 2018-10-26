@@ -94,14 +94,9 @@ class MainEventsHandlerComponent extends Component {
   }
 
   migrationFilesToLocalStorage() {
-    Alert.alert('New Version Available', 'Please update the app to the new version to continue using. This will be quick and will not affect any of your data.', [{
-      text: 'Update', style: 'cancel',
-      onPress: () => {
-        AppProcessor.doMigrateFilesToLocalStorage().catch(error => {
-          console.log('doMigrateFilesToLocalStorage error:', error);
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-        });
-      }
+    Alert.alert(i18n.t('LocalStorageMigrationComponent_title'), i18n.t('LocalStorageMigrationComponent_message'), [{
+      text: i18n.t('LocalStorageMigrationComponent_buttonText'), style: 'cancel',
+      onPress: () => Actions.localStorageMigration()
     }]);
   }
 

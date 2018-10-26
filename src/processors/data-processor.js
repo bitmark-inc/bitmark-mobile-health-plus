@@ -841,6 +841,7 @@ const doMigrateFilesToLocalStorage = async () => {
   let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
   userBitmarks = userBitmarks || {};
   let bitmarks = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []);
+  let total = 0;
   for (let bitmark of bitmarks) {
     let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}/${bitmark.asset_id}`;
     let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
@@ -884,6 +885,9 @@ const doMigrateFilesToLocalStorage = async () => {
       let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
     }
+    total++;
+    console.log(total, bitmarks.length);
+    EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, Math.floor(total * 100 / bitmarks.length));
   }
 
   await AccountModel.doMarkMigration(jwt);
