@@ -462,8 +462,8 @@
     "AccountNumberComponent_shortAccountNumberLabel": "Shorten account number:",
     "AccountNumberComponent_viewOnRegistryButtonText": "View this account on blockchain",
     "AddRecordComponent_titleText": "Medical records",
-    "AddRecordComponent_message": "You have no medical records now. \nTap on “+ ADD RECORD” button to add your first medical record.",
-    "AddRecordComponent_bottomButtonText": "Add Record"
+    "AddRecordComponent_message": "You have no medical records now. \nTap on “+ ADD RECORDS” button to add your first medical record.",
+    "AddRecordComponent_bottomButtonText": "Add RecordS"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "BitmarkInternetOffComponent_titleText",

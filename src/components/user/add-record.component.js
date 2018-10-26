@@ -32,9 +32,7 @@ export class AddRecordComponent extends Component {
             </View>
 
             <View style={{ flex: 1, padding: 20 }}>
-              <Hyperlink linkStyle={{ color: 'black' }}
-                linkText={() => '+ Add record'}
-              >
+              <Hyperlink>
                 <Text style={styles.message}>
                   {i18n.t('AddRecordComponent_message')}
                 </Text>
