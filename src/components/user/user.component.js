@@ -48,9 +48,11 @@ class PrivateUserComponent extends Component {
   }
 
   onTakePhoto() {
-    ImagePicker.launchCamera({}, (response) => {
-      this.processOnChooseImage(response);
-    });
+    Actions.captureMultipleImages();
+
+    // ImagePicker.launchCamera({}, (response) => {
+    //   this.processOnChooseImage(response);
+    // });
   }
 
   onChooseFromLibrary() {
