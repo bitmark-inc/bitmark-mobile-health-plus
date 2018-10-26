@@ -205,6 +205,9 @@ const doAcceptEmailRecords = async (emailRecord) => {
 const doRejectEmailRecords = async (emailRecord) => {
   return executeTask('doRejectEmailRecords', { emailRecord });
 };
+const doProcessEmailRecords = (bitmarkAccountNumber, emailIssueRequestsFromAnEmail) => {
+  return executeTask('doProcessEmailRecords', { bitmarkAccountNumber, emailIssueRequestsFromAnEmail });
+};
 
 const doMigrateFilesToLocalStorage = async () => {
   return executeTask('doMigrateFilesToLocalStorage');
@@ -246,6 +249,7 @@ let AppProcessor = {
   doRejectEmailRecords,
 
   doMigrateFilesToLocalStorage,
+  doProcessEmailRecords,
 }
 
 export {
