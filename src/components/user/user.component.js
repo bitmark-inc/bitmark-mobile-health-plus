@@ -30,7 +30,7 @@ class PrivateUserComponent extends Component {
   };
   constructor(props) {
     super(props);
-    this.issueImage = this.issueImage.bind(this);
+    this.doIssueImage = this.doIssueImage.bind(this);
   }
 
   addRecord() {
@@ -50,18 +50,61 @@ class PrivateUserComponent extends Component {
       });
   }
 
-  async issueImage(filePath, createdAt) {
-    let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
-    let metadataList = [];
-    metadataList.push({ label: 'Source', value: 'Health Records' });
-    metadataList.push({ label: 'Saved Time', value: createdAt });
-    assetName = await populateAssetNameFromImage(filePath, assetName);
-    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetName }));
+  doIssueImage(images) {
+    //check existing assets
+    let doCheckExistingAsset = async () => {
+      for (let imageInfo of images) {
+        let filePath = imageInfo.uri.replace('file://', '');
+        let { asset } = await AppProcessor.doCheckFileToIssue(filePath);
+        if (asset && asset.name) {
+          let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
+            ? i18n.t('CaptureAssetComponent_alertMessage11', { type: 'image' })
+            : i18n.t('CaptureAssetComponent_alertMessage12', { type: 'image' });
+          return message;
+        }
+      }
+    };
+    // issue images
+    let doIssuance = async () => {
+      let listAssetName = [];
+      for (let imageInfo of images) {
+        let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+        let metadataList = [];
+        metadataList.push({ label: 'Source', value: 'Health Records' });
+        metadataList.push({ label: 'Saved Time', value: imageInfo.createdAt });
+        let filePath = imageInfo.uri.replace('file://', '');
+        assetName = await populateAssetNameFromImage(filePath, assetName);
+
+        let data = AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
+          indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
+        });
+        if (data) {
+          FileUtil.removeSafe(filePath);
+        }
+        listAssetName.push(assetName);
+      }
+      return listAssetName;
+    };
+    doCheckExistingAsset().then(message => {
+      if (message) {
+        Alert.alert('', message, [{
+          text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
+        }]);
+      } else {
+        doIssuance().then((listAssetName) => {
+          Actions.assetNameInform({ listAssetName });
+        }).catch(error => {
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+        });
+      }
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
   }
 
   onTakePhoto() {
     // Actions.orderCombineImages();
-    Actions.captureMultipleImages({ issueImage: this.issueImage });
+    Actions.captureMultipleImages({ doIssueImage: this.doIssueImage });
 
     // ImagePicker.launchCamera({}, (response) => {
     //   this.processOnChooseImage(response);
@@ -78,7 +121,7 @@ class PrivateUserComponent extends Component {
       for (let image of results) {
         images.push({ uri: image.sourceURL, createdAt: moment(image.creationDate) });
       }
-      Actions.recordImages({ images, issueImage: this.issueImage });
+      Actions.recordImages({ images, doIssueImage: this.doIssueImage });
     });
 
     // ImagePicker.launchImageLibrary({}, (response) => {

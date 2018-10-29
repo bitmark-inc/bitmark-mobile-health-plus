@@ -13,7 +13,7 @@ import { constants } from '../../constants';
 export class RecordImagesComponent extends Component {
   static propTypes = {
     images: PropTypes.array,
-    issueImage: PropTypes.func,
+    doIssueImage: PropTypes.func,
   };
 
   constructor(props) {
@@ -23,12 +23,9 @@ export class RecordImagesComponent extends Component {
 
   async continue() {
     if (this.state.type === 'combine') {
-      Actions.orderCombineImages({ images: this.props.images, issueImage: this.props.issueImage });
+      Actions.orderCombineImages({ images: this.props.images, doIssueImage: this.props.doIssueImage });
     } else {
-      for (let imageInfo of this.props.images) {
-        let filePath = imageInfo.uri.replace('file://', '');
-        this.props.issueImage(filePath, imageInfo.createdAt);
-      }
+      this.props.doIssueImage(this.props.images);
     }
   }
 

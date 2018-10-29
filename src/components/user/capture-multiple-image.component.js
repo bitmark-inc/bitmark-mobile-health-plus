@@ -15,7 +15,7 @@ import { EventEmitterService } from '../../services';
 
 export class CaptureMultipleImagesComponent extends Component {
   static propTypes = {
-    issueImage: PropTypes.func,
+    doIssueImage: PropTypes.func,
   };
   static STEP = {
     capture: 'capture',
@@ -57,9 +57,9 @@ export class CaptureMultipleImagesComponent extends Component {
 
   saveImages() {
     if (this.state.images.length > 1) {
-      Actions.recordImages({ images: this.state.images, issueImage: this.props.issueImage });
+      Actions.recordImages({ images: this.state.images, doIssueImage: this.props.doIssueImage });
     } else {
-      this.props.issueImage(this.state.images[0].uri.replace('file://', ''), this.state.images[0].createdAt);
+      this.props.doIssueImage(this.state.images);
     }
   }
 

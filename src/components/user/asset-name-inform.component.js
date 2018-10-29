@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 
-import {convertWidth} from '../../utils';
-import {config} from '../../configs';
-import {constants} from '../../constants';
-import {Actions} from 'react-native-router-flux';
+import { convertWidth } from '../../utils';
+import { config } from '../../configs';
+import { constants } from '../../constants';
+import { Actions } from 'react-native-router-flux';
 
 export class AssetNameInform extends Component {
   static propTypes = {
-    assetName: PropTypes.string
+    assetNames: PropTypes.string
   };
 
   constructor(props) {
@@ -19,7 +19,7 @@ export class AssetNameInform extends Component {
   }
 
   gotoBitmarkList() {
-    Actions.bitmarkList({bitmarkType: 'bitmark_health_issuance'});
+    Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
   }
 
   render() {
@@ -30,7 +30,9 @@ export class AssetNameInform extends Component {
             <View style={[styles.content]}>
               <Text style={[styles.headerText]}>{global.i18n.t("AssetNameInform_headerText")}</Text>
               <Text style={[styles.description]}>{global.i18n.t("AssetNameInform_description")}</Text>
-              <Text style={[styles.assetName]}>- {this.props.assetName}</Text>
+              {this.props.assetNames.map((assetName, index) => {
+                return <Text key={index} style={[styles.assetName]}>- {assetName}</Text>
+              })}
             </View>
             <View style={styles.lastBottomButtonArea}>
               <TouchableOpacity style={styles.lastBottomButton} onPress={this.gotoBitmarkList.bind(this)}>

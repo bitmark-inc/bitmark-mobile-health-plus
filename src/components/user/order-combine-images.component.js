@@ -14,7 +14,7 @@ import { constants } from '../../constants';
 export class OrderCombineImagesComponent extends Component {
   static propTypes = {
     images: PropTypes.array,
-    issueImage: PropTypes.func,
+    doIssueImage: PropTypes.func,
   };
 
   constructor(props) {
@@ -40,20 +40,20 @@ export class OrderCombineImagesComponent extends Component {
           </View>
           <View style={{ flex: 1, padding: 20, }}>
             <Text style={styles.message}>Drag and drop to rearrange photos.</Text>
-            <ScrollView contentContainerStyle={{flexGrow:1}}>
-            <SortableGrid
-              style={{ flex: 1, width: convertWidth(375), }}
-              itemsPerRow={3}
-              onDragRelease={(itemOrder) => console.log("Drag was released, the blocks are in the following order: ", itemOrder)}
-              onDragStart={(itemOrder) => console.log("Some block is being dragged now!", itemOrder)} >
-              {
-                this.props.images.map((imageInfo, index) =>
-                  <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }} key={index} >
-                    <Image style={{ width: convertWidth(109), height: convertWidth(109), resizeMode: 'contain' }} source={{ uri: imageInfo.uri }} />
-                  </View>
-                )
-              }
-            </SortableGrid>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+              <SortableGrid
+                style={{ flex: 1, width: convertWidth(375), }}
+                itemsPerRow={3}
+                onDragRelease={(itemOrder) => console.log("Drag was released, the blocks are in the following order: ", itemOrder)}
+                onDragStart={(itemOrder) => console.log("Some block is being dragged now!", itemOrder)} >
+                {
+                  this.props.images.map((imageInfo, index) =>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }} key={index} >
+                      <Image style={{ width: convertWidth(109), height: convertWidth(109), resizeMode: 'contain' }} source={{ uri: imageInfo.uri }} />
+                    </View>
+                  )
+                }
+              </SortableGrid>
             </ScrollView>
 
           </View>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   message: {
     width: convertWidth(375), textAlign: 'center',
     fontSize: 16, fontWeight: '300', fontFamily: 'Avenir Light', color: 'white',
-    marginBottom:10,
+    marginBottom: 10,
   },
 
   nextButton: {
