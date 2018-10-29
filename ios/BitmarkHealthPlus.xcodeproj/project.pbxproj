@@ -182,6 +182,9 @@
 		58908AC920A18A5A00C0064A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		589626E9201B28380026C4A5 /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
 		58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
+		58BA32BF2186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
+		58BA32C02186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
+		58BA32C12186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
 		58C9513920202AF80050A9D4 /* TouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9510D20202AF70050A9D4 /* TouchID.m */; };
 		58CB4892201EC63A0058B364 /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
 		58DBAEEF217984C2005B0E32 /* PDFScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DBAEEE217984C2005B0E32 /* PDFScanner.m */; };
@@ -782,6 +785,8 @@
 		589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkSDKBridge.m; sourceTree = "<group>"; };
 		58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-beta.plist"; sourceTree = "<group>"; };
 		58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "Bitmark-beta.entitlements"; path = "Bitmark/Bitmark-beta.entitlements"; sourceTree = "<group>"; };
+		58BA32BD2186C457007E35FE /* AESDecrypt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AESDecrypt.h; sourceTree = "<group>"; };
+		58BA32BE2186C457007E35FE /* AESDecrypt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AESDecrypt.m; sourceTree = "<group>"; };
 		58C9510C20202AF70050A9D4 /* TouchID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchID.h; sourceTree = "<group>"; };
 		58C9510D20202AF70050A9D4 /* TouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchID.m; sourceTree = "<group>"; };
 		58CB488F201EC5670058B364 /* Bitmark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Bitmark.entitlements; path = Bitmark/Bitmark.entitlements; sourceTree = "<group>"; };
@@ -1239,6 +1244,15 @@
 			path = OtherUtilities;
 			sourceTree = "<group>";
 		};
+		58BA32812186C434007E35FE /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				58BA32BD2186C457007E35FE /* AESDecrypt.h */,
+				58BA32BE2186C457007E35FE /* AESDecrypt.m */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
 		58C9510B20202AF70050A9D4 /* TouchID */ = {
 			isa = PBXGroup;
 			children = (
@@ -1297,6 +1311,7 @@
 		58FC1E27201B21AC00F60AF9 /* RNModules */ = {
 			isa = PBXGroup;
 			children = (
+				58BA32812186C434007E35FE /* Crypto */,
 				58DBAEB121798495005B0E32 /* PDFScanner */,
 				0E7371A621747877009022CC /* RNTextDetector */,
 				588FE1E3205FB45500937D78 /* HealthKit */,
@@ -2550,6 +2565,7 @@
 				588FE251205FB45500937D78 /* RCTAppleHealthKit+Utils.m in Sources */,
 				588FE272205FB71000937D78 /* LocaleUnit.m in Sources */,
 				588FE259205FB45500937D78 /* HKDevice+Exporting.m in Sources */,
+				58BA32BF2186C457007E35FE /* AESDecrypt.m in Sources */,
 				588FE23D205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */,
 				588FE276205FB71000937D78 /* PhotoExporting.m in Sources */,
 				588FE24B205FB45500937D78 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m in Sources */,
@@ -2587,6 +2603,7 @@
 				5805EDF1216F31B900943FA5 /* RCTAppleHealthKit+Utils.m in Sources */,
 				5805EDF2216F31B900943FA5 /* LocaleUnit.m in Sources */,
 				5805EDF4216F31B900943FA5 /* HKDevice+Exporting.m in Sources */,
+				58BA32C12186C457007E35FE /* AESDecrypt.m in Sources */,
 				5805EDF5216F31B900943FA5 /* RCTAppleHealthKit+Methods_Body.m in Sources */,
 				5805EDF8216F31B900943FA5 /* PhotoExporting.m in Sources */,
 				5805EDF9216F31B900943FA5 /* RCTAppleHealthKit+Methods_ReproductiveHealth.m in Sources */,
@@ -2624,6 +2641,7 @@
 				58908A7D20A18A5A00C0064A /* RCTAppleHealthKit+Utils.m in Sources */,
 				58908A7E20A18A5A00C0064A /* LocaleUnit.m in Sources */,
 				58908A8020A18A5A00C0064A /* HKDevice+Exporting.m in Sources */,
+				58BA32C02186C457007E35FE /* AESDecrypt.m in Sources */,
 				58908A8120A18A5A00C0064A /* RCTAppleHealthKit+Methods_Body.m in Sources */,
 				58908A8420A18A5A00C0064A /* PhotoExporting.m in Sources */,
 				58908A8520A18A5A00C0064A /* RCTAppleHealthKit+Methods_ReproductiveHealth.m in Sources */,

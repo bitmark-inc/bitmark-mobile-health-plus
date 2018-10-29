@@ -198,8 +198,8 @@ const doConfirmGrantingAccess = async (token, grantee, processingData) => {
   return executeTask('doConfirmGrantingAccess', { token, grantee, processingData });
 };
 
-const doAcceptEmailRecords = async (emailRecord) => {
-  return executeTask('doAcceptEmailRecords', { emailRecord });
+const doAcceptEmailRecords = async (emailRecord, processingData) => {
+  return executeTask('doAcceptEmailRecords', { emailRecord, processingData });
 };
 
 const doRejectEmailRecords = async (emailRecord) => {

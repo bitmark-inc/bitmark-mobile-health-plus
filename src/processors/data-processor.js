@@ -886,12 +886,13 @@ const doMigrateFilesToLocalStorage = async () => {
       let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
     }
-    total++;
-    console.log(total, bitmarks.length);
     EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, Math.floor(total * 100 / bitmarks.length));
+    total++;
   }
+  EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, 100);
 
   await AccountModel.doMarkMigration(jwt);
+  didMigrationFileToLocalStorage = true;
 };
 
 const detectLocalAssetFilePath = async (assetId) => {

@@ -120,19 +120,9 @@ export class BitmarkDetailComponent extends Component {
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
               </View>
-              <View style={styles.content}>
+              <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
                 <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
-                  <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle1')}</Text>
-                  <Text style={styles.metadataMessage}>{i18n.t('BitmarkDetailComponent_metadataMessage')}</Text>
-                  <View style={styles.metadataRow}>
-                    <Text style={styles.metadataLabel}>{i18n.t('BitmarkDetailComponent_metadataLabel1').toUpperCase()}</Text>
-                    <Text style={styles.metadataValue}>{moment(this.props.bitmark.asset.metadata['Saved Time']).format('YYYY MMM DD hh:mm:ss').toUpperCase()}</Text>
-                  </View>
-                  <View style={styles.metadataRow}>
-                    <Text style={styles.metadataLabel}>{i18n.t('BitmarkDetailComponent_metadataLabel2').toUpperCase()}</Text>
-                    <Text style={styles.metadataValue}>{this.props.bitmark.asset.metadata['Source'].toUpperCase()}</Text>
-                  </View>
-                  <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>
+                  {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>}
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                     <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({
                       filePath: this.state.filePath,
@@ -172,6 +162,7 @@ const styles = StyleSheet.create({
   },
   bodySafeView: {
     flex: 1,
+    backgroundColor: 'white',
   },
   body: {
     padding: convertWidth(16),
@@ -188,16 +179,17 @@ const styles = StyleSheet.create({
 
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     padding: convertWidth(20),
+    paddingBottom: 0,
     paddingTop: 0,
     paddingRight: 0,
   },
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 36,
+    flex: 1,
+    fontSize: 24,
   },
   closeButton: {
     paddingTop: convertWidth(26),
@@ -214,47 +206,26 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: convertWidth(26),
-    paddingTop: convertWidth(15),
+    paddingTop: convertWidth(0),
   },
   contentScroll: {
     flexDirection: 'column',
   },
   metadataTitle: {
     fontFamily: 'Avenir Medium',
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 16,
-    marginTop: 21,
-  },
-  metadataMessage: {
-    fontFamily: 'Avenir Medium',
-    fontWeight: '300',
-    fontSize: 14,
-    color: '#999999',
-    marginTop: 4,
-    marginBottom: 24,
-  },
-
-  metadataRow: {
-    flexDirection: 'row',
-  },
-  metadataLabel: {
-    fontFamily: 'Avenir Medium',
-    fontWeight: '300',
-    fontSize: 14,
-    color: '#999999'
-  },
-  metadataValue: {
-    fontFamily: 'Avenir Medium',
-    fontWeight: '300',
-    fontSize: 14,
-    color: '#999999'
+    marginTop: 5,
   },
 
   bitmarkImageArea: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
   },
   bitmarkImage: {
     height: '100%',
+    width: '100%',
     resizeMode: 'contain',
   },
   bitmarkContent: {

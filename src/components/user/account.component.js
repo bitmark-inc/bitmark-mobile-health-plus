@@ -61,7 +61,7 @@ export class PrivateAccountComponent extends Component {
     Mailer.mail({
       subject: i18n.t('AccountComponent_subject'),
       recipients: ['support@bitmark.com'],
-      body: 'Health+ version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
+      body: 'Bitmark Health version: ' + DataProcessor.getApplicationVersion() + ' (' + DataProcessor.getApplicationBuildNumber() + ')',
     }, (error) => {
       if (error) {
         Alert.alert(i18n.t('AccountComponent_alertTitle3'), i18n.t('AccountComponent_alertMessage3'));
@@ -117,15 +117,17 @@ export class PrivateAccountComponent extends Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
-            <View style={[styles.accountNumberTitleRow,]}>
-              <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
-              <TouchableOpacity onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
+
 
             <ScrollView>
               <View style={styles.accountNumberArea}>
+                <View style={[styles.accountNumberTitleRow,]}>
+                  <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
+                  <TouchableOpacity onPress={Actions.pop}>
+                    <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
+                  </TouchableOpacity>
+                </View>
+
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
                 <Text style={styles.accountNumberValue}>{emailAddress}</Text>
                 <TouchableOpacity style={[styles.accountNumberCopiedArea]} onPress={() => {
@@ -276,9 +278,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: convertWidth(20),
-    paddingBottom: 0,
-    paddingTop: convertWidth(15),
+    paddingBottom: convertWidth(10),
   },
   accountNumberTitle: {
     fontFamily: 'Avenir Black',

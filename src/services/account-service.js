@@ -1,12 +1,13 @@
 import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
-import aesjs from 'aes-js';
+// import aesjs from 'aes-js';
 import randomString from 'random-string';
 
 import { AccountModel, CommonModel, BitmarkSDK, UserModel, BitmarkModel } from './../models';
 import { config } from '../configs';
 import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError } from './../utils';
+import { CryptoAdapter } from '../models/adapters/crypto';
 const {
   PushNotificationIOS,
   Platform,
@@ -160,30 +161,27 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
     await FileUtil.mkdir(unzipFolder);
 
     let encryptedFilePath = `${folderPath}/temp_email_records_encrypted.zip`;
-    let start = Date.now();
     await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
-    console.log('download time:', (Date.now() - start) / 1000);
 
-    start = Date.now();
-    let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
-
-    let keyInByte = Buffer.from(emailIssueRequest.aes_key, 'hex');
-    let ivInByte = Buffer.from(emailIssueRequest.aes_iv, 'hex');
-    let contentEncryptedFileInBytes = Buffer.from(contentEncryptedFile, 'base64');
-
-    let aesOfbDecrypt = new aesjs.ModeOfOperation.ofb(keyInByte, ivInByte);
-    let contentDecryptedFileInBytes = aesOfbDecrypt.decrypt(contentEncryptedFileInBytes);
 
     let decryptedFilePath = `${folderPath}/temp_email_records_decrypted.zip`;
-    await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
-    console.log('decrypt time:', (Date.now() - start) / 1000);
-    start = Date.now();
+    await CryptoAdapter.decryptAES(encryptedFilePath, emailIssueRequest.aes_key, emailIssueRequest.aes_iv, emailIssueRequest.aes_cipher, decryptedFilePath);
+
+    // let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
+
+    // let keyInByte = Buffer.from(emailIssueRequest.aes_key, 'hex');
+    // let ivInByte = Buffer.from(emailIssueRequest.aes_iv, 'hex');
+    // let contentEncryptedFileInBytes = Buffer.from(contentEncryptedFile, 'base64');
+
+    // let aesOfbDecrypt = new aesjs.ModeOfOperation.ofb(keyInByte, ivInByte);
+    // let contentDecryptedFileInBytes = aesOfbDecrypt.decrypt(contentEncryptedFileInBytes);
+
+    // let decryptedFilePath = `${folderPath}/temp_email_records_decrypted.zip`;
+    // await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
     await FileUtil.unzip(decryptedFilePath, unzipFolder);
-    console.log('unzip time:', (Date.now() - start) / 1000);
 
     let existDataFolder = await runPromiseWithoutError(FileUtil.exists(`${unzipFolder}/data`));
     if (existDataFolder && !existDataFolder.error) {
-      start = Date.now();
       let list = await FileUtil.readDir(`${unzipFolder}/data`);
       if (list && list.length > 0) {
         results.ids.push(emailIssueRequest.id);
@@ -224,7 +222,6 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
           }
         }
       }
-      console.log('detect asset time:', (Date.now() - start) / 1000);
     }
   }
   return results;

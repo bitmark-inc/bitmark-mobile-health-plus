@@ -34,6 +34,6 @@
         </view>
     </objects>
     <resources>
-        <image name="bitmark_logo" width="16" height="16"/>
+        <image name="bitmark_logo" width="177" height="61"/>
     </resources>
 </document>
