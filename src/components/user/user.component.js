@@ -7,10 +7,12 @@ import ReactNative, {
   Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
 let { ActionSheetIOS } = ReactNative;
-
+import moment from 'moment';
 import { Provider, connect } from 'react-redux';
+import randomString from 'random-string';
 
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+// import ImagePicker from 'react-native-image-picker';
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import { convertWidth, FileUtil } from './../../utils';
 import { config } from '../../configs';
@@ -28,6 +30,7 @@ class PrivateUserComponent extends Component {
   };
   constructor(props) {
     super(props);
+    this.issueImage = this.issueImage.bind(this);
   }
 
   addRecord() {
@@ -47,9 +50,18 @@ class PrivateUserComponent extends Component {
       });
   }
 
+  async issueImage(filePath, createdAt) {
+    let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+    let metadataList = [];
+    metadataList.push({ label: 'Source', value: 'Health Records' });
+    metadataList.push({ label: 'Saved Time', value: createdAt });
+    assetName = await populateAssetNameFromImage(filePath, assetName);
+    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetName }));
+  }
+
   onTakePhoto() {
     // Actions.orderCombineImages();
-    Actions.captureMultipleImages();
+    Actions.captureMultipleImages({ issueImage: this.issueImage });
 
     // ImagePicker.launchCamera({}, (response) => {
     //   this.processOnChooseImage(response);
@@ -57,9 +69,21 @@ class PrivateUserComponent extends Component {
   }
 
   onChooseFromLibrary() {
-    ImagePicker.launchImageLibrary({}, (response) => {
-      this.processOnChooseImage(response);
+
+    ImagePicker.openPicker({
+      multiple: true,
+      maxFiles: 0,
+    }).then(results => {
+      let images = [];
+      for (let image of results) {
+        images.push({ uri: image.sourceURL, createdAt: moment(image.creationDate) });
+      }
+      Actions.recordImages({ images, issueImage: this.issueImage });
     });
+
+    // ImagePicker.launchImageLibrary({}, (response) => {
+    //   this.processOnChooseImage(response);
+    // });
   }
 
   async processOnChooseImage(response) {

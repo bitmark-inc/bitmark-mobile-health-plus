@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { RNCamera } from 'react-native-camera';
 import Swiper from 'react-native-swiper';
 import moment from 'moment';
@@ -7,15 +7,15 @@ import {
   StyleSheet,
   View, TouchableOpacity, Text, Image,
 } from 'react-native';
-import { convertWidth, populateAssetNameFromImage, issue } from '../../utils';
+import { convertWidth, } from '../../utils';
 import { config } from '../../configs';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
-import randomString from 'random-string';
+
 
 export class CaptureMultipleImagesComponent extends Component {
   static propTypes = {
-
+    issueImage: PropTypes.func,
   };
   static STEP = {
     capture: 'capture',
@@ -24,7 +24,7 @@ export class CaptureMultipleImagesComponent extends Component {
   }
   constructor(props) {
     super(props);
-    this.issueImage = this.issueImage.bind(this);
+
     this.state = {
       step: CaptureMultipleImagesComponent.STEP.capture,
       images: [],
@@ -57,9 +57,9 @@ export class CaptureMultipleImagesComponent extends Component {
 
   saveImages() {
     if (this.state.images.length > 1) {
-      Actions.recordImages({ images: this.state.images, issueImage: this.issueImage });
+      Actions.recordImages({ images: this.state.images, issueImage: this.props.issueImage });
     } else {
-      this.issueImage(this.state.images[0].uri.replace('file://', ''), this.state.images[0].createdAt);
+      this.props.issueImage(this.state.images[0].uri.replace('file://', ''), this.state.images[0].createdAt);
     }
   }
 
@@ -82,15 +82,6 @@ export class CaptureMultipleImagesComponent extends Component {
     this.setState({
       step: CaptureMultipleImagesComponent.STEP.list,
     });
-  }
-
-  async issueImage(filePath, createdAt) {
-    let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
-    let metadataList = [];
-    metadataList.push({ label: 'Source', value: 'Health Records' });
-    metadataList.push({ label: 'Saved Time', value: createdAt });
-    assetName = await populateAssetNameFromImage(filePath, assetName);
-    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetName }));
   }
 
   render() {
