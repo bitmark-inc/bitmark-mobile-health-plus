@@ -915,7 +915,8 @@ const doCombineImages = async (images) => {
   for (let imageInfo of images) {
     listFilePath.push(imageInfo.uri.replace('file://', ''));
   }
-  let tempFolderPath = `${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/temp/combine-images`;
+  let tempFolderPath = `${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/combine-images`;
+  await FileUtil.mkdir(tempFolderPath);
   let tempFilePath = `${tempFolderPath}/${moment().toDate().getTime()}.pdf`;
   await PDFScanner.pdfCombine(listFilePath, tempFilePath);
   return tempFilePath;

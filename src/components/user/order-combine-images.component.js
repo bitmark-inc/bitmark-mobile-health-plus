@@ -22,19 +22,26 @@ export class OrderCombineImagesComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { type: 'combine' };
+    this.state = { type: 'combine', scrollEnabled: true, itemOrder: null, };
   }
 
   async continue() {
-    AppProcessor.doCombineImages(this.props.images).then((filePath) => {
-      this.doIssueImage([{ uri: `file://${filePath}`, createAt: moment() }]);
+    let newImages = [];
+    for (let item of this.state.itemOrder) {
+      newImages.push(this.props.images[item.key]);
+    }
+    AppProcessor.doCombineImages(newImages).then((filePath) => {
+      this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment() }]);
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     })
   }
 
+  newOrder({ itemOrder }) {
+    this.setState({ scrollEnabled: true, itemOrder: itemOrder });
+  }
+
   render() {
-    console.log('this.props :', this.props);
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.body}>
@@ -45,14 +52,15 @@ export class OrderCombineImagesComponent extends Component {
             <Text style={styles.titleText}>Arrange photos</Text>
             <Text />
           </View>
-          <View style={{ flex: 1, padding: 20, }}>
+          <View style={{ flex: 1, padding: 20, paddingTop: 0, }}>
             <Text style={styles.message}>Drag and drop to rearrange photos.</Text>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} scrollEnabled={this.state.scrollEnabled}>
+
               <SortableGrid
                 style={{ flex: 1, width: convertWidth(375), }}
                 itemsPerRow={3}
-                onDragRelease={(itemOrder) => console.log("Drag was released, the blocks are in the following order: ", itemOrder)}
-                onDragStart={(itemOrder) => console.log("Some block is being dragged now!", itemOrder)} >
+                onDragRelease={this.newOrder.bind(this)}
+                onDragStart={() => this.setState({ scrollEnabled: false })} >
                 {
                   this.props.images.map((imageInfo, index) =>
                     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }} key={index} >
@@ -97,6 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444', height: constants.buttonHeight,
     flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
     width: convertWidth(335),
+    marginBottom: config.isIPhoneX ? 44 : 0,
   },
   nextButtonText: {
     fontSize: 16, fontWeight: '900', fontFamily: 'Avenir Heavy', color: 'white',
