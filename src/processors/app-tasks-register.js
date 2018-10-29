@@ -156,9 +156,9 @@ const doConfirmGrantingAccess = async ({ token, grantee, processingData }) => {
   return submitting(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee), processingData);
 };
 
-const doAcceptEmailRecords = async ({ emailRecord }) => {
+const doAcceptEmailRecords = async ({ emailRecord, processingData }) => {
   let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return processing(DataProcessor.doAcceptEmailRecords(touchFaceIdSession, emailRecord));
+  return submitting(DataProcessor.doAcceptEmailRecords(touchFaceIdSession, emailRecord), processingData);
 };
 
 const doRejectEmailRecords = async ({ emailRecord }) => {

@@ -146,20 +146,24 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'Avenir Black',
     fontWeight: '900',
-    fontSize: 36,
+    fontSize: 24,
     flex: 1,
   },
   closeButton: {
-    padding: 24,
+    paddingTop: convertWidth(26),
+    paddingBottom: convertWidth(26),
+    paddingRight: convertWidth(24),
+    paddingLeft: convertWidth(50),
   },
   closeIcon: {
-    width: convertWidth(20),
-    height: convertWidth(20),
+    width: convertWidth(21),
+    height: convertWidth(21),
     resizeMode: 'contain',
   },
 
   bitmarkList: {
     padding: convertWidth(26),
+    paddingTop: 0,
   },
   bitmarkRow: {
     flexDirection: 'row',

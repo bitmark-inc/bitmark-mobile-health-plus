@@ -193,17 +193,16 @@ export class AccountPhraseComponent extends Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
-            <View style={styles.titleArea}>
-              <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1')
-                : (this.state.step === STEPS.testing ? i18n.t('AccountPhraseComponent_titleText2') : i18n.t('AccountPhraseComponent_titleText3'))).toUpperCase()}</Text>
-              <TouchableOpacity onPress={Actions.pop}>
-                {this.state.step !== STEPS.testing && <Image style={styles.titleBackIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />}
-                {this.state.step === STEPS.testing && <Text style={styles.titleCancelText}>{i18n.t('AccountPhraseComponent_titleCancelText')}</Text>}
-              </TouchableOpacity>
-            </View>
+
 
             {this.state.step === STEPS.warning && <View style={{ flex: 1 }}>
               <ScrollView style={styles.content}>
+                <View style={styles.titleArea}>
+                  <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1') : i18n.t('AccountPhraseComponent_titleText3')).toUpperCase()}</Text>
+                  <TouchableOpacity onPress={Actions.pop}>
+                    <Image style={styles.titleBackIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.warningIconArea}>
                   <Image style={styles.warningIcon} source={require('./../../../assets/imgs/warning_icon.png')} />
                 </View>
@@ -224,6 +223,12 @@ export class AccountPhraseComponent extends Component {
 
             {this.state.step === STEPS.phraseWord && <View style={{ flex: 1 }}>
               <ScrollView style={styles.content}>
+                <View style={styles.titleArea}>
+                  <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1') : i18n.t('AccountPhraseComponent_titleText3')).toUpperCase()}</Text>
+                  <TouchableOpacity onPress={Actions.pop}>
+                    <Image style={styles.titleBackIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                  </TouchableOpacity>
+                </View>
                 <Text style={styles.phraseWordMessage}>
                   {i18n.t('AccountPhraseComponent_phraseWordMessage1')}
                 </Text>
@@ -270,6 +275,13 @@ export class AccountPhraseComponent extends Component {
 
             {this.state.step === STEPS.testing && <View style={{ flex: 1 }}>
               <ScrollView style={styles.content} contentContainerStyle={{ flexDirection: 'column', justifyContent: 'center', flexGrow: 1, }}>
+                <View style={styles.titleArea}>
+                  <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1') : i18n.t('AccountPhraseComponent_titleText2')).toUpperCase()}</Text>
+                  <TouchableOpacity onPress={Actions.pop}>
+                    <Text style={styles.titleCancelText}>{i18n.t('AccountPhraseComponent_titleCancelText')}</Text>
+                  </TouchableOpacity>
+                </View>
+
                 <Text style={styles.phraseWordMessage}>
                   {this.props.isLogout ? i18n.t('AccountPhraseComponent_phraseWordMessage2')
                     : i18n.t('AccountPhraseComponent_phraseWordMessage3')}
@@ -395,7 +407,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: convertWidth(20),
     paddingTop: convertWidth(15),
     paddingBottom: 0,
   },

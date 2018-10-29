@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactNative, {
-  StyleSheet,
-  Alert,
-  Linking,
+  StyleSheet, Alert, Linking,
   Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
-let { ActionSheetIOS } = ReactNative;
 
+let { ActionSheetIOS } = ReactNative;
 import { Provider, connect } from 'react-redux';
 
-import ImagePicker from 'react-native-image-picker';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-import { convertWidth, FileUtil } from './../../utils';
+import {
+  FileUtil,
+  convertWidth, issue,
+  populateAssetNameFromImage, populateAssetNameFromPdf
+} from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
-import { issue, populateAssetNameFromImage, populateAssetNameFromPdf } from "../../utils";
 import { UserBitmarksStore } from '../../stores';
+
+import ImagePicker from 'react-native-image-picker';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 
 class PrivateUserComponent extends Component {
   static propTypes = {
@@ -178,8 +180,12 @@ class PrivateUserComponent extends Component {
                 </TouchableOpacity>
               </View>
               <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60), }]}>
-                <TouchableOpacity style={{ flex: 1 }} disabled={this.props.healthAssetBitmarks.length === 0} onPress={() => {
-                  Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' })
+                <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                  if (this.props.healthAssetBitmarks.length === 0) {
+                    Actions.addRecord({ addRecord: this.addRecord.bind(this) });
+                  } else {
+                    Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
+                  }
                 }}>
                   <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.props.healthAssetBitmarks.length} </Text>
                     {i18n.t('UserComponent_dataTitle2', { s: this.props.healthAssetBitmarks.length !== 1 ? 's' : '' })}
