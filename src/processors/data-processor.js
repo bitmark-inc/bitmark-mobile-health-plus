@@ -891,6 +891,7 @@ const doMigrateFilesToLocalStorage = async () => {
   EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, 100);
 
   await AccountModel.doMarkMigration(jwt);
+  didMigrationFileToLocalStorage = true;
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
