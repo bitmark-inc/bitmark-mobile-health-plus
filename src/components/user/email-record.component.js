@@ -54,7 +54,9 @@ export class EmailRecordComponent extends Component {
   }
 
   doAccept() {
-    AppProcessor.doAcceptEmailRecords({ list: this.state.list, ids: this.state.ids }).then(() => {
+    AppProcessor.doAcceptEmailRecords({ list: this.state.list, ids: this.state.ids }, {
+      indicator: true, title: i18n.t('EmailRecordComponent_alertTitle'), message: ''
+    }).then(() => {
       let acceptedList = this.state.acceptedList;
       acceptedList = acceptedList.concat(this.state.list.filter(item => !item.existingAsset));
       if (this.state.emailIndex < this.state.emailAddress.length - 1) {
