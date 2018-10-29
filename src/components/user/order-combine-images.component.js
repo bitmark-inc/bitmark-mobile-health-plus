@@ -36,7 +36,7 @@ export class OrderCombineImagesComponent extends Component {
     }
 
     AppProcessor.doCombineImages(newImages).then((filePath) => {
-      this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment() }]);
+      this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment() }], true);
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     })

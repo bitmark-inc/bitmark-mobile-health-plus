@@ -12,6 +12,7 @@ import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 import { AppProcessor, DataProcessor } from './../../processors';
 import { EventEmitterService } from './../../services';
+import { isImageFile } from "../../utils";
 
 export class EmailRecordComponent extends Component {
   static propTypes = {
@@ -118,9 +119,7 @@ export class EmailRecordComponent extends Component {
                 renderItem={({ item, index }) => {
                   return (
                     <TouchableOpacity key={index} onPress={() => {
-                      const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-                      let fileExtension = item.filePath.substring(item.filePath.lastIndexOf('.') + 1);
-                      if (imageExtensions.includes(fileExtension.toUpperCase())) {
+                      if (isImageFile(item.filePath)) {
                         Actions.fullViewCaptureAsset({ filePath: item.filePath, title: item.assetName });
                       } else {
                         Alert.alert(i18n.t('EmailRecordComponent_fileTypeNotSupport'));
@@ -141,9 +140,7 @@ export class EmailRecordComponent extends Component {
                   renderItem={({ item, index }) => {
                     return (
                       <TouchableOpacity key={index} onPress={() => {
-                        const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-                        let fileExtension = item.filePath.substring(item.filePath.lastIndexOf('.') + 1);
-                        if (imageExtensions.includes(fileExtension.toUpperCase())) {
+                        if (isImageFile(item.filePath)) {
                           Actions.fullViewCaptureAsset({ filePath: item.filePath, title: item.assetName });
                         } else {
                           Alert.alert(i18n.t('EmailRecordComponent_fileTypeNotSupport'));

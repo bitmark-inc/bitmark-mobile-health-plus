@@ -16,7 +16,7 @@ import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker
 import {
   FileUtil,
   convertWidth, issue,
-  populateAssetNameFromImage, populateAssetNameFromPdf
+  populateAssetNameFromImage, populateAssetNameFromPdf, generateThumbnail, isImageFile, isPdfFile
 } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
@@ -52,7 +52,7 @@ class PrivateUserComponent extends Component {
       });
   }
 
-  doIssueImage(images) {
+  doIssueImage(images, isCombineFile) {
     console.log('doIssueImage :', images);
     //check existing assets
     let doCheckExistingAsset = async () => {
@@ -95,10 +95,15 @@ class PrivateUserComponent extends Component {
         listAssetName.push(assetName);
       }
 
-      let result = await AppProcessor.doIssueMultipleFiles(listInfo, {
+      let bitmarks = await AppProcessor.doIssueMultipleFiles(listInfo, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       });
-      if (result) {
+
+      for (let i = 0; i < listInfo.length; i++) {
+        await generateThumbnail(listInfo[i].filePath, bitmarks[i].id, isCombineFile);
+      }
+
+      if (bitmarks) {
         for (let info of listInfo) {
           FileUtil.removeSafe(info.filePath);
         }
@@ -194,15 +199,12 @@ class PrivateUserComponent extends Component {
       let assetName = response.fileName;
 
       let willDetectAssetNameAutomatically = false;
-      const pdfExtensions = ['PDF'];
-      const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-      let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
-      if (pdfExtensions.includes(fileExtension.toUpperCase())) {
+      if (isPdfFile(filePath)) {
         willDetectAssetNameAutomatically = true;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
         assetName = await populateAssetNameFromPdf(filePath, assetName);
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-      } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
+      } else if (isImageFile(filePath)) {
         willDetectAssetNameAutomatically = true;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
         assetName = await populateAssetNameFromImage(filePath, assetName);
@@ -213,7 +215,17 @@ class PrivateUserComponent extends Component {
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file', 1, () => willDetectAssetNameAutomatically ? Actions.assetNameInform({ assetNames: [assetName] }) : Actions.pop());
+      issue(filePath, assetName, metadataList, 'file', 1, async (data) => {
+        let bitmarkId = data[0].id;
+        let isMultipleAsset = false;
+        await generateThumbnail(filePath, bitmarkId, isMultipleAsset);
+
+        if (willDetectAssetNameAutomatically) {
+          Actions.assetNameInform({assetName});
+        } else {
+          Actions.pop();
+        }
+      });
     });
   }
 

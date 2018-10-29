@@ -21,7 +21,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, runPromiseWithoutError } from '../utils';
+import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError } from '../utils';
 import PDFScanner from '../models/adapters/pdf-scanner';
 
 let userInformation = {};
@@ -69,6 +69,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     (!grantedAccessAccountSelected && bitmarkAccountNumber === userInformation.bitmarkAccountNumber)) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = healthDataBitmarks;
+
     storeState.healthAssetBitmarks = healthAssetBitmarks;
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
@@ -123,8 +124,8 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       }
       return { bitmarks: totalBitmarks, assets: totalAssets };
     };
+
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
-      console.log({ assets, bitmarks });
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       for (let bitmark of bitmarks) {
 
@@ -138,20 +139,23 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           if (isHealthAssetBitmark(asset)) {
             asset.filePath = await detectLocalAssetFilePath(asset.id);
             bitmark.asset = asset;
+            bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
             healthAssetBitmarks.push(bitmark);
           }
         }
       }
 
       let compareFunction = (a, b) => {
-        if (a.status === 'pending') {
+        if (a.status === 'pending' && b.status !== 'pending') {
+          return -1;
+        } else if (b.status === 'pending' && a.status !== 'pending') {
           return 1;
+        } else if (a.status === 'pending' && b.status === 'pending') {
+          return 0;
         }
-        if (b.status === 'pending') {
-          return 1;
-        }
+
         return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
-      }
+      };
       healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
       healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
 
@@ -629,10 +633,12 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
 };
 
 const doIssueMultipleFiles = async (touchFaceIdSession, listInfo) => {
+  let results = [];
   for (let info of listInfo) {
-    await doIssueFile(touchFaceIdSession, info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset);
+    let result = await doIssueFile(touchFaceIdSession, info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset);
+    results.push(result[0]);
   }
-  return true;
+  return results;
 };
 
 const getUserInformation = () => {

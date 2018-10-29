@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import randomString from "random-string";
 
-import { convertWidth, issue, populateAssetNameFromImage } from '../../utils';
+import { convertWidth, issue, populateAssetNameFromImage, generateThumbnail } from '../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
@@ -31,7 +31,13 @@ export class CaptureAssetComponent extends Component {
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
     assetName = await populateAssetNameFromImage(filePath, assetName);
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetNames: [assetName] }));
+    issue(filePath, assetName, metadataList, 'image', 1, async (data) => {
+      let bitmarkId = data[0].id;
+      // TODO
+      let isMultipleAsset = false;
+      await generateThumbnail(filePath, bitmarkId, isMultipleAsset);
+      Actions.assetNameInform({ assetName });
+    });
   }
 
 

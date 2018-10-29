@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList, Share,
 } from 'react-native';
-import moment from "moment";
 
 import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
@@ -14,6 +13,7 @@ import { EventEmitterService } from '../../services';
 import { DataProcessor, AppProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 import { UserBitmarksStore, UserBitmarksActions } from '../../stores/user-bitmarks.store';
+import { MaterialIndicator } from 'react-native-indicators';
 
 class PrivateBitmarkListComponent extends Component {
   static propTypes = {
@@ -21,12 +21,13 @@ class PrivateBitmarkListComponent extends Component {
     healthDataBitmarks: PropTypes.array,
     healthAssetBitmarks: PropTypes.array,
   };
+
   constructor(props) {
     super(props);
   }
 
   goToDetailScreen(bitmark, bitmarkType) {
-    Actions.bitmarkDetail({ bitmark, bitmarkType });
+    Actions.bitmarkDetail({bitmark, bitmarkType});
   }
 
   backToUserAccount() {
@@ -35,14 +36,14 @@ class PrivateBitmarkListComponent extends Component {
         Actions.reset('user');
       }
     }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
     });
   }
 
 
   downloadBitmark(asset) {
     if (asset.filePath) {
-      Share.share({ title: i18n.t('BitmarkListComponent_shareTitle'), url: asset.filePath }).then(() => {
+      Share.share({title: i18n.t('BitmarkListComponent_shareTitle'), url: asset.filePath}).then(() => {
       }).catch(error => {
         console.log('Share error:', error);
       })
@@ -55,39 +56,53 @@ class PrivateBitmarkListComponent extends Component {
     let isFileRecord = (bitmark) => { return bitmark.asset.metadata.Source === 'Medical Records' };
 
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
           <Text style={styles.accountNumberDisplayText}>
-            {i18n.t('BitmarkListComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
+            {i18n.t('BitmarkListComponent_accountNumberDisplayText', {accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length)})}
           </Text>
         </TouchableOpacity>}
         <SafeAreaView style={styles.bodySafeView}>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
-                {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
-                {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText2')}</Text>}
+                {this.props.bitmarkType === 'bitmark_health_data' &&
+                <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
+                {this.props.bitmarkType === 'bitmark_health_issuance' &&
+                <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText2')}</Text>}
                 <TouchableOpacity style={styles.closeButton} onPress={() => Actions.reset('user')}>
-                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
+                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')}/>
                 </TouchableOpacity>
               </View>
 
               <ScrollView style={styles.bitmarkList}>
                 <FlatList
-                  style={{ marginBottom: 50, }}
+                  contentContainerStyle={[styles.bitmarksContainer]}
                   keyExtractor={(item) => item.id}
                   scrollEnabled={false}
                   data={this.props.bitmarkType === 'bitmark_health_data' ? this.props.healthDataBitmarks :
                     (this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.healthAssetBitmarks : [])}
                   extraData={this.props}
-                  renderItem={({ item }) => {
-                    return (<TouchableOpacity style={styles.bitmarkRow} onPress={() => {
-                      isFileRecord(item) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)
-                    }}>
-                      <Text style={styles.bitmarkRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
-                      {item.status === 'confirmed' && <Image style={styles.bitmarkRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
-                      {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
-                    </TouchableOpacity>);
+                  renderItem={({item}) => {
+                    return (
+                      <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
+                        isFileRecord(item) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)
+                      }}>
+                        {item && item.thumbnail && item.thumbnail.exists ?
+                          <View>
+                            <Image style={styles.bitmarkThumbnail} source={{uri: `${item.thumbnail.path}`}}/>
+                            {item.thumbnail.multiple &&
+                            <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')}/>
+                            }
+                          </View>
+                          :
+                          <Image style={styles.bitmarkThumbnail} source={this.props.bitmarkType === 'bitmark_health_data' ? require('./../../../assets/imgs/health_data_icon.png') : require('./../../../assets/imgs/unknown_file_type_icon.png')}/>
+                        }
+
+                        {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32}/>}
+                        {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
+                      </TouchableOpacity>
+                    );
                   }}
                 />
               </ScrollView>
@@ -162,35 +177,46 @@ const styles = StyleSheet.create({
   },
 
   bitmarkList: {
-    padding: convertWidth(26),
-    paddingTop: 0,
-  },
-  bitmarkRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 14,
-  },
-  bitmarkRowText: {
-    fontFamily: 'Avenir Book',
-    fontSize: 16,
-    fontWeight: '300',
-    paddingRight: 5,
-    flex: 1
-  },
-  bitmarkRowIcon: {
-    width: convertWidth(8),
-    height: 14 * convertWidth(8) / 8,
-    resizeMode: 'contain',
+    padding: 3
   },
   bitmarkPending: {
     fontFamily: 'Avenir Medium',
     fontSize: 14,
     fontStyle: 'italic',
     fontWeight: '300',
-    color: '#C1C1C1',
-  }
+    color: 'white',
+    position: 'absolute',
+    top: 67
+  },
+  bitmarksContainer: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
 
+  },
+  bitmarkItem: {
+    flex: 1,
+    padding: 4,
+    alignItems: 'center'
+  },
+  bitmarkThumbnail: {
+    width: 103,
+    height: 103,
+    resizeMode: 'stretch',
+  },
+  multipleFilesIcon: {
+    width: 14,
+    height: 17,
+    resizeMode: 'contain',
+    position: 'absolute',
+    top: 5,
+    right: 5
+  },
+  indicator: {
+    position: 'absolute',
+    top: 35,
+    left: 35
+  }
 });
 
 const StoreBitmarkListComponent = connect(
@@ -206,11 +232,12 @@ export class BitmarkListComponent extends Component {
     super(props);
     UserBitmarksStore.dispatch(UserBitmarksActions.updateBitmarkType(this.props.bitmarkType));
   }
+
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Provider store={UserBitmarksStore}>
-          <StoreBitmarkListComponent />
+          <StoreBitmarkListComponent/>
         </Provider>
       </View>
     );

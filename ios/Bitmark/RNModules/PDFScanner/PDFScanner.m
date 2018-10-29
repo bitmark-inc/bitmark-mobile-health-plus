@@ -23,15 +23,15 @@ RCT_EXPORT_METHOD(pdfScan:(NSString *)filePath:(RCTResponseSenderBlock)callback)
 {
   NSURL *url = [NSURL fileURLWithPath:filePath];
   self.pageStrings = [NSMutableArray<NSString *> new];
-  
+
   CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((__bridge CFURLRef)url);
   CGPDFDocumentRef document = CGPDFDocumentRetain(pdf);
   CFRelease(pdf);
-  
+
   CGPDFOperatorTableRef table = CGPDFOperatorTableCreate();
   CGPDFOperatorTableSetCallback(table, "TJ", arrayCallback);
   CGPDFOperatorTableSetCallback(table, "Tj", stringCallback);
-  
+
   CGPDFPageRef page = CGPDFDocumentGetPage(document, 1);
   CGPDFContentStreamRef stream = CGPDFContentStreamCreateWithPage(page);
   CGPDFScannerRef scanner = CGPDFScannerCreate(stream, table, (__bridge void *)self);
@@ -52,9 +52,20 @@ RCT_EXPORT_METHOD(pdfCombine:(NSArray<NSString *> *)imagePaths:(NSString *)outpu
     PDFPage *page = [[PDFPage alloc] initWithImage:image];
     [document insertPage:page atIndex:i];
   }
-  
+
   [document writeToFile:outputPath];
-  
+
+  callback(@[@YES]);
+}
+
+RCT_EXPORT_METHOD(pdfThumbnail:(NSString *)pdfFilePath:(int)width:(int)height:(NSString *)outputPath:(RCTResponseSenderBlock)callback)
+{
+  NSURL* pdfFileUrl = [NSURL fileURLWithPath:pdfFilePath];
+  PDFDocument *document = [[PDFDocument alloc] initWithURL:pdfFileUrl];
+  PDFPage *firstPage = [document pageAtIndex:0];
+  UIImage *thumbnail = [firstPage thumbnailOfSize:CGSizeMake(width, height) forBox:kPDFDisplayBoxMediaBox];
+  [UIImagePNGRepresentation(thumbnail) writeToFile:outputPath atomically:YES];
+
   callback(@[@YES]);
 }
 

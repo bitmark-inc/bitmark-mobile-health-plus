@@ -15,6 +15,7 @@ import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
 import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
+import { getThumbnail, isPdfFile } from "../../utils";
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -25,8 +26,9 @@ export class BitmarkDetailComponent extends Component {
     super(props);
     this.state = {
       filePath: this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.bitmark.asset.filePath : '',
+      thumbnail: isPdfFile(this.props.bitmark.asset.filePath) ? getThumbnail(this.props.bitmark.id, true) : '',
       content: '',
-    }
+    };
 
     if (this.props.bitmark) {
       if (this.props.bitmarkType === 'bitmark_health_data') {
@@ -130,7 +132,7 @@ export class BitmarkDetailComponent extends Component {
                       filePath: this.state.filePath,
                       title: moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()
                     })}>
-                      <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} /></TouchableOpacity>}
+                      <Image style={styles.bitmarkImage} source={{ uri: this.state.thumbnail ? this.state.thumbnail : this.state.filePath }} /></TouchableOpacity>}
                   {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>
                     <ScrollView horizontal={true}>
                       <JSONTree data={this.state.content}

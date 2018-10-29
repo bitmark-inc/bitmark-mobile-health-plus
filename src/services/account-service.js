@@ -8,6 +8,7 @@ import { AccountModel, CommonModel, BitmarkSDK, UserModel, BitmarkModel } from '
 import { config } from '../configs';
 import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError } from './../utils';
 import { CryptoAdapter } from '../models/adapters/crypto';
+import { isImageFile, isPdfFile } from "../utils";
 const {
   PushNotificationIOS,
   Platform,
@@ -198,14 +199,11 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
               assetName = assetInformation.name;
             } else {
 
-              let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
               let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
 
-              const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-              const pdfExtensions = ['PDF'];
-              if (pdfExtensions.includes(fileExtension.toUpperCase())) {
+              if (isPdfFile(filePath)) {
                 assetName = await populateAssetNameFromPdf(filePath, defaultAssetName);
-              } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
+              } else if (isImageFile(filePath)) {
                 assetName = await populateAssetNameFromImage(filePath, defaultAssetName);
               } else {
                 assetName = defaultAssetName;

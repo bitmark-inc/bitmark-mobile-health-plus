@@ -8,6 +8,10 @@ import DeviceInfo from "react-native-device-info/deviceinfo";
 import i18n from "i18n-js";
 import { intersection } from "lodash";
 import { runPromiseWithoutError } from "./helper";
+import ImageResizer from 'react-native-image-resizer';
+
+const THUMBNAIL_PATH = `${FileUtil.DocumentDirectory}/thumbnails`;
+const COMBINE_FILE_SUFFIX = 'combine';
 
 const isPascalCase = (str) => {
   let pascalCase1 = str.replace(/(\w)(\w*)/g,
@@ -94,10 +98,10 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
     } else {
       AppProcessor.doIssueFile(filePath, assetName, metadataList, quality, false, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
-      }).then((data) => {
+      }).then(async (data) => {
         if (data) {
+          await callBack(data);
           FileUtil.removeSafe(filePath);
-          callBack();
         }
       }).catch(error => {
         Alert.alert(i18n.t('CaptureAssetComponent_alertTitle2'), i18n.t('CaptureAssetComponent_alertMessage2'));
@@ -237,4 +241,62 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
   return assetName;
 };
 
-export { issue, populateAssetNameFromImage, populateAssetNameFromPdf }
+const isImageFile = (filePath) => {
+  const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
+  let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+
+  return imageExtensions.includes(fileExtension.toUpperCase());
+};
+
+const isPdfFile = (filePath) => {
+  const pdfExtensions = ['PDF'];
+  let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+
+  return pdfExtensions.includes(fileExtension.toUpperCase());
+};
+
+const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => {
+  // Create new one if thumbnail folder is not existing
+  await FileUtil.mkdir(THUMBNAIL_PATH);
+  let outputFilePath = isCombineFile ? `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
+
+  const THUMBNAIL_WIDTH = 300;
+  const THUMBNAIL_HEIGHT = 300;
+
+  if (isImageFile(filePath)) {
+    // Generate image thumbnail
+    let response = await ImageResizer.createResizedImage(filePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, 'PNG', 100, 0, THUMBNAIL_PATH);
+    await FileUtil.moveFileSafe(response.uri, outputFilePath);
+
+  } else if (isPdfFile(filePath)) {
+    // Generate pdf thumbnail
+    await runPromiseWithoutError(PDFScanner.pdfThumbnail(filePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, outputFilePath));
+  }
+};
+
+const checkThumbnailForBitmark = async (bitmarkId) => {
+  let thumbnailInfo = {exists: false};
+
+  let thumbnailFilePath = `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
+  let thumbnailMultipleFilePath = `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG`;
+
+  if ((await FileUtil.exists(thumbnailFilePath))) {
+    thumbnailInfo = {
+      exists: true,
+      path: thumbnailFilePath
+    }
+  } else if ((await FileUtil.exists(thumbnailMultipleFilePath))) {
+    thumbnailInfo = {
+      exists: true,
+      path: thumbnailMultipleFilePath,
+      multiple: true
+    }
+  }
+  return thumbnailInfo;
+};
+
+const getThumbnail = (bitmarkId, isCombineFile) => {
+  return isCombineFile ? `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
+};
+
+export { issue, populateAssetNameFromImage, populateAssetNameFromPdf, generateThumbnail, isImageFile, isPdfFile, checkThumbnailForBitmark, getThumbnail }

@@ -14,6 +14,9 @@
 		00E356F31AD99517003FC87E /* BitmarkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BitmarkTests.m */; };
 		0E25DDFC20F470EB00635A33 /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
 		0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
+		0E3544882186A9EB005AEB12 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */; };
+		0E3544892186A9F7005AEB12 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */; };
+		0E35448A2186AA05005AEB12 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */; };
 		0E4065AB2091E23B005E1CBD /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
 		0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		0E617E4F20A2FAE4007A3A24 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
@@ -277,6 +280,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = Bitmark;
+		};
+		0E3544562186A9CE005AEB12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0E3544472186A9CE005AEB12 /* RCTImageResizer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5D72D2E81C16249000E22EC1;
+			remoteInfo = RCTImageResizer;
 		};
 		0E4065A92091E015005E1CBD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -714,6 +724,7 @@
 		00E356EE1AD99517003FC87E /* BitmarkHealthPlusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitmarkHealthPlusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* BitmarkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkTests.m; sourceTree = "<group>"; };
+		0E3544472186A9CE005AEB12 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNExitApp.xcodeproj; path = "../node_modules/react-native-exit-app/ios/RNExitApp.xcodeproj"; sourceTree = "<group>"; };
 		0E7371A721747877009022CC /* RNTextDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTextDetector.h; sourceTree = "<group>"; };
@@ -874,6 +885,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			    0E35448A2186AA05005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B272188063200A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B42186AEBB00630294 /* libimageCropPicker.a in Frameworks */,
 				F13CAAFC21410B1F001414A9 /* libRNCamera.a in Frameworks */,
@@ -915,6 +927,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			    0E3544892186A9F7005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B282188063900A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B22186AEAD00630294 /* libimageCropPicker.a in Frameworks */,
 				5805EE1A216F31B900943FA5 /* libRNCamera.a in Frameworks */,
@@ -957,6 +970,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			    0E3544882186A9EB005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B262188062D00A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B32186AEB500630294 /* libimageCropPicker.a in Frameworks */,
 				F13CAAFD21410B26001414A9 /* libRNCamera.a in Frameworks */,
@@ -1056,6 +1070,14 @@
 				00E356F11AD99517003FC87E /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0E3544482186A9CE005AEB12 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		0E4065A62091E015005E1CBD /* Products */ = {
@@ -1372,6 +1394,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0E3544472186A9CE005AEB12 /* RCTImageResizer.xcodeproj */,
 				F1F87AE52188062100A363D1 /* ReactNativeViewPDF.xcodeproj */,
 				F1EA756F2186AEA100630294 /* imageCropPicker.xcodeproj */,
 				F13CAABA21410654001414A9 /* ReactNativePermissions.xcodeproj */,
@@ -1747,6 +1770,10 @@
 					ProjectRef = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
 				},
 				{
+					ProductGroup = 0E3544482186A9CE005AEB12 /* Products */;
+					ProjectRef = 0E3544472186A9CE005AEB12 /* RCTImageResizer.xcodeproj */;
+				},
+				{
 					ProductGroup = 78C398B11ACF4ADC00677621 /* Products */;
 					ProjectRef = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
 				},
@@ -1875,6 +1902,13 @@
 			fileType = archive.ar;
 			path = libRCTVibration.a;
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTImageResizer.a;
+			remoteRef = 0E3544562186A9CE005AEB12 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */ = {

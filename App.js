@@ -13,6 +13,8 @@ import {
 } from './src';
 import { config } from './src/configs';
 
+console.disableYellowBox = true;
+
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
 

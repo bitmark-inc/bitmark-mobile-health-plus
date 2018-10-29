@@ -14,6 +14,17 @@ const PDFScanner = {
       });
     });
   },
+  pdfThumbnail: (filePath, width, height, outputPath) => {
+    return new Promise((resolve, reject) => {
+      PDFScannerNative.pdfThumbnail(filePath, width, height, outputPath, (ok, result) => {
+        if (ok) {
+          resolve(result);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
   pdfCombine: (imagePaths, output) => {
     return new Promise((resolve, reject) => {
       PDFScannerNative.pdfCombine(imagePaths, output, (ok, result) => {
