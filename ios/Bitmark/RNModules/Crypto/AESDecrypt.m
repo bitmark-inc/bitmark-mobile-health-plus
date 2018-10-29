@@ -30,34 +30,43 @@ RCT_EXPORT_METHOD(decryptAES:(NSString *)filePath:(NSString *)keyString:(NSStrin
     return;
   }
   
-  char keyPtr[length+1]; // room for terminator (unused)
-  bzero( keyPtr, sizeof( keyPtr ) ); // fill with zeroes (for padding)
+  CCCryptorRef cryptor;
   
-  NSUInteger dataLength = [message length];
+  CCCryptorStatus result = CCCryptorCreateWithMode(kCCDecrypt,
+                                                   kCCModeOFB,
+                                                   kCCAlgorithmAES,
+                                                   ccNoPadding,
+                                                   [iv bytes],
+                                                   [key bytes],
+                                                   length,
+                                                   NULL,
+                                                   0,
+                                                   0,
+                                                   0,
+                                                   &cryptor);
   
-  //See the doc: For block ciphers, the output size will always be less than or
-  //equal to the input size plus the size of one block.
-  //That's why we need to add the size of one block here
-  size_t bufferSize = dataLength + kCCBlockSizeAES128;
-  void *buffer = malloc( bufferSize );
   
-  size_t numBytesDecrypted = 0;
-  CCCryptorStatus cryptStatus = CCCrypt( kCCDecrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding,
-                                        key.bytes, length,
-                                        iv.bytes,
-                                        [message bytes], dataLength, /* input */
-                                        buffer, bufferSize, /* output */
-                                        &numBytesDecrypted );
+  size_t bufferLength = CCCryptorGetOutputLength(cryptor, message.length, false);
+  NSMutableData *buffer = [NSMutableData dataWithLength:bufferLength];
   
-  if( cryptStatus == kCCSuccess )
+  size_t outLength;
+  
+  
+  result = CCCryptorUpdate(cryptor,
+                           [message bytes],
+                           [message length],
+                           [buffer mutableBytes],
+                           [buffer length],
+                           &outLength);
+  
+  
+  result = CCCryptorRelease(cryptor);
+  
+  if( result == kCCSuccess )
   {
-    //the returned NSData takes ownership of the buffer and will free it on deallocation
-    NSData *decrypted = [NSData dataWithBytesNoCopy:buffer length:numBytesDecrypted];
-    free( buffer );
-    [decrypted writeToFile:outputFile atomically:YES];
+    [buffer writeToFile:outputFile atomically:YES];
     callback(@[@YES]);
   } else {
-    free( buffer );
     callback(@[@NO]);
   }
 }
