@@ -188,7 +188,6 @@ const styles = StyleSheet.create({
 
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     padding: convertWidth(20),
     paddingTop: 0,
@@ -198,6 +197,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
+    flex: 1,
   },
   closeButton: {
     paddingTop: convertWidth(26),
