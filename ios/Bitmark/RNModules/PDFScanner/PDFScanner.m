@@ -7,6 +7,7 @@
 //
 
 #import "PDFScanner.h"
+@import PDFKit;
 
 @interface PDFScanner ()
 
@@ -41,6 +42,20 @@ RCT_EXPORT_METHOD(pdfScan:(NSString *)filePath:(RCTResponseSenderBlock)callback)
     CGPDFDocumentRelease(document);
   }
   callback(@[@YES, self.pageStrings]);
+}
+
+RCT_EXPORT_METHOD(pdfCombine:(NSArray<NSString *> *)imagePaths:(NSString *)outputPath:(RCTResponseSenderBlock)callback)
+{
+  PDFDocument *document = [[PDFDocument alloc] init];
+  for (int i = 0; i < imagePaths.count; i++) {
+    UIImage *image = [UIImage imageWithContentsOfFile:imagePaths[i]];
+    PDFPage *page = [[PDFPage alloc] initWithImage:image];
+    [document insertPage:page atIndex:i];
+  }
+  
+  [document writeToFile:outputPath];
+  
+  callback(@[@YES]);
 }
 
 @end
