@@ -5,13 +5,13 @@ import {
   View, TouchableOpacity, Text, SafeAreaView, FlatList,
 } from 'react-native';
 
-
+import KeepAwake from 'react-native-keep-awake';
 import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 import { AppProcessor, DataProcessor } from './../../processors';
-import { EventEmitterService, AccountService } from './../../services';
+import { EventEmitterService } from './../../services';
 
 export class EmailRecordComponent extends Component {
   static propTypes = {
@@ -42,7 +42,9 @@ export class EmailRecordComponent extends Component {
 
   async processEmailRecordsFromAnEmail(selectedEmail) {
     this.setState({ processing: true });
-    let results = await AccountService.doProcessEmailRecords(DataProcessor.getUserInformation().bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
+    KeepAwake.activate();
+    let results = await AppProcessor.doProcessEmailRecords(DataProcessor.getUserInformation().bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
+    KeepAwake.deactivate();
     console.log({ results });
     this.setState({
       list: results.list || [],
@@ -52,7 +54,9 @@ export class EmailRecordComponent extends Component {
   }
 
   doAccept() {
-    AppProcessor.doAcceptEmailRecords({ list: this.state.list, ids: this.state.ids }).then(() => {
+    AppProcessor.doAcceptEmailRecords({ list: this.state.list, ids: this.state.ids }, {
+      indicator: true, title: i18n.t('EmailRecordComponent_alertTitle'), message: ''
+    }).then(() => {
       let acceptedList = this.state.acceptedList;
       acceptedList = acceptedList.concat(this.state.list.filter(item => !item.existingAsset));
       if (this.state.emailIndex < this.state.emailAddress.length - 1) {
