@@ -200,7 +200,7 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
     }
 
     if (potentialAssetNameItem && potentialAssetNameItem.text.trim()) {
-      assetName = 'HA_' + potentialAssetNameItem.text.trim();
+      assetName = 'HA' + potentialAssetNameItem.text.trim();
     }
   }
 
@@ -230,7 +230,7 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
     }
 
     if (potentialAssetNameItem && potentialAssetNameItem.text.trim()) {
-      assetName = 'HA_' + potentialAssetNameItem.text.trim();
+      assetName = 'HA' + potentialAssetNameItem.text.trim();
     }
   }
   console.log('assetName:', assetName);
