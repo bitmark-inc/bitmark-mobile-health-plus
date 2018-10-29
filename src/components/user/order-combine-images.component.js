@@ -10,6 +10,9 @@ import { config } from '../../configs';
 import { Actions } from 'react-native-router-flux';
 import { convertWidth, } from '../../utils';
 import { constants } from '../../constants';
+import { AppProcessor } from '../../processors';
+import { EventEmitterService } from '../../services';
+import moment from 'moment';
 
 export class OrderCombineImagesComponent extends Component {
   static propTypes = {
@@ -23,7 +26,11 @@ export class OrderCombineImagesComponent extends Component {
   }
 
   async continue() {
-
+    AppProcessor.doCombineImages(this.props.images).then((filePath) => {
+      this.doIssueImage([{ uri: `file://${filePath}`, createAt: moment() }]);
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    })
   }
 
   render() {

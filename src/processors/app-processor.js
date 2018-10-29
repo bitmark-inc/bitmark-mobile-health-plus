@@ -213,6 +213,10 @@ const doMigrateFilesToLocalStorage = async () => {
   return executeTask('doMigrateFilesToLocalStorage');
 };
 
+const doCombineImages = async (images) => {
+  return executeTask('doCombineImages', { images });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -250,6 +254,7 @@ let AppProcessor = {
 
   doMigrateFilesToLocalStorage,
   doProcessEmailRecords,
+  doCombineImages,
 }
 
 export {

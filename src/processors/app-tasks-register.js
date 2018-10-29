@@ -172,6 +172,9 @@ const doProcessEmailRecords = async ({ bitmarkAccountNumber, emailIssueRequestsF
   return AccountService.doProcessEmailRecords(bitmarkAccountNumber, emailIssueRequestsFromAnEmail);
 };
 
+const doCombineImages = async ({ images }) => {
+  return processing(DataProcessor.doCombineImages(images));
+};
 
 // ================================================================================================
 // ================================================================================================
@@ -197,6 +200,7 @@ let AppTasks = {
   doRejectEmailRecords,
   doMigrateFilesToLocalStorage,
   doProcessEmailRecords,
+  doCombineImages,
 };
 
 let registeredTasks = {};

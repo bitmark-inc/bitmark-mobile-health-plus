@@ -21,7 +21,7 @@ export class RecordImagesComponent extends Component {
     this.state = { type: 'combine' };
   }
 
-  async continue() {
+  continue() {
     if (this.state.type === 'combine') {
       Actions.orderCombineImages({ images: this.props.images, doIssueImage: this.props.doIssueImage });
     } else {

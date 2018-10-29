@@ -22,6 +22,7 @@ import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
 import { FileUtil, runPromiseWithoutError } from '../utils';
+import PDFScanner from '../models/adapters/pdf-scanner';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -908,6 +909,17 @@ const detectLocalAssetFilePath = async (assetId) => {
   return `${assetFolderPath}/downloaded/${list[0]}`;
 };
 
+const doCombineImages = async (images) => {
+  let listFilePath = [];
+  for (let imageInfo of images) {
+    listFilePath.push(imageInfo.uri.replace('file://', ''));
+  }
+  let tempFolderPath = `${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/temp/combine-images`;
+  let tempFilePath = `${tempFolderPath}/${moment().toDate().getTime()}.pdf`;
+  await PDFScanner.pdfCombine(listFilePath, tempFilePath);
+  return tempFilePath;
+};
+
 
 const DataProcessor = {
   doOpenApp,
@@ -948,6 +960,7 @@ const DataProcessor = {
 
   doMigrateFilesToLocalStorage,
   detectLocalAssetFilePath,
+  doCombineImages,
 };
 
 export { DataProcessor };
