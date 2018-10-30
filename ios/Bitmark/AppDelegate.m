@@ -16,10 +16,7 @@
 #import <React/RCTPushNotificationManager.h>
 #import "ReactNativeExceptionHandler.h"
 #import "Intercom/intercom.h"
-
-#ifdef HOCKEYAPP
-  @import HockeySDK;
-#endif
+@import HockeySDK;
 
 
 @implementation AppDelegate
