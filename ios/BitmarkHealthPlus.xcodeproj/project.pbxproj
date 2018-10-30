@@ -230,6 +230,9 @@
 		F1EA75B42186AEBB00630294 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1EA75782186AEA200630294 /* libimageCropPicker.a */; };
 		F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
 		F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
+		F1F87B262188062D00A363D1 /* libReactNativeViewPDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F87B192188062100A363D1 /* libReactNativeViewPDF.a */; };
+		F1F87B272188063200A363D1 /* libReactNativeViewPDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F87B192188062100A363D1 /* libReactNativeViewPDF.a */; };
+		F1F87B282188063900A363D1 /* libReactNativeViewPDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F87B192188062100A363D1 /* libReactNativeViewPDF.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -653,6 +656,13 @@
 			remoteGlobalIDString = 1BD725DA1CF77A8B005DBD79;
 			remoteInfo = RNCookieManagerIOS;
 		};
+		F1F87B182188062100A363D1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1F87AE52188062100A363D1 /* ReactNativeViewPDF.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5318AA072052B7FC009FB5F2;
+			remoteInfo = ReactNativeViewPDF;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -845,6 +855,7 @@
 		F1D09CF7207707BF008B16EE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		F1EA756F2186AEA100630294 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 		F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCookieManagerIOS.xcodeproj; path = "../node_modules/react-native-cookies/ios/RNCookieManagerIOS.xcodeproj"; sourceTree = "<group>"; };
+		F1F87AE52188062100A363D1 /* ReactNativeViewPDF.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeViewPDF.xcodeproj; path = "../node_modules/react-native-view-pdf/ReactNativeViewPDF.xcodeproj"; sourceTree = "<group>"; };
 		FD055631D7E5490F8244DCED /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -863,6 +874,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1F87B272188063200A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B42186AEBB00630294 /* libimageCropPicker.a in Frameworks */,
 				F13CAAFC21410B1F001414A9 /* libRNCamera.a in Frameworks */,
 				F13CAAFB21410668001414A9 /* libReactNativePermissions.a in Frameworks */,
@@ -903,6 +915,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1F87B282188063900A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B22186AEAD00630294 /* libimageCropPicker.a in Frameworks */,
 				5805EE1A216F31B900943FA5 /* libRNCamera.a in Frameworks */,
 				5805EE1B216F31B900943FA5 /* libReactNativePermissions.a in Frameworks */,
@@ -944,6 +957,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1F87B262188062D00A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B32186AEB500630294 /* libimageCropPicker.a in Frameworks */,
 				F13CAAFD21410B26001414A9 /* libRNCamera.a in Frameworks */,
 				F13CAAFA2141065E001414A9 /* libReactNativePermissions.a in Frameworks */,
@@ -1352,6 +1366,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F1F87AE52188062100A363D1 /* ReactNativeViewPDF.xcodeproj */,
 				F1EA756F2186AEA100630294 /* imageCropPicker.xcodeproj */,
 				F13CAABA21410654001414A9 /* ReactNativePermissions.xcodeproj */,
 				F13CAA5E2140BF8F001414A9 /* RNIntercom.xcodeproj */,
@@ -1538,6 +1553,14 @@
 			isa = PBXGroup;
 			children = (
 				F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1F87AE62188062100A363D1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1F87B192188062100A363D1 /* libReactNativeViewPDF.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1766,6 +1789,10 @@
 				{
 					ProductGroup = F13CAABB21410654001414A9 /* Products */;
 					ProjectRef = F13CAABA21410654001414A9 /* ReactNativePermissions.xcodeproj */;
+				},
+				{
+					ProductGroup = F1F87AE62188062100A363D1 /* Products */;
+					ProjectRef = F1F87AE52188062100A363D1 /* ReactNativeViewPDF.xcodeproj */;
 				},
 				{
 					ProductGroup = F12EC134213938F5008E6F4C /* Products */;
@@ -2226,6 +2253,13 @@
 			fileType = archive.ar;
 			path = libRNCookieManagerIOS.a;
 			remoteRef = F1F6E2D620B6BF4000CECD53 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F1F87B192188062100A363D1 /* libReactNativeViewPDF.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeViewPDF.a;
+			remoteRef = F1F87B182188062100A363D1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
