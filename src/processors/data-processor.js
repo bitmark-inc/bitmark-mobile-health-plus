@@ -628,6 +628,13 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
   return results;
 };
 
+const doIssueMultipleFiles = async (touchFaceIdSession, listInfo) => {
+  for (let info of listInfo) {
+    await doIssueFile(touchFaceIdSession, info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset);
+  }
+  return true;
+};
+
 const getUserInformation = () => {
   return userInformation;
 };
@@ -937,6 +944,7 @@ const DataProcessor = {
   doBitmarkHealthData,
   doDownloadBitmark,
   doIssueFile,
+  doIssueMultipleFiles,
 
   doCheckFileToIssue,
 

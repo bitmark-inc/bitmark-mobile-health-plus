@@ -142,6 +142,10 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublic
   return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
 };
 
+const doIssueMultipleFiles = async (listInfo, processingInfo) => {
+  return executeTask('doIssueMultipleFiles', { listInfo, processingInfo });
+};
+
 const doBitmarkHealthData = async (list, processingData) => {
   return executeTask('doBitmarkHealthData', { list, processingData });
 };
@@ -231,6 +235,7 @@ let AppProcessor = {
   doCreateSignatureData,
   doCheckFileToIssue,
   doIssueFile,
+  doIssueMultipleFiles,
   doGetTransferOfferDetail,
   doRequireHealthKitPermission,
   doBitmarkHealthData,

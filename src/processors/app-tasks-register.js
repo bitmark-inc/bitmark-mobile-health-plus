@@ -89,6 +89,15 @@ const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPubl
   return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset), processingInfo);
 };
 
+const doIssueMultipleFiles = async ({ listInfo, processingInfo }) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doIssueFile'));
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  return await submitting(DataProcessor.doIssueMultipleFiles(touchFaceIdSession, listInfo), processingInfo);
+};
+
+
 const doBitmarkHealthData = async ({ list, processingData }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doBitmarkHealthData'));
   if (!touchFaceIdSession) {
@@ -185,6 +194,7 @@ let AppTasks = {
   doLogout,
   doDeleteAccount,
   doIssueFile,
+  doIssueMultipleFiles,
   doBitmarkHealthData,
   doDownloadBitmark,
   doDownloadHealthDataBitmark,

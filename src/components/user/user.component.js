@@ -70,6 +70,7 @@ class PrivateUserComponent extends Component {
     // issue images
     let doIssuance = async () => {
       let listAssetName = [];
+      let listInfo = [];
       for (let imageInfo of images) {
         let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
         let metadataList = [];
@@ -78,16 +79,27 @@ class PrivateUserComponent extends Component {
         let filePath = imageInfo.uri.replace('file://', '');
         assetName = await populateAssetNameFromImage(filePath, assetName);
 
-        let issueResult = await AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
-          indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
+        listInfo.push({
+          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false,
         });
 
-        console.log('issueResult :', issueResult);
+        // let issueResult = await AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
+        //   indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
+        // });
 
-        if (issueResult) {
-          FileUtil.removeSafe(filePath);
-        }
+        // console.log('issueResult :', issueResult);
+
+        // if (issueResult) {
+        //   FileUtil.removeSafe(filePath);
+        // }
         listAssetName.push(assetName);
+      }
+
+      await AppProcessor.doIssueMultipleFiles(listInfo, {
+        indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
+      });
+      for (let info of listInfo) {
+        FileUtil.removeSafe(info.filePath);
       }
       return listAssetName;
     };
@@ -126,7 +138,8 @@ class PrivateUserComponent extends Component {
     }).then(results => {
       let images = [];
       for (let image of results) {
-        images.push({ uri: image.sourceURL, createdAt: moment(image.creationDate) });
+        let createdAt = new Date(parseInt(image.creationDate)).toISOString();
+        images.push({ uri: image.sourceURL, createdAt });
       }
       Actions.recordImages({ images, doIssueImage: this.doIssueImage });
     });
