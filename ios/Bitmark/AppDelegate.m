@@ -43,10 +43,10 @@
 #ifndef DEBUG
   NSString *hockeyAppID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HockeyAppID"];
   if (hockeyAppID.length > 0) {
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyAppID];
     [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAutoSend];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyAppID];
   }
 #endif
 #ifdef HOCKEYAPP_UPDATE
