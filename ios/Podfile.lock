@@ -1,9 +1,9 @@
 PODS:
   - BitmarkSDK (0.0.5):
     - TweetNacl
-  - HockeySDK (5.1.2):
-    - HockeySDK/DefaultLib (= 5.1.2)
-  - HockeySDK/DefaultLib (5.1.2)
+  - HockeySDK (5.1.4):
+    - HockeySDK/DefaultLib (= 5.1.4)
+  - HockeySDK/DefaultLib (5.1.4)
   - Intercom (5.1.5)
   - KeychainAccess (3.1.2)
   - TesseractOCRiOS (4.0.0)
@@ -40,7 +40,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BitmarkSDK: 3234949ba38f292e9ac3bd5d13a8981b182990a1
-  HockeySDK: 38b7e2726af1ea86ae97ce4b5de33ab0817e3500
+  HockeySDK: 15afe6bc0a5bfe3a531fd73dbf082095f37dac3b
   Intercom: 0a0ec9a30a12802c56ff02bb98ddf6f047035c68
   KeychainAccess: b3816fddcf28aa29d94b10ec305cd52be14c472b
   TesseractOCRiOS: 729989db3984bb60ba3addb053569b172d48c409
