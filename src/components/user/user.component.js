@@ -53,6 +53,7 @@ class PrivateUserComponent extends Component {
   }
 
   doIssueImage(images) {
+    console.log('doIssueImage :', images);
     //check existing assets
     let doCheckExistingAsset = async () => {
       for (let imageInfo of images) {
@@ -73,14 +74,17 @@ class PrivateUserComponent extends Component {
         let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
         let metadataList = [];
         metadataList.push({ label: 'Source', value: 'Health Records' });
-        metadataList.push({ label: 'Saved Time', value: imageInfo.createdAt });
+        metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
         let filePath = imageInfo.uri.replace('file://', '');
         assetName = await populateAssetNameFromImage(filePath, assetName);
 
-        let data = AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
+        let issueResult = await AppProcessor.doIssueFile(filePath, assetName, metadataList, 1, false, {
           indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
         });
-        if (data) {
+
+        console.log('issueResult :', issueResult);
+
+        if (issueResult) {
           FileUtil.removeSafe(filePath);
         }
         listAssetName.push(assetName);
@@ -94,7 +98,8 @@ class PrivateUserComponent extends Component {
         }]);
       } else {
         doIssuance().then((listAssetName) => {
-          Actions.assetNameInform({ listAssetName });
+          console.log('listAssetName :', listAssetName);
+          Actions.assetNameInform({ assetNames: listAssetName });
         }).catch(error => {
           EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
         });
@@ -186,7 +191,7 @@ class PrivateUserComponent extends Component {
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file', 1, () => willDetectAssetNameAutomatically ? Actions.assetNameInform({ assetName }) : Actions.pop());
+      issue(filePath, assetName, metadataList, 'file', 1, () => willDetectAssetNameAutomatically ? Actions.assetNameInform({ assetNames: [assetName] }) : Actions.pop());
     });
   }
 

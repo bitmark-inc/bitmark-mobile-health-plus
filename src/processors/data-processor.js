@@ -124,6 +124,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       return { bitmarks: totalBitmarks, assets: totalAssets };
     };
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
+      console.log({ assets, bitmarks });
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       for (let bitmark of bitmarks) {
 

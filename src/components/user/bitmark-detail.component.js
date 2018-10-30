@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     flex: 1,
     fontSize: 24,
+    marginTop: 18,
   },
   closeButton: {
     paddingTop: convertWidth(26),

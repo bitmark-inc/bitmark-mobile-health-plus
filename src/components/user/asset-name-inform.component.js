@@ -11,7 +11,7 @@ import { Actions } from 'react-native-router-flux';
 
 export class AssetNameInform extends Component {
   static propTypes = {
-    assetNames: PropTypes.string
+    assetNames: PropTypes.array
   };
 
   constructor(props) {

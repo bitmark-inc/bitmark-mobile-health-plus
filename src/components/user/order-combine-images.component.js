@@ -27,9 +27,14 @@ export class OrderCombineImagesComponent extends Component {
 
   async continue() {
     let newImages = [];
-    for (let item of this.state.itemOrder) {
-      newImages.push(this.props.images[item.key]);
+    if (this.state.itemOrder) {
+      for (let item of this.state.itemOrder) {
+        newImages.push(this.props.images[item.key]);
+      }
+    } else {
+      newImages = this.props.images;
     }
+
     AppProcessor.doCombineImages(newImages).then((filePath) => {
       this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment() }]);
     }).catch(error => {

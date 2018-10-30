@@ -31,7 +31,7 @@ export class CaptureAssetComponent extends Component {
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
     assetName = await populateAssetNameFromImage(filePath, assetName);
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetName }));
+    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetNames: [assetName] }));
   }
 
 
