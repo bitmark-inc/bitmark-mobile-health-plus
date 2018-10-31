@@ -144,7 +144,7 @@ class PrivateUserComponent extends Component {
       let images = [];
       for (let image of results) {
         let createdAt = new Date(parseInt(image.creationDate)).toISOString();
-        images.push({ uri: image.sourceURL, createdAt });
+        images.push({ uri: image.path, createdAt });
       }
       if (images.length === 1) {
         this.doIssueImage(images);
