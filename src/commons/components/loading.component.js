@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingLogo: {
-    width: convertWidth(213),
-    height: 45 * convertWidth(213) / 213,
+    width: convertWidth(177),
+    height: 61 * convertWidth(177) / 177,
     resizeMode: 'contain',
   },
 });
