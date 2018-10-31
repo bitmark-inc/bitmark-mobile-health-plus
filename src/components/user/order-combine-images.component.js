@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444', height: constants.buttonHeight,
     flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
     width: convertWidth(335),
-    marginBottom: config.isIPhoneX ? 44 : 0,
+    marginBottom: config.isIPhoneX ? 44 : 20,
   },
   nextButtonText: {
     fontSize: 16, fontWeight: '900', fontFamily: 'Avenir Heavy', color: 'white',
