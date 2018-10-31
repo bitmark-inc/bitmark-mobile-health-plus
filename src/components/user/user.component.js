@@ -37,7 +37,13 @@ class PrivateUserComponent extends Component {
 
   addRecord() {
     ActionSheetIOS.showActionSheetWithOptions({
-      options: [i18n.t('UserComponent_actionSheetOption1'), i18n.t('UserComponent_actionSheetOption2'), i18n.t('UserComponent_actionSheetOption3'), i18n.t('UserComponent_actionSheetOption4')],
+      options: [
+        i18n.t('UserComponent_actionSheetOption1'),
+        i18n.t('UserComponent_actionSheetOption2'),
+        i18n.t('UserComponent_actionSheetOption3'),
+        i18n.t('UserComponent_actionSheetOption4'),
+        'Scan Page'
+      ],
       title: i18n.t('UserComponent_pickerTitle'),
       cancelButtonIndex: 0,
     },
@@ -48,6 +54,8 @@ class PrivateUserComponent extends Component {
           this.onChooseFromLibrary();
         } else if (buttonIndex === 3) {
           this.onChooseFile();
+        } else if (buttonIndex === 4) {
+          Actions.scanDocument();
         }
       });
   }
@@ -221,7 +229,7 @@ class PrivateUserComponent extends Component {
         await generateThumbnail(filePath, bitmarkId, isMultipleAsset);
 
         if (willDetectAssetNameAutomatically) {
-          Actions.assetNameInform({assetName});
+          Actions.assetNameInform({ assetName });
         } else {
           Actions.pop();
         }

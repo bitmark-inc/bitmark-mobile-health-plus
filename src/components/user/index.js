@@ -25,6 +25,7 @@ import { LocalStorageMigrationComponent } from './local-storeage-migration.compo
 import { CaptureMultipleImagesComponent } from './capture-multiple-image.component';
 import { RecordImagesComponent } from './record-images.component';
 import { OrderCombineImagesComponent } from './order-combine-images.component';
+import { ScanDocumentComponent } from './scan-document.component';
 
 
 
@@ -59,6 +60,8 @@ export class UserRouterComponent extends Component {
           <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} />
           <Scene key="recordImages" component={RecordImagesComponent} />
           <Scene key="orderCombineImages" component={OrderCombineImagesComponent} />
+          <Scene key="scanDocument" component={ScanDocumentComponent} />
+
         </Stack>
       </Router>
     );
