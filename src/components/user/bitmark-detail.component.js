@@ -6,6 +6,8 @@ import {
   Alert,
   Image, View, SafeAreaView, TouchableOpacity, Text, ScrollView,
 } from 'react-native';
+import JSONTree from 'react-native-json-tree';
+import { Map } from 'immutable'
 
 import { convertWidth, runPromiseWithoutError, FileUtil, } from './../../utils';
 import { config } from '../../configs';
@@ -34,12 +36,12 @@ export class BitmarkDetailComponent extends Component {
             EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
             return;
           }
-          this.setState({ content: JSON.stringify(JSON.parse(result), null, 2) });
+          result.immutable = Map({ key: 'value' });
+          this.setState({ content: JSON.parse(result) });
         });
       } else if (this.props.bitmarkType !== 'bitmark_health_issuance') {
         Actions.pop();
       }
-
 
       // let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
       // if (this.props.bitmarkType === 'bitmark_health_data') {
@@ -129,8 +131,35 @@ export class BitmarkDetailComponent extends Component {
                       title: moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()
                     })}>
                       <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} /></TouchableOpacity>}
-                  {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, paddingBottom: 30, }}>
-                    <Text >{this.state.content}</Text>
+                  {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>
+                    <ScrollView horizontal={true}>
+                      <JSONTree data={this.state.content}
+                        getItemString={() => <Text></Text>}
+                        labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', }}>{raw}</Text>}
+                        valueRenderer={raw => <Text style={{ color: '#FF4444' }}>{raw}</Text>}
+                        hideRoot={true}
+                        theme={{
+                          scheme: 'monokai',
+                          author: 'wimer hazenberg (http://www.monokai.nl)',
+                          base00: '#272822',
+                          base01: '#383830',
+                          base02: '#49483e',
+                          base03: '#75715e',
+                          base04: '#a59f85',
+                          base05: '#f8f8f2',
+                          base06: '#f5f4f1',
+                          base07: '#f9f8f5',
+                          base08: '#f92672',
+                          base09: '#fd971f',
+                          base0A: '#f4bf75',
+                          base0B: '#a6e22e',
+                          base0C: '#a1efe4',
+                          base0D: '#FF003C',
+                          base0E: '#ae81ff',
+                          base0F: '#cc6633'
+                        }}
+                      />
+                    </ScrollView>
                   </ScrollView>}
                 </ScrollView>
               </View>
@@ -230,7 +259,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   bitmarkContent: {
-    padding: convertWidth(20),
+    paddingTop: convertWidth(20),
     flex: 1,
   },
 
