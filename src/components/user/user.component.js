@@ -95,13 +95,16 @@ class PrivateUserComponent extends Component {
         listAssetName.push(assetName);
       }
 
-      await AppProcessor.doIssueMultipleFiles(listInfo, {
+      let result = await AppProcessor.doIssueMultipleFiles(listInfo, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       });
-      for (let info of listInfo) {
-        FileUtil.removeSafe(info.filePath);
+      if (result) {
+        for (let info of listInfo) {
+          FileUtil.removeSafe(info.filePath);
+        }
+        return listAssetName;
       }
-      return listAssetName;
+      return null;
     };
     doCheckExistingAsset().then(message => {
       if (message) {
@@ -111,7 +114,9 @@ class PrivateUserComponent extends Component {
       } else {
         doIssuance().then((listAssetName) => {
           console.log('listAssetName :', listAssetName);
-          Actions.assetNameInform({ assetNames: listAssetName });
+          if (listAssetName) {
+            Actions.assetNameInform({ assetNames: listAssetName });
+          }
         }).catch(error => {
           EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
         });
