@@ -141,7 +141,11 @@ class PrivateUserComponent extends Component {
         let createdAt = new Date(parseInt(image.creationDate)).toISOString();
         images.push({ uri: image.sourceURL, createdAt });
       }
-      Actions.recordImages({ images, doIssueImage: this.doIssueImage });
+      if (images.length === 1) {
+        this.doIssueImage(images);
+      } else {
+        Actions.recordImages({ images, doIssueImage: this.doIssueImage });
+      }
     });
 
     // ImagePicker.launchImageLibrary({}, (response) => {
