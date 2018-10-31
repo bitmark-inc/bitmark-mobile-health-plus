@@ -90,10 +90,10 @@ export class CaptureMultipleImagesComponent extends Component {
         {this.state.step === CaptureMultipleImagesComponent.STEP.capture && <View style={styles.body}>
           <View style={styles.header}>
             <TouchableOpacity style={styles.button} onPress={Actions.pop}>
-              <Text style={styles.buttonText}>Cancel</Text>
+              <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText1')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
-              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save({this.state.images.length})</Text>}
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText2')}({this.state.images.length})</Text>}
             </TouchableOpacity>
           </View>
           <RNCamera
@@ -120,7 +120,7 @@ export class CaptureMultipleImagesComponent extends Component {
             <TouchableOpacity style={styles.button} disabled={true}>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
-              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save({this.state.images.length})</Text>}
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText2')}({this.state.images.length})</Text>}
             </TouchableOpacity>
           </View>
           <View style={styles.imageArea}>
@@ -128,10 +128,10 @@ export class CaptureMultipleImagesComponent extends Component {
           </View>
           <View style={styles.footer}>
             <TouchableOpacity style={styles.button} onPress={this.retakeImage.bind(this)}>
-              <Text style={styles.buttonText}>Retake</Text>
+              <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText3')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={this.keepImage.bind(this)}>
-              <Text style={styles.buttonText}>Kepp Retake</Text>
+              <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText4')}</Text>
             </TouchableOpacity>
           </View>
         </View>}
@@ -141,7 +141,7 @@ export class CaptureMultipleImagesComponent extends Component {
             <TouchableOpacity style={styles.button} disabled={true}>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
-              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save({this.state.images.length})</Text>}
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText2')}({this.state.images.length})</Text>}
             </TouchableOpacity>
           </View>
           <Swiper
@@ -164,10 +164,10 @@ export class CaptureMultipleImagesComponent extends Component {
 
           <View style={styles.footer}>
             <TouchableOpacity style={styles.button} onPress={this.retakeImage.bind(this)}>
-              <Text style={styles.buttonText}>Retake</Text>
+              <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText3')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={this.keepImage.bind(this)}>
-              <Text style={styles.buttonText}>Kepp Retake</Text>
+              <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText4')}</Text>
             </TouchableOpacity>
           </View>
         </View>}

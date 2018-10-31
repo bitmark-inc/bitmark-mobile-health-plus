@@ -37,14 +37,14 @@ export class RecordImagesComponent extends Component {
             <TouchableOpacity style={styles.button} onPress={Actions.pop}>
               <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../../assets/imgs/back_icon_white.png')} />
             </TouchableOpacity>
-            <Text style={styles.titleText}>Record types</Text>
+            <Text style={styles.titleText}>{i18n.t('RecordImagesComponent_titleText')}</Text>
             <Text />
           </View>
           <View style={{ flex: 1, padding: 20, }}>
             <TouchableOpacity style={styles.combineCheckbox} onPress={() => this.setState({ type: 'combine' })}>
               <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Image style={styles.typeIcon} source={require('../../../assets/imgs/record_combine_image_icon.png')} />
-                <Text style={styles.typeText} >Combine all the photos into one document.</Text>
+                <Text style={styles.typeText} >{i18n.t('RecordImagesComponent_typeText1')}</Text>
               </View>
               {this.state.type === 'combine' && <Image style={{ width: 30, height: 30, resizeMode: 'contain' }} source={require('../../../assets/imgs/checkbox_checked_icon.png')} />}
               {this.state.type !== 'combine' && <View style={{ width: 30, height: 30, borderWidth: 1, borderColor: 'white', borderRadius: 15, }} />}
@@ -53,14 +53,14 @@ export class RecordImagesComponent extends Component {
             <TouchableOpacity style={styles.combineCheckbox} onPress={() => this.setState({ type: 'each' })}>
               <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Image style={styles.typeIcon} source={require('../../../assets/imgs/record_each_image_icon.png')} />
-                <Text style={styles.typeText} >Each photo is a separate record.</Text>
+                <Text style={styles.typeText} >{i18n.t('RecordImagesComponent_typeText2')}</Text>
               </View>
               {this.state.type === 'each' && <Image style={{ width: 30, height: 30, resizeMode: 'contain' }} source={require('../../../assets/imgs/checkbox_checked_icon.png')} />}
               {this.state.type !== 'each' && <View style={{ width: 30, height: 30, borderWidth: 1, borderColor: 'white', borderRadius: 15, }} />}
             </TouchableOpacity>
           </View>
           <TouchableOpacity style={styles.nextButton} onPress={this.continue.bind(this)}>
-            <Text style={styles.nextButtonText}>NEXT</Text>
+            <Text style={styles.nextButtonText}>{i18n.t('RecordImagesComponent_nextButtonText')}</Text>
           </TouchableOpacity>
         </View>
       </View>

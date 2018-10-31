@@ -54,11 +54,11 @@ export class OrderCombineImagesComponent extends Component {
             <TouchableOpacity style={styles.button} onPress={Actions.pop}>
               <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../../assets/imgs/back_icon_white.png')} />
             </TouchableOpacity>
-            <Text style={styles.titleText}>Arrange photos</Text>
+            <Text style={styles.titleText}>{i18n.t('OrderCombineImagesComponent_titleText')}</Text>
             <Text />
           </View>
           <View style={{ flex: 1, padding: 20, paddingTop: 0, }}>
-            <Text style={styles.message}>Drag and drop to rearrange photos.</Text>
+            <Text style={styles.message}>{i18n.t('OrderCombineImagesComponent_message')}</Text>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} scrollEnabled={this.state.scrollEnabled}>
 
               <SortableGrid
@@ -78,7 +78,7 @@ export class OrderCombineImagesComponent extends Component {
 
           </View>
           <TouchableOpacity style={styles.nextButton} onPress={this.continue.bind(this)}>
-            <Text style={styles.nextButtonText}>NEXT</Text>
+            <Text style={styles.nextButtonText}>{i18n.t('OrderCombineImagesComponent_nextButtonText')}</Text>
           </TouchableOpacity>
         </View>
       </View>
