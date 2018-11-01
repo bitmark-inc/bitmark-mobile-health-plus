@@ -175,10 +175,11 @@ class MainEventsHandlerComponent extends Component {
         i18n.locale = DeviceInfo.getDeviceLocale();
       }
       this.doTryConnectInternet();
+      runPromiseWithoutError(DataProcessor.doMetricOnScreen(true));
     }
     if (nextAppState.match(/background/) &&
       DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
-      console.log('handleAppStateChange resetFaceTouchSessionId ======== ');
+      runPromiseWithoutError(DataProcessor.doMetricOnScreen(false));
       CommonModel.resetFaceTouchSessionId();
     }
     this.appState = nextAppState;

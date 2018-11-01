@@ -331,7 +331,7 @@ const doCreateAccount = async (touchFaceIdSession) => {
     });
   }
   await CommonModel.doTrackEvent({
-    event_name: 'health_plus_create_new_account',
+    event_name: 'health_create_new_account',
     account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
   });
   return userInformation;
@@ -373,10 +373,6 @@ const doLogout = async () => {
   await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
   await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
   await Intercom.reset();
-  await CommonModel.doTrackEvent({
-    event_name: 'health_plus_user_delete_account',
-    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-  });
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
@@ -405,7 +401,7 @@ const doOpenApp = async () => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
-  await doTrackEvent({ appInfo, eventName: 'health_plus_download' });
+  await doTrackEvent({ appInfo, eventName: 'health_download' });
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
@@ -460,30 +456,6 @@ const doOpenApp = async () => {
       console.log('websocket closed:', e.code, e.reason);
     };
 
-    if (!appInfo.lastTimeOpen) {
-      let appInfo = await doGetAppInformation();
-      appInfo.lastTimeOpen = moment().toDate().getTime();
-      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    } else if (!appInfo.trackEvents || !appInfo.trackEvents.health_plus_user_open_app_two_time_in_a_week) {
-
-      let firstTime = moment(appInfo.lastTimeOpen);
-      let currentTime = moment();
-      let diffWeeks = currentTime.diff(firstTime, 'week');
-      let diffHours = currentTime.diff(firstTime, 'hour');
-      if (diffWeeks === 0 && diffHours > 1) {
-        appInfo.trackEvents = appInfo.trackEvents || {};
-        appInfo.trackEvents.health_plus_user_open_app_two_time_in_a_week = true;
-        await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-        await CommonModel.doTrackEvent({
-          event_name: 'health_plus_user_open_app_two_time_in_a_week',
-          account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-        });
-      } else if (diffWeeks > 0) {
-        appInfo.lastTimeOpen = currentTime.toDate().getTime();
-        await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-      }
-    }
-
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
 
     if (!grantedAccessAccountSelected && !userInformation.activeHealthData &&
@@ -515,10 +487,10 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
   await runGetUserBitmarksInBackground();
 
-  let userBitmarks = await doGetUserDataBitmarks();
-  if (!userBitmarks || !userBitmarks.healthDataBitmarks || userBitmarks.healthDataBitmarks.length === 0) {
-    await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_weekly_health_data' });
-  }
+  await CommonModel.doTrackEvent({
+    event_name: 'health_record_issued',
+    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+  });
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
@@ -578,10 +550,10 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
   let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
-  let userBitmarks = await doGetUserDataBitmarks();
-  if (!userBitmarks || !userBitmarks.healthAssetBitmarks || userBitmarks.healthAssetBitmarks.length === 0) {
-    await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_file' });
-  }
+  await CommonModel.doTrackEvent({
+    event_name: 'health_record_issued',
+    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+  });
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
@@ -772,8 +744,6 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
   }
   await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
 
-  await doTrackEvent({ eventName: 'health_plus_user_first_time_grant_access' });
-
   return await runGetAccountAccessesInBackground();
 };
 const doDeleteAccount = async () => {
@@ -814,6 +784,31 @@ const doRejectEmailRecords = async (emailRecord) => {
   }
 };
 
+const doMetricOnScreen = async (isActive) => {
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  if (isActive) {
+    let onScreenAt = moment().toDate().getTime();
+    let offScreenAt = appInfo.offScreenAt;
+    if (offScreenAt && offScreenAt > onScreenAt) {
+      let userInfo = userInformation || await UserModel.doTryGetCurrentUser() || {};
+
+      let totalOnScreenAtPreTime = (offScreenAt - onScreenAt) / (1000 * 60);
+      await CommonModel.doTrackEvent({
+        event_name: 'health_screen_time',
+        account_number: userInfo ? userInfo.bitmarkAccountNumber : null,
+      }, {
+          hit: totalOnScreenAtPreTime
+        });
+    }
+    appInfo.onScreenAt = onScreenAt;
+    appInfo.offScreenAt = null;
+  } else {
+    appInfo.offScreenAt = moment().toDate().getTime();
+  }
+  await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+};
+
 
 const DataProcessor = {
   doOpenApp,
@@ -851,6 +846,7 @@ const DataProcessor = {
   doTrackEvent,
   doAcceptEmailRecords,
   doRejectEmailRecords,
+  doMetricOnScreen,
 };
 
 export { DataProcessor };
