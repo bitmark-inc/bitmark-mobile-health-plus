@@ -487,10 +487,17 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
   await runGetUserBitmarksInBackground();
 
-  await CommonModel.doTrackEvent({
-    event_name: 'health_record_issued',
-    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-  });
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  if (appInfo && (!appInfo.lastTimeIssued ||
+    (appInfo.lastTimeIssued && (appInfo.lastTimeIssued - moment().toDate().getTime()) > 7 * 24 * 60 * 60 * 1000))) {
+    await CommonModel.doTrackEvent({
+      event_name: 'health_plus_weekly_active_user',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+    appInfo.lastTimeIssued = moment().toDate().getTime();
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+  }
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
@@ -550,10 +557,17 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
   let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
-  await CommonModel.doTrackEvent({
-    event_name: 'health_record_issued',
-    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-  });
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  if (appInfo && (!appInfo.lastTimeIssued ||
+    (appInfo.lastTimeIssued && (appInfo.lastTimeIssued - moment().toDate().getTime()) > 7 * 24 * 60 * 60 * 1000))) {
+    await CommonModel.doTrackEvent({
+      event_name: 'health_plus_weekly_active_user',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+    appInfo.lastTimeIssued = moment().toDate().getTime();
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+  }
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
   if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
