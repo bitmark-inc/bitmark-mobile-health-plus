@@ -6,7 +6,7 @@
   Copyright © 2018 Bitmark Inc. All rights reserved.
 */
 
-"NSFaceIDUsageDescription" = "info_plist_touch_face_id";
-"NSCameraUsageDescription" = "info_plist_camera";
-"NSPhotoLibraryUsageDescription" = "into_plist_photo";
-"NSHealthShareUsageDescription" = "into_plist_health";
+"NSFaceIDUsageDescription" = "Nhận diện vân tay/khuôn mặt hoặc mật mã được yêu cầu để cho phép thực hiện các giao dịch của bạn.";
+"NSCameraUsageDescription" = "Bitmark Health yêu cầu truy cập Camera.";
+"NSPhotoLibraryUsageDescription" = "Bitmark Health yêu cầu truy cập thư viện ảnh.";
+"NSHealthShareUsageDescription" = "Bitmark Health yêu cầu truy cập dữ liệu sức khoẻ của bạn.";

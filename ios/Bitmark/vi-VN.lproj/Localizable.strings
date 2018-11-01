@@ -6,5 +6,6 @@
   Copyright © 2018 Facebook. All rights reserved.
 */
 
-"info_plist_touch_face_id" = "info_plist_touch_face_id";
-"notification_intercom_new_messages" = "notification_intercom_new_messages";
+"info_plist_touch_face_id" = "Nhận diện vân tay/khuôn mặt hoặc mật mã được yêu cầu để cho phép thực hiện các giao dịch của bạn.";
+"notification_intercom_new_messages" = "Bạn nhận được tin nhắn mới từ đội ngũ hỗ trợ của Bitmark, bấm vào đây để xem!";
+"notification_email_issue_request" = "%@ muốn thêm một bản ghi y tế vào tài khoản Bitmark Health của bạn. Vui lòng kiểm tra và quyết định chấp nhận hoặc từ chối bản ghi."

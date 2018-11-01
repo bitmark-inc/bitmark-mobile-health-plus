@@ -6,7 +6,7 @@
   Copyright © 2018 Bitmark Inc. All rights reserved.
 */
 
-"NSFaceIDUsageDescription" = "info_plist_touch_face_id";
-"NSCameraUsageDescription" = "info_plist_camera";
-"NSPhotoLibraryUsageDescription" = "into_plist_photo";
-"NSHealthShareUsageDescription" = "into_plist_health";
+"NSFaceIDUsageDescription" = "欲簽署及加密你的健康資料，請使用指紋辨識/臉部辨識或密碼";
+"NSCameraUsageDescription" = "Bitmark Health 想要讀取你的相機";
+"NSPhotoLibraryUsageDescription" = "Bitmark Health 想要讀取你的相簿";
+"NSHealthShareUsageDescription" = "Bitmark Health 想要讀取你的健康資料";
