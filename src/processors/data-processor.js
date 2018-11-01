@@ -242,6 +242,13 @@ const runOnBackground = async () => {
     userInformation = userInfo;
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);
   }
+
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  appInfo.onScreenAt = appInfo.onScreenAt || moment().toDate().getTime();
+  appInfo.offScreenAt = moment().toDate().getTime();
+  await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
     await runGetAccountAccessesInBackground();
@@ -383,10 +390,6 @@ const doLogout = async () => {
   await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}`);
   await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
   await Intercom.reset();
-  await CommonModel.doTrackEvent({
-    event_name: 'health_plus_user_delete_account',
-    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-  });
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
@@ -415,7 +418,17 @@ const doOpenApp = async () => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
-  await doTrackEvent({ appInfo, eventName: 'health_plus_download' });
+
+  if (!appInfo.trackEvents || !appInfo.trackEvents['health_plus_download']) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents['health_plus_download'] = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    await CommonModel.doTrackEvent({
+      event_name: 'health_plus_download',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}`);
@@ -471,35 +484,6 @@ const doOpenApp = async () => {
       console.log('websocket closed:', e.code, e.reason);
     };
 
-    if (!appInfo.lastTimeOpen) {
-      let appInfo = await doGetAppInformation();
-      appInfo.lastTimeOpen = moment().toDate().getTime();
-      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    } else if (!appInfo.trackEvents || !appInfo.trackEvents.health_plus_user_open_app_two_time_in_a_week) {
-
-      let firstTime = moment(appInfo.lastTimeOpen);
-      let currentTime = moment();
-      let diffWeeks = currentTime.diff(firstTime, 'week');
-      let diffHours = currentTime.diff(firstTime, 'hour');
-      if (diffWeeks === 0 && diffHours > 1) {
-        appInfo.trackEvents = appInfo.trackEvents || {};
-        appInfo.trackEvents.health_plus_user_open_app_two_time_in_a_week = true;
-        await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-        await CommonModel.doTrackEvent({
-          event_name: 'health_plus_user_open_app_two_time_in_a_week',
-          account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-        });
-      } else if (diffWeeks > 0) {
-        appInfo.lastTimeOpen = currentTime.toDate().getTime();
-        await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-      }
-    }
-
-    didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
-    if (!didMigrationFileToLocalStorage) {
-      EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
-    }
-
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
 
     if (!grantedAccessAccountSelected && !userInformation.activeHealthData &&
@@ -531,9 +515,16 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
   await runGetUserBitmarksInBackground();
 
-  let userBitmarks = await doGetUserDataBitmarks();
-  if (!userBitmarks || !userBitmarks.healthDataBitmarks || userBitmarks.healthDataBitmarks.length === 0) {
-    await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_weekly_health_data' });
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  if (appInfo && (!appInfo.lastTimeIssued ||
+    (appInfo.lastTimeIssued && (appInfo.lastTimeIssued - moment().toDate().getTime()) > 7 * 24 * 60 * 60 * 1000))) {
+    await CommonModel.doTrackEvent({
+      event_name: 'health_plus_weekly_active_user',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+    appInfo.lastTimeIssued = moment().toDate().getTime();
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
   }
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
@@ -603,9 +594,16 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
   let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
-  let userBitmarks = await doGetUserDataBitmarks();
-  if (!userBitmarks || !userBitmarks.healthAssetBitmarks || userBitmarks.healthAssetBitmarks.length === 0) {
-    await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_file' });
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  if (appInfo && (!appInfo.lastTimeIssued ||
+    (appInfo.lastTimeIssued && (appInfo.lastTimeIssued - moment().toDate().getTime()) > 7 * 24 * 60 * 60 * 1000))) {
+    await CommonModel.doTrackEvent({
+      event_name: 'health_plus_weekly_active_user',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+    appInfo.lastTimeIssued = moment().toDate().getTime();
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
   }
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
@@ -806,26 +804,10 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
   }
   await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
 
-  await doTrackEvent({ eventName: 'health_plus_user_first_time_grant_access' });
-
   return await runGetAccountAccessesInBackground();
 };
 const doDeleteAccount = async () => {
   return await AccountModel.doDeleteAccount(jwt);
-};
-
-const doTrackEvent = async ({ appInfo, eventName }) => {
-  appInfo = appInfo || (await doGetAppInformation()) || {};
-  if (!appInfo.trackEvents || !appInfo.trackEvents[eventName]) {
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents[eventName] = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-
-    await CommonModel.doTrackEvent({
-      event_name: eventName,
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
 };
 
 const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
@@ -934,6 +916,29 @@ const doCombineImages = async (images) => {
   let tempFilePath = `${tempFolderPath}/${moment().toDate().getTime()}.pdf`;
   await PDFScanner.pdfCombine(listFilePath, tempFilePath);
   return tempFilePath;
+}
+  const doMetricOnScreen = async (isActive) => {
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  let onScreenAt = appInfo.onScreenAt;
+  let offScreenAt = appInfo.offScreenAt;
+  if (isActive && onScreenAt && offScreenAt) {
+    if (offScreenAt && offScreenAt > onScreenAt) {
+      let userInfo = userInformation || await UserModel.doTryGetCurrentUser() || {};
+
+      let totalOnScreenAtPreTime = Math.floor((offScreenAt - onScreenAt) / (1000 * 60));
+      await CommonModel.doTrackEvent({
+        event_name: 'health_plus_screen_time',
+        account_number: userInfo ? userInfo.bitmarkAccountNumber : null,
+      }, {
+          hit: totalOnScreenAtPreTime
+        });
+    }
+    appInfo.onScreenAt = moment().toDate().getTime();
+  } else {
+    appInfo.offScreenAt = moment().toDate().getTime();
+  }
+  await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 };
 
 
@@ -971,13 +976,12 @@ const DataProcessor = {
   doConfirmGrantingAccess,
   doDownloadHealthDataBitmark,
   doDeleteAccount,
-  doTrackEvent,
   doAcceptEmailRecords,
   doRejectEmailRecords,
-
   doMigrateFilesToLocalStorage,
   detectLocalAssetFilePath,
   doCombineImages,
+  doMetricOnScreen,
 };
 
 export { DataProcessor };

@@ -130,13 +130,19 @@ export class PrivateAccountComponent extends Component {
 
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
                 <Text style={styles.accountNumberValue}>{emailAddress}</Text>
-                <TouchableOpacity style={[styles.accountNumberCopiedArea]} onPress={() => {
-                  Clipboard.setString(emailAddress);
-                  this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
-                  setTimeout(() => { this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText') }) }, 1000);
-                }}>
-                  <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
-                </TouchableOpacity>
+                <View style={[styles.accountNumberCopiedArea]} >
+                  <TouchableOpacity onPress={() => {
+                    Clipboard.setString(emailAddress);
+                    this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
+                    setTimeout(() => { this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText') }) }, 1000);
+                  }}>
+                    <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => Share.share({ title: '', message: emailAddress })}>
+                    <Text style={styles.accountNumberShareButtonText}>{i18n.t('AccountComponent_accountNumberShareButtonText')}</Text>
+                  </TouchableOpacity>
+                </View>
+
                 <TouchableOpacity style={styles.rowButton} onPress={Actions.accountNumber}>
                   <Text style={[styles.accountNumberLabel, styles.rowButtonText]}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
@@ -305,6 +311,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginTop: 8,
     minHeight: 21,
+    flexDirection: 'row',
   },
   accountNumberCopiedText: {
     fontFamily: 'Avenir Medium',
@@ -312,6 +319,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#0064FC',
     marginTop: 5,
+    minWidth: 54,
+  },
+  accountNumberShareButtonText: {
+    fontFamily: 'Avenir Medium',
+    fontWeight: '600',
+    fontSize: 14,
+    color: '#0064FC',
+    marginTop: 5,
+    minWidth: 54,
   },
   accountNumberDescription: {
     marginTop: 12,

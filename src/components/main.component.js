@@ -181,11 +181,13 @@ class MainEventsHandlerComponent extends Component {
     if (this.appState.match(/background/) && nextAppState === 'active') {
       i18n.locale = DeviceInfo.getDeviceLocale();
       this.doTryConnectInternet();
+      runPromiseWithoutError(DataProcessor.doMetricOnScreen(true));
     }
-    if (nextAppState.match(/background/) &&
-      DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
-      console.log('handleAppStateChange resetFaceTouchSessionId ======== ');
-      CommonModel.resetFaceTouchSessionId();
+    if (nextAppState.match(/background/)) {
+      if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
+        CommonModel.resetFaceTouchSessionId();
+      }
+      runPromiseWithoutError(DataProcessor.doMetricOnScreen(false));
     }
     this.appState = nextAppState;
   }
