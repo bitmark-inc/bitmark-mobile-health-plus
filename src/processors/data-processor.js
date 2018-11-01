@@ -338,7 +338,7 @@ const doCreateAccount = async (touchFaceIdSession) => {
     });
   }
   await CommonModel.doTrackEvent({
-    event_name: 'health_create_new_account',
+    event_name: 'health_plus_create_new_account',
     account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
   });
   return userInformation;
@@ -409,13 +409,13 @@ const doOpenApp = async () => {
   appInfo = appInfo || {};
 
 
-  if (!appInfo.trackEvents || !appInfo.trackEvents['health_download']) {
+  if (!appInfo.trackEvents || !appInfo.trackEvents['health_plus_download']) {
     appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents['health_download'] = true;
+    appInfo.trackEvents['health_plus_download'] = true;
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 
     await CommonModel.doTrackEvent({
-      event_name: 'health_download',
+      event_name: 'health_plus_download',
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
     });
   }
@@ -812,7 +812,7 @@ const doMetricOnScreen = async (isActive) => {
 
       let totalOnScreenAtPreTime = (offScreenAt - onScreenAt) / (1000 * 60);
       await CommonModel.doTrackEvent({
-        event_name: 'health_screen_time',
+        event_name: 'health_plus_screen_time',
         account_number: userInfo ? userInfo.bitmarkAccountNumber : null,
       }, {
           hit: totalOnScreenAtPreTime
