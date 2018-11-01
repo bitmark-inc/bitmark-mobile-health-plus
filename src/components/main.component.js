@@ -177,10 +177,11 @@ class MainEventsHandlerComponent extends Component {
       this.doTryConnectInternet();
       runPromiseWithoutError(DataProcessor.doMetricOnScreen(true));
     }
-    if (nextAppState.match(/background/) &&
-      DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
+    if (nextAppState.match(/background/)) {
+      if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
+        CommonModel.resetFaceTouchSessionId();
+      }
       runPromiseWithoutError(DataProcessor.doMetricOnScreen(false));
-      CommonModel.resetFaceTouchSessionId();
     }
     this.appState = nextAppState;
   }

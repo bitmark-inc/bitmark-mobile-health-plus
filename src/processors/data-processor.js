@@ -232,6 +232,13 @@ const runOnBackground = async () => {
     userInformation = userInfo;
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);
   }
+
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  appInfo.onScreenAt = appInfo.onScreenAt || moment().toDate().getTime();
+  appInfo.offScreenAt = moment().toDate().getTime();
+  await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
     await runGetAccountAccessesInBackground();
@@ -401,7 +408,17 @@ const doOpenApp = async () => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
-  await doTrackEvent({ appInfo, eventName: 'health_download' });
+
+  if (!appInfo.trackEvents || !appInfo.trackEvents['health_download']) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents['health_download'] = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    await CommonModel.doTrackEvent({
+      event_name: 'health_download',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
@@ -764,20 +781,6 @@ const doDeleteAccount = async () => {
   return await AccountModel.doDeleteAccount(jwt);
 };
 
-const doTrackEvent = async ({ appInfo, eventName }) => {
-  appInfo = appInfo || (await doGetAppInformation()) || {};
-  if (!appInfo.trackEvents || !appInfo.trackEvents[eventName]) {
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents[eventName] = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-
-    await CommonModel.doTrackEvent({
-      event_name: eventName,
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
-};
-
 const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
   for (let item of emailRecord.list) {
     if (!item.existingAsset) {
@@ -801,9 +804,9 @@ const doRejectEmailRecords = async (emailRecord) => {
 const doMetricOnScreen = async (isActive) => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
-  if (isActive) {
-    let onScreenAt = moment().toDate().getTime();
-    let offScreenAt = appInfo.offScreenAt;
+  let onScreenAt = appInfo.onScreenAt;
+  let offScreenAt = appInfo.offScreenAt;
+  if (isActive && onScreenAt && offScreenAt) {
     if (offScreenAt && offScreenAt > onScreenAt) {
       let userInfo = userInformation || await UserModel.doTryGetCurrentUser() || {};
 
@@ -815,9 +818,10 @@ const doMetricOnScreen = async (isActive) => {
           hit: totalOnScreenAtPreTime
         });
     }
-    appInfo.onScreenAt = onScreenAt;
+    appInfo.onScreenAt = moment().toDate().getTime();
     appInfo.offScreenAt = null;
   } else {
+    appInfo.onScreenAt = null;
     appInfo.offScreenAt = moment().toDate().getTime();
   }
   await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
@@ -857,7 +861,6 @@ const DataProcessor = {
   doConfirmGrantingAccess,
   doDownloadHealthDataBitmark,
   doDeleteAccount,
-  doTrackEvent,
   doAcceptEmailRecords,
   doRejectEmailRecords,
   doMetricOnScreen,
