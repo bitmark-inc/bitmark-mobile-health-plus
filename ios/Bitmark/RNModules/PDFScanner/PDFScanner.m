@@ -11,7 +11,8 @@
 
 @interface PDFScanner ()
 
-@property (readwrite, strong, nonatomic) NSMutableArray<NSString *> *pageStrings;
+@property (readwrite, strong, nonatomic) NSMutableArray<NSMutableArray<NSString *> *> *pageStrings;
+@property (readwrite, nonatomic) NSUInteger currentPage;
 
 @end
 
@@ -22,7 +23,6 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_METHOD(pdfScan:(NSString *)filePath:(RCTResponseSenderBlock)callback)
 {
   NSURL *url = [NSURL fileURLWithPath:filePath];
-  self.pageStrings = [NSMutableArray<NSString *> new];
 
   CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((__bridge CFURLRef)url);
   CGPDFDocumentRef document = CGPDFDocumentRetain(pdf);
@@ -31,13 +31,21 @@ RCT_EXPORT_METHOD(pdfScan:(NSString *)filePath:(RCTResponseSenderBlock)callback)
   CGPDFOperatorTableRef table = CGPDFOperatorTableCreate();
   CGPDFOperatorTableSetCallback(table, "TJ", arrayCallback);
   CGPDFOperatorTableSetCallback(table, "Tj", stringCallback);
+  
+  NSUInteger pagesCount = (NSUInteger)CGPDFDocumentGetNumberOfPages(document);
+  self.pageStrings = [[NSMutableArray<NSMutableArray<NSString *> *> alloc] initWithCapacity:pagesCount];
+  
+  for (NSUInteger i = 0; i < pagesCount; i ++ ) {
+    self.currentPage = i;
+    self.pageStrings[i] = [NSMutableArray<NSString *> new];
+    CGPDFPageRef page = CGPDFDocumentGetPage(document, i);
+    CGPDFContentStreamRef stream = CGPDFContentStreamCreateWithPage(page);
+    CGPDFScannerRef scanner = CGPDFScannerCreate(stream, table, (__bridge void *)self);
+    CGPDFScannerScan(scanner);
+    CGPDFScannerRelease(scanner);
+    CGPDFContentStreamRelease(stream);
+  }
 
-  CGPDFPageRef page = CGPDFDocumentGetPage(document, 1);
-  CGPDFContentStreamRef stream = CGPDFContentStreamCreateWithPage(page);
-  CGPDFScannerRef scanner = CGPDFScannerCreate(stream, table, (__bridge void *)self);
-  CGPDFScannerScan(scanner);
-  CGPDFScannerRelease(scanner);
-  CGPDFContentStreamRelease(stream);
   if (document) {
     CGPDFDocumentRelease(document);
   }
@@ -87,7 +95,7 @@ void arrayCallback(CGPDFScannerRef inScanner, void *userInfo) {
       [finalString appendString:string];
     }
   }
-  [parser.pageStrings addObject:finalString];
+  [parser.pageStrings[parser.currentPage] addObject:finalString];
 }
 
 void stringCallback(CGPDFScannerRef inScanner, void *userInfo) {
@@ -96,6 +104,6 @@ void stringCallback(CGPDFScannerRef inScanner, void *userInfo) {
   bool success = CGPDFScannerPopString(inScanner, &pdfString);
   if (success) {
     NSString *string = (__bridge_transfer NSString *)CGPDFStringCopyTextString(pdfString);
-    [searcher.pageStrings addObject:string];
+    [searcher.pageStrings[searcher.currentPage] addObject:string];
   }
 }
