@@ -112,8 +112,7 @@ export class SearchResultsComponent extends Component {
         {/*NO RESULTS*/}
         {(results.length == 0) ?
         <View style={styles.noResultsContainer}>
-          {/*TODO: localization*/}
-          <Text style={styles.noResultsText}>No Results</Text>
+          <Text style={styles.noResultsText}>{global.i18n.t("SearchResultsComponent_noResults")}</Text>
         </View> : null
         }
       </View>

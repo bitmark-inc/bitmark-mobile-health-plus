@@ -357,13 +357,13 @@ class PrivateUserComponent extends Component {
                 this.updateSearch(searchTerm);
               }}
               style={styles.searchInput}
-              placeholder="Search">
+              placeholder={global.i18n.t("UserComponent_search")}>
             </SearchInputComponent>
 
             {this.state.isSearching && <View style={styles.indicatorContainer}>
               <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16}/>
               {/*TODO: localization*/}
-              <Text>Searching...</Text>
+              <Text>{global.i18n.t("UserComponent_searching")}</Text>
             </View>
             }
             {(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults}/> : null}
