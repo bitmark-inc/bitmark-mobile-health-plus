@@ -16,6 +16,7 @@
 #import <React/RCTPushNotificationManager.h>
 #import "ReactNativeExceptionHandler.h"
 #import "Intercom/intercom.h"
+@import iCloudDocumentSync;
 @import HockeySDK;
 
 
@@ -58,6 +59,10 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  // iCloud sync
+  [[iCloud sharedCloud] setupiCloudDocumentSyncWithUbiquityContainer:nil];
+  [[iCloud sharedCloud] updateFiles];
   
   // Handle Crash App by native code
   [ReactNativeExceptionHandler replaceNativeExceptionHandlerBlock:^(NSException *exception, NSString *readeableException){
@@ -112,6 +117,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
   [RCTPushNotificationManager didReceiveLocalNotification:notification];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [[iCloud sharedCloud] updateFiles];
 }
 
 @end

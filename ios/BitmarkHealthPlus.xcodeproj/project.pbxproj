@@ -84,7 +84,6 @@
 		5805EE28216F31B900943FA5 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		5805EE29216F31B900943FA5 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		5805EE2A216F31B900943FA5 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		5805EE2B216F31B900943FA5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5824028A21393018001206A2 /* CloudKit.framework */; };
 		5805EE2C216F31B900943FA5 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		5805EE2D216F31B900943FA5 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		5805EE2E216F31B900943FA5 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
@@ -104,7 +103,6 @@
 		5805EE45216F31B900943FA5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5805EE46216F31B900943FA5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		580FF1522146345A00B36DE7 /* Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 580FF1512146345A00B36DE7 /* Info-dev.plist */; };
-		5824028B21393018001206A2 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5824028A21393018001206A2 /* CloudKit.framework */; };
 		58400A98202C013C00550ADB /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
 		58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
 		586D2E2521671BFA002A84B5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 586D2DE821671BFA002A84B5 /* Localizable.strings */; };
@@ -196,6 +194,9 @@
 		58908AC820A18A5A00C0064A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		58908AC920A18A5A00C0064A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		589626E9201B28380026C4A5 /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
+		58AC1DF7218FEFAC00B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
+		58AC1E35218FEFB100B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
+		58AC1E36218FF0DF00B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
 		58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		58BA32BF2186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
 		58BA32C02186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
@@ -750,7 +751,6 @@
 		579C1381393E59B3042E29F2 /* Pods-Bitmark.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitmark.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitmark/Pods-Bitmark.release.xcconfig"; sourceTree = "<group>"; };
 		5805EE4F216F31B900943FA5 /* BitmarkHealthPlus beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitmarkHealthPlus beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		580FF1512146345A00B36DE7 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
-		5824028A21393018001206A2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		5840099F20243AA700550ADB /* RNCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		5841D60721884A86006CDCA4 /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -811,6 +811,8 @@
 		58908AD220A18A5A00C0064A /* BitmarkHealthPlus dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitmarkHealthPlus dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkSDKBridge.m; sourceTree = "<group>"; };
 		58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-beta.plist"; sourceTree = "<group>"; };
+		58AC1D97218C529400B4CA8F /* Bitmark-dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Bitmark-dev.entitlements"; path = "Bitmark/Bitmark-dev.entitlements"; sourceTree = "<group>"; };
+		58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "Bitmark-beta.entitlements"; path = "Bitmark/Bitmark-beta.entitlements"; sourceTree = "<group>"; };
 		58BA32BD2186C457007E35FE /* AESDecrypt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AESDecrypt.h; sourceTree = "<group>"; };
 		58BA32BE2186C457007E35FE /* AESDecrypt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AESDecrypt.m; sourceTree = "<group>"; };
@@ -885,7 +887,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			    0E35448A2186AA05005AEB12 /* libRCTImageResizer.a in Frameworks */,
+				0E35448A2186AA05005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B272188063200A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B42186AEBB00630294 /* libimageCropPicker.a in Frameworks */,
 				F13CAAFC21410B1F001414A9 /* libRNCamera.a in Frameworks */,
@@ -906,6 +908,7 @@
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
+				58AC1E36218FF0DF00B4CA8F /* CloudKit.framework in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
@@ -927,7 +930,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			    0E3544892186A9F7005AEB12 /* libRCTImageResizer.a in Frameworks */,
+				0E3544892186A9F7005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B282188063900A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B22186AEAD00630294 /* libimageCropPicker.a in Frameworks */,
 				5805EE1A216F31B900943FA5 /* libRNCamera.a in Frameworks */,
@@ -946,9 +949,9 @@
 				5805EE28216F31B900943FA5 /* libRCTBlob.a in Frameworks */,
 				5805EE29216F31B900943FA5 /* libRCTAnimation.a in Frameworks */,
 				5805EE2A216F31B900943FA5 /* libReact.a in Frameworks */,
-				5805EE2B216F31B900943FA5 /* CloudKit.framework in Frameworks */,
 				5805EE29216F31B900943FA5 /* libRCTAnimation.a in Frameworks */,
 				588CAAD221885FE1006D846A /* QBImagePicker.framework in Frameworks */,
+				58AC1DF7218FEFAC00B4CA8F /* CloudKit.framework in Frameworks */,
 				5805EE2C216F31B900943FA5 /* libRCTActionSheet.a in Frameworks */,
 				5805EE2D216F31B900943FA5 /* libRCTImage.a in Frameworks */,
 				5805EE2E216F31B900943FA5 /* libRCTLinking.a in Frameworks */,
@@ -970,7 +973,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			    0E3544882186A9EB005AEB12 /* libRCTImageResizer.a in Frameworks */,
+				0E3544882186A9EB005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B262188062D00A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B32186AEB500630294 /* libimageCropPicker.a in Frameworks */,
 				F13CAAFD21410B26001414A9 /* libRNCamera.a in Frameworks */,
@@ -979,6 +982,7 @@
 				F12EC13A21393C70008E6F4C /* libRNDeviceInfo.a in Frameworks */,
 				0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */,
 				0E7B97DE20EF56170064EEEC /* libReactNativeExceptionHandler.a in Frameworks */,
+				58AC1E35218FEFB100B4CA8F /* CloudKit.framework in Frameworks */,
 				F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
 				F179A25020AF9775002D5539 /* libKCKeepAwake.a in Frameworks */,
 				0E617E4F20A2FAE4007A3A24 /* libRNDocumentPicker.a in Frameworks */,
@@ -989,7 +993,6 @@
 				58908AAD20A18A5A00C0064A /* libRCTBlob.a in Frameworks */,
 				58908AAE20A18A5A00C0064A /* libRCTAnimation.a in Frameworks */,
 				58908AAF20A18A5A00C0064A /* libReact.a in Frameworks */,
-				5824028B21393018001206A2 /* CloudKit.framework in Frameworks */,
 				58908AAE20A18A5A00C0064A /* libRCTAnimation.a in Frameworks */,
 				58908AB020A18A5A00C0064A /* libRCTActionSheet.a in Frameworks */,
 				58908AB220A18A5A00C0064A /* libRCTImage.a in Frameworks */,
@@ -1141,6 +1144,7 @@
 				588E9D3B216C643D00F0E5D9 /* InfoPlist.strings */,
 				58CB488F201EC5670058B364 /* Bitmark.entitlements */,
 				58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */,
+				58AC1D97218C529400B4CA8F /* Bitmark-dev.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				58FC1E54201B21CC00F60AF9 /* Bitmark-Bridging-Header.h */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -1150,6 +1154,7 @@
 				580FF1512146345A00B36DE7 /* Info-dev.plist */,
 				58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
+				58AC1D2F218C3B2E00B4CA8F /* iCloudSync */,
 				58CB4890201EC62E0058B364 /* Keychain */,
 				588FE263205FB71000937D78 /* OtherUtilities */,
 				58FC1E27201B21AC00F60AF9 /* RNModules */,
@@ -1184,6 +1189,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */,
 				5841D64D21884AB9006CDCA4 /* RSKImageCropper.framework */,
 				5841D64B21884AB2006CDCA4 /* QBImagePicker.framework */,
 				5841D64921884AAA006CDCA4 /* RSKImageCropper.framework */,
@@ -1196,7 +1202,6 @@
 				F1CE35272186B89700648551 /* RSKImageCropper.framework */,
 				F1CE35252186B88100648551 /* QBImagePicker.framework */,
 				F1CE35232186B87A00648551 /* RSKImageCropper.framework */,
-				5824028A21393018001206A2 /* CloudKit.framework */,
 				F1D09CF7207707BF008B16EE /* libz.tbd */,
 				58557E6A2062041C00402734 /* HealthKit.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
@@ -1284,6 +1289,13 @@
 				588FE26D205FB71000937D78 /* PhotoExporting.m */,
 			);
 			path = OtherUtilities;
+			sourceTree = "<group>";
+		};
+		58AC1D2F218C3B2E00B4CA8F /* iCloudSync */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = iCloudSync;
 			sourceTree = "<group>";
 		};
 		58BA32812186C434007E35FE /* Crypto */ = {
@@ -1711,6 +1723,11 @@
 					5805EDEC216F31B900943FA5 = {
 						DevelopmentTeam = A52M7AQ8B2;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					58908A7820A18A5A00C0064A = {
 						DevelopmentTeam = A52M7AQ8B2;
@@ -2378,6 +2395,7 @@
 				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
 				"${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework",
 				"${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework",
+				"${BUILT_PRODUCTS_DIR}/iCloudDocumentSync/iCloudDocumentSync.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
@@ -2387,6 +2405,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TesseractOCR.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TweetNacl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iCloudDocumentSync.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2468,6 +2487,7 @@
 				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
 				"${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework",
 				"${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework",
+				"${BUILT_PRODUCTS_DIR}/iCloudDocumentSync/iCloudDocumentSync.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -2475,6 +2495,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TesseractOCR.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TweetNacl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iCloudDocumentSync.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2488,15 +2509,15 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2514,6 +2535,7 @@
 				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
 				"${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework",
 				"${BUILT_PRODUCTS_DIR}/TweetNacl/TweetNacl.framework",
+				"${BUILT_PRODUCTS_DIR}/iCloudDocumentSync/iCloudDocumentSync.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -2521,6 +2543,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TesseractOCR.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TweetNacl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iCloudDocumentSync.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2556,11 +2579,13 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
 			);
@@ -2578,17 +2603,17 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3004,7 +3029,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-beta.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -3045,7 +3070,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-beta.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Bitmark/Bitmark-dev.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;

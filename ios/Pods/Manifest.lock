@@ -4,6 +4,7 @@ PODS:
   - HockeySDK (5.1.4):
     - HockeySDK/DefaultLib (= 5.1.4)
   - HockeySDK/DefaultLib (5.1.4)
+  - iCloudDocumentSync (7.4.1)
   - Intercom (5.1.5)
   - KeychainAccess (3.1.2)
   - TesseractOCRiOS (4.0.0)
@@ -12,6 +13,7 @@ PODS:
 DEPENDENCIES:
   - BitmarkSDK (from `https://github.com/bitmark-inc/bitmark-sdk-swift.git`, branch `v1`)
   - HockeySDK
+  - iCloudDocumentSync
   - Intercom
   - KeychainAccess
   - TesseractOCRiOS (from `https://github.com/gali8/Tesseract-OCR-iOS.git`)
@@ -19,6 +21,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - HockeySDK
+    - iCloudDocumentSync
     - Intercom
     - KeychainAccess
     - TweetNacl
@@ -41,11 +44,12 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   BitmarkSDK: 3234949ba38f292e9ac3bd5d13a8981b182990a1
   HockeySDK: 15afe6bc0a5bfe3a531fd73dbf082095f37dac3b
+  iCloudDocumentSync: 961aac30ca09c221de4c236e94dae69912f2c589
   Intercom: 0a0ec9a30a12802c56ff02bb98ddf6f047035c68
   KeychainAccess: b3816fddcf28aa29d94b10ec305cd52be14c472b
   TesseractOCRiOS: 729989db3984bb60ba3addb053569b172d48c409
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
-PODFILE CHECKSUM: 3b7d4193b0b8f7a33526807aab051cff9c66a598
+PODFILE CHECKSUM: 8a496ddbe226737387fb9442064cf850f3e0a0c2
 
 COCOAPODS: 1.5.3
