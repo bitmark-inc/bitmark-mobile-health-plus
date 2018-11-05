@@ -412,7 +412,7 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 
-const doOpenApp = async () => {
+const doOpenApp = async (justCreatedBitmarkAccount) => {
   // await UserModel.doRemoveUserInfo();
   userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
@@ -483,6 +483,16 @@ const doOpenApp = async () => {
     websocket.onclose = (e) => {
       console.log('websocket closed:', e.code, e.reason);
     };
+
+    if (justCreatedBitmarkAccount) {
+      await AccountModel.doMarkMigration(jwt);
+      didMigrationFileToLocalStorage = true;
+    } else {
+      didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
+      if (!didMigrationFileToLocalStorage) {
+        EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
+      }
+    }
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
 
@@ -917,7 +927,7 @@ const doCombineImages = async (images) => {
   await PDFScanner.pdfCombine(listFilePath, tempFilePath);
   return tempFilePath;
 }
-  const doMetricOnScreen = async (isActive) => {
+const doMetricOnScreen = async (isActive) => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   let onScreenAt = appInfo.onScreenAt;

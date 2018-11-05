@@ -108,10 +108,10 @@ class MainEventsHandlerComponent extends Component {
       }
       this.setState({ passTouchFaceId });
       if (passTouchFaceId && this.state.networkStatus) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
+        EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus: this.state.networkStatus, justCreatedBitmarkAccount });
       }
     } else if (this.state.networkStatus) {
-      EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
+      EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus: this.state.networkStatus, justCreatedBitmarkAccount });
     }
   }
 
@@ -167,10 +167,10 @@ class MainEventsHandlerComponent extends Component {
           let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
           this.setState({ passTouchFaceId });
           if (passTouchFaceId) {
-            EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkStatus);
+            EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus });
           }
         } else {
-          EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkStatus);
+          EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus });
         }
       });
     }
@@ -462,7 +462,7 @@ export class MainComponent extends Component {
     return false;
   }
 
-  doOpenApp(networkStatus, justCreatedBitmarkAccount) {
+  doOpenApp({ networkStatus, justCreatedBitmarkAccount }) {
     if (!networkStatus) {
       return;
     }
