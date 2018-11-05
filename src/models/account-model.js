@@ -48,6 +48,9 @@ const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platfor
       body: JSON.stringify({ platform, token, client, intercom_user_id }),
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -73,6 +76,9 @@ const doDeregisterNotificationInfo = (accountNumber, timestamp, signature, token
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -98,6 +104,9 @@ const doTryRegisterAccount = (accountNumber, timestamp, signature) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -120,6 +129,9 @@ const doTryGetAppVersion = () => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -164,6 +176,9 @@ let doRegisterJWT = (accountNumber, timestamp, signature) => {
       })
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -187,6 +202,9 @@ let doDeleteAccount = (jwt) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -210,6 +228,9 @@ let doGrantingAccess = (jwt) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -234,6 +255,9 @@ let doReceiveGrantingAccess = (jwt, token, body) => {
       body: JSON.stringify(body || {})
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 500) {
@@ -259,6 +283,9 @@ let doRevokeGrantingAccess = (jwt, token) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -282,6 +309,9 @@ let doGetAllGrantedAccess = (accountNumber) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -305,6 +335,9 @@ let doGetWaitingGrantedAccess = (jwt) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -330,6 +363,9 @@ let doRemoveGrantingAccess = (from, to, requester, timestamp, signature) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -354,6 +390,9 @@ let doCancelGrantingAccess = (jwt, token) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -377,6 +416,9 @@ let doGetAllEmailRecords = (jwt) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -406,6 +448,9 @@ let doDeleteEmailRecord = (jwt, id) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -430,6 +475,9 @@ const doCheckMigration = (jwt) => {
       },
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -456,6 +504,9 @@ const doMarkMigration = (jwt) => {
       })
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
