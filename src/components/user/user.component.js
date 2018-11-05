@@ -99,13 +99,10 @@ class PrivateUserComponent extends Component {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       });
 
-      for (let i = 0; i < listInfo.length; i++) {
-        await generateThumbnail(listInfo[i].filePath, bitmarks[i].id, isCombineFile);
-      }
-
       if (bitmarks) {
-        for (let info of listInfo) {
-          FileUtil.removeSafe(info.filePath);
+        for (let i = 0; i < listInfo.length; i++) {
+          await generateThumbnail(listInfo[i].filePath, bitmarks[i].id, isCombineFile);
+          FileUtil.removeSafe(listInfo[i].filePath);
         }
         return listAssetName;
       }
@@ -221,7 +218,7 @@ class PrivateUserComponent extends Component {
         await generateThumbnail(filePath, bitmarkId, isMultipleAsset);
 
         if (willDetectAssetNameAutomatically) {
-          Actions.assetNameInform({assetName});
+          Actions.assetNameInform({ assetName });
         } else {
           Actions.pop();
         }
