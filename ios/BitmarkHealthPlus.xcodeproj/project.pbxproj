@@ -197,6 +197,9 @@
 		58AC1DF7218FEFAC00B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
 		58AC1E35218FEFB100B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
 		58AC1E36218FF0DF00B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
+		58AC1ED821901F7800B4CA8F /* iCloudSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC1ED721901F7800B4CA8F /* iCloudSync.m */; };
+		58AC1ED921901F7800B4CA8F /* iCloudSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC1ED721901F7800B4CA8F /* iCloudSync.m */; };
+		58AC1EDA21901F7800B4CA8F /* iCloudSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC1ED721901F7800B4CA8F /* iCloudSync.m */; };
 		58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		58BA32BF2186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
 		58BA32C02186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
@@ -813,6 +816,8 @@
 		58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-beta.plist"; sourceTree = "<group>"; };
 		58AC1D97218C529400B4CA8F /* Bitmark-dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Bitmark-dev.entitlements"; path = "Bitmark/Bitmark-dev.entitlements"; sourceTree = "<group>"; };
 		58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		58AC1ED621901F7800B4CA8F /* iCloudSync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudSync.h; sourceTree = "<group>"; };
+		58AC1ED721901F7800B4CA8F /* iCloudSync.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iCloudSync.m; sourceTree = "<group>"; };
 		58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "Bitmark-beta.entitlements"; path = "Bitmark/Bitmark-beta.entitlements"; sourceTree = "<group>"; };
 		58BA32BD2186C457007E35FE /* AESDecrypt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AESDecrypt.h; sourceTree = "<group>"; };
 		58BA32BE2186C457007E35FE /* AESDecrypt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AESDecrypt.m; sourceTree = "<group>"; };
@@ -1154,7 +1159,6 @@
 				580FF1512146345A00B36DE7 /* Info-dev.plist */,
 				58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
-				58AC1D2F218C3B2E00B4CA8F /* iCloudSync */,
 				58CB4890201EC62E0058B364 /* Keychain */,
 				588FE263205FB71000937D78 /* OtherUtilities */,
 				58FC1E27201B21AC00F60AF9 /* RNModules */,
@@ -1291,9 +1295,11 @@
 			path = OtherUtilities;
 			sourceTree = "<group>";
 		};
-		58AC1D2F218C3B2E00B4CA8F /* iCloudSync */ = {
+		58AC1ED521901F5C00B4CA8F /* iCloudSync */ = {
 			isa = PBXGroup;
 			children = (
+				58AC1ED621901F7800B4CA8F /* iCloudSync.h */,
+				58AC1ED721901F7800B4CA8F /* iCloudSync.m */,
 			);
 			path = iCloudSync;
 			sourceTree = "<group>";
@@ -1365,6 +1371,7 @@
 		58FC1E27201B21AC00F60AF9 /* RNModules */ = {
 			isa = PBXGroup;
 			children = (
+				58AC1ED521901F5C00B4CA8F /* iCloudSync */,
 				58BA32812186C434007E35FE /* Crypto */,
 				58DBAEB121798495005B0E32 /* PDFScanner */,
 				0E7371A621747877009022CC /* RNTextDetector */,
@@ -2657,6 +2664,7 @@
 				588FE24F205FB45500937D78 /* RCTAppleHealthKit+Methods_Results.m in Sources */,
 				588FE251205FB45500937D78 /* RCTAppleHealthKit+Utils.m in Sources */,
 				588FE272205FB71000937D78 /* LocaleUnit.m in Sources */,
+				58AC1ED821901F7800B4CA8F /* iCloudSync.m in Sources */,
 				588FE259205FB45500937D78 /* HKDevice+Exporting.m in Sources */,
 				58BA32BF2186C457007E35FE /* AESDecrypt.m in Sources */,
 				588FE23D205FB45500937D78 /* RCTAppleHealthKit+Methods_Body.m in Sources */,
@@ -2695,6 +2703,7 @@
 				5805EDF0216F31B900943FA5 /* RCTAppleHealthKit+Methods_Results.m in Sources */,
 				5805EDF1216F31B900943FA5 /* RCTAppleHealthKit+Utils.m in Sources */,
 				5805EDF2216F31B900943FA5 /* LocaleUnit.m in Sources */,
+				58AC1EDA21901F7800B4CA8F /* iCloudSync.m in Sources */,
 				5805EDF4216F31B900943FA5 /* HKDevice+Exporting.m in Sources */,
 				58BA32C12186C457007E35FE /* AESDecrypt.m in Sources */,
 				5805EDF5216F31B900943FA5 /* RCTAppleHealthKit+Methods_Body.m in Sources */,
@@ -2733,6 +2742,7 @@
 				58908A7C20A18A5A00C0064A /* RCTAppleHealthKit+Methods_Results.m in Sources */,
 				58908A7D20A18A5A00C0064A /* RCTAppleHealthKit+Utils.m in Sources */,
 				58908A7E20A18A5A00C0064A /* LocaleUnit.m in Sources */,
+				58AC1ED921901F7800B4CA8F /* iCloudSync.m in Sources */,
 				58908A8020A18A5A00C0064A /* HKDevice+Exporting.m in Sources */,
 				58BA32C02186C457007E35FE /* AESDecrypt.m in Sources */,
 				58908A8120A18A5A00C0064A /* RCTAppleHealthKit+Methods_Body.m in Sources */,
