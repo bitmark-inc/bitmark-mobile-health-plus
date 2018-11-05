@@ -130,7 +130,7 @@ export class BitmarkDetailComponent extends Component {
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                     <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({
                       filePath: this.state.filePath,
-                      title: moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()
+                      title: this.props.bitmark.asset.name
                     })}>
                       <Image style={styles.bitmarkImage} source={{ uri: this.state.thumbnail ? this.state.thumbnail : this.state.filePath }} /></TouchableOpacity>}
                   {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>
