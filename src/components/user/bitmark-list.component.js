@@ -186,7 +186,8 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     color: 'white',
     position: 'absolute',
-    top: 67
+    top: 67,
+    zIndex: 2,
   },
   bitmarksContainer: {
     justifyContent: 'flex-start',
@@ -216,12 +217,14 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     position: 'absolute',
     top: 5,
-    right: 5
+    right: 5,
+    zIndex: 2,
   },
   indicator: {
     position: 'absolute',
     top: convertWidth(35),
-    left: convertWidth(35)
+    left: convertWidth(35),
+    zIndex: 2,
   }
 });
 
