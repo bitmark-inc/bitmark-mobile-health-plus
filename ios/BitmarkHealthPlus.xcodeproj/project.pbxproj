@@ -14,6 +14,10 @@
 		00E356F31AD99517003FC87E /* BitmarkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BitmarkTests.m */; };
 		0E25DDFC20F470EB00635A33 /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
 		0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
+		0E34934C21902D9F00796D52 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2A2189882600816D2E /* libSQLite.a */; };
+		0E34938A21902DA500796D52 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */; };
+		0E34938B21902DAE00796D52 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2A2189882600816D2E /* libSQLite.a */; };
+		0E34938C21902DB300796D52 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */; };
 		0E3544882186A9EB005AEB12 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */; };
 		0E3544892186A9F7005AEB12 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */; };
 		0E35448A2186AA05005AEB12 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */; };
@@ -898,6 +902,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E34938A21902DA500796D52 /* libsqlite3.0.tbd in Frameworks */,
+				0E34934C21902D9F00796D52 /* libSQLite.a in Frameworks */,
 				0E35448A2186AA05005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B272188063200A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B42186AEBB00630294 /* libimageCropPicker.a in Frameworks */,
@@ -941,6 +947,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E34938C21902DB300796D52 /* libsqlite3.0.tbd in Frameworks */,
+				0E34938B21902DAE00796D52 /* libSQLite.a in Frameworks */,
 				0E3544892186A9F7005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B282188063900A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B22186AEAD00630294 /* libimageCropPicker.a in Frameworks */,
