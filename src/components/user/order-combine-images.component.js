@@ -14,6 +14,42 @@ import { AppProcessor } from '../../processors';
 import { EventEmitterService } from '../../services';
 import moment from 'moment';
 
+
+class ItemOrderImageComponent extends Component {
+  static propTypes = {
+    uri: PropTypes.string,
+    index: PropTypes.number,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      index: this.props.index,
+      uri: this.props.uri,
+    }
+  }
+
+  changeData({ uri, index }) {
+    uri = uri || this.state.uri;
+    this.setState({ uri, index });
+  }
+
+  render() {
+    console.log('ItemOrderImageComponent state :', this.state);
+    return (<View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}  >
+      <View style={{
+        position: 'absolute', bottom: 5, right: 5, height: convertWidth(15), width: convertWidth(30),
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        alignItems: 'center', justifyContent: 'center',
+        borderRadius: convertWidth(7.5), borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.6)'
+      }}>
+        <Text style={{ color: 'white', flex: 1, fontSize: 10, }}> {this.state.index + 1}</Text>
+      </View>
+      <Image style={{ width: convertWidth(109), height: convertWidth(109), resizeMode: 'contain' }} source={{ uri: this.state.uri }} />
+    </View>);
+  }
+}
+
 export class OrderCombineImagesComponent extends Component {
   static propTypes = {
     images: PropTypes.array,
@@ -23,6 +59,7 @@ export class OrderCombineImagesComponent extends Component {
   constructor(props) {
     super(props);
     this.state = { type: 'combine', scrollEnabled: true, itemOrder: null, };
+    this.itemOrderImageRefs = {};
   }
 
   async continue() {
@@ -44,6 +81,9 @@ export class OrderCombineImagesComponent extends Component {
 
   newOrder({ itemOrder }) {
     this.setState({ scrollEnabled: true, itemOrder: itemOrder });
+    for (let index in this.itemOrderImageRefs) {
+      this.itemOrderImageRefs[index].changeData({ index: parseInt(itemOrder[index].key) })
+    }
   }
 
   render() {
@@ -67,11 +107,9 @@ export class OrderCombineImagesComponent extends Component {
                 onDragRelease={this.newOrder.bind(this)}
                 onDragStart={() => this.setState({ scrollEnabled: false })} >
                 {
-                  this.props.images.map((imageInfo, index) =>
-                    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }} key={index} >
-                      <Image style={{ width: convertWidth(109), height: convertWidth(109), resizeMode: 'contain' }} source={{ uri: imageInfo.uri }} />
-                    </View>
-                  )
+                  this.props.images.map((imageInfo, index) => {
+                    return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => this.itemOrderImageRefs[index] = ref} />);
+                  })
                 }
               </SortableGrid>
             </ScrollView>
