@@ -18,6 +18,7 @@ const isIPhoneX = (currentSize.height === 812);
 let config = {
   isIPhoneX,
   network,
+  localization: DeviceInfo.getDeviceLocale(),
 
   NETWORKS,
   bitmark_network: NETWORKS.testnet,

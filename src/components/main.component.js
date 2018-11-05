@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DeviceInfo from 'react-native-device-info';
 
 import {
   View, Text, TouchableOpacity,
@@ -179,7 +178,6 @@ class MainEventsHandlerComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
-      i18n.locale = DeviceInfo.getDeviceLocale();
       this.doTryConnectInternet();
       runPromiseWithoutError(DataProcessor.doMetricOnScreen(true));
     }
