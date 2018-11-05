@@ -368,7 +368,7 @@ class MainEventsHandlerComponent extends Component {
               color: 'white', fontWeight: '900', fontSize: 16,
               backgroundColor: '#FF4444', padding: 10,
               textAlign: 'center',
-            }}>PLEASE AUTHORIZE</Text>
+            }}>{i18n.t('MainComponent_pleaseAuthorizeText​')}</Text>
           </TouchableOpacity>
         </BitmarkDialogComponent>}
         {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
