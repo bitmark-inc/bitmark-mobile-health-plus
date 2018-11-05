@@ -3,10 +3,19 @@ import { NativeModules } from 'react-native';
 const iCloudSyncNative = NativeModules.iCloudSync;
 
 const iCloudSyncAdapter = {
-  syncCloudFile: (folderPath) => {
+  uploadToCloud: (folderPath) => {
     return new Promise((resolve) => {
-      iCloudSyncNative.syncCloudFile(folderPath, (ok) => {
-        console.log('I cloud sync result:', ok);
+      iCloudSyncNative.uploadToCloud(folderPath, (ok) => {
+        console.log('upload to cloud result:', ok);
+      });
+      resolve();
+    });
+  },
+
+  syncCloud: () => {
+    return new Promise((resolve) => {
+      iCloudSyncNative.syncCloud((ok) => {
+        console.log('sync with cloud result:', ok);
       });
       resolve();
     });
