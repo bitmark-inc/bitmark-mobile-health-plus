@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
 
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
     color: 'white',

@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '900',
     fontSize: 34,
   },
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   rowButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   }

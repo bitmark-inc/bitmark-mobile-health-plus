@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -94,17 +94,17 @@ const styles = StyleSheet.create({
 
   },
   description: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontSize: 16,
     marginTop: 30,
   },
   fullAccountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Book',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Book',
     fontSize: 16,
     marginTop: 25,
   },
   fullAccountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Andale Mono',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
     fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
@@ -118,12 +118,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   shortAccountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Book',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Book',
     fontSize: 16,
     marginTop: 40,
   },
   shortAccountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Andale Mono',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
     fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   viewOnRegistryButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '400',
     fontSize: 16,
     color: 'black'

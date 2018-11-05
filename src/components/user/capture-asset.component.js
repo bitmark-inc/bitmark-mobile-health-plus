@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   headerTitle: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     fontSize: 28,
     fontWeight: '900',
     color: 'white',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

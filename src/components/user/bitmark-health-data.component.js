@@ -88,14 +88,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '900',
     fontSize: 36,
     color: '#464646',
   },
   message: {
     marginTop: 24,
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444'
   },
   signButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: 'white'

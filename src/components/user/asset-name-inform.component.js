@@ -69,18 +69,18 @@ const styles = StyleSheet.create({
     flex: 1
   },
   headerText: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     fontSize: 36,
     fontWeight: '900'
   },
   description: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir light',
     fontSize: 16,
     fontWeight: '300',
     marginTop: 20,
   },
   assetName: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir medium',
     fontSize: 16,
     fontWeight: '800',
     marginTop: 20,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

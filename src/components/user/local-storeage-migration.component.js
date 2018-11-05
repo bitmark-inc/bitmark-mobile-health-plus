@@ -88,14 +88,14 @@ const styles = StyleSheet.create({
   updatingStatus: {
     fontSize: 16,
     fontWeight: '900',
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     color: '#A4B5CD'
   },
 
   completedStatus: {
     fontSize: 16,
     fontWeight: '900',
-    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     color: '#0060F2'
   },
 

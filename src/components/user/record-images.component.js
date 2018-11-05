@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between',
   },
   titleText: {
-    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black', color: 'white',
+    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black', color: 'white',
   },
   combineCheckbox: {
     width: '100%',
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     flex: 1,
-    fontSize: 16, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black', color: 'white',
+    fontSize: 16, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black', color: 'white',
     paddingLeft: 16, paddingRight: 16,
   },
 
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: config.isIPhoneX ? 44 : 20,
   },
   nextButtonText: {
-    fontSize: 16, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Heavy', color: 'white',
+    fontSize: 16, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy', color: 'white',
   },
 
 });

@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   paginationText: {
-    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black', color: 'white',
+    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black', color: 'white',
   },
   footer: {
     padding: 20, paddingTop: 40, paddingBottom: 40,
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   buttonText: {
-    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black', color: 'white',
+    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black', color: 'white',
   },
   captureIcon: {
     width: convertWidth(68),
