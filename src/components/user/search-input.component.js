@@ -69,8 +69,7 @@ export class SearchInputComponent extends Component {
                 searchTerm: ''
               })
             }}>
-              {/*TODO: localization*/}
-              <Text style={styles.clearButtonText}>Cancel</Text>
+              <Text style={styles.clearButtonText}>{global.i18n.t("SearchInputComponent_cancel")}</Text>
             </TouchableOpacity>
           </View>
           : null
