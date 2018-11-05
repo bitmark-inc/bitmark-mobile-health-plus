@@ -18,6 +18,8 @@
 		0E3544892186A9F7005AEB12 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */; };
 		0E35448A2186AA05005AEB12 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3544572186A9CE005AEB12 /* libRCTImageResizer.a */; };
 		0E4065AB2091E23B005E1CBD /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
+		0E4B7F2B2189889000816D2E /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2A2189882600816D2E /* libSQLite.a */; };
+		0E4B7F2D218988D200816D2E /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */; };
 		0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		0E617E4F20A2FAE4007A3A24 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
 		0E7371A921747877009022CC /* RNTextDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7371A821747877009022CC /* RNTextDetector.m */; };
@@ -295,6 +297,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = E01DD9DB1D2311A600C39062;
 			remoteInfo = RNDocumentPicker;
+		};
+		0E4B7F292189882600816D2E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0E4B7EE82189882600816D2E /* SQLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E23D7B471ACEFE2A00C59171;
+			remoteInfo = SQLite;
 		};
 		0E608BDA20F3126700F40874 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -727,6 +736,8 @@
 		00E356F21AD99517003FC87E /* BitmarkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkTests.m; sourceTree = "<group>"; };
 		0E3544472186A9CE005AEB12 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
+		0E4B7EE82189882600816D2E /* SQLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SQLite.xcodeproj; path = "../node_modules/react-native-sqlite-storage/src/ios/SQLite.xcodeproj"; sourceTree = "<group>"; };
+		0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNExitApp.xcodeproj; path = "../node_modules/react-native-exit-app/ios/RNExitApp.xcodeproj"; sourceTree = "<group>"; };
 		0E7371A721747877009022CC /* RNTextDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTextDetector.h; sourceTree = "<group>"; };
 		0E7371A821747877009022CC /* RNTextDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTextDetector.m; sourceTree = "<group>"; };
@@ -973,6 +984,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E4B7F2D218988D200816D2E /* libsqlite3.0.tbd in Frameworks */,
+				0E4B7F2B2189889000816D2E /* libSQLite.a in Frameworks */,
 				0E3544882186A9EB005AEB12 /* libRCTImageResizer.a in Frameworks */,
 				F1F87B262188062D00A363D1 /* libReactNativeViewPDF.a in Frameworks */,
 				F1EA75B32186AEB500630294 /* libimageCropPicker.a in Frameworks */,
@@ -1091,6 +1104,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0E4B7EE92189882600816D2E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0E4B7F2A2189882600816D2E /* libSQLite.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0E608BA520F3126700F40874 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1189,6 +1210,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */,
 				58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */,
 				5841D64D21884AB9006CDCA4 /* RSKImageCropper.framework */,
 				5841D64B21884AB2006CDCA4 /* QBImagePicker.framework */,
@@ -1406,6 +1428,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0E4B7EE82189882600816D2E /* SQLite.xcodeproj */,
 				0E3544472186A9CE005AEB12 /* RCTImageResizer.xcodeproj */,
 				F1F87AE52188062100A363D1 /* ReactNativeViewPDF.xcodeproj */,
 				F1EA756F2186AEA100630294 /* imageCropPicker.xcodeproj */,
@@ -1874,6 +1897,10 @@
 					ProductGroup = F15C1CDB2063B9B6002DDF98 /* Products */;
 					ProjectRef = F15C1CDA2063B9B6002DDF98 /* RNZipArchive.xcodeproj */;
 				},
+				{
+					ProductGroup = 0E4B7EE92189882600816D2E /* Products */;
+					ProjectRef = 0E4B7EE82189882600816D2E /* SQLite.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1933,6 +1960,13 @@
 			fileType = archive.ar;
 			path = libRNDocumentPicker.a;
 			remoteRef = 0E4065A92091E015005E1CBD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0E4B7F2A2189882600816D2E /* libSQLite.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSQLite.a;
+			remoteRef = 0E4B7F292189882600816D2E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0E608BDB20F3126700F40874 /* libRNExitApp.a */ = {

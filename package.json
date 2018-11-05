@@ -45,6 +45,7 @@
     "react-native-qrcode": "^0.2.7",
     "react-native-router-flux": "^4.0.1",
     "react-native-sortable-grid": "^2.0.0",
+    "react-native-sqlite-storage": "^3.3.7",
     "react-native-swiper": "^1.5.13",
     "react-native-video": "^3.2.0",
     "react-native-view-pdf": "^0.5.4",

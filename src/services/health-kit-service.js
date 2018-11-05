@@ -382,7 +382,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     await FileUtil.create(`${encryptedAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
 
     issueResult.bitmarkIds.forEach(id => {
-      results.push({ id, sessionData: issueResult.sessionData });
+      results.push({ id, sessionData: issueResult.sessionData, healthData });
     });
   }
   return results;
