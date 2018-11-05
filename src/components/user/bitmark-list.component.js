@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   accountNumberDisplayText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Heavy',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
     flex: 1,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     padding: 3
   },
   bitmarkPending: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
     fontSize: 14,
     fontStyle: 'italic',
     fontWeight: '300',

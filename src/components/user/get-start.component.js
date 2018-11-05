@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   // getStart
   getStartTitle: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
     color: '#FF4444',
     fontSize: 17,
     fontWeight: '900',
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   getStartDescription: {
     marginTop: 25,
     width: convertWidth(296),
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir light',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
     textAlign: 'center',
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   enableButtonText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

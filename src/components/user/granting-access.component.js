@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     paddingTop: convertWidth(15),
   },
   titleText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -139,13 +139,13 @@ const styles = StyleSheet.create({
     paddingTop: convertWidth(35),
   },
   message: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 35,
   },
   messageEmail: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 20,

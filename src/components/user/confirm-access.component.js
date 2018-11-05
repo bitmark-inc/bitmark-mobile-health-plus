@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     paddingTop: convertWidth(15),
   },
   titleText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
     color: 'white',
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     paddingTop: convertWidth(15),
   },
   message: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
     fontWeight: '300',
     fontSize: 12,
     color: 'white',
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
 
   },
   bottomButtonText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
     fontWeight: '900',
     fontSize: 16,
     color: 'white'

@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     paddingBottom: convertWidth(10),
   },
   accountNumberTitle: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -297,13 +297,13 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   accountNumberValue: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Andale Mono',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Andale Mono',
     fontSize: 14,
     marginTop: 15,
     color: '#FF1F1F'
   },
   accountNumberLabel: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
     fontSize: 16,
     color: '#6D6D72',
   },
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   accountNumberCopiedText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
     fontWeight: '600',
     fontSize: 14,
     color: '#0064FC',
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     minWidth: 54,
   },
   accountNumberShareButtonText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
     fontWeight: '600',
     fontSize: 14,
     color: '#0064FC',
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
   },
   accountNumberDescription: {
     marginTop: 12,
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     paddingBottom: 45,
   },
   securityTitle: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 34,
   },
@@ -356,12 +356,12 @@ const styles = StyleSheet.create({
   //   paddingBottom: 20,
   // },
   // accessTitle: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Avenir Black',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Avenir Black',
   //   fontWeight: '900',
   //   fontSize: 34,
   // },
   // accessDescription: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Avenir Book',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Avenir Book',
   //   fontWeight: '300',
   //   fontSize: 16,
   //   marginTop: 10,
@@ -372,12 +372,12 @@ const styles = StyleSheet.create({
   //   marginTop: 12,
   // },
   // accessAccountNumber: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Andale Mono',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Andale Mono',
   //   fontSize: 14,
   //   color: '#0060F2',
   // },
   // accessRevokeButtonText: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Andale Mono',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Andale Mono',
   //   fontSize: 14,
   //   color: '#FF003C',
   // },
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
   //   justifyContent: 'center',
   // },
   // addGrandAccessButtonText: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Avenir Heavy',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Avenir Heavy',
   //   fontWeight: '900',
   //   fontSize: 16,
   //   color: 'white',
@@ -403,12 +403,12 @@ const styles = StyleSheet.create({
   //   paddingBottom: 20,
   // },
   // accessOtherAccountTitle: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Avenir Black',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Avenir Black',
   //   fontWeight: '900',
   //   fontSize: 34,
   // },
   // accessOtherAccountDescription: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Avenir Book',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Avenir Book',
   //   fontWeight: '300',
   //   fontSize: 16,
   //   marginTop: 10,
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
   //   marginTop: 12,
   // },
   // accessOtherAccountAccountNumber: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Andale Mono',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Andale Mono',
   //   fontSize: 14,
   //   color: '#0060F2',
   // },
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
   //   justifyContent: 'center',
   // },
   // addOtherAccountButtonText: {
-  //   fontFamily:  config.localization === 'vi-US' ? null : 'Avenir Heavy',
+  //   fontFamily:  config.localization.startsWith('vi') ? null : 'Avenir Heavy',
   //   fontWeight: '900',
   //   fontSize: 16,
   //   color: 'white',
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   aboutTitle: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 34,
   },
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   rowButtonText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
     fontWeight: '400',
     fontSize: 16,
     color: 'black'

@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   accountNumberDisplayText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Heavy',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     padding: convertWidth(20),
   },
   dataTitle: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
   },
   addHealthRecordButtonText: {
     marginLeft: convertWidth(6),
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   accountButtonText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     color: '#FF1F1F'

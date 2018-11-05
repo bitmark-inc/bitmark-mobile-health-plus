@@ -70,13 +70,13 @@ const styles = StyleSheet.create({
     paddingTop: convertWidth(15),
   },
   titleText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
     fontSize: 36,
     fontWeight: '900',
     color: 'white',
   },
   description: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
     fontSize: 16,
     color: 'white',
     marginTop: 70,
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   okButtonText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black',
     fontSize: 16,
     fontWeight: '900',
     color: '#FF4444',

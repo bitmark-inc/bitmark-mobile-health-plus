@@ -403,12 +403,12 @@ let mainStyle = StyleSheet.create({
   },
   emptyDataSourceTitle: {
     width: convertWidth(256),
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
   },
   emptyDataSourceDescription: {
     width: convertWidth(256),
     marginTop: 20,
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
   },
   emptyDataSourceOKButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
@@ -416,14 +416,14 @@ let mainStyle = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   emptyDataSourceOKButtonText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
   },
   emptyDataSourceLaterButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     width: convertWidth(260), marginTop: 10,
   },
   emptyDataSourceLaterButtonText: {
-    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
+    fontFamily: config.localization.startsWith('vi') ? null : 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
   },
 });
 
