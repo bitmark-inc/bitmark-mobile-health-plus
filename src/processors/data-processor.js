@@ -23,6 +23,7 @@ import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
 import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError } from '../utils';
 import PDFScanner from '../models/adapters/pdf-scanner';
+import iCloudSyncAdapter from '../models/adapters/icloud';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -414,6 +415,10 @@ const doDeactiveApplication = async () => {
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
   // await UserModel.doRemoveUserInfo();
+
+  await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets`);
+  runPromiseWithoutError(iCloudSyncAdapter.syncCloudFile(`${FileUtil.DocumentDirectory}/assets`));
+
   userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
