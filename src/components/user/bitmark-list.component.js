@@ -27,7 +27,7 @@ class PrivateBitmarkListComponent extends Component {
   }
 
   goToDetailScreen(bitmark, bitmarkType) {
-    Actions.bitmarkDetail({bitmark, bitmarkType});
+    Actions.bitmarkDetail({ bitmark, bitmarkType });
   }
 
   backToUserAccount() {
@@ -36,14 +36,14 @@ class PrivateBitmarkListComponent extends Component {
         Actions.reset('user');
       }
     }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
 
   downloadBitmark(asset) {
     if (asset.filePath) {
-      Share.share({title: i18n.t('BitmarkListComponent_shareTitle'), url: asset.filePath}).then(() => {
+      Share.share({ title: i18n.t('BitmarkListComponent_shareTitle'), url: asset.filePath }).then(() => {
       }).catch(error => {
         console.log('Share error:', error);
       })
@@ -56,10 +56,10 @@ class PrivateBitmarkListComponent extends Component {
     let isFileRecord = (bitmark) => { return bitmark.asset.metadata.Source === 'Medical Records' };
 
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
           <Text style={styles.accountNumberDisplayText}>
-            {i18n.t('BitmarkListComponent_accountNumberDisplayText', {accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length)})}
+            {i18n.t('BitmarkListComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
           </Text>
         </TouchableOpacity>}
         <SafeAreaView style={styles.bodySafeView}>
@@ -67,11 +67,11 @@ class PrivateBitmarkListComponent extends Component {
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
                 {this.props.bitmarkType === 'bitmark_health_data' &&
-                <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
+                  <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
                 {this.props.bitmarkType === 'bitmark_health_issuance' &&
-                <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText2')}</Text>}
+                  <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText2')}</Text>}
                 <TouchableOpacity style={styles.closeButton} onPress={() => Actions.reset('user')}>
-                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')}/>
+                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
                 </TouchableOpacity>
               </View>
 
@@ -83,23 +83,23 @@ class PrivateBitmarkListComponent extends Component {
                   data={this.props.bitmarkType === 'bitmark_health_data' ? this.props.healthDataBitmarks :
                     (this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.healthAssetBitmarks : [])}
                   extraData={this.props}
-                  renderItem={({item}) => {
+                  renderItem={({ item }) => {
                     return (
                       <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
                         isFileRecord(item) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)
                       }}>
                         {item && item.thumbnail && item.thumbnail.exists ?
                           <View>
-                            <Image style={styles.bitmarkThumbnail} source={{uri: `${item.thumbnail.path}`}}/>
+                            <Image style={styles.bitmarkThumbnail} source={{ uri: `${item.thumbnail.path}` }} />
                             {item.thumbnail.multiple &&
-                            <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')}/>
+                              <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')} />
                             }
                           </View>
                           :
-                          <Image style={styles.bitmarkThumbnail} source={this.props.bitmarkType === 'bitmark_health_data' ? require('./../../../assets/imgs/health_data_icon.png') : require('./../../../assets/imgs/unknown_file_type_icon.png')}/>
+                          <Image style={styles.bitmarkThumbnail} source={this.props.bitmarkType === 'bitmark_health_data' ? require('./../../../assets/imgs/health_data_icon.png') : require('./../../../assets/imgs/unknown_file_type_icon.png')} />
                         }
 
-                        {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32}/>}
+                        {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32} />}
                         {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
                       </TouchableOpacity>
                     );
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   accountNumberDisplayText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Heavy',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
     flex: 1,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     padding: 3
   },
   bitmarkPending: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontSize: 14,
     fontStyle: 'italic',
     fontWeight: '300',
@@ -235,9 +235,9 @@ export class BitmarkListComponent extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Provider store={UserBitmarksStore}>
-          <StoreBitmarkListComponent/>
+          <StoreBitmarkListComponent />
         </Provider>
       </View>
     );

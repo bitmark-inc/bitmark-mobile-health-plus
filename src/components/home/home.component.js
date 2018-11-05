@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   introductionTitle: {
     marginTop: 25,
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
     color: '#FF4444',
     fontSize: 17,
     fontWeight: '900',
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   },
   introductionDescription: {
     marginTop: 15,
-    fontFamily: 'Avenir light',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
     textAlign: 'center',
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   buttonText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     fontWeight: '900',
     color: 'white',
   },

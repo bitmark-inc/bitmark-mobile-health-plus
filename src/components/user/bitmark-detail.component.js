@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   accountNumberDisplayText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Heavy',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     paddingRight: 0,
   },
   titleText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     fontWeight: '900',
     flex: 1,
     fontSize: 24,
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   metadataTitle: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontWeight: '600',
     fontSize: 16,
     marginTop: 5,

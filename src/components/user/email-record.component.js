@@ -221,19 +221,19 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   title: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
     fontWeight: '900',
     fontSize: 36,
     color: '#464646',
   },
   message: {
     marginTop: 24,
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
   emailRecordItem: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     color: '#0060F1',
@@ -241,20 +241,20 @@ const styles = StyleSheet.create({
   },
 
   acceptedEmailRecordItem: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 20,
   },
   processingText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     fontWeight: '800',
     fontSize: 16,
     color: '#0060F1',
     marginTop: 16,
   },
   existingAssetMessage: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 20,
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     width: convertWidth(143),
   },
   acceptButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: 'white'
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   rejectButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: '#FF4444'
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444'
   },
   viewButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: 'white'

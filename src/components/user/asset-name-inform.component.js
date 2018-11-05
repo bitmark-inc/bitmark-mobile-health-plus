@@ -69,18 +69,18 @@ const styles = StyleSheet.create({
     flex: 1
   },
   headerText: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
     fontSize: 36,
     fontWeight: '900'
   },
   description: {
-    fontFamily: 'Avenir light',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir light',
     fontSize: 16,
     fontWeight: '300',
     marginTop: 20,
   },
   assetName: {
-    fontFamily: 'Avenir medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir medium',
     fontSize: 16,
     fontWeight: '800',
     marginTop: 20,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

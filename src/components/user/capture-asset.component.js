@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   headerTitle: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
     fontSize: 28,
     fontWeight: '900',
     color: 'white',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

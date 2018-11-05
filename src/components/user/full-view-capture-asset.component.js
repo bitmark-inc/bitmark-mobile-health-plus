@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
 
   },
   titleText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
     color: 'white',

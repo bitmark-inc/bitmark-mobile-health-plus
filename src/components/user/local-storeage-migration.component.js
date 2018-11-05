@@ -2,13 +2,13 @@ import React from 'react';
 import {
   View, Image, Text,
   StyleSheet,
-  Alert
 } from 'react-native';
 
 import { EventEmitterService } from '../../services';
 import { convertWidth } from '../../utils';
 import { Actions } from 'react-native-router-flux';
 import { DataProcessor } from '../../processors';
+import { config } from '../../configs';
 
 export class LocalStorageMigrationComponent extends React.Component {
   constructor(props) {
@@ -88,14 +88,14 @@ const styles = StyleSheet.create({
   updatingStatus: {
     fontSize: 16,
     fontWeight: '900',
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     color: '#A4B5CD'
   },
 
   completedStatus: {
     fontSize: 16,
     fontWeight: '900',
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     color: '#0060F2'
   },
 

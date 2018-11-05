@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   titleText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -94,17 +94,17 @@ const styles = StyleSheet.create({
 
   },
   description: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
     fontSize: 16,
     marginTop: 30,
   },
   fullAccountNumberLabel: {
-    fontFamily: 'Avenir Book',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Book',
     fontSize: 16,
     marginTop: 25,
   },
   fullAccountNumberValue: {
-    fontFamily: 'Andale Mono',
+    fontFamily: config.localization === 'vi-US' ? null : 'Andale Mono',
     fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
@@ -118,12 +118,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   shortAccountNumberLabel: {
-    fontFamily: 'Avenir Book',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Book',
     fontSize: 16,
     marginTop: 40,
   },
   shortAccountNumberValue: {
-    fontFamily: 'Andale Mono',
+    fontFamily: config.localization === 'vi-US' ? null : 'Andale Mono',
     fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   viewOnRegistryButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     fontWeight: '400',
     fontSize: 16,
     color: 'black'

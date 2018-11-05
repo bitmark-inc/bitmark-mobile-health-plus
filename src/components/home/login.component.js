@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Black',
     fontWeight: '900',
     fontSize: 18,
     paddingLeft: 3,
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   description: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
     fontWeight: '300',
     fontSize: 17,
     marginTop: 16,
@@ -419,14 +419,14 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     width: convertWidth(39),
     color: '#C1C1C1',
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
     fontWeight: '300',
     fontSize: 15,
   },
   recoveryPhraseWord: {
     flex: 1,
     backgroundColor: '#F5F5F5',
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Light',
     fontWeight: '300',
     color: '#FF4444',
     fontSize: 15,
@@ -438,12 +438,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   resultTitle: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Heavy',
     fontWeight: '900',
     fontSize: 15,
   },
   resultMessage: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Heavy',
     fontWeight: '300',
     fontSize: 15,
     textAlign: 'center',
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
   },
   switchFormMessage: {
     width: convertWidth(240),
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Medium',
     textAlign: 'center',
     fontSize: 14,
     color: '#0054FC',
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   submitButtonText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: config.localization === 'vi-US' ? null : 'Avenir Heavy',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',
