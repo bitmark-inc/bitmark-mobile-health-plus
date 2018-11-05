@@ -13,7 +13,7 @@
 
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(syncCloudFile:(NSString *)folder:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(uploadToCloudFile:(NSString *)folder:(RCTResponseSenderBlock)callback)
 {
   NSString *documentsDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
   NSString *localDocument = [documentsDirectory stringByAppendingPathComponent:folder];
@@ -28,6 +28,11 @@ RCT_EXPORT_METHOD(syncCloudFile:(NSString *)folder:(RCTResponseSenderBlock)callb
       callback(@[@YES]);
     }
   }];
+}
+
+RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
+{
+  [[iCloud sharedCloud] updateFiles];
 }
 
 @end
