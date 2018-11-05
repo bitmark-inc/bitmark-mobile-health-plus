@@ -37,14 +37,15 @@ class ItemOrderImageComponent extends Component {
   render() {
     return (<View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}  >
       <View style={{
-        position: 'absolute', bottom: 5, right: 5, height: convertWidth(15), width: convertWidth(30),
+        position: 'absolute', bottom: 10, right: 10, height: convertWidth(15), width: convertWidth(15),
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         alignItems: 'center', justifyContent: 'center',
-        borderRadius: convertWidth(7.5), borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.6)'
+        borderRadius: convertWidth(7.5), borderWidth: 1, borderColor: 'rgba(0,0,0,0)',
+        zIndex: 1,
       }}>
         <Text style={{ color: 'white', flex: 1, fontSize: 10, }}> {this.state.index + 1}</Text>
       </View>
-      <Image style={{ width: convertWidth(109), height: convertWidth(109), resizeMode: 'contain' }} source={{ uri: this.state.uri }} />
+      <Image style={{ width: convertWidth(109), height: convertWidth(109), resizeMode: 'cover' }} source={{ uri: this.state.uri }} />
     </View>);
   }
 }
