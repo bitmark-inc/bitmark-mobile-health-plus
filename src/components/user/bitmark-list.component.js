@@ -98,6 +98,7 @@ class PrivateBitmarkListComponent extends Component {
                           <Image style={styles.bitmarkThumbnail} source={this.props.bitmarkType === 'bitmark_health_data' ? require('./../../../assets/imgs/health_data_icon.png') : require('./../../../assets/imgs/unknown_file_type_icon.png')} />
                         }
 
+                        {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]}/>}
                         {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32} />}
                         {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
                       </TouchableOpacity>
@@ -199,9 +200,15 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   bitmarkThumbnail: {
-    width: 103,
-    height: 103,
-    resizeMode: 'stretch',
+    width: convertWidth(103),
+    height: convertWidth(103),
+    resizeMode: 'stretch'
+  },
+  thumbnailPendingCover: {
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    position: 'absolute',
+    top: 4,
+    zIndex: 1,
   },
   multipleFilesIcon: {
     width: 14,
@@ -213,8 +220,8 @@ const styles = StyleSheet.create({
   },
   indicator: {
     position: 'absolute',
-    top: 35,
-    left: 35
+    top: convertWidth(35),
+    left: convertWidth(35)
   }
 });
 

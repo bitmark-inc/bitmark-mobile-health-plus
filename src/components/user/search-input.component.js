@@ -53,7 +53,7 @@ export class SearchInputComponent extends Component {
             onSubmitEditing={this.props.onSubmitEditing}
             placeholder={this.props.placeholder}
             autoCorrect={false}
-            autoCapitalize={false}
+            autoCapitalize={'none'}
             type={'search'}
             value={this.state.searchTerm}
           >
@@ -145,5 +145,5 @@ SearchInputComponent.propTypes = {
   onSubmitEditing: PropTypes.func,
   throttle: PropTypes.number,
   value: PropTypes.string,
-  placeholder: PropTypes.placeholder,
+  placeholder: PropTypes.string,
 };
