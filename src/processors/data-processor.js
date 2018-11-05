@@ -23,6 +23,7 @@ import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
 import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError } from '../utils';
 import PDFScanner from '../models/adapters/pdf-scanner';
+import iCloudSyncAdapter from '../models/adapters/icloud';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -414,6 +415,10 @@ const doDeactiveApplication = async () => {
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
   // await UserModel.doRemoveUserInfo();
+
+  await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets`);
+  runPromiseWithoutError(iCloudSyncAdapter.syncCloud(`${FileUtil.DocumentDirectory}/assets`));
+
   userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
@@ -557,7 +562,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
-
+  runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud(`${FileUtil.DocumentDirectory}/assets`));
   return results;
 };
 
@@ -637,6 +642,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
   await doReloadUserData();
+  runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud(`${FileUtil.DocumentDirectory}/assets`));
   return results;
 };
 
@@ -899,6 +905,7 @@ const doMigrateFilesToLocalStorage = async () => {
 
   await AccountModel.doMarkMigration(jwt);
   didMigrationFileToLocalStorage = true;
+  runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud(`${FileUtil.DocumentDirectory}/assets`));
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
