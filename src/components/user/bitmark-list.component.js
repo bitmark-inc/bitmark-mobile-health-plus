@@ -6,7 +6,7 @@ import {
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList, Share,
 } from 'react-native';
 
-import { convertWidth } from '../../utils';
+import { convertWidth, isFileRecord } from '../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
 import { EventEmitterService } from '../../services';
@@ -53,7 +53,6 @@ class PrivateBitmarkListComponent extends Component {
   render() {
     let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
     let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
-    let isFileRecord = (bitmark) => { return bitmark.asset.metadata.Source === 'Medical Records' };
 
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>

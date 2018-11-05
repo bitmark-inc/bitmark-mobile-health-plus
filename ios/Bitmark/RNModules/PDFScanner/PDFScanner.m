@@ -38,7 +38,7 @@ RCT_EXPORT_METHOD(pdfScan:(NSString *)filePath:(RCTResponseSenderBlock)callback)
   for (NSUInteger i = 0; i < pagesCount; i ++ ) {
     self.currentPage = i;
     self.pageStrings[i] = [NSMutableArray<NSString *> new];
-    CGPDFPageRef page = CGPDFDocumentGetPage(document, i);
+    CGPDFPageRef page = CGPDFDocumentGetPage(document, i + 1);
     CGPDFContentStreamRef stream = CGPDFContentStreamCreateWithPage(page);
     CGPDFScannerRef scanner = CGPDFScannerCreate(stream, table, (__bridge void *)self);
     CGPDFScannerScan(scanner);

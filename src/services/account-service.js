@@ -190,6 +190,7 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
           if (!filename.toLowerCase().endsWith('.desc')) {
             let filePath = `${unzipFolder}/data/${filename}`;
             let assetName;
+            let detectedTexts;
             let existingAsset = false;
             let metadataList = [];
             let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
@@ -202,9 +203,13 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
               let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
 
               if (isPdfFile(filePath)) {
-                assetName = await populateAssetNameFromPdf(filePath, defaultAssetName);
+                let detectResult = await populateAssetNameFromPdf(filePath, defaultAssetName);
+                assetName = detectResult.assetName;
+                detectedTexts = detectResult.detectedTexts;
               } else if (isImageFile(filePath)) {
-                assetName = await populateAssetNameFromImage(filePath, defaultAssetName);
+                let detectResult = await populateAssetNameFromImage(filePath, defaultAssetName);
+                assetName = detectResult.assetName;
+                detectedTexts = detectResult.detectedTexts;
               } else {
                 assetName = defaultAssetName;
               }
@@ -216,6 +221,7 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
               filePath, assetName,
               metadata: metadataList,
               existingAsset,
+              detectedTexts
             });
           }
         }

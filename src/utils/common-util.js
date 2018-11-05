@@ -9,6 +9,7 @@ import i18n from "i18n-js";
 import { intersection } from "lodash";
 import { runPromiseWithoutError } from "./helper";
 import ImageResizer from 'react-native-image-resizer';
+import { flatten } from 'lodash';
 
 const THUMBNAIL_PATH = `${FileUtil.DocumentDirectory}/thumbnails`;
 const COMBINE_FILE_SUFFIX = 'combine';
@@ -47,7 +48,7 @@ const getLanguageForTextDetector = () => {
 
 const sanitizeTextDetectorResponse = (detectedItems) => {
   const notContainsSepecicalCharacter = (str) => {
-    const blacklistCharacters = '1234567890\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§˘ˆ↵˛˝'.split('');
+    const blacklistCharacters = '1234567890\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§˘ˆ↵˛˝˙'.split('');
     let strCharactors = str.split('').filter(item => item !== ' ');
 
     return intersection(blacklistCharacters, strCharactors).length == 0;
@@ -163,7 +164,10 @@ const detectAssetNameByCommonRules = (texts) => {
 const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   let assetName = defaultAssetName;
 
-  filePath = 'file://' + filePath;
+  if (!filePath.startsWith('file://')) {
+    filePath = 'file://' + filePath;
+  }
+
   let visionResp = await runPromiseWithoutError(RNTextDetector.detectFromUri({
     imagePath: filePath,
     language: getLanguageForTextDetector()
@@ -174,7 +178,9 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
     let demension = calculateDocDimension(visionResp);
     let centerTextX = demension.centerTextX;
 
+    console.log('visionResp-Original:', visionResp);
     visionResp = sanitizeTextDetectorResponse(visionResp);
+    console.log('visionResp-Sanitized:', visionResp);
 
     if (visionResp.length > 1) {
       // Sort items in descending order by size/(top * center)
@@ -208,8 +214,20 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
     }
   }
 
+  let detectedTexts = [];
+  if (visionResp instanceof Array) {
+    visionResp.forEach(item => {
+      if (item.text) detectedTexts.push(item.text);
+    })
+  }
+
   console.log('assetName:', assetName);
-  return assetName;
+  console.log('allDetectedTexts:', detectedTexts);
+
+  return {
+    detectedTexts: detectedTexts,
+    assetName
+  };
 };
 
 const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
@@ -218,27 +236,40 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
   console.log('populateAssetFromPDF...');
 
   let detectedTexts = await runPromiseWithoutError(PDFScanner.pdfScan(filePath));
-  console.log('detectedTexts:', detectedTexts);
+  console.log('original-DetectedTexts:', detectedTexts);
 
   if (detectedTexts && !detectedTexts.error && detectedTexts.length) {
-    detectedTexts = detectedTexts.map(text => {
-      return { text: text ? text.trim() : text }
+    detectedTexts = detectedTexts.map(item => {
+      item = item.map(text => {
+        return {text: text ? text.trim() : text}
+      });
+      return sanitizeTextDetectorResponse(item);
     });
-
-    detectedTexts = sanitizeTextDetectorResponse(detectedTexts);
     console.log('detectedTexts-sanitized:', detectedTexts);
 
     let potentialAssetNameItem;
-    if (detectedTexts.length) {
-      potentialAssetNameItem = detectAssetNameByCommonRules(detectedTexts);
+    // Take the first page to detect asset name
+    if (detectedTexts[0].length) {
+      potentialAssetNameItem = detectAssetNameByCommonRules(detectedTexts[0]);
     }
 
     if (potentialAssetNameItem && potentialAssetNameItem.text.trim()) {
       assetName = 'HA ' + potentialAssetNameItem.text.trim();
     }
   }
+
+  let allDetectedTexts = [];
+  flatten(detectedTexts).forEach(item => {
+    allDetectedTexts.push(item.text);
+  });
+
   console.log('assetName:', assetName);
-  return assetName;
+  console.log('allDetectedTexts:', allDetectedTexts);
+
+  return {
+    detectedTexts: allDetectedTexts,
+    assetName
+  };
 };
 
 const isImageFile = (filePath) => {
@@ -299,4 +330,30 @@ const getThumbnail = (bitmarkId, isCombineFile) => {
   return isCombineFile ? `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
 };
 
-export { issue, populateAssetNameFromImage, populateAssetNameFromPdf, generateThumbnail, isImageFile, isPdfFile, checkThumbnailForBitmark, getThumbnail }
+const isFileRecord = (bitmark) => {
+  return bitmark.asset.metadata.Source === 'Medical Records'
+};
+const isCaptureDataRecord = (bitmark) => {
+  return bitmark.asset.metadata.Source === 'Health Records'
+};
+const isHealthDataRecord = (bitmark) => {
+  return bitmark.asset.metadata.Source === 'HealthKit'
+};
+const isAssetDataRecord = (bitmark) => {
+  return isCaptureDataRecord(bitmark) || isFileRecord(bitmark)
+};
+
+export {
+  issue,
+  populateAssetNameFromImage,
+  populateAssetNameFromPdf,
+  generateThumbnail,
+  isImageFile,
+  isPdfFile,
+  checkThumbnailForBitmark,
+  getThumbnail,
+  isFileRecord,
+  isCaptureDataRecord,
+  isHealthDataRecord,
+  isAssetDataRecord
+}
