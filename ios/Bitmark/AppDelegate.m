@@ -19,6 +19,9 @@
 @import iCloudDocumentSync;
 @import HockeySDK;
 
+@interface AppDelegate () <iCloudDelegate>
+
+@end
 
 @implementation AppDelegate
 
@@ -62,7 +65,7 @@
   
   // iCloud sync
   [[iCloud sharedCloud] setupiCloudDocumentSyncWithUbiquityContainer:nil];
-  [[iCloud sharedCloud] updateFiles];
+  [[iCloud sharedCloud] setDelegate:self];
   
   // Handle Crash App by native code
   [ReactNativeExceptionHandler replaceNativeExceptionHandlerBlock:^(NSException *exception, NSString *readeableException){
@@ -117,10 +120,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
   [RCTPushNotificationManager didReceiveLocalNotification:notification];
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-  [[iCloud sharedCloud] updateFiles];
 }
 
 @end

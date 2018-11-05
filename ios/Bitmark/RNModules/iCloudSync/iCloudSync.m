@@ -21,13 +21,13 @@ RCT_EXPORT_METHOD(uploadToCloud:(NSString *)folder:(RCTResponseSenderBlock)callb
     [[iCloud sharedCloud].previousQueryResults addObject:localDocument];
   }
   
-  [[iCloud sharedCloud] uploadLocalDocumentToCloudWithName:folder completion:^(NSError *error) {
-    if (error) {
-      callback(@[@NO, error.localizedDescription]);
-    } else {
-      callback(@[@YES]);
-    }
-  }];
+//  [[iCloud sharedCloud] uploadLocalDocumentToCloudWithName:folder completion:^(NSError *error) {
+//    if (error) {
+//      callback(@[@NO, error.localizedDescription]);
+//    } else {
+//      callback(@[@YES]);
+//    }
+//  }];
 }
 
 RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
