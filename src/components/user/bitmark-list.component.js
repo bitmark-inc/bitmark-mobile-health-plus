@@ -196,8 +196,6 @@ const styles = StyleSheet.create({
   bitmarksContainer: {
     justifyContent: 'flex-start',
     flexDirection: 'row',
-    flexWrap: 'wrap',
-
   },
   bitmarkItem: {
     flex: 1,

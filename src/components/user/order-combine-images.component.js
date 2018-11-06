@@ -82,7 +82,7 @@ export class OrderCombineImagesComponent extends Component {
   newOrder({ itemOrder }) {
     this.setState({ scrollEnabled: true, itemOrder: itemOrder });
     for (let index in this.itemOrderImageRefs) {
-      this.itemOrderImageRefs[index].changeData({ index: parseInt(itemOrder[index].key) })
+      this.itemOrderImageRefs[itemOrder[index].key].changeData({ index: itemOrder[index].order })
     }
   }
 
@@ -108,7 +108,13 @@ export class OrderCombineImagesComponent extends Component {
                 onDragStart={() => this.setState({ scrollEnabled: false })} >
                 {
                   this.props.images.map((imageInfo, index) => {
-                    return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => this.itemOrderImageRefs[index] = ref} />);
+                    return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
+                      if (this.state.itemOrder) {
+                        this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
+                      } else {
+                        this.itemOrderImageRefs[index] = ref
+                      }
+                    }} />);
                   })
                 }
               </SortableGrid>
