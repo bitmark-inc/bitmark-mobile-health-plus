@@ -253,7 +253,7 @@ class PrivateUserComponent extends Component {
         await insertDetectedDataToIndexedDB(bitmarkId, assetName, metadataList, detectedTexts);
 
         if (willDetectAssetNameAutomatically) {
-          Actions.assetNameInform({ assetName });
+          Actions.assetNameInform({ assetNames: [assetName] });
         } else {
           Actions.pop();
         }
@@ -295,7 +295,7 @@ class PrivateUserComponent extends Component {
 
   async updateSearch(searchTerm) {
     console.log('searchTerm:', searchTerm);
-    let searchResults = {length: 0, healthDataBitmarks: [], healthAssetBitmarks: []};
+    let searchResults = { length: 0, healthDataBitmarks: [], healthAssetBitmarks: [] };
     if (searchTerm) {
       let searchResultBitmarkIds = await searchIndexedBitmarks(searchTerm);
 
@@ -345,7 +345,7 @@ class PrivateUserComponent extends Component {
         <SafeAreaView style={[styles.bodySafeView,]}>
           {/*SEARCH AREA*/}
           {/*TODO: localization*/}
-          <View style={[styles.searchArea, (this.state.searchTerm ? {flex: 1} : {})]}>
+          <View style={[styles.searchArea, (this.state.searchTerm ? { flex: 1 } : {})]}>
             <SearchInputComponent
               throttle={300}
               onSearchTermChange={(searchTerm) => {
@@ -361,45 +361,45 @@ class PrivateUserComponent extends Component {
             </SearchInputComponent>
 
             {this.state.isSearching && <View style={styles.indicatorContainer}>
-              <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16}/>
+              <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />
               {/*TODO: localization*/}
               <Text>{global.i18n.t("UserComponent_searching")}</Text>
             </View>
             }
-            {(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults}/> : null}
+            {(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}
           </View>
 
           {/*DATA PANEL*/}
           {!this.state.searchTerm && <View style={styles.body}>
-            <View style={[styles.bodyContent, isCurrentUser ? {} : {borderBottomWidth: 1}]}>
+            <View style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]}>
               <View style={styles.dataArea}>
-                <TouchableOpacity style={{flex: 1}} onPress={() => {
+                <TouchableOpacity style={{ flex: 1 }} onPress={() => {
 
                   if (isCurrentUser && !DataProcessor.getUserInformation().activeHealthData) {
                     Actions.getStart();
                   } else {
-                    Actions.bitmarkList({bitmarkType: 'bitmark_health_data'});
+                    Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' });
                   }
                 }}>
-                  <Text style={styles.dataTitle}><Text style={{color: '#FF1829'}}>{this.props.healthDataBitmarks.length} </Text>
-                    {i18n.t('UserComponent_dataTitle1', {s: this.props.healthDataBitmarks.length !== 1 ? 's' : ''})}
+                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.props.healthDataBitmarks.length} </Text>
+                    {i18n.t('UserComponent_dataTitle1', { s: this.props.healthDataBitmarks.length !== 1 ? 's' : '' })}
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={[styles.dataArea, {borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60),}]}>
-                <TouchableOpacity style={{flex: 1}} onPress={() => {
+              <View style={[styles.dataArea, { borderTopColor: '#FF1829', borderTopWidth: 1, paddingBottom: convertWidth(60), }]}>
+                <TouchableOpacity style={{ flex: 1 }} onPress={() => {
                   if (this.props.healthAssetBitmarks.length === 0) {
-                    Actions.addRecord({addRecord: this.addRecord.bind(this)});
+                    Actions.addRecord({ addRecord: this.addRecord.bind(this) });
                   } else {
-                    Actions.bitmarkList({bitmarkType: 'bitmark_health_issuance'});
+                    Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
                   }
                 }}>
-                  <Text style={styles.dataTitle}><Text style={{color: '#FF1829'}}>{this.props.healthAssetBitmarks.length} </Text>
-                    {i18n.t('UserComponent_dataTitle2', {s: this.props.healthAssetBitmarks.length !== 1 ? 's' : ''})}
+                  <Text style={styles.dataTitle}><Text style={{ color: '#FF1829' }}>{this.props.healthAssetBitmarks.length} </Text>
+                    {i18n.t('UserComponent_dataTitle2', { s: this.props.healthAssetBitmarks.length !== 1 ? 's' : '' })}
                   </Text>
                 </TouchableOpacity>
                 {isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.addRecord.bind(this)}>
-                  <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')}/>
+                  <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
                   <Text style={styles.addHealthRecordButtonText}> {i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>}
               </View>

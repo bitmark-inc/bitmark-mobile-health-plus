@@ -39,7 +39,7 @@ export class CaptureAssetComponent extends Component {
       let isMultipleAsset = false;
       await generateThumbnail(filePath, bitmarkId, isMultipleAsset);
       await insertDetectedDataToIndexedDB(bitmarkId, assetName, metadataList, detectedTexts);
-      Actions.assetNameInform({ assetName });
+      Actions.assetNameInform({ assetNames: [assetName] });
     });
   }
 

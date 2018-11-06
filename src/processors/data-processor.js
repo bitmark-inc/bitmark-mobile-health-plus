@@ -21,7 +21,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail } from '../utils';
+import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB, populateAssetNameFromImage, isImageFile } from '../utils';
 import PDFScanner from '../models/adapters/pdf-scanner';
 import iCloudSyncAdapter from '../models/adapters/icloud';
 
@@ -899,6 +899,23 @@ const doMigrateFilesToLocalStorage = async () => {
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
     }
     await generateThumbnail(bitmark.asset.filePath, bitmark.id);
+
+    if (isHealthDataBitmark(bitmark.asset)) {
+      let data = await FileUtil.readFile(bitmark.asset.filePath);
+      await insertHealthDataToIndexedDB(bitmark.id, {
+        assetMetadata: bitmark.asset.metadata,
+        assetName: bitmark.asset.name,
+        data,
+      });
+    } else if (isImageFile(bitmark.asset.filePath)) {
+      let metadataList = [];
+      for (let label in bitmark.asset.metadata) {
+        metadataList.push({ label, value: bitmark.asset.metadata[label] });
+      }
+      let detectResult = await populateAssetNameFromImage(bitmark.asset.filePath);
+      await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, metadataList, detectResult.detectedTexts);
+    }
+
     EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, Math.floor(total * 100 / bitmarks.length));
     total++;
   }

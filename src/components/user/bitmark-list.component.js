@@ -6,7 +6,7 @@ import {
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList, Share,
 } from 'react-native';
 
-import { convertWidth, isFileRecord } from '../../utils';
+import { convertWidth, isFileRecord, isImageFile, isPdfFile } from '../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
 import { EventEmitterService } from '../../services';
@@ -85,7 +85,11 @@ class PrivateBitmarkListComponent extends Component {
                   renderItem={({ item }) => {
                     return (
                       <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
-                        isFileRecord(item) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, this.props.bitmarkType)
+                        if (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) {
+                          this.downloadBitmark.bind(this)(item.asset)
+                        } else {
+                          this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
+                        }
                       }}>
                         {item && item.thumbnail && item.thumbnail.exists ?
                           <View>
@@ -98,7 +102,7 @@ class PrivateBitmarkListComponent extends Component {
                           <Image style={styles.bitmarkThumbnail} source={this.props.bitmarkType === 'bitmark_health_data' ? require('./../../../assets/imgs/health_data_icon.png') : require('./../../../assets/imgs/unknown_file_type_icon.png')} />
                         }
 
-                        {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]}/>}
+                        {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]} />}
                         {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32} />}
                         {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
                       </TouchableOpacity>
