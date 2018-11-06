@@ -157,7 +157,7 @@ export class CaptureMultipleImagesComponent extends Component {
           >
             {this.state.images.map((item, index) => {
               return (<View style={styles.imageArea} key={index}>
-                <Image style={styles.imageDetail} source={{ uri: item }} />
+                <Image style={styles.imageDetail} source={item} />
               </View>)
             })}
           </Swiper>
