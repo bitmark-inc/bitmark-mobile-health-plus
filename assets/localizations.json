@@ -495,7 +495,7 @@
     "EmailRecordComponent_existingAssetMessage": "The following medical records are already registered before and will not be added again:",
     "EmailRecordComponent_alertTitle": "Encrypting and protecting your health record...",
     "AssetNameInform_headerText": "Your record has been added",
-    "AssetNameInform_description": "We have automatically generated the following name  for your record:",
+    "AssetNameInform_description": "We have automatically generated the following name for your record:",
     "AssetNameInform_view": "VIEW",
     "AccountNumberComponent_titleText": "Account\nnumber",
     "AccountNumberComponent_description": "To protect your privacy, you are identified in the Bitmark system by a pseudonymous account number. This number is public. You can safely share it with others without compromising your security.",
