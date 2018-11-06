@@ -831,7 +831,8 @@ const doDeleteAccount = async () => {
 const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
   for (let item of emailRecord.list) {
     if (!item.existingAsset) {
-      await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+      let results = await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+      await generateThumbnail(item.filePath, results[0].id);
     }
   }
   for (let id of emailRecord.ids) {
