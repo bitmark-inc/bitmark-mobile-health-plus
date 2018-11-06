@@ -171,6 +171,7 @@ class PrivateUserComponent extends Component {
     ImagePicker.openPicker({
       multiple: true,
       maxFiles: 0,
+      mediaType: 'photo',
     }).then(results => {
       let images = [];
       for (let image of results) {

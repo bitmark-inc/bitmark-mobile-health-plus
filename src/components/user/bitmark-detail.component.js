@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from "moment";
 import {
   StyleSheet,
   Alert,
@@ -26,7 +25,6 @@ export class BitmarkDetailComponent extends Component {
     super(props);
     this.state = {
       filePath: this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.bitmark.asset.filePath : '',
-      thumbnail: isPdfFile(this.props.bitmark.asset.filePath) ? getThumbnail(this.props.bitmark.id, true) : '',
       content: '',
     };
 
@@ -126,13 +124,15 @@ export class BitmarkDetailComponent extends Component {
               </View>
               <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
                 <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
-                  {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>}
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                     <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({
                       filePath: this.state.filePath,
                       title: this.props.bitmark.asset.name
                     })}>
-                      <Image style={styles.bitmarkImage} source={{ uri: this.state.thumbnail ? this.state.thumbnail : this.state.filePath }} /></TouchableOpacity>}
+                      <Image style={styles.bitmarkImage} source={{ uri: this.props.bitmark.thumbnail ? this.props.bitmark.thumbnail.path : this.state.filePath }} />
+                    </TouchableOpacity>}
+
+                  {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>}
                   {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>
                     <ScrollView horizontal={true}>
                       <JSONTree data={this.state.content}
