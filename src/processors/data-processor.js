@@ -32,6 +32,7 @@ let websocket;
 let isLoadingData = false;
 let notificationUUID;
 let isDisplayingEmailRecord = false;
+let isMigratingFileToLocalStorage = false;
 let didMigrationFileToLocalStorage = false;
 
 const isHealthDataBitmark = (asset) => {
@@ -494,7 +495,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       didMigrationFileToLocalStorage = true;
     } else {
       didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
-      if (!didMigrationFileToLocalStorage) {
+      if (!didMigrationFileToLocalStorage && !isMigratingFileToLocalStorage) {
+        isMigratingFileToLocalStorage = true;
         EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
       }
     }

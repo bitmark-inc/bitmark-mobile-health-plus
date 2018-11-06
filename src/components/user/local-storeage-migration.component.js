@@ -3,6 +3,7 @@ import {
   View, Image, Text,
   StyleSheet,
 } from 'react-native';
+import KeepAwake from 'react-native-keep-awake';
 
 import { EventEmitterService } from '../../services';
 import { convertWidth } from '../../utils';
@@ -22,8 +23,11 @@ export class LocalStorageMigrationComponent extends React.Component {
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, this.handerProgress);
-
-    DataProcessor.doMigrateFilesToLocalStorage().catch(error => {
+    KeepAwake.activate();
+    DataProcessor.doMigrateFilesToLocalStorage().then(() => {
+      KeepAwake.deactivate();
+    }).catch(error => {
+      KeepAwake.deactivate();
       console.log('doMigrateFilesToLocalStorage error:', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });

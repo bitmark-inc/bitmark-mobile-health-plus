@@ -488,7 +488,7 @@ const doCheckMigration = (jwt) => {
   });
 };
 
-const doMarkMigration = (jwt) => {
+const doMarkMigration = (jwt, status) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/accounts/metadata`;
@@ -500,7 +500,7 @@ const doMarkMigration = (jwt) => {
         Authorization: 'Bearer ' + jwt,
       },
       body: JSON.stringify({
-        metadata: { bitmarks_migrated: true },
+        metadata: { bitmarks_migrated: status === undefined ? true : status },
       })
     }).then((response) => {
       statusCode = response.status;
