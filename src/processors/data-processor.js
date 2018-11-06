@@ -418,7 +418,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   // await UserModel.doRemoveUserInfo();
 
   await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets`);
-  runPromiseWithoutError(iCloudSyncAdapter.syncCloud(`${FileUtil.DocumentDirectory}/assets`));
+  // runPromiseWithoutError(iCloudSyncAdapter.syncCloud());
 
   userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
