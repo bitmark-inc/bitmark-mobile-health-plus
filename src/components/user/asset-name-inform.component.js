@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   lastBottomButtonArea: {
-    padding: convertWidth(20),
   },
   lastBottomButton: {
     height: constants.buttonHeight,
