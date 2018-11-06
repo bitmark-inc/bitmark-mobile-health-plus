@@ -63,7 +63,7 @@ export class TouchFaceIdComponent extends React.Component {
     }
     promise.then((user) => {
       if (user) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, true);
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, !phraseWords);
       }
     }).catch(error => {
       console.log('error :', error);
