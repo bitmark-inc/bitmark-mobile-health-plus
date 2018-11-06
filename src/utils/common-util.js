@@ -241,7 +241,7 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
   if (detectedTexts && !detectedTexts.error && detectedTexts.length) {
     detectedTexts = detectedTexts.map(item => {
       item = item.map(text => {
-        return {text: text ? text.trim() : text}
+        return { text: text ? text.trim() : text }
       });
       return sanitizeTextDetectorResponse(item);
     });
@@ -273,6 +273,9 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
 };
 
 const isImageFile = (filePath) => {
+  if (!filePath) {
+    return false;
+  }
   const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
   let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
 
@@ -280,6 +283,9 @@ const isImageFile = (filePath) => {
 };
 
 const isPdfFile = (filePath) => {
+  if (!filePath) {
+    return false;
+  }
   const pdfExtensions = ['PDF'];
   let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
 
@@ -306,7 +312,7 @@ const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => 
 };
 
 const checkThumbnailForBitmark = async (bitmarkId) => {
-  let thumbnailInfo = {exists: false};
+  let thumbnailInfo = { exists: false };
 
   let thumbnailFilePath = `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
   let thumbnailMultipleFilePath = `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG`;
