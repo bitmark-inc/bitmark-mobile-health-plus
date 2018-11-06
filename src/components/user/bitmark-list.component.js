@@ -77,6 +77,7 @@ class PrivateBitmarkListComponent extends Component {
               <ScrollView style={styles.bitmarkList}>
                 <FlatList
                   contentContainerStyle={[styles.bitmarksContainer]}
+                  numColumns={3}
                   keyExtractor={(item) => item.id}
                   scrollEnabled={false}
                   data={this.props.bitmarkType === 'bitmark_health_data' ? this.props.healthDataBitmarks :
@@ -194,11 +195,8 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   bitmarksContainer: {
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
   },
   bitmarkItem: {
-    flex: 1,
     padding: 4,
     alignItems: 'center'
   },
