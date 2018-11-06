@@ -256,7 +256,8 @@ const styles = StyleSheet.create({
   },
 
   bitmarkHealthList: {
-    padding: convertWidth(26)
+    padding: convertWidth(26),
+    paddingTop: 0
   },
 
   bitmarkHealthRow: {
