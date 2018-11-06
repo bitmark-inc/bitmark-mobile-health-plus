@@ -14,7 +14,6 @@ import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
 import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
-import { getThumbnail, isPdfFile } from "../../utils";
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -123,22 +122,25 @@ export class BitmarkDetailComponent extends Component {
                 </TouchableOpacity>
               </View>
               <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
-                <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
+                <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }} scrollEnabled={this.props.bitmarkType !== 'bitmark_health_issuance'}>
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                     <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({
                       filePath: this.state.filePath,
                       title: this.props.bitmark.asset.name
                     })}>
                       <Image style={styles.bitmarkImage} source={{ uri: this.props.bitmark.thumbnail ? this.props.bitmark.thumbnail.path : this.state.filePath }} />
+                      <View style={styles.fullViewButton}>
+                        <Image style={styles.fullViewIcon} source={require('./../../../assets/imgs/full_view_icon.png')} />
+                        <Text style={styles.fullViewButtonText}>{i18n.t('BitmarkDetailComponent_fullViewButtonText')}</Text>
+                      </View>
                     </TouchableOpacity>}
 
-                  {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>}
                   {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>
                     <ScrollView horizontal={true}>
                       <JSONTree data={this.state.content}
                         getItemString={() => <Text></Text>}
-                        labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', }}>{raw}</Text>}
-                        valueRenderer={raw => <Text style={{ color: '#FF4444' }}>{raw}</Text>}
+                        labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
+                        valueRenderer={raw => <Text style={{ color: '#FF003C', fontFamily: 'Avenir' }}>{raw}</Text>}
                         hideRoot={true}
                         theme={{
                           scheme: 'monokai',
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     borderWidth: 1,
-    borderColor: "#FF4444",
+    borderColor: "#FF003C",
     width: "100%",
   },
 
@@ -243,11 +245,15 @@ const styles = StyleSheet.create({
   contentScroll: {
     flexDirection: 'column',
   },
-  metadataTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
-    fontWeight: '600',
-    fontSize: 16,
-    marginTop: 5,
+  fullViewButton: {
+    position: 'absolute', bottom: 20, width: '100%',
+    justifyContent: 'center', flexDirection: 'row', alignItems: 'center'
+  },
+  fullViewIcon: {
+    width: 14, height: 17, resizeMode: 'contain', marginRight: 15,
+  },
+  fullViewButtonText: {
+    textAlign: 'center', color: '#FF1F1F', fontSize: 16, fontWeight: '600'
   },
 
   bitmarkImageArea: {
