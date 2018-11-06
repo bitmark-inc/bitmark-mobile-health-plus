@@ -231,7 +231,7 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
 };
 
 const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
-
+  let allDetectedTexts = [];
   let assetName = defaultAssetName;
   console.log('populateAssetFromPDF...');
 
@@ -256,12 +256,11 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
     if (potentialAssetNameItem && potentialAssetNameItem.text.trim()) {
       assetName = 'HA ' + potentialAssetNameItem.text.trim();
     }
-  }
 
-  let allDetectedTexts = [];
-  flatten(detectedTexts).forEach(item => {
-    allDetectedTexts.push(item.text);
-  });
+    flatten(detectedTexts).forEach(item => {
+      allDetectedTexts.push(item.text);
+    });
+  }
 
   console.log('assetName:', assetName);
   console.log('allDetectedTexts:', allDetectedTexts);

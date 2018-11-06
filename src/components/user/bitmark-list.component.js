@@ -14,6 +14,7 @@ import { DataProcessor, AppProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 import { UserBitmarksStore, UserBitmarksActions } from '../../stores/user-bitmarks.store';
 import { MaterialIndicator } from 'react-native-indicators';
+import moment from 'moment';
 
 class PrivateBitmarkListComponent extends Component {
   static propTypes = {
@@ -74,43 +75,66 @@ class PrivateBitmarkListComponent extends Component {
                 </TouchableOpacity>
               </View>
 
-              <ScrollView style={styles.bitmarkList}>
-                <FlatList
-                  contentContainerStyle={[styles.bitmarksContainer]}
-                  numColumns={3}
-                  keyExtractor={(item) => item.id}
-                  scrollEnabled={false}
-                  data={this.props.bitmarkType === 'bitmark_health_data' ? this.props.healthDataBitmarks :
-                    (this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.healthAssetBitmarks : [])}
-                  extraData={this.props}
-                  renderItem={({ item }) => {
-                    return (
-                      <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
-                        if (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) {
-                          this.downloadBitmark.bind(this)(item.asset)
-                        } else {
+              {(this.props.bitmarkType === 'bitmark_health_data') ? (
+                // HEALTH DATA RECORDS
+                <ScrollView style={styles.bitmarkHealthList}>
+                  <FlatList
+                    keyExtractor={(item) => item.id}
+                    scrollEnabled={false}
+                    data={this.props.healthDataBitmarks || []}
+                    extraData={this.props}
+                    renderItem={({ item }) => {
+                      return (
+                        <TouchableOpacity style={styles.bitmarkHealthRow} onPress={() => {
                           this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
-                        }
-                      }}>
-                        {item && item.thumbnail && item.thumbnail.exists ?
-                          <View>
-                            <Image style={styles.bitmarkThumbnail} source={{ uri: `${item.thumbnail.path}` }} />
-                            {item.thumbnail.multiple &&
-                              <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')} />
-                            }
-                          </View>
-                          :
-                          <Image style={styles.bitmarkThumbnail} source={this.props.bitmarkType === 'bitmark_health_data' ? require('./../../../assets/imgs/health_data_icon.png') : require('./../../../assets/imgs/unknown_file_type_icon.png')} />
-                        }
+                        }}>
+                          <Text style={styles.bitmarkHealthRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
+                          {item.status === 'confirmed' && <Image style={styles.bitmarkHealthRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
+                          {item.status === 'pending' && <Text style={styles.bitmarkHealthPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </ScrollView>
+                ) : (
+                // ASSET RECORDS
+                <ScrollView style={styles.bitmarkList}>
+                  <FlatList
+                    contentContainerStyle={[styles.bitmarksContainer]}
+                    keyExtractor={(item) => item.id}
+                    scrollEnabled={false}
+                    data={this.props.healthAssetBitmarks || []}
+                    extraData={this.props}
+                    renderItem={({ item }) => {
+                      return (
+                        <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
+                          if (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) {
+                            this.downloadBitmark.bind(this)(item.asset)
+                          } else {
+                            this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
+                          }
+                        }}>
+                          {item && item.thumbnail && item.thumbnail.exists ?
+                            <View>
+                              <Image style={styles.bitmarkThumbnail} source={{ uri: `${item.thumbnail.path}` }} />
+                              {item.thumbnail.multiple &&
+                                <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')} />
+                              }
+                            </View>
+                            :
+                            <Image style={styles.bitmarkThumbnail} source={this.props.bitmarkType === 'bitmark_health_data' ? require('./../../../assets/imgs/health_data_icon.png') : require('./../../../assets/imgs/unknown_file_type_icon.png')} />
+                          }
 
-                        {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]} />}
-                        {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32} />}
-                        {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </ScrollView>
+                          {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]} />}
+                          {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32} />}
+                          {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </ScrollView>
+                )
+                }
             </View>
           </View>
         </SafeAreaView>
@@ -195,8 +219,12 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   bitmarksContainer: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   bitmarkItem: {
+    flex: 1,
     padding: 4,
     alignItems: 'center'
   },
@@ -225,6 +253,36 @@ const styles = StyleSheet.create({
     top: convertWidth(35),
     left: convertWidth(35),
     zIndex: 2,
+  },
+
+  bitmarkHealthList: {
+    padding: convertWidth(26)
+  },
+
+  bitmarkHealthRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 14,
+  },
+  bitmarkHealthRowText: {
+    fontFamily: 'Avenir Book',
+    fontSize: 16,
+    fontWeight: '300',
+    paddingRight: 5,
+    flex: 1
+  },
+  bitmarkHealthRowIcon: {
+    width: convertWidth(8),
+    height: 14 * convertWidth(8) / 8,
+    resizeMode: 'contain',
+  },
+  bitmarkHealthPending: {
+    fontFamily: 'Avenir Medium',
+    fontSize: 14,
+    fontStyle: 'italic',
+    fontWeight: '300',
+    color: '#C1C1C1',
   }
 });
 
