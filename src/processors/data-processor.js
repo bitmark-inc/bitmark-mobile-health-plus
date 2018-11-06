@@ -564,7 +564,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
-  runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
+  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
   return results;
 };
 
@@ -644,7 +644,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
   await doReloadUserData();
-  runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
+  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
   return results;
 };
 
@@ -925,7 +925,7 @@ const doMigrateFilesToLocalStorage = async () => {
 
   await AccountModel.doMarkMigration(jwt);
   didMigrationFileToLocalStorage = true;
-  runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
+  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
