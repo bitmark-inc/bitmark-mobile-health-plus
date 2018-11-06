@@ -436,7 +436,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     });
   }
 
-  if (userInformation && userInformation.bitmarkAccountNumber) {
+  if (userInformation && userInformation.bitmarkAccountNumber && !!CommonModel.getFaceTouchSessionId()) {
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
 
