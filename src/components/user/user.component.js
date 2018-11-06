@@ -172,6 +172,7 @@ class PrivateUserComponent extends Component {
       multiple: true,
       maxFiles: 0,
       mediaType: 'photo',
+      compressImageQuality: 1,
     }).then(results => {
       let images = [];
       for (let image of results) {
