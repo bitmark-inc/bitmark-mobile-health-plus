@@ -21,7 +21,7 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError } from '../utils';
+import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail } from '../utils';
 import PDFScanner from '../models/adapters/pdf-scanner';
 import iCloudSyncAdapter from '../models/adapters/icloud';
 
@@ -898,6 +898,7 @@ const doMigrateFilesToLocalStorage = async () => {
       let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
     }
+    await generateThumbnail(bitmark.asset.filePath, bitmark.id);
     EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, Math.floor(total * 100 / bitmarks.length));
     total++;
   }
