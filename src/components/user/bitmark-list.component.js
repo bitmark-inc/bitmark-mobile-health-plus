@@ -122,7 +122,7 @@ class PrivateBitmarkListComponent extends Component {
                               }
                             </View>
                             :
-                            <Image style={styles.bitmarkThumbnail} source={this.props.bitmarkType === 'bitmark_health_data' ? require('./../../../assets/imgs/health_data_icon.png') : require('./../../../assets/imgs/unknown_file_type_icon.png')} />
+                            <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/unknown_file_type_icon.png')} />
                           }
 
                           {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]} />}
