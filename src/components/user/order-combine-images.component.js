@@ -43,7 +43,7 @@ class ItemOrderImageComponent extends Component {
         borderRadius: convertWidth(7.5), borderWidth: 1, borderColor: 'rgba(0,0,0,0)',
         zIndex: 1,
       }}>
-        <Text style={{ color: 'white', flex: 1, fontSize: 10, }}> {this.state.index + 1}</Text>
+        <Text style={{ color: 'white', flex: 1, fontSize: 10, }}>{this.state.index + 1}</Text>
       </View>
       <Image style={{ width: convertWidth(109), height: convertWidth(109), resizeMode: 'cover' }} source={{ uri: this.state.uri }} />
     </View>);
