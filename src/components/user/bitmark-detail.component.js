@@ -140,7 +140,7 @@ export class BitmarkDetailComponent extends Component {
                       <JSONTree data={this.state.content}
                         getItemString={() => <Text></Text>}
                         labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
-                        valueRenderer={raw => <Text style={{ color: '#FF003C', fontFamily: 'Avenir' }}>{raw}</Text>}
+                        valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}
                         hideRoot={true}
                         theme={{
                           scheme: 'monokai',
@@ -158,7 +158,7 @@ export class BitmarkDetailComponent extends Component {
                           base0A: '#f4bf75',
                           base0B: '#a6e22e',
                           base0C: '#a1efe4',
-                          base0D: '#FF003C',
+                          base0D: '#FF4444',
                           base0E: '#ae81ff',
                           base0F: '#cc6633'
                         }}
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     borderWidth: 1,
-    borderColor: "#FF003C",
+    borderColor: "#FF4444",
     width: "100%",
   },
 
