@@ -10,6 +10,7 @@ import { intersection } from "lodash";
 import { runPromiseWithoutError } from "./helper";
 import ImageResizer from 'react-native-image-resizer';
 import { flatten } from 'lodash';
+import { Image } from 'react-native';
 
 const THUMBNAIL_PATH = `${FileUtil.DocumentDirectory}/thumbnails`;
 const COMBINE_FILE_SUFFIX = 'combine';
@@ -163,15 +164,30 @@ const detectAssetNameByCommonRules = (texts) => {
 
 const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   let assetName = defaultAssetName;
+  let detectFilePath = filePath;
 
-  if (!filePath.startsWith('file://')) {
-    filePath = 'file://' + filePath;
+  if (isJPGFile(filePath)) {
+    // Convert JPG format to PNG format in the case of multiple selection because it can not be used for detected text from image
+    let imageSize = await getImageSize(filePath);
+    let outputDir = filePath.substring(0, filePath.lastIndexOf('/'));
+    let response = await ImageResizer.createResizedImage(filePath, imageSize.width, imageSize.height, 'PNG', 100, 0, outputDir);
+    detectFilePath = response.uri;
+  }
+
+  if (!detectFilePath.startsWith('file://')) {
+    detectFilePath = 'file://' + detectFilePath;
   }
 
   let visionResp = await runPromiseWithoutError(RNTextDetector.detectFromUri({
-    imagePath: filePath,
+    imagePath: detectFilePath,
     language: getLanguageForTextDetector()
   }));
+
+  // Clean up file if necessary
+  if (isJPGFile(filePath)) {
+    // Remove converted PNG file
+    await FileUtil.removeSafe(detectFilePath);
+  }
 
   if (visionResp && !visionResp.error && visionResp.length) {
     let potentialAssetNameItem;
@@ -241,7 +257,7 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
   if (detectedTexts && !detectedTexts.error && detectedTexts.length) {
     detectedTexts = detectedTexts.map(item => {
       item = item.map(text => {
-        return { text: text ? text.trim() : text }
+        return {text: text ? text.trim() : text}
       });
       return sanitizeTextDetectorResponse(item);
     });
@@ -281,6 +297,16 @@ const isImageFile = (filePath) => {
   return imageExtensions.includes(fileExtension.toUpperCase());
 };
 
+const isJPGFile = (filePath) => {
+  if (!filePath) {
+    return false;
+  }
+  const imageExtensions = ['JPG'];
+  let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+
+  return imageExtensions.includes(fileExtension.toUpperCase());
+};
+
 const isPdfFile = (filePath) => {
   if (!filePath) {
     return false;
@@ -311,7 +337,7 @@ const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => 
 };
 
 const checkThumbnailForBitmark = async (bitmarkId) => {
-  let thumbnailInfo = { exists: false };
+  let thumbnailInfo = {exists: false};
 
   let thumbnailFilePath = `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
   let thumbnailMultipleFilePath = `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG`;
@@ -348,6 +374,14 @@ const isAssetDataRecord = (bitmark) => {
   return isCaptureDataRecord(bitmark) || isFileRecord(bitmark)
 };
 
+const getImageSize = async (imageFilePath) => {
+  return new Promise((resolve) => {
+    Image.getSize(imageFilePath, (width, height) => {
+      resolve({width, height})
+    });
+  })
+};
+
 export {
   issue,
   populateAssetNameFromImage,
@@ -360,5 +394,7 @@ export {
   isFileRecord,
   isCaptureDataRecord,
   isHealthDataRecord,
-  isAssetDataRecord
+  isAssetDataRecord,
+  isJPGFile,
+  getImageSize
 }

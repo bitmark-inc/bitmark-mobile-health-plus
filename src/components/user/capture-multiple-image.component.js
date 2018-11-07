@@ -35,7 +35,7 @@ export class CaptureMultipleImagesComponent extends Component {
   async captureImage() {
     if (this.cameraRef) {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-      const options = { base64: true };
+      const options = {quality: 1};
       const data = await this.cameraRef.takePictureAsync(options);
       let images = this.state.images;
       let selectedIndex = this.state.selectedIndex < 0 ? images.length : this.state.selectedIndex;
