@@ -347,29 +347,29 @@ class PrivateUserComponent extends Component {
         <SafeAreaView style={[styles.bodySafeView,]}>
           {/*SEARCH AREA*/}
           {/*TODO: localization*/}
-          <View style={[styles.searchArea, (this.state.searchTerm ? { flex: 1 } : {})]}>
-            <SearchInputComponent
-              throttle={300}
-              onSearchTermChange={(searchTerm) => {
-                this.setState({
-                  isSearching: true,
-                  searchTerm
-                });
+          {/*<View style={[styles.searchArea, (this.state.searchTerm ? { flex: 1 } : {})]}>*/}
+            {/*<SearchInputComponent*/}
+              {/*throttle={300}*/}
+              {/*onSearchTermChange={(searchTerm) => {*/}
+                {/*this.setState({*/}
+                  {/*isSearching: true,*/}
+                  {/*searchTerm*/}
+                {/*});*/}
 
-                this.updateSearch(searchTerm);
-              }}
-              style={styles.searchInput}
-              placeholder={global.i18n.t("UserComponent_search")}>
-            </SearchInputComponent>
+                {/*this.updateSearch(searchTerm);*/}
+              {/*}}*/}
+              {/*style={styles.searchInput}*/}
+              {/*placeholder={global.i18n.t("UserComponent_search")}>*/}
+            {/*</SearchInputComponent>*/}
 
-            {this.state.isSearching && <View style={styles.indicatorContainer}>
-              <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />
-              {/*TODO: localization*/}
-              <Text>{global.i18n.t("UserComponent_searching")}</Text>
-            </View>
-            }
-            {(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}
-          </View>
+            {/*{this.state.isSearching && <View style={styles.indicatorContainer}>*/}
+              {/*<MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />*/}
+              {/*/!*TODO: localization*!/*/}
+              {/*<Text>{global.i18n.t("UserComponent_searching")}</Text>*/}
+            {/*</View>*/}
+            {/*}*/}
+            {/*{(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}*/}
+          {/*</View>*/}
 
           {/*DATA PANEL*/}
           {!this.state.searchTerm && <View style={styles.body}>
@@ -472,7 +472,8 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: 0,
+    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+    // paddingTop: 0,
     flex: 1,
   },
   bodyContent: {

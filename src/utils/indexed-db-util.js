@@ -3,54 +3,54 @@ import { DataProcessor } from "../processors/data-processor";
 import moment from "moment/moment";
 
 const initializeIndexedDB = async () => {
-    await IndexedDB.connectDB();
-    await IndexedDB.createIndexedDataTable();
+  // await IndexedDB.connectDB();
+  // await IndexedDB.createIndexedDataTable();
 };
 
 const insertDetectedDataToIndexedDB = async (bitmarkId, assetName, metadataList, detectedTexts) => {
-  let accountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
-  let metadataStr = metadataList.map((metadata) => {
-    return metadata.label == 'Saved Time' ? `${metadata.label} ${moment(metadata.value).format('YYYY MMM DD')}` : `${metadata.label} ${metadata.value}`;
-  }).join(' ');
-  let detectedTextsStr = (detectedTexts instanceof Array) ? detectedTexts.join(' ') : '';
-  detectedTextsStr = removeVietnameseSigns(detectedTextsStr);
-
-  await IndexedDB.insert(accountNumber, bitmarkId, assetName, metadataStr, detectedTextsStr);
+  // let accountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
+  // let metadataStr = metadataList.map((metadata) => {
+  //   return metadata.label == 'Saved Time' ? `${metadata.label} ${moment(metadata.value).format('YYYY MMM DD')}` : `${metadata.label} ${metadata.value}`;
+  // }).join(' ');
+  // let detectedTextsStr = (detectedTexts instanceof Array) ? detectedTexts.join(' ') : '';
+  // detectedTextsStr = removeVietnameseSigns(detectedTextsStr);
+  //
+  // await IndexedDB.insert(accountNumber, bitmarkId, assetName, metadataStr, detectedTextsStr);
 };
 
 const insertHealthDataToIndexedDB = async (bitmarkId, healthData) => {
-  let accountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
-  let metadataList = [];
-  for (let key in healthData.assetMetadata) {
-    let searchableData = (key == 'Saved Time') ? `${key} ${moment(healthData.assetMetadata[key]).format('YYYY MMM DD')}` : `${key} ${healthData.assetMetadata[key]}`;
-    metadataList.push(searchableData);
-  }
-
-  let metadataStr = metadataList.join(' ');
-
-  // Strip json string to searchable text
-  // Ex: {"Source":"HealthKit","Saved Time":"2018-01-01"} -> Source HealthKit Saved Time 2018-01-01
-  let healthDataStr = healthData.data.replace(/{/g, "").replace(/}/g, "").replace(/"/g, "").replace(/:/g, " ").replace(/,/g, " ");
-
-  await IndexedDB.insert(accountNumber, bitmarkId, healthData.assetName, metadataStr, healthDataStr);
+  // let accountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
+  // let metadataList = [];
+  // for (let key in healthData.assetMetadata) {
+  //   let searchableData = (key == 'Saved Time') ? `${key} ${moment(healthData.assetMetadata[key]).format('YYYY MMM DD')}` : `${key} ${healthData.assetMetadata[key]}`;
+  //   metadataList.push(searchableData);
+  // }
+  //
+  // let metadataStr = metadataList.join(' ');
+  //
+  // // Strip json string to searchable text
+  // // Ex: {"Source":"HealthKit","Saved Time":"2018-01-01"} -> Source HealthKit Saved Time 2018-01-01
+  // let healthDataStr = healthData.data.replace(/{/g, "").replace(/}/g, "").replace(/"/g, "").replace(/:/g, " ").replace(/,/g, " ");
+  //
+  // await IndexedDB.insert(accountNumber, bitmarkId, healthData.assetName, metadataStr, healthDataStr);
 };
 
 const searchIndexedBitmarks = async(searchTerm) => {
-  let accountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
-
-  searchTerm = removeVietnameseSigns(searchTerm);
-
-  // Modify original search term for fulltext search
-  // Ex: "hello world" -> "hello* world*
-  let searchTermParts = [];
-  searchTerm.split(' ').forEach(item => {
-    if (item) searchTermParts.push(`${item}*`);
-  });
-  searchTerm = `${searchTermParts.join(' ')}`;
-
-  let indexedRecords = (await IndexedDB.query(accountNumber, searchTerm)) || [];
-
-  return indexedRecords.map(record => record.bitmarkId);
+  // let accountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
+  //
+  // searchTerm = removeVietnameseSigns(searchTerm);
+  //
+  // // Modify original search term for fulltext search
+  // // Ex: "hello world" -> "hello* world*
+  // let searchTermParts = [];
+  // searchTerm.split(' ').forEach(item => {
+  //   if (item) searchTermParts.push(`${item}*`);
+  // });
+  // searchTerm = `${searchTermParts.join(' ')}`;
+  //
+  // let indexedRecords = (await IndexedDB.query(accountNumber, searchTerm)) || [];
+  //
+  // return indexedRecords.map(record => record.bitmarkId);
 };
 
 const removeVietnameseSigns = (str) => {
