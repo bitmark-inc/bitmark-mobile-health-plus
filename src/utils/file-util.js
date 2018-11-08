@@ -57,10 +57,10 @@ const FileUtil = {
   },
 
   zip: async (inputPath, outputPath) => {
-    return zip(inputPath, outputPath);
+    return await zip(inputPath, outputPath);
   },
   unzip: async (inputPath, outputPath) => {
-    return unzip(inputPath, outputPath);
+    return await unzip(inputPath, outputPath);
   },
   exists: async (filePath) => {
     return await RNFS.exists(filePath);
