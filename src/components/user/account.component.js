@@ -138,7 +138,7 @@ export class PrivateAccountComponent extends Component {
                   }}>
                     <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => Share.share({ title: '', message: emailAddress })}>
+                  <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => Share.share({ title: '', message: emailAddress })}>
                     <Text style={styles.accountNumberShareButtonText}>{i18n.t('AccountComponent_accountNumberShareButtonText')}</Text>
                   </TouchableOpacity>
                 </View>
