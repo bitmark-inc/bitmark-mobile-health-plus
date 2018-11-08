@@ -76,12 +76,12 @@ export class BitmarkLegalComponent extends React.Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={[styles.header, this.state.displayedContentName ? {} : { borderBottomWidth: 1, borderColor: '#FF4444' }]}>
-              {!this.state.displayedContentName && <Text style={[styles.headerTitle]}>BITMARK LEGAL</Text>}
-              {this.state.displayedContentName === Contents.KnowYourRights.name && <Text style={styles.headerTitle}>KNOW YOUR RIGHTS</Text>}
-              {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={styles.headerTitle}>PRIVACY POLICY</Text>}
-              {this.state.displayedContentName === Contents.TermOfService.name && <Text style={styles.headerTitle}>TERMS OF SERVICE</Text>}
+              {!this.state.displayedContentName && <Text style={[styles.headerTitle]}>{i18n.t('BitmarkLegalComponent_headerTitle1')}</Text>}
+              {this.state.displayedContentName === Contents.KnowYourRights.name && <Text style={styles.headerTitle}>{i18n.t('BitmarkLegalComponent_headerTitle2')}</Text>}
+              {this.state.displayedContentName === Contents.PrivacyPolicy.name && <Text style={styles.headerTitle}>{i18n.t('BitmarkLegalComponent_headerTitle3')}</Text>}
+              {this.state.displayedContentName === Contents.TermOfService.name && <Text style={styles.headerTitle}>{i18n.t('BitmarkLegalComponent_headerTitle4')}</Text>}
               <TouchableOpacity onPress={this.state.displayedContentName ? Actions.pop : this.shareLegal.bind(this)}>
-                <Text style={styles.doneButtonText}>{this.state.displayedContentName ? 'Done' : 'Print'}</Text>
+                <Text style={styles.doneButtonText}>{this.state.displayedContentName ? i18n.t('BitmarkLegalComponent_doneButtonText1') : i18n.t('BitmarkLegalComponent_doneButtonText2')}</Text>
               </TouchableOpacity>
             </View>
             <ScrollView >
@@ -526,17 +526,17 @@ export class BitmarkLegalComponent extends React.Component {
             </ ScrollView>
             {!!this.state.displayedContentName && <View style={styles.lastBottomButtonArea}>
               <TouchableOpacity style={styles.lastBottomButton} onPress={this.shareLegal}>
-                <Text style={styles.lastBottomButtonText}>SHARE</Text>
+                <Text style={styles.lastBottomButtonText}>{i18n.t('BitmarkLegalComponent_lastBottomButtonText1')}</Text>
               </TouchableOpacity>
             </View>}
           </View>
           {!this.state.displayedContentName && <View style={styles.lastBottomButtonArea}>
             <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white' }]}
               onPress={Actions.pop}>
-              <Text style={[styles.lastBottomButtonText, { color: '#FF4444' }]}>DISAGREE</Text>
+              <Text style={[styles.lastBottomButtonText, { color: '#FF4444' }]}>{i18n.t('BitmarkLegalComponent_lastBottomButtonText2')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), marginLeft: convertWidth(18) }]} onPress={Actions.touchFaceId}>
-              <Text style={styles.lastBottomButtonText}>AGREE</Text>
+              <Text style={styles.lastBottomButtonText}>{i18n.t('BitmarkLegalComponent_lastBottomButtonText3')}</Text>
             </TouchableOpacity>
           </View>}
         </View>
@@ -563,24 +563,22 @@ const styles = StyleSheet.create({
     borderColor: '#FF4444'
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    padding: convertWidth(20),
-    paddingTop: convertWidth(15),
-    height: 70,
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    width: '100%', minHeight: 70,
+    padding: convertWidth(20), paddingTop: convertWidth(15),
   },
 
   headerTitle: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     fontSize: 18,
     fontWeight: '900',
+    flex: 1,
   },
   doneButtonText: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontSize: 16,
     color: '#FF4444',
+    width: 70,
   },
 
   legalContent: {
@@ -592,7 +590,7 @@ const styles = StyleSheet.create({
 
   contentSubTitleText: {
     width: '100%',
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     fontSize: 15,
     fontWeight: '900',
     paddingLeft: convertWidth(19),
@@ -604,7 +602,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontSize: 15,
     fontStyle: 'italic',
     fontWeight: '300',
@@ -618,7 +616,7 @@ const styles = StyleSheet.create({
     paddingRight: convertWidth(19),
     fontSize: 15,
     fontWeight: '300',
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     marginTop: 5,
   },
 
@@ -635,7 +633,7 @@ const styles = StyleSheet.create({
   knowYourRightsRowText: {
     fontSize: 12,
     fontWeight: '300',
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     lineHeight: 21,
   },
 
@@ -653,7 +651,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '800',

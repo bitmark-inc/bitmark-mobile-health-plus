@@ -12,6 +12,7 @@ import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 import { AppProcessor, DataProcessor } from './../../processors';
 import { EventEmitterService } from './../../services';
+import { isImageFile } from "../../utils";
 
 export class EmailRecordComponent extends Component {
   static propTypes = {
@@ -37,7 +38,10 @@ export class EmailRecordComponent extends Component {
       list: [],
       ids: []
     };
-    this.processEmailRecordsFromAnEmail(emailAddress[0]);
+  }
+
+  componentDidMount() {
+    this.processEmailRecordsFromAnEmail(this.state.selectedEmail);
   }
 
   async processEmailRecordsFromAnEmail(selectedEmail) {
@@ -45,7 +49,6 @@ export class EmailRecordComponent extends Component {
     KeepAwake.activate();
     let results = await AppProcessor.doProcessEmailRecords(DataProcessor.getUserInformation().bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
     KeepAwake.deactivate();
-    console.log({ results });
     this.setState({
       list: results.list || [],
       ids: results.ids || [],
@@ -116,9 +119,7 @@ export class EmailRecordComponent extends Component {
                 renderItem={({ item, index }) => {
                   return (
                     <TouchableOpacity key={index} onPress={() => {
-                      const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-                      let fileExtension = item.filePath.substring(item.filePath.lastIndexOf('.') + 1);
-                      if (imageExtensions.includes(fileExtension.toUpperCase())) {
+                      if (isImageFile(item.filePath)) {
                         Actions.fullViewCaptureAsset({ filePath: item.filePath, title: item.assetName });
                       } else {
                         Alert.alert(i18n.t('EmailRecordComponent_fileTypeNotSupport'));
@@ -139,9 +140,7 @@ export class EmailRecordComponent extends Component {
                   renderItem={({ item, index }) => {
                     return (
                       <TouchableOpacity key={index} onPress={() => {
-                        const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-                        let fileExtension = item.filePath.substring(item.filePath.lastIndexOf('.') + 1);
-                        if (imageExtensions.includes(fileExtension.toUpperCase())) {
+                        if (isImageFile(item.filePath)) {
                           Actions.fullViewCaptureAsset({ filePath: item.filePath, title: item.assetName });
                         } else {
                           Alert.alert(i18n.t('EmailRecordComponent_fileTypeNotSupport'));
@@ -222,19 +221,19 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   title: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '900',
     fontSize: 36,
     color: '#464646',
   },
   message: {
     marginTop: 24,
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
   emailRecordItem: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     color: '#0060F1',
@@ -242,20 +241,20 @@ const styles = StyleSheet.create({
   },
 
   acceptedEmailRecordItem: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 20,
   },
   processingText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '800',
     fontSize: 16,
     color: '#0060F1',
     marginTop: 16,
   },
   existingAssetMessage: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 20,
@@ -278,7 +277,7 @@ const styles = StyleSheet.create({
     width: convertWidth(143),
   },
   acceptButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: 'white'
@@ -293,7 +292,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   rejectButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: '#FF4444'
@@ -308,7 +307,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444'
   },
   viewButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: 'white'

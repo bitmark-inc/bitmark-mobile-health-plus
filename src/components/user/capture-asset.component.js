@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import randomString from "random-string";
 
-import { convertWidth, issue, populateAssetNameFromImage } from '../../utils';
+import { convertWidth, issue, populateAssetNameFromImage, generateThumbnail, insertDetectedDataToIndexedDB } from '../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
@@ -29,9 +29,18 @@ export class CaptureAssetComponent extends Component {
     metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
 
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-    assetName = await populateAssetNameFromImage(filePath, assetName);
+    let detectResult = await populateAssetNameFromImage(filePath, assetName);
+    assetName = detectResult.assetName;
+    let detectedTexts = detectResult.detectedTexts;
+
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-    issue(filePath, assetName, metadataList, 'image', 1, () => Actions.assetNameInform({ assetName }));
+    issue(filePath, assetName, metadataList, 'image', 1, async (data) => {
+      let bitmarkId = data[0].id;
+      let isMultipleAsset = false;
+      await generateThumbnail(filePath, bitmarkId, isMultipleAsset);
+      await insertDetectedDataToIndexedDB(bitmarkId, assetName, metadataList, detectedTexts);
+      Actions.assetNameInform({ assetNames: [assetName] });
+    });
   }
 
 
@@ -80,7 +89,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   headerTitle: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     fontSize: 28,
     fontWeight: '900',
     color: 'white',
@@ -114,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

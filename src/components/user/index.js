@@ -21,6 +21,10 @@ import { AssetNameInform } from "./asset-name-inform.component";
 import { GetStartComponent } from './get-start.component';
 import { AddRecordComponent } from './add-record.component';
 import { AccountNumberComponent } from './account-number.component';
+import { LocalStorageMigrationComponent } from './local-storeage-migration.component';
+import { CaptureMultipleImagesComponent } from './capture-multiple-image.component';
+import { RecordImagesComponent } from './record-images.component';
+import { OrderCombineImagesComponent } from './order-combine-images.component';
 
 
 
@@ -51,6 +55,10 @@ export class UserRouterComponent extends Component {
           <Scene key="getStart" component={GetStartComponent} />
           <Scene key="addRecord" component={AddRecordComponent} />
           <Scene key="accountNumber" component={AccountNumberComponent} />
+          <Scene key="localStorageMigration" component={LocalStorageMigrationComponent} />
+          <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} />
+          <Scene key="recordImages" component={RecordImagesComponent} />
+          <Scene key="orderCombineImages" component={OrderCombineImagesComponent} />
         </Stack>
       </Router>
     );

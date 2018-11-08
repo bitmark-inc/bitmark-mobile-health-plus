@@ -89,6 +89,15 @@ const doIssueFile = async ({ filePath, assetName, metadataList, quantity, isPubl
   return await submitting(DataProcessor.doIssueFile(touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset), processingInfo);
 };
 
+const doIssueMultipleFiles = async ({ listInfo, processingInfo }) => {
+  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doIssueFile'));
+  if (!touchFaceIdSession) {
+    return null;
+  }
+  return await submitting(DataProcessor.doIssueMultipleFiles(touchFaceIdSession, listInfo), processingInfo);
+};
+
+
 const doBitmarkHealthData = async ({ list, processingData }) => {
   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doBitmarkHealthData'));
   if (!touchFaceIdSession) {
@@ -97,22 +106,22 @@ const doBitmarkHealthData = async ({ list, processingData }) => {
   return await submitting(DataProcessor.doBitmarkHealthData(touchFaceIdSession, list), processingData);
 };
 
-const doDownloadBitmark = async ({ bitmarkIdOrGrantedId, processingData }) => {
+const doDownloadBitmark = async ({ bitmarkIdOrGrantedId, assetId, processingData }) => {
   // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
   // if (!touchFaceIdSession) {
   //   return null;
   // }
   let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await submitting(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId), processingData);
+  return await submitting(DataProcessor.doDownloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId, assetId), processingData);
 };
 
-const doDownloadHealthDataBitmark = async ({ bitmarkIdOrGrantedId, processingData }) => {
+const doDownloadHealthDataBitmark = async ({ bitmarkIdOrGrantedId, assetId, processingData }) => {
   // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
   // if (!touchFaceIdSession) {
   //   return null;
   // }
   let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  return await submitting(DataProcessor.doDownloadHealthDataBitmark(touchFaceIdSession, bitmarkIdOrGrantedId), processingData);
+  return await submitting(DataProcessor.doDownloadHealthDataBitmark(touchFaceIdSession, bitmarkIdOrGrantedId, assetId), processingData);
 };
 
 
@@ -165,10 +174,16 @@ const doRejectEmailRecords = async ({ emailRecord }) => {
   return processing(DataProcessor.doRejectEmailRecords(emailRecord));
 };
 
+const doMigrateFilesToLocalStorage = async () => {
+  return processing(DataProcessor.doMigrateFilesToLocalStorage());
+}
 const doProcessEmailRecords = async ({ bitmarkAccountNumber, emailIssueRequestsFromAnEmail }) => {
   return AccountService.doProcessEmailRecords(bitmarkAccountNumber, emailIssueRequestsFromAnEmail);
 };
 
+const doCombineImages = async ({ images }) => {
+  return processing(DataProcessor.doCombineImages(images));
+};
 
 // ================================================================================================
 // ================================================================================================
@@ -179,6 +194,7 @@ let AppTasks = {
   doLogout,
   doDeleteAccount,
   doIssueFile,
+  doIssueMultipleFiles,
   doBitmarkHealthData,
   doDownloadBitmark,
   doDownloadHealthDataBitmark,
@@ -192,7 +208,9 @@ let AppTasks = {
   doConfirmGrantingAccess,
   doAcceptEmailRecords,
   doRejectEmailRecords,
+  doMigrateFilesToLocalStorage,
   doProcessEmailRecords,
+  doCombineImages,
 };
 
 let registeredTasks = {};

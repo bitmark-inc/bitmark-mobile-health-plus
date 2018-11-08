@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   notificationTitle: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     color: '#FF4444',
     fontSize: 20,
     fontWeight: '900',
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   notificationDescription: {
     marginTop: 25,
     width: convertWidth(275),
-    fontFamily: 'Avenir light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
     textAlign: 'center',
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   enableButtonText: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

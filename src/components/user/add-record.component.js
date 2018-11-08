@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
     flex: 1,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
 
   },
   bottomButtonText: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '900',
     fontSize: 16,
     color: 'white'

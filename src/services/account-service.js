@@ -6,8 +6,9 @@ import randomString from 'random-string';
 
 import { AccountModel, CommonModel, BitmarkSDK, UserModel, BitmarkModel } from './../models';
 import { config } from '../configs';
-import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage } from './../utils';
+import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError } from './../utils';
 import { CryptoAdapter } from '../models/adapters/crypto';
+import { isImageFile, isPdfFile } from "../utils";
 const {
   PushNotificationIOS,
   Platform,
@@ -163,6 +164,7 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
     let encryptedFilePath = `${folderPath}/temp_email_records_encrypted.zip`;
     await FileUtil.downloadFile(emailIssueRequest.download_url, encryptedFilePath);
 
+
     let decryptedFilePath = `${folderPath}/temp_email_records_decrypted.zip`;
     await CryptoAdapter.decryptAES(encryptedFilePath, emailIssueRequest.aes_key, emailIssueRequest.aes_iv, emailIssueRequest.aes_cipher, decryptedFilePath);
 
@@ -179,43 +181,49 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
     // await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
     await FileUtil.unzip(decryptedFilePath, unzipFolder);
 
-    let list = await FileUtil.readDir(`${unzipFolder}/data`);
-    if (list && list.length > 0) {
-      results.ids.push(emailIssueRequest.id);
-      for (let filename of list) {
-        if (!filename.toLowerCase().endsWith('.desc')) {
-          let filePath = `${unzipFolder}/data/${filename}`;
-          let assetName;
-          let existingAsset = false;
-          let metadataList = [];
-          let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
-          let assetInformation = await BitmarkModel.doGetAssetInformation(assetInfo.id);
-          if (assetInformation) {
-            existingAsset = true;
-            assetName = assetInformation.name;
-          } else {
-
-            let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
-            let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
-
-            const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-            const pdfExtensions = ['PDF'];
-            if (pdfExtensions.includes(fileExtension.toUpperCase())) {
-              assetName = await populateAssetNameFromPdf(filePath, defaultAssetName);
-            } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
-              assetName = await populateAssetNameFromImage(filePath, defaultAssetName);
+    let existDataFolder = await runPromiseWithoutError(FileUtil.exists(`${unzipFolder}/data`));
+    if (existDataFolder && !existDataFolder.error) {
+      let list = await FileUtil.readDir(`${unzipFolder}/data`);
+      if (list && list.length > 0) {
+        results.ids.push(emailIssueRequest.id);
+        for (let filename of list) {
+          if (!filename.toLowerCase().endsWith('.desc')) {
+            let filePath = `${unzipFolder}/data/${filename}`;
+            let assetName;
+            let detectedTexts;
+            let existingAsset = false;
+            let metadataList = [];
+            let assetInfo = await BitmarkModel.doPrepareAssetInfo(filePath);
+            let assetInformation = await BitmarkModel.doGetAssetInformation(assetInfo.id);
+            if (assetInformation) {
+              existingAsset = true;
+              assetName = assetInformation.name;
             } else {
-              assetName = defaultAssetName;
-            }
-            metadataList.push({ label: 'Source', value: 'Medical Records' });
-            metadataList.push({ label: 'Saved Time', value: new Date(emailIssueRequest.created_at).toISOString() });
-          }
 
-          results.list.push({
-            filePath, assetName,
-            metadata: metadataList,
-            existingAsset,
-          });
+              let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+
+              if (isPdfFile(filePath)) {
+                let detectResult = await populateAssetNameFromPdf(filePath, defaultAssetName);
+                assetName = detectResult.assetName;
+                detectedTexts = detectResult.detectedTexts;
+              } else if (isImageFile(filePath)) {
+                let detectResult = await populateAssetNameFromImage(filePath, defaultAssetName);
+                assetName = detectResult.assetName;
+                detectedTexts = detectResult.detectedTexts;
+              } else {
+                assetName = defaultAssetName;
+              }
+              metadataList.push({ label: 'Source', value: 'Medical Records' });
+              metadataList.push({ label: 'Saved Time', value: new Date(emailIssueRequest.created_at).toISOString() });
+            }
+
+            results.list.push({
+              filePath, assetName,
+              metadata: metadataList,
+              existingAsset,
+              detectedTexts
+            });
+          }
         }
       }
     }

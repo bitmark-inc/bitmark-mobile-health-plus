@@ -7,6 +7,8 @@ def pods
     pod 'KeychainAccess'
     pod 'Intercom'
     pod 'TesseractOCRiOS', :git => 'https://github.com/gali8/Tesseract-OCR-iOS.git'
+    pod 'iCloudDocumentSync'
+    pod 'HockeySDK'
     
 end
 
@@ -26,7 +28,6 @@ target 'BitmarkHealthPlus dev' do
     use_frameworks!
     
     pods
-    pod 'HockeySDK'
     
 end
 
@@ -34,7 +35,6 @@ target 'BitmarkHealthPlus beta' do
     use_frameworks!
     
     pods
-    pod 'HockeySDK'
     
 end
 

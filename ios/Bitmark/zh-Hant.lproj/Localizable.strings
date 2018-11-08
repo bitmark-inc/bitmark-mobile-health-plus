@@ -6,5 +6,6 @@
   Copyright © 2018 Facebook. All rights reserved.
 */
 
-"info_plist_touch_face_id" = "info_plist_touch_face_id";
-"notification_intercom_new_messages" = "notification_intercom_new_messages";
+"info_plist_touch_face_id" = "欲簽署及加密你的健康資料，請使用指紋辨識/臉部辨識或密碼";
+"notification_intercom_new_messages" = "你有來自Bitmark支持團隊的訊息，請按此查看！";
+"notification_email_issue_request" = "%@ 想要新增健康資料至你的Bitmark Health帳戶，請檢視你的資料並決定是否接受。";

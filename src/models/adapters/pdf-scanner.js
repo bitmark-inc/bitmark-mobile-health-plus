@@ -1,15 +1,37 @@
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 
 const PDFScannerNative = NativeModules.PDFScanner;
 
 const PDFScanner = {
   pdfScan: (filePath) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       PDFScannerNative.pdfScan(filePath, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
           resolve(false);
+        }
+      });
+    });
+  },
+  pdfThumbnail: (filePath, width, height, outputPath) => {
+    return new Promise((resolve, reject) => {
+      PDFScannerNative.pdfThumbnail(filePath, width, height, outputPath, (ok, result) => {
+        if (ok) {
+          resolve(result);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  pdfCombine: (imagePaths, output) => {
+    return new Promise((resolve, reject) => {
+      PDFScannerNative.pdfCombine(imagePaths, output, (ok, result) => {
+        if (ok) {
+          resolve();
+        } else {
+          reject(new Error(result));
         }
       });
     });

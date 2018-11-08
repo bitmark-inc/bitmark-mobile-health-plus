@@ -12,6 +12,7 @@ import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 import { AppProcessor } from './../../processors';
 import { EventEmitterService } from './../../services';
+import { insertHealthDataToIndexedDB } from "../../utils";
 
 export class BitmarkHealthDataComponent extends Component {
   static propTypes = {
@@ -40,8 +41,12 @@ export class BitmarkHealthDataComponent extends Component {
               <TouchableOpacity style={styles.signButton} onPress={() => {
                 AppProcessor.doBitmarkHealthData(this.props.list, {
                   indicator: true, title: i18n.t('BitmarkHealthDataComponent_alertTitle'), message: ''
-                }).then(result => {
-                  if (result) {
+                }).then(results => {
+                  if (results) {
+                    console.log('health-data-results:', results);
+                    results.forEach(item => {
+                      insertHealthDataToIndexedDB(item.id, item.healthData);
+                    });
                     Actions.pop();
                   }
                 }).catch(error => {
@@ -83,14 +88,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '900',
     fontSize: 36,
     color: '#464646',
   },
   message: {
     marginTop: 24,
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444'
   },
   signButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: 'white'

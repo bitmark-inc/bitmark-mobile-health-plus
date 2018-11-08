@@ -4,14 +4,20 @@ import ReactNative, {
   StyleSheet, Alert, Linking,
   Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
-
 let { ActionSheetIOS } = ReactNative;
-import { Provider, connect } from 'react-redux';
+import moment from 'moment';
 
+import { Provider, connect } from 'react-redux';
+import randomString from 'random-string';
+
+import ImagePicker from 'react-native-image-crop-picker';
+// import ImagePicker from 'react-native-image-picker';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import {
   FileUtil,
   convertWidth, issue,
-  populateAssetNameFromImage, populateAssetNameFromPdf
+  populateAssetNameFromImage, populateAssetNameFromPdf, generateThumbnail, isImageFile, isPdfFile,
+  checkThumbnailForBitmark, initializeIndexedDB, insertDetectedDataToIndexedDB, isAssetDataRecord, searchIndexedBitmarks
 } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
@@ -19,9 +25,9 @@ import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
 import { UserBitmarksStore } from '../../stores';
-
-import ImagePicker from 'react-native-image-picker';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import { SearchInputComponent } from "./search-input.component";
+import { MaterialIndicator } from "react-native-indicators";
+import { SearchResultsComponent } from "./search-results.component";
 
 class PrivateUserComponent extends Component {
   static propTypes = {
@@ -30,6 +36,16 @@ class PrivateUserComponent extends Component {
   };
   constructor(props) {
     super(props);
+    this.doIssueImage = this.doIssueImage.bind(this);
+    this.updateSearch = this.updateSearch.bind(this);
+
+    this.state = {
+      searchResults: {}
+    }
+  }
+
+  componentDidMount() {
+    initializeIndexedDB();
   }
 
   addRecord() {
@@ -49,16 +65,130 @@ class PrivateUserComponent extends Component {
       });
   }
 
-  onTakePhoto() {
-    ImagePicker.launchCamera({}, (response) => {
-      this.processOnChooseImage(response);
+  doIssueImage(images, combineFilesList) {
+    console.log('doIssueImage :', images, combineFilesList);
+    //check existing assets
+    let doCheckExistingAsset = async () => {
+      for (let imageInfo of images) {
+        let filePath = imageInfo.uri.replace('file://', '');
+        let { asset } = await AppProcessor.doCheckFileToIssue(filePath);
+        if (asset && asset.name) {
+          let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
+            ? i18n.t('CaptureAssetComponent_alertMessage11', { type: 'image' })
+            : i18n.t('CaptureAssetComponent_alertMessage12', { type: 'image' });
+          return message;
+        }
+      }
+    };
+    // issue images
+    let doIssuance = async () => {
+      let listAssetName = [];
+      let listInfo = [];
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+      for (let imageInfo of images) {
+        let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+        let metadataList = [];
+        metadataList.push({ label: 'Source', value: 'Health Records' });
+        metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
+        let filePath = imageInfo.uri.replace('file://', '');
+
+        let detectedTexts;
+        let detectResult;
+        if (combineFilesList && combineFilesList.length) {
+          // In the case of combined file. "images" array only has one file path (combined PDF file)
+          // Take the first image from combineFilesList to detect asset name
+          let inCombineAssetNames = [];
+          let inCombineDetectedTexts = [];
+          for (let i = 0; i < combineFilesList.length; i++) {
+            let inCombineDetectResult = await populateAssetNameFromImage(combineFilesList[i].uri, assetName);
+            inCombineAssetNames.push(inCombineDetectResult.assetName);
+            inCombineDetectedTexts = inCombineDetectedTexts.concat(inCombineDetectResult.detectedTexts);
+          }
+
+          assetName = inCombineAssetNames[0];
+          detectedTexts = inCombineDetectedTexts;
+        } else {
+          detectResult = await populateAssetNameFromImage(filePath, assetName);
+          assetName = detectResult.assetName;
+          detectedTexts = detectResult.detectedTexts;
+        }
+
+        if (assetName.length > 64) assetName = assetName.substring(0, 64);
+
+        listInfo.push({
+          filePath, assetName, metadataList, detectedTexts, quantity: 1, isPublicAsset: false,
+        });
+
+        listAssetName.push(assetName);
+      }
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+
+      let bitmarks = await AppProcessor.doIssueMultipleFiles(listInfo, {
+        indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
+      });
+
+      if (bitmarks) {
+        for (let i = 0; i < listInfo.length; i++) {
+          await generateThumbnail(listInfo[i].filePath, bitmarks[i].id, !!combineFilesList);
+          await insertDetectedDataToIndexedDB(bitmarks[i].id, listInfo[i].assetName, listInfo[i].metadataList, listInfo[i].detectedTexts);
+          FileUtil.removeSafe(listInfo[i].filePath);
+        }
+        return listAssetName;
+      }
+      return null;
+    };
+    doCheckExistingAsset().then(message => {
+      if (message) {
+        Alert.alert('', message, [{
+          text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
+        }]);
+      } else {
+        doIssuance().then((listAssetName) => {
+          console.log('listAssetName :', listAssetName);
+          if (listAssetName) {
+            Actions.assetNameInform({ assetNames: listAssetName });
+          }
+        }).catch(error => {
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+        });
+      }
+    }).catch(error => {
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
+  onTakePhoto() {
+    // Actions.orderCombineImages();
+    Actions.captureMultipleImages({ doIssueImage: this.doIssueImage });
+
+    // ImagePicker.launchCamera({}, (response) => {
+    //   this.processOnChooseImage(response);
+    // });
+  }
+
   onChooseFromLibrary() {
-    ImagePicker.launchImageLibrary({}, (response) => {
-      this.processOnChooseImage(response);
+
+    ImagePicker.openPicker({
+      multiple: true,
+      maxFiles: 0,
+      mediaType: 'photo',
+      compressImageQuality: 1,
+    }).then(results => {
+      let images = [];
+      for (let image of results) {
+        let createdAt = new Date(parseInt(image.creationDate)).toISOString();
+        images.push({ uri: image.path, createdAt });
+      }
+      if (images.length === 1) {
+        this.doIssueImage(images);
+      } else {
+        Actions.recordImages({ images, doIssueImage: this.doIssueImage });
+      }
     });
+
+    // ImagePicker.launchImageLibrary({}, (response) => {
+    //   this.processOnChooseImage(response);
+    // });
   }
 
   async processOnChooseImage(response) {
@@ -95,20 +225,22 @@ class PrivateUserComponent extends Component {
 
       let filePath = info.filePath;
       let assetName = response.fileName;
+      let detectedTexts;
 
       let willDetectAssetNameAutomatically = false;
-      const pdfExtensions = ['PDF'];
-      const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
-      let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
-      if (pdfExtensions.includes(fileExtension.toUpperCase())) {
+      if (isPdfFile(filePath)) {
         willDetectAssetNameAutomatically = true;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-        assetName = await populateAssetNameFromPdf(filePath, assetName);
+        let detectResult = await populateAssetNameFromPdf(filePath, assetName);
+        assetName = detectResult.assetName;
+        detectedTexts = detectResult.detectedTexts;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-      } else if (imageExtensions.includes(fileExtension.toUpperCase())) {
+      } else if (isImageFile(filePath)) {
         willDetectAssetNameAutomatically = true;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-        assetName = await populateAssetNameFromImage(filePath, assetName);
+        let detectResult = await populateAssetNameFromImage(filePath, assetName);
+        assetName = detectResult.assetName;
+        detectedTexts = detectResult.detectedTexts;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       }
 
@@ -116,7 +248,18 @@ class PrivateUserComponent extends Component {
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file', 1, () => willDetectAssetNameAutomatically ? Actions.assetNameInform({ assetName }) : Actions.pop());
+      issue(filePath, assetName, metadataList, 'file', 1, async (data) => {
+        let bitmarkId = data[0].id;
+        let isMultipleAsset = false;
+        await generateThumbnail(filePath, bitmarkId, isMultipleAsset);
+        await insertDetectedDataToIndexedDB(bitmarkId, assetName, metadataList, detectedTexts);
+
+        if (willDetectAssetNameAutomatically) {
+          Actions.assetNameInform({ assetNames: [assetName] });
+        } else {
+          Actions.pop();
+        }
+      });
     });
   }
 
@@ -152,9 +295,48 @@ class PrivateUserComponent extends Component {
     });
   }
 
+  async updateSearch(searchTerm) {
+    console.log('searchTerm:', searchTerm);
+    let searchResults = { length: 0, healthDataBitmarks: [], healthAssetBitmarks: [] };
+    if (searchTerm) {
+      let searchResultBitmarkIds = await searchIndexedBitmarks(searchTerm);
+
+      if (searchResultBitmarkIds.length) {
+        let allBitmarks = this.props.healthDataBitmarks.concat(this.props.healthAssetBitmarks);
+        let allBitmarksMap = {};
+        allBitmarks.forEach(bitmark => allBitmarksMap[bitmark.id] = bitmark);
+        for (let i = 0; i < searchResultBitmarkIds.length; i++) {
+          let bitmark = allBitmarksMap[searchResultBitmarkIds[i]];
+
+          if (bitmark) {
+            if (isAssetDataRecord(bitmark)) {
+              if (!bitmark.thumbnail) {
+                bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
+              }
+
+              searchResults.healthAssetBitmarks.push(bitmark);
+            } else {
+              searchResults.healthDataBitmarks.push(bitmark);
+            }
+          }
+        }
+      }
+    }
+
+    searchResults.length = searchResults.healthDataBitmarks.length + searchResults.healthAssetBitmarks.length;
+    // searchResults.length = 0;
+    console.log('searchResults:', searchResults);
+
+    this.setState({
+      searchResults,
+      isSearching: false
+    })
+  }
+
   render() {
     let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
     let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
+
     return (
       <View style={{ flex: 1, }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
@@ -163,8 +345,35 @@ class PrivateUserComponent extends Component {
           </Text>
         </TouchableOpacity>}
         <SafeAreaView style={[styles.bodySafeView,]}>
-          <View style={styles.body}>
-            <View style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]} >
+          {/*SEARCH AREA*/}
+          {/*TODO: localization*/}
+          {/*<View style={[styles.searchArea, (this.state.searchTerm ? { flex: 1 } : {})]}>*/}
+            {/*<SearchInputComponent*/}
+              {/*throttle={300}*/}
+              {/*onSearchTermChange={(searchTerm) => {*/}
+                {/*this.setState({*/}
+                  {/*isSearching: true,*/}
+                  {/*searchTerm*/}
+                {/*});*/}
+
+                {/*this.updateSearch(searchTerm);*/}
+              {/*}}*/}
+              {/*style={styles.searchInput}*/}
+              {/*placeholder={global.i18n.t("UserComponent_search")}>*/}
+            {/*</SearchInputComponent>*/}
+
+            {/*{this.state.isSearching && <View style={styles.indicatorContainer}>*/}
+              {/*<MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />*/}
+              {/*/!*TODO: localization*!/*/}
+              {/*<Text>{global.i18n.t("UserComponent_searching")}</Text>*/}
+            {/*</View>*/}
+            {/*}*/}
+            {/*{(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}*/}
+          {/*</View>*/}
+
+          {/*DATA PANEL*/}
+          {!this.state.searchTerm && <View style={styles.body}>
+            <View style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]}>
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {
 
@@ -193,10 +402,11 @@ class PrivateUserComponent extends Component {
                 </TouchableOpacity>
                 {isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.addRecord.bind(this)}>
                   <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
-                  <Text style={styles.addHealthRecordButtonText} > {i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase()}</Text>
+                  <Text style={styles.addHealthRecordButtonText}> {i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>}
               </View>
             </View>
+
             {isCurrentUser && <View style={[styles.accountArea]}>
               <TouchableOpacity style={styles.accountButton} onPress={Actions.account}>
                 <Text style={styles.accountButtonText}>
@@ -205,6 +415,7 @@ class PrivateUserComponent extends Component {
               </TouchableOpacity>
             </View>}
           </View>
+          }
         </SafeAreaView>
       </View>
     );
@@ -225,7 +436,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   accountNumberDisplayText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -233,9 +444,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  searchArea: {
+    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0)
+  },
+  searchInput: {
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+    paddingBottom: convertWidth(14)
+  },
+  searchResultsContainer: {
+    paddingLeft: convertWidth(8),
+    paddingRight: convertWidth(8),
+    backgroundColor: '#F5F5F5',
+    flex: 1,
+  },
+  indicatorContainer: {
+    paddingTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    backgroundColor: '#F5F5F5',
+    flex: 1,
+  },
+  indicator: {
+    flex: 0,
+    marginRight: 8,
+  },
   body: {
     padding: convertWidth(16),
     paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+    // paddingTop: 0,
     flex: 1,
   },
   bodyContent: {
@@ -253,7 +491,7 @@ const styles = StyleSheet.create({
     padding: convertWidth(20),
   },
   dataTitle: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -272,7 +510,7 @@ const styles = StyleSheet.create({
   },
   addHealthRecordButtonText: {
     marginLeft: convertWidth(6),
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -291,11 +529,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   accountButtonText: {
-    fontFamily: 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     color: '#FF1F1F'
-  },
+  }
+
 });
 
 const StoreUserComponent = connect(

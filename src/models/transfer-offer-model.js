@@ -12,6 +12,9 @@ const doGetTransferOfferDetail = (transferOfferId) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -34,6 +37,9 @@ const doGetAllTransferOffers = (accountNumber) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -56,6 +62,9 @@ const doGetIncomingTransferOffers = (accountNumber) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -79,6 +88,9 @@ const doGetOutgoingTransferOffers = (accountNumber) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -106,6 +118,9 @@ const doAcceptTransferOffer = (accountNumber, bitmarkId, timestamp, signature, c
       }),
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -133,7 +148,10 @@ const doRejectTransferOffer = (accountNumber, bitmarkId, signatureData) => {
       })
     }).then((response) => {
       statusCode = response.status;
-      return response.text();
+      if (statusCode >= 500) {
+        return response.text();
+      }
+      return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
         return reject(new Error('doRejectTransferOffer error :' + JSON.stringify(data)));
@@ -156,6 +174,9 @@ const doCancelTransferOffer = (accountNumber, bitmarkId) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {

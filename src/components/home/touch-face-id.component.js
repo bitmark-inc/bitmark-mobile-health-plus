@@ -12,6 +12,7 @@ import { CommonModel } from '../../models';
 import { convertWidth } from '../../utils';
 import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
+import { config } from '../../configs';
 
 export class TouchFaceIdComponent extends React.Component {
   static propTypes = {
@@ -62,7 +63,7 @@ export class TouchFaceIdComponent extends React.Component {
     }
     promise.then((user) => {
       if (user) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, true);
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, !phraseWords);
       }
     }).catch(error => {
       console.log('error :', error);
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
 
   // notification
   faceTouchIdTitle: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     color: '#FF4444',
     fontSize: 17,
     fontWeight: '900',
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
   faceTouchIdDescription: {
     marginTop: 29,
     width: convertWidth(294),
-    fontFamily: 'Avenir light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
     lineHeight: 20,
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   enableButtonText: {
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

@@ -21,7 +21,9 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, runPromiseWithoutError } from '../utils';
+import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB, populateAssetNameFromImage, isImageFile } from '../utils';
+import PDFScanner from '../models/adapters/pdf-scanner';
+import iCloudSyncAdapter from '../models/adapters/icloud';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -30,6 +32,8 @@ let websocket;
 let isLoadingData = false;
 let notificationUUID;
 let isDisplayingEmailRecord = false;
+let isMigratingFileToLocalStorage = false;
+let didMigrationFileToLocalStorage = false;
 
 const isHealthDataBitmark = (asset) => {
   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
@@ -67,6 +71,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     (!grantedAccessAccountSelected && bitmarkAccountNumber === userInformation.bitmarkAccountNumber)) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = healthDataBitmarks;
+
     storeState.healthAssetBitmarks = healthAssetBitmarks;
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
@@ -78,7 +83,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
 
   if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthData) {
     let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.createdAt);
-    if (list && list.length > 0) {
+    if (list && list.length > 0 && didMigrationFileToLocalStorage) {
       Actions.bitmarkHealthData({ list });
     }
   }
@@ -121,31 +126,38 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       }
       return { bitmarks: totalBitmarks, assets: totalAssets };
     };
-    doGetAllBitmarks().then(({ assets, bitmarks }) => {
+
+    doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
       let healthDataBitmarks = [], healthAssetBitmarks = [];
-      bitmarks.forEach(bitmark => {
+      for (let bitmark of bitmarks) {
+
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
           if (isHealthDataBitmark(asset)) {
+            asset.filePath = await detectLocalAssetFilePath(asset.id);
             bitmark.asset = asset;
             healthDataBitmarks.push(bitmark);
           }
           if (isHealthAssetBitmark(asset)) {
+            asset.filePath = await detectLocalAssetFilePath(asset.id);
             bitmark.asset = asset;
+            bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
             healthAssetBitmarks.push(bitmark);
           }
         }
-      });
+      }
 
       let compareFunction = (a, b) => {
-        if (a.status === 'pending') {
+        if (a.status === 'pending' && b.status !== 'pending') {
+          return -1;
+        } else if (b.status === 'pending' && a.status !== 'pending') {
           return 1;
+        } else if (a.status === 'pending' && b.status === 'pending') {
+          return 0;
         }
-        if (b.status === 'pending') {
-          return 1;
-        }
+
         return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
-      }
+      };
       healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
       healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
 
@@ -167,7 +179,7 @@ const doCheckNewAccesses = async (accesses) => {
   if (grantedAccessAccountSelected) {
     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === grantedAccessAccountSelected.grantor);
   }
-  if (accesses && accesses.waiting && accesses.waiting.length > 0) {
+  if (accesses && accesses.waiting && accesses.waiting.length > 0 && didMigrationFileToLocalStorage) {
     Actions.confirmAccess({ token: accesses.waiting[0].id, grantee: accesses.waiting[0].grantee });
   }
 };
@@ -200,7 +212,7 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
     isDisplayingEmailRecord = false;
     return;
   }
-  if (Object.keys(mapEmailRecords).length > 0 && !isDisplayingEmailRecord) {
+  if (Object.keys(mapEmailRecords).length > 0 && !isDisplayingEmailRecord && didMigrationFileToLocalStorage) {
     isDisplayingEmailRecord = true;
     Actions.emailRecords({ mapEmailRecords });
   } else {
@@ -232,6 +244,13 @@ const runOnBackground = async () => {
     userInformation = userInfo;
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);
   }
+
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  appInfo.onScreenAt = appInfo.onScreenAt || moment().toDate().getTime();
+  appInfo.offScreenAt = moment().toDate().getTime();
+  await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
     await runGetAccountAccessesInBackground();
@@ -370,13 +389,9 @@ const doLogout = async () => {
   }
   CommonModel.resetFaceTouchSessionId();
   await UserModel.doRemoveUserInfo();
-  await FileUtil.removeSafe(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
-  await FileUtil.removeSafe(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
+  await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}`);
+  await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
   await Intercom.reset();
-  await CommonModel.doTrackEvent({
-    event_name: 'health_plus_user_delete_account',
-    account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-  });
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   userInformation = {};
@@ -399,24 +414,39 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 
-const doOpenApp = async () => {
+const doOpenApp = async (justCreatedBitmarkAccount) => {
   // await UserModel.doRemoveUserInfo();
+
+  await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets`);
+  // runPromiseWithoutError(iCloudSyncAdapter.syncCloud());
+
   userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
-  await doTrackEvent({ appInfo, eventName: 'health_plus_download' });
 
-  if (userInformation && userInformation.bitmarkAccountNumber) {
-    await FileUtil.mkdir(FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber);
-    await FileUtil.mkdir(FileUtil.DocumentDirectory + '/encrypted_' + userInformation.bitmarkAccountNumber);
-    await FileUtil.mkdir(FileUtil.CacheDirectory + '/' + userInformation.bitmarkAccountNumber);
+  if (!appInfo.trackEvents || !appInfo.trackEvents['health_plus_download']) {
+    appInfo.trackEvents = appInfo.trackEvents || {};
+    appInfo.trackEvents['health_plus_download'] = true;
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+
+    await CommonModel.doTrackEvent({
+      event_name: 'health_plus_download',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+  }
+
+  if (userInformation && userInformation.bitmarkAccountNumber && !!CommonModel.getFaceTouchSessionId()) {
+    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}`);
+    await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
+
+    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${userInformation.bitmarkAccountNumber}`);
+    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}`);
 
     configNotification();
     if (!userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
       Intercom.reset().then(() => {
-
         return Intercom.registerIdentifiedUser({ userId: intercomUserId })
       }).then(() => {
         userInformation.intercomUserId = intercomUserId;
@@ -448,7 +478,7 @@ const doOpenApp = async () => {
           //
         }
         console.log('data event :', data);
-        if (data && data.event === 'bitmarks_grant_access' && data.id && data.grantee) {
+        if (data && data.event === 'bitmarks_grant_access' && data.id && data.grantee && didMigrationFileToLocalStorage) {
           Actions.confirmAccess({ token: data.id, grantee: data.grantee });
         }
       }
@@ -460,27 +490,14 @@ const doOpenApp = async () => {
       console.log('websocket closed:', e.code, e.reason);
     };
 
-    if (!appInfo.lastTimeOpen) {
-      let appInfo = await doGetAppInformation();
-      appInfo.lastTimeOpen = moment().toDate().getTime();
-      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    } else if (!appInfo.trackEvents || !appInfo.trackEvents.health_plus_user_open_app_two_time_in_a_week) {
-
-      let firstTime = moment(appInfo.lastTimeOpen);
-      let currentTime = moment();
-      let diffWeeks = currentTime.diff(firstTime, 'week');
-      let diffHours = currentTime.diff(firstTime, 'hour');
-      if (diffWeeks === 0 && diffHours > 1) {
-        appInfo.trackEvents = appInfo.trackEvents || {};
-        appInfo.trackEvents.health_plus_user_open_app_two_time_in_a_week = true;
-        await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-        await CommonModel.doTrackEvent({
-          event_name: 'health_plus_user_open_app_two_time_in_a_week',
-          account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-        });
-      } else if (diffWeeks > 0) {
-        appInfo.lastTimeOpen = currentTime.toDate().getTime();
-        await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+    if (justCreatedBitmarkAccount) {
+      await AccountModel.doMarkMigration(jwt);
+      didMigrationFileToLocalStorage = true;
+    } else {
+      didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
+      if (!didMigrationFileToLocalStorage && !isMigratingFileToLocalStorage) {
+        isMigratingFileToLocalStorage = true;
+        EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
       }
     }
 
@@ -515,9 +532,16 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
   await runGetUserBitmarksInBackground();
 
-  let userBitmarks = await doGetUserDataBitmarks();
-  if (!userBitmarks || !userBitmarks.healthDataBitmarks || userBitmarks.healthDataBitmarks.length === 0) {
-    await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_weekly_health_data' });
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  if (appInfo && (!appInfo.lastTimeIssued ||
+    (appInfo.lastTimeIssued && (appInfo.lastTimeIssued - moment().toDate().getTime()) > 7 * 24 * 60 * 60 * 1000))) {
+    await CommonModel.doTrackEvent({
+      event_name: 'health_plus_weekly_active_user',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+    appInfo.lastTimeIssued = moment().toDate().getTime();
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
   }
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
@@ -540,47 +564,63 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
-
+  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
   return results;
 };
 
-const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId) => {
-  let downloadedFilePath;
+const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, assetId) => {
+  let bitmarkAccountNumber = grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.grantedAccessAccountSelected;
+  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/${assetId}`;
+  let downloadedFolder = `${assetFolderPath}/downloaded`;
+  await FileUtil.mkdir(assetFolderPath);
+  await FileUtil.mkdir(downloadedFolder);
+
   if (grantedAccessAccountSelected) {
-    downloadedFilePath = await BitmarkSDK.downloadBitmarkWithGrantId(touchFaceIdSession, bitmarkIdOrGrantedId);
+    await BitmarkSDK.downloadBitmarkWithGrantId(touchFaceIdSession, bitmarkIdOrGrantedId, downloadedFolder);
   } else {
-    downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId);
+    await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId, downloadedFolder);
   }
-  downloadedFilePath = downloadedFilePath.replace('file://', '');
-  let accountFilePath = FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber + downloadedFilePath.substring(downloadedFilePath.lastIndexOf('/'), downloadedFilePath.length);
-  await FileUtil.moveFileSafe(downloadedFilePath, accountFilePath);
-  return accountFilePath;
+
+  let list = await FileUtil.readDir(downloadedFolder);
+  return `${downloadedFolder}/${list[0]}`;
 };
 
-const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId) => {
-  let downloadedFilePath;
-  if (grantedAccessAccountSelected) {
-    downloadedFilePath = await BitmarkSDK.downloadBitmarkWithGrantId(touchFaceIdSession, bitmarkIdOrGrantedId);
-  } else {
-    downloadedFilePath = await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId);
-  }
-  downloadedFilePath = downloadedFilePath.replace('file://', '');
-  let accountFilePath = FileUtil.DocumentDirectory + '/' + userInformation.bitmarkAccountNumber + downloadedFilePath.substring(downloadedFilePath.lastIndexOf('/'), downloadedFilePath.length);
-  await FileUtil.moveFileSafe(downloadedFilePath, accountFilePath);
+const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, assetId) => {
+  let bitmarkAccountNumber = grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.grantedAccessAccountSelected;
+  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/${assetId}`;
+  let downloadedFolder = `${assetFolderPath}/downloaded`;
+  await FileUtil.mkdir(assetFolderPath);
+  await FileUtil.mkdir(downloadedFolder);
 
-  let folderPathUnzip = accountFilePath.replace('.zip', '');
-  await FileUtil.unzip(accountFilePath, folderPathUnzip);
-  let listFile = await FileUtil.readDir(folderPathUnzip);
-  let result = await FileUtil.readFile(folderPathUnzip + '/' + listFile[0]);
+  if (grantedAccessAccountSelected) {
+    await BitmarkSDK.downloadBitmarkWithGrantId(touchFaceIdSession, bitmarkIdOrGrantedId, downloadedFolder);
+  } else {
+    await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId, downloadedFolder);
+  }
+
+  let list = await FileUtil.readDir(downloadedFolder);
+  let accountFilePath = `${downloadedFolder}/${list[0]}`;
+  await FileUtil.unzip(accountFilePath, downloadedFolder);
+  await FileUtil.removeSafe(accountFilePath);
+
+  let listFile = await FileUtil.readDir(downloadedFolder);
+  let result = await FileUtil.readFile(downloadedFolder + '/' + listFile[0]);
   return result;
 };
 
 const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
   let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
-  let userBitmarks = await doGetUserDataBitmarks();
-  if (!userBitmarks || !userBitmarks.healthAssetBitmarks || userBitmarks.healthAssetBitmarks.length === 0) {
-    await doTrackEvent({ eventName: 'health_plus_user_first_time_issued_file' });
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  if (appInfo && (!appInfo.lastTimeIssued ||
+    (appInfo.lastTimeIssued && (appInfo.lastTimeIssued - moment().toDate().getTime()) > 7 * 24 * 60 * 60 * 1000))) {
+    await CommonModel.doTrackEvent({
+      event_name: 'health_plus_weekly_active_user',
+      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+    });
+    appInfo.lastTimeIssued = moment().toDate().getTime();
+    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
   }
 
   let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
@@ -604,6 +644,16 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
   await doReloadUserData();
+  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
+  return results;
+};
+
+const doIssueMultipleFiles = async (touchFaceIdSession, listInfo) => {
+  let results = [];
+  for (let info of listInfo) {
+    let result = await doIssueFile(touchFaceIdSession, info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset);
+    results.push(result[0]);
+  }
   return results;
 };
 
@@ -705,9 +755,9 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
     let body = { items: [] };
 
     let doGetSessionData = async (bitmarkAccountNumber, assetId) => {
-      let filePath = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + assetId + '/session_data.txt';
-      let exist = await FileUtil.exists(filePath);
-      if (exist) {
+      let filePath = FileUtil.DocumentDirectory + '/assets-session-data/' + bitmarkAccountNumber + '/' + assetId + '/session_data.txt';
+      let exist = await runPromiseWithoutError(FileUtil.exists(filePath));
+      if (exist && !exist.error) {
         let content = await FileUtil.readFile(filePath);
         if (content) {
           try {
@@ -772,32 +822,17 @@ const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
   }
   await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
 
-  await doTrackEvent({ eventName: 'health_plus_user_first_time_grant_access' });
-
   return await runGetAccountAccessesInBackground();
 };
 const doDeleteAccount = async () => {
   return await AccountModel.doDeleteAccount(jwt);
 };
 
-const doTrackEvent = async ({ appInfo, eventName }) => {
-  appInfo = appInfo || (await doGetAppInformation()) || {};
-  if (!appInfo.trackEvents || !appInfo.trackEvents[eventName]) {
-    appInfo.trackEvents = appInfo.trackEvents || {};
-    appInfo.trackEvents[eventName] = true;
-    await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-
-    await CommonModel.doTrackEvent({
-      event_name: eventName,
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
-    });
-  }
-};
-
 const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
   for (let item of emailRecord.list) {
     if (!item.existingAsset) {
-      await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+      let results = await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+      await generateThumbnail(item.filePath, results[0].id);
     }
   }
   for (let id of emailRecord.ids) {
@@ -807,11 +842,141 @@ const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
 };
 
 const doRejectEmailRecords = async (emailRecord) => {
-  console.log('doRejectEmailRecords :', emailRecord);
   for (let id of emailRecord.ids) {
     await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
     await AccountModel.doDeleteEmailRecord(jwt, id);
   }
+};
+
+const doMigrateFilesToLocalStorage = async () => {
+  await runGetUserBitmarksInBackground();
+  await runGetAccountAccessesInBackground();
+
+  let currentSessionId = CommonModel.getFaceTouchSessionId();
+
+  let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
+  userBitmarks = userBitmarks || {};
+  let bitmarks = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []);
+  let total = 0;
+  for (let bitmark of bitmarks) {
+    let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}/${bitmark.asset_id}`;
+    let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
+    let needDownload = false;
+    if (!existAssetFolder || existAssetFolder.error) {
+      needDownload = true;
+    } else {
+      let list = await FileUtil.readDir(assetFolderPath);
+      if (list.length === 0) {
+        needDownload = true;
+      } else {
+        needDownload =
+          (list.findIndex(filename => filename.startsWith('downloading')) >= 0) ||
+          (list.findIndex(filename => filename.startsWith('downloaded')) < 0);
+      }
+    }
+    if (needDownload) {
+      await FileUtil.mkdir(assetFolderPath);
+      let downloadingFolderPath = `${assetFolderPath}/downloading`;
+      await FileUtil.mkdir(downloadingFolderPath);
+      await BitmarkSDK.downloadBitmark(currentSessionId, bitmark.id, downloadingFolderPath);
+      let listDownloadFile = await FileUtil.readDir(downloadingFolderPath);
+      let filePathAfterDownloading = `${downloadingFolderPath}/${listDownloadFile[0]}`;
+
+      let downloadedFolderPath = `${assetFolderPath}/downloaded`;
+      await FileUtil.mkdir(downloadedFolderPath);
+      let downloadedFilePath = `${downloadedFolderPath}${filePathAfterDownloading.substring(filePathAfterDownloading.lastIndexOf('/'), filePathAfterDownloading.length)}`;
+      await FileUtil.moveFileSafe(filePathAfterDownloading, downloadedFilePath);
+      await FileUtil.removeSafe(downloadingFolderPath);
+
+      if (isHealthDataBitmark(bitmark.asset)) {
+        await FileUtil.unzip(downloadedFilePath, downloadedFolderPath);
+        await FileUtil.removeSafe(downloadedFilePath);
+        let listUnzipFile = await FileUtil.readDir(downloadedFolderPath);
+
+        bitmark.asset.filePath = `${downloadedFolderPath}/${listUnzipFile[0]}`;
+      } else {
+        bitmark.asset.filePath = `${downloadedFilePath}`;
+      }
+    } else {
+      let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
+      bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
+    }
+    await generateThumbnail(bitmark.asset.filePath, bitmark.id);
+
+    if (isHealthDataBitmark(bitmark.asset)) {
+      let data = await FileUtil.readFile(bitmark.asset.filePath);
+      await insertHealthDataToIndexedDB(bitmark.id, {
+        assetMetadata: bitmark.asset.metadata,
+        assetName: bitmark.asset.name,
+        data,
+      });
+    } else if (isImageFile(bitmark.asset.filePath)) {
+      let metadataList = [];
+      for (let label in bitmark.asset.metadata) {
+        metadataList.push({ label, value: bitmark.asset.metadata[label] });
+      }
+      let detectResult = await populateAssetNameFromImage(bitmark.asset.filePath);
+      await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, metadataList, detectResult.detectedTexts);
+    }
+
+    EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, Math.floor(total * 100 / bitmarks.length));
+    total++;
+  }
+  EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, 100);
+
+  await AccountModel.doMarkMigration(jwt);
+  didMigrationFileToLocalStorage = true;
+  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
+};
+
+const detectLocalAssetFilePath = async (assetId) => {
+  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}/${assetId}`;
+  let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
+  if (!existAssetFolder || existAssetFolder.error) {
+    return null;
+  }
+  let downloadedFolder = `${assetFolderPath}/downloaded`;
+  let existDownloadedFolder = await runPromiseWithoutError(FileUtil.exists(downloadedFolder));
+  if (!existDownloadedFolder || existDownloadedFolder.error) {
+    return null;
+  }
+  let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
+  return `${assetFolderPath}/downloaded/${list[0]}`;
+};
+
+const doCombineImages = async (images) => {
+  let listFilePath = [];
+  for (let imageInfo of images) {
+    listFilePath.push(imageInfo.uri.replace('file://', ''));
+  }
+  let tempFolderPath = `${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/combine-images`;
+  await FileUtil.mkdir(tempFolderPath);
+  let tempFilePath = `${tempFolderPath}/${moment().toDate().getTime()}.pdf`;
+  await PDFScanner.pdfCombine(listFilePath, tempFilePath);
+  return tempFilePath;
+}
+const doMetricOnScreen = async (isActive) => {
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  let onScreenAt = appInfo.onScreenAt;
+  let offScreenAt = appInfo.offScreenAt;
+  if (isActive && onScreenAt && offScreenAt) {
+    if (offScreenAt && offScreenAt > onScreenAt) {
+      let userInfo = userInformation || await UserModel.doTryGetCurrentUser() || {};
+
+      let totalOnScreenAtPreTime = Math.floor((offScreenAt - onScreenAt) / (1000 * 60));
+      await CommonModel.doTrackEvent({
+        event_name: 'health_plus_screen_time',
+        account_number: userInfo ? userInfo.bitmarkAccountNumber : null,
+      }, {
+          hit: totalOnScreenAtPreTime
+        });
+    }
+    appInfo.onScreenAt = moment().toDate().getTime();
+  } else {
+    appInfo.offScreenAt = moment().toDate().getTime();
+  }
+  await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 };
 
 
@@ -828,6 +993,7 @@ const DataProcessor = {
   doBitmarkHealthData,
   doDownloadBitmark,
   doIssueFile,
+  doIssueMultipleFiles,
 
   doCheckFileToIssue,
 
@@ -848,9 +1014,12 @@ const DataProcessor = {
   doConfirmGrantingAccess,
   doDownloadHealthDataBitmark,
   doDeleteAccount,
-  doTrackEvent,
   doAcceptEmailRecords,
   doRejectEmailRecords,
+  doMigrateFilesToLocalStorage,
+  detectLocalAssetFilePath,
+  doCombineImages,
+  doMetricOnScreen,
 };
 
 export { DataProcessor };

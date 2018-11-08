@@ -20,6 +20,9 @@ const doGet100Bitmarks = (accountNumber, lastOffset) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -126,6 +129,9 @@ const doGetBitmarksOfAsset = (assetId, owner) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode === 404) {
@@ -150,6 +156,9 @@ const doGetAssetInformation = (assetId) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode === 404) {
@@ -174,6 +183,9 @@ const doGetAssetAccessibility = (assetId) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode === 404) {
@@ -238,8 +250,8 @@ const doCheckMetadata = async (metadata) => {
   return await BitmarkSDK.validateMetadata(metadata);
 };
 
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset) => {
-  let result = await BitmarkSDK.issueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
+const doIssueFile = async (touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity, isPublicAsset) => {
+  let result = await BitmarkSDK.issueFile(touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity, isPublicAsset);
   return result;
 };
 
@@ -261,6 +273,9 @@ const doGet100Transactions = (accountNumber, offsetNumber) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -309,6 +324,9 @@ const doGetTransactionDetail = (txid) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -334,6 +352,9 @@ const doGetBitmarkInformation = (bitmarkId) => {
       }
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {
@@ -360,6 +381,9 @@ const doAccessGrants = (accountNumber, timestamp, signature, body) => {
       body: JSON.stringify(body),
     }).then((response) => {
       statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
       return response.json();
     }).then((data) => {
       if (statusCode >= 400) {

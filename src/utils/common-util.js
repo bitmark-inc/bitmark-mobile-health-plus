@@ -8,6 +8,12 @@ import DeviceInfo from "react-native-device-info/deviceinfo";
 import i18n from "i18n-js";
 import { intersection } from "lodash";
 import { runPromiseWithoutError } from "./helper";
+import ImageResizer from 'react-native-image-resizer';
+import { flatten } from 'lodash';
+import { Image } from 'react-native';
+
+const THUMBNAIL_PATH = `${FileUtil.DocumentDirectory}/thumbnails`;
+const COMBINE_FILE_SUFFIX = 'combine';
 
 const isPascalCase = (str) => {
   let pascalCase1 = str.replace(/(\w)(\w*)/g,
@@ -43,7 +49,7 @@ const getLanguageForTextDetector = () => {
 
 const sanitizeTextDetectorResponse = (detectedItems) => {
   const notContainsSepecicalCharacter = (str) => {
-    const blacklistCharacters = '1234567890\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§˘ˆ↵˛˝'.split('');
+    const blacklistCharacters = '1234567890\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§˘ˆ↵˛˝˙'.split('');
     let strCharactors = str.split('').filter(item => item !== ' ');
 
     return intersection(blacklistCharacters, strCharactors).length == 0;
@@ -94,10 +100,10 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
     } else {
       AppProcessor.doIssueFile(filePath, assetName, metadataList, quality, false, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
-      }).then((data) => {
+      }).then(async (data) => {
         if (data) {
+          await callBack(data);
           FileUtil.removeSafe(filePath);
-          callBack();
         }
       }).catch(error => {
         Alert.alert(i18n.t('CaptureAssetComponent_alertTitle2'), i18n.t('CaptureAssetComponent_alertMessage2'));
@@ -158,19 +164,39 @@ const detectAssetNameByCommonRules = (texts) => {
 
 const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   let assetName = defaultAssetName;
+  let detectFilePath = filePath;
 
-  filePath = 'file://' + filePath;
+  if (isJPGFile(filePath)) {
+    // Convert JPG format to PNG format in the case of multiple selection because it can not be used for detected text from image
+    let imageSize = await getImageSize(filePath);
+    let outputDir = filePath.substring(0, filePath.lastIndexOf('/'));
+    let response = await ImageResizer.createResizedImage(filePath, imageSize.width, imageSize.height, 'PNG', 100, 0, outputDir);
+    detectFilePath = response.uri;
+  }
+
+  if (!detectFilePath.startsWith('file://')) {
+    detectFilePath = 'file://' + detectFilePath;
+  }
+
   let visionResp = await runPromiseWithoutError(RNTextDetector.detectFromUri({
-    imagePath: filePath,
+    imagePath: detectFilePath,
     language: getLanguageForTextDetector()
   }));
+
+  // Clean up file if necessary
+  if (isJPGFile(filePath)) {
+    // Remove converted PNG file
+    await FileUtil.removeSafe(detectFilePath);
+  }
 
   if (visionResp && !visionResp.error && visionResp.length) {
     let potentialAssetNameItem;
     let demension = calculateDocDimension(visionResp);
     let centerTextX = demension.centerTextX;
 
+    console.log('visionResp-Original:', visionResp);
     visionResp = sanitizeTextDetectorResponse(visionResp);
+    console.log('visionResp-Sanitized:', visionResp);
 
     if (visionResp.length > 1) {
       // Sort items in descending order by size/(top * center)
@@ -204,37 +230,171 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
     }
   }
 
+  let detectedTexts = [];
+  if (visionResp instanceof Array) {
+    visionResp.forEach(item => {
+      if (item.text) detectedTexts.push(item.text);
+    })
+  }
+
   console.log('assetName:', assetName);
-  return assetName;
+  console.log('allDetectedTexts:', detectedTexts);
+
+  return {
+    detectedTexts: detectedTexts,
+    assetName
+  };
 };
 
 const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
-
+  let allDetectedTexts = [];
   let assetName = defaultAssetName;
   console.log('populateAssetFromPDF...');
 
   let detectedTexts = await runPromiseWithoutError(PDFScanner.pdfScan(filePath));
-  console.log('detectedTexts:', detectedTexts);
+  console.log('original-DetectedTexts:', detectedTexts);
 
   if (detectedTexts && !detectedTexts.error && detectedTexts.length) {
-    detectedTexts = detectedTexts.map(text => {
-      return { text: text ? text.trim() : text }
+    detectedTexts = detectedTexts.map(item => {
+      item = item.map(text => {
+        return {text: text ? text.trim() : text}
+      });
+      return sanitizeTextDetectorResponse(item);
     });
-
-    detectedTexts = sanitizeTextDetectorResponse(detectedTexts);
     console.log('detectedTexts-sanitized:', detectedTexts);
 
     let potentialAssetNameItem;
-    if (detectedTexts.length) {
-      potentialAssetNameItem = detectAssetNameByCommonRules(detectedTexts);
+    // Take the first page to detect asset name
+    if (detectedTexts[0].length) {
+      potentialAssetNameItem = detectAssetNameByCommonRules(detectedTexts[0]);
     }
 
     if (potentialAssetNameItem && potentialAssetNameItem.text.trim()) {
       assetName = 'HA ' + potentialAssetNameItem.text.trim();
     }
+
+    flatten(detectedTexts).forEach(item => {
+      allDetectedTexts.push(item.text);
+    });
   }
+
   console.log('assetName:', assetName);
-  return assetName;
+  console.log('allDetectedTexts:', allDetectedTexts);
+
+  return {
+    detectedTexts: allDetectedTexts,
+    assetName
+  };
 };
 
-export { issue, populateAssetNameFromImage, populateAssetNameFromPdf }
+const isImageFile = (filePath) => {
+  if (!filePath) {
+    return false;
+  }
+  const imageExtensions = ['PNG', 'JPG', 'JPEG', 'HEIC', 'TIFF', 'BMP', 'HEIF', 'IMG'];
+  let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+
+  return imageExtensions.includes(fileExtension.toUpperCase());
+};
+
+const isJPGFile = (filePath) => {
+  if (!filePath) {
+    return false;
+  }
+  const imageExtensions = ['JPG'];
+  let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+
+  return imageExtensions.includes(fileExtension.toUpperCase());
+};
+
+const isPdfFile = (filePath) => {
+  if (!filePath) {
+    return false;
+  }
+  const pdfExtensions = ['PDF'];
+  let fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+
+  return pdfExtensions.includes(fileExtension.toUpperCase());
+};
+
+const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => {
+  // Create new one if thumbnail folder is not existing
+  await FileUtil.mkdir(THUMBNAIL_PATH);
+  let outputFilePath = isCombineFile ? `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
+
+  const THUMBNAIL_WIDTH = 300;
+  const THUMBNAIL_HEIGHT = 300;
+
+  if (isImageFile(filePath)) {
+    // Generate image thumbnail
+    let response = await ImageResizer.createResizedImage(filePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, 'PNG', 100, 0, THUMBNAIL_PATH);
+    await FileUtil.moveFileSafe(response.uri, outputFilePath);
+
+  } else if (isPdfFile(filePath)) {
+    // Generate pdf thumbnail
+    await runPromiseWithoutError(PDFScanner.pdfThumbnail(filePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, outputFilePath));
+  }
+};
+
+const checkThumbnailForBitmark = async (bitmarkId) => {
+  let thumbnailInfo = {exists: false};
+
+  let thumbnailFilePath = `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
+  let thumbnailMultipleFilePath = `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG`;
+
+  if ((await FileUtil.exists(thumbnailFilePath))) {
+    thumbnailInfo = {
+      exists: true,
+      path: thumbnailFilePath
+    }
+  } else if ((await FileUtil.exists(thumbnailMultipleFilePath))) {
+    thumbnailInfo = {
+      exists: true,
+      path: thumbnailMultipleFilePath,
+      multiple: true
+    }
+  }
+  return thumbnailInfo;
+};
+
+const getThumbnail = (bitmarkId, isCombineFile) => {
+  return isCombineFile ? `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
+};
+
+const isFileRecord = (bitmark) => {
+  return bitmark.asset.metadata.Source === 'Medical Records'
+};
+const isCaptureDataRecord = (bitmark) => {
+  return bitmark.asset.metadata.Source === 'Health Records'
+};
+const isHealthDataRecord = (bitmark) => {
+  return bitmark.asset.metadata.Source === 'HealthKit'
+};
+const isAssetDataRecord = (bitmark) => {
+  return isCaptureDataRecord(bitmark) || isFileRecord(bitmark)
+};
+
+const getImageSize = async (imageFilePath) => {
+  return new Promise((resolve) => {
+    Image.getSize(imageFilePath, (width, height) => {
+      resolve({width, height})
+    });
+  })
+};
+
+export {
+  issue,
+  populateAssetNameFromImage,
+  populateAssetNameFromPdf,
+  generateThumbnail,
+  isImageFile,
+  isPdfFile,
+  checkThumbnailForBitmark,
+  getThumbnail,
+  isFileRecord,
+  isCaptureDataRecord,
+  isHealthDataRecord,
+  isAssetDataRecord,
+  isJPGFile,
+  getImageSize
+}

@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   introductionTitle: {
     marginTop: 25,
-    fontFamily: 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     color: '#FF4444',
     fontSize: 17,
     fontWeight: '900',
@@ -151,15 +151,15 @@ const styles = StyleSheet.create({
   },
   introductionDescription: {
     marginTop: 15,
-    fontFamily: 'Avenir light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
     textAlign: 'center',
   },
 
   loadingLogo: {
-    width: convertWidth(213),
-    height: 45 * convertWidth(213) / 213,
+    width: 177,
+    height: 61,
     resizeMode: 'contain',
   },
   bottomButtonsAreaSafeView: {
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   buttonText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '900',
     color: 'white',
   },

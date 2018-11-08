@@ -138,7 +138,7 @@ const BitmarkSDK = {
     });
   },
 
-  issueFile: (sessionId, filePath, propertyName, metadata, quantity, isPublicAsset) => {
+  issueFile: (sessionId, localFolderPath, filePath, propertyName, metadata, quantity, isPublicAsset) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.issueFile(sessionId, {
         url: filePath,
@@ -146,14 +146,15 @@ const BitmarkSDK = {
         metadata,
         quantity,
         is_public_asset: !!isPublicAsset
-      }, (ok, bitmarkIds, assetId, sessionData, encryptedFilePath) => {
-        console.log('issueFile :', ok, bitmarkIds, assetId, sessionData, encryptedFilePath);
-        if (ok) {
-          resolve({ bitmarkIds, assetId, sessionData, encryptedFilePath });
-        } else {
-          reject(new Error(bitmarkIds || 'Can not issue file!'));
-        }
-      });
+      }, localFolderPath,
+        (ok, bitmarkIds, assetId, sessionData, encryptedFilePath) => {
+          console.log('issueFile :', ok, bitmarkIds, assetId, sessionData, encryptedFilePath);
+          if (ok) {
+            resolve({ bitmarkIds, assetId, sessionData, encryptedFilePath });
+          } else {
+            reject(new Error(bitmarkIds || 'Can not issue file!'));
+          }
+        });
     });
   },
   transferOneSignature: (sessionId, bitmarkId, address) => {
@@ -168,7 +169,7 @@ const BitmarkSDK = {
     });
   },
 
-  issueThenTransferFile: (sessionId, filePath, property_name, metadata, receiver, extra_info) => {
+  issueThenTransferFile: (sessionId, localFolderPath, filePath, property_name, metadata, receiver, extra_info) => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.issueThenTransferFile(sessionId, {
         url: filePath,
@@ -176,13 +177,14 @@ const BitmarkSDK = {
         metadata,
         receiver,
         extra_info,
-      }, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not issue then transfer file!'));
-        }
-      });
+      }, localFolderPath,
+        (ok, result) => {
+          if (ok && result) {
+            resolve(result);
+          } else {
+            reject(newError(result, 'Can not issue then transfer file!'));
+          }
+        });
     });
   },
 
@@ -256,9 +258,9 @@ const BitmarkSDK = {
       });
     });
   },
-  downloadBitmark: (sessionId, bitmarkId) => {
+  downloadBitmark: (sessionId, bitmarkId, localFolderPath) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.downloadBitmark(sessionId, bitmarkId, (ok, result) => {
+      SwiftBitmarkSDK.downloadBitmark(sessionId, bitmarkId, localFolderPath, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
@@ -267,9 +269,9 @@ const BitmarkSDK = {
       });
     });
   },
-  downloadBitmarkWithGrantId: (sessionId, grantId) => {
+  downloadBitmarkWithGrantId: (sessionId, grantId, localFolderPath) => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.downloadBitmarkWithGrantId(sessionId, grantId, (ok, result) => {
+      SwiftBitmarkSDK.downloadBitmarkWithGrantId(sessionId, grantId, localFolderPath, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {

@@ -142,14 +142,18 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublic
   return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
 };
 
+const doIssueMultipleFiles = async (listInfo, processingInfo) => {
+  return executeTask('doIssueMultipleFiles', { listInfo, processingInfo });
+};
+
 const doBitmarkHealthData = async (list, processingData) => {
   return executeTask('doBitmarkHealthData', { list, processingData });
 };
-const doDownloadBitmark = async (bitmarkIdOrGrantedId, processingData) => {
-  return executeTask('doDownloadBitmark', { bitmarkIdOrGrantedId, processingData });
+const doDownloadBitmark = async (bitmarkIdOrGrantedId, assetId, processingData) => {
+  return executeTask('doDownloadBitmark', { bitmarkIdOrGrantedId, assetId, processingData });
 };
-const doDownloadHealthDataBitmark = async (bitmarkIdOrGrantedId, processingData) => {
-  return executeTask('doDownloadHealthDataBitmark', { bitmarkIdOrGrantedId, processingData });
+const doDownloadHealthDataBitmark = async (bitmarkIdOrGrantedId, assetId, processingData) => {
+  return executeTask('doDownloadHealthDataBitmark', { bitmarkIdOrGrantedId, assetId, processingData });
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {
@@ -209,6 +213,14 @@ const doProcessEmailRecords = (bitmarkAccountNumber, emailIssueRequestsFromAnEma
   return executeTask('doProcessEmailRecords', { bitmarkAccountNumber, emailIssueRequestsFromAnEmail });
 };
 
+const doMigrateFilesToLocalStorage = async () => {
+  return executeTask('doMigrateFilesToLocalStorage');
+};
+
+const doCombineImages = async (images) => {
+  return executeTask('doCombineImages', { images });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -223,6 +235,7 @@ let AppProcessor = {
   doCreateSignatureData,
   doCheckFileToIssue,
   doIssueFile,
+  doIssueMultipleFiles,
   doGetTransferOfferDetail,
   doRequireHealthKitPermission,
   doBitmarkHealthData,
@@ -244,7 +257,9 @@ let AppProcessor = {
   doAcceptEmailRecords,
   doRejectEmailRecords,
 
+  doMigrateFilesToLocalStorage,
   doProcessEmailRecords,
+  doCombineImages,
 }
 
 export {

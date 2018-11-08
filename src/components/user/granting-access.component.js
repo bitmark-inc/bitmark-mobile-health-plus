@@ -10,11 +10,11 @@ import QRCode from 'react-native-qrcode';
 import Mailer from 'react-native-mail';
 import Hyperlink from 'react-native-hyperlink';
 
-import { convertWidth, runPromiseWithoutError } from './../../utils';
+import { convertWidth, } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
-import { AppProcessor, DataProcessor } from '../../processors';
+import { AppProcessor, } from '../../processors';
 import { EventEmitterService } from '../../services';
 
 export class GrantingAccessComponent extends Component {
@@ -34,7 +34,6 @@ export class GrantingAccessComponent extends Component {
   }
 
   sendEmail() {
-    runPromiseWithoutError(DataProcessor.doTrackEvent({ eventName: 'health_plus_user_first_time_share_grant_access' }));
     let clientName = 'healthplus';
     clientName = (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse') ? 'healthplusinhouse' :
       (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') ? 'healthplusbeta' : clientName;
@@ -123,7 +122,7 @@ const styles = StyleSheet.create({
     paddingTop: convertWidth(15),
   },
   titleText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -140,13 +139,13 @@ const styles = StyleSheet.create({
     paddingTop: convertWidth(35),
   },
   message: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 35,
   },
   messageEmail: {
-    fontFamily: 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 20,

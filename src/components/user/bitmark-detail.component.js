@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from "moment";
 import {
   StyleSheet,
   Alert,
   Image, View, SafeAreaView, TouchableOpacity, Text, ScrollView,
 } from 'react-native';
+import JSONTree from 'react-native-json-tree';
+import { Map } from 'immutable'
 
-import { convertWidth, runPromiseWithoutError, } from './../../utils';
+import { convertWidth, runPromiseWithoutError, FileUtil, } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
@@ -22,52 +23,67 @@ export class BitmarkDetailComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filePath: '',
+      filePath: this.props.bitmarkType === 'bitmark_health_issuance' ? this.props.bitmark.asset.filePath : '',
       content: '',
-    }
+    };
 
     if (this.props.bitmark) {
-      let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
       if (this.props.bitmarkType === 'bitmark_health_data') {
-        let id = this.props.bitmark.id;
-        if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
-          let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
-          id = grantedInfo.ids[this.props.bitmark.asset_id];
-        }
-        runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, {
-          indicator: true, title: i18n.t('BitmarkDetailComponent_title')
-        })).then(result => {
-          console.log('result :', result);
+        runPromiseWithoutError(FileUtil.readFile(this.props.bitmark.asset.filePath)).then(result => {
           if (result && result.error) {
+            console.log('error:', result.error);
             EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
-            // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
-            //   text: 'OK', onPress: Actions.pop
-            // }]);
             return;
           }
-          this.setState({ content: JSON.stringify(JSON.parse(result), null, 2) });
+          result.immutable = Map({ key: 'value' });
+          this.setState({ content: JSON.parse(result) });
         });
-      } else if (this.props.bitmarkType === 'bitmark_health_issuance') {
-        let id = this.props.bitmark.id;
-        if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
-          let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
-          id = grantedInfo.ids[this.props.bitmark.asset_id];
-        }
-        runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, {
-          indicator: true, title: i18n.t('BitmarkDetailComponent_title')
-        })).then(result => {
-          if (result && result.error) {
-            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
-            // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
-            //   text: 'OK', onPress: Actions.pop
-            // }]);
-            return;
-          }
-          this.setState({ filePath: result });
-        });
-      } else {
+      } else if (this.props.bitmarkType !== 'bitmark_health_issuance') {
         Actions.pop();
       }
+
+      // let accountDisplayed = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+      // if (this.props.bitmarkType === 'bitmark_health_data') {
+      //   let id = this.props.bitmark.id;
+      //   if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+      //     let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
+      //     id = grantedInfo.ids[this.props.bitmark.asset_id];
+      //   }
+      //   runPromiseWithoutError(AppProcessor.doDownloadHealthDataBitmark(id, this.props.bitmark.asset_id, {
+      //     indicator: true, title: i18n.t('BitmarkDetailComponent_title')
+      //   })).then(result => {
+      //     console.log('result :', result);
+      //     if (result && result.error) {
+      //       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
+      //       // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+      //       //   text: 'OK', onPress: Actions.pop
+      //       // }]);
+      //       return;
+      //     }
+      //     this.setState({ content: JSON.stringify(JSON.parse(result), null, 2) });
+      //   });
+      // } else if (this.props.bitmarkType === 'bitmark_health_issuance') {
+      //   let id = this.props.bitmark.id;
+      //   if (accountDisplayed !== DataProcessor.getUserInformation().bitmarkAccountNumber) {
+      //     let grantedInfo = DataProcessor.getGrantedAccessAccountSelected();
+      //     id = grantedInfo.ids[this.props.bitmark.asset_id];
+      //   }
+      //   runPromiseWithoutError(AppProcessor.doDownloadBitmark(id, this.props.bitmark.asset_id, {
+      //     indicator: true, title: i18n.t('BitmarkDetailComponent_title')
+      //   })).then(result => {
+      //     console.log('result :', result);
+      //     if (result && result.error) {
+      //       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
+      //       // Alert.alert('This record can not be accessed.', 'Once you delete your account, you wll not able to access the record again.', [{
+      //       //   text: 'OK', onPress: Actions.pop
+      //       // }]);
+      //       return;
+      //     }
+      //     this.setState({ filePath: result });
+      //   });
+      // } else {
+      //   Actions.pop();
+      // }
     } else {
       Alert.alert(i18n.t('BitmarkDetailComponent_alertTitle1'), i18n.t('BitmarkDetailComponent_alertMessage1'), [{
         text: 'OK', onPress: Actions.pop
@@ -90,7 +106,7 @@ export class BitmarkDetailComponent extends Component {
     let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
     console.log('this.state :', this.state, this.props)
     return (
-      <View style={{ flex: 1, }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
           <Text style={styles.accountNumberDisplayText}>
             {i18n.t('BitmarkDetailComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
@@ -100,23 +116,54 @@ export class BitmarkDetailComponent extends Component {
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
-                {this.props.bitmarkType === 'bitmark_health_data' && <Text style={[styles.titleText]}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
-                {this.props.bitmarkType === 'bitmark_health_issuance' && <Text style={styles.titleText}>{moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>}
+                <Text style={styles.titleText}>{this.props.bitmark.asset.name}</Text>
                 <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
               </View>
               <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
-                <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }}>
-                  {this.props.bitmarkType === 'bitmark_health_data' && <Text style={styles.metadataTitle}>{i18n.t('BitmarkDetailComponent_metadataTitle2')}</Text>}
+                <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }} scrollEnabled={this.props.bitmarkType !== 'bitmark_health_issuance'}>
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                     <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({
                       filePath: this.state.filePath,
-                      title: moment(this.props.bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()
+                      title: this.props.bitmark.asset.name
                     })}>
-                      <Image style={styles.bitmarkImage} source={{ uri: this.state.filePath }} /></TouchableOpacity>}
-                  {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, paddingBottom: 30, }}>
-                    <Text >{this.state.content}</Text>
+                      <Image style={styles.bitmarkImage} source={{ uri: this.props.bitmark.thumbnail ? this.props.bitmark.thumbnail.path : this.state.filePath }} />
+                      <View style={styles.fullViewButton}>
+                        <Image style={styles.fullViewIcon} source={require('./../../../assets/imgs/full_view_icon.png')} />
+                        <Text style={styles.fullViewButtonText}>{i18n.t('BitmarkDetailComponent_fullViewButtonText')}</Text>
+                      </View>
+                    </TouchableOpacity>}
+
+                  {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>
+                    <ScrollView horizontal={true}>
+                      <JSONTree data={this.state.content}
+                        getItemString={() => <Text></Text>}
+                        labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
+                        valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}
+                        hideRoot={true}
+                        theme={{
+                          scheme: 'monokai',
+                          author: 'wimer hazenberg (http://www.monokai.nl)',
+                          base00: '#000000',
+                          base01: '#383830',
+                          base02: '#49483e',
+                          base03: '#75715e',
+                          base04: '#a59f85',
+                          base05: '#f8f8f2',
+                          base06: '#f5f4f1',
+                          base07: '#f9f8f5',
+                          base08: '#f92672',
+                          base09: '#fd971f',
+                          base0A: '#f4bf75',
+                          base0B: '#a6e22e',
+                          base0C: '#a1efe4',
+                          base0D: '#FF4444',
+                          base0E: '#ae81ff',
+                          base0F: '#cc6633'
+                        }}
+                      />
+                    </ScrollView>
                   </ScrollView>}
                 </ScrollView>
               </View>
@@ -142,7 +189,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   accountNumberDisplayText: {
-    fontFamily: 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -165,7 +212,6 @@ const styles = StyleSheet.create({
 
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     padding: convertWidth(20),
     paddingBottom: 0,
@@ -173,9 +219,11 @@ const styles = StyleSheet.create({
     paddingRight: 0,
   },
   titleText: {
-    fontFamily: 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '900',
+    flex: 1,
     fontSize: 24,
+    marginTop: 18,
   },
   closeButton: {
     paddingTop: convertWidth(26),
@@ -197,11 +245,15 @@ const styles = StyleSheet.create({
   contentScroll: {
     flexDirection: 'column',
   },
-  metadataTitle: {
-    fontFamily: 'Avenir Medium',
-    fontWeight: '600',
-    fontSize: 16,
-    marginTop: 5,
+  fullViewButton: {
+    position: 'absolute', bottom: 20, width: '100%',
+    justifyContent: 'center', flexDirection: 'row', alignItems: 'center'
+  },
+  fullViewIcon: {
+    width: 14, height: 17, resizeMode: 'contain', marginRight: 15,
+  },
+  fullViewButtonText: {
+    textAlign: 'center', color: '#FF1F1F', fontSize: 16, fontWeight: '600'
   },
 
   bitmarkImageArea: {
@@ -215,7 +267,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   bitmarkContent: {
-    padding: convertWidth(20),
+    paddingTop: convertWidth(20),
     flex: 1,
   },
 

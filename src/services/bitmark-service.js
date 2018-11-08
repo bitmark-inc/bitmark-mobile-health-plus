@@ -1,3 +1,5 @@
+import randomString from "random-string";
+import moment from 'moment';
 import { BitmarkModel } from "../models";
 import { FileUtil } from "../utils";
 
@@ -53,13 +55,28 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
       metadata[item.label] = item.value;
     }
   });
-  let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, filePath, assetName, metadata, quantity, isPublicAsset);
-  let encryptedAssetFolder = FileUtil.DocumentDirectory + '/encrypted_' + bitmarkAccountNumber + '/' + issueResult.assetId;
-  await FileUtil.mkdir(encryptedAssetFolder);
-  await FileUtil.create(encryptedAssetFolder + '/session_data.txt', JSON.stringify(issueResult.sessionData));
 
-  let desEncryptedFilePath = encryptedAssetFolder + issueResult.encryptedFilePath.substring(issueResult.encryptedFilePath.lastIndexOf('/'), issueResult.encryptedFilePath.length);
-  await FileUtil.moveFileSafe(issueResult.encryptedFilePath.replace('file://', ''), desEncryptedFilePath);
+  let tempFolder = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/temp_${randomString({ length: 8, numeric: true, letters: false, }) + moment().toDate().getTime()}`;
+  let tempFolderDownloaded = `${tempFolder}/downloaded`;
+  await FileUtil.mkdir(tempFolder);
+  await FileUtil.mkdir(tempFolderDownloaded);
+
+  let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, tempFolderDownloaded, filePath, assetName, metadata, quantity, isPublicAsset);
+
+  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/${issueResult.assetId}`;
+  let downloadedFolder = `${assetFolderPath}/downloaded`;
+  await FileUtil.mkdir(assetFolderPath);
+  await FileUtil.mkdir(downloadedFolder);
+  let list = await FileUtil.readDir(tempFolderDownloaded);
+  for (let filename of list) {
+    await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
+  }
+  await FileUtil.removeSafe(tempFolder);
+
+  let sessionAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
+  await FileUtil.mkdir(sessionAssetFolder);
+  await FileUtil.create(`${sessionAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
+
   let results = [];
   issueResult.bitmarkIds.forEach(id => {
     results.push({ id, sessionData: issueResult.sessionData });

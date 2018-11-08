@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DeviceInfo from 'react-native-device-info';
 
 import {
   View, Text, TouchableOpacity,
@@ -47,6 +46,7 @@ class MainEventsHandlerComponent extends Component {
     this.handleDeepLink = this.handleDeepLink.bind(this);
     this.displayEmptyDataSource = this.displayEmptyDataSource.bind(this);
     this.doRefresh = this.doRefresh.bind(this);
+    this.migrationFilesToLocalStorage = this.migrationFilesToLocalStorage.bind(this);
 
     this.state = {
       processingCount: false,
@@ -74,6 +74,7 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
+    EventEmitterService.on(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
 
     runPromiseWithoutError(AccountService.doRequestNotificationPermissions());
     // Handle Crashes
@@ -88,7 +89,15 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
-    EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
+    EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
+    EventEmitterService.remove(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
+  }
+
+  migrationFilesToLocalStorage() {
+    Alert.alert(i18n.t('LocalStorageMigrationComponent_title'), i18n.t('LocalStorageMigrationComponent_message'), [{
+      text: i18n.t('LocalStorageMigrationComponent_buttonText'), style: 'cancel',
+      onPress: () => Actions.localStorageMigration()
+    }]);
   }
 
   async doRefresh(justCreatedBitmarkAccount) {
@@ -99,10 +108,10 @@ class MainEventsHandlerComponent extends Component {
       }
       this.setState({ passTouchFaceId });
       if (passTouchFaceId && this.state.networkStatus) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
+        EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus: this.state.networkStatus, justCreatedBitmarkAccount });
       }
     } else if (this.state.networkStatus) {
-      EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, this.state.networkStatus, justCreatedBitmarkAccount);
+      EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus: this.state.networkStatus, justCreatedBitmarkAccount });
     }
   }
 
@@ -158,10 +167,10 @@ class MainEventsHandlerComponent extends Component {
           let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
           this.setState({ passTouchFaceId });
           if (passTouchFaceId) {
-            EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkStatus);
+            EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus });
           }
         } else {
-          EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, networkStatus);
+          EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus });
         }
       });
     }
@@ -169,17 +178,14 @@ class MainEventsHandlerComponent extends Component {
 
   handleAppStateChange = (nextAppState) => {
     if (this.appState.match(/background/) && nextAppState === 'active') {
-      if (config.network === config.NETWORKS.livenet) {
-        i18n.locale = 'en';
-      } else {
-        i18n.locale = DeviceInfo.getDeviceLocale();
-      }
       this.doTryConnectInternet();
+      runPromiseWithoutError(DataProcessor.doMetricOnScreen(true));
     }
-    if (nextAppState.match(/background/) &&
-      DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
-      console.log('handleAppStateChange resetFaceTouchSessionId ======== ');
-      CommonModel.resetFaceTouchSessionId();
+    if (nextAppState.match(/background/)) {
+      if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
+        CommonModel.resetFaceTouchSessionId();
+      }
+      runPromiseWithoutError(DataProcessor.doMetricOnScreen(false));
     }
     this.appState = nextAppState;
   }
@@ -362,7 +368,7 @@ class MainEventsHandlerComponent extends Component {
               color: 'white', fontWeight: '900', fontSize: 16,
               backgroundColor: '#FF4444', padding: 10,
               textAlign: 'center',
-            }}>PLEASE AUTHORIZE</Text>
+            }}>{i18n.t('MainComponent_pleaseAuthorizeText​')}</Text>
           </TouchableOpacity>
         </BitmarkDialogComponent>}
         {this.state.processingCount > 0 && <DefaultIndicatorComponent />}
@@ -397,12 +403,12 @@ let mainStyle = StyleSheet.create({
   },
   emptyDataSourceTitle: {
     width: convertWidth(256),
-    fontFamily: 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
   },
   emptyDataSourceDescription: {
     width: convertWidth(256),
     marginTop: 20,
-    fontFamily: 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
   },
   emptyDataSourceOKButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
@@ -410,14 +416,14 @@ let mainStyle = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   emptyDataSourceOKButtonText: {
-    fontFamily: 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
   },
   emptyDataSourceLaterButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     width: convertWidth(260), marginTop: 10,
   },
   emptyDataSourceLaterButtonText: {
-    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
   },
 });
 
@@ -456,7 +462,7 @@ export class MainComponent extends Component {
     return false;
   }
 
-  doOpenApp(networkStatus, justCreatedBitmarkAccount) {
+  doOpenApp({ networkStatus, justCreatedBitmarkAccount }) {
     if (!networkStatus) {
       return;
     }
@@ -471,6 +477,7 @@ export class MainComponent extends Component {
       this.doAppRefresh(justCreatedBitmarkAccount);
     }).catch(error => {
       console.log('doOpenApp error:', error);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
   doAppRefresh(justCreatedBitmarkAccount) {
@@ -500,6 +507,7 @@ export class MainComponent extends Component {
       }
     }).catch(error => {
       console.log('doAppRefresh error:', error);
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
 
