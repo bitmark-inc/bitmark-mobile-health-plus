@@ -4,7 +4,7 @@ import {
   AppleHealthKitModel,
   BitmarkModel,
 } from '../models';
-import { FileUtil } from '../utils';
+import { FileUtil, getLocalAssetsFolderPath } from '../utils';
 
 let allDataTypes = [
   'ActiveEnergyBurned',
@@ -354,7 +354,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     };
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
 
-    let tempFolder = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/temp_${randomString({ length: 8, numeric: true, letters: false, }) + moment().toDate().getTime()}`;
+    let tempFolder = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/temp_${randomString({ length: 8, numeric: true, letters: false, }) + moment().toDate().getTime()}`;
     let tempFolderDownloaded = `${tempFolder}/downloaded`;
     await FileUtil.mkdir(tempFolder);
     await FileUtil.mkdir(tempFolderDownloaded);
@@ -362,7 +362,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, tempFolderDownloaded, filePath, healthData.assetName, healthData.assetMetadata, 1);
     await FileUtil.remove(filePath);
 
-    let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/${issueResult.assetId}`;
+    let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
     let downloadedFolder = `${assetFolderPath}/downloaded`;
     await FileUtil.mkdir(assetFolderPath);
     await FileUtil.mkdir(downloadedFolder);

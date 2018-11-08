@@ -1,35 +1,36 @@
 import RNFS from 'react-native-fs';
 import { zip, unzip } from 'react-native-zip-archive';
 
-const FileUtil = {
-  CacheDirectory: RNFS.CachesDirectoryPath,
-  DocumentDirectory: RNFS.DocumentDirectoryPath,
-  mkdir: async (folderPath) => {
+class FileUtil {
+  static CacheDirectory = RNFS.CachesDirectoryPath;
+  static DocumentDirectory = RNFS.DocumentDirectoryPath;
+
+  static async mkdir(folderPath) {
     return await RNFS.mkdir(folderPath, {
       NSURLIsExcludedFromBackupKey: true,
     });
-  },
-  create: async (filePath, data, encode) => {
+  }
+  static async create(filePath, data, encode) {
     return await RNFS.writeFile(filePath, data || '', encode || 'utf8');
-  },
-  remove: async (path) => {
+  }
+  static async remove(path) {
     return await RNFS.unlink(path);
-  },
-  removeSafe: async (path) => {
+  }
+  static async removeSafe(path) {
     try {
       await RNFS.unlink(path);
     } catch (err) {
       console.log("File isn't existing");
     }
-  },
-  copyFile: async (sourcePath, destinationPath) => {
+  }
+  static async copyFile(sourcePath, destinationPath) {
     return await RNFS.copyFile(sourcePath, destinationPath);
-  },
-  moveFile: async (sourcePath, destinationPath) => {
+  }
+  static async moveFile(sourcePath, destinationPath) {
     console.log('moveFile :', sourcePath, destinationPath);
     return await RNFS.moveFile(sourcePath, destinationPath);
-  },
-  moveFileSafe: async (sourcePath, destinationPath) => {
+  }
+  static async moveFileSafe(sourcePath, destinationPath) {
     console.log('moveFileSafe :', sourcePath, destinationPath);
     try {
       await RNFS.unlink(destinationPath);
@@ -37,36 +38,62 @@ const FileUtil = {
       console.log("Destination path isn't existing");
     }
     return await RNFS.moveFile(sourcePath, destinationPath);
-  },
-  downloadFile: async (urlDownload, filePath, headers) => {
+  }
+  static async downloadFile(urlDownload, filePath, headers) {
     const options = {
       fromUrl: urlDownload,
       toFile: filePath,
       headers,
     };
     return await RNFS.downloadFile(options).promise;
-  },
-  readDir: async (folderPath) => {
+  }
+  static async readDir(folderPath) {
     return await RNFS.readdir(folderPath);
-  },
-  readFile: async (filePath, encoding) => {
+  }
+  static async readDirItem(folderPath) {
+    return await RNFS.readDir(folderPath);
+  }
+  static async readFile(filePath, encoding) {
     return await RNFS.readFile(filePath, encoding);
-  },
-  writeFile: async (filePath, content, encoding) => {
+  }
+  static async writeFile(filePath, content, encoding) {
     return await RNFS.writeFile(filePath, content, encoding);
-  },
+  }
 
-  zip: async (inputPath, outputPath) => {
+  static async zip(inputPath, outputPath) {
     return zip(inputPath, outputPath);
-  },
-  unzip: async (inputPath, outputPath) => {
+  }
+  static async unzip(inputPath, outputPath) {
     return unzip(inputPath, outputPath);
-  },
-  exists: async (filePath) => {
+  }
+  static async exists(filePath) {
     return await RNFS.exists(filePath);
-  },
-  stat: async (filePath) => {
+  }
+  static async stat(filePath) {
     return await RNFS.stat(filePath);
   }
-};
+  static async copyDir(sourceFolderPath, destinationFolderPath) {
+    await this.mkdir(destinationFolderPath);
+
+    let items = await this.readDirItem(sourceFolderPath);
+
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      if (item.isFile()) {
+        await this.copyFile(item.path, `${destinationFolderPath}/${item.name}`)
+      }
+
+      if (item.isDirectory()) {
+        let destDir = `${destinationFolderPath}/${item.name}`;
+        await this.mkdir(destDir);
+        await this.copyDir(item.path, destDir);
+      }
+    }
+  }
+  static async moveDir(sourceFolderPath, destinationFolderPath) {
+    await this.copyDir(sourceFolderPath, destinationFolderPath);
+    await this.removeSafe(sourceFolderPath);
+  }
+}
+
 export { FileUtil };

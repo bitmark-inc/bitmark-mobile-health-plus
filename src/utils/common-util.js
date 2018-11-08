@@ -11,8 +11,8 @@ import { runPromiseWithoutError } from "./helper";
 import ImageResizer from 'react-native-image-resizer';
 import { flatten } from 'lodash';
 import { Image } from 'react-native';
+import { getLocalThumbnailsFolderPath } from "./local-storage-util";
 
-const THUMBNAIL_PATH = `${FileUtil.DocumentDirectory}/thumbnails`;
 const COMBINE_FILE_SUFFIX = 'combine';
 
 const isPascalCase = (str) => {
@@ -319,15 +319,15 @@ const isPdfFile = (filePath) => {
 
 const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => {
   // Create new one if thumbnail folder is not existing
-  await FileUtil.mkdir(THUMBNAIL_PATH);
-  let outputFilePath = isCombineFile ? `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
+  let thumbnailsFolderPath = getLocalThumbnailsFolderPath();
+  let outputFilePath = isCombineFile ? `${thumbnailsFolderPath}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${thumbnailsFolderPath}/${bitmarkId}.PNG`;
 
   const THUMBNAIL_WIDTH = 300;
   const THUMBNAIL_HEIGHT = 300;
 
   if (isImageFile(filePath)) {
     // Generate image thumbnail
-    let response = await ImageResizer.createResizedImage(filePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, 'PNG', 100, 0, THUMBNAIL_PATH);
+    let response = await ImageResizer.createResizedImage(filePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, 'PNG', 100, 0, thumbnailsFolderPath);
     await FileUtil.moveFileSafe(response.uri, outputFilePath);
 
   } else if (isPdfFile(filePath)) {
@@ -339,8 +339,9 @@ const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => 
 const checkThumbnailForBitmark = async (bitmarkId) => {
   let thumbnailInfo = {exists: false};
 
-  let thumbnailFilePath = `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
-  let thumbnailMultipleFilePath = `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG`;
+  let thumbnailsFolderPath = getLocalThumbnailsFolderPath();
+  let thumbnailFilePath = `${thumbnailsFolderPath}/${bitmarkId}.PNG`;
+  let thumbnailMultipleFilePath = `${thumbnailsFolderPath}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG`;
 
   if ((await FileUtil.exists(thumbnailFilePath))) {
     thumbnailInfo = {
@@ -358,7 +359,8 @@ const checkThumbnailForBitmark = async (bitmarkId) => {
 };
 
 const getThumbnail = (bitmarkId, isCombineFile) => {
-  return isCombineFile ? `${THUMBNAIL_PATH}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${THUMBNAIL_PATH}/${bitmarkId}.PNG`;
+  let thumbnailsFolderPath = getLocalThumbnailsFolderPath();
+  return isCombineFile ? `${thumbnailsFolderPath}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${thumbnailsFolderPath}/${bitmarkId}.PNG`;
 };
 
 const isFileRecord = (bitmark) => {

@@ -21,7 +21,10 @@ import {
 import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
-import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB, populateAssetNameFromImage, isImageFile } from '../utils';
+import {
+  FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
+  populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath
+} from '../utils';
 import PDFScanner from '../models/adapters/pdf-scanner';
 import iCloudSyncAdapter from '../models/adapters/icloud';
 
@@ -389,7 +392,6 @@ const doLogout = async () => {
   }
   CommonModel.resetFaceTouchSessionId();
   await UserModel.doRemoveUserInfo();
-  await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}`);
   await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
   await Intercom.reset();
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
@@ -416,8 +418,6 @@ const doDeactiveApplication = async () => {
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
   // await UserModel.doRemoveUserInfo();
-
-  await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets`);
   // runPromiseWithoutError(iCloudSyncAdapter.syncCloud());
 
   userInformation = await UserModel.doTryGetCurrentUser();
@@ -437,11 +437,11 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   }
 
   if (userInformation && userInformation.bitmarkAccountNumber && !!CommonModel.getFaceTouchSessionId()) {
-    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
-
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${userInformation.bitmarkAccountNumber}`);
-    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}`);
+
+    await moveOldDataFilesToNewLocalStorageFolder();
+    await initializeLocalStorage();
 
     configNotification();
     if (!userInformation.intercomUserId) {
@@ -570,7 +570,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
 
 const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, assetId) => {
   let bitmarkAccountNumber = grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.grantedAccessAccountSelected;
-  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/${assetId}`;
+  let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${assetId}`;
   let downloadedFolder = `${assetFolderPath}/downloaded`;
   await FileUtil.mkdir(assetFolderPath);
   await FileUtil.mkdir(downloadedFolder);
@@ -587,7 +587,7 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, asset
 
 const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, assetId) => {
   let bitmarkAccountNumber = grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.grantedAccessAccountSelected;
-  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/${assetId}`;
+  let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${assetId}`;
   let downloadedFolder = `${assetFolderPath}/downloaded`;
   await FileUtil.mkdir(assetFolderPath);
   await FileUtil.mkdir(downloadedFolder);
@@ -859,7 +859,7 @@ const doMigrateFilesToLocalStorage = async () => {
   let bitmarks = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []);
   let total = 0;
   for (let bitmark of bitmarks) {
-    let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}/${bitmark.asset_id}`;
+    let assetFolderPath = `${getLocalAssetsFolderPath(userInformation.bitmarkAccountNumber)}/${bitmark.asset_id}`;
     let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
     let needDownload = false;
     if (!existAssetFolder || existAssetFolder.error) {
@@ -930,7 +930,7 @@ const doMigrateFilesToLocalStorage = async () => {
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
-  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${userInformation.bitmarkAccountNumber}/${assetId}`;
+  let assetFolderPath = `${getLocalAssetsFolderPath(userInformation.bitmarkAccountNumber)}/${assetId}`;
   let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
   if (!existAssetFolder || existAssetFolder.error) {
     return null;

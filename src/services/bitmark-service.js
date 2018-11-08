@@ -1,7 +1,7 @@
 import randomString from "random-string";
 import moment from 'moment';
 import { BitmarkModel } from "../models";
-import { FileUtil } from "../utils";
+import { FileUtil, getLocalAssetsFolderPath } from "../utils";
 
 // ================================================================================================
 // ================================================================================================
@@ -56,14 +56,14 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
     }
   });
 
-  let tempFolder = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/temp_${randomString({ length: 8, numeric: true, letters: false, }) + moment().toDate().getTime()}`;
+  let tempFolder = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/temp_${randomString({ length: 8, numeric: true, letters: false, }) + moment().toDate().getTime()}`;
   let tempFolderDownloaded = `${tempFolder}/downloaded`;
   await FileUtil.mkdir(tempFolder);
   await FileUtil.mkdir(tempFolderDownloaded);
 
   let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, tempFolderDownloaded, filePath, assetName, metadata, quantity, isPublicAsset);
 
-  let assetFolderPath = `${FileUtil.DocumentDirectory}/assets/${bitmarkAccountNumber}/${issueResult.assetId}`;
+  let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
   let downloadedFolder = `${assetFolderPath}/downloaded`;
   await FileUtil.mkdir(assetFolderPath);
   await FileUtil.mkdir(downloadedFolder);
