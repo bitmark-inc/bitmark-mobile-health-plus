@@ -1,5 +1,5 @@
 language: swift
-osx_image: xcode10.1
+osx_image: xcode10
 xcode_sdk: iphonesimulator12.0
 node_js:
 - '8'
