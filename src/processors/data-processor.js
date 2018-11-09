@@ -24,7 +24,8 @@ import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
 import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
-  populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath, compareVersion
+  populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
+  checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -985,22 +986,36 @@ const doMigrateFilesToLocalStorage = async () => {
       let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
     }
-    await generateThumbnail(bitmark.asset.filePath, bitmark.id);
 
-    if (isHealthDataBitmark(bitmark.asset)) {
-      let data = await FileUtil.readFile(bitmark.asset.filePath);
-      await insertHealthDataToIndexedDB(bitmark.id, {
-        assetMetadata: bitmark.asset.metadata,
-        assetName: bitmark.asset.name,
-        data,
-      });
-    } else if (isImageFile(bitmark.asset.filePath)) {
-      let metadataList = [];
-      for (let label in bitmark.asset.metadata) {
-        metadataList.push({ label, value: bitmark.asset.metadata[label] });
+    // Create thumbnail if not exist
+    if (!checkThumbnailForBitmark(bitmark.id).exists) {
+      await generateThumbnail(bitmark.asset.filePath, bitmark.id);
+    }
+
+    // Create search indexed data if not exist
+    let isExistIndexedData = await checkExistIndexedDataForBitmark(bitmark.id);
+    if (!isExistIndexedData) {
+      if (isHealthDataBitmark(bitmark.asset)) {
+        let data = await FileUtil.readFile(bitmark.asset.filePath);
+        await insertHealthDataToIndexedDB(bitmark.id, {
+          assetMetadata: bitmark.asset.metadata,
+          assetName: bitmark.asset.name,
+          data,
+        });
+      } else if (isImageFile(bitmark.asset.filePath)) {
+        let detectResult = await populateAssetNameFromImage(bitmark.asset.filePath);
+        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
+      } else if (isPdfFile(bitmark.asset.filePath)) {
+        let detectResult;
+        if (isCaptureDataRecord(bitmark.asset.filePath)) {
+          let detectedTexts = await detectTextsFromPdf(bitmark.asset.filePath);
+          detectResult = {detectedTexts};
+        } else {
+          detectResult = await populateAssetNameFromPdf(bitmark.asset.filePath);
+        }
+
+        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
       }
-      let detectResult = await populateAssetNameFromImage(bitmark.asset.filePath);
-      await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, metadataList, detectResult.detectedTexts);
     }
 
     EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, Math.floor(total * 100 / bitmarks.length));

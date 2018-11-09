@@ -287,6 +287,28 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
   };
 };
 
+const detectTextsFromPdf = async (filePath) => {
+  let allDetectTexts = [];
+  let outputFolderPath = `${FileUtil.CacheDirectory}/temp_images`;
+  await FileUtil.mkdir(outputFolderPath);
+  await runPromiseWithoutError(PDFScanner.pdfThumbnails(filePath, 2000, 2000, outputFolderPath));
+
+  let imageFiles = (await FileUtil.readDir(outputFolderPath)) || [];
+
+  for (let i = 0; i < imageFiles.length; i++) {
+    let detectTexts = (await populateAssetNameFromImage(`${outputFolderPath}/${imageFiles[i]}`)).detectedTexts;
+    if (detectTexts) {
+      allDetectTexts = allDetectTexts.concat(detectTexts);
+    }
+  }
+
+  await FileUtil.removeSafe(outputFolderPath);
+
+  console.log('allDetectTexts:', allDetectTexts);
+
+  return allDetectTexts;
+};
+
 const isImageFile = (filePath) => {
   if (!filePath) {
     return false;
@@ -398,5 +420,6 @@ export {
   isHealthDataRecord,
   isAssetDataRecord,
   isJPGFile,
-  getImageSize
+  getImageSize,
+  detectTextsFromPdf
 }

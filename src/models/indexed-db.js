@@ -1,11 +1,21 @@
+import { getLocalDatabasesFolderPath } from "../utils";
+
 const SQLite = require('react-native-sqlite-storage');
 const DB_NAME = 'bitmark_indexed_data.db';
 const DB_LOCATION = 'Documents'; //Documents subdirectory - visible to iTunes and backed up by iCloud
 const TABLE_NAME = 'IndexedData';
 
 export class IndexedDB {
-  static connectDB() {
-    this.db = SQLite.openDatabase({name: DB_NAME, location: DB_LOCATION});
+  static async connectDB() {
+    let databaseFilePath = `${getLocalDatabasesFolderPath()}/${DB_NAME}`;
+    // Relative path to "Documents" folder
+    // Ex: /User/xxx/Documents/accountNumber/databases/bitmark_indexed_data.db -> /accountNumber/databases/bitmark_indexed_data.db
+    let relativeDBFilePath = databaseFilePath.substring(databaseFilePath.indexOf(DB_LOCATION) + DB_LOCATION.length);
+
+    this.db = SQLite.openDatabase({
+      name: relativeDBFilePath,
+      location: DB_LOCATION
+    });
   }
 
   static async executeQuery(query, params = []) {
@@ -32,6 +42,12 @@ export class IndexedDB {
   static async query(accountNumber, term) {
     let query = `SELECT * FROM ${TABLE_NAME} WHERE accountNumber='${accountNumber}' AND (asset_name MATCH '${term}' OR metadata MATCH '${term}' OR content MATCH '${term}')`;
     console.log('query:', query);
+    return this.executeQuery(query);
+  }
+
+  static async queryByBitmarkId(bitmarkId) {
+    let query = `SELECT * FROM ${TABLE_NAME} WHERE bitmarkId='${bitmarkId}'`;
+    console.log('query by Bitmark Id:', query);
     return this.executeQuery(query);
   }
 
