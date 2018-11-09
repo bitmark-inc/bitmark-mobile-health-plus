@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Intercom from 'react-native-intercom';
 import {
   View, Text, TouchableOpacity, SafeAreaView, ScrollView,
   Linking,
@@ -532,7 +533,10 @@ export class BitmarkLegalComponent extends React.Component {
           </View>
           {!this.state.displayedContentName && <View style={styles.lastBottomButtonArea}>
             <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white' }]}
-              onPress={Actions.pop}>
+              onPress={() => {
+                Actions.pop();
+                Intercom.displayMessageComposerWithInitialMessage(`I don't agree because `);
+              }}>
               <Text style={[styles.lastBottomButtonText, { color: '#FF4444' }]}>{i18n.t('BitmarkLegalComponent_lastBottomButtonText2')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), marginLeft: convertWidth(18) }]} onPress={Actions.touchFaceId}>

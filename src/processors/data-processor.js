@@ -5,6 +5,7 @@ import { merge } from 'lodash';
 import { Actions } from 'react-native-router-flux';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
+import randomString from 'random-string';
 const {
   PushNotificationIOS,
 } = ReactNative;
@@ -23,7 +24,7 @@ import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
 import { FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB, populateAssetNameFromImage, isImageFile } from '../utils';
 import PDFScanner from '../models/adapters/pdf-scanner';
-import iCloudSyncAdapter from '../models/adapters/icloud';
+// import iCloudSyncAdapter from '../models/adapters/icloud';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -520,6 +521,18 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       alertTitle: '',
       alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
       repeatInterval: 'week'
+    });
+  } else if (!userInformation || !userInformation.bitmarkAccountNumber) {
+    let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
+    Intercom.reset().then(() => {
+      return Intercom.registerIdentifiedUser({ userId: intercomUserId })
+    }).then(() => {
+      if (!appInfo.intercomUserId) {
+        appInfo.intercomUserId = intercomUserId;
+        return CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+      }
+    }).catch(error => {
+      console.log('registerIdentifiedUser error :', error);
     });
   }
 
