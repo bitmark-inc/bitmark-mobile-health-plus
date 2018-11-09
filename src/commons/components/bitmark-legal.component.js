@@ -535,7 +535,12 @@ export class BitmarkLegalComponent extends React.Component {
             <TouchableOpacity style={[styles.lastBottomButton, { width: convertWidth(162), borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white' }]}
               onPress={() => {
                 Actions.pop();
-                Intercom.displayMessageComposerWithInitialMessage(`I don't agree because `);
+                Intercom.updateUser({
+                  custom_attributes: {
+                    context: 'Disagree with term of service and privacy.'
+                  }
+                });
+                Intercom.displayMessageComposer();
               }}>
               <Text style={[styles.lastBottomButtonText, { color: '#FF4444' }]}>{i18n.t('BitmarkLegalComponent_lastBottomButtonText2')}</Text>
             </TouchableOpacity>
