@@ -59,12 +59,11 @@ class FileUtil {
   static async writeFile(filePath, content, encoding) {
     return await RNFS.writeFile(filePath, content, encoding);
   }
-
   static async zip(inputPath, outputPath) {
-    return zip(inputPath, outputPath);
+    return await zip(inputPath, outputPath);
   }
   static async unzip(inputPath, outputPath) {
-    return unzip(inputPath, outputPath);
+    return await unzip(inputPath, outputPath);
   }
   static async exists(filePath) {
     return await RNFS.exists(filePath);

@@ -922,8 +922,9 @@ const doMigrateFilesToLocalStorage = async () => {
     EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, Math.floor(total * 100 / bitmarks.length));
     total++;
   }
-  EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, 100);
+  await runGetUserBitmarksInBackground();
 
+  EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, 100);
   await AccountModel.doMarkMigration(jwt);
   didMigrationFileToLocalStorage = true;
   // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
