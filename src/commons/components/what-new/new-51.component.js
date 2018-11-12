@@ -33,7 +33,7 @@ export class WhatNew_S51_Component extends Component {
         <View style={styles.body}>
           {this.state.step === 1 && <View style={styles.bodyContent}>
             <View style={styles.header}>
-              <Text style={styles.headerTitle}>What’s new?</Text>
+              <Text style={styles.headerTitle}>{i18n.t('WhatNew_S51_Component_headerTitle1')}</Text>
             </View>
             <View style={styles.newContent}>
               <Swiper
@@ -52,56 +52,50 @@ export class WhatNew_S51_Component extends Component {
                 <View style={styles.newContentSwipePage}>
                   <Image style={styles.newSwipeImage} source={require('./../../../../assets/imgs/s51_new_1.png')} />
                   <View style={styles.newSwipeInformationArea}>
-                    <Text style={styles.s51New1Description}>Now you can add tags to your health records to help you find them faster later. Create whatever tags you want and as many as you want!</Text>
+                    <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description1')}</Text>
                   </View>
                 </View>
 
                 <View style={styles.newContentSwipePage}>
                   <Image style={styles.newSwipeImage} source={require('./../../../../assets/imgs/s51_new_2.png')} />
                   <View style={styles.newSwipeInformationArea}>
-                    <Text style={styles.s51New1Description}>Use our new search bar to instantly search across all your health records.</Text>
+                    <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description2')}</Text>
                   </View>
                 </View>
 
                 <View style={styles.newContentSwipePage}>
                   <Image style={styles.newSwipeImage} source={require('./../../../../assets/imgs/s51_new_3.png')} />
                   <View style={styles.newSwipeInformationArea}>
-                    <Text style={styles.s51New1Description}>Your Bitmark Health data is now securely backed up in your Apple iCloud storage. Everything is encrypted so that not even Bitmark or Apple can see your health data.</Text>
+                    <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description2')}</Text>
                   </View>
                 </View>
               </Swiper>
               {this.state.index < 2 && <TouchableOpacity style={styles.skipButton} onPress={() => this.setState({ step: 2 })}>
-                <Text style={styles.skipButtonText}>Skip</Text>
+                <Text style={styles.skipButtonText}>{i18n.t('WhatNew_S51_Component_skipButtonText')}</Text>
               </TouchableOpacity>}
               {this.state.index === 2 && <TouchableOpacity style={styles.doneButton} onPress={() => this.setState({ step: 2 })}>
-                <Text style={styles.doneButtonText}>DONE</Text>
+                <Text style={styles.doneButtonText}>{i18n.t('WhatNew_S51_Component_doneButtonText')}</Text>
               </TouchableOpacity>}
             </View>
           </View>}
           {this.state.step === 2 && <View style={styles.bodyContent}>
             <View style={styles.header}>
               <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
-                <Text style={styles.closeButtonText}>Close</Text>
+                <Text style={styles.closeButtonText}>{i18n.t('WhatNew_S51_Component_closeButtonText')}</Text>
               </TouchableOpacity>
-              <Text style={styles.headerTitle}>Release notes</Text>
+              <Text style={styles.headerTitle}>{i18n.t('WhatNew_S51_Component_headerTitle2')}</Text>
             </View>
             <View style={styles.newContent}>
               <ScrollView style={{ width: '100%', }} contentContainerStyle={{ flexGrow: 1, flexDirection: 'column', width: '100%', }}>
                 <View style={styles.versionInformation}>
-                  <Text style={styles.versionInformationText} >Version {DataProcessor.getApplicationVersion()}</Text>
-                  <Text style={styles.versionInformationReleaseDiff} >{this.state.diffDay === 0 ? `just now` : `${this.state.diffDay}d ago`}</Text>
+                  <Text style={styles.versionInformationText} >{i18n.t('WhatNew_S51_Component_versionInformationText', { version: DataProcessor.getApplicationVersion() })}</Text>
+                  <Text style={styles.versionInformationReleaseDiff}>
+                    {this.state.diffDay === 0 ? i18n.t('WhatNew_S51_Component_versionInformationReleaseDiff1') : i18n.t('WhatNew_S51_Component_versionInformationReleaseDiff2', { day: this.state.diffDay })}
+                  </Text>
                 </View>
 
                 <Text style={styles.releaseNoteText}>
-                  New features:{'\n'}
-                  • In-app update - this will allow users update the latest version of the alpha app automatically by opening it.{'\n'}
-                  Improvements:{'\n'}
-                  1. Removed the Apple Health grant permission screen from the new user onboarding flow.{'\n'}
-                  2. Users can now opt to enable Weekly Health data registration after clicking on the Weekly Health data section.{'\n'}
-                  3. Simplified the Account button{'\n'}
-                  4. Moved Grant Access screens to Account Settings.{'\n'}
-                  5. New update notification for the next versions.{'\n'}
-
+                  {i18n.t('WhatNew_S51_Component_releaseNoteText')}
                 </Text>
               </ScrollView>
             </View>
