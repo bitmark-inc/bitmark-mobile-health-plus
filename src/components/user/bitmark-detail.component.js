@@ -12,7 +12,7 @@ import { convertWidth, runPromiseWithoutError, FileUtil, } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
-import { AppProcessor, DataProcessor } from '../../processors';
+// import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 
 export class BitmarkDetailComponent extends Component {
@@ -91,27 +91,27 @@ export class BitmarkDetailComponent extends Component {
     }
   }
 
-  backToUserAccount() {
-    AppProcessor.doSelectAccountAccess(DataProcessor.getUserInformation().bitmarkAccountNumber).then(result => {
-      if (result) {
-        Actions.reset('user');
-      }
-    }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-    });
-  }
+  // backToUserAccount() {
+  //   AppProcessor.doSelectAccountAccess(DataProcessor.getUserInformation().bitmarkAccountNumber).then(result => {
+  //     if (result) {
+  //       Actions.reset('user');
+  //     }
+  //   }).catch(error => {
+  //     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+  //   });
+  // }
 
   render() {
-    let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
-    let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
+    // let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    // let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
     console.log('this.state :', this.state, this.props)
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
-        {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
+        {/* {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
           <Text style={styles.accountNumberDisplayText}>
             {i18n.t('BitmarkDetailComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
           </Text>
-        </TouchableOpacity>}
+        </TouchableOpacity>} */}
         <SafeAreaView style={[styles.bodySafeView]}>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
@@ -176,23 +176,23 @@ export class BitmarkDetailComponent extends Component {
 }
 
 const styles = StyleSheet.create({
-  accountNumberDisplayArea: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: convertWidth(32) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    backgroundColor: '#E6FF00',
-    zIndex: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  accountNumberDisplayText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
-    fontWeight: '800',
-    fontSize: 14,
-  },
+  // accountNumberDisplayArea: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   width: '100%',
+  //   height: convertWidth(32) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+  //   paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+  //   backgroundColor: '#E6FF00',
+  //   zIndex: 10,
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // accountNumberDisplayText: {
+  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+  //   fontWeight: '800',
+  //   fontSize: 14,
+  // },
   bodySafeView: {
     flex: 1,
     backgroundColor: 'white',

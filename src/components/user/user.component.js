@@ -25,9 +25,9 @@ import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
 import { UserBitmarksStore } from '../../stores';
-import { SearchInputComponent } from "./search-input.component";
-import { MaterialIndicator } from "react-native-indicators";
-import { SearchResultsComponent } from "./search-results.component";
+// import { SearchInputComponent } from "./search-input.component";
+// import { MaterialIndicator } from "react-native-indicators";
+// import { SearchResultsComponent } from "./search-results.component";
 
 class PrivateUserComponent extends Component {
   static propTypes = {
@@ -285,15 +285,15 @@ class PrivateUserComponent extends Component {
     return { filePath, timestamp };
   }
 
-  backToUserAccount() {
-    AppProcessor.doSelectAccountAccess(DataProcessor.getUserInformation().bitmarkAccountNumber).then(result => {
-      if (result) {
-        Actions.reset('user');
-      }
-    }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-    });
-  }
+  // backToUserAccount() {
+  //   AppProcessor.doSelectAccountAccess(DataProcessor.getUserInformation().bitmarkAccountNumber).then(result => {
+  //     if (result) {
+  //       Actions.reset('user');
+  //     }
+  //   }).catch(error => {
+  //     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+  //   });
+  // }
 
   async updateSearch(searchTerm) {
     console.log('searchTerm:', searchTerm);
@@ -339,36 +339,36 @@ class PrivateUserComponent extends Component {
 
     return (
       <View style={{ flex: 1, }}>
-        {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
+        {/* {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
           <Text style={styles.accountNumberDisplayText}>
             {i18n.t('UserComponent_accountNumberDisplayText', { accountNumber: '[' + accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) + ']' })}
           </Text>
-        </TouchableOpacity>}
+        </TouchableOpacity>} */}
         <SafeAreaView style={[styles.bodySafeView,]}>
           {/*SEARCH AREA*/}
           {/*TODO: localization*/}
           {/*<View style={[styles.searchArea, (this.state.searchTerm ? { flex: 1 } : {})]}>*/}
-            {/*<SearchInputComponent*/}
-              {/*throttle={300}*/}
-              {/*onSearchTermChange={(searchTerm) => {*/}
-                {/*this.setState({*/}
-                  {/*isSearching: true,*/}
-                  {/*searchTerm*/}
-                {/*});*/}
+          {/*<SearchInputComponent*/}
+          {/*throttle={300}*/}
+          {/*onSearchTermChange={(searchTerm) => {*/}
+          {/*this.setState({*/}
+          {/*isSearching: true,*/}
+          {/*searchTerm*/}
+          {/*});*/}
 
-                {/*this.updateSearch(searchTerm);*/}
-              {/*}}*/}
-              {/*style={styles.searchInput}*/}
-              {/*placeholder={global.i18n.t("UserComponent_search")}>*/}
-            {/*</SearchInputComponent>*/}
+          {/*this.updateSearch(searchTerm);*/}
+          {/*}}*/}
+          {/*style={styles.searchInput}*/}
+          {/*placeholder={global.i18n.t("UserComponent_search")}>*/}
+          {/*</SearchInputComponent>*/}
 
-            {/*{this.state.isSearching && <View style={styles.indicatorContainer}>*/}
-              {/*<MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />*/}
-              {/*/!*TODO: localization*!/*/}
-              {/*<Text>{global.i18n.t("UserComponent_searching")}</Text>*/}
-            {/*</View>*/}
-            {/*}*/}
-            {/*{(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}*/}
+          {/*{this.state.isSearching && <View style={styles.indicatorContainer}>*/}
+          {/*<MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />*/}
+          {/*/!*TODO: localization*!/*/}
+          {/*<Text>{global.i18n.t("UserComponent_searching")}</Text>*/}
+          {/*</View>*/}
+          {/*}*/}
+          {/*{(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}*/}
           {/*</View>*/}
 
           {/*DATA PANEL*/}
@@ -423,53 +423,53 @@ class PrivateUserComponent extends Component {
 }
 
 const styles = StyleSheet.create({
-  accountNumberDisplayArea: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: convertWidth(32) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    backgroundColor: '#E6FF00',
-    zIndex: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  accountNumberDisplayText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
-    fontWeight: '800',
-    fontSize: 14,
-  },
+  // accountNumberDisplayArea: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   width: '100%',
+  //   height: convertWidth(32) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+  //   paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+  //   backgroundColor: '#E6FF00',
+  //   zIndex: 10,
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // accountNumberDisplayText: {
+  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+  //   fontWeight: '800',
+  //   fontSize: 14,
+  // },
   bodySafeView: {
     flex: 1,
     backgroundColor: 'white',
   },
-  searchArea: {
-    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0)
-  },
-  searchInput: {
-    paddingLeft: convertWidth(16),
-    paddingRight: convertWidth(16),
-    paddingBottom: convertWidth(14)
-  },
-  searchResultsContainer: {
-    paddingLeft: convertWidth(8),
-    paddingRight: convertWidth(8),
-    backgroundColor: '#F5F5F5',
-    flex: 1,
-  },
-  indicatorContainer: {
-    paddingTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    backgroundColor: '#F5F5F5',
-    flex: 1,
-  },
-  indicator: {
-    flex: 0,
-    marginRight: 8,
-  },
+  // searchArea: {
+  //   paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0)
+  // },
+  // searchInput: {
+  //   paddingLeft: convertWidth(16),
+  //   paddingRight: convertWidth(16),
+  //   paddingBottom: convertWidth(14)
+  // },
+  // searchResultsContainer: {
+  //   paddingLeft: convertWidth(8),
+  //   paddingRight: convertWidth(8),
+  //   backgroundColor: '#F5F5F5',
+  //   flex: 1,
+  // },
+  // indicatorContainer: {
+  //   paddingTop: 10,
+  //   flexDirection: 'row',
+  //   justifyContent: 'center',
+  //   alignItems: 'flex-start',
+  //   backgroundColor: '#F5F5F5',
+  //   flex: 1,
+  // },
+  // indicator: {
+  //   flex: 0,
+  //   marginRight: 8,
+  // },
   body: {
     padding: convertWidth(16),
     paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),

@@ -139,31 +139,31 @@ const doDownloadAndShareLegal = async ({ title, urlDownload }) => {
   return filePath;
 };
 
-const doGrantingAccess = async () => {
-  return processing(DataProcessor.doGrantingAccess());
-};
+// const doGrantingAccess = async () => {
+//   return processing(DataProcessor.doGrantingAccess());
+// };
 
-const doSelectAccountAccess = async ({ accountNumber }) => {
-  return processing(DataProcessor.doSelectAccountAccess(accountNumber));
-};
+// const doSelectAccountAccess = async ({ accountNumber }) => {
+//   return processing(DataProcessor.doSelectAccountAccess(accountNumber));
+// };
 
-const doReceivedAccessQRCode = async ({ token }) => {
-  return processing(DataProcessor.doReceivedAccessQRCode(token));
-};
-const doRemoveGrantingAccess = async ({ grantee }) => {
-  return processing(DataProcessor.doRemoveGrantingAccess(grantee));
-};
-const doCancelGrantingAccess = async ({ token }) => {
-  return processing(DataProcessor.doCancelGrantingAccess(token));
-};
+// const doReceivedAccessQRCode = async ({ token }) => {
+//   return processing(DataProcessor.doReceivedAccessQRCode(token));
+// };
+// const doRemoveGrantingAccess = async ({ grantee }) => {
+//   return processing(DataProcessor.doRemoveGrantingAccess(grantee));
+// };
+// const doCancelGrantingAccess = async ({ token }) => {
+//   return processing(DataProcessor.doCancelGrantingAccess(token));
+// };
 
-const doConfirmGrantingAccess = async ({ token, grantee, processingData }) => {
-  let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doConfirmGrantingAccess'));
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  return submitting(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee), processingData);
-};
+// const doConfirmGrantingAccess = async ({ token, grantee, processingData }) => {
+//   let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doConfirmGrantingAccess'));
+//   if (!touchFaceIdSession) {
+//     return null;
+//   }
+//   return submitting(DataProcessor.doConfirmGrantingAccess(touchFaceIdSession, token, grantee), processingData);
+// };
 
 const doAcceptEmailRecords = async ({ emailRecord, processingData }) => {
   let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
@@ -200,12 +200,12 @@ let AppTasks = {
   doDownloadHealthDataBitmark,
   doGetBitmarkInformation,
   doDownloadAndShareLegal,
-  doGrantingAccess,
-  doSelectAccountAccess,
-  doReceivedAccessQRCode,
-  doRemoveGrantingAccess,
-  doCancelGrantingAccess,
-  doConfirmGrantingAccess,
+  // doGrantingAccess,
+  // doSelectAccountAccess,
+  // doReceivedAccessQRCode,
+  // doRemoveGrantingAccess,
+  // doCancelGrantingAccess,
+  // doConfirmGrantingAccess,
   doAcceptEmailRecords,
   doRejectEmailRecords,
   doMigrateFilesToLocalStorage,

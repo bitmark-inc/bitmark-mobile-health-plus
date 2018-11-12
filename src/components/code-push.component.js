@@ -16,6 +16,13 @@ export class CodePushComponent extends React.Component {
       progress: 0,
     };
 
+    codePush.checkForUpdate().then((update) => {
+      if (!update) {
+        console.log("The app is up to date!");
+      } else {
+        console.log("An update is available! Should we download it?");
+      }
+    });
     codePush.getCurrentPackage().then(updateInfo => {
       console.log('current package :', updateInfo);
     });

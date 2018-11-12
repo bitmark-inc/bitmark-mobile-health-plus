@@ -18,10 +18,10 @@ import { convertWidth } from './../../utils';
 import { config } from './../../configs';
 import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
-import { EventEmitterService } from '../../services';
+// import { EventEmitterService } from '../../services';
 import {
   DataProcessor,
-  AppProcessor
+  // AppProcessor
 } from '../../processors';
 import { DataAccountAccessesStore } from '../../stores';
 export class PrivateAccountComponent extends Component {
@@ -95,19 +95,19 @@ export class PrivateAccountComponent extends Component {
     });
   }
 
-  selectAccount(accountNumber) {
-    AppProcessor.doSelectAccountAccess(accountNumber).then(result => {
-      if (result === true) {
-        Actions.reset('user');
-      } else if (result === false) {
-        Alert.alert('', i18n.t('OtherAccountsComponent_alertMessage1'), [{
-          text: 'OK', style: 'cancel',
-        }]);
-      }
-    }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-    });
-  }
+  // selectAccount(accountNumber) {
+  //   AppProcessor.doSelectAccountAccess(accountNumber).then(result => {
+  //     if (result === true) {
+  //       Actions.reset('user');
+  //     } else if (result === false) {
+  //       Alert.alert('', i18n.t('OtherAccountsComponent_alertMessage1'), [{
+  //         text: 'OK', style: 'cancel',
+  //       }]);
+  //     }
+  //   }).catch(error => {
+  //     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+  //   });
+  // }
 
   render() {
     let emailAddress = config.network === config.NETWORKS.livenet

@@ -164,13 +164,13 @@ const doDownloadAndShareLegal = async (title, urlDownload) => {
   return executeTask('doDownloadAndShareLegal', { title, urlDownload });
 };
 
-const doGrantingAccess = async () => {
-  return executeTask('doGrantingAccess');
-};
+// const doGrantingAccess = async () => {
+//   return executeTask('doGrantingAccess');
+// };
 
-const doSelectAccountAccess = async (accountNumber) => {
-  return executeTask('doSelectAccountAccess', { accountNumber });
-};
+// const doSelectAccountAccess = async (accountNumber) => {
+//   return executeTask('doSelectAccountAccess', { accountNumber });
+// };
 
 
 const doCheckNoLongerSupportVersion = async () => {
@@ -186,21 +186,21 @@ const doCheckNoLongerSupportVersion = async () => {
   return true;
 };
 
-const doReceivedAccessQRCode = async (token) => {
-  return executeTask('doReceivedAccessQRCode', { token });
-};
+// const doReceivedAccessQRCode = async (token) => {
+//   return executeTask('doReceivedAccessQRCode', { token });
+// };
 
-const doCancelGrantingAccess = async (token) => {
-  return executeTask('doCancelGrantingAccess', { token });
-};
+// const doCancelGrantingAccess = async (token) => {
+//   return executeTask('doCancelGrantingAccess', { token });
+// };
 
-const doRemoveGrantingAccess = async (grantee) => {
-  return executeTask('doRemoveGrantingAccess', { grantee });
-};
+// const doRemoveGrantingAccess = async (grantee) => {
+//   return executeTask('doRemoveGrantingAccess', { grantee });
+// };
 
-const doConfirmGrantingAccess = async (token, grantee, processingData) => {
-  return executeTask('doConfirmGrantingAccess', { token, grantee, processingData });
-};
+// const doConfirmGrantingAccess = async (token, grantee, processingData) => {
+//   return executeTask('doConfirmGrantingAccess', { token, grantee, processingData });
+// };
 
 const doAcceptEmailRecords = async (emailRecord, processingData) => {
   return executeTask('doAcceptEmailRecords', { emailRecord, processingData });
@@ -248,12 +248,12 @@ let AppProcessor = {
   doDownloadAndShareLegal,
 
   doCheckNoLongerSupportVersion,
-  doGrantingAccess,
-  doSelectAccountAccess,
-  doReceivedAccessQRCode,
-  doRemoveGrantingAccess,
-  doCancelGrantingAccess,
-  doConfirmGrantingAccess,
+  // doGrantingAccess,
+  // doSelectAccountAccess,
+  // doReceivedAccessQRCode,
+  // doRemoveGrantingAccess,
+  // doCancelGrantingAccess,
+  // doConfirmGrantingAccess,
   doAcceptEmailRecords,
   doRejectEmailRecords,
 

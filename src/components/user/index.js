@@ -9,7 +9,7 @@ import { BitmarkHealthDataComponent } from './bitmark-health-data.component';
 import { CaptureAssetComponent } from './capture-asset.component';
 import { BitmarkListComponent } from './bitmark-list.component';
 
-import { BitmarkLegalComponent } from './../../commons';
+import { BitmarkLegalComponent, WhatNewComponent } from './../../commons';
 import { BitmarkDetailComponent } from './bitmark-detail.component';
 import { GrantingAccessComponent } from './granting-access.component';
 import { ScanAccessQRCodeComponent } from './scan-access-qr-code.component';
@@ -59,6 +59,7 @@ export class UserRouterComponent extends Component {
           <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} />
           <Scene key="recordImages" component={RecordImagesComponent} />
           <Scene key="orderCombineImages" component={OrderCombineImagesComponent} />
+          <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
         </Stack>
       </Router>
     );

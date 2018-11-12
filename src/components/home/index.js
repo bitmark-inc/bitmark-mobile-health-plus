@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import { Router, Scene, Stack, } from 'react-native-router-flux';
 import { TouchFaceIdComponent } from './touch-face-id.component';
 
-import { BitmarkLegalComponent } from './../../commons';
+import { BitmarkLegalComponent, WhatNewComponent } from './../../commons';
+console.log('WhatNewComponent :', WhatNewComponent);
 
 
 export class HomeRouterComponent extends Component {
@@ -19,6 +20,7 @@ export class HomeRouterComponent extends Component {
           <Scene key="login" component={LoginComponent} />
           <Scene key="touchFaceId" component={TouchFaceIdComponent} />
           <Scene key="legal" component={BitmarkLegalComponent} />
+          <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
         </Stack>
       </Router>
     );

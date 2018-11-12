@@ -9,8 +9,8 @@ import {
 import { convertWidth, isFileRecord, isImageFile, isPdfFile } from '../../utils';
 import { constants } from '../../constants';
 import { config } from '../../configs';
-import { EventEmitterService } from '../../services';
-import { DataProcessor, AppProcessor } from '../../processors';
+// import { EventEmitterService } from '../../services';
+// import { DataProcessor, AppProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 import { UserBitmarksStore, UserBitmarksActions } from '../../stores/user-bitmarks.store';
 import { MaterialIndicator } from 'react-native-indicators';
@@ -31,15 +31,15 @@ class PrivateBitmarkListComponent extends Component {
     Actions.bitmarkDetail({ bitmark, bitmarkType });
   }
 
-  backToUserAccount() {
-    AppProcessor.doSelectAccountAccess(DataProcessor.getUserInformation().bitmarkAccountNumber).then(result => {
-      if (result) {
-        Actions.reset('user');
-      }
-    }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-    });
-  }
+  // backToUserAccount() {
+  //   AppProcessor.doSelectAccountAccess(DataProcessor.getUserInformation().bitmarkAccountNumber).then(result => {
+  //     if (result) {
+  //       Actions.reset('user');
+  //     }
+  //   }).catch(error => {
+  //     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+  //   });
+  // }
 
 
   downloadBitmark(asset) {
@@ -52,16 +52,16 @@ class PrivateBitmarkListComponent extends Component {
   }
 
   render() {
-    let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
-    let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
+    // let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    // let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
 
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
-        {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
+        {/* {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
           <Text style={styles.accountNumberDisplayText}>
             {i18n.t('BitmarkListComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
           </Text>
-        </TouchableOpacity>}
+        </TouchableOpacity>} */}
         <SafeAreaView style={styles.bodySafeView}>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
@@ -96,45 +96,45 @@ class PrivateBitmarkListComponent extends Component {
                     }}
                   />
                 </ScrollView>
-                ) : (
-                // ASSET RECORDS
-                <ScrollView style={styles.bitmarkList}>
-                  <FlatList
-                    contentContainerStyle={[styles.bitmarksContainer]}
-                    keyExtractor={(item) => item.id}
-                    scrollEnabled={false}
-                    data={this.props.healthAssetBitmarks || []}
-                    extraData={this.props}
-                    renderItem={({ item }) => {
-                      return (
-                        <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
-                          if (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) {
-                            this.downloadBitmark.bind(this)(item.asset)
-                          } else {
-                            this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
-                          }
-                        }}>
-                          {item && item.thumbnail && item.thumbnail.exists ?
-                            <View>
-                              <Image style={styles.bitmarkThumbnail} source={{ uri: `${item.thumbnail.path}` }} />
-                              {item.thumbnail.multiple &&
-                                <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')} />
-                              }
-                            </View>
-                            :
-                            <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/unknown_file_type_icon.png')} />
-                          }
+              ) : (
+                  // ASSET RECORDS
+                  <ScrollView style={styles.bitmarkList}>
+                    <FlatList
+                      contentContainerStyle={[styles.bitmarksContainer]}
+                      keyExtractor={(item) => item.id}
+                      scrollEnabled={false}
+                      data={this.props.healthAssetBitmarks || []}
+                      extraData={this.props}
+                      renderItem={({ item }) => {
+                        return (
+                          <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
+                            if (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) {
+                              this.downloadBitmark.bind(this)(item.asset)
+                            } else {
+                              this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
+                            }
+                          }}>
+                            {item && item.thumbnail && item.thumbnail.exists ?
+                              <View>
+                                <Image style={styles.bitmarkThumbnail} source={{ uri: `${item.thumbnail.path}` }} />
+                                {item.thumbnail.multiple &&
+                                  <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')} />
+                                }
+                              </View>
+                              :
+                              <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/unknown_file_type_icon.png')} />
+                            }
 
-                          {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]} />}
-                          {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32} />}
-                          {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
-                        </TouchableOpacity>
-                      );
-                    }}
-                  />
-                </ScrollView>
+                            {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]} />}
+                            {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32} />}
+                            {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
+                  </ScrollView>
                 )
-                }
+              }
             </View>
           </View>
         </SafeAreaView>
@@ -144,23 +144,23 @@ class PrivateBitmarkListComponent extends Component {
 }
 
 const styles = StyleSheet.create({
-  accountNumberDisplayArea: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: convertWidth(32) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    backgroundColor: '#E6FF00',
-    zIndex: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  accountNumberDisplayText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
-    fontWeight: '800',
-    fontSize: 14,
-  },
+  // accountNumberDisplayArea: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   width: '100%',
+  //   height: convertWidth(32) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+  //   paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+  //   backgroundColor: '#E6FF00',
+  //   zIndex: 10,
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // accountNumberDisplayText: {
+  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+  //   fontWeight: '800',
+  //   fontSize: 14,
+  // },
   bodySafeView: {
     flex: 1,
     backgroundColor: 'white',

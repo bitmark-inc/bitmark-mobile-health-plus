@@ -23,19 +23,29 @@ import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
 import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
-  populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath
+  populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath, compareVersion
 } from '../utils';
+
 import PDFScanner from '../models/adapters/pdf-scanner';
-import iCloudSyncAdapter from '../models/adapters/icloud';
+// import iCloudSyncAdapter from '../models/adapters/icloud';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
 let jwt;
-let websocket;
+// let websocket;
 let isLoadingData = false;
 let notificationUUID;
-let isDisplayingEmailRecord = false;
-let isMigratingFileToLocalStorage = false;
+
+let mapModalDisplayData = {};
+let keyIndexModalDisplaying = 0;
+let mapModalDisplayKeyIndex = {
+  what_new: 1,
+  local_storage_migration: 2,
+  email_record: 3,
+  weekly_health_data: 4,
+};
+// let isDisplayingEmailRecord = false;
+// let isMigratingFileToLocalStorage = false;
 let didMigrationFileToLocalStorage = false;
 
 const isHealthDataBitmark = (asset) => {
@@ -59,6 +69,44 @@ const isHealthAssetBitmark = (asset) => {
     if (asset.metadata['Source'] == 'Health Records' && asset.name.startsWith('HA')) return true;
   }
   return false;
+};
+
+let isDisplayingModal = (keyIndex) => {
+  return keyIndexModalDisplaying === keyIndex && !!mapModalDisplayData[keyIndex];
+}
+
+let checkDisplayModal = () => {
+  if (keyIndexModalDisplaying > 0 && !mapModalDisplayData[keyIndexModalDisplaying]) {
+    keyIndexModalDisplaying = 0;
+  }
+  let keyIndexArray = Object.keys(mapModalDisplayData).sort();
+  for (let index = 0; index < keyIndexArray.length; index++) {
+    let keyIndex = parseInt(keyIndexArray[index]);
+    console.log({
+      keyIndex, data: mapModalDisplayData[keyIndex], keyIndexModalDisplaying,
+      result: keyIndex === mapModalDisplayKeyIndex.what_new && mapModalDisplayData[keyIndex] && (keyIndexModalDisplaying <= 0 || keyIndexModalDisplaying > keyIndex)
+    })
+    if (mapModalDisplayData[keyIndex] && (keyIndexModalDisplaying <= 0 || keyIndexModalDisplaying > keyIndex)) {
+      if (keyIndex === mapModalDisplayKeyIndex.what_new) {
+        setTimeout(() => Actions.whatNew(), 1000);
+      } else if (keyIndex === mapModalDisplayKeyIndex.local_storage_migration) {
+        EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
+      } if (keyIndex === mapModalDisplayKeyIndex.email_record) {
+        Actions.emailRecords(mapModalDisplayData[keyIndex]);
+      } if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data) {
+        Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
+      }
+      keyIndexModalDisplaying = keyIndex;
+    }
+  }
+};
+
+let updateModal = (keyIndex, data) => {
+  console.log('updateModal :', keyIndex, data);
+  mapModalDisplayData[keyIndex] = data;
+  if (data) {
+    checkDisplayModal();
+  }
 };
 
 // ================================================================================================================================================
@@ -86,8 +134,11 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
 
   if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthData) {
     let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.createdAt);
-    if (list && list.length > 0 && didMigrationFileToLocalStorage) {
-      Actions.bitmarkHealthData({ list });
+    // if (list && list.length > 0 && didMigrationFileToLocalStorage) {
+    //   Actions.bitmarkHealthData({ list });
+    // }
+    if (list && list.length > 0) {
+      updateModal(mapModalDisplayKeyIndex.weekly_health_data, { list });
     }
   }
 };
@@ -175,52 +226,62 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
   });
 };
 
-let queueGetAccountAccesses = [];
-const doCheckNewAccesses = async (accesses) => {
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
-  DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(accesses));
-  if (grantedAccessAccountSelected) {
-    grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === grantedAccessAccountSelected.grantor);
-  }
-  if (accesses && accesses.waiting && accesses.waiting.length > 0 && didMigrationFileToLocalStorage) {
-    Actions.confirmAccess({ token: accesses.waiting[0].id, grantee: accesses.waiting[0].grantee });
-  }
-};
-const runGetAccountAccessesInBackground = () => {
-  return new Promise((resolve) => {
-    queueGetAccountAccesses = queueGetAccountAccesses || [];
-    queueGetAccountAccesses.push(resolve);
-    if (queueGetAccountAccesses.length > 1) {
-      return;
-    }
-    AccountService.doGetAllGrantedAccess(userInformation.bitmarkAccountNumber, jwt).then(accesses => {
-      queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
-      queueGetAccountAccesses = [];
-      doCheckNewAccesses(accesses);
-    }).catch(error => {
-      queueGetAccountAccesses.forEach(queueResolve => queueResolve());
-      queueGetAccountAccesses = [];
-      console.log(' runGetAccountAccessesInBackground error:', error);
-    });
-  });
-};
+// let queueGetAccountAccesses = [];
+// const doCheckNewAccesses = async (accesses) => {
+//   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
+//   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(accesses));
+//   if (grantedAccessAccountSelected) {
+//     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === grantedAccessAccountSelected.grantor);
+//   }
+//   if (accesses && accesses.waiting && accesses.waiting.length > 0 && didMigrationFileToLocalStorage) {
+//     Actions.confirmAccess({ token: accesses.waiting[0].id, grantee: accesses.waiting[0].grantee });
+//   }
+// };
+// const runGetAccountAccessesInBackground = () => {
+//   return new Promise((resolve) => {
+//     queueGetAccountAccesses = queueGetAccountAccesses || [];
+//     queueGetAccountAccesses.push(resolve);
+//     if (queueGetAccountAccesses.length > 1) {
+//       return;
+//     }
+//     AccountService.doGetAllGrantedAccess(userInformation.bitmarkAccountNumber, jwt).then(accesses => {
+//       queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
+//       queueGetAccountAccesses = [];
+//       doCheckNewAccesses(accesses);
+//     }).catch(error => {
+//       queueGetAccountAccesses.forEach(queueResolve => queueResolve());
+//       queueGetAccountAccesses = [];
+//       console.log(' runGetAccountAccessesInBackground error:', error);
+//     });
+//   });
+// };
 
 const finishedDisplayEmailRecords = () => {
-  isDisplayingEmailRecord = false;
+  updateModal(mapModalDisplayKeyIndex.email_record);
 };
 let queueGetEmailRecords = [];
 const doCheckNewEmailRecords = async (mapEmailRecords) => {
   console.log('mapEmailRecords :', mapEmailRecords);
   if (!mapEmailRecords) {
-    isDisplayingEmailRecord = false;
+    updateModal(mapModalDisplayKeyIndex.email_record);
     return;
   }
-  if (Object.keys(mapEmailRecords).length > 0 && !isDisplayingEmailRecord && didMigrationFileToLocalStorage) {
-    isDisplayingEmailRecord = true;
-    Actions.emailRecords({ mapEmailRecords });
+  if (Object.keys(mapEmailRecords).length > 0) {
+    updateModal(mapModalDisplayKeyIndex.email_record, { mapEmailRecords });
   } else {
-    isDisplayingEmailRecord = false;
+    updateModal(mapModalDisplayKeyIndex.email_record);
   }
+
+  // if (!mapEmailRecords) {
+  //   isDisplayingEmailRecord = false;
+  //   return;
+  // }
+  // if (Object.keys(mapEmailRecords).length > 0 && !isDisplayingEmailRecord && didMigrationFileToLocalStorage) {
+  //   isDisplayingEmailRecord = true;
+  //   Actions.emailRecords({ mapEmailRecords });
+  // } else {
+  //   isDisplayingEmailRecord = false;
+  // }
 };
 const runGetEmailRecordsInBackground = () => {
   return new Promise((resolve) => {
@@ -256,13 +317,16 @@ const runOnBackground = async () => {
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
-    await runGetAccountAccessesInBackground();
+    // await runGetAccountAccessesInBackground();
     if (grantedAccessAccountSelected) {
       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
     }
-    if (!isDisplayingEmailRecord) {
+    if (!isDisplayingModal(mapModalDisplayKeyIndex.email_record)) {
       await runGetEmailRecordsInBackground();
     }
+    // if (!isDisplayingEmailRecord) {
+    //   await runGetEmailRecordsInBackground();
+    // }
   }
 };
 // ================================================================================================================================================
@@ -436,6 +500,10 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     });
   }
 
+  if (!appInfo.displayedWhatNewInformation || compareVersion(appInfo.displayedWhatNewInformation, DeviceInfo.getVersion()) < 0) {
+    updateModal(mapModalDisplayKeyIndex.what_new, true);
+  }
+
   if (userInformation && userInformation.bitmarkAccountNumber && !!CommonModel.getFaceTouchSessionId()) {
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${userInformation.bitmarkAccountNumber}`);
@@ -460,45 +528,48 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
     jwt = result.jwt_token;
 
-    websocket = new WebSocket(config.mobile_server_url + '/ws', [], {
-      headers: {
-        'Authorization': 'Bearer ' + jwt
-      }
-    });
+    // websocket = new WebSocket(config.mobile_server_url + '/ws', [], {
+    //   headers: {
+    //     'Authorization': 'Bearer ' + jwt
+    //   }
+    // });
 
-    websocket.onopen = () => {
-      console.log('websocket opened');
-    };
-    websocket.onmessage = (event) => {
-      if (event.data) {
-        let data
-        try {
-          data = JSON.parse(event.data);
-        } catch (error) {
-          //
-        }
-        console.log('data event :', data);
-        if (data && data.event === 'bitmarks_grant_access' && data.id && data.grantee && didMigrationFileToLocalStorage) {
-          Actions.confirmAccess({ token: data.id, grantee: data.grantee });
-        }
-      }
-    };
-    websocket.onerror = (e) => {
-      console.log('websocket error : ', e);
-    };
-    websocket.onclose = (e) => {
-      console.log('websocket closed:', e.code, e.reason);
-    };
+    // websocket.onopen = () => {
+    //   console.log('websocket opened');
+    // };
+    // websocket.onmessage = (event) => {
+    //   if (event.data) {
+    //     let data
+    //     try {
+    //       data = JSON.parse(event.data);
+    //     } catch (error) {
+    //       //
+    //     }
+    //     console.log('data event :', data);
+    //     // if (data && data.event === 'bitmarks_grant_access' && data.id && data.grantee && didMigrationFileToLocalStorage) {
+    //     //   Actions.confirmAccess({ token: data.id, grantee: data.grantee });
+    //     // }
+    //   }
+    // };
+    // websocket.onerror = (e) => {
+    //   console.log('websocket error : ', e);
+    // };
+    // websocket.onclose = (e) => {
+    //   console.log('websocket closed:', e.code, e.reason);
+    // };
 
     if (justCreatedBitmarkAccount) {
       await AccountModel.doMarkMigration(jwt);
       didMigrationFileToLocalStorage = true;
     } else {
       didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
-      if (!didMigrationFileToLocalStorage && !isMigratingFileToLocalStorage) {
-        isMigratingFileToLocalStorage = true;
-        EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
+      if (!didMigrationFileToLocalStorage && !isDisplayingModal(mapModalDisplayKeyIndex.local_storage_migration)) {
+        updateModal(mapModalDisplayKeyIndex.local_storage_migration, true);
       }
+      // if (!didMigrationFileToLocalStorage && !isMigratingFileToLocalStorage) {
+      //   isMigratingFileToLocalStorage = true;
+      //   EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
+      // }
     }
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
@@ -704,126 +775,126 @@ const doCheckFileToIssue = async (filePath) => {
   return await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
 };
 
-const doGrantingAccess = async () => {
-  return await AccountModel.doGrantingAccess(jwt);
-};
+// const doGrantingAccess = async () => {
+//   return await AccountModel.doGrantingAccess(jwt);
+// };
 
-const getAccountAccessSelected = () => {
-  return grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : null;
-};
-const getGrantedAccessAccountSelected = () => {
-  return grantedAccessAccountSelected;
-};
+// const getAccountAccessSelected = () => {
+//   return grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : null;
+// };
+// const getGrantedAccessAccountSelected = () => {
+//   return grantedAccessAccountSelected;
+// };
 
-const doSelectAccountAccess = async (accountNumber) => {
-  if (accountNumber === userInformation.bitmarkAccountNumber) {
-    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks((await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {}));
-    grantedAccessAccountSelected = null;
-    return true;
-  }
-  let accesses = await runGetAccountAccessesInBackground();
-  if (accesses && accesses.granted_from) {
-    grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === accountNumber);
-    if (grantedAccessAccountSelected) {
-      UserBitmarksStore.dispatch(UserBitmarksActions.reset());
-      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor, grantedAccessAccountSelected.granted_at);
-      return true;
-    }
-  }
-  return false;
-};
+// const doSelectAccountAccess = async (accountNumber) => {
+//   if (accountNumber === userInformation.bitmarkAccountNumber) {
+//     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks((await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {}));
+//     grantedAccessAccountSelected = null;
+//     return true;
+//   }
+//   let accesses = await runGetAccountAccessesInBackground();
+//   if (accesses && accesses.granted_from) {
+//     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === accountNumber);
+//     if (grantedAccessAccountSelected) {
+//       UserBitmarksStore.dispatch(UserBitmarksActions.reset());
+//       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor, grantedAccessAccountSelected.granted_at);
+//       return true;
+//     }
+//   }
+//   return false;
+// };
 
-const doReceivedAccessQRCode = async (token) => {
-  return await AccountModel.doReceiveGrantingAccess(jwt, token, { "update_grantee": true });
-};
+// const doReceivedAccessQRCode = async (token) => {
+//   return await AccountModel.doReceiveGrantingAccess(jwt, token, { "update_grantee": true });
+// };
 
-const doRemoveGrantingAccess = async (grantee) => {
-  let result = await AccountModel.doRemoveGrantingAccess(userInformation.bitmarkAccountNumber, grantee);
-  await runGetAccountAccessesInBackground();
-  return result;
-};
+// const doRemoveGrantingAccess = async (grantee) => {
+//   let result = await AccountModel.doRemoveGrantingAccess(userInformation.bitmarkAccountNumber, grantee);
+//   await runGetAccountAccessesInBackground();
+//   return result;
+// };
 
-const doCancelGrantingAccess = async (token) => {
-  let result = await AccountModel.doCancelGrantingAccess(jwt, token);
-  await runGetAccountAccessesInBackground();
-  return result;
-};
+// const doCancelGrantingAccess = async (token) => {
+//   let result = await AccountModel.doCancelGrantingAccess(jwt, token);
+//   await runGetAccountAccessesInBackground();
+//   return result;
+// };
 
-const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
-  let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
-  if (userBitmarks && (userBitmarks.healthDataBitmarks || userBitmarks.healthAssetBitmarks)) {
-    let body = { items: [] };
+// const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
+//   let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
+//   if (userBitmarks && (userBitmarks.healthDataBitmarks || userBitmarks.healthAssetBitmarks)) {
+//     let body = { items: [] };
 
-    let doGetSessionData = async (bitmarkAccountNumber, assetId) => {
-      let filePath = FileUtil.DocumentDirectory + '/assets-session-data/' + bitmarkAccountNumber + '/' + assetId + '/session_data.txt';
-      let exist = await runPromiseWithoutError(FileUtil.exists(filePath));
-      if (exist && !exist.error) {
-        let content = await FileUtil.readFile(filePath);
-        if (content) {
-          try {
-            return JSON.parse(content);
-          } catch (error) {
-            //
-          }
-        }
-      }
-      return null;
-    };
+//     let doGetSessionData = async (bitmarkAccountNumber, assetId) => {
+//       let filePath = FileUtil.DocumentDirectory + '/assets-session-data/' + bitmarkAccountNumber + '/' + assetId + '/session_data.txt';
+//       let exist = await runPromiseWithoutError(FileUtil.exists(filePath));
+//       if (exist && !exist.error) {
+//         let content = await FileUtil.readFile(filePath);
+//         if (content) {
+//           try {
+//             return JSON.parse(content);
+//           } catch (error) {
+//             //
+//           }
+//         }
+//       }
+//       return null;
+//     };
 
-    for (let bitmark of (userBitmarks.healthDataBitmarks || [])) {
-      let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
-      if (sessionData) {
-        let granteeSessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
-        body.items.push({
-          bitmark_id: bitmark.id,
-          session_data: granteeSessionData,
-          to: grantee,
-          start_at: Math.floor(moment().toDate().getTime() / 1000),
-          duration: { Years: 99 }
-        });
-      } else if (bitmark.status === 'confirmed') {
-        let granteeSessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
-        body.items.push({
-          bitmark_id: bitmark.id,
-          session_data: granteeSessionData,
-          to: grantee,
-          start_at: Math.floor(moment().toDate().getTime() / 1000),
-          duration: { Years: 99 }
-        });
-      }
-    }
-    for (let bitmark of (userBitmarks.healthAssetBitmarks || [])) {
-      let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
-      if (sessionData) {
-        let granteeSessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
-        body.items.push({
-          bitmark_id: bitmark.id,
-          session_data: granteeSessionData,
-          to: grantee,
-          start_at: Math.floor(moment().toDate().getTime() / 1000),
-          duration: { Years: 99 }
-        });
-      } else if (bitmark.status === 'confirmed') {
-        let granteeSessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
-        body.items.push({
-          bitmark_id: bitmark.id,
-          session_data: granteeSessionData,
-          to: grantee,
-          start_at: Math.floor(moment().toDate().getTime() / 1000),
-          duration: { Years: 99 }
-        });
-      }
-    }
+//     for (let bitmark of (userBitmarks.healthDataBitmarks || [])) {
+//       let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
+//       if (sessionData) {
+//         let granteeSessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
+//         body.items.push({
+//           bitmark_id: bitmark.id,
+//           session_data: granteeSessionData,
+//           to: grantee,
+//           start_at: Math.floor(moment().toDate().getTime() / 1000),
+//           duration: { Years: 99 }
+//         });
+//       } else if (bitmark.status === 'confirmed') {
+//         let granteeSessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
+//         body.items.push({
+//           bitmark_id: bitmark.id,
+//           session_data: granteeSessionData,
+//           to: grantee,
+//           start_at: Math.floor(moment().toDate().getTime() / 1000),
+//           duration: { Years: 99 }
+//         });
+//       }
+//     }
+//     for (let bitmark of (userBitmarks.healthAssetBitmarks || [])) {
+//       let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
+//       if (sessionData) {
+//         let granteeSessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
+//         body.items.push({
+//           bitmark_id: bitmark.id,
+//           session_data: granteeSessionData,
+//           to: grantee,
+//           start_at: Math.floor(moment().toDate().getTime() / 1000),
+//           duration: { Years: 99 }
+//         });
+//       } else if (bitmark.status === 'confirmed') {
+//         let granteeSessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
+//         body.items.push({
+//           bitmark_id: bitmark.id,
+//           session_data: granteeSessionData,
+//           to: grantee,
+//           start_at: Math.floor(moment().toDate().getTime() / 1000),
+//           duration: { Years: 99 }
+//         });
+//       }
+//     }
 
-    let timestamp = moment().toDate().getTime();
-    let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
-    let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
-    await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
-  }
-  await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
+//     let timestamp = moment().toDate().getTime();
+//     let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
+//     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
+//     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
+//   }
+//   await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
 
-  return await runGetAccountAccessesInBackground();
-};
+//   return await runGetAccountAccessesInBackground();
+// };
 const doDeleteAccount = async () => {
   return await AccountModel.doDeleteAccount(jwt);
 };
@@ -850,7 +921,7 @@ const doRejectEmailRecords = async (emailRecord) => {
 
 const doMigrateFilesToLocalStorage = async () => {
   await runGetUserBitmarksInBackground();
-  await runGetAccountAccessesInBackground();
+  // await runGetAccountAccessesInBackground();
 
   let currentSessionId = CommonModel.getFaceTouchSessionId();
 
@@ -1004,15 +1075,15 @@ const DataProcessor = {
   finishedDisplayEmailRecords,
   isAppLoadingData: () => isLoadingData,
 
-  doGrantingAccess,
-  doGetAccountAccesses,
-  doSelectAccountAccess,
-  getAccountAccessSelected,
-  getGrantedAccessAccountSelected,
-  doReceivedAccessQRCode,
-  doCancelGrantingAccess,
-  doRemoveGrantingAccess,
-  doConfirmGrantingAccess,
+  // doGrantingAccess,
+  // doGetAccountAccesses,
+  // doSelectAccountAccess,
+  // getAccountAccessSelected,
+  // getGrantedAccessAccountSelected,
+  // doReceivedAccessQRCode,
+  // doCancelGrantingAccess,
+  // doRemoveGrantingAccess,
+  // doConfirmGrantingAccess,
   doDownloadHealthDataBitmark,
   doDeleteAccount,
   doAcceptEmailRecords,
