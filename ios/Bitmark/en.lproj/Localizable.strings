@@ -8,3 +8,4 @@
 
 "info_plist_touch_face_id" = "Touch/Face ID or a passcode is required to authorize your transactions";
 "notification_intercom_new_messages" = "You have new messages from our support team. Tap to view.";
+"notification_email_issue_request" = "%@ would like to add health record to your Bitmark Health account. Please review the record to decide if you wish to accept or reject it.";

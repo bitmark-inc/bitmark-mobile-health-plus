@@ -131,14 +131,14 @@ export class PrivateAccountComponent extends Component {
                 <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
                 <Text style={styles.accountNumberValue}>{emailAddress}</Text>
                 <View style={[styles.accountNumberCopiedArea]} >
-                  <TouchableOpacity onPress={() => {
+                  {/* <TouchableOpacity onPress={() => {
                     Clipboard.setString(emailAddress);
                     this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopiedText') });
                     setTimeout(() => { this.setState({ accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText') }) }, 1000);
                   }}>
                     <Text style={styles.accountNumberCopiedText}>{this.state.accountNumberCopyText}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => Share.share({ title: '', message: emailAddress })}>
+                  </TouchableOpacity> */}
+                  <TouchableOpacity onPress={() => Share.share({ title: '', message: emailAddress })}>
                     <Text style={styles.accountNumberShareButtonText}>{i18n.t('AccountComponent_accountNumberShareButtonText')}</Text>
                   </TouchableOpacity>
                 </View>
