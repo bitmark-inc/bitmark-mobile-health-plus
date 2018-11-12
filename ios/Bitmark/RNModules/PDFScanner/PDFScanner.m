@@ -100,6 +100,30 @@ RCT_EXPORT_METHOD(pdfThumbnail:(NSString *)pdfFilePath:(int)width:(int)height:(N
   callback(@[@YES]);
 }
 
+RCT_EXPORT_METHOD(pdfThumbnails:(NSString *)pdfFilePath:(int)width:(int)height:(NSString *)outputFolderPath:(RCTResponseSenderBlock)callback)
+{
+  NSURL* pdfFileUrl = [NSURL fileURLWithPath:pdfFilePath];
+  PDFDocument *document = [[PDFDocument alloc] initWithURL:pdfFileUrl];
+  
+  if (document.isEncrypted) {
+    callback(@[@NO, @"PDF file is encrypted."]);
+    return;
+  }
+  
+  if (document.isLocked) {
+    callback(@[@NO, @"PDF file is locked."]);
+    return;
+  }
+  
+  for (NSUInteger i = 0; i < document.pageCount; i++) {
+    PDFPage *page = [document pageAtIndex:i];
+    UIImage *thumbnail = [page thumbnailOfSize:CGSizeMake(width, height) forBox:kPDFDisplayBoxMediaBox];
+    [UIImagePNGRepresentation(thumbnail) writeToFile:[NSString stringWithFormat:@"%@/%ld.png", outputFolderPath, i] atomically:YES];
+  }
+  
+  callback(@[@YES]);
+}
+
 @end
 
 void arrayCallback(CGPDFScannerRef inScanner, void *userInfo) {
