@@ -7,6 +7,7 @@ import {
 import codePush from "react-native-code-push";
 import { MainComponent } from './main.component';
 import { config } from '../configs';
+import { DataProcessor } from '../processors';
 
 export class CodePushComponent extends React.Component {
   constructor(props) {
@@ -16,12 +17,8 @@ export class CodePushComponent extends React.Component {
       progress: 0,
     };
 
-    codePush.checkForUpdate().then((update) => {
-      if (!update) {
-        console.log("The app is up to date!");
-      } else {
-        console.log("An update is available! Should we download it?");
-      }
+    codePush.checkForUpdate().then((needUpdate) => {
+      DataProcessor.setCodePushUpdated(!needUpdate)
     });
     codePush.getCurrentPackage().then(updateInfo => {
       console.log('current package :', updateInfo);

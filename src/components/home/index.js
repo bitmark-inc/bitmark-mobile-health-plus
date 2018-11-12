@@ -6,10 +6,14 @@ import { Router, Scene, Stack, } from 'react-native-router-flux';
 import { TouchFaceIdComponent } from './touch-face-id.component';
 
 import { BitmarkLegalComponent, WhatNewComponent } from './../../commons';
+import { DataProcessor } from '../../processors';
 console.log('WhatNewComponent :', WhatNewComponent);
 
 
 export class HomeRouterComponent extends Component {
+  componentDidMount() {
+    DataProcessor.setMountedRouter();
+  }
   render() {
     return (
       <Router sceneStyle={{

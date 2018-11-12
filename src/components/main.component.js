@@ -481,34 +481,38 @@ export class MainComponent extends Component {
     });
   }
   doAppRefresh(justCreatedBitmarkAccount) {
-    return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
-      console.log('doOpenApp user:', user);
-      if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
-        this.setState({ user });
-      }
-      if (user && user.bitmarkAccountNumber) {
-        CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
-          if (ok) {
-            AppProcessor.doStartBackgroundProcess();
-          } else {
-            if (!this.requiringTouchId) {
-              this.requiringTouchId = true;
-              Alert.alert(i18n.t('MainComponent_alertTitle2'), '', [{
-                text: i18n.t('MainComponent_alertButton2'),
-                style: 'cancel',
-                onPress: () => {
-                  Linking.openURL('app-settings:');
-                  this.requiringTouchId = false;
-                }
-              }]);
-            }
+    DataProcessor.doCheckHaveCodePushUpdate().then(updated => {
+      if (updated) {
+        return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
+          console.log('doOpenApp user:', user);
+          if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
+            this.setState({ user });
           }
+          if (user && user.bitmarkAccountNumber) {
+            CommonModel.doCheckPasscodeAndFaceTouchId().then(ok => {
+              if (ok) {
+                AppProcessor.doStartBackgroundProcess();
+              } else {
+                if (!this.requiringTouchId) {
+                  this.requiringTouchId = true;
+                  Alert.alert(i18n.t('MainComponent_alertTitle2'), '', [{
+                    text: i18n.t('MainComponent_alertButton2'),
+                    style: 'cancel',
+                    onPress: () => {
+                      Linking.openURL('app-settings:');
+                      this.requiringTouchId = false;
+                    }
+                  }]);
+                }
+              }
+            });
+          }
+        }).catch(error => {
+          console.log('doAppRefresh error:', error);
+          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
         });
       }
-    }).catch(error => {
-      console.log('doAppRefresh error:', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-    });
+    })
   }
 
   render() {

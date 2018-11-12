@@ -39,14 +39,16 @@ let notificationUUID;
 let mapModalDisplayData = {};
 let keyIndexModalDisplaying = 0;
 let mapModalDisplayKeyIndex = {
-  what_new: 1,
-  local_storage_migration: 2,
+  local_storage_migration: 1,
+  what_new: 2,
   email_record: 3,
   weekly_health_data: 4,
 };
+let codePushUpdated = null;
 // let isDisplayingEmailRecord = false;
 // let isMigratingFileToLocalStorage = false;
 let didMigrationFileToLocalStorage = false;
+let mountedRouter = null;
 
 const isHealthDataBitmark = (asset) => {
   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
@@ -82,27 +84,25 @@ let checkDisplayModal = () => {
   let keyIndexArray = Object.keys(mapModalDisplayData).sort();
   for (let index = 0; index < keyIndexArray.length; index++) {
     let keyIndex = parseInt(keyIndexArray[index]);
-    console.log({
-      keyIndex, data: mapModalDisplayData[keyIndex], keyIndexModalDisplaying,
-      result: keyIndex === mapModalDisplayKeyIndex.what_new && mapModalDisplayData[keyIndex] && (keyIndexModalDisplaying <= 0 || keyIndexModalDisplaying > keyIndex)
-    })
     if (mapModalDisplayData[keyIndex] && (keyIndexModalDisplaying <= 0 || keyIndexModalDisplaying > keyIndex)) {
-      if (keyIndex === mapModalDisplayKeyIndex.what_new) {
-        setTimeout(() => Actions.whatNew(), 1000);
-      } else if (keyIndex === mapModalDisplayKeyIndex.local_storage_migration) {
+      if (keyIndex === mapModalDisplayKeyIndex.what_new && mountedRouter) {
+        Actions.whatNew();
+        keyIndexModalDisplaying = keyIndex;
+      } else if (keyIndex === mapModalDisplayKeyIndex.local_storage_migration && mountedRouter) {
         EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
-      } if (keyIndex === mapModalDisplayKeyIndex.email_record) {
+        keyIndexModalDisplaying = keyIndex;
+      } if (keyIndex === mapModalDisplayKeyIndex.email_record && mountedRouter) {
         Actions.emailRecords(mapModalDisplayData[keyIndex]);
-      } if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data) {
+        keyIndexModalDisplaying = keyIndex;
+      } if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && mountedRouter) {
         Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
+        keyIndexModalDisplaying = keyIndex;
       }
-      keyIndexModalDisplaying = keyIndex;
     }
   }
 };
 
 let updateModal = (keyIndex, data) => {
-  console.log('updateModal :', keyIndex, data);
   mapModalDisplayData[keyIndex] = data;
   if (data) {
     checkDisplayModal();
@@ -1051,6 +1051,28 @@ const doMetricOnScreen = async (isActive) => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 };
 
+const setMountedRouter = () => {
+  mountedRouter = true;
+  checkDisplayModal();
+};
+
+let setCodePushUpdated = (updated) => {
+  console.log('setCodePushUpdated :', updated);
+  codePushUpdated = !!updated;
+};
+
+let doCheckHaveCodePushUpdate = () => {
+  return new Promise((resolve) => {
+    let checkHaveCodePushUpdate = () => {
+      if (codePushUpdated === true || codePushUpdated === false) {
+        return resolve(codePushUpdated);
+      }
+      setTimeout(checkHaveCodePushUpdate, 1000);
+    };
+    checkHaveCodePushUpdate();
+  });
+};
+
 
 const DataProcessor = {
   doOpenApp,
@@ -1092,6 +1114,10 @@ const DataProcessor = {
   detectLocalAssetFilePath,
   doCombineImages,
   doMetricOnScreen,
+  checkDisplayModal,
+  setMountedRouter,
+  setCodePushUpdated,
+  doCheckHaveCodePushUpdate,
 };
 
 export { DataProcessor };

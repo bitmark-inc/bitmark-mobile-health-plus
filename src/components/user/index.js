@@ -25,12 +25,14 @@ import { LocalStorageMigrationComponent } from './local-storeage-migration.compo
 import { CaptureMultipleImagesComponent } from './capture-multiple-image.component';
 import { RecordImagesComponent } from './record-images.component';
 import { OrderCombineImagesComponent } from './order-combine-images.component';
+import { DataProcessor } from '../../processors';
 
 
 
 export class UserRouterComponent extends Component {
   componentDidMount() {
     Actions.refresh();
+    DataProcessor.setMountedRouter();
   }
   render() {
     return (
