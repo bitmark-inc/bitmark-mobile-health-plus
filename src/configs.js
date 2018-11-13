@@ -22,7 +22,7 @@ let config = {
 
   NETWORKS,
   bitmark_network: NETWORKS.testnet,
-  zeroAddress: '00000000000000000000000000000000000000000000000000',
+  zeroAddress: 'dw9MQXcC5rJZb3QE1nz86PiQAheMP1dx9M3dr52tT8NNs14m33',
   appLink: 'https://itunes.apple.com/us/app/bitmark-health/id1436273185?ls=1&mt=8',
   api_server_url: 'https://api.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',
@@ -42,6 +42,7 @@ if (config.network === NETWORKS.testnet) {
   config.mobile_server_url = 'https://bm.bitmark.com';
   config.preview_asset_url = "https://preview.bitmarkaccountassets.com";
   config.bitmark_web_site = 'https://bitmark.com';
+  config.zeroAddress = 'a3ezwdYVEVrHwszQrYzDTCAZwUD3yKtNsCq9YhEu97bPaGAKy1';
 }
 export { config, };
 
