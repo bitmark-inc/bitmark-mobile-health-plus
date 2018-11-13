@@ -1086,6 +1086,13 @@ let doCheckHaveCodePushUpdate = () => {
   });
 };
 
+let doMarkDisplayedWhatNewInformation = async () => {
+  let appInfo = await doGetAppInformation();
+  appInfo = appInfo || {};
+  appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
+  await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+};
+
 
 const DataProcessor = {
   doOpenApp,
@@ -1131,6 +1138,7 @@ const DataProcessor = {
   setMountedRouter,
   setCodePushUpdated,
   doCheckHaveCodePushUpdate,
+  doMarkDisplayedWhatNewInformation
 };
 
 export { DataProcessor };

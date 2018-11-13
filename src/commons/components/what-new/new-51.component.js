@@ -7,7 +7,7 @@ import {
 import Swiper from 'react-native-swiper';
 
 import { config } from '../../../configs';
-import { convertWidth } from '../../../utils';
+import { convertWidth, runPromiseWithoutError } from '../../../utils';
 import { constants } from '../../../constants';
 import moment from 'moment';
 import { DataProcessor } from '../../../processors';
@@ -25,6 +25,11 @@ export class WhatNew_S51_Component extends Component {
       index: 0,
       diffDay,
     };
+  }
+
+  viewAllWhatNew() {
+    runPromiseWithoutError(DataProcessor.doMarkDisplayedWhatNewInformation());
+    Actions.pop();
   }
 
   render() {
@@ -80,7 +85,7 @@ export class WhatNew_S51_Component extends Component {
           </View>}
           {this.state.step === 2 && <View style={styles.bodyContent}>
             <View style={styles.header}>
-              <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
+              <TouchableOpacity style={styles.closeButton} onPress={this.viewAllWhatNew.bind(this)}>
                 <Text style={styles.closeButtonText}>{i18n.t('WhatNew_S51_Component_closeButtonText')}</Text>
               </TouchableOpacity>
               <Text style={styles.headerTitle}>{i18n.t('WhatNew_S51_Component_headerTitle2')}</Text>

@@ -334,7 +334,8 @@ class PrivateUserComponent extends Component {
   }
 
   render() {
-    let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    // let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
+    let accountNumberDisplay = DataProcessor.getUserInformation().bitmarkAccountNumber;
     let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
 
     return (
