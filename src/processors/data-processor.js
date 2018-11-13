@@ -548,7 +548,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   if (appInfo && (!appInfo.lastTimeIssued ||
-    (appInfo.lastTimeIssued && (appInfo.lastTimeIssued - moment().toDate().getTime()) > 7 * 24 * 60 * 60 * 1000))) {
+    (appInfo.lastTimeIssued && (moment().toDate().getTime() - appInfo.lastTimeIssued) > 7 * 24 * 60 * 60 * 1000))) {
     await CommonModel.doTrackEvent({
       event_name: 'health_plus_weekly_active_user',
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
@@ -627,7 +627,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   if (appInfo && (!appInfo.lastTimeIssued ||
-    (appInfo.lastTimeIssued && (appInfo.lastTimeIssued - moment().toDate().getTime()) > 7 * 24 * 60 * 60 * 1000))) {
+    (appInfo.lastTimeIssued && (moment().toDate().getTime() - appInfo.lastTimeIssued) > 7 * 24 * 60 * 60 * 1000))) {
     await CommonModel.doTrackEvent({
       event_name: 'health_plus_weekly_active_user',
       account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
