@@ -5,11 +5,11 @@ const TABLE_NAME = 'IndexedData';
 
 export class IndexedDB {
   static connectDB() {
-    this.db = SQLite.openDatabase({name: DB_NAME, location: DB_LOCATION});
+    this.db = SQLite.openDatabase({ name: DB_NAME, location: DB_LOCATION });
   }
 
   static async executeQuery(query, params = []) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.db.transaction((tx) => {
         tx.executeSql(query, params, (tx, results) => {
           let rows = [];
@@ -39,5 +39,10 @@ export class IndexedDB {
     let query = `INSERT INTO ${TABLE_NAME} VALUES (?,?,?,?,?)`;
     console.log('insert-query:', query, [accountNumber, bitmarkId, assetName, metadata, content]);
     return this.executeQuery(query, [accountNumber, bitmarkId, assetName, metadata, content]);
+  }
+
+  static async delete(accountNumber, bitmarkId) {
+    let query = `DELETE FROM ${TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
+    return this.executeQuery(query);
   }
 }

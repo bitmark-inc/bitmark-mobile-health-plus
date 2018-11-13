@@ -12,7 +12,7 @@ import randomString from 'random-string';
 
 import ImagePicker from 'react-native-image-crop-picker';
 // import ImagePicker from 'react-native-image-picker';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import { DocumentPicker } from 'react-native-document-picker';
 import {
   FileUtil,
   convertWidth, issue,
@@ -68,16 +68,18 @@ class PrivateUserComponent extends Component {
   doIssueImage(images, combineFilesList) {
     console.log('doIssueImage :', images, combineFilesList);
     //check existing assets
+    let mapFileAssets = {};
     let doCheckExistingAsset = async () => {
       for (let imageInfo of images) {
         let filePath = imageInfo.uri.replace('file://', '');
         let { asset } = await AppProcessor.doCheckFileToIssue(filePath);
-        if (asset && asset.name) {
+        if (asset && asset.name && !asset.canIssue) {
           let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
             ? i18n.t('CaptureAssetComponent_alertMessage11', { type: 'image' })
             : i18n.t('CaptureAssetComponent_alertMessage12', { type: 'image' });
           return message;
         }
+        mapFileAssets[filePath] = asset;
       }
     };
     // issue images
@@ -86,11 +88,23 @@ class PrivateUserComponent extends Component {
       let listInfo = [];
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
       for (let imageInfo of images) {
-        let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
-        let metadataList = [];
-        metadataList.push({ label: 'Source', value: 'Health Records' });
-        metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
         let filePath = imageInfo.uri.replace('file://', '');
+        let asset = mapFileAssets[filePath];
+        let assetName, metadataList;
+        if (asset && asset.name) {
+          assetName = asset.name;
+          metadataList = [];
+          for (let label in asset.metadata) {
+            metadataList.push({ label, value: asset.metadata[label] });
+          }
+        } else {
+          assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+          metadataList = [];
+          metadataList.push({ label: 'Source', value: 'Health Records' });
+          metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
+        }
+
+
 
         let detectedTexts;
         let detectResult;

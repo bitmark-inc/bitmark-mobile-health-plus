@@ -1,6 +1,6 @@
 import randomString from "random-string";
 import moment from 'moment';
-import { BitmarkModel } from "../models";
+import { BitmarkModel, BitmarkSDK } from "../models";
 import { FileUtil, getLocalAssetsFolderPath } from "../utils";
 
 // ================================================================================================
@@ -88,6 +88,10 @@ const doGetBitmarkInformation = async (bitmarkId) => {
   return await BitmarkModel.doGetBitmarkInformation(bitmarkId);
 };
 
+const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
+  return await BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmarkId, receiver);
+};
+
 // ================================================================================================
 // ================================================================================================
 let BitmarkService = {
@@ -95,6 +99,7 @@ let BitmarkService = {
   doCheckMetadata,
   doIssueFile,
   doGetBitmarkInformation,
+  doTransferBitmark,
 };
 
 export { BitmarkService };

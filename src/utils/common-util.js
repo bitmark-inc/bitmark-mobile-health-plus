@@ -87,12 +87,10 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
   if (assetName.length > 64) assetName = assetName.substring(0, 64);
 
   AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
-    if (asset && asset.name) {
-
+    if (asset && asset.name && !asset.canIssue) {
       let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
         ? i18n.t('CaptureAssetComponent_alertMessage11', { type })
         : i18n.t('CaptureAssetComponent_alertMessage12', { type });
-
 
       Alert.alert('', message, [{
         text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
@@ -257,7 +255,7 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
   if (detectedTexts && !detectedTexts.error && detectedTexts.length) {
     detectedTexts = detectedTexts.map(item => {
       item = item.map(text => {
-        return {text: text ? text.trim() : text}
+        return { text: text ? text.trim() : text }
       });
       return sanitizeTextDetectorResponse(item);
     });
@@ -337,7 +335,7 @@ const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => 
 };
 
 const checkThumbnailForBitmark = async (bitmarkId) => {
-  let thumbnailInfo = {exists: false};
+  let thumbnailInfo = { exists: false };
 
   let thumbnailsFolderPath = getLocalThumbnailsFolderPath();
   let thumbnailFilePath = `${thumbnailsFolderPath}/${bitmarkId}.PNG`;
@@ -379,7 +377,7 @@ const isAssetDataRecord = (bitmark) => {
 const getImageSize = async (imageFilePath) => {
   return new Promise((resolve) => {
     Image.getSize(imageFilePath, (width, height) => {
-      resolve({width, height})
+      resolve({ width, height })
     });
   })
 };

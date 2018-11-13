@@ -185,6 +185,11 @@ const doCombineImages = async ({ images }) => {
   return processing(DataProcessor.doCombineImages(images));
 };
 
+const doTransferBitmark = async ({ bitmark, receiver }) => {
+  let touchFaceIdSession = CommonModel.getFaceTouchSessionId();
+  return await processing(DataProcessor.doTransferBitmark(touchFaceIdSession, bitmark, receiver));
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -211,6 +216,7 @@ let AppTasks = {
   doMigrateFilesToLocalStorage,
   doProcessEmailRecords,
   doCombineImages,
+  doTransferBitmark,
 };
 
 let registeredTasks = {};

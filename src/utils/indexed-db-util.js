@@ -35,7 +35,7 @@ const insertHealthDataToIndexedDB = async (bitmarkId, healthData) => {
   // await IndexedDB.insert(accountNumber, bitmarkId, healthData.assetName, metadataStr, healthDataStr);
 };
 
-const searchIndexedBitmarks = async(searchTerm) => {
+const searchIndexedBitmarks = async (searchTerm) => {
   // let accountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
   //
   // searchTerm = removeVietnameseSigns(searchTerm);
@@ -71,9 +71,14 @@ const removeVietnameseSigns = (str) => {
   return str;
 };
 
+const deleteDataToIndexedDB = async (accountNumber, bitmarkId) => {
+  await IndexedDB.delete(accountNumber, bitmarkId);
+};
+
 export {
   initializeIndexedDB,
   insertDetectedDataToIndexedDB,
   insertHealthDataToIndexedDB,
+  deleteDataToIndexedDB,
   searchIndexedBitmarks
 }

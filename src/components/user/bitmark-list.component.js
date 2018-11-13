@@ -66,13 +66,13 @@ class PrivateBitmarkListComponent extends Component {
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
+                <TouchableOpacity style={styles.closeButton} onPress={() => Actions.reset('user')}>
+                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                </TouchableOpacity>
                 {this.props.bitmarkType === 'bitmark_health_data' &&
                   <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
                 {this.props.bitmarkType === 'bitmark_health_issuance' &&
                   <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText2')}</Text>}
-                <TouchableOpacity style={styles.closeButton} onPress={() => Actions.reset('user')}>
-                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
-                </TouchableOpacity>
               </View>
 
               {(this.props.bitmarkType === 'bitmark_health_data') ? (
@@ -182,10 +182,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: convertWidth(20),
-    paddingTop: 0,
-    paddingRight: 0,
+    height: 60,
     width: '100%',
+    borderBottomColor: '#FF4444', borderBottomWidth: 1,
   },
   titleText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
@@ -194,10 +193,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   closeButton: {
-    paddingTop: convertWidth(26),
-    paddingBottom: convertWidth(26),
-    paddingRight: convertWidth(24),
-    paddingLeft: convertWidth(50),
+    height: '100%',
+    paddingRight: convertWidth(8),
+    paddingLeft: convertWidth(15),
+    alignItems: 'center', justifyContent: 'center',
   },
   closeIcon: {
     width: convertWidth(21),
@@ -256,15 +255,15 @@ const styles = StyleSheet.create({
   },
 
   bitmarkHealthList: {
-    padding: convertWidth(26),
-    paddingTop: 0
+    padding: convertWidth(20),
+    paddingTop: 10,
   },
 
   bitmarkHealthRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 14,
+    marginTop: 15,
   },
   bitmarkHealthRowText: {
     fontFamily: 'Avenir Book',

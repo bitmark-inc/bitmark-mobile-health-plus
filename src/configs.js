@@ -22,6 +22,7 @@ let config = {
 
   NETWORKS,
   bitmark_network: NETWORKS.testnet,
+  zeroAddress: '00000000000000000000000000000000000000000000000000',
   appLink: 'https://itunes.apple.com/us/app/bitmark-health/id1436273185?ls=1&mt=8',
   api_server_url: 'https://api.test.bitmark.com',
   registry_server_url: 'https://registry.test.bitmark.com',

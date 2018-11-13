@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
+import ReactNative, {
   StyleSheet,
   Alert,
   Image, View, SafeAreaView, TouchableOpacity, Text, ScrollView,
 } from 'react-native';
+let { ActionSheetIOS } = ReactNative;
 import JSONTree from 'react-native-json-tree';
 import { Map } from 'immutable'
 
@@ -14,6 +15,7 @@ import { constants } from '../../constants';
 import { EventEmitterService } from '../../services';
 // import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
+import { AppProcessor } from '../../processors';
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -101,6 +103,25 @@ export class BitmarkDetailComponent extends Component {
   //   });
   // }
 
+  deleteBitmark() {
+    ActionSheetIOS.showActionSheetWithOptions({
+      title: 'This health data will be deleted',
+      options: ['Cancel', 'Delete'],
+      destructiveButtonIndex: 1,
+      cancelButtonIndex: 0,
+    },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          AppProcessor.doTransferBitmark(this.props.bitmark, config.zeroAddress).then(() => {
+            Actions.pop();
+          }).catch(error => {
+            console.log('error:', error);
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+          })
+        }
+      });
+  }
+
   render() {
     // let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
     // let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
@@ -116,9 +137,12 @@ export class BitmarkDetailComponent extends Component {
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
-                <Text style={styles.titleText}>{this.props.bitmark.asset.name}</Text>
                 <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                </TouchableOpacity>
+                <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
+                <TouchableOpacity style={styles.closeButton} onPress={this.deleteBitmark.bind(this)}>
+                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/delete_icon_red.png')} />
                 </TouchableOpacity>
               </View>
               <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
@@ -213,10 +237,9 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: convertWidth(20),
-    paddingBottom: 0,
-    paddingTop: 0,
-    paddingRight: 0,
+    height: 60,
+    width: '100%',
+    borderBottomColor: '#FF4444', borderBottomWidth: 1,
   },
   titleText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
@@ -226,10 +249,10 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
   closeButton: {
-    paddingTop: convertWidth(26),
-    paddingBottom: convertWidth(26),
-    paddingRight: convertWidth(24),
-    paddingLeft: convertWidth(50),
+    height: '100%',
+    paddingRight: convertWidth(8),
+    paddingLeft: convertWidth(15),
+    alignItems: 'center', justifyContent: 'center',
   },
   closeIcon: {
     width: convertWidth(21),

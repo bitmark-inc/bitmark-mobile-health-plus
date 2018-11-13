@@ -3,7 +3,7 @@ import moment from 'moment';
 import { registerTasks } from './app-tasks-register';
 
 import { CommonModel, AccountModel, FaceTouchId } from './../models';
-import { AccountService, EventEmitterService, TransactionService } from './../services'
+import { AccountService, EventEmitterService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';
 import { compareVersion } from '../utils';
@@ -93,9 +93,6 @@ const doCheckPhraseWords = async (phraseWords) => {
   return await AccountModel.doCheckPhraseWords(phraseWords);
 };
 
-const doGetTransferOfferDetail = async (transferOfferId) => {
-  return await processing(TransactionService.doGetTransferOfferDetail(transferOfferId));
-};
 
 const doCheckFileToIssue = async (filePath) => {
   return await processing(DataProcessor.doCheckFileToIssue(filePath));
@@ -221,6 +218,10 @@ const doCombineImages = async (images) => {
   return executeTask('doCombineImages', { images });
 };
 
+const doTransferBitmark = async (bitmark, receiver) => {
+  return executeTask('doTransferBitmark', { bitmark, receiver });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -236,7 +237,6 @@ let AppProcessor = {
   doCheckFileToIssue,
   doIssueFile,
   doIssueMultipleFiles,
-  doGetTransferOfferDetail,
   doRequireHealthKitPermission,
   doBitmarkHealthData,
 
@@ -260,6 +260,7 @@ let AppProcessor = {
   doMigrateFilesToLocalStorage,
   doProcessEmailRecords,
   doCombineImages,
+  doTransferBitmark,
 }
 
 export {

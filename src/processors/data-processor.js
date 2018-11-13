@@ -24,7 +24,7 @@ import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
 import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
-  populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath, compareVersion
+  populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath, compareVersion, deleteDataToIndexedDB
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -785,7 +785,20 @@ const doGetAccountAccesses = (type) => {
 };
 
 const doCheckFileToIssue = async (filePath) => {
-  return await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
+  let result = await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
+  let canIssue = true;
+  if (result && result.asset && result.asset.name) {
+    if (result.asset.registrant !== userInformation.bitmarkAccountNumber) {
+      let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
+      userBitmarks = userBitmarks || {};
+      canIssue = ((userBitmarks.healthAssetBitmarks || []).findIndex(bm => bm.asset_id === result.asset.id) < 0) &&
+        ((userBitmarks.healthDataBitmarks || []).findIndex(bm => bm.asset_id === result.asset.id) < 0);
+    } else {
+      canIssue = false;
+    }
+  }
+  result.asset.canIssue = canIssue;
+  return result;
 };
 
 // const doGrantingAccess = async () => {
@@ -1093,6 +1106,13 @@ let doMarkDisplayedWhatNewInformation = async () => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 };
 
+const doTransferBitmark = async (touchFaceIdSession, bitmark, receiver) => {
+  let result = await BitmarkService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver);
+  await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
+  await deleteDataToIndexedDB(userInformation.bitmarkAccountNumber, bitmark.id);
+  await doReloadUserData();
+  return result;
+};
 
 const DataProcessor = {
   doOpenApp,
@@ -1138,7 +1158,8 @@ const DataProcessor = {
   setMountedRouter,
   setCodePushUpdated,
   doCheckHaveCodePushUpdate,
-  doMarkDisplayedWhatNewInformation
+  doMarkDisplayedWhatNewInformation,
+  doTransferBitmark,
 };
 
 export { DataProcessor };
