@@ -4,14 +4,14 @@ import { BitmarkSDK } from './adapters';
 import { config } from '../configs';
 import { FileUtil, runPromiseWithoutError } from './../utils';
 
-const doCreateAccount = async () => {
+const doCreateAccount = async (enableTouchFaceId) => {
   await CookieManager.clearAll();
-  return await BitmarkSDK.newAccount(config.bitmark_network);
+  return await BitmarkSDK.newAccount(config.bitmark_network, enableTouchFaceId);
 };
 
-const doLogin = async (phraseWords) => {
+const doLogin = async (phraseWords, enableTouchFaceId) => {
   await CookieManager.clearAll();
-  return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, config.bitmark_network);
+  return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, config.bitmark_network, enableTouchFaceId);
 }
 
 const doGetCurrentAccount = async (touchFaceIdSession) => {
