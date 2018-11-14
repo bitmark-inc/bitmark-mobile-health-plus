@@ -48,6 +48,7 @@ const initializeLocalStorage =  async () => {
     await FileUtil.mkdir(getUserLocalStorageFolderPath());
     await FileUtil.mkdir(getLocalAssetsFolderPath());
     await FileUtil.mkdir(getLocalThumbnailsFolderPath());
+    await FileUtil.mkdir(getLocalDatabasesFolderPath());
   }
 };
 
