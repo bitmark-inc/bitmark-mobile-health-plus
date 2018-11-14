@@ -1009,7 +1009,7 @@ const doMigrateFilesToLocalStorage = async () => {
         let detectResult;
         if (isCaptureDataRecord(bitmark.asset.filePath)) {
           let detectedTexts = await detectTextsFromPdf(bitmark.asset.filePath);
-          detectResult = {detectedTexts};
+          detectResult = { detectedTexts };
         } else {
           detectResult = await populateAssetNameFromPdf(bitmark.asset.filePath);
         }
@@ -1107,6 +1107,9 @@ let doMarkDisplayedWhatNewInformation = async () => {
   appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
   await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 };
+const doDisplayedWhatNewInformation = async () => {
+  updateModal(mapModalDisplayKeyIndex.what_new, true);
+};
 
 
 const DataProcessor = {
@@ -1153,7 +1156,8 @@ const DataProcessor = {
   setMountedRouter,
   setCodePushUpdated,
   doCheckHaveCodePushUpdate,
-  doMarkDisplayedWhatNewInformation
+  doMarkDisplayedWhatNewInformation,
+  doDisplayedWhatNewInformation,
 };
 
 export { DataProcessor };
