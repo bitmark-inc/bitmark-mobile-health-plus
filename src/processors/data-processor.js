@@ -40,7 +40,7 @@ let notificationUUID;
 
 let mapModalDisplayData = {};
 let keyIndexModalDisplaying = 0;
-let mapModalDisplayKeyIndex = {
+const mapModalDisplayKeyIndex = {
   local_storage_migration: 1,
   what_new: 2,
   email_record: 3,
@@ -462,6 +462,9 @@ const doLogout = async () => {
   await Intercom.reset();
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
+  mapModalDisplayData = {};
+  keyIndexModalDisplaying = {};
+  grantedAccessAccountSelected = null;
   userInformation = {};
   return true;
 };
