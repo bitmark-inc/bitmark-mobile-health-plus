@@ -1,6 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
-import { sha3_256 } from 'js-sha3';
 // import aesjs from 'aes-js';
 import randomString from 'random-string';
 
@@ -85,9 +84,14 @@ let setApplicationIconBadgeNumber = (number) => {
 };
 
 let doRegisterNotificationInfo = async (accountNumber, token, intercomUserId) => {
-  let signatureData = await CommonModel.doTryCreateSignatureData('Please sign to authorize your transactions');
-  if (!signatureData) {
-    return;
+  let signatureData;
+  if (accountNumber) {
+    signatureData = await CommonModel.doTryCreateSignatureData('Please sign to authorize your transactions');
+    if (!signatureData) {
+      return;
+    }
+  } else {
+    signatureData = {};
   }
   let client = 'healthplus';
   client = (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse') ? 'healthplusinhouse' :

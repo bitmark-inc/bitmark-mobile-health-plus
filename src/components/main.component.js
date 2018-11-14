@@ -76,7 +76,6 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
     EventEmitterService.on(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
 
-    runPromiseWithoutError(AccountService.doRequestNotificationPermissions());
     // Handle Crashes
     this.checkAndShowCrashLog();
     this.registerCrashHandler();
