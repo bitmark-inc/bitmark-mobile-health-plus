@@ -56,44 +56,44 @@ struct KeychainUtil {
   }
   
   static func saveCore(_ core: Data, version: String, authentication: Bool) throws {
-    DispatchQueue.main.sync {
-      UserDefaults().set(authentication, forKey: authenticationKey)
-      UserDefaults().set(version, forKey: versionKey)
-    }
+    UserDefaults.standard.set(authentication, forKey: authenticationKey)
+    UserDefaults.standard.set(version, forKey: versionKey)
     try getKeychain(reason: NSLocalizedString("info_plist_touch_face_id", comment: ""), authentication: authentication)
       .set(core, key: bitmarkSeedCoreKey(authentication: authentication))
   }
   
   static func getCore(reason: String) throws -> Data? {
-    let authentication = DispatchQueue.main.sync {
-      UserDefaults().bool(forKey: authenticationKey)
+    guard let authentication = UserDefaults.standard.object(forKey: authenticationKey) as? Bool else {
+      // Try to get both options
+      let result = try getKeychain(reason: reason, authentication: false)
+        .getData(bitmarkSeedCoreKey(authentication: false))
+      if result != nil {
+        return result
+      } else {
+        return try getKeychain(reason: reason, authentication: true)
+          .getData(bitmarkSeedCoreKey(authentication: true))
+      }
     }
     return try getKeychain(reason: reason, authentication: authentication)
       .getData(bitmarkSeedCoreKey(authentication: authentication))
   }
   
   static func clearCore() throws {
-    let authentication = DispatchQueue.main.sync {
-      return UserDefaults().bool(forKey: authenticationKey)
-    }
+    let authentication = UserDefaults.standard.bool(forKey: authenticationKey)
     try getKeychain(reason: "Bitmark app would like to remove your account from keychain.", authentication: authentication)
       .remove(bitmarkSeedCoreKey(authentication: authentication))
-    DispatchQueue.main.sync {
-      UserDefaults().removeObject(forKey: authenticationKey)
-    }
+    UserDefaults.standard.removeObject(forKey: authenticationKey)
   }
   
   static func getAccountVersion() -> SeedVersion {
-    let versionValue = DispatchQueue.main.sync {
-      UserDefaults().string(forKey: versionKey)
-    }
-    if let v = versionValue {
-      if v == "v2" {
+    if let versionValue = UserDefaults.standard.string(forKey: versionKey) {
+      if versionValue == "v2" {
         return SeedVersion.v2
       } else {
         return SeedVersion.v1
       }
-    } else {
+    }
+    else {
       return SeedVersion.v1
     }
   }
