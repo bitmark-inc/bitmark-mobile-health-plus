@@ -41,7 +41,10 @@ export class LocalStorageMigrationComponent extends React.Component {
     let status = this.state.status;
     if (progress === 100) {
       status = 'completed';
-      setTimeout(Actions.pop, 2000);
+      setTimeout(() => {
+        Actions.pop();
+        DataProcessor.doMarkDoneMigration();
+      }, 2000);
     }
     this.setState({ progress, status });
   }

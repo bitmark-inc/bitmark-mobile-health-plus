@@ -73,8 +73,8 @@ export class EmailRecordComponent extends Component {
         if (acceptedList.length > 0) {
           this.setState({ step: EmailRecordComponent.STEPS.view, acceptedList });
         } else {
+          Actions.reset('user');
           DataProcessor.finishedDisplayEmailRecords();
-          return Actions.reset('user');
         }
       }
     }).catch(error => {
@@ -91,8 +91,9 @@ export class EmailRecordComponent extends Component {
         });
       } else {
         if (this.state.acceptedList.length === 0) {
+          Actions.reset('user');
           DataProcessor.finishedDisplayEmailRecords();
-          return Actions.reset('user');
+          return;
         }
         this.setState({ step: EmailRecordComponent.STEPS.view });
       }
@@ -184,9 +185,9 @@ export class EmailRecordComponent extends Component {
             </ScrollView>
             <View style={styles.buttonArea}>
               <TouchableOpacity style={styles.viewButton} onPress={() => {
-                DataProcessor.finishedDisplayEmailRecords();
                 Actions.reset('user');
                 Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
+                DataProcessor.finishedDisplayEmailRecords();
               }} >
                 <Text style={styles.viewButtonText}>{i18n.t('EmailRecordComponent_viewButtonText').toUpperCase()}</Text>
               </TouchableOpacity>

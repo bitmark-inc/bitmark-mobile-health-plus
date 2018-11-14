@@ -90,15 +90,19 @@ let checkDisplayModal = () => {
       if (keyIndex === mapModalDisplayKeyIndex.what_new && mountedRouter) {
         Actions.whatNew();
         keyIndexModalDisplaying = keyIndex;
+        break;
       } else if (keyIndex === mapModalDisplayKeyIndex.local_storage_migration && mountedRouter) {
         EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
         keyIndexModalDisplaying = keyIndex;
+        break;
       } if (keyIndex === mapModalDisplayKeyIndex.email_record && mountedRouter) {
         Actions.emailRecords(mapModalDisplayData[keyIndex]);
         keyIndexModalDisplaying = keyIndex;
+        break;
       } if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && mountedRouter) {
         Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
         keyIndexModalDisplaying = keyIndex;
+        break;
       }
     }
   }
@@ -106,9 +110,7 @@ let checkDisplayModal = () => {
 
 let updateModal = (keyIndex, data) => {
   mapModalDisplayData[keyIndex] = data;
-  if (data) {
-    checkDisplayModal();
-  }
+  checkDisplayModal();
 };
 
 // ================================================================================================================================================
@@ -1122,11 +1124,15 @@ let doMarkDisplayedWhatNewInformation = async () => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
+  updateModal(mapModalDisplayKeyIndex.what_new);
   keyIndexModalDisplaying = 0;
   await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 };
 const doDisplayedWhatNewInformation = async () => {
   updateModal(mapModalDisplayKeyIndex.what_new, true);
+};
+let doMarkDoneMigration = () => {
+  updateModal(mapModalDisplayKeyIndex.local_storage_migration);
 };
 
 const doTransferBitmark = async (touchFaceIdSession, bitmark, receiver) => {
@@ -1183,6 +1189,7 @@ const DataProcessor = {
   doCheckHaveCodePushUpdate,
   doMarkDisplayedWhatNewInformation,
   doDisplayedWhatNewInformation,
+  doMarkDoneMigration,
   doTransferBitmark,
 };
 
