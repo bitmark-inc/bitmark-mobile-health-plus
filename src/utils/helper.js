@@ -13,7 +13,7 @@ const runPromiseWithoutError = (promise) => {
   });
 };
 
-const compareVersion = (version1, version2) => {
+const compareVersion = (version1, version2, length) => {
   if (version1 === null) {
     return -1;
   }
@@ -22,7 +22,8 @@ const compareVersion = (version1, version2) => {
   }
   let versionParts1 = version1.split('.');
   let versionParts2 = version2.split('.');
-  for (let index in versionParts1) {
+  length = length || versionParts1.length;
+  for (let index = 0; index < length; index++) {
     let versionPart1 = +versionParts1[index];
     let versionPart2 = +versionParts2[index];
     if (versionPart1 !== versionPart2) {

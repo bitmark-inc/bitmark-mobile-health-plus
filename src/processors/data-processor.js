@@ -502,7 +502,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     });
   }
 
-  if (!appInfo.displayedWhatNewInformation || compareVersion(appInfo.displayedWhatNewInformation, DeviceInfo.getVersion()) < 0) {
+  if (!appInfo.displayedWhatNewInformation || compareVersion(appInfo.displayedWhatNewInformation, DeviceInfo.getVersion(), 2) < 0) {
     updateModal(mapModalDisplayKeyIndex.what_new, true);
   }
 

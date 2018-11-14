@@ -12,7 +12,7 @@ import randomString from 'random-string';
 
 import ImagePicker from 'react-native-image-crop-picker';
 // import ImagePicker from 'react-native-image-picker';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import { DocumentPicker } from 'react-native-document-picker';
 import {
   FileUtil,
   convertWidth, issue,
