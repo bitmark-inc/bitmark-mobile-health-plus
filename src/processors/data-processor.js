@@ -502,10 +502,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     });
   }
 
-  if (!appInfo.displayedWhatNewInformation || compareVersion(appInfo.displayedWhatNewInformation, DeviceInfo.getVersion(), 2) < 0) {
-    updateModal(mapModalDisplayKeyIndex.what_new, true);
-  }
-
   if (userInformation && userInformation.bitmarkAccountNumber && !!CommonModel.getFaceTouchSessionId()) {
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${userInformation.bitmarkAccountNumber}`);
@@ -563,6 +559,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     if (justCreatedBitmarkAccount) {
       await AccountModel.doMarkMigration(jwt);
       didMigrationFileToLocalStorage = true;
+      appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
+      await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
     } else {
       didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
       if (!didMigrationFileToLocalStorage && !isDisplayingModal(mapModalDisplayKeyIndex.local_storage_migration)) {
@@ -572,6 +570,9 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       //   isMigratingFileToLocalStorage = true;
       //   EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
       // }
+      if (!appInfo.displayedWhatNewInformation || compareVersion(appInfo.displayedWhatNewInformation, DeviceInfo.getVersion(), 2) < 0) {
+        updateModal(mapModalDisplayKeyIndex.what_new, true);
+      }
     }
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);

@@ -71,7 +71,7 @@ export class WhatNew_S51_Component extends Component {
                 <View style={styles.newContentSwipePage}>
                   <Image style={styles.newSwipeImage} source={require('./../../../../assets/imgs/s51_new_3.png')} />
                   <View style={styles.newSwipeInformationArea}>
-                    <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description2')}</Text>
+                    <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description3')}</Text>
                   </View>
                 </View>
               </Swiper>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir Light', fontWeight: '300', fontSize: 16, textAlign: 'center',
   },
   swipePagination: {
-    position: 'absolute', bottom: config.isIPhoneX ? 0 : 15,
+    position: 'absolute', bottom: config.isIPhoneX ? 3 : 18,
   },
   skipButton: {
     position: 'absolute', bottom: config.isIPhoneX ? 0 : 15, left: 27, zIndex: 1,
