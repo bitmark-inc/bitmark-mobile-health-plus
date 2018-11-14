@@ -1105,6 +1105,7 @@ let doMarkDisplayedWhatNewInformation = async () => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
+  keyIndexModalDisplaying = 0;
   await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 };
 const doDisplayedWhatNewInformation = async () => {
