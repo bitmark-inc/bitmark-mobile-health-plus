@@ -9,7 +9,7 @@ const newError = (reason, defaultMessage) => {
 
 const BitmarkSDK = {
   // return session id
-  newAccount: (network, version = 'v2', enableTouchFaceId) => {
+  newAccount: (network, enableTouchFaceId, version = 'v2') => {
     return new Promise((resolve, reject) => {
       SwiftBitmarkSDK.newAccount(network, version, enableTouchFaceId, (ok, result) => {
         if (ok) {

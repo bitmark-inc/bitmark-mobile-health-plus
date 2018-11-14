@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
 
   enableButtonArea: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
@@ -205,13 +205,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FF4444',
   },
   skipButtonText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',
-    color: 'white'
+    color: '#FF4444'
   },
 });
