@@ -53,13 +53,13 @@ export class TouchFaceIdComponent extends React.Component {
     });
   }
 
-  doContinue() {
+  doContinue(enableTouchFaceId) {
     let phraseWords = this.props.phraseWords;
     let promise;
     if (phraseWords) {
-      promise = AppProcessor.doLogin(phraseWords);
+      promise = AppProcessor.doLogin(phraseWords, enableTouchFaceId);
     } else {
-      promise = AppProcessor.doCreateNewAccount();
+      promise = AppProcessor.doCreateNewAccount(enableTouchFaceId);
     }
     promise.then((user) => {
       if (user) {
@@ -92,10 +92,14 @@ export class TouchFaceIdComponent extends React.Component {
                 if (!this.state.supported) {
                   Linking.openURL('app-settings:');
                 } else {
-                  this.doContinue();
+                  this.doContinue(true);
                 }
               }}>
               <Text style={styles.enableButtonText}>{i18n.t('TouchFaceIdComponent_enableButtonText')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.skipButton]}
+              onPress={() => this.doContinue(false)}>
+              <Text style={styles.skipButtonText}>{i18n.t('TouchFaceIdComponent_skipButtonText')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -188,6 +192,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   enableButtonText: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '900',
+    color: 'white'
+  },
+  skipButton: {
+    height: constants.buttonHeight,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FF4444',
+  },
+  skipButtonText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
