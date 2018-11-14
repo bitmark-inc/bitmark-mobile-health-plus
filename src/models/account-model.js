@@ -483,7 +483,7 @@ const doCheckMigration = (jwt) => {
       if (statusCode >= 400) {
         return resolve();
       }
-      resolve(data.metadata.bitmarks_migrated);
+      resolve(data.metadata.health_bitmarks_migrated);
     }).catch(() => resolve());
   });
 };
@@ -500,7 +500,7 @@ const doMarkMigration = (jwt, status) => {
         Authorization: 'Bearer ' + jwt,
       },
       body: JSON.stringify({
-        metadata: { bitmarks_migrated: status === undefined ? true : status },
+        metadata: { health_bitmarks_migrated: status === undefined ? true : status },
       })
     }).then((response) => {
       statusCode = response.status;

@@ -249,6 +249,10 @@ export class PrivateAccountComponent extends Component {
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText7')}</Text>
                   <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={[styles.rowButton]} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText8')}</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
               </View>
             </ScrollView>
           </View>
@@ -312,14 +316,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     minHeight: 21,
     flexDirection: 'row',
-  },
-  accountNumberCopiedText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
-    fontWeight: '600',
-    fontSize: 14,
-    color: '#0064FC',
-    marginTop: 5,
-    minWidth: 54,
   },
   accountNumberShareButtonText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',

@@ -25,9 +25,9 @@ import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
 import { UserBitmarksStore } from '../../stores';
-// import { SearchInputComponent } from "./search-input.component";
-// import { MaterialIndicator } from "react-native-indicators";
-// import { SearchResultsComponent } from "./search-results.component";
+import { SearchInputComponent } from "./search-input.component";
+import { MaterialIndicator } from "react-native-indicators";
+import { SearchResultsComponent } from "./search-results.component";
 
 class PrivateUserComponent extends Component {
   static propTypes = {
@@ -361,30 +361,28 @@ class PrivateUserComponent extends Component {
         </TouchableOpacity>} */}
         <SafeAreaView style={[styles.bodySafeView,]}>
           {/*SEARCH AREA*/}
-          {/*TODO: localization*/}
-          {/*<View style={[styles.searchArea, (this.state.searchTerm ? { flex: 1 } : {})]}>*/}
-          {/*<SearchInputComponent*/}
-          {/*throttle={300}*/}
-          {/*onSearchTermChange={(searchTerm) => {*/}
-          {/*this.setState({*/}
-          {/*isSearching: true,*/}
-          {/*searchTerm*/}
-          {/*});*/}
+          <View style={[styles.searchArea, (this.state.searchTerm ? { flex: 1 } : {})]}>
+            <SearchInputComponent
+              throttle={300}
+              onSearchTermChange={(searchTerm) => {
+                this.setState({
+                  isSearching: true,
+                  searchTerm
+                });
 
-          {/*this.updateSearch(searchTerm);*/}
-          {/*}}*/}
-          {/*style={styles.searchInput}*/}
-          {/*placeholder={global.i18n.t("UserComponent_search")}>*/}
-          {/*</SearchInputComponent>*/}
+                this.updateSearch(searchTerm);
+              }}
+              style={styles.searchInput}
+              placeholder={global.i18n.t("UserComponent_search")}>
+            </SearchInputComponent>
 
-          {/*{this.state.isSearching && <View style={styles.indicatorContainer}>*/}
-          {/*<MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />*/}
-          {/*/!*TODO: localization*!/*/}
-          {/*<Text>{global.i18n.t("UserComponent_searching")}</Text>*/}
-          {/*</View>*/}
-          {/*}*/}
-          {/*{(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}*/}
-          {/*</View>*/}
+            {this.state.isSearching && <View style={styles.indicatorContainer}>
+              <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />
+              <Text>{global.i18n.t("UserComponent_searching")}</Text>
+            </View>
+            }
+            {(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}
+          </View>
 
           {/*DATA PANEL*/}
           {!this.state.searchTerm && <View style={styles.body}>
@@ -459,36 +457,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  // searchArea: {
-  //   paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0)
-  // },
-  // searchInput: {
-  //   paddingLeft: convertWidth(16),
-  //   paddingRight: convertWidth(16),
-  //   paddingBottom: convertWidth(14)
-  // },
-  // searchResultsContainer: {
-  //   paddingLeft: convertWidth(8),
-  //   paddingRight: convertWidth(8),
-  //   backgroundColor: '#F5F5F5',
-  //   flex: 1,
-  // },
-  // indicatorContainer: {
-  //   paddingTop: 10,
-  //   flexDirection: 'row',
-  //   justifyContent: 'center',
-  //   alignItems: 'flex-start',
-  //   backgroundColor: '#F5F5F5',
-  //   flex: 1,
-  // },
-  // indicator: {
-  //   flex: 0,
-  //   marginRight: 8,
-  // },
+  searchArea: {
+    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0)
+  },
+  searchInput: {
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+    paddingBottom: convertWidth(14)
+  },
+  searchResultsContainer: {
+    paddingLeft: convertWidth(8),
+    paddingRight: convertWidth(8),
+    backgroundColor: '#F5F5F5',
+    flex: 1,
+  },
+  indicatorContainer: {
+    paddingTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    backgroundColor: '#F5F5F5',
+    flex: 1,
+  },
+  indicator: {
+    flex: 0,
+    marginRight: 8,
+  },
   body: {
     padding: convertWidth(16),
-    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-    // paddingTop: 0,
+    // paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+    paddingTop: 0,
     flex: 1,
   },
   bodyContent: {
