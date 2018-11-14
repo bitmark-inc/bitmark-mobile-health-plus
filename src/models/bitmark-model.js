@@ -10,7 +10,7 @@ const doGet100Bitmarks = (accountNumber, lastOffset) => {
   return new Promise((resolve, reject) => {
     let statusCode;
     let bitmarkUrl = config.api_server_url +
-      `/v1/bitmarks?owner=${accountNumber}&asset=true&pending=true&to=later&sent=true` + (lastOffset ? `&at=${lastOffset}` : '');
+      `/v1/bitmarks?owner=${accountNumber}&asset=true&pending=true&to=later` + (lastOffset ? `&at=${lastOffset}` : '');
     console.log('bitmarkUrl :', bitmarkUrl);
     fetch(bitmarkUrl, {
       method: 'GET',

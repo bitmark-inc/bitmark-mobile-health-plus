@@ -790,7 +790,7 @@ const doCheckFileToIssue = async (filePath) => {
   let result = await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
   let canIssue = true;
   if (result && result.asset && result.asset.name) {
-    if (result.asset.registrant !== userInformation.bitmarkAccountNumber) {
+    if (result.asset.registrant === userInformation.bitmarkAccountNumber) {
       let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
       userBitmarks = userBitmarks || {};
       canIssue = ((userBitmarks.healthAssetBitmarks || []).findIndex(bm => bm.asset_id === result.asset.id) < 0) &&
