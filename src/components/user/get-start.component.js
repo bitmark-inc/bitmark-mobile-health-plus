@@ -23,16 +23,17 @@ export class GetStartComponent extends React.Component {
   render() {
 
     let requestHealthKitPermission = () => {
+      Actions.pop();
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
       AppProcessor.doRequireHealthKitPermission().then(() => {
-        DataProcessor.doReloadUserData();
+        return DataProcessor.doReloadUserData();
+      }).then(() => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
         console.log('doRequireHealthKitPermission error :', error);
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       });
-      Actions.pop();
     }
     return (
       <SafeAreaView style={styles.safeAreaView}>

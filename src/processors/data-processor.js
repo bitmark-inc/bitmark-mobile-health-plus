@@ -239,7 +239,10 @@ const runGetEmailRecordsInBackground = () => {
   });
 };
 
-const runOnBackground = async () => {
+const runOnBackground = async (justOpenApp) => {
+  if (justOpenApp) {
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+  }
   let userInfo = await UserModel.doTryGetCurrentUser();
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
     userInformation = userInfo;
@@ -261,6 +264,9 @@ const runOnBackground = async () => {
     if (!isDisplayingEmailRecord) {
       await runGetEmailRecordsInBackground();
     }
+  }
+  if (justOpenApp) {
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
   }
 };
 // ================================================================================================================================================
@@ -312,7 +318,7 @@ const configNotification = () => {
 let dataInterval = null;
 const startInterval = () => {
   stopInterval();
-  runOnBackground();
+  runOnBackground(true);
   dataInterval = setInterval(runOnBackground, 30 * 1000);
 };
 
