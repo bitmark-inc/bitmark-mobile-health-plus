@@ -937,7 +937,17 @@ const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
   for (let item of emailRecord.list) {
     if (!item.existingAsset) {
       let results = await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
-      await generateThumbnail(item.filePath, results[0].id);
+      let bitmark = results[0];
+      await generateThumbnail(item.filePath, bitmark.id);
+
+      // Index data
+      if (isImageFile(item.filePath)) {
+        let detectResult = await populateAssetNameFromImage(item.filePath, item.assetName);
+        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
+      } else if (isPdfFile(item.filePath)) {
+        let detectResult = await populateAssetNameFromPdf(item.filePath, item.assetName);
+        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
+      }
     }
   }
   for (let id of emailRecord.ids) {
