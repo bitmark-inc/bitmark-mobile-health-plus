@@ -210,7 +210,7 @@ class PrivateUserComponent extends Component {
 
   onChooseFile() {
     DocumentPicker.show({
-      filetype: [DocumentPickerUtil.allFiles(), "public.data"],
+      filetype: ["public.item"],
     }, async (error, response) => {
       if (error) {
         return;
