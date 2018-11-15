@@ -235,10 +235,10 @@ export class PrivateAccountComponent extends Component {
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.rowButton]} onPress={this.rateApp.bind(this)}>
+                {/* <TouchableOpacity style={[styles.rowButton]} onPress={this.rateApp.bind(this)}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText5')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={styles.rowButton} onPress={() => Share.share({ title: 'Bitmark', message: '', url: config.appLink })}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText6')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
