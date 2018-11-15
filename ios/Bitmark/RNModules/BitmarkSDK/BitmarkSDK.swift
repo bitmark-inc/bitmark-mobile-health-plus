@@ -527,6 +527,29 @@ class BitmarkSDK: NSObject {
 extension Data {
   func saveFileLocally(url: URL) throws {
     try self.write(to: url, options: [.completeFileProtection, .atomic])
+    // Save file to iCloud as well
+    let fileManager = FileManager.default
+    let documentURLString = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.absoluteString
+    let localFileURLString = url.absoluteString
+    // Check if input file is in Document directory
+    if localFileURLString.range(of: documentURLString) == nil {
+      return
+    }
+    
+    let relativePath = String(localFileURLString.suffix(localFileURLString.count - documentURLString.count))
+    
+    guard let rootDirectory = fileManager.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
+      return
+    }
+    let iCloudURLFilePath = rootDirectory.appendingPathComponent(relativePath)
+    let iCloudURLDirectoryPath = iCloudURLFilePath.deletingLastPathComponent()
+//    try fileManager.createDirectory(at: iCloudURLDirectoryPath, withIntermediateDirectories: true, attributes: nil)
+    
+    iCloud.shared()?.saveAndCloseDocument(withName: relativePath, withContent: self, completion: { (document, data, error) in
+      if let err = error {
+        print(err.localizedDescription)
+      }
+    })
   }
 }
 
