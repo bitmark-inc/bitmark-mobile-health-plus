@@ -5,6 +5,7 @@ import Swiper from 'react-native-swiper';
 import moment from 'moment';
 import {
   StyleSheet,
+  Alert,
   View, TouchableOpacity, Text, Image,
 } from 'react-native';
 import { convertWidth, } from '../../utils';
@@ -34,8 +35,12 @@ export class CaptureMultipleImagesComponent extends Component {
 
   async captureImage() {
     if (this.cameraRef) {
+      if (this.state.images.length >= 20) {
+        Alert.alert(i18n.t('CaptureMultipleImagesComponent_titleLimitModal'), i18n.t('CaptureMultipleImagesComponent_messageLimitModal'));
+        return;
+      }
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-      const options = {quality: 1};
+      const options = { quality: 1 };
       const data = await this.cameraRef.takePictureAsync(options);
       let images = this.state.images;
       let selectedIndex = this.state.selectedIndex < 0 ? images.length : this.state.selectedIndex;
