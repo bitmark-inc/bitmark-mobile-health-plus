@@ -105,8 +105,8 @@ export class BitmarkDetailComponent extends Component {
 
   deleteBitmark() {
     ActionSheetIOS.showActionSheetWithOptions({
-      title: 'This health data will be deleted',
-      options: ['Cancel', 'Delete'],
+      title: i18n.t('BitmarkDetailComponent_titleDeleteModal'),
+      options: [i18n.t('BitmarkDetailComponent_cancelButtonDeleteModal'), i18n.t('BitmarkDetailComponent_deleteButtonDeleteModal')],
       destructiveButtonIndex: 1,
       cancelButtonIndex: 0,
     },
