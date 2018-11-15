@@ -24,6 +24,7 @@ export class TaggingComponent extends Component {
       tag: '',
       tags: [],
       tagsCache: [],
+      tagsSuggestion: [],
       keyboardHeight: 0,
       keyboardExternalBottom: new Animated.Value(0),
       keyboardExternalOpacity: new Animated.Value(0)
@@ -38,7 +39,7 @@ export class TaggingComponent extends Component {
     console.log('tags:', tags);
     let tagsCache = await getTagsCache();
     console.log('tagsCache:', tagsCache);
-    this.setState({tags, tagsCache});
+    this.setState({tags, tagsCache, tagsSuggestion: tagsCache});
   }
 
   componentWillUnmount() {
@@ -83,7 +84,7 @@ export class TaggingComponent extends Component {
   }
 
   hideInputTag() {
-    this.setState({inputtingTag: false});
+    this.setState({inputtingTag: false, tagsSuggestion: this.state.tagsCache});
   }
 
   async addTag() {
@@ -115,6 +116,12 @@ export class TaggingComponent extends Component {
       await updateTag(this.props.bitmarkId, tags);
       this.setState({tags});
     }
+  }
+
+  onChangeText(text) {
+    let tag = text.replace(/\s/g, '');
+    let tagsSuggestion = this.state.tagsCache.filter((item) => item.startsWith(text));
+    this.setState({tag, tagsSuggestion});
   }
 
   render() {
@@ -182,7 +189,7 @@ export class TaggingComponent extends Component {
                     autoCapitalize="none"
                     clearTextOnFocus={true}
                     onChange={() => {this.setState({tag: this.state.tag.replace(/\s/g, '')})}}
-                    onChangeText={(text) => {this.setState({tag: text.replace(/\s/g, '')})}}
+                    onChangeText={(text) => {this.onChangeText.bind(this)(text)}}
                     onSubmitEditing={this.hideInputTag.bind(this)}
                   />
 
@@ -193,13 +200,13 @@ export class TaggingComponent extends Component {
                 </View>
 
                 {/*TAG CACHE*/}
-                {(this.state.keyboardHeight > 0 && this.state.tagsCache.length) ? (
+                {(this.state.keyboardHeight > 0 && this.state.tagsSuggestion.length) ? (
                   <View style={[styles.suggestionList]}>
                     <FlatList
                       keyboardShouldPersistTaps="handled"
                       horizontal={true}
                       extraData={this.state}
-                      data={this.state.tagsCache}
+                      data={this.state.tagsSuggestion}
                       renderItem={({ item }) => {
                         return (<TouchableOpacity style={styles.suggestionItem} onPress={() => {this.setState({tag: item})}}>
                           <Text style={[styles.suggestionItemText]}>#{item}</Text>
