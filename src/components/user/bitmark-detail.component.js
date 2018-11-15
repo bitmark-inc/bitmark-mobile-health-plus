@@ -145,14 +145,14 @@ export class BitmarkDetailComponent extends Component {
                 <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
                 {/*TAG ICON*/}
                 {this.props.bitmarkType === 'bitmark_health_issuance' &&
-                  <TouchableOpacity style={styles.taggingButton} onPress={() => Actions.tagging({bitmarkId: this.props.bitmark.id})}>
+                  <TouchableOpacity style={styles.taggingButton} onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
                     <Image style={styles.taggingIcon} source={require('./../../../assets/imgs/tagging.png')} />
                   </TouchableOpacity>
                 }
                 {/*DELETE ICON*/}
-                <TouchableOpacity style={styles.closeButton} onPress={this.deleteBitmark.bind(this)}>
+                {this.props.bitmark.status !== 'pending' && <TouchableOpacity style={styles.closeButton} onPress={this.deleteBitmark.bind(this)}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/delete_icon_red.png')} />
-                </TouchableOpacity>
+                </TouchableOpacity>}
               </View>
               <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
                 <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }} scrollEnabled={this.props.bitmarkType !== 'bitmark_health_issuance'}>

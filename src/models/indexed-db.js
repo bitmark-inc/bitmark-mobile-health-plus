@@ -60,7 +60,7 @@ export class IndexedDB {
   }
 
   static async delete(accountNumber, bitmarkId) {
-    let query = `DELETE FROM ${TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
+    let query = `DELETE FROM ${INDEXED_DATA_TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
     return this.executeQuery(query);
   }
 
