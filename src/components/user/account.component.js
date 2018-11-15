@@ -224,15 +224,14 @@ export class PrivateAccountComponent extends Component {
               </View>
               <View style={styles.aboutArea}>
                 <Text style={styles.aboutTitle}>{i18n.t('AccountComponent_aboutTitle')}</Text>
-
                 <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => {
                   Intercom.displayMessageComposer();
                 }}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText1')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText2')}</Text>
+                <TouchableOpacity style={styles.rowButton} onPress={() => Linking.openURL('https://www.facebook.com/groups/274018259885853/')} >
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText9')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
 
@@ -244,6 +243,11 @@ export class PrivateAccountComponent extends Component {
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText6')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
+                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText2')}</Text>
+                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                </TouchableOpacity>
+
                 <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} disabled={true}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText7')}</Text>
                   <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
