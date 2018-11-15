@@ -150,7 +150,7 @@ export class BitmarkDetailComponent extends Component {
                   </TouchableOpacity>
                 }
                 {/*DELETE ICON*/}
-                {this.props.bitmark.status !== 'pending' && <TouchableOpacity style={styles.closeButton} onPress={this.deleteBitmark.bind(this)}>
+                {this.props.bitmark.status !== 'pending' && this.props.bitmarkType === 'bitmark_health_issuance' && <TouchableOpacity style={styles.closeButton} onPress={this.deleteBitmark.bind(this)}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/delete_icon_red.png')} />
                 </TouchableOpacity>}
               </View>
