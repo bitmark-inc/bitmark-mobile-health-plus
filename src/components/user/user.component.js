@@ -16,8 +16,8 @@ import { DocumentPicker } from 'react-native-document-picker';
 import {
   FileUtil,
   convertWidth, issue,
-  populateAssetNameFromImage, populateAssetNameFromPdf, generateThumbnail, isImageFile, isPdfFile,
-  checkThumbnailForBitmark, initializeIndexedDB, insertDetectedDataToIndexedDB, isAssetDataRecord, searchIndexedBitmarks
+  populateAssetNameFromImage, populateAssetNameFromPdf, isImageFile, isPdfFile,
+  checkThumbnailForBitmark, insertDetectedDataToIndexedDB, isAssetDataRecord, searchIndexedBitmarks
 } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
@@ -126,7 +126,7 @@ class PrivateUserComponent extends Component {
         if (assetName.length > 64) assetName = assetName.substring(0, 64);
 
         listInfo.push({
-          filePath, assetName, metadataList, detectedTexts, quantity: 1, isPublicAsset: false,
+          filePath, assetName, metadataList, detectedTexts, quantity: 1, isPublicAsset: false, isMultipleAsset: !!combineFilesList
         });
 
         listAssetName.push(assetName);
@@ -139,7 +139,6 @@ class PrivateUserComponent extends Component {
 
       if (bitmarks) {
         for (let i = 0; i < listInfo.length; i++) {
-          await generateThumbnail(listInfo[i].filePath, bitmarks[i].id, !!combineFilesList);
           await insertDetectedDataToIndexedDB(bitmarks[i].id, listInfo[i].assetName, listInfo[i].metadataList, listInfo[i].detectedTexts);
           FileUtil.removeSafe(listInfo[i].filePath);
         }
@@ -260,8 +259,6 @@ class PrivateUserComponent extends Component {
 
       issue(filePath, assetName, metadataList, 'file', 1, async (data) => {
         let bitmarkId = data[0].id;
-        let isMultipleAsset = false;
-        await generateThumbnail(filePath, bitmarkId, isMultipleAsset);
         await insertDetectedDataToIndexedDB(bitmarkId, assetName, metadataList, detectedTexts);
 
         if (willDetectAssetNameAutomatically) {
@@ -347,7 +344,7 @@ class PrivateUserComponent extends Component {
                   return matched;
                 });
 
-                bitmark.tags = tags.map((item) => {return {value: item}});
+                bitmark.tags = tags.map((item) => { return { value: item } });
               }
 
               searchResults.healthAssetBitmarks.push(bitmark);

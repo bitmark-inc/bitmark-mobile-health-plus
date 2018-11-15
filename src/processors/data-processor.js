@@ -700,7 +700,7 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
   return result;
 };
 
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset) => {
+const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset = false, isMultipleAsset = false) => {
   let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
   let appInfo = await doGetAppInformation();
@@ -735,6 +735,9 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
+  for (let record of results) {
+    await generateThumbnail(filePath, record.id, isMultipleAsset);
+  }
   await doReloadUserData();
   // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
   return results;
@@ -743,7 +746,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
 const doIssueMultipleFiles = async (touchFaceIdSession, listInfo) => {
   let results = [];
   for (let info of listInfo) {
-    let result = await doIssueFile(touchFaceIdSession, info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset);
+    let result = await doIssueFile(touchFaceIdSession, info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset, info.isMultipleAsset);
     results.push(result[0]);
   }
   return results;
@@ -938,8 +941,6 @@ const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
     if (!item.existingAsset) {
       let results = await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
       let bitmark = results[0];
-      await generateThumbnail(item.filePath, bitmark.id);
-
       // Index data
       if (isImageFile(item.filePath)) {
         let detectResult = await populateAssetNameFromImage(item.filePath, item.assetName);
