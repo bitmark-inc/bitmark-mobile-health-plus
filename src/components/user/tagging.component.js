@@ -53,28 +53,27 @@ export class TaggingComponent extends Component {
     let listAnimations = [];
     listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
       toValue: keyboardHeight,
-      duration: 200,
+      duration: 100,
     }));
     listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
       toValue: 1,
-      duration: 200,
+      duration: 100,
     }));
     Animated.parallel(listAnimations).start();
   }
 
   onKeyboardDidHide() {
-    // TODO: Animation
     this.hideInputTag();
     this.setState({ keyboardHeight: 0 });
 
     let listAnimations = [];
     listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
       toValue: 0,
-      duration: 200,
+      duration: 100,
     }));
     listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
       toValue: 0,
-      duration: 200,
+      duration: 100,
     }));
     Animated.parallel(listAnimations).start();
   }
@@ -170,44 +169,48 @@ export class TaggingComponent extends Component {
             </View>
           </View>
 
-          {this.state.inputtingTag && <KeyboardAvoidingView behavior="padding" enabled style={styles.keyboardAvoidingView}>
-            {/*INPUT TAG*/}
-            <View style={styles.inputTagContainer}>
-              <TextInput
-                style={[styles.inputTag]}
-                ref={(ref) => this.inputTag = ref}
-                value={this.state.tag}
-                autoCorrect={false}
-                autoFocus={true}
-                autoCapitalize="none"
-                onChange={() => {this.setState({tag: this.state.tag.replace(/\s/g, '')})}}
-                onChangeText={(text) => {this.setState({tag: text.replace(/\s/g, '')})}}
-                onSubmitEditing={this.hideInputTag.bind(this)}
-              />
+          <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity }]}>
+            {this.state.inputtingTag && <KeyboardAvoidingView behavior="padding" enabled style={styles.keyboardAvoidingView}>
+                {/*INPUT TAG*/}
+                <View style={styles.inputTagContainer}>
+                  <TextInput
+                    style={[styles.inputTag]}
+                    ref={(ref) => this.inputTag = ref}
+                    value={this.state.tag}
+                    autoCorrect={false}
+                    autoFocus={true}
+                    autoCapitalize="none"
+                    clearTextOnFocus={true}
+                    onChange={() => {this.setState({tag: this.state.tag.replace(/\s/g, '')})}}
+                    onChangeText={(text) => {this.setState({tag: text.replace(/\s/g, '')})}}
+                    onSubmitEditing={this.hideInputTag.bind(this)}
+                  />
 
-              {/*SUBMIT TAG*/}
-              <TouchableOpacity onPress={this.addTag.bind(this)}>
-                <Image style={[styles.addTagIcon]} source={require('./../../../assets/imgs/add-tag-icon.png')} />
-              </TouchableOpacity>
-            </View>
+                  {/*SUBMIT TAG*/}
+                  <TouchableOpacity onPress={this.addTag.bind(this)}>
+                    <Image style={[styles.addTagIcon]} source={require('./../../../assets/imgs/add-tag-icon.png')} />
+                  </TouchableOpacity>
+                </View>
 
-            {this.state.keyboardHeight > 0 &&
-            <View style={[styles.suggestionList]}>
-              <FlatList
-                keyboardShouldPersistTaps="handled"
-                horizontal={true}
-                extraData={this.state}
-                data={this.state.tagsCache}
-                renderItem={({ item }) => {
-                  return (<TouchableOpacity style={styles.suggestionItem} onPress={() => {this.setState({tag: item})}}>
-                    <Text style={[styles.suggestionItemText]}>#{item}</Text>
-                  </TouchableOpacity>)
-                }}
-              />
-            </View>
+                {/*TAG CACHE*/}
+                {this.state.keyboardHeight > 0 && this.state.tagsCache.length &&
+                <View style={[styles.suggestionList]}>
+                  <FlatList
+                    keyboardShouldPersistTaps="handled"
+                    horizontal={true}
+                    extraData={this.state}
+                    data={this.state.tagsCache}
+                    renderItem={({ item }) => {
+                      return (<TouchableOpacity style={styles.suggestionItem} onPress={() => {this.setState({tag: item})}}>
+                        <Text style={[styles.suggestionItemText]}>#{item}</Text>
+                      </TouchableOpacity>)
+                    }}
+                  />
+                </View>
+                }
+            </KeyboardAvoidingView>
             }
-          </KeyboardAvoidingView>
-          }
+          </Animated.View>
         </SafeAreaView>
       </View>
     );
@@ -371,5 +374,12 @@ const styles = StyleSheet.create({
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontSize: 17,
     color: '#0060F2'
+  },
+  keyboardExternal: {
+    position: 'absolute',
+    width: '100%', height: constants.keyboardExternalHeight,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center'
   }
 });
