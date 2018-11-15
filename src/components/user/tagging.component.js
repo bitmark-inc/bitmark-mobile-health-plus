@@ -193,20 +193,21 @@ export class TaggingComponent extends Component {
                 </View>
 
                 {/*TAG CACHE*/}
-                {this.state.keyboardHeight > 0 && this.state.tagsCache.length &&
-                <View style={[styles.suggestionList]}>
-                  <FlatList
-                    keyboardShouldPersistTaps="handled"
-                    horizontal={true}
-                    extraData={this.state}
-                    data={this.state.tagsCache}
-                    renderItem={({ item }) => {
-                      return (<TouchableOpacity style={styles.suggestionItem} onPress={() => {this.setState({tag: item})}}>
-                        <Text style={[styles.suggestionItemText]}>#{item}</Text>
-                      </TouchableOpacity>)
-                    }}
-                  />
-                </View>
+                {(this.state.keyboardHeight > 0 && this.state.tagsCache.length) ? (
+                  <View style={[styles.suggestionList]}>
+                    <FlatList
+                      keyboardShouldPersistTaps="handled"
+                      horizontal={true}
+                      extraData={this.state}
+                      data={this.state.tagsCache}
+                      renderItem={({ item }) => {
+                        return (<TouchableOpacity style={styles.suggestionItem} onPress={() => {this.setState({tag: item})}}>
+                          <Text style={[styles.suggestionItemText]}>#{item}</Text>
+                        </TouchableOpacity>)
+                      }}
+                    />
+                  </View>
+                  ) : null
                 }
             </KeyboardAvoidingView>
             }
