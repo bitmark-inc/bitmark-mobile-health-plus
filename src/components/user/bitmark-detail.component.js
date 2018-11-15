@@ -137,15 +137,19 @@ export class BitmarkDetailComponent extends Component {
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
+                {/*BACK ICON*/}
                 <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
+                {/*NAME*/}
                 <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
-
-                <TouchableOpacity style={styles.taggingButton} onPress={() => Actions.tagging({bitmarkId: this.props.bitmark.id})}>
-                  <Image style={styles.taggingIcon} source={require('./../../../assets/imgs/tagging.png')} />
-                </TouchableOpacity>
-
+                {/*TAG ICON*/}
+                {this.props.bitmarkType === 'bitmark_health_issuance' &&
+                  <TouchableOpacity style={styles.taggingButton} onPress={() => Actions.tagging({bitmarkId: this.props.bitmark.id})}>
+                    <Image style={styles.taggingIcon} source={require('./../../../assets/imgs/tagging.png')} />
+                  </TouchableOpacity>
+                }
+                {/*DELETE ICON*/}
                 <TouchableOpacity style={styles.closeButton} onPress={this.deleteBitmark.bind(this)}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/delete_icon_red.png')} />
                 </TouchableOpacity>
@@ -265,10 +269,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   taggingButton: {
-    paddingTop: convertWidth(26),
-    paddingBottom: convertWidth(26),
-    paddingRight: convertWidth(23),
-    paddingLeft: convertWidth(50),
+    height: '100%',
+    paddingLeft: convertWidth(15),
+    alignItems: 'center', justifyContent: 'center',
   },
   taggingIcon: {
     width: convertWidth(21),
