@@ -49,7 +49,7 @@ const getLanguageForTextDetector = () => {
 
 const sanitizeTextDetectorResponse = (detectedItems) => {
   const notContainsSepecicalCharacter = (str) => {
-    const blacklistCharacters = '1234567890\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§˘ˆ↵˛˝˙'.split('');
+    const blacklistCharacters = '\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§˘ˆ↵˛˝˙'.split('');
     let strCharactors = str.split('').filter(item => item !== ' ');
 
     return intersection(blacklistCharacters, strCharactors).length == 0;
