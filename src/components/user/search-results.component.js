@@ -104,16 +104,18 @@ export class SearchResultsComponent extends Component {
                         <Text style={styles.bitmarkStatus}>{item.status === 'pending' ? i18n.t('BitmarkListComponent_bitmarkPending') : moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
 
                         {/*Tags*/}
-                        {item.tags && item.tags.length && <View style={styles.tagListContainer}>
-                          {(item.tags || []).map(tag => {
-                            return (
-                              <View key={tag.value} style={styles.taggingItemContainer}>
-                                <Text style={styles.taggingItem}>#{tag.value}</Text>
-                              </View>
-                            );
-                            })
-                          }
-                        </View>
+                        {(item.tags && item.tags.length) ? (
+                          <View style={styles.tagListContainer}>
+                            {(item.tags || []).map(tag => {
+                              return (
+                                <View key={tag.value} style={styles.taggingItemContainer}>
+                                  <Text style={styles.taggingItem}>#{tag.value}</Text>
+                                </View>
+                              );
+                              })
+                            }
+                          </View>
+                          ) : null
                         }
                       </View>
                     </View>
