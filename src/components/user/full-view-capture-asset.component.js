@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImageZoom from 'react-native-image-pan-zoom';
-import PDFView from 'react-native-view-pdf';
+// import PDFView from 'react-native-view-pdf';
+import Pdf from 'react-native-pdf';
 
 import {
   StyleSheet, Dimensions,
@@ -26,16 +27,8 @@ export class FullViewCaptureAssetComponent extends Component {
     if (pdfExtensions.includes(this.props.filePath.substring(this.props.filePath.lastIndexOf('.') + 1).toUpperCase())) {
       loading = true;
       type = 'pdf';
-      runPromiseWithoutError(FileUtil.readFile(this.props.filePath, 'base64')).then(result => {
-        if (result && result.error) {
-          console.log('error:', result.error);
-          EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
-          return;
-        }
-        this.setState({ content: result });
-      })
     }
-    this.state = { type, loading, content: null };
+    this.state = { type, loading };
   }
 
   render() {
@@ -59,14 +52,17 @@ export class FullViewCaptureAssetComponent extends Component {
             </ImageZoom>}
 
             {this.state.type === 'pdf' && this.state.loading && <ActivityIndicator size='large' />}
-            {this.state.type === 'pdf' && !!this.state.content && <PDFView
-              fadeInDuration={250.0}
-              style={{ flex: 1, borderWidth: 1, width: '100%', }}
-              resource={this.state.content}
-              resourceType='base64'
-              onLoad={() => this.setState({ loading: false })}
-              onError={(error) => console.log('Cannot render PDF', error)}
-            />}
+            {this.state.type === 'pdf' && <Pdf
+              source={{ uri: `file://${this.props.filePath}` }}
+              scale={0.5}
+              minScale={0.2}
+              onLoadComplete={() => {
+                this.setState({ loading: false });
+              }}
+              onError={(error) => {
+                console.log('load pdf error :', error);
+              }}
+              style={{ flex: 1, width: '100%', borderWidth: 3, borderColor: 'white' }} />}
           </View>
         </View>
       </View>
