@@ -9,10 +9,31 @@
 #import "iCloudSync.h"
 @import iCloudDocumentSync;
 #import <React/RCTLog.h>
+#import <React/RCTComponent.h>
+#import <React/RCTViewManager.h>
+
+@interface iCloudSync () <iCloudDelegate>
+
+@property (readwrite, strong, nonatomic) NSMutableDictionary *iCloudFileChanges;
+@property (nonatomic, copy) RCTBubblingEventBlock onFileChange;
+
+@end
 
 @implementation iCloudSync
 
 RCT_EXPORT_MODULE();
+RCT_EXPORT_VIEW_PROPERTY(onFileChange, RCTBubblingEventBlock);
+
+RCT_EXPORT_METHOD(uploadFileToCloud:(NSString *)filePath:(NSString *)iCloudKey:(RCTResponseSenderBlock)callback)
+{
+  [[iCloud sharedCloud] saveAndCloseDocumentWithName:iCloudKey withContent:[NSData dataWithContentsOfFile:filePath] completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
+    if (error) {
+      callback(@[@NO, error.description]);
+    } else {
+      callback(@[@YES]);
+    }
+  }];
+}
 
 RCT_EXPORT_METHOD(uploadToCloud:(NSString *)folder:(RCTResponseSenderBlock)callback)
 {
@@ -130,7 +151,19 @@ RCT_EXPORT_METHOD(uploadToCloud:(NSString *)folder:(RCTResponseSenderBlock)callb
 
 RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
 {
+  [[iCloud sharedCloud] setDelegate:self];
   [[iCloud sharedCloud] updateFiles];
+  callback(@[@YES]);
+}
+
+- (void)iCloudFilesDidChange:(NSMutableArray *)files withNewFileNames:(NSMutableArray *)fileNames {
+  NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:files.count];
+  for (int i = 0; i < files.count; i++) {
+    NSMetadataItem *item = files[i];
+    NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
+    [result setValue:path forKey:fileNames[i]];
+  }
+  self.onFileChange(result);
 }
 
 @end
