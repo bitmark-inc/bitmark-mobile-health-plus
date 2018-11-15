@@ -8,6 +8,7 @@ import {
 import { Actions } from 'react-native-router-flux';
 import { isFileRecord } from "../../utils";
 import moment from "moment/moment";
+import { config } from "../../configs";
 
 
 export class SearchResultsComponent extends Component {
@@ -44,21 +45,23 @@ export class SearchResultsComponent extends Component {
               scrollEnabled={false}
               data={results.healthDataBitmarks}
               extraData={this.props}
-              renderItem={({item}) => {
+              renderItem={({item, index}) => {
                 return (
                   <TouchableOpacity style={styles.bitmarkItemContainer} onPress={() => {
                     isFileRecord(item) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_data');
                   }}>
-                    <View style={styles.bitmarkItem}>
+                    <View style={(index == results.healthDataBitmarks.length - 1) ? styles.bitmarkLastItem : styles.bitmarkItem}>
                       {/*Thumbnail*/}
                       <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/health_data_icon.png')}/>
 
                       {/*Content*/}
                       <View style={styles.itemContent}>
+                        {/*Name*/}
                         <Text style={styles.assetName}>{item.asset.name}</Text>
-                        <Text
-                          style={styles.bitmarkStatus}>{item.status === 'pending' ? i18n.t('BitmarkListComponent_bitmarkPending') : moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
-                      </View></View>
+                        {/*Status*/}
+                        <Text style={styles.bitmarkStatus}>{item.status === 'pending' ? i18n.t('BitmarkListComponent_bitmarkPending') : moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
+                      </View>
+                    </View>
                   </TouchableOpacity>
                 );
               }}
@@ -75,12 +78,12 @@ export class SearchResultsComponent extends Component {
               scrollEnabled={false}
               data={results.healthAssetBitmarks}
               extraData={this.props}
-              renderItem={({item}) => {
+              renderItem={({item, index}) => {
                 return (
                   <TouchableOpacity style={styles.bitmarkItemContainer} onPress={() => {
                     isFileRecord(item) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
                   }}>
-                    <View style={styles.bitmarkItem}>
+                    <View style={(index == results.healthAssetBitmarks.length - 1) ? styles.bitmarkLastItem : styles.bitmarkItem}>
                       {/*Thumbnail*/}
                       {item && item.thumbnail && item.thumbnail.exists ? (
                         <View>
@@ -95,9 +98,23 @@ export class SearchResultsComponent extends Component {
 
                       {/*Content*/}
                       <View style={styles.itemContent}>
+                        {/*Name*/}
                         <Text style={styles.assetName}>{item.asset.name}</Text>
-                        <Text
-                          style={styles.bitmarkStatus}>{item.status === 'pending' ? i18n.t('BitmarkListComponent_bitmarkPending') : moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
+                        {/*Status*/}
+                        <Text style={styles.bitmarkStatus}>{item.status === 'pending' ? i18n.t('BitmarkListComponent_bitmarkPending') : moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
+
+                        {/*Tags*/}
+                        {item.tags && item.tags.length && <View style={styles.tagListContainer}>
+                          {(item.tags || []).map(tag => {
+                            return (
+                              <View key={tag.value} style={styles.taggingItemContainer}>
+                                <Text style={styles.taggingItem}>#{tag.value}</Text>
+                              </View>
+                            );
+                            })
+                          }
+                        </View>
+                        }
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -153,13 +170,17 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   bitmarkItemContainer: {
-    height: 90,
     padding: 8,
   },
   bitmarkItem: {
-    height: 85,
     borderBottomWidth: 0.3,
     borderBottomColor: '#999999',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 8,
+  },
+  bitmarkLastItem: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
@@ -179,7 +200,6 @@ const styles = StyleSheet.create({
   },
   itemContent: {
     marginLeft: 10,
-    height: '100%',
     justifyContent: 'center',
     flex: 1
   },
@@ -194,5 +214,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir medium',
     color: '#000000',
     marginTop: 5
+  },
+  tagListContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  taggingItemContainer: {
+    flexDirection: 'row',
+    padding: 5,
+    paddingTop: 2,
+    paddingBottom: 2,
+    backgroundColor: '#ECECEC',
+    marginRight: 10,
+    marginTop: 10
+  },
+  taggingItem: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontSize: 14,
+    fontWeight: '300',
   }
+
 });

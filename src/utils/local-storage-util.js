@@ -17,6 +17,10 @@ const getLocalDatabasesFolderPath = (bitmarkAccountNumber) => {
   return `${getUserLocalStorageFolderPath(bitmarkAccountNumber)}/databases`;
 };
 
+const getLocalCachesFolderPath = (bitmarkAccountNumber) => {
+  return `${getUserLocalStorageFolderPath(bitmarkAccountNumber)}/caches`;
+};
+
 const moveOldDataFilesToNewLocalStorageFolder = async () => {
   let bitmarkAccountNumber = DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber;
   if (bitmarkAccountNumber) {
@@ -49,6 +53,7 @@ const initializeLocalStorage =  async () => {
     await FileUtil.mkdir(getLocalAssetsFolderPath());
     await FileUtil.mkdir(getLocalThumbnailsFolderPath());
     await FileUtil.mkdir(getLocalDatabasesFolderPath());
+    await FileUtil.mkdir(getLocalCachesFolderPath());
   }
 };
 
@@ -57,5 +62,6 @@ export {
   getLocalAssetsFolderPath,
   getLocalThumbnailsFolderPath,
   getLocalDatabasesFolderPath,
+  getLocalCachesFolderPath,
   moveOldDataFilesToNewLocalStorageFolder
 }

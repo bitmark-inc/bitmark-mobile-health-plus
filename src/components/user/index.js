@@ -26,6 +26,7 @@ import { CaptureMultipleImagesComponent } from './capture-multiple-image.compone
 import { RecordImagesComponent } from './record-images.component';
 import { OrderCombineImagesComponent } from './order-combine-images.component';
 import { DataProcessor } from '../../processors';
+import { TaggingComponent } from "./tagging.component";
 
 
 
@@ -62,6 +63,7 @@ export class UserRouterComponent extends Component {
           <Scene key="recordImages" component={RecordImagesComponent} />
           <Scene key="orderCombineImages" component={OrderCombineImagesComponent} />
           <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
+          <Scene key="tagging" component={TaggingComponent} />
         </Stack>
       </Router>
     );

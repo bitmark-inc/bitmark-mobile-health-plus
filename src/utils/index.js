@@ -4,3 +4,4 @@ export * from './file-util';
 export * from './common-util';
 export * from './indexed-db-util';
 export * from './local-storage-util';
+export * from './tag-cache-util';

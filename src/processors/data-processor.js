@@ -25,7 +25,7 @@ import { config } from '../configs';
 import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
-  checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf, deleteDataToIndexedDB
+  checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf, deleteDataToIndexedDB, initializeIndexedDB
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -513,6 +513,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     await moveOldDataFilesToNewLocalStorageFolder();
     await initializeLocalStorage();
+    await initializeIndexedDB();
 
     configNotification();
     if (!userInformation.intercomUserId) {

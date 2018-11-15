@@ -1,10 +1,12 @@
 import { IndexedDB } from "../models";
 import { DataProcessor } from "../processors/data-processor";
 import moment from "moment/moment";
+import { uniq } from "lodash";
 
 const initializeIndexedDB = async () => {
   await IndexedDB.connectDB();
   await IndexedDB.createIndexedDataTable();
+  await IndexedDB.createTagsTable();
 };
 
 const insertDetectedDataToIndexedDB = async (bitmarkId, assetName, metadata, detectedTexts) => {
@@ -28,7 +30,7 @@ const insertDetectedDataToIndexedDB = async (bitmarkId, assetName, metadata, det
   let detectedTextsStr = (detectedTexts instanceof Array) ? detectedTexts.join(' ') : '';
   detectedTextsStr = removeVietnameseSigns(detectedTextsStr);
 
-  await IndexedDB.insert(accountNumber, bitmarkId, assetName, metadataStr, detectedTextsStr);
+  await IndexedDB.insertIndexedData(accountNumber, bitmarkId, assetName, metadataStr, detectedTextsStr);
 };
 
 const insertHealthDataToIndexedDB = async (bitmarkId, healthData) => {
@@ -45,7 +47,7 @@ const insertHealthDataToIndexedDB = async (bitmarkId, healthData) => {
   // Ex: {"Source":"HealthKit","Saved Time":"2018-01-01"} -> Source HealthKit Saved Time 2018-01-01
   let healthDataStr = healthData.data.replace(/{/g, "").replace(/}/g, "").replace(/"/g, "").replace(/:/g, " ").replace(/,/g, " ");
 
-  await IndexedDB.insert(accountNumber, bitmarkId, healthData.assetName, metadataStr, healthDataStr);
+  await IndexedDB.insertIndexedData(accountNumber, bitmarkId, healthData.assetName, metadataStr, healthDataStr);
 };
 
 const searchIndexedBitmarks = async (searchTerm) => {
@@ -61,15 +63,39 @@ const searchIndexedBitmarks = async (searchTerm) => {
   });
   searchTerm = `${searchTermParts.join(' ')}`;
 
-  let indexedRecords = (await IndexedDB.query(accountNumber, searchTerm)) || [];
+  let indexedRecords = (await IndexedDB.queryIndexedData(accountNumber, searchTerm)) || [];
+  let tagRecords = (await IndexedDB.queryTags(accountNumber, searchTerm)) || [];
+  let records = indexedRecords.concat(tagRecords);
 
-  return indexedRecords.map(record => record.bitmarkId);
+  return {bitmarkIds: uniq(records.map(record => record.bitmarkId)), tagRecords};
 };
 
 const checkExistIndexedDataForBitmark = async (bitmarkId) => {
-  let indexedRecords = (await IndexedDB.queryByBitmarkId(bitmarkId)) || [];
+  let indexedRecords = (await IndexedDB.queryIndexedDataByBitmarkId(bitmarkId)) || [];
 
   return indexedRecords.length > 0;
+};
+
+const getTagsByBitmarkId = async (bitmarkId) => {
+  let tags = [];
+  let records = (await IndexedDB.queryTagsByBitmarkId(bitmarkId)) || [];
+
+  if (records.length) {
+    let tagsStr = records[0].tags;
+    tags = tagsStr.split(' ');
+  }
+
+  return tags;
+};
+
+const updateTag = async (bitmarkId, tags) => {
+  let records = (await IndexedDB.queryTagsByBitmarkId(bitmarkId)) || [];
+  if (records.length) {
+    await IndexedDB.updateTag(bitmarkId, tags.join(' '));
+  } else {
+    let accountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
+    await IndexedDB.insertTag(accountNumber, bitmarkId, tags.join(' '));
+  }
 };
 
 const removeVietnameseSigns = (str) => {
@@ -101,5 +127,7 @@ export {
   deleteDataToIndexedDB,
 
   searchIndexedBitmarks,
-  checkExistIndexedDataForBitmark
+  checkExistIndexedDataForBitmark,
+  getTagsByBitmarkId,
+  updateTag
 }

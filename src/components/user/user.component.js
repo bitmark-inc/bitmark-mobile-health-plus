@@ -44,10 +44,6 @@ class PrivateUserComponent extends Component {
     }
   }
 
-  componentDidMount() {
-    initializeIndexedDB();
-  }
-
   addRecord() {
     ActionSheetIOS.showActionSheetWithOptions({
       options: [i18n.t('UserComponent_actionSheetOption1'), i18n.t('UserComponent_actionSheetOption2'), i18n.t('UserComponent_actionSheetOption3'), i18n.t('UserComponent_actionSheetOption4')],
@@ -313,12 +309,18 @@ class PrivateUserComponent extends Component {
     console.log('searchTerm:', searchTerm);
     let searchResults = { length: 0, healthDataBitmarks: [], healthAssetBitmarks: [] };
     if (searchTerm) {
-      let searchResultBitmarkIds = await searchIndexedBitmarks(searchTerm);
+      let queryResult = await searchIndexedBitmarks(searchTerm);
+      let searchResultBitmarkIds = queryResult.bitmarkIds;
+      let tagRecords = queryResult.tagRecords;
 
       if (searchResultBitmarkIds.length) {
         let allBitmarks = this.props.healthDataBitmarks.concat(this.props.healthAssetBitmarks);
         let allBitmarksMap = {};
         allBitmarks.forEach(bitmark => allBitmarksMap[bitmark.id] = bitmark);
+
+        let tagRecordsMap = {};
+        tagRecords.forEach(tagRecord => tagRecordsMap[tagRecord.bitmarkId] = tagRecord);
+
         for (let i = 0; i < searchResultBitmarkIds.length; i++) {
           let bitmark = allBitmarksMap[searchResultBitmarkIds[i]];
 
@@ -326,6 +328,26 @@ class PrivateUserComponent extends Component {
             if (isAssetDataRecord(bitmark)) {
               if (!bitmark.thumbnail) {
                 bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
+              }
+
+              if (tagRecordsMap[bitmark.id]) {
+                // Augment tag info
+                let searchTermParts = searchTerm.split(' ');
+                let tagsStr = tagRecordsMap[bitmark.id].tags;
+                let tags = tagsStr.split(' ');
+
+                tags = tags.filter((tag) => {
+                  let matched = false;
+                  for (let index = 0; index < searchTermParts.length; index++) {
+                    if (tag.startsWith(searchTermParts[index])) {
+                      matched = true;
+                      break;
+                    }
+                  }
+                  return matched;
+                });
+
+                bitmark.tags = tags.map((item) => {return {value: item}});
               }
 
               searchResults.healthAssetBitmarks.push(bitmark);

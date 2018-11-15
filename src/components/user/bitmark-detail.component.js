@@ -141,6 +141,11 @@ export class BitmarkDetailComponent extends Component {
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
                 <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
+
+                <TouchableOpacity style={styles.taggingButton} onPress={() => Actions.tagging({bitmarkId: this.props.bitmark.id})}>
+                  <Image style={styles.taggingIcon} source={require('./../../../assets/imgs/tagging.png')} />
+                </TouchableOpacity>
+
                 <TouchableOpacity style={styles.closeButton} onPress={this.deleteBitmark.bind(this)}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/delete_icon_red.png')} />
                 </TouchableOpacity>
@@ -255,6 +260,17 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   closeIcon: {
+    width: convertWidth(21),
+    height: convertWidth(21),
+    resizeMode: 'contain',
+  },
+  taggingButton: {
+    paddingTop: convertWidth(26),
+    paddingBottom: convertWidth(26),
+    paddingRight: convertWidth(23),
+    paddingLeft: convertWidth(50),
+  },
+  taggingIcon: {
     width: convertWidth(21),
     height: convertWidth(21),
     resizeMode: 'contain',
