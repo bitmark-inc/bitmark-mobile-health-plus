@@ -80,7 +80,7 @@ const getTagsByBitmarkId = async (bitmarkId) => {
   let tags = [];
   let records = (await IndexedDB.queryTagsByBitmarkId(bitmarkId)) || [];
 
-  if (records.length) {
+  if (records.length && records[0].tags) {
     let tagsStr = records[0].tags;
     tags = tagsStr.split(' ');
   }
