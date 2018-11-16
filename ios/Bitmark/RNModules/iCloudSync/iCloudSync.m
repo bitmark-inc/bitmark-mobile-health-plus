@@ -9,20 +9,18 @@
 #import "iCloudSync.h"
 @import iCloudDocumentSync;
 #import <React/RCTLog.h>
-#import <React/RCTComponent.h>
-#import <React/RCTViewManager.h>
 
 @interface iCloudSync () <iCloudDelegate>
-
-@property (readwrite, strong, nonatomic) NSMutableDictionary *iCloudFileChanges;
-@property (nonatomic, copy) RCTBubblingEventBlock onFileChange;
 
 @end
 
 @implementation iCloudSync
 
 RCT_EXPORT_MODULE();
-RCT_EXPORT_VIEW_PROPERTY(onFileChange, RCTBubblingEventBlock);
+
+- (NSArray<NSString *> *)supportedEvents {
+  return @[@"oniCloudFileChanged"];
+}
 
 RCT_EXPORT_METHOD(uploadFileToCloud:(NSString *)filePath:(NSString *)iCloudKey:(RCTResponseSenderBlock)callback)
 {
@@ -163,7 +161,8 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
     NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
     [result setValue:path forKey:fileNames[i]];
   }
-  self.onFileChange(result);
+  
+  [self sendEventWithName:@"oniCloudFileChanged" body:result];
 }
 
 @end
