@@ -146,7 +146,7 @@ let configure = (onRegister, onNotification) => {
   PushNotification.configure({
     onRegister: onRegister,
     onNotification: onNotification,
-    requestPermissions: false,
+    requestPermissions: true,
   });
 };
 
