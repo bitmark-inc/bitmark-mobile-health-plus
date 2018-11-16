@@ -370,7 +370,8 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     let list = await FileUtil.readDir(tempFolderDownloaded);
     for (let filename of list) {
       await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
-      iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${filename}`, `${bitmarkAccountNumber}_${issueResult.assetId}_downloaded`);
+      let iCloudFilename = 'asset-file' + filename.substring(filename.lastIndexOf('.'), filename.length);
+      iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${filename}`, `${bitmarkAccountNumber}_${issueResult.assetId}_downloaded_${iCloudFilename}`);
     }
     await FileUtil.removeSafe(tempFolder);
 

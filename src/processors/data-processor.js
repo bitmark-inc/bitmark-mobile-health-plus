@@ -537,19 +537,25 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await initializeIndexedDB();
 
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
+      console.log('oniCloudFileChanged mapFiles :', mapFiles);
       for (let key in mapFiles) {
         if (key && key.indexOf(userInformation.bitmarkAccountNumber) === 0) {
           let doSyncFile = async () => {
             let filePath = mapFiles[key];
-            let filename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
-            let downloadedFile = `${FileUtil.CacheDirectory}/assets/${key.replace(new RegExp('_', 'g'), '/')}/${filename}`;
+            let tempKeys = key.split('_');
+            let filename = new Buffer(tempKeys[tempKeys.length - 1], 'hex').toString();
+            let downloadedFile = `${FileUtil.CacheDirectory}/assets/${tempKeys[0]}/${tempKeys[1]}/${tempKeys[2]}/${filename}`;
+            downloadedFile = downloadedFile.replace('_', '/');
+            downloadedFile = downloadedFile.replace('_', '/');
+            console.log('downloadedFile :', downloadedFile);
+            console.log('filePath :', filePath);
             await FileUtil.moveFileSafe(filePath, downloadedFile);
           };
-          runPromiseWithoutError(doSyncFile);
+          runPromiseWithoutError(doSyncFile());
         }
       }
     });
-
+    iCloudSyncAdapter.syncCloud();
     configNotification();
     if (!userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
@@ -714,7 +720,8 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, asset
   }
 
   let list = await FileUtil.readDir(downloadedFolder);
-  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${list[0]}`, `${bitmarkAccountNumber}_${assetId}_downloaded`);
+  let iCloudFilename = 'asset-file' + list[0].substring(list[0].lastIndexOf('.'), list[0].length);
+  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${list[0]}`, `${bitmarkAccountNumber}_${assetId}_downloaded_${iCloudFilename}`);
   return `${downloadedFolder}/${list[0]}`;
 };
 
@@ -738,7 +745,9 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 
   let listFile = await FileUtil.readDir(downloadedFolder);
   let result = await FileUtil.readFile(downloadedFolder + '/' + listFile[0]);
-  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_${assetId}_downloaded`);
+  let iCloudFilename = 'asset-file' + listFile[0].substring(listFile[0].lastIndexOf('.'), list[0].length);
+
+  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_${assetId}_downloaded_${iCloudFilename}`);
   return result;
 };
 
@@ -1054,11 +1063,14 @@ const doMigrateFilesToLocalStorage = async () => {
       } else {
         bitmark.asset.filePath = `${downloadedFilePath}`;
       }
-      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_${bitmark.asset.id}_downloaded`)
+      let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
+      let iCloudFilename = 'asset-file' + filename.substring(filename.lastIndexOf('.'), filename.length);
+      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_${bitmark.asset.id}_downloaded_${iCloudFilename}`)
     } else {
       let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
-      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_${bitmark.asset.id}_downloaded`)
+      let iCloudFilename = 'asset-file' + list[0].substring(list[0].lastIndexOf('.'), list[0].length);
+      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_${bitmark.asset.id}_downloaded_${iCloudFilename}`)
     }
 
     // Create thumbnail if not exist
