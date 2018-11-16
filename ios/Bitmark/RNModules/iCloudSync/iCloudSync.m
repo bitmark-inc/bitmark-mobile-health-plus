@@ -164,5 +164,4 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
   
   [self sendEventWithName:@"oniCloudFileChanged" body:result];
 }
-
 @end
