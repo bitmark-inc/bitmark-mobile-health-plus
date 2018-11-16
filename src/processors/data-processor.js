@@ -944,10 +944,10 @@ const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
       // Index data
       if (isImageFile(item.filePath)) {
         let detectResult = await populateAssetNameFromImage(item.filePath, item.assetName);
-        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
+        await insertDetectedDataToIndexedDB(bitmark.id, item.assetName, item.metadata, detectResult.detectedTexts);
       } else if (isPdfFile(item.filePath)) {
         let detectResult = await populateAssetNameFromPdf(item.filePath, item.assetName);
-        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
+        await insertDetectedDataToIndexedDB(bitmark.id, item.assetName, item.metadata, detectResult.detectedTexts);
       }
     }
   }
