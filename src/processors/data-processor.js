@@ -308,7 +308,7 @@ const configNotification = () => {
   };
   const onReceivedNotification = async (notificationData) => {
     if (!notificationData.foreground && notificationData.data && notificationData.data.event === 'intercom_reply') {
-      setTimeout(() => { Intercom.displayConversationsList(); }, 1000);
+      setTimeout(() => { Intercom.displayConversationsList(); }, 2000);
     }
   };
   AccountService.configure(onRegistered, onReceivedNotification);
