@@ -9,10 +9,9 @@ import {
   Image, View, TouchableOpacity, Text, ActivityIndicator,
 } from 'react-native';
 
-import { convertWidth, runPromiseWithoutError, FileUtil, } from '../../utils';
+import { convertWidth } from '../../utils';
 import { Actions } from 'react-native-router-flux';
 import { config } from '../../configs';
-import { EventEmitterService } from '../../services';
 
 export class FullViewCaptureAssetComponent extends Component {
   static propTypes = {
