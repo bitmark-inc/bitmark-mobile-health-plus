@@ -5,6 +5,7 @@ import {
   BitmarkModel,
 } from '../models';
 import { FileUtil, getLocalAssetsFolderPath } from '../utils';
+import iCloudSyncAdapter from '../models/adapters/icloud';
 
 let allDataTypes = [
   'ActiveEnergyBurned',
@@ -369,6 +370,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     let list = await FileUtil.readDir(tempFolderDownloaded);
     for (let filename of list) {
       await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
+      iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${filename}`, `${bitmarkAccountNumber}_${issueResult.assetId}_downloaded`);
     }
     await FileUtil.removeSafe(tempFolder);
 
