@@ -521,11 +521,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         if (key && key.indexOf(userInformation.bitmarkAccountNumber) === 0) {
           let doSyncFile = async () => {
             let filePath = mapFiles[key];
-            let tempKeys = key.split('_');
-            let filename = new Buffer(tempKeys[tempKeys.length - 1], 'hex').toString();
-            let downloadedFile = `${FileUtil.CacheDirectory}/assets/${tempKeys[0]}/${tempKeys[1]}/${tempKeys[2]}/${filename}`;
-            downloadedFile = downloadedFile.replace('_', '/');
-            downloadedFile = downloadedFile.replace('_', '/');
+            let downloadedFile = `${FileUtil.DocumentDirectory}/${key}`;
+            downloadedFile = downloadedFile.replace(new RegExp('_', 'g'), '/');
             console.log('downloadedFile :', downloadedFile);
             console.log('filePath :', filePath);
             await FileUtil.moveFileSafe(filePath, downloadedFile);
@@ -694,7 +691,7 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, asset
 
   let list = await FileUtil.readDir(downloadedFolder);
   let iCloudFilename = 'asset-file' + list[0].substring(list[0].lastIndexOf('.'), list[0].length);
-  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${list[0]}`, `${bitmarkAccountNumber}_${assetId}_downloaded_${iCloudFilename}`);
+  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${list[0]}`, `${bitmarkAccountNumber}_assets_${assetId}_downloaded_${iCloudFilename}`);
   return `${downloadedFolder}/${list[0]}`;
 };
 
@@ -720,7 +717,7 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
   let result = await FileUtil.readFile(downloadedFolder + '/' + listFile[0]);
   let iCloudFilename = 'asset-file' + listFile[0].substring(listFile[0].lastIndexOf('.'), list[0].length);
 
-  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_${assetId}_downloaded_${iCloudFilename}`);
+  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_assets_${assetId}_downloaded_${iCloudFilename}`);
   return result;
 };
 
@@ -1038,12 +1035,12 @@ const doMigrateFilesToLocalStorage = async () => {
       }
       let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
       let iCloudFilename = 'asset-file' + filename.substring(filename.lastIndexOf('.'), filename.length);
-      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_${bitmark.asset.id}_downloaded_${iCloudFilename}`)
+      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${bitmark.asset.id}_downloaded_${iCloudFilename}`)
     } else {
       let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
       let iCloudFilename = 'asset-file' + list[0].substring(list[0].lastIndexOf('.'), list[0].length);
-      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_${bitmark.asset.id}_downloaded_${iCloudFilename}`)
+      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${bitmark.asset.id}_downloaded_${iCloudFilename}`)
     }
 
     // Create thumbnail if not exist
