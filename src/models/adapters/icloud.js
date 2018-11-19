@@ -4,8 +4,16 @@ const iCloudSyncNative = NativeModules.iCloudSync;
 const iCloudSyncNativeEmitter = new NativeEventEmitter(iCloudSyncNative);
 
 const iCloudSyncAdapter = {
+  deleteFileFromCloud: (key) => {
+    return new Promise((resolve) => {
+      iCloudSyncNative.deleteFileFromCloud(key, (ok) => {
+        console.log('delete file from cloud result:', ok);
+      });
+      resolve();
+    });
+  },
+
   uploadFileToCloud: (filePath, key) => {
-    console.log('uploadFileToCloud :', filePath, key);
     return new Promise((resolve) => {
       iCloudSyncNative.uploadFileToCloud(filePath, key, (ok) => {
         console.log('upload file to cloud result:', ok);

@@ -1199,8 +1199,10 @@ let doMarkDoneMigration = () => {
 };
 
 const doTransferBitmark = async (touchFaceIdSession, bitmark, receiver) => {
+  let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
   let result = await BitmarkService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver);
   await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
+  await iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`)
   await deleteIndexedDataByBitmarkId(bitmark.id);
   await deleteTagsByBitmarkId(bitmark.id);
   await doReloadUserData();
