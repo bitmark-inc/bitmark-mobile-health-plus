@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
-import { isFileRecord } from "../../utils";
+import { isFileRecord, isImageFile, isPdfFile } from "../../utils";
 import moment from "moment/moment";
 import { config } from "../../configs";
 
@@ -81,7 +81,7 @@ export class SearchResultsComponent extends Component {
               renderItem={({item, index}) => {
                 return (
                   <TouchableOpacity style={styles.bitmarkItemContainer} onPress={() => {
-                    isFileRecord(item) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
+                    (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
                   }}>
                     <View style={(index == results.healthAssetBitmarks.length - 1) ? styles.bitmarkLastItem : styles.bitmarkItem}>
                       {/*Thumbnail*/}
