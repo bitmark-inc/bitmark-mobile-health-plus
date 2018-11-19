@@ -5,3 +5,4 @@ export * from './common-util';
 export * from './indexed-db-util';
 export * from './local-storage-util';
 export * from './tag-cache-util';
+export * from './search-util';

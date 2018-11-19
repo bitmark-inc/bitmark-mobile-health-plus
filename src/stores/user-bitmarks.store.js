@@ -6,6 +6,7 @@ const ACTION_TYPES = {
   RESET: 'RESET',
   INIT: 'INIT',
   UPDATE_BITMARK_TYPE: 'UPDATE_BITMARK_TYPE',
+  UPDATE_SEARCH_RESULTS: 'UPDATE_SEARCH_RESULTS'
 };
 
 const UserBitmarksActions = {
@@ -18,9 +19,12 @@ const UserBitmarksActions = {
   updateBitmarkType: (bitmarkType) => {
     return { type: ACTION_TYPES.UPDATE_BITMARK_TYPE, bitmarkType };
   },
+  updateSearchResults: (searchResults, searchTerm) => {
+    return { type: ACTION_TYPES.UPDATE_SEARCH_RESULTS, searchResults, searchTerm };
+  },
 };
 
-const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], bitmarkType: '' };
+const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], bitmarkType: '', searchTerm: '', searchResults: {} };
 
 const data = (state = initialState, action) => {
   switch (action.type) {
@@ -36,6 +40,12 @@ const data = (state = initialState, action) => {
     case ACTION_TYPES.UPDATE_BITMARK_TYPE: {
       let tempState = merge({}, state);
       tempState.bitmarkType = action.bitmarkType || tempState.bitmarkType;
+      return tempState;
+    }
+    case ACTION_TYPES.UPDATE_SEARCH_RESULTS: {
+      let tempState = merge({}, state);
+      tempState.searchResults = action.searchResults;
+      tempState.searchTerm = action.searchTerm;
       return tempState;
     }
     default:

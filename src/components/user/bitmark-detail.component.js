@@ -16,6 +16,7 @@ import { EventEmitterService } from '../../services';
 // import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 import { AppProcessor } from '../../processors';
+import { searchAgain } from "../../utils";
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -112,7 +113,8 @@ export class BitmarkDetailComponent extends Component {
     },
       (buttonIndex) => {
         if (buttonIndex === 1) {
-          AppProcessor.doTransferBitmark(this.props.bitmark, config.zeroAddress).then(() => {
+          AppProcessor.doTransferBitmark(this.props.bitmark, config.zeroAddress).then(async () => {
+            await searchAgain();
             Actions.pop();
           }).catch(error => {
             console.log('error:', error);
