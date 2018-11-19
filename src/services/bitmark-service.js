@@ -72,7 +72,7 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
   let list = await FileUtil.readDir(tempFolderDownloaded);
   for (let filename of list) {
     await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
-    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${filename}`, `${bitmarkAccountNumber}_${base58.encode(new Buffer(issueResult.assetId, 'hex'))}_${filename}`);
+    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${filename}`, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(issueResult.assetId, 'hex'))}_${filename}`);
   }
   await FileUtil.removeSafe(tempFolder);
 

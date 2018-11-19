@@ -381,7 +381,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
 
     let listFile = await FileUtil.readDir(downloadedFolder);
 
-    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_${base58.encode(new Buffer(issueResult.assetId, 'hex'))}_${listFile[0]}`);
+    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(issueResult.assetId, 'hex'))}_${listFile[0]}`);
 
     let encryptedAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
     await FileUtil.mkdir(encryptedAssetFolder);
