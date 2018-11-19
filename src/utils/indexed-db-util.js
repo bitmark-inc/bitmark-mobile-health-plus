@@ -76,6 +76,10 @@ const checkExistIndexedDataForBitmark = async (bitmarkId) => {
   return indexedRecords.length > 0;
 };
 
+const deleteIndexedDataByBitmarkId = async (bitmarkId) => {
+  await IndexedDB.deleteIndexedDataByBitmarkId(bitmarkId);
+};
+
 const getTagsByBitmarkId = async (bitmarkId) => {
   let tags = [];
   let records = (await IndexedDB.queryTagsByBitmarkId(bitmarkId)) || [];
@@ -98,6 +102,10 @@ const updateTag = async (bitmarkId, tags) => {
   }
 };
 
+const deleteTagsByBitmarkId = async (bitmarkId) => {
+  await IndexedDB.deleteTagsByBitmarkId(bitmarkId);
+};
+
 const removeVietnameseSigns = (str) => {
   str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
   str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
@@ -116,18 +124,15 @@ const removeVietnameseSigns = (str) => {
   return str;
 };
 
-const deleteDataToIndexedDB = async (accountNumber, bitmarkId) => {
-  await IndexedDB.delete(accountNumber, bitmarkId);
-};
-
 export {
   initializeIndexedDB,
   insertDetectedDataToIndexedDB,
   insertHealthDataToIndexedDB,
-  deleteDataToIndexedDB,
+  deleteIndexedDataByBitmarkId,
 
   searchIndexedBitmarks,
   checkExistIndexedDataForBitmark,
   getTagsByBitmarkId,
-  updateTag
+  updateTag,
+  deleteTagsByBitmarkId
 }

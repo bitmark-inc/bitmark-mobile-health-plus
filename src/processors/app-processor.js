@@ -62,11 +62,11 @@ const executeTask = (taskKey, data) => {
 }
 // ================================================================================================
 // ================================================================================================
-const doCreateNewAccount = async () => {
-  if (Platform.OS === 'ios' && config.isIPhoneX) {
+const doCreateNewAccount = async (enableTouchFaceId) => {
+  if (Platform.OS === 'ios' && config.isIPhoneX && enableTouchFaceId) {
     await FaceTouchId.authenticate();
   }
-  let touchFaceIdSession = await AccountModel.doCreateAccount();
+  let touchFaceIdSession = await AccountModel.doCreateAccount(enableTouchFaceId);
   if (!touchFaceIdSession) {
     return null;
   }
@@ -123,8 +123,8 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 
 // ================================================================================================
 // ================================================================================================
-const doLogin = async (phraseWords) => {
-  return executeTask('doLogin', { phraseWords });
+const doLogin = async (phraseWords, enableTouchFaceId) => {
+  return executeTask('doLogin', { phraseWords, enableTouchFaceId });
 };
 
 const doLogout = async () => {

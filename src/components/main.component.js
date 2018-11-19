@@ -21,7 +21,7 @@ import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-e
 import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent, } from '../commons'
 import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
-import { EventEmitterService, AccountService } from '../services';
+import { EventEmitterService } from '../services';
 import { UserModel, CommonModel } from '../models';
 import { FileUtil, convertWidth, runPromiseWithoutError } from '../utils';
 import { DataProcessor, AppProcessor } from '../processors';
@@ -76,7 +76,6 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
     EventEmitterService.on(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
 
-    runPromiseWithoutError(AccountService.doRequestNotificationPermissions());
     // Handle Crashes
     this.checkAndShowCrashLog();
     this.registerCrashHandler();
@@ -484,6 +483,7 @@ export class MainComponent extends Component {
     DataProcessor.doCheckHaveCodePushUpdate().then(updated => {
       if (updated) {
         return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
+          user = user || {};
           console.log('doOpenApp user:', user);
           if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
             this.setState({ user });
@@ -503,6 +503,7 @@ export class MainComponent extends Component {
                       this.requiringTouchId = false;
                     }
                   }]);
+
                 }
               }
             });

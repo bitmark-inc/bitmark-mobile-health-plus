@@ -4,14 +4,14 @@ import { BitmarkSDK } from './adapters';
 import { config } from '../configs';
 import { FileUtil, runPromiseWithoutError } from './../utils';
 
-const doCreateAccount = async () => {
+const doCreateAccount = async (enableTouchFaceId) => {
   await CookieManager.clearAll();
-  return await BitmarkSDK.newAccount(config.bitmark_network);
+  return await BitmarkSDK.newAccount(config.bitmark_network, enableTouchFaceId);
 };
 
-const doLogin = async (phraseWords) => {
+const doLogin = async (phraseWords, enableTouchFaceId) => {
   await CookieManager.clearAll();
-  return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, config.bitmark_network);
+  return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, config.bitmark_network, enableTouchFaceId);
 }
 
 const doGetCurrentAccount = async (touchFaceIdSession) => {
@@ -36,15 +36,18 @@ const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platfor
   return new Promise((resolve, reject) => {
     let statusCode;
     let tempURL = `${config.mobile_server_url}/api/push_uuids`;
+    let headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+    if (accountNumber) {
+      headers.requester = accountNumber;
+      headers.timestamp = timestamp;
+      headers.signature = signature;
+    }
     fetch(tempURL, {
       method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        requester: accountNumber,
-        timestamp,
-        signature,
-      },
+      headers,
       body: JSON.stringify({ platform, token, client, intercom_user_id }),
     }).then((response) => {
       statusCode = response.status;
@@ -146,7 +149,7 @@ let configure = (onRegister, onNotification) => {
   PushNotification.configure({
     onRegister: onRegister,
     onNotification: onNotification,
-    requestPermissions: false,
+    requestPermissions: true,
   });
 };
 

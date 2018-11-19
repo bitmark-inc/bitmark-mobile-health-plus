@@ -17,14 +17,14 @@ import {
   FileUtil,
   convertWidth, issue,
   populateAssetNameFromImage, populateAssetNameFromPdf, isImageFile, isPdfFile,
-  checkThumbnailForBitmark, insertDetectedDataToIndexedDB, isAssetDataRecord, searchIndexedBitmarks
+  search, insertDetectedDataToIndexedDB
 } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { DataProcessor, AppProcessor } from './../../processors';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitterService } from '../../services';
-import { UserBitmarksStore } from '../../stores';
+import { UserBitmarksActions, UserBitmarksStore } from '../../stores';
 import { SearchInputComponent } from "./search-input.component";
 import { MaterialIndicator } from "react-native-indicators";
 import { SearchResultsComponent } from "./search-results.component";
@@ -33,15 +33,15 @@ class PrivateUserComponent extends Component {
   static propTypes = {
     healthDataBitmarks: PropTypes.array,
     healthAssetBitmarks: PropTypes.array,
+    searchTerm: PropTypes.string,
+    searchResults: PropTypes.object
   };
   constructor(props) {
     super(props);
     this.doIssueImage = this.doIssueImage.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
 
-    this.state = {
-      searchResults: {}
-    }
+    this.state = {};
   }
 
   addRecord() {
@@ -177,7 +177,7 @@ class PrivateUserComponent extends Component {
 
     ImagePicker.openPicker({
       multiple: true,
-      maxFiles: 0,
+      maxFiles: 10,
       mediaType: 'photo',
       compressImageQuality: 1,
     }).then(results => {
@@ -302,66 +302,13 @@ class PrivateUserComponent extends Component {
 
   async updateSearch(searchTerm) {
     console.log('searchTerm:', searchTerm);
-    let searchResults = { length: 0, healthDataBitmarks: [], healthAssetBitmarks: [] };
-    if (searchTerm) {
-      let queryResult = await searchIndexedBitmarks(searchTerm);
-      let searchResultBitmarkIds = queryResult.bitmarkIds;
-      let tagRecords = queryResult.tagRecords;
+    let searchResults = await search(searchTerm);
 
-      if (searchResultBitmarkIds.length) {
-        let allBitmarks = this.props.healthDataBitmarks.concat(this.props.healthAssetBitmarks);
-        let allBitmarksMap = {};
-        allBitmarks.forEach(bitmark => allBitmarksMap[bitmark.id] = bitmark);
-
-        let tagRecordsMap = {};
-        tagRecords.forEach(tagRecord => tagRecordsMap[tagRecord.bitmarkId] = tagRecord);
-
-        for (let i = 0; i < searchResultBitmarkIds.length; i++) {
-          let bitmark = allBitmarksMap[searchResultBitmarkIds[i]];
-
-          if (bitmark) {
-            if (isAssetDataRecord(bitmark)) {
-              if (!bitmark.thumbnail) {
-                bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
-              }
-
-              if (tagRecordsMap[bitmark.id]) {
-                // Augment tag info
-                let searchTermParts = searchTerm.split(' ');
-                let tagsStr = tagRecordsMap[bitmark.id].tags;
-                let tags = tagsStr.split(' ');
-
-                tags = tags.filter((tag) => {
-                  let matched = false;
-                  for (let index = 0; index < searchTermParts.length; index++) {
-                    if (tag.startsWith(searchTermParts[index])) {
-                      matched = true;
-                      break;
-                    }
-                  }
-                  return matched;
-                });
-
-                bitmark.tags = tags.map((item) => { return { value: item } });
-              }
-
-              searchResults.healthAssetBitmarks.push(bitmark);
-            } else {
-              searchResults.healthDataBitmarks.push(bitmark);
-            }
-          }
-        }
-      }
-    }
-
-    searchResults.length = searchResults.healthDataBitmarks.length + searchResults.healthAssetBitmarks.length;
-    // searchResults.length = 0;
-    console.log('searchResults:', searchResults);
+    UserBitmarksStore.dispatch(UserBitmarksActions.updateSearchResults(searchResults, searchTerm));
 
     this.setState({
-      searchResults,
       isSearching: false
-    })
+    });
   }
 
   render() {
@@ -378,13 +325,12 @@ class PrivateUserComponent extends Component {
         </TouchableOpacity>} */}
         <SafeAreaView style={[styles.bodySafeView,]}>
           {/*SEARCH AREA*/}
-          <View style={[styles.searchArea, (this.state.searchTerm ? { flex: 1 } : {})]}>
+          <View style={[styles.searchArea, (this.props.searchTerm ? { flex: 1 } : {})]}>
             <SearchInputComponent
               throttle={300}
               onSearchTermChange={(searchTerm) => {
                 this.setState({
-                  isSearching: true,
-                  searchTerm
+                  isSearching: true
                 });
 
                 this.updateSearch(searchTerm);
@@ -398,11 +344,11 @@ class PrivateUserComponent extends Component {
               <Text>{global.i18n.t("UserComponent_searching")}</Text>
             </View>
             }
-            {(this.state.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.state.searchResults} /> : null}
+            {(this.props.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} /> : null}
           </View>
 
           {/*DATA PANEL*/}
-          {!this.state.searchTerm && <View style={styles.body}>
+          {!this.props.searchTerm && <View style={styles.body}>
             <View style={[styles.bodyContent, isCurrentUser ? {} : { borderBottomWidth: 1 }]}>
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {

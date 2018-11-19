@@ -59,7 +59,7 @@ export class IndexedDB {
     return this.executeQuery(query, [accountNumber, bitmarkId, assetName, metadata, content]);
   }
 
-  static async delete(accountNumber, bitmarkId) {
+  static async deleteIndexedDataByBitmarkId(accountNumber, bitmarkId) {
     let query = `DELETE FROM ${INDEXED_DATA_TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
     return this.executeQuery(query);
   }
@@ -91,6 +91,11 @@ export class IndexedDB {
   static async updateTag(bitmarkId, tagsStr) {
     let query = `UPDATE ${TAGS_TABLE_NAME} SET tags='${tagsStr}' WHERE bitmarkId='${bitmarkId}'`;
     console.log('updateTag-query:', query);
+    return this.executeQuery(query);
+  }
+
+  static async deleteTagsByBitmarkId(bitmarkId) {
+    let query = `DELETE FROM ${TAGS_TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
     return this.executeQuery(query);
   }
 }

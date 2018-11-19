@@ -27,7 +27,8 @@ import { config } from '../configs';
 import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
-  checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf, deleteDataToIndexedDB, initializeIndexedDB
+  checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf,
+  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -308,7 +309,10 @@ const runGetEmailRecordsInBackground = () => {
   });
 };
 
-const runOnBackground = async () => {
+const runOnBackground = async (justOpenApp) => {
+  if (justOpenApp) {
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+  }
   let userInfo = await UserModel.doTryGetCurrentUser();
   if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
     userInformation = userInfo;
@@ -334,6 +338,9 @@ const runOnBackground = async () => {
     //   await runGetEmailRecordsInBackground();
     // }
   }
+  if (justOpenApp) {
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
+  }
 };
 // ================================================================================================================================================
 const doReloadUserData = async () => {
@@ -351,18 +358,30 @@ const configNotification = () => {
     if (!userInformation || !userInformation.bitmarkAccountNumber) {
       userInformation = await UserModel.doGetCurrentUser();
     }
-    if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-      AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
-        userInformation.notificationUUID = notificationUUID;
-        return UserModel.doUpdateUserInfo(userInformation);
-      }).catch(error => {
-        console.log('DataProcessor doRegisterNotificationInfo error:', error);
-      });
+    if (!userInformation || !userInformation.bitmarkAccountNumber) {
+      let appInfo = (await doGetAppInformation()) || {};
+      if (appInfo.notificationUUID !== notificationUUID) {
+        AccountService.doRegisterNotificationInfo(null, notificationUUID, appInfo.intercomUserId).then(() => {
+          userInformation.notificationUUID = notificationUUID;
+          return UserModel.doUpdateUserInfo(userInformation);
+        }).catch(error => {
+          console.log('DataProcessor doRegisterNotificationInfo error:', error);
+        });
+      }
+    } else {
+      if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
+        AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, userInformation.intercomUserId).then(() => {
+          userInformation.notificationUUID = notificationUUID;
+          return UserModel.doUpdateUserInfo(userInformation);
+        }).catch(error => {
+          console.log('DataProcessor doRegisterNotificationInfo error:', error);
+        });
+      }
     }
   };
   const onReceivedNotification = async (notificationData) => {
     if (!notificationData.foreground && notificationData.data && notificationData.data.event === 'intercom_reply') {
-      setTimeout(() => { Intercom.displayConversationsList(); }, 1000);
+      setTimeout(() => { Intercom.displayConversationsList(); }, 2000);
     }
   };
   AccountService.configure(onRegistered, onReceivedNotification);
@@ -372,7 +391,7 @@ const configNotification = () => {
 let dataInterval = null;
 const startInterval = () => {
   stopInterval();
-  runOnBackground();
+  runOnBackground(true);
   dataInterval = setInterval(runOnBackground, 30 * 1000);
 };
 
@@ -415,7 +434,9 @@ const doCreateAccount = async (touchFaceIdSession) => {
   let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
   await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   if (notificationUUID) {
-    AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID).then(() => {
+    let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
+    userInformation.intercomUserId = intercomUserId;
+    AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, intercomUserId).then(() => {
       userInformation.notificationUUID = notificationUUID;
       return UserModel.doUpdateUserInfo(userInformation);
     }).catch(error => {
@@ -538,18 +559,18 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       }
     });
     iCloudSyncAdapter.syncCloud();
-    configNotification();
+
     if (!userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
+      userInformation.intercomUserId = intercomUserId;
+      await UserModel.doUpdateUserInfo(userInformation);
       Intercom.reset().then(() => {
         return Intercom.registerIdentifiedUser({ userId: intercomUserId })
-      }).then(() => {
-        userInformation.intercomUserId = intercomUserId;
-        return UserModel.doUpdateUserInfo(userInformation);
       }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
       });
     }
+    configNotification();
 
     let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
@@ -626,16 +647,21 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     });
   } else if (!userInformation || !userInformation.bitmarkAccountNumber) {
     let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
-    Intercom.reset().then(() => {
-      return Intercom.registerIdentifiedUser({ userId: intercomUserId })
-    }).then(() => {
-      if (!appInfo.intercomUserId) {
-        appInfo.intercomUserId = intercomUserId;
-        return CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-      }
-    }).catch(error => {
-      console.log('registerIdentifiedUser error :', error);
-    });
+    if (!appInfo.intercomUserId) {
+      appInfo.intercomUserId = intercomUserId;
+      Intercom.reset().then(() => {
+        return Intercom.registerIdentifiedUser({ userId: intercomUserId })
+      }).catch(error => {
+        console.log('registerIdentifiedUser error :', error);
+      });
+      CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+    } else {
+      Intercom.registerIdentifiedUser({ userId: intercomUserId }).catch(error => {
+        console.log('registerIdentifiedUser error :', error);
+      });
+    }
+
+    configNotification();
   }
 
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
@@ -967,10 +993,10 @@ const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
       // Index data
       if (isImageFile(item.filePath)) {
         let detectResult = await populateAssetNameFromImage(item.filePath, item.assetName);
-        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
+        await insertDetectedDataToIndexedDB(bitmark.id, item.assetName, item.metadata, detectResult.detectedTexts);
       } else if (isPdfFile(item.filePath)) {
         let detectResult = await populateAssetNameFromPdf(item.filePath, item.assetName);
-        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
+        await insertDetectedDataToIndexedDB(bitmark.id, item.assetName, item.metadata, detectResult.detectedTexts);
       }
     }
   }
@@ -1175,7 +1201,8 @@ let doMarkDoneMigration = () => {
 const doTransferBitmark = async (touchFaceIdSession, bitmark, receiver) => {
   let result = await BitmarkService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver);
   await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
-  await deleteDataToIndexedDB(userInformation.bitmarkAccountNumber, bitmark.id);
+  await deleteIndexedDataByBitmarkId(bitmark.id);
+  await deleteTagsByBitmarkId(bitmark.id);
   await doReloadUserData();
   return result;
 };

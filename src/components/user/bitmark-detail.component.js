@@ -16,6 +16,7 @@ import { EventEmitterService } from '../../services';
 // import { AppProcessor, DataProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 import { AppProcessor } from '../../processors';
+import { searchAgain } from "../../utils";
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -112,7 +113,8 @@ export class BitmarkDetailComponent extends Component {
     },
       (buttonIndex) => {
         if (buttonIndex === 1) {
-          AppProcessor.doTransferBitmark(this.props.bitmark, config.zeroAddress).then(() => {
+          AppProcessor.doTransferBitmark(this.props.bitmark, config.zeroAddress).then(async () => {
+            await searchAgain();
             Actions.pop();
           }).catch(error => {
             console.log('error:', error);
@@ -145,7 +147,7 @@ export class BitmarkDetailComponent extends Component {
                 <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
                 {/*TAG ICON*/}
                 {this.props.bitmarkType === 'bitmark_health_issuance' &&
-                  <TouchableOpacity style={styles.taggingButton} onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
+                  <TouchableOpacity style={this.props.bitmark.status !== 'pending' ? styles.taggingButton : styles.taggingButtonForPending} onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
                     <Image style={styles.taggingIcon} source={require('./../../../assets/imgs/tagging.png')} />
                   </TouchableOpacity>
                 }
@@ -270,6 +272,12 @@ const styles = StyleSheet.create({
   },
   taggingButton: {
     height: '100%',
+    paddingLeft: convertWidth(15),
+    alignItems: 'center', justifyContent: 'center',
+  },
+  taggingButtonForPending: {
+    height: '100%',
+    paddingRight: convertWidth(8),
     paddingLeft: convertWidth(15),
     alignItems: 'center', justifyContent: 'center',
   },

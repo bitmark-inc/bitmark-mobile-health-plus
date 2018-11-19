@@ -39,7 +39,10 @@ export class TaggingComponent extends Component {
     console.log('tags:', tags);
     let tagsCache = await getTagsCache();
     console.log('tagsCache:', tagsCache);
-    this.setState({tags, tagsCache, tagsSuggestion: tagsCache});
+    let tagsSuggestion = tagsCache.filter((item) => tags.indexOf(item) == -1);
+    console.log('tagsSuggestion:', tagsSuggestion);
+
+    this.setState({tags, tagsCache, tagsSuggestion});
   }
 
   componentWillUnmount() {
@@ -84,25 +87,25 @@ export class TaggingComponent extends Component {
   }
 
   hideInputTag() {
-    this.setState({inputtingTag: false, tagsSuggestion: this.state.tagsCache});
+    this.setState({inputtingTag: false, tagsSuggestion: this.state.tagsCache.filter(item => this.state.tags.indexOf(item) == -1)});
   }
 
-  async addTag() {
-    this.hideInputTag();
-
-    if (this.state.tag) {
+  async addTag(tag) {
+    if (tag) {
       let tags = this.state.tags;
-      if (tags.indexOf(this.state.tag) == -1) {
-        tags.push(this.state.tag);
+      if (tags.indexOf(tag) == -1) {
+        tags.push(tag);
         await updateTag(this.props.bitmarkId, tags);
 
         let tagsCache = this.state.tagsCache;
         // Insert to the beginning of the list
-        tagsCache.unshift(this.state.tag);
+        tagsCache.unshift(tag);
         // Remove duplication
         tagsCache = uniq(tagsCache);
 
-        this.setState({tags, tagsCache});
+        let tagsSuggestion = tagsCache.filter((item) => tags.indexOf(item) == -1);
+
+        this.setState({tag: '', tags, tagsCache, tagsSuggestion});
         await writeTagsCache(tagsCache);
       }
     }
@@ -114,13 +117,18 @@ export class TaggingComponent extends Component {
     if (tags.indexOf(tag) > -1) {
       tags = tags.filter(item => item != tag);
       await updateTag(this.props.bitmarkId, tags);
-      this.setState({tags});
+
+      let tagsSuggestion = this.state.tagsCache.filter((item) => { return tags.indexOf(item) == -1});
+
+      this.setState({tags, tagsSuggestion});
     }
   }
 
   onChangeText(text) {
     let tag = text.replace(/\s/g, '');
-    let tagsSuggestion = this.state.tagsCache.filter((item) => item.startsWith(text));
+    let tagsSuggestion = this.state.tagsCache.filter((item) => {
+      return item.startsWith(text) && this.state.tags.indexOf(item) == -1
+    });
     this.setState({tag, tagsSuggestion});
   }
 
@@ -189,12 +197,13 @@ export class TaggingComponent extends Component {
                     autoCapitalize="none"
                     clearTextOnFocus={true}
                     onChange={() => {this.setState({tag: this.state.tag.replace(/\s/g, '')})}}
+                    onBlur={() => {this.setState({tag: ''})}}
                     onChangeText={(text) => {this.onChangeText.bind(this)(text)}}
                     onSubmitEditing={this.hideInputTag.bind(this)}
                   />
 
                   {/*SUBMIT TAG*/}
-                  <TouchableOpacity onPress={this.addTag.bind(this)}>
+                  <TouchableOpacity onPress={() => this.addTag.bind(this)(this.state.tag)}>
                     <Image style={[styles.addTagIcon]} source={require('./../../../assets/imgs/add-tag-icon.png')} />
                   </TouchableOpacity>
                 </View>
@@ -208,7 +217,7 @@ export class TaggingComponent extends Component {
                       extraData={this.state}
                       data={this.state.tagsSuggestion}
                       renderItem={({ item }) => {
-                        return (<TouchableOpacity style={styles.suggestionItem} onPress={() => {this.setState({tag: item})}}>
+                        return (<TouchableOpacity style={styles.suggestionItem} onPress={() => {this.addTag.bind(this)(item)}}>
                           <Text style={[styles.suggestionItemText]}>#{item}</Text>
                         </TouchableOpacity>)
                       }}

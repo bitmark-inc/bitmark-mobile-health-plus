@@ -9,9 +9,9 @@ const newError = (reason, defaultMessage) => {
 
 const BitmarkSDK = {
   // return session id
-  newAccount: (network, version = 'v2') => {
+  newAccount: (network, enableTouchFaceId, version = 'v2') => {
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccount(network, version, (ok, result) => {
+      SwiftBitmarkSDK.newAccount(network, version, enableTouchFaceId, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
@@ -20,10 +20,10 @@ const BitmarkSDK = {
       });
     });
   },
-  newAccountFromPhraseWords: (phraseWords, network) => {
+  newAccountFromPhraseWords: (phraseWords, network, enableTouchFaceId) => {
     console.log('phraseWords :', phraseWords);
     return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFromPhraseWords(phraseWords, network, (ok, result) => {
+      SwiftBitmarkSDK.newAccountFromPhraseWords(phraseWords, network, enableTouchFaceId, (ok, result) => {
         if (ok) {
           resolve(result);
         } else {
