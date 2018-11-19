@@ -58,11 +58,11 @@ let submitting = (promise, processingData) => {
 // ================================================================================================
 // ================================================================================================
 
-const doLogin = async ({ phraseWords }) => {
-  if (Platform.OS === 'ios' && config.isIPhoneX) {
+const doLogin = async ({ phraseWords, enableTouchFaceId }) => {
+  if (Platform.OS === 'ios' && config.isIPhoneX && enableTouchFaceId) {
     await FaceTouchId.authenticate();
   }
-  let touchFaceIdSession = await AccountModel.doLogin(phraseWords);
+  let touchFaceIdSession = await AccountModel.doLogin(phraseWords, enableTouchFaceId);
   if (!touchFaceIdSession) {
     return null;
   }

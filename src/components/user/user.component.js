@@ -179,7 +179,7 @@ class PrivateUserComponent extends Component {
 
     ImagePicker.openPicker({
       multiple: true,
-      maxFiles: 0,
+      maxFiles: 10,
       mediaType: 'photo',
       compressImageQuality: 1,
     }).then(results => {
