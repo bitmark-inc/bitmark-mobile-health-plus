@@ -25,7 +25,8 @@ import { config } from '../configs';
 import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
-  checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf, deleteDataToIndexedDB, initializeIndexedDB
+  checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf,
+  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -1150,7 +1151,8 @@ let doMarkDoneMigration = () => {
 const doTransferBitmark = async (touchFaceIdSession, bitmark, receiver) => {
   let result = await BitmarkService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver);
   await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
-  await deleteDataToIndexedDB(userInformation.bitmarkAccountNumber, bitmark.id);
+  await deleteIndexedDataByBitmarkId(bitmark.id);
+  await deleteTagsByBitmarkId(bitmark.id);
   await doReloadUserData();
   return result;
 };
