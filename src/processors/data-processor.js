@@ -523,8 +523,10 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
             let filePath = mapFiles[key];
             let downloadedFile = `${FileUtil.DocumentDirectory}/${key}`;
             downloadedFile = downloadedFile.replace(new RegExp('_', 'g'), '/');
+            let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
             console.log('downloadedFile :', downloadedFile);
             console.log('filePath :', filePath);
+            await FileUtil.mkdir(downloadedFolder);
             await FileUtil.copyFile(filePath, downloadedFile);
           };
           runPromiseWithoutError(doSyncFile());
