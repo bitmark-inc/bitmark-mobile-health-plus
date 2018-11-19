@@ -525,7 +525,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
             downloadedFile = downloadedFile.replace(new RegExp('_', 'g'), '/');
             console.log('downloadedFile :', downloadedFile);
             console.log('filePath :', filePath);
-            await FileUtil.moveFileSafe(filePath, downloadedFile);
+            await FileUtil.copyFile(filePath, downloadedFile);
           };
           runPromiseWithoutError(doSyncFile());
         }
