@@ -550,7 +550,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
       });
-      return CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+      CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
     } else {
       Intercom.registerIdentifiedUser({ userId: intercomUserId }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
