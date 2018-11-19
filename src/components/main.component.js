@@ -21,7 +21,7 @@ import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-e
 import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent, } from '../commons'
 import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
-import { EventEmitterService, AccountService } from '../services';
+import { EventEmitterService } from '../services';
 import { UserModel, CommonModel } from '../models';
 import { FileUtil, convertWidth, runPromiseWithoutError } from '../utils';
 import { DataProcessor, AppProcessor } from '../processors';
@@ -481,6 +481,7 @@ export class MainComponent extends Component {
   }
   doAppRefresh(justCreatedBitmarkAccount) {
     return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
+      user = user || {};
       console.log('doOpenApp user:', user);
       if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
         this.setState({ user });
