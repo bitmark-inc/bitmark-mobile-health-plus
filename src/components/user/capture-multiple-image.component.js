@@ -35,8 +35,8 @@ export class CaptureMultipleImagesComponent extends Component {
 
   async captureImage() {
     if (this.cameraRef) {
-      if (this.state.images.length >= 20) {
-        Alert.alert(i18n.t('CaptureMultipleImagesComponent_titleLimitModal'), i18n.t('CaptureMultipleImagesComponent_messageLimitModal'));
+      if (this.state.images.length >= 10) {
+        Alert.alert(i18n.t('CaptureMultipleImagesComponent_titleLimitModal'), i18n.t('CaptureMultipleImagesComponent_messageLimitModal', { maximum: 10 }));
         return;
       }
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
