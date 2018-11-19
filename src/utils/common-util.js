@@ -48,17 +48,16 @@ const getLanguageForTextDetector = () => {
 };
 
 const sanitizeTextDetectorResponse = (detectedItems) => {
-  const notContainsSepecicalCharacter = (str) => {
-    const blacklistCharacters = '\'!|"#$%&/\\()={}[]+*-_:;<>‘.,`~¥§˘ˆ↵˛˝˙'.split('');
-    let strCharactors = str.split('').filter(item => item !== ' ');
-
-    return intersection(blacklistCharacters, strCharactors).length == 0;
-  };
+  // Remove special characters
+  detectedItems.forEach(item => {
+    if (item.text) {
+      item.text = item.text.replace(/[`~!@#$%^&*()_|+\-=÷¿?;:'",.<>\{\}\[\]\\\/‘.,`~¥§˘ˆ↵˛˝”˙»]/gi, '').trim();
+    }
+  });
 
   return detectedItems.filter(item => {
-    let text = item.text ? item.text.trim() : item.text;
-    return text && text.length > 3 && notContainsSepecicalCharacter(text);
-  })
+    return item.text && item.text.length > 3;
+  });
 };
 
 const calculateDocDimension = (visionResp) => {
@@ -167,6 +166,7 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   if (isJPGFile(filePath)) {
     // Convert JPG format to PNG format in the case of multiple selection because it can not be used for detected text from image
     let imageSize = await getImageSize(filePath);
+    console.log('imageSize:', imageSize);
     let outputDir = filePath.substring(0, filePath.lastIndexOf('/'));
     let response = await ImageResizer.createResizedImage(filePath, imageSize.width, imageSize.height, 'PNG', 100, 0, outputDir);
     detectFilePath = response.uri;
