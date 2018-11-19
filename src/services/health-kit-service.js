@@ -370,8 +370,6 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     let list = await FileUtil.readDir(tempFolderDownloaded);
     for (let filename of list) {
       await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
-      let iCloudFilename = 'asset-file' + filename.substring(filename.lastIndexOf('.'), filename.length);
-      iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${filename}`, `${bitmarkAccountNumber}_assets_${issueResult.assetId}_downloaded_${iCloudFilename}`);
     }
     await FileUtil.removeSafe(tempFolder);
 
@@ -379,6 +377,11 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     let zipFilePath = `${downloadedFolder}/${listFiles[0]}`;
     await FileUtil.unzip(zipFilePath, downloadedFolder);
     await FileUtil.removeSafe(zipFilePath);
+
+    let listFile = await FileUtil.readDir(downloadedFolder);
+
+    let iCloudFilename = 'asset-file' + listFile[0].substring(listFile[0].lastIndexOf('.'), listFile[0].length);
+    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_assets_${issueResult.assetId}_downloaded_${iCloudFilename}`);
 
     let encryptedAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
     await FileUtil.mkdir(encryptedAssetFolder);
