@@ -6,6 +6,8 @@ import { Actions } from 'react-native-router-flux';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
 import randomString from 'random-string';
+import base58 from 'bs58';
+
 const {
   PushNotificationIOS,
 } = ReactNative;
@@ -539,15 +541,17 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
       console.log('oniCloudFileChanged mapFiles :', mapFiles);
       for (let key in mapFiles) {
-        if (key && key.indexOf(userInformation.bitmarkAccountNumber) === 0) {
+        let keyList = key.split('_');
+        if (keyList[0] === userInformation.bitmarkAccountNumber) {
+          console.log({ key, filePath: mapFiles[key] });
+          let assetId = base58.decode(keyList[1]).toString('hex');
+          let keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_${keyList[1]}_`, `${userInformation.bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
           let doSyncFile = async () => {
             let filePath = mapFiles[key];
-            let downloadedFile = `${FileUtil.DocumentDirectory}/${key}`;
-            downloadedFile = downloadedFile.replace(new RegExp('_', 'g'), '/');
+            let downloadedFile = `${FileUtil.DocumentDirectory}/${keyFilePath}`;
             let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
-            console.log('downloadedFile :', downloadedFile);
-            console.log('filePath :', filePath);
             await FileUtil.mkdir(downloadedFolder);
+            await FileUtil.removeSafe(downloadedFile);
             await FileUtil.copyFile(filePath, downloadedFile);
           };
           runPromiseWithoutError(doSyncFile());
@@ -719,8 +723,7 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, asset
   }
 
   let list = await FileUtil.readDir(downloadedFolder);
-  let iCloudFilename = 'asset-file' + list[0].substring(list[0].lastIndexOf('.'), list[0].length);
-  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${list[0]}`, `${bitmarkAccountNumber}_assets_${assetId}_downloaded_${iCloudFilename}`);
+  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${list[0]}`, `${bitmarkAccountNumber}_${base58.encode(new Buffer(assetId, 'hex'))}_${list[0]}`);
   return `${downloadedFolder}/${list[0]}`;
 };
 
@@ -744,9 +747,7 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 
   let listFile = await FileUtil.readDir(downloadedFolder);
   let result = await FileUtil.readFile(downloadedFolder + '/' + listFile[0]);
-  let iCloudFilename = 'asset-file' + listFile[0].substring(listFile[0].lastIndexOf('.'), list[0].length);
-
-  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_assets_${assetId}_downloaded_${iCloudFilename}`);
+  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_${base58.encode(new Buffer(assetId, 'hex'))}_${list[0]}`);
   return result;
 };
 
@@ -1063,13 +1064,11 @@ const doMigrateFilesToLocalStorage = async () => {
         bitmark.asset.filePath = `${downloadedFilePath}`;
       }
       let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
-      let iCloudFilename = 'asset-file' + filename.substring(filename.lastIndexOf('.'), filename.length);
-      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${bitmark.asset.id}_downloaded_${iCloudFilename}`)
+      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
     } else {
       let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
-      let iCloudFilename = 'asset-file' + list[0].substring(list[0].lastIndexOf('.'), list[0].length);
-      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${bitmark.asset.id}_downloaded_${iCloudFilename}`)
+      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${list[0]}`);
     }
 
     // Create thumbnail if not exist

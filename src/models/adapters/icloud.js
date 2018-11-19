@@ -4,14 +4,6 @@ const iCloudSyncNative = NativeModules.iCloudSync;
 const iCloudSyncNativeEmitter = new NativeEventEmitter(iCloudSyncNative);
 
 const iCloudSyncAdapter = {
-  uploadToCloud: (folderPath) => {
-    return new Promise((resolve) => {
-      iCloudSyncNative.uploadToCloud(folderPath, (ok) => {
-        console.log('upload to cloud result:', ok);
-      });
-      resolve();
-    });
-  },
   uploadFileToCloud: (filePath, key) => {
     console.log('uploadFileToCloud :', filePath, key);
     return new Promise((resolve) => {

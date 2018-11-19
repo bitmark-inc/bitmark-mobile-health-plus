@@ -6,6 +6,7 @@ import {
 } from '../models';
 import { FileUtil, getLocalAssetsFolderPath } from '../utils';
 import iCloudSyncAdapter from '../models/adapters/icloud';
+import base58 from 'bs58';
 
 let allDataTypes = [
   'ActiveEnergyBurned',
@@ -380,8 +381,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
 
     let listFile = await FileUtil.readDir(downloadedFolder);
 
-    let iCloudFilename = 'asset-file' + listFile[0].substring(listFile[0].lastIndexOf('.'), listFile[0].length);
-    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_assets_${issueResult.assetId}_downloaded_${iCloudFilename}`);
+    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_${base58.encode(new Buffer(issueResult.assetId, 'hex'))}_${listFile[0]}`);
 
     let encryptedAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
     await FileUtil.mkdir(encryptedAssetFolder);
