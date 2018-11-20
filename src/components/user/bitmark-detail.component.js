@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 60,
+    height: 54,
     width: '100%',
     borderBottomColor: '#FF4444', borderBottomWidth: 1,
   },
@@ -257,11 +257,11 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     flex: 1,
     fontSize: 24,
-    marginTop: 18,
+    marginTop: 12,
   },
   closeButton: {
     height: '100%',
-    paddingRight: convertWidth(8),
+    paddingRight: convertWidth(10),
     paddingLeft: convertWidth(15),
     alignItems: 'center', justifyContent: 'center',
   },

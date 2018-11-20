@@ -289,7 +289,8 @@
     "TaggingComponent_tags": "TaggingComponent_tags",
     "TaggingComponent_existingTags": "TaggingComponent_existingTags",
     "TaggingComponent_noTags": "TaggingComponent_noTags",
-    "TaggingComponent_addTags": "TaggingComponent_addTags"
+    "TaggingComponent_addTags": "TaggingComponent_addTags",
+    "TaggingComponent_enterATag": "TaggingComponent_enterATag"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -581,7 +582,8 @@
     "TaggingComponent_tags": "Tags",
     "TaggingComponent_existingTags": "Existing tags",
     "TaggingComponent_noTags": "You don’t have any tags now, tap to start adding.",
-    "TaggingComponent_addTags": "add tags"
+    "TaggingComponent_addTags": "add tags",
+    "TaggingComponent_enterATag": "Enter a tag"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "沒有網路連線",
@@ -873,7 +875,8 @@
     "TaggingComponent_tags": "標籤",
     "TaggingComponent_existingTags": "現有標籤",
     "TaggingComponent_noTags": "目前尚無任何標籤。",
-    "TaggingComponent_addTags": "新增標籤"
+    "TaggingComponent_addTags": "新增標籤",
+    "TaggingComponent_enterATag": "TaggingComponent_enterATag"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -1165,6 +1168,7 @@
     "TaggingComponent_tags": "Thẻ",
     "TaggingComponent_existingTags": "Thẻ hiện có",
     "TaggingComponent_noTags": "Bạn chưa có thẻ nào, chạm để gắn thẻ",
-    "TaggingComponent_addTags": "Thêm thẻ"
+    "TaggingComponent_addTags": "Thêm thẻ",
+    "TaggingComponent_enterATag": "Tạo thẻ"
   }
 }

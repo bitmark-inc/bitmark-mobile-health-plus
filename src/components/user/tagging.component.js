@@ -200,6 +200,7 @@ export class TaggingComponent extends Component {
                     onBlur={() => {this.setState({tag: ''})}}
                     onChangeText={(text) => {this.onChangeText.bind(this)(text)}}
                     onSubmitEditing={this.hideInputTag.bind(this)}
+                    placeholder={global.i18n.t("TaggingComponent_enterATag")}
                   />
 
                   {/*SUBMIT TAG*/}
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
-    fontWeight: '700',
+    fontWeight: '400',
     flex: 1,
     fontSize: 24,
     marginTop: 8,
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
   closeButton: {
     paddingTop: convertWidth(14),
     paddingBottom: convertWidth(14),
-    paddingRight: convertWidth(23)
+    paddingRight: convertWidth(10)
   },
   closeIcon: {
     width: convertWidth(21),
@@ -372,6 +373,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '300',
     padding: 5,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
   addTagIcon: {
     width: 31,
