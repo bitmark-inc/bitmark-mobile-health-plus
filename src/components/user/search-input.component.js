@@ -20,8 +20,11 @@ export class SearchInputComponent extends Component {
     this.state = {
       searchTerm: this.props.value || '',
       inputFocus: props.inputFocus,
+      focusing: false,
     };
-    this._keyboardDidHide = this._keyboardDidHide.bind(this)
+    this._keyboardDidHide = this._keyboardDidHide.bind(this);
+
+    this.searchInput = null;
   }
 
   UNSAFE_componentWillMount() {
@@ -30,6 +33,15 @@ export class SearchInputComponent extends Component {
 
   componentWillUnmount() {
     this.keyboardDidHideListener.remove();
+  }
+
+  onFocus() {
+    this.setState({focusing: true});
+    this.props.setSearchFocus(true);
+  }
+
+  onBlur() {
+    this.props.setSearchFocus(false);
   }
 
   _keyboardDidHide() {
@@ -48,9 +60,12 @@ export class SearchInputComponent extends Component {
           {/*SEARCH INPUT*/}
           <TextInput
             style={styles.textInput}
+            ref={(input) =>  this.searchInput = input}
             onChangeText={(term) => this.updateSearch(term)}
             returnKeyType={this.props.returnKeyType}
             onSubmitEditing={this.props.onSubmitEditing}
+            onFocus={this.onFocus.bind(this)}
+            onBlur={this.onBlur.bind(this)}
             placeholder={this.props.placeholder}
             autoCorrect={false}
             autoCapitalize={'none'}
@@ -58,15 +73,31 @@ export class SearchInputComponent extends Component {
             value={this.state.searchTerm}
           >
           </TextInput>
-        </View>
 
-        {/*CANCEL BUTTON*/}
-        {this.state && this.state.searchTerm
-          ? <View style={styles.clearButtonContainer}>
-            <TouchableOpacity onPress={() => {
+          {/*CLOSE BUTTON*/}
+          {this.state && this.state.searchTerm
+            ? <TouchableOpacity onPress={() => {
               this.props.onSearchTermChange('');
               this.setState({
                 searchTerm: ''
+              })
+            }}>
+              <Image style={styles.searchCloseIcon} source={require('../../../assets/imgs/search-close-icon.png')}/>
+            </TouchableOpacity>
+            : null
+          }
+        </View>
+
+        {/*CANCEL BUTTON*/}
+        {this.state && this.state.focusing
+          ? <View style={styles.clearButtonContainer}>
+            <TouchableOpacity onPress={() => {
+              this.props.onSearchTermChange('');
+              this.props.setSearchFocus(false);
+              this.searchInput.blur();
+              this.setState({
+                searchTerm: '',
+                focusing: false
               })
             }}>
               <Text style={styles.clearButtonText}>{global.i18n.t("SearchInputComponent_cancel")}</Text>
@@ -111,6 +142,13 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
+  searchCloseIcon: {
+    width: 15,
+    height: 15,
+    resizeMode: 'contain',
+    marginRight: 5,
+  },
+
   searchIcon: {
     width: 13,
     height: 13,
@@ -141,6 +179,7 @@ SearchInputComponent.propTypes = {
   style: PropTypes.object,
   inputFocus: PropTypes.bool,
   onSearchTermChange: PropTypes.func,
+  setSearchFocus: PropTypes.func,
   returnKeyType: PropTypes.func,
   onSubmitEditing: PropTypes.func,
   throttle: PropTypes.number,
