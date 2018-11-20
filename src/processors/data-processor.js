@@ -651,6 +651,18 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     }
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
+    if (userBitmarks) {
+      (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).forEach(bitmark => {
+        if (bitmark.asset.filePath) {
+          let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
+          iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
+        }
+        if (bitmark.thumbnail && bitmark.thumbnail.path) {
+          let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
+          iCloudSyncAdapter.uploadFileToCloud(bitmark.thumbnail.path, `${userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
+        }
+      });
+    }
 
     if (!grantedAccessAccountSelected && !userInformation.activeHealthData &&
       userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
