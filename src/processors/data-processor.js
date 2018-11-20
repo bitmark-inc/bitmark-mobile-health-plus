@@ -189,7 +189,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     };
 
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
-      let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
+      let userBitmarks = (await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {};
 
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       for (let bitmark of bitmarks) {
@@ -213,12 +213,13 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           if (isHealthAssetBitmark(asset)) {
             asset.filePath = await detectLocalAssetFilePath(asset.id);
             if (!existOldFile && asset.filePath) {
-              let data = await FileUtil.readFile(asset.filePath);
-              await insertHealthDataToIndexedDB(bitmark.id, {
-                assetMetadata: asset.metadata,
-                assetName: asset.name,
-                data,
-              });
+              if (isImageFile(asset.filePath)) {
+                let detectResult = await populateAssetNameFromImage(asset.filePath, asset.name);
+                await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
+              } else if (isPdfFile(asset.filePath)) {
+                let detectResult = await populateAssetNameFromPdf(asset.filePath, asset.name);
+                await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
+              }
             }
             bitmark.asset = asset;
             bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
