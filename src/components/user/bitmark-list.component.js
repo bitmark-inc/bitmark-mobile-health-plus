@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 60,
+    height: 54,
     width: '100%',
     borderBottomColor: '#FF4444', borderBottomWidth: 1,
   },
@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
+    marginTop: 6,
     flex: 1,
   },
   closeButton: {

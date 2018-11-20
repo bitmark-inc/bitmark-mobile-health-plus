@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   closeButton: {
     height: '100%',
     paddingRight: convertWidth(10),
-    paddingLeft: convertWidth(15),
+    paddingLeft: convertWidth(10),
     alignItems: 'center', justifyContent: 'center',
   },
   closeIcon: {
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   },
   taggingButton: {
     height: '100%',
-    paddingLeft: convertWidth(15),
+    paddingLeft: convertWidth(10),
     alignItems: 'center', justifyContent: 'center',
   },
   taggingButtonForPending: {
