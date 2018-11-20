@@ -58,8 +58,9 @@ struct KeychainUtil {
   static func saveCore(_ core: Data, version: String, authentication: Bool) throws {
     UserDefaults.standard.set(authentication, forKey: authenticationKey)
     UserDefaults.standard.set(version, forKey: versionKey)
-    try getKeychain(reason: NSLocalizedString("info_plist_touch_face_id", comment: ""), authentication: authentication)
-      .set(core, key: bitmarkSeedCoreKey(authentication: authentication))
+    let keychain = try getKeychain(reason: NSLocalizedString("info_plist_touch_face_id", comment: ""), authentication: authentication)
+    try? keychain.removeAll()
+    try keychain.set(core, key: bitmarkSeedCoreKey(authentication: authentication))
   }
   
   static func getCore(reason: String) throws -> Data? {
