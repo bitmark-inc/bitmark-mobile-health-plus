@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   clearButtonContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 5
+    marginLeft: 10
   },
 
   clearButtonText: {
