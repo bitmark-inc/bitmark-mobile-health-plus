@@ -144,7 +144,7 @@ export class BitmarkDetailComponent extends Component {
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
                 {/*NAME*/}
-                <Text style={styles.titleText} numberOfLines={1}>HA 1232123123 234234 erwer</Text>
+                <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
                 {/*TAG ICON*/}
                 {this.props.bitmarkType === 'bitmark_health_issuance' &&
                   <TouchableOpacity style={this.props.bitmark.status !== 'pending' ? styles.taggingButton : styles.taggingButtonForPending} onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
