@@ -22,7 +22,6 @@ class BitmarkSDK: NSObject {
       let network = BitmarkSDK.networkWithName(name: network)
       let account = try Account(version: BitmarkSDK.versionFromString(version), network: network)
       try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDK.stringFromVersion(account.seed.version), authentication: authentication)
-      _ = try? account.registerPublicEncryptionKey()
       let sessionId = AccountSession.shared.addSessionForAccount(account)
       callback([true, sessionId])
     }
@@ -41,13 +40,19 @@ class BitmarkSDK: NSObject {
     }
   }
   
-  @objc(newAccountFromPhraseWords::::)
-  func newAccountFromPhraseWords(_ pharse: [String], _ network: String, _ authentication: Bool, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(newAccountFromPhraseWords:::::)
+  func newAccountFromPhraseWords(_ pharse: [String], language: String, _ network: String, _ authentication: Bool, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+    let lang: RecoveryLanguage
+    if language == "chinese" {
+      lang = .chineseTraditional
+    } else {
+      lang = .english
+    }
     do {
       let network = BitmarkSDK.networkWithName(name: network)
-      let account = try Account(recoverPhrase: pharse)
+      let account = try Account(recoverPhrase: pharse, language: .english)
       
-      if account.accountNumber.network != network {
+      if account.accountNumber. != network {
         callback([false])
         return
       }

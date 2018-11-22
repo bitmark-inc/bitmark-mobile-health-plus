@@ -16,37 +16,17 @@ public struct KeyType {
     public let seedLength: Int
 }
 
+public enum Network: Int {
+    case livenet = 0x00
+    case testnet = 0x01
+}
+
 public extension KeyType {
     public static let ed25519 = KeyType(name: "ed25519",
                                         value: 0x01,
                                         publicLength: 32,
                                         privateLength: 64,
                                         seedLength: 32)
-}
-
-public struct Network: APIEndpoint {
-    public let name: String
-    public let addressValue: Int
-    
-    private(set) var apiServerURL: URL
-    private(set) var assetServerURL: URL
-    
-    public mutating func setEndpoint(api: URL, asset: URL) {
-        self.apiServerURL = api
-        self.assetServerURL = asset
-    }
-}
-
-public extension Network {
-    public static let livenet = Network(name: "livenet",
-                                        addressValue: 0x00,
-                                        apiServerURL: URL(string: "https://api.bitmark.com")!,
-                                        assetServerURL: URL(string: "https://bitmarkaccountassets.com")!)
-    
-    public static let testnet = Network(name: "testnet",
-                                        addressValue: 0x01,
-                                        apiServerURL: URL(string: "https://api.test.bitmark.com")!,
-                                        assetServerURL: URL(string: "https://test.bitmarkaccountassets.com")!)
 }
 
 public struct Config {

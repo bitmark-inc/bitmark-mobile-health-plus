@@ -8,6 +8,11 @@
 
 import Foundation
 
+public enum RecoveryLanguage {
+    case english
+    case chineseTraditional
+}
+
 public struct RecoverPhrase {
     
     public enum RecoverPhraseError: Error {
@@ -15,10 +20,12 @@ public struct RecoverPhrase {
         case wordNotFound
     }
     
+
+    
     internal static let masks: [UInt64] = [0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023]
     
     public struct V1 {
-        public static func createPhrase(fromData data: Data) throws -> [String] {
+        public static func createPhrase(fromData data: Data, language: RecoveryLanguage) throws -> [String] {
             if data.count != 33 {
                 throw(RecoverPhraseError.invalidLength)
             }
@@ -37,7 +44,7 @@ public struct RecoverPhrase {
                     
                     let index = accumulator >> bits
                     accumulator &= masks[Int(bits)]
-                    let word = bip39Words[Int(index)]
+                    let word = bip39Word(index: Int(index), language: language)
                     
                     phrases.append(word)
                 }
@@ -50,7 +57,7 @@ public struct RecoverPhrase {
             return phrases
         }
         
-        public static func recoverSeed(fromPhrase phrases:[String]) throws -> Data {
+        public static func recoverSeed(fromPhrase phrases:[String], language: RecoveryLanguage) throws -> Data {
             if phrases.count != 24 {
                 throw RecoverPhraseError.invalidLength
             }
@@ -62,7 +69,7 @@ public struct RecoverPhrase {
             
             for i in 0..<phrases.count {
                 let word = phrases[i]
-                guard let n = RecoverPhrase.bip39Words.index(of: word) else {
+                guard let n = indexOfWord(word, language: language) else {
                     throw(RecoverPhraseError.wordNotFound)
                 }
                 
@@ -83,7 +90,7 @@ public struct RecoverPhrase {
     }
     
     public struct V2 {
-        public static func createPhrase(fromData data: Data) throws -> [String] {
+        public static func createPhrase(fromData data: Data, language: RecoveryLanguage) throws -> [String] {
             if data.count != Config.SeedConfigV2.seedLength {
                 throw(RecoverPhraseError.invalidLength)
             }
@@ -107,7 +114,7 @@ public struct RecoverPhrase {
                     
                     let index = accumulator >> bits
                     accumulator &= masks[Int(bits)]
-                    let word = bip39Words[Int(index)]
+                    let word = bip39Word(index: Int(index), language: language)
                     
                     phrases.append(word)
                 }
@@ -120,7 +127,7 @@ public struct RecoverPhrase {
             return phrases
         }
         
-        public static func recoverSeed(fromPhrase phrases:[String]) throws -> Data {
+        public static func recoverSeed(fromPhrase phrases:[String], language: RecoveryLanguage) throws -> Data {
             if phrases.count != 12 {
                 throw RecoverPhraseError.invalidLength
             }
@@ -132,7 +139,7 @@ public struct RecoverPhrase {
             
             for i in 0..<phrases.count {
                 let word = phrases[i]
-                guard let n = RecoverPhrase.bip39Words.index(of: word) else {
+                guard let n = indexOfWord(word, language: language) else {
                     throw(RecoverPhraseError.wordNotFound)
                 }
                 

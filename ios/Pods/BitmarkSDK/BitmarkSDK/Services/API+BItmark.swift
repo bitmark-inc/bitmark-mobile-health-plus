@@ -1,5 +1,5 @@
 //
-//  API+BItmark.swift
+//  API+Bitmark.swift
 //  BitmarkSDK
 //
 //  Created by Anh Nguyen on 1/25/18.
@@ -8,48 +8,50 @@
 
 import Foundation
 
-struct BitmarkInfo {
-    let headId: String
-    let owner: String
-    let id: String
-    let issuer: String
-}
-
-extension BitmarkInfo: Codable {
-    enum BitmarkInfoKeys: String, CodingKey {
-        case headId = "head_id"
-        case owner = "owner"
-        case id = "id"
-        case issuer = "issuer"
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: BitmarkInfoKeys.self)
-        self.init(headId: try container.decode(String.self, forKey: BitmarkInfoKeys.headId),
-                  owner:  try container.decode(String.self, forKey: BitmarkInfoKeys.owner),
-                  id:  try container.decode(String.self, forKey: BitmarkInfoKeys.id),
-                  issuer:  try container.decode(String.self, forKey: BitmarkInfoKeys.issuer))
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: BitmarkInfoKeys.self)
-        try container.encode(self.headId, forKey: .headId)
-        try container.encode(self.owner, forKey: .owner)
-        try container.encode(self.id, forKey: .id)
-        try container.encode(self.issuer, forKey: .issuer)
-    }
-}
+//extension API {
+//    internal func bitmarkInfo(bitmarkId: String) throws -> BitmarkInfo? {
+//        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v1/bitmarks/" + bitmarkId)
+//
+//        var urlRequest = URLRequest(url: requestURL)
+//        urlRequest.httpMethod = "GET"
+//
+//        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
+//
+//        let dic = try JSONDecoder().decode([String: BitmarkInfo].self, from: data)
+//        return dic["bitmark"]
+//    }
+//}
 
 extension API {
-    internal func bitmarkInfo(bitmarkId: String) throws -> BitmarkInfo? {
-        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v1/bitmarks/" + bitmarkId)
-        
-        var urlRequest = URLRequest(url: requestURL)
-        urlRequest.httpMethod = "GET"
-        
+    struct BitmarkQueryResponse: Codable {
+        let bitmark: Bitmark
+    }
+    
+    struct BitmarksQueryResponse: Codable {
+        let bitmarks: [Bitmark]
+        let assets: [Asset]?
+    }
+    
+    internal func get(bitmarkID: String) throws -> Bitmark {
+        var urlComponents = URLComponents(url: endpoint.apiServerURL.appendingPathComponent("/v3/bitmarks/" + bitmarkID), resolvingAgainstBaseURL: false)!
+        urlComponents.queryItems = [URLQueryItem(name: "pending", value: "true")]
+        let urlRequest = URLRequest(url: urlComponents.url!)
         let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
         
-        let dic = try JSONDecoder().decode([String: BitmarkInfo].self, from: data)
-        return dic["bitmark"]
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full)
+        let result = try decoder.decode(BitmarkQueryResponse.self, from: data)
+        return result.bitmark
+    }
+    
+    internal func listBitmark(builder: Bitmark.QueryParam) throws -> ([Bitmark], [Asset]?) {
+        let requestURL = builder.buildURL(baseURL: endpoint.apiServerURL, path: "/v3/bitmarks")
+        let urlRequest = URLRequest(url: requestURL)
+        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full)
+        let result = try decoder.decode(BitmarksQueryResponse.self, from: data)
+        return (result.bitmarks, result.assets)
     }
 }
