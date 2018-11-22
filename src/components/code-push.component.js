@@ -18,10 +18,15 @@ export class CodePushComponent extends React.Component {
     };
 
     codePush.checkForUpdate().then((needUpdate) => {
-      DataProcessor.setCodePushUpdated(!needUpdate)
+      DataProcessor.setCodePushUpdated(!needUpdate);
+    }).catch(error => {
+      DataProcessor.setCodePushUpdated(true);
+      console.log('checkForUpdate error :', error);
     });
     codePush.getCurrentPackage().then(updateInfo => {
       console.log('current package :', updateInfo);
+    }).catch(error => {
+      console.log('getCurrentPackage error :', error);
     });
   }
 

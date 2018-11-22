@@ -18,7 +18,7 @@ export class WhatNew_S51_Component extends Component {
   constructor(props) {
     super(props);
     // let releaseDate = moment('', 'DD-MM-YYYY');
-    let releaseDate = moment('01-11-2018', 'DD-MM-YYYY');
+    let releaseDate = moment('22-11-2018', 'DD-MM-YYYY');
     let diffDay = moment().diff(releaseDate, 'days');
     this.state = {
       step: 1,
@@ -68,17 +68,17 @@ export class WhatNew_S51_Component extends Component {
                   </View>
                 </View>
 
-                <View style={styles.newContentSwipePage}>
+                {/* <View style={styles.newContentSwipePage}>
                   <Image style={styles.newSwipeImage} source={require('./../../../../assets/imgs/s51_new_3.png')} />
                   <View style={styles.newSwipeInformationArea}>
                     <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description3')}</Text>
                   </View>
-                </View>
+                </View> */}
               </Swiper>
-              {this.state.index < 2 && <TouchableOpacity style={styles.skipButton} onPress={() => this.setState({ step: 2 })}>
+              {this.state.index < 1 && <TouchableOpacity style={styles.skipButton} onPress={() => this.setState({ step: 2 })}>
                 <Text style={styles.skipButtonText}>{i18n.t('WhatNew_S51_Component_skipButtonText')}</Text>
               </TouchableOpacity>}
-              {this.state.index === 2 && <TouchableOpacity style={styles.doneButton} onPress={() => this.setState({ step: 2 })}>
+              {this.state.index === 1 && <TouchableOpacity style={styles.doneButton} onPress={() => this.setState({ step: 2 })}>
                 <Text style={styles.doneButtonText}>{i18n.t('WhatNew_S51_Component_doneButtonText')}</Text>
               </TouchableOpacity>}
             </View>
