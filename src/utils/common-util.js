@@ -6,7 +6,6 @@ import RNTextDetector from "../models/adapters/react-native-text-detector";
 import PDFScanner from "../models/adapters/pdf-scanner";
 import DeviceInfo from "react-native-device-info/deviceinfo";
 import i18n from "i18n-js";
-import { intersection } from "lodash";
 import { runPromiseWithoutError } from "./helper";
 import ImageResizer from 'react-native-image-resizer';
 import { flatten } from 'lodash';
@@ -385,16 +384,16 @@ const getThumbnail = (bitmarkId, isCombineFile) => {
 };
 
 const isFileRecord = (bitmark) => {
-  return bitmark.asset.metadata.Source === 'Medical Records'
+  return bitmark.asset && bitmark.asset.metadata && bitmark.asset.metadata.Source === 'Medical Records';
 };
 const isCaptureDataRecord = (bitmark) => {
-  return bitmark.asset.metadata.Source === 'Health Records'
+  return bitmark.asset && bitmark.asset.metadata && bitmark.asset.metadata.Source === 'Health Records';
 };
 const isHealthDataRecord = (bitmark) => {
-  return bitmark.asset.metadata.Source === 'HealthKit'
+  return bitmark.asset && bitmark.asset.metadata && bitmark.asset.metadata.Source === 'HealthKit';
 };
 const isAssetDataRecord = (bitmark) => {
-  return isCaptureDataRecord(bitmark) || isFileRecord(bitmark)
+  return isCaptureDataRecord(bitmark) || isFileRecord(bitmark);
 };
 
 const getImageSize = async (imageFilePath) => {
