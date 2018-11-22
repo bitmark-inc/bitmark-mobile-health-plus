@@ -305,7 +305,7 @@ const doGetDataSources = async () => {
 
 let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
   let folderPath = FileUtil.CacheDirectory + '/' + userId;
-  let assetFilename = prefix + '_' + userId + '_' + date.toString() + '_' + randomId;
+  let assetFilename = prefix + '_' + userId + '_' + date.toISOString() + '_' + randomId;
   let assetFolder = folderPath + '/' + assetFilename;
 
   let filename = assetFilename + '.txt';
