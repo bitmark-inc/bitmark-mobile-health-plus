@@ -647,6 +647,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
 const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
+  updateModal(mapModalDisplayKeyIndex.weekly_health_data);
   await runGetUserBitmarksInBackground();
 
   let appInfo = await doGetAppInformation();
