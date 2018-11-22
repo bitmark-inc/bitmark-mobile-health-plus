@@ -24,6 +24,11 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(uploadFileToCloud:(NSString *)filePath:(NSString *)iCloudKey:(RCTResponseSenderBlock)callback)
 {
+  // Ignore the case that file
+  if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+    callback(@[@YES]);
+    return;
+  }
   [[iCloud sharedCloud] saveAndCloseDocumentWithName:iCloudKey withContent:[NSData dataWithContentsOfFile:filePath] completion:^(UIDocument *cloudDocument, NSData *documentData, NSError *error) {
     if (error) {
       callback(@[@NO, error.description]);
