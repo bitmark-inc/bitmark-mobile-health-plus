@@ -651,7 +651,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     }
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
-    if (userBitmarks) {
+    if (userBitmarks && didMigrationFileToLocalStorage) {
       (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).forEach(bitmark => {
         if (bitmark.asset.filePath) {
           let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);

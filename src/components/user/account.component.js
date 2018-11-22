@@ -19,11 +19,11 @@ import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 // import { EventEmitterService } from '../../services';
 import {
-  DataProcessor, AppProcessor,
+  DataProcessor,
   // AppProcessor
 } from '../../processors';
 import { DataAccountAccessesStore } from '../../stores';
-import { EventEmitterService } from '../../services';
+// import { EventEmitterService } from '../../services';
 export class PrivateAccountComponent extends Component {
   static propTypes = {
     accesses: PropTypes.shape({
