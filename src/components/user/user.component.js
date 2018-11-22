@@ -311,6 +311,10 @@ class PrivateUserComponent extends Component {
     });
   }
 
+  setSearchFocus(searchFocusing) {
+    this.setState({searchFocusing});
+  }
+
   render() {
     // let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
     let accountNumberDisplay = DataProcessor.getUserInformation().bitmarkAccountNumber;
@@ -335,6 +339,7 @@ class PrivateUserComponent extends Component {
 
                 this.updateSearch(searchTerm);
               }}
+              setSearchFocus={this.setSearchFocus.bind(this)}
               style={styles.searchInput}
               placeholder={global.i18n.t("UserComponent_search")}>
             </SearchInputComponent>
@@ -346,6 +351,12 @@ class PrivateUserComponent extends Component {
             }
             {(this.props.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} /> : null}
           </View>
+
+          {/*SEARCH COVER*/}
+          {this.state.searchFocusing && !this.props.searchTerm &&
+            <View style={styles.searchCover}>
+            </View>
+          }
 
           {/*DATA PANEL*/}
           {!this.props.searchTerm && <View style={styles.body}>
@@ -419,6 +430,14 @@ const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  searchCover: {
+    position: 'absolute',
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    marginTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0) + 34 + convertWidth(14),
+    backgroundColor: 'rgba(232, 232, 232, 1.0)',
   },
   searchArea: {
     paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0)

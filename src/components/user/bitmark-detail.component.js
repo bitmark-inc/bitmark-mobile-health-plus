@@ -152,7 +152,7 @@ export class BitmarkDetailComponent extends Component {
                   </TouchableOpacity>
                 }
                 {/*DELETE ICON*/}
-                {this.props.bitmark.status !== 'pending' && this.props.bitmarkType === 'bitmark_health_issuance' && <TouchableOpacity style={styles.closeButton} onPress={this.deleteBitmark.bind(this)}>
+                {this.props.bitmark.status !== 'pending' && this.props.bitmarkType === 'bitmark_health_issuance' && <TouchableOpacity style={styles.deleteButton} onPress={this.deleteBitmark.bind(this)}>
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/delete_icon_red.png')} />
                 </TouchableOpacity>}
               </View>
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 60,
+    height: 54,
     width: '100%',
     borderBottomColor: '#FF4444', borderBottomWidth: 1,
   },
@@ -257,11 +257,17 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     flex: 1,
     fontSize: 24,
-    marginTop: 18,
+    marginTop: 12,
   },
   closeButton: {
     height: '100%',
-    paddingRight: convertWidth(8),
+    paddingRight: convertWidth(10),
+    paddingLeft: convertWidth(15),
+    alignItems: 'center', justifyContent: 'center',
+  },
+  deleteButton: {
+    height: '100%',
+    paddingRight: convertWidth(20),
     paddingLeft: convertWidth(15),
     alignItems: 'center', justifyContent: 'center',
   },
@@ -277,7 +283,7 @@ const styles = StyleSheet.create({
   },
   taggingButtonForPending: {
     height: '100%',
-    paddingRight: convertWidth(8),
+    paddingRight: convertWidth(20),
     paddingLeft: convertWidth(15),
     alignItems: 'center', justifyContent: 'center',
   },

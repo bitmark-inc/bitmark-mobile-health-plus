@@ -173,19 +173,20 @@ const styles = StyleSheet.create({
   },
   bitmarkItemContainer: {
     padding: 8,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   bitmarkItem: {
     borderBottomWidth: 0.3,
     borderBottomColor: '#999999',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingTop: 8,
     paddingBottom: 8,
   },
   bitmarkLastItem: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingTop: 8,
+    paddingBottom: 8,
   },
   bitmarkThumbnail: {
     width: 60,
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     backgroundColor: '#ECECEC',
     marginRight: 10,
-    marginTop: 10
+    marginTop: 13
   },
   taggingItem: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
