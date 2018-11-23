@@ -70,7 +70,6 @@
 		5805EE0F216F31B900943FA5 /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
 		5805EE10216F31B900943FA5 /* RCTAppleHealthKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FE205FB45500937D78 /* RCTAppleHealthKit.m */; };
 		5805EE11216F31B900943FA5 /* HKSourceRevision+Exporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE204205FB45500937D78 /* HKSourceRevision+Exporting.m */; };
-		5805EE12216F31B900943FA5 /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
 		5805EE13216F31B900943FA5 /* RCTAppleHealthKit+Methods_Fitness.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EB205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m */; };
 		5805EE16216F31B900943FA5 /* RCTAppleHealthKit+Methods_Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F6205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m */; };
 		5805EE18216F31B900943FA5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -109,7 +108,6 @@
 		5805EE45216F31B900943FA5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5805EE46216F31B900943FA5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		580FF1522146345A00B36DE7 /* Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 580FF1512146345A00B36DE7 /* Info-dev.plist */; };
-		58400A98202C013C00550ADB /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
 		58557E6B2062041C00402734 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58557E6A2062041C00402734 /* HealthKit.framework */; };
 		586D2E2521671BFA002A84B5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 586D2DE821671BFA002A84B5 /* Localizable.strings */; };
 		586D2E2621671BFA002A84B5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 586D2DE821671BFA002A84B5 /* Localizable.strings */; };
@@ -173,7 +171,6 @@
 		58908A9B20A18A5A00C0064A /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
 		58908A9C20A18A5A00C0064A /* RCTAppleHealthKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1FE205FB45500937D78 /* RCTAppleHealthKit.m */; };
 		58908A9D20A18A5A00C0064A /* HKSourceRevision+Exporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE204205FB45500937D78 /* HKSourceRevision+Exporting.m */; };
-		58908A9E20A18A5A00C0064A /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58400A97202C013C00550ADB /* AccountSession.swift */; };
 		58908A9F20A18A5A00C0064A /* RCTAppleHealthKit+Methods_Fitness.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1EB205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m */; };
 		58908AA220A18A5A00C0064A /* RCTAppleHealthKit+Methods_Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 588FE1F6205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m */; };
 		58908AA420A18A5A00C0064A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -780,7 +777,6 @@
 		5805EE4F216F31B900943FA5 /* BitmarkHealthPlus beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitmarkHealthPlus beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		580FF1512146345A00B36DE7 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		5840099F20243AA700550ADB /* RNCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
-		58400A97202C013C00550ADB /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		5841D60721884A86006CDCA4 /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5841D64521884A96006CDCA4 /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5841D64721884AA3006CDCA4 /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1370,7 +1366,6 @@
 			isa = PBXGroup;
 			children = (
 				58CB4891201EC63A0058B364 /* KeychainUtil.swift */,
-				58400A97202C013C00550ADB /* AccountSession.swift */,
 			);
 			name = Keychain;
 			path = Bitmark/Keychain;
@@ -1792,6 +1787,7 @@
 					};
 					58908A7820A18A5A00C0064A = {
 						DevelopmentTeam = A52M7AQ8B2;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.iCloud = {
@@ -2764,7 +2760,6 @@
 				58CB4892201EC63A0058B364 /* KeychainUtil.swift in Sources */,
 				588FE255205FB45500937D78 /* RCTAppleHealthKit.m in Sources */,
 				588FE25B205FB45500937D78 /* HKSourceRevision+Exporting.m in Sources */,
-				58400A98202C013C00550ADB /* AccountSession.swift in Sources */,
 				588FE243205FB45500937D78 /* RCTAppleHealthKit+Methods_Fitness.m in Sources */,
 				588FE24D205FB45500937D78 /* RCTAppleHealthKit+Methods_Environment.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
@@ -2803,7 +2798,6 @@
 				5805EE0F216F31B900943FA5 /* KeychainUtil.swift in Sources */,
 				5805EE10216F31B900943FA5 /* RCTAppleHealthKit.m in Sources */,
 				5805EE11216F31B900943FA5 /* HKSourceRevision+Exporting.m in Sources */,
-				5805EE12216F31B900943FA5 /* AccountSession.swift in Sources */,
 				5805EE13216F31B900943FA5 /* RCTAppleHealthKit+Methods_Fitness.m in Sources */,
 				5805EE16216F31B900943FA5 /* RCTAppleHealthKit+Methods_Environment.m in Sources */,
 				5805EE18216F31B900943FA5 /* main.m in Sources */,
@@ -2842,7 +2836,6 @@
 				58908A9B20A18A5A00C0064A /* KeychainUtil.swift in Sources */,
 				58908A9C20A18A5A00C0064A /* RCTAppleHealthKit.m in Sources */,
 				58908A9D20A18A5A00C0064A /* HKSourceRevision+Exporting.m in Sources */,
-				58908A9E20A18A5A00C0064A /* AccountSession.swift in Sources */,
 				58908A9F20A18A5A00C0064A /* RCTAppleHealthKit+Methods_Fitness.m in Sources */,
 				58908AA220A18A5A00C0064A /* RCTAppleHealthKit+Methods_Environment.m in Sources */,
 				58908AA420A18A5A00C0064A /* main.m in Sources */,
@@ -3145,7 +3138,7 @@
 				PROVISIONING_PROFILE = "d33a3f18-e17d-4e43-9956-1ff9a756759f";
 				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Inhouse Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -3184,7 +3177,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d8d34896-37b2-42fb-8942-ad0b914f9b50";
 				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.inhouse";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
