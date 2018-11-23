@@ -51,6 +51,10 @@ public struct Account {
     
     public init(recoverPhrase phrases: [String], language: RecoveryLanguage) throws {
         let seed = try Seed.fromRecoveryPhrase(phrases, language: language)
+        if seed.network != globalConfig.network {
+            throw(SeedError.wrongNetwork)
+        }
+        
         try self.init(seed: seed)
     }
     
