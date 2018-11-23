@@ -6,7 +6,6 @@ import {
 import KeepAwake from 'react-native-keep-awake';
 
 import { EventEmitterService } from '../../services';
-import { convertWidth } from '../../utils';
 import { Actions } from 'react-native-router-flux';
 import { DataProcessor } from '../../processors';
 import { config } from '../../configs';
@@ -19,18 +18,21 @@ export class LocalStorageMigrationComponent extends React.Component {
       status: 'updating',
       progress: 0,
     };
+
+    setTimeout(() => {
+      KeepAwake.activate();
+      DataProcessor.doMigrateFilesToLocalStorage().then(() => {
+        KeepAwake.deactivate();
+      }).catch(error => {
+        KeepAwake.deactivate();
+        console.log('doMigrateFilesToLocalStorage error:', error);
+        EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+      });
+    }, 500);
   }
 
   componentDidMount() {
     EventEmitterService.on(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, this.handerProgress);
-    KeepAwake.activate();
-    DataProcessor.doMigrateFilesToLocalStorage().then(() => {
-      KeepAwake.deactivate();
-    }).catch(error => {
-      KeepAwake.deactivate();
-      console.log('doMigrateFilesToLocalStorage error:', error);
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-    });
   }
 
   componentWillUnmount() {
@@ -38,11 +40,13 @@ export class LocalStorageMigrationComponent extends React.Component {
   }
 
   handerProgress(progress) {
+    console.log({ progress });
     let status = this.state.status;
     if (progress === 100) {
       status = 'completed';
       setTimeout(() => {
         Actions.pop();
+        console.log('run1');
         DataProcessor.doMarkDoneMigration();
       }, 2000);
     }
