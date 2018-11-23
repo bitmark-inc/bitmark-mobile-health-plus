@@ -16,11 +16,12 @@ public struct Account {
     
     // MARK:- Basic init
     
-    public init() throws {
-        try self.init(network: globalConfig.network)
+    public init(version: SeedVersion = .v2) throws {
+        let seed = try Seed.fromBase58(network: globalConfig.network, version: version)
+        try self.init(seed: seed)
     }
     
-    public init(keyType: KeyType = KeyType.ed25519, version: SeedVersion = .v1, network: Network) throws {
+    public init(keyType: KeyType = KeyType.ed25519, version: SeedVersion = .v2, network: Network) throws {
         let seed = try Seed.fromBase58(network: network, version: version)
         try self.init(seed: seed)
     }
