@@ -380,23 +380,23 @@ const configNotification = () => {
     }
     if (!userInformation || !userInformation.bitmarkAccountNumber) {
       let appInfo = (await doGetAppInformation()) || {};
-      if (appInfo.notificationUUID !== notificationUUID) {
-        AccountService.doRegisterNotificationInfo(null, notificationUUID, appInfo.intercomUserId).then(() => {
-          userInformation.notificationUUID = notificationUUID;
-          return UserModel.doUpdateUserInfo(userInformation);
-        }).catch(error => {
-          console.log('DataProcessor doRegisterNotificationInfo error:', error);
-        });
-      }
+      // if (appInfo.notificationUUID !== notificationUUID) {
+      AccountService.doRegisterNotificationInfo(null, notificationUUID, appInfo.intercomUserId).then(() => {
+        userInformation.notificationUUID = notificationUUID;
+        return UserModel.doUpdateUserInfo(userInformation);
+      }).catch(error => {
+        console.log('DataProcessor doRegisterNotificationInfo error:', error);
+      });
+      // }
     } else {
-      if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-        AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, userInformation.intercomUserId).then(() => {
-          userInformation.notificationUUID = notificationUUID;
-          return UserModel.doUpdateUserInfo(userInformation);
-        }).catch(error => {
-          console.log('DataProcessor doRegisterNotificationInfo error:', error);
-        });
-      }
+      // if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
+      AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, userInformation.intercomUserId).then(() => {
+        userInformation.notificationUUID = notificationUUID;
+        return UserModel.doUpdateUserInfo(userInformation);
+      }).catch(error => {
+        console.log('DataProcessor doRegisterNotificationInfo error:', error);
+      });
+      // }
     }
   };
   const onReceivedNotification = async (notificationData) => {

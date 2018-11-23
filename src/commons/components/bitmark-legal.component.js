@@ -587,7 +587,8 @@ const styles = StyleSheet.create({
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
     fontSize: 16,
     color: '#FF4444',
-    width: 70,
+    textAlign: 'right',
+    paddingLeft: 10, paddingRight: 10,
   },
 
   legalContent: {
