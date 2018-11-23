@@ -370,7 +370,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     await FileUtil.mkdir(downloadedFolder);
     let list = await FileUtil.readDir(tempFolderDownloaded);
     for (let filename of list) {
-      await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
+      await FileUtil.moveFileSafe(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
     }
     await FileUtil.removeSafe(tempFolder);
 
