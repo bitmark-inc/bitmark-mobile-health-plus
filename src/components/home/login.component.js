@@ -389,6 +389,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingLeft: 3,
     paddingRight: 3,
+    flex: 1,
   },
   closeIcon: {
     width: convertWidth(21),
