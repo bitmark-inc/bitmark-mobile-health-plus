@@ -34,7 +34,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   BitmarkSDK:
-    :commit: ddfa8c67f5443ee4dda2857a0863f7152a12c01b
+    :commit: cac2b93178b9289e3d6475253d0290e1a4962de4
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
   TesseractOCRiOS:
     :commit: 14ff7d4e344d788b462ed993b56e94674df52ca9

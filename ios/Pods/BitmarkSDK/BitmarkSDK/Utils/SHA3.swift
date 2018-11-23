@@ -36,8 +36,8 @@ struct SHA3Compute {
     }
 }
 
-extension Data {
-    func sha3(length: Int) -> Data {
+public extension Data {
+    public func sha3(length: Int) -> Data {
         return SHA3Compute.computeSHA3(data: self, length: length)
     }
 }
