@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, View, TouchableOpacity, Text, SafeAreaView,
+  StyleSheet, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
 } from 'react-native';
 
 import { convertWidth } from '../../utils';
@@ -30,9 +30,11 @@ export class AssetNameInform extends Component {
             <View style={[styles.content]}>
               <Text style={[styles.headerText]}>{global.i18n.t("AssetNameInform_headerText")}</Text>
               <Text style={[styles.description]}>{global.i18n.t("AssetNameInform_description")}</Text>
-              {this.props.assetNames.map((assetName, index) => {
-                return <Text key={index} style={[styles.assetName]}>- {assetName}</Text>
-              })}
+              <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+                {this.props.assetNames.map((assetName, index) => {
+                  return <Text key={index} style={[styles.assetName]}>- {assetName}</Text>
+                })}
+              </ScrollView>
             </View>
             <View style={styles.lastBottomButtonArea}>
               <TouchableOpacity style={styles.lastBottomButton} onPress={this.gotoBitmarkList.bind(this)}>
