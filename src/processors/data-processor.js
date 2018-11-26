@@ -614,13 +614,15 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     AccountService.removeAllDeliveredNotifications();
     PushNotificationIOS.cancelAllLocalNotifications();
-    let dateNotification = HealthKitService.getNextSunday11AM();
-    PushNotificationIOS.scheduleLocalNotification({
-      fireDate: dateNotification.toDate(),
-      alertTitle: '',
-      alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
-      repeatInterval: 'week'
-    });
+    if (userInformation.activeHealthData) {
+      let dateNotification = HealthKitService.getNextSunday11AM();
+      PushNotificationIOS.scheduleLocalNotification({
+        fireDate: dateNotification.toDate(),
+        alertTitle: '',
+        alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
+        repeatInterval: 'week'
+      });
+    }
   } else if (!userInformation || !userInformation.bitmarkAccountNumber) {
     let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
     if (!appInfo.intercomUserId) {
