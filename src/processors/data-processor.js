@@ -1,3 +1,4 @@
+import { Linking, Alert } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Intercom from 'react-native-intercom';
 import moment from 'moment';
@@ -48,6 +49,7 @@ const mapModalDisplayKeyIndex = {
   what_new: 2,
   email_record: 3,
   weekly_health_data: 4,
+  update_alpha_app: 5,
 };
 let codePushUpdated = null;
 // let isDisplayingEmailRecord = false;
@@ -105,6 +107,16 @@ let checkDisplayModal = () => {
       } else if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && mountedRouter) {
         Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
         keyIndexModalDisplaying = keyIndex;
+        break;
+      } else if (keyIndex === mapModalDisplayKeyIndex.update_alpha_app) {
+        Alert.alert('Update', 'Alpha app have new update.\nPlease install and try it!', [{
+          text: 'Install', onPress: () => {
+            updateModal(mapModalDisplayKeyIndex.update_alpha_app);
+            Linking.openURL(mapModalDisplayData[keyIndex]);
+          }
+        }, {
+          text: 'Cancel', style: 'cancel'
+        }]);
         break;
       }
     }
@@ -408,8 +420,12 @@ const configNotification = () => {
     }
   };
   const onReceivedNotification = async (notificationData) => {
-    if (!notificationData.foreground && notificationData.data && notificationData.data.event === 'intercom_reply') {
-      setTimeout(() => { Intercom.displayConversationsList(); }, 2000);
+    if (!notificationData.foreground && notificationData.data) {
+      if (notificationData.data.event === 'intercom_reply') {
+        setTimeout(() => { Intercom.displayConversationsList(); }, 2000);
+      } else if (notificationData.data.event === 'open_url' && DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
+        Linking.openURL(notificationData.data.url);
+      }
     }
   };
   AccountService.configure(onRegistered, onReceivedNotification);
@@ -723,6 +739,17 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     }
 
     configNotification();
+  }
+
+  let appId = '';
+  let token = '';
+  let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
+  if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
+    let newestVersion = returnedData.app_versions[0].shortversion;
+    let url = returnedData.app_versions[0].download_url;
+    if (compareVersion(newestVersion, DeviceInfo.getVersion()) > 0) {
+      updateModal(mapModalDisplayKeyIndex.update_alpha_app, url);
+    }
   }
 
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
