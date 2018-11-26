@@ -98,11 +98,11 @@ let checkDisplayModal = () => {
         EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
         keyIndexModalDisplaying = keyIndex;
         break;
-      } if (keyIndex === mapModalDisplayKeyIndex.email_record && mountedRouter) {
+      } else if (keyIndex === mapModalDisplayKeyIndex.email_record && mountedRouter) {
         Actions.emailRecords(mapModalDisplayData[keyIndex]);
         keyIndexModalDisplaying = keyIndex;
         break;
-      } if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && mountedRouter) {
+      } else if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && mountedRouter) {
         Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
         keyIndexModalDisplaying = keyIndex;
         break;
@@ -131,7 +131,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   if ((grantedAccessAccountSelected && grantedAccessAccountSelected.grantor === bitmarkAccountNumber) ||
     (!grantedAccessAccountSelected && bitmarkAccountNumber === userInformation.bitmarkAccountNumber)) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
-    storeState.healthDataBitmarks = healthDataBitmarks;
+    storeState.healthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].healthDataBitmarks;
 
     storeState.healthAssetBitmarks = healthAssetBitmarks;
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
@@ -388,23 +388,23 @@ const configNotification = () => {
     }
     if (!userInformation || !userInformation.bitmarkAccountNumber) {
       let appInfo = (await doGetAppInformation()) || {};
-      // if (appInfo.notificationUUID !== notificationUUID) {
-      AccountService.doRegisterNotificationInfo(null, notificationUUID, appInfo.intercomUserId).then(() => {
-        userInformation.notificationUUID = notificationUUID;
-        return UserModel.doUpdateUserInfo(userInformation);
-      }).catch(error => {
-        console.log('DataProcessor doRegisterNotificationInfo error:', error);
-      });
-      // }
+      if (appInfo.notificationUUID !== notificationUUID) {
+        AccountService.doRegisterNotificationInfo(null, notificationUUID, appInfo.intercomUserId).then(() => {
+          userInformation.notificationUUID = notificationUUID;
+          return UserModel.doUpdateUserInfo(userInformation);
+        }).catch(error => {
+          console.log('DataProcessor doRegisterNotificationInfo error:', error);
+        });
+      }
     } else {
-      // if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-      AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, userInformation.intercomUserId).then(() => {
-        userInformation.notificationUUID = notificationUUID;
-        return UserModel.doUpdateUserInfo(userInformation);
-      }).catch(error => {
-        console.log('DataProcessor doRegisterNotificationInfo error:', error);
-      });
-      // }
+      if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
+        AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, userInformation.intercomUserId).then(() => {
+          userInformation.notificationUUID = notificationUUID;
+          return UserModel.doUpdateUserInfo(userInformation);
+        }).catch(error => {
+          console.log('DataProcessor doRegisterNotificationInfo error:', error);
+        });
+      }
     }
   };
   const onReceivedNotification = async (notificationData) => {
