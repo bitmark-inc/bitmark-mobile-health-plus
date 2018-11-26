@@ -120,7 +120,10 @@ let updateModal = (keyIndex, data) => {
 const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber) => {
   bitmarkAccountNumber = bitmarkAccountNumber || userInformation.bitmarkAccountNumber;
   let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
-  userDataBitmarks[bitmarkAccountNumber] = { healthDataBitmarks, healthAssetBitmarks };
+  userDataBitmarks[bitmarkAccountNumber] = {
+    healthDataBitmarks: (healthDataBitmarks || []).filter(b => b.owner === bitmarkAccountNumber),
+    healthAssetBitmarks
+  };
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
 
@@ -187,8 +190,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
 
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
       let userBitmarks = (await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {};
-      console.log('doGetAllBitmarks userBitmarks :', userBitmarks);
-
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       for (let bitmark of bitmarks) {
         let asset = assets.find(as => as.id === bitmark.asset_id);
@@ -196,37 +197,41 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           let oldBitmark = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).find(b => b.id === bitmark.id);
           let indexed = oldBitmark && oldBitmark.asset && oldBitmark.asset.indexed;
           if (isHealthDataBitmark(asset)) {
-            asset.filePath = await detectLocalAssetFilePath(asset.id);
-            if (!indexed && asset && asset.filePath) {
-              let data = await FileUtil.readFile(asset.filePath);
-              await insertHealthDataToIndexedDB(bitmark.id, {
-                assetMetadata: asset.metadata,
-                assetName: asset.name,
-                data,
-              });
-              indexed = true;
+            if (bitmark.owner === bitmarkAccountNumber) {
+              asset.filePath = await detectLocalAssetFilePath(asset.id);
+              if (!indexed && asset && asset.filePath) {
+                let data = await FileUtil.readFile(asset.filePath);
+                await insertHealthDataToIndexedDB(bitmark.id, {
+                  assetMetadata: asset.metadata,
+                  assetName: asset.name,
+                  data,
+                });
+                indexed = true;
+              }
+              asset.indexed = indexed;
             }
-            asset.indexed = indexed;
             bitmark.asset = asset;
             healthDataBitmarks.push(bitmark);
           }
           if (isHealthAssetBitmark(asset)) {
-            asset.filePath = await detectLocalAssetFilePath(asset.id);
-            if (!indexed && asset.filePath) {
-              if (isImageFile(asset.filePath)) {
-                let detectResult = await populateAssetNameFromImage(asset.filePath, asset.name);
-                await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
-                indexed = true;
-              } else if (isPdfFile(asset.filePath)) {
-                let detectResult = await populateAssetNameFromPdf(asset.filePath, asset.name);
-                await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
-                indexed = true;
+            if (bitmark.owner === bitmarkAccountNumber) {
+              asset.filePath = await detectLocalAssetFilePath(asset.id);
+              if (!indexed && asset.filePath) {
+                if (isImageFile(asset.filePath)) {
+                  let detectResult = await populateAssetNameFromImage(asset.filePath, asset.name);
+                  await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
+                  indexed = true;
+                } else if (isPdfFile(asset.filePath)) {
+                  let detectResult = await populateAssetNameFromPdf(asset.filePath, asset.name);
+                  await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
+                  indexed = true;
+                }
               }
+              asset.indexed = indexed;
+              bitmark.asset = asset;
+              bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
+              healthAssetBitmarks.push(bitmark);
             }
-            asset.indexed = indexed;
-            bitmark.asset = asset;
-            bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
-            healthAssetBitmarks.push(bitmark);
           }
         }
       }
