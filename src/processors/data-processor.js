@@ -28,7 +28,7 @@ import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
   checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf,
-  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId
+  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, checkAndSyncIndexedDataForBitmark, checkAndSyncTagForBitmark
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -212,6 +212,8 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
             }
             bitmark.asset = asset;
             healthDataBitmarks.push(bitmark);
+            await checkAndSyncIndexedDataForBitmark(bitmark);
+            await checkAndSyncTagForBitmark(bitmark);
           }
           if (isHealthAssetBitmark(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
@@ -231,6 +233,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               bitmark.asset = asset;
               bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
               healthAssetBitmarks.push(bitmark);
+              await checkAndSyncIndexedDataForBitmark(bitmark);
             }
           }
         }

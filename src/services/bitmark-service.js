@@ -82,7 +82,7 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
 
   let results = [];
   issueResult.bitmarkIds.forEach(id => {
-    results.push({ id, sessionData: issueResult.sessionData });
+    results.push({ id, sessionData: issueResult.sessionData, issueResult });
   });
   return results;
 };
