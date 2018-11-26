@@ -494,6 +494,14 @@ const doRequireHealthKitPermission = async () => {
   userInformation.activeHealthDataAt = moment().toDate().toISOString();
   await UserModel.doUpdateUserInfo(userInformation);
 
+  let dateNotification = HealthKitService.getNextSunday11AM();
+  PushNotificationIOS.scheduleLocalNotification({
+    fireDate: dateNotification.toDate(),
+    alertTitle: '',
+    alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
+    repeatInterval: 'week'
+  });
+
   let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
   if (emptyHealthKitData) {
     EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
