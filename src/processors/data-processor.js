@@ -190,37 +190,43 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
 
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
       let userBitmarks = (await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {};
+      console.log('doGetAllBitmarks userBitmarks :', userBitmarks);
 
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       for (let bitmark of bitmarks) {
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
           let oldBitmark = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).find(b => b.id === bitmark.id);
-          let existOldFile = oldBitmark && oldBitmark.asset && oldBitmark.asset.filePath;
+          let indexed = oldBitmark && oldBitmark.asset && oldBitmark.asset.indexed;
           if (isHealthDataBitmark(asset)) {
             asset.filePath = await detectLocalAssetFilePath(asset.id);
-            if (!existOldFile && asset.filePath) {
+            if (!indexed && asset && asset.filePath) {
               let data = await FileUtil.readFile(asset.filePath);
               await insertHealthDataToIndexedDB(bitmark.id, {
                 assetMetadata: asset.metadata,
                 assetName: asset.name,
                 data,
               });
+              indexed = true;
             }
+            asset.indexed = indexed;
             bitmark.asset = asset;
             healthDataBitmarks.push(bitmark);
           }
           if (isHealthAssetBitmark(asset)) {
             asset.filePath = await detectLocalAssetFilePath(asset.id);
-            if (!existOldFile && asset.filePath) {
+            if (!indexed && asset.filePath) {
               if (isImageFile(asset.filePath)) {
                 let detectResult = await populateAssetNameFromImage(asset.filePath, asset.name);
                 await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
+                indexed = true;
               } else if (isPdfFile(asset.filePath)) {
                 let detectResult = await populateAssetNameFromPdf(asset.filePath, asset.name);
                 await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
+                indexed = true;
               }
             }
+            asset.indexed = indexed;
             bitmark.asset = asset;
             bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
             healthAssetBitmarks.push(bitmark);
@@ -559,11 +565,9 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await initializeIndexedDB();
 
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
-      console.log('oniCloudFileChanged mapFiles :', mapFiles);
       for (let key in mapFiles) {
         let keyList = key.split('_');
         if (keyList[0] === userInformation.bitmarkAccountNumber) {
-          console.log({ key, filePath: mapFiles[key] });
           let keyFilePath;
           if (keyList[1] === 'assets') {
             let assetId = base58.decode(keyList[2]).toString('hex');
@@ -574,9 +578,11 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
           let doSyncFile = async () => {
             let filePath = mapFiles[key];
             let downloadedFile = `${FileUtil.DocumentDirectory}/${keyFilePath}`;
-            let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
-            await FileUtil.mkdir(downloadedFolder);
-            await FileUtil.copyFile(filePath, downloadedFile);
+            if (!(await FileUtil.exists(downloadedFile))) {
+              let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
+              await FileUtil.mkdir(downloadedFolder);
+              await FileUtil.copyFile(filePath, downloadedFile);
+            }
           };
           runPromiseWithoutError(doSyncFile());
         }
@@ -651,14 +657,21 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
     if (userBitmarks && didMigrationFileToLocalStorage) {
-      (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).forEach(bitmark => {
-        if (bitmark.asset.filePath) {
-          let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
-          iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
-        }
-        if (bitmark.thumbnail && bitmark.thumbnail.path) {
-          let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
-          iCloudSyncAdapter.uploadFileToCloud(bitmark.thumbnail.path, `${userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
+      (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).forEach(async (bitmark) => {
+        if (!bitmark.asset.iCloudSynced) {
+          if (bitmark.asset.filePath) {
+            let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
+            await iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
+          }
+          if (bitmark.thumbnail && bitmark.thumbnail.path) {
+            let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
+            await iCloudSyncAdapter.uploadFileToCloud(bitmark.thumbnail.path, `${userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
+          }
+          bitmark.asset.iCloudSynced = true;
+          let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
+          userDataBitmarks[userInformation.bitmarkAccountNumber] = userBitmarks;
+
+          await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
         }
       });
     }
