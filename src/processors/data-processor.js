@@ -735,7 +735,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
 const doBitmarkHealthData = async (touchFaceIdSession, list) => {
   let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
-  updateModal(mapModalDisplayKeyIndex.weekly_health_data);
   await runGetUserBitmarksInBackground();
 
   let appInfo = await doGetAppInformation();
@@ -771,6 +770,10 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
   return results;
+};
+
+const doMarkDoneBitmarkHealthData = () => {
+  updateModal(mapModalDisplayKeyIndex.weekly_health_data);
 };
 
 const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, assetId) => {
@@ -1289,6 +1292,7 @@ const DataProcessor = {
   doRequireHealthKitPermission,
   doDeactiveApplication,
   doBitmarkHealthData,
+  doMarkDoneBitmarkHealthData,
   doDownloadBitmark,
   doIssueFile,
   doIssueMultipleFiles,
