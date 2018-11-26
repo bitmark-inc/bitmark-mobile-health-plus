@@ -127,7 +127,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
   }
 };
 
-const doUpdateIndexTag = async (bitmarkId) => {
+const doUpdateIndexTagFromICloud = async (bitmarkId) => {
   //sync index tags
   let tagFileName = `${bitmarkId}.txt`;
   let tagFilePath = `${getUserLocalStorageFolderPath()}/indexTag/${tagFileName}`;
@@ -135,6 +135,21 @@ const doUpdateIndexTag = async (bitmarkId) => {
   if (existFileIndexedTags) {
     let tags = await readTagFile(tagFilePath);
     await updateTag(bitmarkId, tags);
+  }
+};
+
+const doUpdateIndexTagToICloud = async (bitmarkId, tags) => {
+  //sync index tags
+  let tagFileName = `${bitmarkId}.txt`;
+  let tagFilePath = `${getUserLocalStorageFolderPath()}/indexTag/${tagFileName}`;
+  if (!tags) {
+    let tagRecord = await getTagRecordByBitmarkId(bitmarkId);
+    tags = tagRecord ? tagRecord.tags : null;
+  }
+  if (tags) {
+    await FileUtil.mkdir(`${getUserLocalStorageFolderPath()}/indexTag`);
+    await writeTagFile(tagFilePath, tags);
+    iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${DataProcessor.getUserInformation().bitmarkAccountNumber}_indexTag_${tagFileName}`);
   }
 };
 
@@ -161,5 +176,6 @@ export {
   writeIndexedDataFile,
 
   doCheckAndSyncDataWithICloud,
-  doUpdateIndexTag
+  doUpdateIndexTagFromICloud,
+  doUpdateIndexTagToICloud,
 }

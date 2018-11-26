@@ -28,7 +28,7 @@ import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
   checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf,
-  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTag
+  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -579,7 +579,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
           } else if (keyList[1] === 'indexTag') {
             keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_indexTag_`, `${userInformation.bitmarkAccountNumber}/indexTag/`);
             let bitmarkId = keyList[2].replace('.txt', '');
-            promiseRunAfterCopyFile = doUpdateIndexTag(bitmarkId);
+            promiseRunAfterCopyFile = doUpdateIndexTagFromICloud(bitmarkId);
           }
           let doSyncFile = async () => {
             let filePath = mapFiles[key];
