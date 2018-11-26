@@ -12,7 +12,6 @@ import { Actions } from 'react-native-router-flux';
 import { constants } from '../../constants';
 import { AppProcessor, DataProcessor } from './../../processors';
 import { EventEmitterService } from './../../services';
-import { insertHealthDataToIndexedDB } from "../../utils";
 
 export class BitmarkHealthDataComponent extends Component {
   static propTypes = {
@@ -44,9 +43,6 @@ export class BitmarkHealthDataComponent extends Component {
                 }).then(results => {
                   if (results) {
                     console.log('health-data-results:', results);
-                    results.forEach(item => {
-                      insertHealthDataToIndexedDB(item.id, item.healthData);
-                    });
                     Actions.pop();
                     DataProcessor.doMarkDoneBitmarkHealthData();
                   }
