@@ -1,7 +1,9 @@
-import randomString from "random-string";
+import randomString from 'random-string';
 import moment from 'moment';
-import { BitmarkModel, BitmarkSDK } from "../models";
-import { FileUtil, getLocalAssetsFolderPath } from "../utils";
+import { BitmarkModel, BitmarkSDK } from '../models';
+import { FileUtil, getLocalAssetsFolderPath } from '../utils';
+import iCloudSyncAdapter from '../models/adapters/icloud';
+import base58 from 'bs58';
 
 // ================================================================================================
 // ================================================================================================
@@ -69,7 +71,8 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
   await FileUtil.mkdir(downloadedFolder);
   let list = await FileUtil.readDir(tempFolderDownloaded);
   for (let filename of list) {
-    await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
+    await FileUtil.moveFileSafe(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
+    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${filename}`, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(issueResult.assetId, 'hex'))}_${filename}`);
   }
   await FileUtil.removeSafe(tempFolder);
 

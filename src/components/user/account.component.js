@@ -23,6 +23,7 @@ import {
   // AppProcessor
 } from '../../processors';
 import { DataAccountAccessesStore } from '../../stores';
+// import { EventEmitterService } from '../../services';
 export class PrivateAccountComponent extends Component {
   static propTypes = {
     accesses: PropTypes.shape({

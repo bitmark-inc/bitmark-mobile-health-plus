@@ -100,8 +100,6 @@ class PrivateUserComponent extends Component {
           metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
         }
 
-
-
         let detectedTexts;
         let detectResult;
         if (combineFilesList && combineFilesList.length) {

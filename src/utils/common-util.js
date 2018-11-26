@@ -353,6 +353,7 @@ const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => 
     // Generate pdf thumbnail
     await runPromiseWithoutError(PDFScanner.pdfThumbnail(filePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, outputFilePath));
   }
+  return outputFilePath;
 };
 
 const checkThumbnailForBitmark = async (bitmarkId) => {

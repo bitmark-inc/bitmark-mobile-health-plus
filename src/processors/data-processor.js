@@ -6,6 +6,8 @@ import { Actions } from 'react-native-router-flux';
 import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
 import randomString from 'random-string';
+import base58 from 'bs58';
+
 const {
   PushNotificationIOS,
 } = ReactNative;
@@ -30,7 +32,7 @@ import {
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
-// import iCloudSyncAdapter from '../models/adapters/icloud';
+import iCloudSyncAdapter from '../models/adapters/icloud';
 
 let userInformation = {};
 let grantedAccessAccountSelected = null;
@@ -187,18 +189,38 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     };
 
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
+      let userBitmarks = (await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {};
+
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       for (let bitmark of bitmarks) {
-
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
+          let oldBitmark = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).find(b => b.id === bitmark.id);
+          let existOldFile = oldBitmark && oldBitmark.asset && oldBitmark.asset.filePath;
           if (isHealthDataBitmark(asset)) {
             asset.filePath = await detectLocalAssetFilePath(asset.id);
+            if (!existOldFile && asset.filePath) {
+              let data = await FileUtil.readFile(asset.filePath);
+              await insertHealthDataToIndexedDB(bitmark.id, {
+                assetMetadata: asset.metadata,
+                assetName: asset.name,
+                data,
+              });
+            }
             bitmark.asset = asset;
             healthDataBitmarks.push(bitmark);
           }
           if (isHealthAssetBitmark(asset)) {
             asset.filePath = await detectLocalAssetFilePath(asset.id);
+            if (!existOldFile && asset.filePath) {
+              if (isImageFile(asset.filePath)) {
+                let detectResult = await populateAssetNameFromImage(asset.filePath, asset.name);
+                await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
+              } else if (isPdfFile(asset.filePath)) {
+                let detectResult = await populateAssetNameFromPdf(asset.filePath, asset.name);
+                await insertDetectedDataToIndexedDB(bitmark.id, asset.name, asset.metadata, detectResult.detectedTexts);
+              }
+            }
             bitmark.asset = asset;
             bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
             healthAssetBitmarks.push(bitmark);
@@ -536,6 +558,32 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await initializeLocalStorage();
     await initializeIndexedDB();
 
+    iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
+      console.log('oniCloudFileChanged mapFiles :', mapFiles);
+      for (let key in mapFiles) {
+        let keyList = key.split('_');
+        if (keyList[0] === userInformation.bitmarkAccountNumber) {
+          console.log({ key, filePath: mapFiles[key] });
+          let keyFilePath;
+          if (keyList[1] === 'assets') {
+            let assetId = base58.decode(keyList[2]).toString('hex');
+            keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_assets_${keyList[2]}_`, `${userInformation.bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
+          } else if (keyList[1] === 'thumbnails') {
+            keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_thumbnails_`, `${userInformation.bitmarkAccountNumber}/thumbnails/`);
+          }
+          let doSyncFile = async () => {
+            let filePath = mapFiles[key];
+            let downloadedFile = `${FileUtil.DocumentDirectory}/${keyFilePath}`;
+            let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
+            await FileUtil.mkdir(downloadedFolder);
+            await FileUtil.copyFile(filePath, downloadedFile);
+          };
+          runPromiseWithoutError(doSyncFile());
+        }
+      }
+    });
+    iCloudSyncAdapter.syncCloud();
+
     if (!userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
       userInformation.intercomUserId = intercomUserId;
@@ -602,6 +650,18 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     }
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
+    if (userBitmarks && didMigrationFileToLocalStorage) {
+      (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).forEach(bitmark => {
+        if (bitmark.asset.filePath) {
+          let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
+          iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
+        }
+        if (bitmark.thumbnail && bitmark.thumbnail.path) {
+          let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
+          iCloudSyncAdapter.uploadFileToCloud(bitmark.thumbnail.path, `${userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
+        }
+      });
+    }
 
     if (!grantedAccessAccountSelected && !userInformation.activeHealthData &&
       userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
@@ -682,7 +742,6 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
-  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
   return results;
 };
 
@@ -700,6 +759,7 @@ const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, asset
   }
 
   let list = await FileUtil.readDir(downloadedFolder);
+  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${list[0]}`, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(assetId, 'hex'))}_${list[0]}`);
   return `${downloadedFolder}/${list[0]}`;
 };
 
@@ -723,6 +783,7 @@ const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrante
 
   let listFile = await FileUtil.readDir(downloadedFolder);
   let result = await FileUtil.readFile(downloadedFolder + '/' + listFile[0]);
+  iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${listFile[0]}`, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(assetId, 'hex'))}_${list[0]}`);
   return result;
 };
 
@@ -762,10 +823,11 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
   for (let record of results) {
-    await generateThumbnail(filePath, record.id, isMultipleAsset);
+    let thumbnailPath = await generateThumbnail(filePath, record.id, isMultipleAsset);
+    let filename = thumbnailPath.substring(thumbnailPath.lastIndexOf('/') + 1, thumbnailPath.length);
+    iCloudSyncAdapter.uploadFileToCloud(thumbnailPath, `${userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
   }
   await doReloadUserData();
-  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
   return results;
 };
 
@@ -1039,14 +1101,19 @@ const doMigrateFilesToLocalStorage = async () => {
       } else {
         bitmark.asset.filePath = `${downloadedFilePath}`;
       }
+      let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
+      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
     } else {
       let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
       bitmark.asset.filePath = `${assetFolderPath}/downloaded/${list[0]}`;
+      iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${list[0]}`);
     }
 
     // Create thumbnail if not exist
     if (!checkThumbnailForBitmark(bitmark.id).exists) {
-      await generateThumbnail(bitmark.asset.filePath, bitmark.id);
+      let thumbnailPath = await generateThumbnail(bitmark.asset.filePath, bitmark.id);
+      let filename = thumbnailPath.substring(thumbnailPath.lastIndexOf('/') + 1, thumbnailPath.length);
+      iCloudSyncAdapter.uploadFileToCloud(thumbnailPath, `${userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
     }
 
     // Create search indexed data if not exist
@@ -1083,7 +1150,6 @@ const doMigrateFilesToLocalStorage = async () => {
   EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, 100);
   await AccountModel.doMarkMigration(jwt);
   didMigrationFileToLocalStorage = true;
-  // runPromiseWithoutError(iCloudSyncAdapter.uploadToCloud('assets'));
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
@@ -1174,8 +1240,10 @@ let doMarkDoneMigration = () => {
 };
 
 const doTransferBitmark = async (touchFaceIdSession, bitmark, receiver) => {
+  let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
   let result = await BitmarkService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver);
   await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
+  await iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`)
   await deleteIndexedDataByBitmarkId(bitmark.id);
   await deleteTagsByBitmarkId(bitmark.id);
   await doReloadUserData();
