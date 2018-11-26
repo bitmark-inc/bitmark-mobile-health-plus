@@ -135,15 +135,12 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   }
 
   if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber &&
-    !userInformation.activeHealthData && healthDataBitmarks && healthDataBitmarks.length > 0) {
+    !userInformation.activeHealthDataAt && healthDataBitmarks && healthDataBitmarks.length > 0) {
     await runPromiseWithoutError(doRequireHealthKitPermission());
   }
 
-  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthData) {
-    let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.createdAt);
-    // if (list && list.length > 0 && didMigrationFileToLocalStorage) {
-    //   Actions.bitmarkHealthData({ list });
-    // }
+  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthDataAt) {
+    let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.activeHealthDataAt);
     if (list && list.length > 0) {
       updateModal(mapModalDisplayKeyIndex.weekly_health_data, { list });
     }
@@ -522,7 +519,7 @@ const doLogout = async () => {
 
 const doRequireHealthKitPermission = async () => {
   let result = await HealthKitService.initHealthKit();
-  userInformation.activeHealthData = true;
+  userInformation.activeHealthDataAt = moment().toDate().toISOString();
   await UserModel.doUpdateUserInfo(userInformation);
 
   let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
@@ -676,7 +673,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       });
     }
 
-    if (!grantedAccessAccountSelected && !userInformation.activeHealthData &&
+    if (!grantedAccessAccountSelected && !userInformation.activeHealthDataAt &&
       userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
       await runPromiseWithoutError(doRequireHealthKitPermission());
     }
@@ -687,13 +684,15 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     AccountService.removeAllDeliveredNotifications();
     PushNotificationIOS.cancelAllLocalNotifications();
-    let dateNotification = HealthKitService.getNextSunday11AM();
-    PushNotificationIOS.scheduleLocalNotification({
-      fireDate: dateNotification.toDate(),
-      alertTitle: '',
-      alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
-      repeatInterval: 'week'
-    });
+    if (userInformation.activeHealthDataAt) {
+      let dateNotification = HealthKitService.getNextSunday11AM();
+      PushNotificationIOS.scheduleLocalNotification({
+        fireDate: dateNotification.toDate(),
+        alertTitle: '',
+        alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
+        repeatInterval: 'week'
+      });
+    }
   } else if (!userInformation || !userInformation.bitmarkAccountNumber) {
     let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
     if (!appInfo.intercomUserId) {

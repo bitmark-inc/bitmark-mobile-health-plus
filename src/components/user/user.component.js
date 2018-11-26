@@ -312,7 +312,7 @@ class PrivateUserComponent extends Component {
   }
 
   setSearchFocus(searchFocusing) {
-    this.setState({searchFocusing});
+    this.setState({ searchFocusing });
   }
 
   render() {
@@ -364,7 +364,7 @@ class PrivateUserComponent extends Component {
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {
 
-                  if (isCurrentUser && !DataProcessor.getUserInformation().activeHealthData) {
+                  if (isCurrentUser && !DataProcessor.getUserInformation().activeHealthDataAt) {
                     Actions.getStart();
                   } else {
                     Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' });

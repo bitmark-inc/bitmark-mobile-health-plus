@@ -394,7 +394,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
   return results;
 };
 
-const doCheckBitmarkHealthDataTask = (healthDataBitmarks, accountCreatedAt) => {
+const doCheckBitmarkHealthDataTask = (healthDataBitmarks, activeAt) => {
   let lastTimeBitmarkHealthData;
   (healthDataBitmarks || []).forEach(bitmark => {
     if (bitmark.asset.metadata['Saved Time']) {
@@ -407,7 +407,7 @@ const doCheckBitmarkHealthDataTask = (healthDataBitmarks, accountCreatedAt) => {
   let list = [];
   let startDate, endDate;
   if (!lastTimeBitmarkHealthData) {
-    lastTimeBitmarkHealthData = moment(accountCreatedAt);
+    lastTimeBitmarkHealthData = moment(activeAt);
     startDate = getPreviousDay(lastTimeBitmarkHealthData, SUNDAY);
     startDate = getBeginDay(startDate);
     endDate = moment(lastTimeBitmarkHealthData);
