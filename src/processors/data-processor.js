@@ -516,7 +516,7 @@ const doLogout = async () => {
   CommonModel.resetFaceTouchSessionId();
   await UserModel.doRemoveUserInfo();
   await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
-  await Intercom.reset();
+  await Intercom.logout();
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   mapModalDisplayData = {};
@@ -620,7 +620,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
       userInformation.intercomUserId = intercomUserId;
       await UserModel.doUpdateUserInfo(userInformation);
-      Intercom.reset().then(() => {
+      Intercom.logout().then(() => {
         return Intercom.registerIdentifiedUser({ userId: intercomUserId })
       }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
@@ -707,7 +707,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
     if (!appInfo.intercomUserId) {
       appInfo.intercomUserId = intercomUserId;
-      Intercom.reset().then(() => {
+      Intercom.logout().then(() => {
         return Intercom.registerIdentifiedUser({ userId: intercomUserId })
       }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
