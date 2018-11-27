@@ -14,6 +14,7 @@
 #import <React/RCTRootView.h>
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
+#import <React/RCTLog.h>
 #import "ReactNativeExceptionHandler.h"
 #import "Intercom/intercom.h"
 @import iCloudDocumentSync;
@@ -65,6 +66,12 @@
   
   // iCloud sync
   [[iCloud sharedCloud] setupiCloudDocumentSyncWithUbiquityContainer:nil];
+  if ([[iCloud sharedCloud] checkCloudAvailability]) {
+    RCTLog(@"iCloud is available on this device");
+  }
+  else {
+    RCTLog(@"iCloud is not available on this device");
+  }
   
   // Handle Crash App by native code
   [ReactNativeExceptionHandler replaceNativeExceptionHandlerBlock:^(NSException *exception, NSString *readeableException){
