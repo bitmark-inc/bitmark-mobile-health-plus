@@ -215,7 +215,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
                 asset.filePath = await detectLocalAssetFilePath(asset.id);
               }
               bitmark.asset = asset;
-              doCheckAndSyncDataWithICloud(bitmark);
+              await doCheckAndSyncDataWithICloud(bitmark);
             } else {
               bitmark.asset = asset;
             }
@@ -229,8 +229,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               }
               bitmark.asset = asset;
               bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.asset_id);
-              doCheckAndSyncDataWithICloud(bitmark);
-
+              await doCheckAndSyncDataWithICloud(bitmark);
               healthAssetBitmarks.push(bitmark);
             }
           }
@@ -600,13 +599,15 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
           let doSyncFile = async () => {
             let filePath = mapFiles[key];
             let downloadedFile = `${FileUtil.DocumentDirectory}/${keyFilePath}`;
-            if (!(await FileUtil.exists(downloadedFile))) {
+            if ((await FileUtil.exists(filePath))) {
               let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
               await FileUtil.mkdir(downloadedFolder);
               await FileUtil.copyFile(filePath, downloadedFile);
               if (promiseRunAfterCopyFile) {
                 await promiseRunAfterCopyFile();
               }
+            } else {
+              console.log('file in iCloude is not exist!', { key, filePath });
             }
           };
           runPromiseWithoutError(doSyncFile());
