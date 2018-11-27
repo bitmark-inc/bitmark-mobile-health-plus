@@ -290,7 +290,10 @@
     "TaggingComponent_existingTags": "TaggingComponent_existingTags",
     "TaggingComponent_noTags": "TaggingComponent_noTags",
     "TaggingComponent_addTags": "TaggingComponent_addTags",
-    "TaggingComponent_enterATag": "TaggingComponent_enterATag"
+    "TaggingComponent_enterATag": "TaggingComponent_enterATag",
+    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
+    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
+    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -583,7 +586,10 @@
     "TaggingComponent_existingTags": "Existing tags",
     "TaggingComponent_noTags": "You don’t have any tags now, tap to start adding.",
     "TaggingComponent_addTags": "add tags",
-    "TaggingComponent_enterATag": "Enter a tag"
+    "TaggingComponent_enterATag": "Enter a tag",
+    "AlphaAppUpdate_title": "Update Available",
+    "AlphaAppUpdate_message": "New version of Bitmark Health is available. Please check it out.",
+    "AlphaAppUpdate_button": "View"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "沒有網路連線",
@@ -876,7 +882,10 @@
     "TaggingComponent_existingTags": "現有標籤",
     "TaggingComponent_noTags": "目前尚無任何標籤。",
     "TaggingComponent_addTags": "新增標籤",
-    "TaggingComponent_enterATag": "請輸入一個標籤"
+    "TaggingComponent_enterATag": "請輸入一個標籤",
+    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
+    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
+    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -1169,6 +1178,9 @@
     "TaggingComponent_existingTags": "Thẻ hiện có",
     "TaggingComponent_noTags": "Bạn chưa có thẻ nào, chạm để gắn thẻ",
     "TaggingComponent_addTags": "Thêm thẻ",
-    "TaggingComponent_enterATag": "Tạo thẻ"
+    "TaggingComponent_enterATag": "Tạo thẻ",
+    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
+    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
+    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
   }
 }

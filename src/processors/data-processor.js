@@ -109,13 +109,13 @@ let checkDisplayModal = () => {
         keyIndexModalDisplaying = keyIndex;
         break;
       } else if (keyIndex === mapModalDisplayKeyIndex.update_alpha_app) {
-        Alert.alert('Update', 'Alpha app have new update.\nPlease install and try it!', [{
-          text: 'Install', onPress: () => {
+        keyIndexModalDisplaying = keyIndex;
+        Alert.alert(i18n.t('AlphaAppUpdate_title'), i18n.t('AlphaAppUpdate_message'), [{
+          text: i18n.t('AlphaAppUpdate_button'), onPress: () => {
+            let url = mapModalDisplayData[keyIndex];
             updateModal(mapModalDisplayKeyIndex.update_alpha_app);
-            Linking.openURL(mapModalDisplayData[keyIndex]);
+            Linking.openURL(url);
           }
-        }, {
-          text: 'Cancel', style: 'cancel'
         }]);
         break;
       }
@@ -721,16 +721,19 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     configNotification();
   }
 
-  let appId = '';
-  let token = '';
-  let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
-  if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
-    let newestVersion = returnedData.app_versions[0].shortversion;
-    let url = returnedData.app_versions[0].download_url;
-    if (compareVersion(newestVersion, DeviceInfo.getVersion()) > 0) {
-      updateModal(mapModalDisplayKeyIndex.update_alpha_app, url);
+  if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
+    let appId = '953845cde6b940cea3adac0ff1103f8c';
+    let token = '828e099f430442aa924a8a3a87b3f14b';
+    let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
+    if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
+      let url = returnedData.app_versions[0].download_url;
+      let newestVersion = returnedData.app_versions[0].shortversion;
+      if (compareVersion(newestVersion, DeviceInfo.getVersion()) > 0) {
+        updateModal(mapModalDisplayKeyIndex.update_alpha_app, url);
+      }
     }
   }
+
 
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
   console.log('userInformation :', userInformation);
