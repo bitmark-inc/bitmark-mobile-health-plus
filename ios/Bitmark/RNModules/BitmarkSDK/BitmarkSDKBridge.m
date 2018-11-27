@@ -14,7 +14,8 @@ RCT_EXTERN_METHOD(newAccount:(BOOL)authentication:(RCTPromiseResolveBlock)resolv
 RCT_EXTERN_METHOD(removeAccount:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(tryPhrase:(NSArray<NSString *> *)pharse:(NSString *)network:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(accountInfo:(NSString)sessionId:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(accountInfo:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(authenticate:(NSString)message:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 
 // TODO
 RCT_EXTERN_METHOD(createAccountFromPhrase:(NSArray<NSString *> *)pharse:(NSString *)network:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
