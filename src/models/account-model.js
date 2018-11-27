@@ -520,6 +520,29 @@ const doMarkMigration = (jwt, status) => {
   });
 };
 
+let doGetHockeyAppVersion = (appId, token) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    fetch(`https://rink.hockeyapp.net/api/2/apps/${appId}/app_versions`, {
+      method: 'GET',
+      headers: {
+        'X-HockeyAppToken': token,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return resolve();
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
 
 
 let AccountModel = {
@@ -553,6 +576,8 @@ let AccountModel = {
 
   doCheckMigration,
   doMarkMigration,
+
+  doGetHockeyAppVersion,
 }
 
 export {

@@ -290,7 +290,10 @@
     "TaggingComponent_existingTags": "TaggingComponent_existingTags",
     "TaggingComponent_noTags": "TaggingComponent_noTags",
     "TaggingComponent_addTags": "TaggingComponent_addTags",
-    "TaggingComponent_enterATag": "TaggingComponent_enterATag"
+    "TaggingComponent_enterATag": "TaggingComponent_enterATag",
+    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
+    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
+    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -569,7 +572,7 @@
     "SearchResultsComponent_noResults": "No Results",
     "WhatNew_S51_Component_headerTitle1": "WHAT’S NEW?",
     "WhatNew_S51_Component_s51New1Description1": "Now you can add tags to your health records to help you find them faster later. Create whatever tags you want and as many as you want!",
-    "WhatNew_S51_Component_s51New1Description2": "Use our new search bar to instantly search across all your health records.",
+    "WhatNew_S51_Component_s51New1Description2": "Use our new search bar to instantly search across all your health records.  ",
     "WhatNew_S51_Component_s51New1Description3": "Your Bitmark Health data is now securely backed up in your Apple iCloud storage. Everything is encrypted so that not even Bitmark or Apple can see your health data.",
     "WhatNew_S51_Component_skipButtonText": "Skip",
     "WhatNew_S51_Component_doneButtonText": "Done",
@@ -578,12 +581,15 @@
     "WhatNew_S51_Component_versionInformationText": "VERSION {{version}}",
     "WhatNew_S51_Component_versionInformationReleaseDiff1": "just now",
     "WhatNew_S51_Component_versionInformationReleaseDiff2": "{{day}}d ago",
-    "WhatNew_S51_Component_releaseNoteText": "New features: \n\n• Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future. \n\n• Search — quickly search your health records based on your tags and text appearing in the records. We currently support search over English, Chinese, and Vietnmese records. \n\n• Delete records — delete any records from your Bitmark Health account that you no longer want or added by mistake. \n\n• What’s New screen — we now show you a preview of what's new in the app whenever you update it. ",
+    "WhatNew_S51_Component_releaseNoteText": "New features: \n\n• Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future. \n\n• Search — quickly search your health records based on your tags and text appearing in the records. We currently support search over English, Chinese, and Vietnamese records. \n\n• Delete records — delete any records from your Bitmark Health account that you no longer want or added by mistake. \n\n• What’s New screen — we now show you a preview of what's new in the app whenever you update it. ",
     "TaggingComponent_tags": "Tags",
     "TaggingComponent_existingTags": "Existing tags",
     "TaggingComponent_noTags": "You don’t have any tags now, tap to start adding.",
     "TaggingComponent_addTags": "add tags",
-    "TaggingComponent_enterATag": "Enter a tag"
+    "TaggingComponent_enterATag": "Enter a tag",
+    "AlphaAppUpdate_title": "Update Available",
+    "AlphaAppUpdate_message": "New version of Bitmark Health is available. Please check it out.",
+    "AlphaAppUpdate_button": "View"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "沒有網路連線",
@@ -871,12 +877,15 @@
     "WhatNew_S51_Component_versionInformationText": "版本",
     "WhatNew_S51_Component_versionInformationReleaseDiff1": "今天",
     "WhatNew_S51_Component_versionInformationReleaseDiff2": "天前",
-    "WhatNew_S51_Component_releaseNoteText": "This is old text. Let's wait on this part, no need translate.",
+    "WhatNew_S51_Component_releaseNoteText": "新增功能：\n\n• 資料標籤 — 開始在你的健康資料內新增標籤來幫助記錄與更輕易地搜尋。\n\n• 搜索功能 — 快速藉由健康資料中的文字或者標籤來搜尋你的健康資料。目前我們支援英文，中文和越南文。\n\n• 刪除資料 — 可以刪除帳戶內不需要或者錯誤的健康資料。\n\n• 更新項目畫面 — 現在每次app更新過後，我們都會顯示更新的項目。",
     "TaggingComponent_tags": "標籤",
     "TaggingComponent_existingTags": "現有標籤",
     "TaggingComponent_noTags": "目前尚無任何標籤。",
     "TaggingComponent_addTags": "新增標籤",
-    "TaggingComponent_enterATag": "請輸入一個標籤"
+    "TaggingComponent_enterATag": "請輸入一個標籤",
+    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
+    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
+    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -1164,11 +1173,14 @@
     "WhatNew_S51_Component_versionInformationText": "Phiên bản",
     "WhatNew_S51_Component_versionInformationReleaseDiff1": "vừa xong",
     "WhatNew_S51_Component_versionInformationReleaseDiff2": "{{day}}d ngày trước",
-    "WhatNew_S51_Component_releaseNoteText": "This is old text. Let's wait on this part, no need translate.",
+    "WhatNew_S51_Component_releaseNoteText": "Tính năng mới: \n\n• Gắn thẻ cho bản ghi y tế — Từ giờ trở đi bạn có thể gắn thẻ cho các bản ghi y tế của bạn, nó sẽ giúp bạn tìm kiếm các bản ghi nhanh hơn trong tương lai.\n\n• Tìm kiếm — Tìm kiếm các bản ghi sức khoẻ một cách nhanh chóng dựa theo các thẻ đã gắn và nội dung của các bản ghi. Hiện tại chúng tôi hỗ trợ tìm kiếm cho các bản ghi Tiếng Anh, Tiếng Việt, và Tiếng Trung. \n\n• Xoá bản ghi y tế — Bạn có thể xoá bất kỳ bản ghi nào mà bạn đã thêm nhầm hoặc không còn cần nữa. \n\n• Màn hình \"Có gì mới\" — Từ giờ trở đi chúng tôi sẽ hiển thị bản giới thiệu rút gọn cho các tính năng mới của ứng dụng khi bạn cập nhật phiên bản mới. Bạn có thể xem lại phần giới thiệu này ở màn hình Cài đặt Tài khoản. ",
     "TaggingComponent_tags": "Thẻ",
     "TaggingComponent_existingTags": "Thẻ hiện có",
     "TaggingComponent_noTags": "Bạn chưa có thẻ nào, chạm để gắn thẻ",
     "TaggingComponent_addTags": "Thêm thẻ",
-    "TaggingComponent_enterATag": "Tạo thẻ"
+    "TaggingComponent_enterATag": "Tạo thẻ",
+    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
+    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
+    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
   }
 }

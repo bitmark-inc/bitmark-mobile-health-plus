@@ -14,12 +14,13 @@
 #import <React/RCTRootView.h>
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
+#import <React/RCTLog.h>
 #import "ReactNativeExceptionHandler.h"
 #import "Intercom/intercom.h"
 @import iCloudDocumentSync;
 @import HockeySDK;
 
-@interface AppDelegate () <iCloudDelegate>
+@interface AppDelegate ()
 
 @end
 
@@ -65,8 +66,12 @@
   
   // iCloud sync
   [[iCloud sharedCloud] setupiCloudDocumentSyncWithUbiquityContainer:nil];
-  [[iCloud sharedCloud] setDelegate:self];
-  [[iCloud sharedCloud] updateFiles];
+  if ([[iCloud sharedCloud] checkCloudAvailability]) {
+    RCTLog(@"iCloud is available on this device");
+  }
+  else {
+    RCTLog(@"iCloud is not available on this device");
+  }
   
   // Handle Crash App by native code
   [ReactNativeExceptionHandler replaceNativeExceptionHandlerBlock:^(NSException *exception, NSString *readeableException){

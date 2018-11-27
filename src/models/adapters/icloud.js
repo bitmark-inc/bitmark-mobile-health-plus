@@ -1,12 +1,23 @@
-import { NativeModules } from 'react-native';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 
 const iCloudSyncNative = NativeModules.iCloudSync;
+const iCloudSyncNativeEmitter = new NativeEventEmitter(iCloudSyncNative);
 
 const iCloudSyncAdapter = {
-  uploadToCloud: (folderPath) => {
+  deleteFileFromCloud: (key) => {
     return new Promise((resolve) => {
-      iCloudSyncNative.uploadToCloud(folderPath, (ok) => {
-        console.log('upload to cloud result:', ok);
+      iCloudSyncNative.deleteFileFromCloud(key, (ok) => {
+        console.log('delete file from cloud result:', ok);
+      });
+      resolve();
+    });
+  },
+
+  uploadFileToCloud: (filePath, key) => {
+    return new Promise((resolve) => {
+      key = key.replace(new RegExp(' ', 'g'), '_');
+      iCloudSyncNative.uploadFileToCloud(filePath, key, (ok) => {
+        console.log('upload file to cloud result:', ok);
       });
       resolve();
     });
@@ -19,6 +30,9 @@ const iCloudSyncAdapter = {
       });
       resolve();
     });
+  },
+  oniCloudFileChanged: (cbFunction) => {
+    iCloudSyncNativeEmitter.addListener('oniCloudFileChanged', cbFunction);
   },
 };
 
