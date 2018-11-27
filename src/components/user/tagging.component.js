@@ -5,7 +5,7 @@ import {
   Image, View, SafeAreaView, TouchableOpacity, Text, FlatList, KeyboardAvoidingView, ScrollView, TextInput, Keyboard, Animated
 } from 'react-native';
 
-import { convertWidth } from './../../utils';
+import { convertWidth, doUpdateIndexTagToICloud } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
 import { Actions } from 'react-native-router-flux';
@@ -42,7 +42,7 @@ export class TaggingComponent extends Component {
     let tagsSuggestion = tagsCache.filter((item) => tags.indexOf(item) == -1);
     console.log('tagsSuggestion:', tagsSuggestion);
 
-    this.setState({tags, tagsCache, tagsSuggestion});
+    this.setState({ tags, tagsCache, tagsSuggestion });
   }
 
   componentWillUnmount() {
@@ -83,11 +83,11 @@ export class TaggingComponent extends Component {
   }
 
   showInputTag() {
-    this.setState({inputtingTag: true});
+    this.setState({ inputtingTag: true });
   }
 
   hideInputTag() {
-    this.setState({inputtingTag: false, tagsSuggestion: this.state.tagsCache.filter(item => this.state.tags.indexOf(item) == -1)});
+    this.setState({ inputtingTag: false, tagsSuggestion: this.state.tagsCache.filter(item => this.state.tags.indexOf(item) == -1) });
   }
 
   async addTag(tag) {
@@ -96,6 +96,7 @@ export class TaggingComponent extends Component {
       if (tags.indexOf(tag) == -1) {
         tags.push(tag);
         await updateTag(this.props.bitmarkId, tags);
+        await doUpdateIndexTagToICloud(this.props.bitmarkId, tags);
 
         let tagsCache = this.state.tagsCache;
         // Insert to the beginning of the list
@@ -105,7 +106,7 @@ export class TaggingComponent extends Component {
 
         let tagsSuggestion = tagsCache.filter((item) => tags.indexOf(item) == -1);
 
-        this.setState({tag: '', tags, tagsCache, tagsSuggestion});
+        this.setState({ tag: '', tags, tagsCache, tagsSuggestion });
         await writeTagsCache(tagsCache);
       }
     }
@@ -117,10 +118,11 @@ export class TaggingComponent extends Component {
     if (tags.indexOf(tag) > -1) {
       tags = tags.filter(item => item != tag);
       await updateTag(this.props.bitmarkId, tags);
+      await doUpdateIndexTagToICloud(this.props.bitmarkId, tags);
 
-      let tagsSuggestion = this.state.tagsCache.filter((item) => { return tags.indexOf(item) == -1});
+      let tagsSuggestion = this.state.tagsCache.filter((item) => { return tags.indexOf(item) == -1 });
 
-      this.setState({tags, tagsSuggestion});
+      this.setState({ tags, tagsSuggestion });
     }
   }
 
@@ -129,7 +131,7 @@ export class TaggingComponent extends Component {
     let tagsSuggestion = this.state.tagsCache.filter((item) => {
       return item.startsWith(text) && this.state.tags.indexOf(item) == -1
     });
-    this.setState({tag, tagsSuggestion});
+    this.setState({ tag, tagsSuggestion });
   }
 
   render() {
@@ -158,18 +160,18 @@ export class TaggingComponent extends Component {
                 <View>
                   {this.state.tags.length ? (
                     <FlatList data={this.state.tags}
-                                contentContainerStyle={[styles.existingTagListContainer]}
-                                keyExtractor={(item, index) => index + ''}
-                                renderItem={({item}) => {
-                                  return (
-                                    <TouchableOpacity style={styles.taggingItemContainer} onPress={() => this.removeTag.bind(this)(item)}>
-                                      <Text style={styles.taggingItem}>#{item}</Text>
-                                      <Image style={styles.removeTagIcon} source={require('./../../../assets/imgs/remove-tag-icon.png')}/>
-                                    </TouchableOpacity>
-                                  );
-                                }}
-                      />
-                    ) : (
+                      contentContainerStyle={[styles.existingTagListContainer]}
+                      keyExtractor={(item, index) => index + ''}
+                      renderItem={({ item }) => {
+                        return (
+                          <TouchableOpacity style={styles.taggingItemContainer} onPress={() => this.removeTag.bind(this)(item)}>
+                            <Text style={styles.taggingItem}>#{item}</Text>
+                            <Image style={styles.removeTagIcon} source={require('./../../../assets/imgs/remove-tag-icon.png')} />
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
+                  ) : (
                       <Text style={styles.noTagsText}>{global.i18n.t("TaggingComponent_noTags")}</Text>
                     )
                   }
@@ -186,46 +188,46 @@ export class TaggingComponent extends Component {
 
           <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity }]}>
             {this.state.inputtingTag && <KeyboardAvoidingView behavior="padding" enabled style={styles.keyboardAvoidingView}>
-                {/*INPUT TAG*/}
-                <View style={styles.inputTagContainer}>
-                  <TextInput
-                    style={[styles.inputTag]}
-                    ref={(ref) => this.inputTag = ref}
-                    value={this.state.tag}
-                    autoCorrect={false}
-                    autoFocus={true}
-                    autoCapitalize="none"
-                    clearTextOnFocus={true}
-                    onChange={() => {this.setState({tag: this.state.tag.replace(/\s/g, '')})}}
-                    onBlur={() => {this.setState({tag: ''})}}
-                    onChangeText={(text) => {this.onChangeText.bind(this)(text)}}
-                    onSubmitEditing={this.hideInputTag.bind(this)}
-                    placeholder={global.i18n.t("TaggingComponent_enterATag")}
+              {/*INPUT TAG*/}
+              <View style={styles.inputTagContainer}>
+                <TextInput
+                  style={[styles.inputTag]}
+                  ref={(ref) => this.inputTag = ref}
+                  value={this.state.tag}
+                  autoCorrect={false}
+                  autoFocus={true}
+                  autoCapitalize="none"
+                  clearTextOnFocus={true}
+                  onChange={() => { this.setState({ tag: this.state.tag.replace(/\s/g, '') }) }}
+                  onBlur={() => { this.setState({ tag: '' }) }}
+                  onChangeText={(text) => { this.onChangeText.bind(this)(text) }}
+                  onSubmitEditing={this.hideInputTag.bind(this)}
+                  placeholder={global.i18n.t("TaggingComponent_enterATag")}
+                />
+
+                {/*SUBMIT TAG*/}
+                <TouchableOpacity onPress={() => this.addTag.bind(this)(this.state.tag)}>
+                  <Image style={[styles.addTagIcon]} source={require('./../../../assets/imgs/add-tag-icon.png')} />
+                </TouchableOpacity>
+              </View>
+
+              {/*TAG CACHE*/}
+              {(this.state.keyboardHeight > 0 && this.state.tagsSuggestion.length) ? (
+                <View style={[styles.suggestionList]}>
+                  <FlatList
+                    keyboardShouldPersistTaps="handled"
+                    horizontal={true}
+                    extraData={this.state}
+                    data={this.state.tagsSuggestion}
+                    renderItem={({ item }) => {
+                      return (<TouchableOpacity style={styles.suggestionItem} onPress={() => { this.addTag.bind(this)(item) }}>
+                        <Text style={[styles.suggestionItemText]}>#{item}</Text>
+                      </TouchableOpacity>)
+                    }}
                   />
-
-                  {/*SUBMIT TAG*/}
-                  <TouchableOpacity onPress={() => this.addTag.bind(this)(this.state.tag)}>
-                    <Image style={[styles.addTagIcon]} source={require('./../../../assets/imgs/add-tag-icon.png')} />
-                  </TouchableOpacity>
                 </View>
-
-                {/*TAG CACHE*/}
-                {(this.state.keyboardHeight > 0 && this.state.tagsSuggestion.length) ? (
-                  <View style={[styles.suggestionList]}>
-                    <FlatList
-                      keyboardShouldPersistTaps="handled"
-                      horizontal={true}
-                      extraData={this.state}
-                      data={this.state.tagsSuggestion}
-                      renderItem={({ item }) => {
-                        return (<TouchableOpacity style={styles.suggestionItem} onPress={() => {this.addTag.bind(this)(item)}}>
-                          <Text style={[styles.suggestionItemText]}>#{item}</Text>
-                        </TouchableOpacity>)
-                      }}
-                    />
-                  </View>
-                  ) : null
-                }
+              ) : null
+              }
             </KeyboardAvoidingView>
             }
           </Animated.View>

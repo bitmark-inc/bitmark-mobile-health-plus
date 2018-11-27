@@ -2,8 +2,6 @@ import randomString from 'random-string';
 import moment from 'moment';
 import { BitmarkModel, BitmarkSDK } from '../models';
 import { FileUtil, getLocalAssetsFolderPath } from '../utils';
-import iCloudSyncAdapter from '../models/adapters/icloud';
-import base58 from 'bs58';
 
 // ================================================================================================
 // ================================================================================================
@@ -72,7 +70,6 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
   let list = await FileUtil.readDir(tempFolderDownloaded);
   for (let filename of list) {
     await FileUtil.moveFileSafe(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
-    iCloudSyncAdapter.uploadFileToCloud(`${downloadedFolder}/${filename}`, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(issueResult.assetId, 'hex'))}_${filename}`);
   }
   await FileUtil.removeSafe(tempFolder);
 
@@ -80,9 +77,15 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
   await FileUtil.mkdir(sessionAssetFolder);
   await FileUtil.create(`${sessionAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
 
+  let listFile = await FileUtil.readDir(downloadedFolder);
   let results = [];
   issueResult.bitmarkIds.forEach(id => {
-    results.push({ id, sessionData: issueResult.sessionData });
+    results.push({
+      id,
+      sessionData: issueResult.sessionData,
+      assetId: issueResult.assetId,
+      filePath: `${downloadedFolder}/${listFile[0]}`
+    });
   });
   return results;
 };
