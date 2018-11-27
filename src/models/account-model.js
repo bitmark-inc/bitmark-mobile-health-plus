@@ -6,20 +6,20 @@ import { FileUtil, runPromiseWithoutError } from './../utils';
 
 const doCreateAccount = async (enableTouchFaceId) => {
   await CookieManager.clearAll();
-  return await BitmarkSDK.newAccount(config.bitmark_network, enableTouchFaceId);
+  return await BitmarkSDK.newAccount(enableTouchFaceId);
 };
 
 const doLogin = async (phraseWords, enableTouchFaceId) => {
   await CookieManager.clearAll();
-  return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, config.bitmark_network, enableTouchFaceId);
+  return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, enableTouchFaceId);
 }
 
-const doGetCurrentAccount = async (touchFaceIdSession) => {
-  return await BitmarkSDK.accountInfo(touchFaceIdSession);
+const doGetCurrentAccount = async () => {
+  return await BitmarkSDK.accountInfo();
 };
 
 const doCheckPhraseWords = async (phraseWords) => {
-  return await BitmarkSDK.tryPhraseWords(phraseWords, config.bitmark_network);
+  return await BitmarkSDK.tryPhraseWords(phraseWords);
 };
 
 const doLogout = async (jwt) => {
@@ -218,194 +218,6 @@ let doDeleteAccount = (jwt) => {
   });
 }
 
-let doGrantingAccess = (jwt) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
-    fetch(tempURL, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt,
-      },
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
-let doReceiveGrantingAccess = (jwt, token, body) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks/${token}`;
-    fetch(tempURL, {
-      method: 'PATCH',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt,
-      },
-      body: JSON.stringify(body || {})
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 500) {
-        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
-      } else if (statusCode >= 400) {
-        resolve({ error: 'Access code is invalid or expired!' });
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
-let doRevokeGrantingAccess = (jwt, token) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks/${token}`;
-    fetch(tempURL, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt,
-      },
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
-let doGetAllGrantedAccess = (accountNumber) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.api_server_url}/v2/access-grants?account=${accountNumber}`;
-    console.log('tempURL :', tempURL);
-    fetch(tempURL, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
-let doGetWaitingGrantedAccess = (jwt) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks`;
-    fetch(tempURL, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt,
-      },
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
-      }
-      resolve(data.waiting);
-    }).catch(reject);
-  });
-};
-
-let doRemoveGrantingAccess = (from, to, requester, timestamp, signature) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.api_server_url}/v2/access-grants?from=${from}&to=${to}`;
-    fetch(tempURL, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        requester,
-        timestamp,
-        signature,
-      },
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
-
-let doCancelGrantingAccess = (jwt, token) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/granting_bitmarks/${token}`;
-    fetch(tempURL, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt,
-      },
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('Request failed!' + statusCode + ' - ' + JSON.stringify(data)));
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
 let doGetAllEmailRecords = (jwt) => {
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -465,61 +277,6 @@ let doDeleteEmailRecord = (jwt, id) => {
 };
 
 
-const doCheckMigration = (jwt) => {
-  return new Promise((resolve) => {
-    let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/accounts/metadata`;
-    fetch(tempURL, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt,
-      },
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return resolve();
-      }
-      resolve(data.metadata.health_bitmarks_migrated);
-    }).catch(() => resolve());
-  });
-};
-
-const doMarkMigration = (jwt, status) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.mobile_server_url}/api/accounts/metadata`;
-    fetch(tempURL, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt,
-      },
-      body: JSON.stringify({
-        metadata: { health_bitmarks_migrated: status === undefined ? true : status },
-      })
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return resolve();
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
-
 let doGetHockeyAppVersion = (appId, token) => {
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -563,19 +320,10 @@ let AccountModel = {
 
   doRegisterJWT,
   doDeleteAccount,
-  doGrantingAccess,
-  doReceiveGrantingAccess,
-  doGetAllGrantedAccess,
-  doGetWaitingGrantedAccess,
-  doRevokeGrantingAccess,
-  doRemoveGrantingAccess,
-  doCancelGrantingAccess,
+
   doGetAllEmailRecords,
   doDownloadEmailRecordAttachment,
   doDeleteEmailRecord,
-
-  doCheckMigration,
-  doMarkMigration,
 
   doGetHockeyAppVersion,
 }

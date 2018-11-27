@@ -37,7 +37,7 @@ export class AccountPhraseComponent extends Component {
     }
   }
   accessPhraseWords() {
-    AppProcessor.doGetCurrentAccount(this.props.isLogout).then((userInfo) => {
+    AppProcessor.doGetCurrentAccount().then((userInfo) => {
       if (!userInfo) {
         return;
       }

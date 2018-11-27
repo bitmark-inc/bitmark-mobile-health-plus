@@ -4,7 +4,7 @@ import {
   AppleHealthKitModel,
   BitmarkModel,
 } from '../models';
-import { FileUtil, getLocalAssetsFolderPath } from '../utils';
+import { FileUtil, getLocalAssetsFolderPath, } from '../utils';
 
 let allDataTypes = [
   'ActiveEnergyBurned',
@@ -336,7 +336,7 @@ const removeEmptyValueData = (healthData) => {
   }
   return realData;
 };
-const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, list) => {
+const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
   let results = [];
   for (let dateRange of list) {
     let healthRawData = await doGetHealthKitData(allDataTypes, dateRange.startDate, dateRange.endDate);
@@ -354,23 +354,14 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     };
     let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
 
-    let tempFolder = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/temp_${randomString({ length: 8, numeric: true, letters: false, }) + moment().toDate().getTime()}`;
-    let tempFolderDownloaded = `${tempFolder}/downloaded`;
-    await FileUtil.mkdir(tempFolder);
-    await FileUtil.mkdir(tempFolderDownloaded);
-
-    let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, tempFolderDownloaded, filePath, healthData.assetName, healthData.assetMetadata, 1);
-    await FileUtil.remove(filePath);
+    let issueResult = await BitmarkModel.doIssueFile(filePath, healthData.assetName, healthData.assetMetadata, 1);
 
     let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
     let downloadedFolder = `${assetFolderPath}/downloaded`;
     await FileUtil.mkdir(assetFolderPath);
     await FileUtil.mkdir(downloadedFolder);
-    let list = await FileUtil.readDir(tempFolderDownloaded);
-    for (let filename of list) {
-      await FileUtil.moveFileSafe(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
-    }
-    await FileUtil.removeSafe(tempFolder);
+    let filename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
+    await FileUtil.moveFileSafe(filePath, `${downloadedFolder}/${filename}`);
 
     let listFiles = await FileUtil.readDir(downloadedFolder);
     let zipFilePath = `${downloadedFolder}/${listFiles[0]}`;
@@ -385,7 +376,8 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
 
     issueResult.bitmarkIds.forEach(id => {
       results.push({
-        id, sessionData: issueResult.sessionData,
+        id,
+        assetId: issueResult.asset,
         healthData,
         filePath: `${downloadedFolder}/${listFile[0]}`
       });

@@ -250,15 +250,11 @@ const doCheckMetadata = async (metadata) => {
   return await BitmarkSDK.validateMetadata(metadata);
 };
 
-const doIssueFile = async (touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity, isPublicAsset) => {
-  let result = await BitmarkSDK.issueFile(touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity, isPublicAsset);
+const doIssueFile = async (touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity) => {
+  let result = await BitmarkSDK.issueFile(touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity);
   return result;
 };
 
-const doIssueThenTransferFile = async (touchFaceIdSession, filePath, assetName, metadata, receiver, extra) => {
-  let result = await BitmarkSDK.issueThenTransferFile(touchFaceIdSession, filePath, assetName, metadata, receiver, extra);
-  return result;
-};
 
 const doGet100Transactions = (accountNumber, offsetNumber) => {
   return new Promise((resolve, reject) => {
@@ -365,34 +361,6 @@ const doGetBitmarkInformation = (bitmarkId) => {
   });
 };
 
-const doAccessGrants = (accountNumber, timestamp, signature, body) => {
-  return new Promise((resolve, reject) => {
-    let statusCode;
-    let tempURL = `${config.api_server_url}/v2/access-grants`;
-    fetch(tempURL, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        requester: accountNumber,
-        timestamp,
-        signature,
-      },
-      body: JSON.stringify(body),
-    }).then((response) => {
-      statusCode = response.status;
-      if (statusCode >= 500) {
-        return response.text();
-      }
-      return response.json();
-    }).then((data) => {
-      if (statusCode >= 400) {
-        return reject(new Error('doAccessGrants error :' + JSON.stringify(data)));
-      }
-      resolve(data);
-    }).catch(reject);
-  });
-};
 
 let BitmarkModel = {
   doGet100Bitmarks,
@@ -401,7 +369,6 @@ let BitmarkModel = {
   doGetAssetInformation,
   doPrepareAssetInfo,
   doIssueFile,
-  doIssueThenTransferFile,
   doCheckMetadata,
   doGetBitmarkInformation,
   doGetTransactionDetail,
@@ -411,7 +378,6 @@ let BitmarkModel = {
   doGetAssetAccessibility,
   doGetAssetTextContentType,
   doGetAssetTextContent,
-  doAccessGrants,
 
 };
 

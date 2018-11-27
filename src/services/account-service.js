@@ -3,8 +3,7 @@ import ReactNative from 'react-native';
 // import aesjs from 'aes-js';
 import randomString from 'random-string';
 
-import { AccountModel, CommonModel, BitmarkSDK, UserModel, BitmarkModel } from './../models';
-import { config } from '../configs';
+import { AccountModel, CommonModel, UserModel, BitmarkModel } from './../models';
 import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError } from './../utils';
 import { CryptoAdapter } from '../models/adapters/crypto';
 import { isImageFile, isPdfFile } from "../utils";
@@ -14,8 +13,8 @@ const {
 } = ReactNative;
 
 // ================================================================================================\
-const doGetCurrentAccount = async (touchFaceIdSession) => {
-  let userInfo = await AccountModel.doGetCurrentAccount(touchFaceIdSession);
+const doGetCurrentAccount = async () => {
+  let userInfo = await AccountModel.doGetCurrentAccount();
   let userInformation = { bitmarkAccountNumber: userInfo.bitmarkAccountNumber };
 
   await UserModel.doUpdateUserInfo(userInformation);
@@ -23,7 +22,7 @@ const doGetCurrentAccount = async (touchFaceIdSession) => {
 }
 
 const doCreateSignatureData = async (touchFaceIdMessage) => {
-  let signatureData = await CommonModel.doTryCreateSignatureData(touchFaceIdMessage);
+  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdMessage);
   if (!signatureData) {
     return null;
   }
@@ -31,14 +30,6 @@ const doCreateSignatureData = async (touchFaceIdMessage) => {
   signatureData.account_number = userInfo.bitmarkAccountNumber;
   return signatureData;
 };
-
-const doValidateBitmarkAccountNumber = async (accountNumber) => {
-  let userInfo = await UserModel.doGetCurrentUser();
-  if (userInfo.bitmarkAccountNumber === accountNumber) {
-    throw new Error('Can not transfer for current user!');
-  }
-  return await BitmarkSDK.validateAccountNumber(accountNumber, config.bitmark_network);
-}
 
 // ================================================================================================
 // ================================================================================================
@@ -86,7 +77,7 @@ let setApplicationIconBadgeNumber = (number) => {
 let doRegisterNotificationInfo = async (accountNumber, token, intercomUserId) => {
   let signatureData;
   if (accountNumber) {
-    signatureData = await CommonModel.doTryCreateSignatureData('Please sign to authorize your transactions');
+    signatureData = await CommonModel.doCreateSignatureData();
     if (!signatureData) {
       return;
     }
@@ -114,48 +105,6 @@ let removeAllDeliveredNotifications = () => {
   PushNotificationIOS.removeAllDeliveredNotifications();
 };
 
-let doGetAllGrantedAccess = async (accountNumber, jwt) => {
-  let data = await AccountModel.doGetAllGrantedAccess(accountNumber);
-  let granted_from = [];
-  let granted_to = [];
-  data.access_grants.forEach(item => {
-    if (item.from === accountNumber) {
-      let grantedInfo = granted_to.find(it => it.grantee === item.to);
-      if (!grantedInfo) {
-        grantedInfo = {
-          ids: {},
-          grantor: accountNumber,
-          grantee: item.to,
-          created_at: item.created_at,
-          granted_at: item.start_at,
-        };
-        grantedInfo.ids[item.asset_id] = item.id;
-        granted_to.push(grantedInfo);
-      } else {
-        grantedInfo.ids[item.asset_id] = item.id;
-      }
-    } else if (item.to === accountNumber) {
-      let grantedInfo = granted_from.find(it => it.grantor === item.from);
-      if (!grantedInfo) {
-        grantedInfo = {
-          ids: {},
-          grantor: item.from,
-          grantee: accountNumber,
-          created_at: item.created_at,
-          granted_at: item.start_at,
-        };
-        grantedInfo.ids[item.asset_id] = item.id;
-        granted_from.push(grantedInfo);
-      } else {
-        grantedInfo.ids[item.asset_id] = item.id;
-      }
-    }
-  });
-  console.log('doGetAllGrantedAccess :', granted_from, granted_to);
-  let waiting = await AccountModel.doGetWaitingGrantedAccess(jwt);
-  return { waiting, granted_from, granted_to };
-};
-
 let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromAnEmail) => {
   let results = { ids: [], list: [] };
   for (let emailIssueRequest of emailIssueRequestsFromAnEmail) {
@@ -171,17 +120,6 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
     let decryptedFilePath = `${folderPath}/temp_email_records_decrypted.zip`;
     await CryptoAdapter.decryptAES(encryptedFilePath, emailIssueRequest.aes_key, emailIssueRequest.aes_iv, emailIssueRequest.aes_cipher, decryptedFilePath);
 
-    // let contentEncryptedFile = await FileUtil.readFile(encryptedFilePath, 'base64');
-
-    // let keyInByte = Buffer.from(emailIssueRequest.aes_key, 'hex');
-    // let ivInByte = Buffer.from(emailIssueRequest.aes_iv, 'hex');
-    // let contentEncryptedFileInBytes = Buffer.from(contentEncryptedFile, 'base64');
-
-    // let aesOfbDecrypt = new aesjs.ModeOfOperation.ofb(keyInByte, ivInByte);
-    // let contentDecryptedFileInBytes = aesOfbDecrypt.decrypt(contentEncryptedFileInBytes);
-
-    // let decryptedFilePath = `${folderPath}/temp_email_records_decrypted.zip`;
-    // await FileUtil.writeFile(decryptedFilePath, Buffer.from(contentDecryptedFileInBytes).toString('base64'), 'base64');
     await FileUtil.unzip(decryptedFilePath, unzipFolder);
 
     let existDataFolder = await runPromiseWithoutError(FileUtil.exists(`${unzipFolder}/data`));
@@ -238,19 +176,6 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
 let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
   let emailIssueRequests = await AccountModel.doGetAllEmailRecords(jwt);
 
-  // let emailIssueRequests = [
-  //   {
-  //     "id": "2f05da53-4e34-4a02-96df-35092108f160",
-  //     "account_number": "eB8RZTonPwUUpBPD6kXPffWfjvztdCyy9Ah7FD94iJnPZ4sFYN",
-  //     "sender": "Moise Domino <ngleanh.reg@gmail.com>",
-  //     "subject": "Medical report from Dr. Anh",
-  //     "download_url": "https://drop.test.bitmark.com/zips/z_20181018_084441_768e9d919c663af68f32eb6a8eb43985.ezip",
-  //     "aes_cipher": "aes-256-ofb",
-  //     "aes_key": "b3b11c127ced166a246adf650a804addb6e5379099b1f7f2bcbb9e58c91dae1f",
-  //     "aes_iv": "91055c52c036d7a67fa70ce3cf658a5b",
-  //     "created_at": "2018-10-18T08:44:41.593533Z"
-  //   }
-  // ];
   let result = {};
   if (emailIssueRequests && emailIssueRequests.length > 0) {
     for (let emailIssueRequest of emailIssueRequests) {
@@ -264,7 +189,6 @@ let doGetAllEmailRecords = async (bitmarkAccountNumber, jwt) => {
 let AccountService = {
   doGetCurrentAccount,
   doCreateSignatureData,
-  doValidateBitmarkAccountNumber,
 
   configure,
   setApplicationIconBadgeNumber,
@@ -274,7 +198,6 @@ let AccountService = {
   doCheckNotificationPermission,
   doRegisterNotificationInfo,
   doTryDeregisterNotificationInfo,
-  doGetAllGrantedAccess,
   doGetAllEmailRecords,
   doProcessEmailRecords,
 };

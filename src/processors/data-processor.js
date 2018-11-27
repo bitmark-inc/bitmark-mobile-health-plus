@@ -15,20 +15,19 @@ const {
 
 import {
   UserBitmarksStore, UserBitmarksActions,
-  DataAccountAccessesStore, DataAccountAccessesActions
 } from './../stores';
 import {
   EventEmitterService,
   BitmarkService,
   AccountService,
 } from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkSDK, BitmarkModel } from '../models';
+import { CommonModel, AccountModel, UserModel, BitmarkModel } from '../models';
 import { HealthKitService } from '../services/health-kit-service';
 import { config } from '../configs';
 import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
-  checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf,
+  isPdfFile, populateAssetNameFromPdf, compareVersion,
   deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud
 } from '../utils';
 
@@ -36,25 +35,19 @@ import PDFScanner from '../models/adapters/pdf-scanner';
 import iCloudSyncAdapter from '../models/adapters/icloud';
 
 let userInformation = {};
-let grantedAccessAccountSelected = null;
 let jwt;
-// let websocket;
 let isLoadingData = false;
 let notificationUUID;
 
 let mapModalDisplayData = {};
 let keyIndexModalDisplaying = 0;
 const mapModalDisplayKeyIndex = {
-  local_storage_migration: 1,
   what_new: 2,
   email_record: 3,
   weekly_health_data: 4,
   update_alpha_app: 5,
 };
 let codePushUpdated = null;
-// let isDisplayingEmailRecord = false;
-// let isMigratingFileToLocalStorage = false;
-let didMigrationFileToLocalStorage = false;
 let mountedRouter = null;
 
 const isHealthDataBitmark = (asset) => {
@@ -94,10 +87,6 @@ let checkDisplayModal = () => {
     if (mapModalDisplayData[keyIndex] && (keyIndexModalDisplaying <= 0 || keyIndexModalDisplaying > keyIndex)) {
       if (keyIndex === mapModalDisplayKeyIndex.what_new && mountedRouter) {
         Actions.whatNew();
-        keyIndexModalDisplaying = keyIndex;
-        break;
-      } else if (keyIndex === mapModalDisplayKeyIndex.local_storage_migration && mountedRouter) {
-        EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
         keyIndexModalDisplaying = keyIndex;
         break;
       } else if (keyIndex === mapModalDisplayKeyIndex.email_record && mountedRouter) {
@@ -140,8 +129,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
 
 
-  if ((grantedAccessAccountSelected && grantedAccessAccountSelected.grantor === bitmarkAccountNumber) ||
-    (!grantedAccessAccountSelected && bitmarkAccountNumber === userInformation.bitmarkAccountNumber)) {
+  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].healthDataBitmarks;
 
@@ -179,16 +167,14 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         if (data && data.assets && data.bitmarks && data.assets.length > 0 && data.bitmarks.length > 0) {
           data.assets.forEach(asset => {
             let exist = totalAssets.findIndex(as => as.id == asset.id) >= 0;
-            if ((bitmarkAccountNumber === userInformation.bitmarkAccountNumber && !exist) ||
-              (bitmarkAccountNumber !== userInformation.bitmarkAccountNumber && !exist && grantedAccessAccountSelected && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[asset.id])) {
+            if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && !exist) {
               totalAssets.push(asset);
             }
           });
           data.bitmarks.forEach(bitmark => {
             lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
             let exist = totalBitmarks.findIndex(b => b.id == bitmark.id) >= 0;
-            if ((bitmarkAccountNumber === userInformation.bitmarkAccountNumber && !exist) ||
-              (bitmarkAccountNumber !== userInformation.bitmarkAccountNumber && !exist && grantedAccessAccountSelected && grantedAccessAccountSelected.ids && grantedAccessAccountSelected.ids[bitmark.asset_id])) {
+            if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && !exist) {
               totalBitmarks.push(bitmark);
             }
           });
@@ -261,36 +247,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
   });
 };
 
-// let queueGetAccountAccesses = [];
-// const doCheckNewAccesses = async (accesses) => {
-//   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
-//   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(accesses));
-//   if (grantedAccessAccountSelected) {
-//     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === grantedAccessAccountSelected.grantor);
-//   }
-//   if (accesses && accesses.waiting && accesses.waiting.length > 0 && didMigrationFileToLocalStorage) {
-//     Actions.confirmAccess({ token: accesses.waiting[0].id, grantee: accesses.waiting[0].grantee });
-//   }
-// };
-// const runGetAccountAccessesInBackground = () => {
-//   return new Promise((resolve) => {
-//     queueGetAccountAccesses = queueGetAccountAccesses || [];
-//     queueGetAccountAccesses.push(resolve);
-//     if (queueGetAccountAccesses.length > 1) {
-//       return;
-//     }
-//     AccountService.doGetAllGrantedAccess(userInformation.bitmarkAccountNumber, jwt).then(accesses => {
-//       queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
-//       queueGetAccountAccesses = [];
-//       doCheckNewAccesses(accesses);
-//     }).catch(error => {
-//       queueGetAccountAccesses.forEach(queueResolve => queueResolve());
-//       queueGetAccountAccesses = [];
-//       console.log(' runGetAccountAccessesInBackground error:', error);
-//     });
-//   });
-// };
-
 const finishedDisplayEmailRecords = () => {
   updateModal(mapModalDisplayKeyIndex.email_record);
 };
@@ -306,17 +262,6 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
   } else {
     updateModal(mapModalDisplayKeyIndex.email_record);
   }
-
-  // if (!mapEmailRecords) {
-  //   isDisplayingEmailRecord = false;
-  //   return;
-  // }
-  // if (Object.keys(mapEmailRecords).length > 0 && !isDisplayingEmailRecord && didMigrationFileToLocalStorage) {
-  //   isDisplayingEmailRecord = true;
-  //   Actions.emailRecords({ mapEmailRecords });
-  // } else {
-  //   isDisplayingEmailRecord = false;
-  // }
 };
 const runGetEmailRecordsInBackground = () => {
   return new Promise((resolve) => {
@@ -355,16 +300,9 @@ const runOnBackground = async (justOpenApp) => {
 
   if (userInformation && userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
-    // await runGetAccountAccessesInBackground();
-    if (grantedAccessAccountSelected) {
-      await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor);
-    }
     if (!isDisplayingModal(mapModalDisplayKeyIndex.email_record)) {
       await runGetEmailRecordsInBackground();
     }
-    // if (!isDisplayingEmailRecord) {
-    //   await runGetEmailRecordsInBackground();
-    // }
   }
   if (justOpenApp) {
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
@@ -459,11 +397,11 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   return userInformation;
 };
 
-const doCreateAccount = async (touchFaceIdSession) => {
-  let userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
+const doCreateAccount = async () => {
+  let userInformation = await AccountService.doGetCurrentAccount();
   await checkAppNeedResetLocalData();
 
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+  let signatureData = await CommonModel.doCreateSignatureData();
   await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   if (notificationUUID) {
     let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
@@ -482,9 +420,9 @@ const doCreateAccount = async (touchFaceIdSession) => {
   return userInformation;
 };
 
-const doLogin = async (touchFaceIdSession) => {
-  userInformation = await AccountService.doGetCurrentAccount(touchFaceIdSession);
-  let signatureData = await CommonModel.doCreateSignatureData(touchFaceIdSession);
+const doLogin = async () => {
+  userInformation = await AccountService.doGetCurrentAccount();
+  let signatureData = await CommonModel.doCreateSignatureData();
   await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await checkAppNeedResetLocalData();
   return userInformation;
@@ -496,32 +434,17 @@ const doLogout = async () => {
     return null;
   }
   if (userInformation.notificationUUID) {
-    let signatureData = await CommonModel.doTryCreateSignatureData(i18n.t('FaceTouchId_doLogout'))
+    let signatureData = await CommonModel.doCreateSignatureData()
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
   }
   PushNotificationIOS.cancelAllLocalNotifications();
-  let accesses = await doGetAccountAccesses();
-  for (let grantedInfo of (accesses.granted_from || [])) {
-    let timestamp = moment().toDate().getTime();
-    let message = `accessGrant|${grantedInfo.id}|${userInformation.bitmarkAccountNumber}|${timestamp}`;
-    let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
-    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
-  }
-  for (let grantedInfo of (accesses.granted_to || [])) {
-    let timestamp = moment().toDate().getTime();
-    let message = `accessGrant|${grantedInfo.id}|${userInformation.bitmarkAccountNumber}|${timestamp}`;
-    let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
-    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
-  }
-  CommonModel.resetFaceTouchSessionId();
+
   await UserModel.doRemoveUserInfo();
   await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
   await Intercom.logout();
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
-  DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   mapModalDisplayData = {};
   keyIndexModalDisplaying = {};
-  grantedAccessAccountSelected = null;
   userInformation = {};
   return true;
 };
@@ -551,8 +474,6 @@ const doDeactiveApplication = async () => {
 };
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
-  // await UserModel.doRemoveUserInfo();
-  // runPromiseWithoutError(iCloudSyncAdapter.syncCloud());
 
   userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
@@ -570,7 +491,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     });
   }
 
-  if (userInformation && userInformation.bitmarkAccountNumber && !!CommonModel.getFaceTouchSessionId()) {
+  if (userInformation && userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${userInformation.bitmarkAccountNumber}`);
 
@@ -628,68 +549,26 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     }
     configNotification();
 
-    let signatureData = await CommonModel.doCreateSignatureData(CommonModel.getFaceTouchSessionId());
+    let signatureData = await CommonModel.doCreateSignatureData();
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
     jwt = result.jwt_token;
 
-    // websocket = new WebSocket(config.mobile_server_url + '/ws', [], {
-    //   headers: {
-    //     'Authorization': 'Bearer ' + jwt
-    //   }
-    // });
-
-    // websocket.onopen = () => {
-    //   console.log('websocket opened');
-    // };
-    // websocket.onmessage = (event) => {
-    //   if (event.data) {
-    //     let data
-    //     try {
-    //       data = JSON.parse(event.data);
-    //     } catch (error) {
-    //       //
-    //     }
-    //     console.log('data event :', data);
-    //     // if (data && data.event === 'bitmarks_grant_access' && data.id && data.grantee && didMigrationFileToLocalStorage) {
-    //     //   Actions.confirmAccess({ token: data.id, grantee: data.grantee });
-    //     // }
-    //   }
-    // };
-    // websocket.onerror = (e) => {
-    //   console.log('websocket error : ', e);
-    // };
-    // websocket.onclose = (e) => {
-    //   console.log('websocket closed:', e.code, e.reason);
-    // };
-
     if (justCreatedBitmarkAccount) {
-      await AccountModel.doMarkMigration(jwt);
-      didMigrationFileToLocalStorage = true;
       appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
       await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
     } else {
-      didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
-      if (!didMigrationFileToLocalStorage && !isDisplayingModal(mapModalDisplayKeyIndex.local_storage_migration)) {
-        updateModal(mapModalDisplayKeyIndex.local_storage_migration, true);
-      }
-      // if (!didMigrationFileToLocalStorage && !isMigratingFileToLocalStorage) {
-      //   isMigratingFileToLocalStorage = true;
-      //   EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE);
-      // }
       if (!appInfo.displayedWhatNewInformation || compareVersion(appInfo.displayedWhatNewInformation, DeviceInfo.getVersion(), 2) < 0) {
         updateModal(mapModalDisplayKeyIndex.what_new, true);
       }
     }
 
-    let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
+    let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
 
-    if (!grantedAccessAccountSelected && !userInformation.activeHealthDataAt &&
-      userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
+    if (!userInformation.activeHealthDataAt && userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
       await runPromiseWithoutError(doRequireHealthKitPermission());
     }
 
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(userBitmarks || {}));
-    DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(await doGetAccountAccesses()));
     await checkAppNeedResetLocalData(appInfo);
 
     AccountService.removeAllDeliveredNotifications();
@@ -741,8 +620,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   return userInformation;
 };
 
-const doBitmarkHealthData = async (touchFaceIdSession, list) => {
-  let results = await HealthKitService.doBitmarkHealthData(touchFaceIdSession, userInformation.bitmarkAccountNumber, list);
+const doBitmarkHealthData = async (list) => {
+  let results = await HealthKitService.doBitmarkHealthData(userInformation.bitmarkAccountNumber, list);
 
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
@@ -754,27 +633,6 @@ const doBitmarkHealthData = async (touchFaceIdSession, list) => {
     });
     appInfo.lastTimeIssued = moment().toDate().getTime();
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-  }
-
-  let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
-  if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
-    let body = { items: [] };
-    for (let grantedInfo of grantedInformationForOtherAccount) {
-      for (let record of results) {
-        let sessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, record.id, record.sessionData, grantedInfo.grantee);
-        body.items.push({
-          bitmark_id: record.id,
-          session_data: sessionData,
-          to: grantedInfo.grantee,
-          start_at: Math.floor(moment().toDate().getTime() / 1000),
-          duration: { Years: 99 }
-        });
-      }
-    }
-    let timestamp = moment().toDate().getTime();
-    let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
-    let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
-    await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
 
   for (let item of results) {
@@ -789,48 +647,8 @@ const doMarkDoneBitmarkHealthData = () => {
   updateModal(mapModalDisplayKeyIndex.weekly_health_data);
 };
 
-const doDownloadBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, assetId) => {
-  let bitmarkAccountNumber = grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.grantedAccessAccountSelected;
-  let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${assetId}`;
-  let downloadedFolder = `${assetFolderPath}/downloaded`;
-  await FileUtil.mkdir(assetFolderPath);
-  await FileUtil.mkdir(downloadedFolder);
-
-  if (grantedAccessAccountSelected) {
-    await BitmarkSDK.downloadBitmarkWithGrantId(touchFaceIdSession, bitmarkIdOrGrantedId, downloadedFolder);
-  } else {
-    await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId, downloadedFolder);
-  }
-
-  let list = await FileUtil.readDir(downloadedFolder);
-  return `${downloadedFolder}/${list[0]}`;
-};
-
-const doDownloadHealthDataBitmark = async (touchFaceIdSession, bitmarkIdOrGrantedId, assetId) => {
-  let bitmarkAccountNumber = grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.grantedAccessAccountSelected;
-  let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${assetId}`;
-  let downloadedFolder = `${assetFolderPath}/downloaded`;
-  await FileUtil.mkdir(assetFolderPath);
-  await FileUtil.mkdir(downloadedFolder);
-
-  if (grantedAccessAccountSelected) {
-    await BitmarkSDK.downloadBitmarkWithGrantId(touchFaceIdSession, bitmarkIdOrGrantedId, downloadedFolder);
-  } else {
-    await BitmarkSDK.downloadBitmark(touchFaceIdSession, bitmarkIdOrGrantedId, downloadedFolder);
-  }
-
-  let list = await FileUtil.readDir(downloadedFolder);
-  let accountFilePath = `${downloadedFolder}/${list[0]}`;
-  await FileUtil.unzip(accountFilePath, downloadedFolder);
-  await FileUtil.removeSafe(accountFilePath);
-
-  let listFile = await FileUtil.readDir(downloadedFolder);
-  let result = await FileUtil.readFile(downloadedFolder + '/' + listFile[0]);
-  return result;
-};
-
-const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList, quantity, isPublicAsset = false, isMultipleAsset = false) => {
-  let results = await BitmarkService.doIssueFile(touchFaceIdSession, userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
+const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultipleAsset = false) => {
+  let results = await BitmarkService.doIssueFile(userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity);
 
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
@@ -844,26 +662,6 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
   }
 
-  let grantedInformationForOtherAccount = await doGetAccountAccesses('granted_to');
-  if (grantedInformationForOtherAccount && grantedInformationForOtherAccount.length > 0) {
-    let body = { items: [] };
-    for (let grantedInfo of grantedInformationForOtherAccount) {
-      for (let record of results) {
-        let sessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, record.id, record.sessionData, grantedInfo.grantee);
-        body.items.push({
-          bitmark_id: record.id,
-          session_data: sessionData,
-          to: grantedInfo.grantee,
-          start_at: Math.floor(moment().toDate().getTime() / 1000),
-          duration: { Years: 99 }
-        });
-      }
-    }
-    let timestamp = moment().toDate().getTime();
-    let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
-    let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
-    await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
-  }
   for (let record of results) {
     await generateThumbnail(filePath, record.assetId, isMultipleAsset);
 
@@ -881,10 +679,10 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
   return results;
 };
 
-const doIssueMultipleFiles = async (touchFaceIdSession, listInfo) => {
+const doIssueMultipleFiles = async (listInfo) => {
   let results = [];
   for (let info of listInfo) {
-    let result = await doIssueFile(touchFaceIdSession, info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset, info.isMultipleAsset);
+    let result = await doIssueFile(info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset, info.isMultipleAsset);
     results.push(result[0]);
   }
   return results;
@@ -914,25 +712,6 @@ const doGetUserDataBitmarks = (bitmarkAccountNumber) => {
   });
 };
 
-const doGetAccountAccesses = (type) => {
-  return new Promise((resolve) => {
-    CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES).then((accesses) => {
-      if (!accesses) {
-        return resolve();
-      }
-      if (type) {
-        //TODO field
-        return resolve(accesses[type]);
-      }
-      resolve(accesses);
-    }).catch((error => {
-      console.log('doGetAccountAccesses error:', error);
-      resolve();
-    }));
-
-  });
-};
-
 const doCheckFileToIssue = async (filePath) => {
   let result = await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
   let canIssue = true;
@@ -950,134 +729,14 @@ const doCheckFileToIssue = async (filePath) => {
   return result;
 };
 
-// const doGrantingAccess = async () => {
-//   return await AccountModel.doGrantingAccess(jwt);
-// };
-
-// const getAccountAccessSelected = () => {
-//   return grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : null;
-// };
-// const getGrantedAccessAccountSelected = () => {
-//   return grantedAccessAccountSelected;
-// };
-
-// const doSelectAccountAccess = async (accountNumber) => {
-//   if (accountNumber === userInformation.bitmarkAccountNumber) {
-//     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks((await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {}));
-//     grantedAccessAccountSelected = null;
-//     return true;
-//   }
-//   let accesses = await runGetAccountAccessesInBackground();
-//   if (accesses && accesses.granted_from) {
-//     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === accountNumber);
-//     if (grantedAccessAccountSelected) {
-//       UserBitmarksStore.dispatch(UserBitmarksActions.reset());
-//       await runGetUserBitmarksInBackground(grantedAccessAccountSelected.grantor, grantedAccessAccountSelected.granted_at);
-//       return true;
-//     }
-//   }
-//   return false;
-// };
-
-// const doReceivedAccessQRCode = async (token) => {
-//   return await AccountModel.doReceiveGrantingAccess(jwt, token, { "update_grantee": true });
-// };
-
-// const doRemoveGrantingAccess = async (grantee) => {
-//   let result = await AccountModel.doRemoveGrantingAccess(userInformation.bitmarkAccountNumber, grantee);
-//   await runGetAccountAccessesInBackground();
-//   return result;
-// };
-
-// const doCancelGrantingAccess = async (token) => {
-//   let result = await AccountModel.doCancelGrantingAccess(jwt, token);
-//   await runGetAccountAccessesInBackground();
-//   return result;
-// };
-
-// const doConfirmGrantingAccess = async (touchFaceIdSession, token, grantee) => {
-//   let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
-//   if (userBitmarks && (userBitmarks.healthDataBitmarks || userBitmarks.healthAssetBitmarks)) {
-//     let body = { items: [] };
-
-//     let doGetSessionData = async (bitmarkAccountNumber, assetId) => {
-//       let filePath = FileUtil.DocumentDirectory + '/assets-session-data/' + bitmarkAccountNumber + '/' + assetId + '/session_data.txt';
-//       let exist = await runPromiseWithoutError(FileUtil.exists(filePath));
-//       if (exist && !exist.error) {
-//         let content = await FileUtil.readFile(filePath);
-//         if (content) {
-//           try {
-//             return JSON.parse(content);
-//           } catch (error) {
-//             //
-//           }
-//         }
-//       }
-//       return null;
-//     };
-
-//     for (let bitmark of (userBitmarks.healthDataBitmarks || [])) {
-//       let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
-//       if (sessionData) {
-//         let granteeSessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
-//         body.items.push({
-//           bitmark_id: bitmark.id,
-//           session_data: granteeSessionData,
-//           to: grantee,
-//           start_at: Math.floor(moment().toDate().getTime() / 1000),
-//           duration: { Years: 99 }
-//         });
-//       } else if (bitmark.status === 'confirmed') {
-//         let granteeSessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
-//         body.items.push({
-//           bitmark_id: bitmark.id,
-//           session_data: granteeSessionData,
-//           to: grantee,
-//           start_at: Math.floor(moment().toDate().getTime() / 1000),
-//           duration: { Years: 99 }
-//         });
-//       }
-//     }
-//     for (let bitmark of (userBitmarks.healthAssetBitmarks || [])) {
-//       let sessionData = await doGetSessionData(userInformation.bitmarkAccountNumber, bitmark.asset_id);
-//       if (sessionData) {
-//         let granteeSessionData = await BitmarkSDK.createSessionDataFromLocalForRecipient(touchFaceIdSession, bitmark.id, sessionData, grantee);
-//         body.items.push({
-//           bitmark_id: bitmark.id,
-//           session_data: granteeSessionData,
-//           to: grantee,
-//           start_at: Math.floor(moment().toDate().getTime() / 1000),
-//           duration: { Years: 99 }
-//         });
-//       } else if (bitmark.status === 'confirmed') {
-//         let granteeSessionData = await BitmarkSDK.createSessionDataForRecipient(touchFaceIdSession, bitmark.id, grantee);
-//         body.items.push({
-//           bitmark_id: bitmark.id,
-//           session_data: granteeSessionData,
-//           to: grantee,
-//           start_at: Math.floor(moment().toDate().getTime() / 1000),
-//           duration: { Years: 99 }
-//         });
-//       }
-//     }
-
-//     let timestamp = moment().toDate().getTime();
-//     let message = `accessGrant||${userInformation.bitmarkAccountNumber}|${timestamp}`;
-//     let signatures = await CommonModel.doTryRickSignMessage([message], touchFaceIdSession);
-//     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
-//   }
-//   await AccountModel.doReceiveGrantingAccess(jwt, token, { status: "completed" });
-
-//   return await runGetAccountAccessesInBackground();
-// };
 const doDeleteAccount = async () => {
   return await AccountModel.doDeleteAccount(jwt);
 };
 
-const doAcceptEmailRecords = async (touchFaceIdSession, emailRecord) => {
+const doAcceptEmailRecords = async (emailRecord) => {
   for (let item of emailRecord.list) {
     if (!item.existingAsset) {
-      await doIssueFile(touchFaceIdSession, item.filePath, item.assetName, item.metadata, 1);
+      await doIssueFile(item.filePath, item.assetName, item.metadata, 1);
     }
   }
   for (let id of emailRecord.ids) {
@@ -1091,97 +750,6 @@ const doRejectEmailRecords = async (emailRecord) => {
     await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
     await AccountModel.doDeleteEmailRecord(jwt, id);
   }
-};
-
-const doMigrateFilesToLocalStorage = async () => {
-  await runGetUserBitmarksInBackground();
-  // await runGetAccountAccessesInBackground();
-
-  let currentSessionId = CommonModel.getFaceTouchSessionId();
-
-  let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
-  userBitmarks = userBitmarks || {};
-  let bitmarks = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []);
-  let total = 0;
-  for (let bitmark of bitmarks) {
-    let assetFolderPath = `${getLocalAssetsFolderPath(userInformation.bitmarkAccountNumber)}/${bitmark.asset_id}`;
-    let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
-    let needDownload = false;
-    if (!existAssetFolder || existAssetFolder.error) {
-      needDownload = true;
-    } else {
-      let list = await FileUtil.readDir(assetFolderPath);
-      if (list.length === 0) {
-        needDownload = true;
-      } else {
-        needDownload =
-          (list.findIndex(filename => filename.startsWith('downloading')) >= 0) ||
-          (list.findIndex(filename => filename.startsWith('downloaded')) < 0);
-      }
-    }
-    if (needDownload) {
-      await FileUtil.mkdir(assetFolderPath);
-      let downloadingFolderPath = `${assetFolderPath}/downloading`;
-      await FileUtil.mkdir(downloadingFolderPath);
-      await BitmarkSDK.downloadBitmark(currentSessionId, bitmark.id, downloadingFolderPath);
-      let listDownloadFile = await FileUtil.readDir(downloadingFolderPath);
-      let filePathAfterDownloading = `${downloadingFolderPath}/${listDownloadFile[0]}`;
-
-      let downloadedFolderPath = `${assetFolderPath}/downloaded`;
-      await FileUtil.mkdir(downloadedFolderPath);
-      let downloadedFilePath = `${downloadedFolderPath}${filePathAfterDownloading.substring(filePathAfterDownloading.lastIndexOf('/'), filePathAfterDownloading.length)}`;
-      await FileUtil.moveFileSafe(filePathAfterDownloading, downloadedFilePath);
-      await FileUtil.removeSafe(downloadingFolderPath);
-
-      if (isHealthDataBitmark(bitmark.asset)) {
-        await FileUtil.unzip(downloadedFilePath, downloadedFolderPath);
-        await FileUtil.removeSafe(downloadedFilePath);
-        let listUnzipFile = await FileUtil.readDir(downloadedFolderPath);
-
-        bitmark.asset.filePath = `${downloadedFolderPath}/${listUnzipFile[0]}`;
-      } else {
-        bitmark.asset.filePath = `${downloadedFilePath}`;
-      }
-    }
-    // Create thumbnail if not exist
-    if (!checkThumbnailForBitmark(bitmark.asset_id).exists) {
-      await generateThumbnail(bitmark.asset.filePath, bitmark.asset_id);
-    }
-
-    // Create search indexed data if not exist
-    let isExistIndexedData = await checkExistIndexedDataForBitmark(bitmark.id);
-    if (!isExistIndexedData) {
-      if (isHealthDataBitmark(bitmark.asset)) {
-        let data = await FileUtil.readFile(bitmark.asset.filePath);
-        await insertHealthDataToIndexedDB(bitmark.id, {
-          assetMetadata: bitmark.asset.metadata,
-          assetName: bitmark.asset.name,
-          data,
-        });
-      } else if (isImageFile(bitmark.asset.filePath)) {
-        let detectResult = await populateAssetNameFromImage(bitmark.asset.filePath);
-        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
-      } else if (isPdfFile(bitmark.asset.filePath)) {
-        let detectResult;
-        if (isCaptureDataRecord(bitmark.asset.filePath)) {
-          let detectedTexts = await detectTextsFromPdf(bitmark.asset.filePath);
-          detectResult = { detectedTexts };
-        } else {
-          detectResult = await populateAssetNameFromPdf(bitmark.asset.filePath);
-        }
-
-        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
-      }
-    }
-
-    EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, Math.floor(total * 100 / bitmarks.length));
-    total++;
-  }
-  await runGetUserBitmarksInBackground();
-
-  EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, 100);
-  await AccountModel.doMarkMigration(jwt);
-  didMigrationFileToLocalStorage = true;
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
@@ -1267,13 +835,10 @@ let doMarkDisplayedWhatNewInformation = async () => {
 const doDisplayedWhatNewInformation = async () => {
   updateModal(mapModalDisplayKeyIndex.what_new, true);
 };
-let doMarkDoneMigration = () => {
-  updateModal(mapModalDisplayKeyIndex.local_storage_migration);
-};
 
-const doTransferBitmark = async (touchFaceIdSession, bitmark, receiver) => {
+const doTransferBitmark = async (bitmark, receiver) => {
   let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
-  let result = await BitmarkService.doTransferBitmark(touchFaceIdSession, bitmark.id, receiver);
+  let result = await BitmarkService.doTransferBitmark(bitmark.id, receiver);
   await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
   await iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`)
   await deleteIndexedDataByBitmarkId(bitmark.id);
@@ -1294,7 +859,6 @@ const DataProcessor = {
   doDeactiveApplication,
   doBitmarkHealthData,
   doMarkDoneBitmarkHealthData,
-  doDownloadBitmark,
   doIssueFile,
   doIssueMultipleFiles,
 
@@ -1306,20 +870,9 @@ const DataProcessor = {
   finishedDisplayEmailRecords,
   isAppLoadingData: () => isLoadingData,
 
-  // doGrantingAccess,
-  // doGetAccountAccesses,
-  // doSelectAccountAccess,
-  // getAccountAccessSelected,
-  // getGrantedAccessAccountSelected,
-  // doReceivedAccessQRCode,
-  // doCancelGrantingAccess,
-  // doRemoveGrantingAccess,
-  // doConfirmGrantingAccess,
-  doDownloadHealthDataBitmark,
   doDeleteAccount,
   doAcceptEmailRecords,
   doRejectEmailRecords,
-  doMigrateFilesToLocalStorage,
   detectLocalAssetFilePath,
   doCombineImages,
   doMetricOnScreen,
@@ -1329,7 +882,6 @@ const DataProcessor = {
   doCheckHaveCodePushUpdate,
   doMarkDisplayedWhatNewInformation,
   doDisplayedWhatNewInformation,
-  doMarkDoneMigration,
   doTransferBitmark,
 };
 

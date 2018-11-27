@@ -2,8 +2,8 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 import { registerTasks } from './app-tasks-register';
 
-import { CommonModel, AccountModel, FaceTouchId } from './../models';
-import { AccountService, EventEmitterService, } from './../services'
+import { AccountModel, FaceTouchId, BitmarkSDK } from './../models';
+import { EventEmitterService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';
 import { compareVersion } from '../utils';
@@ -66,26 +66,13 @@ const doCreateNewAccount = async (enableTouchFaceId) => {
   if (Platform.OS === 'ios' && config.isIPhoneX && enableTouchFaceId) {
     await FaceTouchId.authenticate();
   }
-  let touchFaceIdSession = await AccountModel.doCreateAccount(enableTouchFaceId);
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  CommonModel.setFaceTouchSessionId(touchFaceIdSession);
-  return await processing(DataProcessor.doCreateAccount(touchFaceIdSession));
+  await BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp'));
+  await AccountModel.doCreateAccount(enableTouchFaceId);
+  return await processing(DataProcessor.doCreateAccount());
 };
 
-const doGetCurrentAccount = async (canUseCurrentTouchFaceId) => {
-  let touchFaceIdSession;
-  if (canUseCurrentTouchFaceId) {
-    touchFaceIdSession = CommonModel.getFaceTouchSessionId();
-  }
-  if (!touchFaceIdSession) {
-    touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doGetCurrentAccount'));
-  }
-  if (!touchFaceIdSession) {
-    return null;
-  }
-  let userInfo = await processing(AccountModel.doGetCurrentAccount(touchFaceIdSession));
+const doGetCurrentAccount = async () => {
+  let userInfo = await processing(AccountModel.doGetCurrentAccount());
   return userInfo;
 };
 
@@ -96,16 +83,6 @@ const doCheckPhraseWords = async (phraseWords) => {
 
 const doCheckFileToIssue = async (filePath) => {
   return await processing(DataProcessor.doCheckFileToIssue(filePath));
-};
-
-const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
-  if (newSession) {
-    let sessionId = await CommonModel.doStartFaceTouchSessionId(touchFaceIdMessage);
-    if (!sessionId) {
-      return null;
-    }
-  }
-  return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
 };
 
 const doReloadUserData = async () => {
@@ -146,12 +123,6 @@ const doIssueMultipleFiles = async (listInfo, processingInfo) => {
 const doBitmarkHealthData = async (list, processingData) => {
   return executeTask('doBitmarkHealthData', { list, processingData });
 };
-const doDownloadBitmark = async (bitmarkIdOrGrantedId, assetId, processingData) => {
-  return executeTask('doDownloadBitmark', { bitmarkIdOrGrantedId, assetId, processingData });
-};
-const doDownloadHealthDataBitmark = async (bitmarkIdOrGrantedId, assetId, processingData) => {
-  return executeTask('doDownloadHealthDataBitmark', { bitmarkIdOrGrantedId, assetId, processingData });
-};
 
 const doGetBitmarkInformation = async (bitmarkId) => {
   return executeTask('doGetBitmarkInformation', { bitmarkId });
@@ -160,14 +131,6 @@ const doGetBitmarkInformation = async (bitmarkId) => {
 const doDownloadAndShareLegal = async (title, urlDownload) => {
   return executeTask('doDownloadAndShareLegal', { title, urlDownload });
 };
-
-// const doGrantingAccess = async () => {
-//   return executeTask('doGrantingAccess');
-// };
-
-// const doSelectAccountAccess = async (accountNumber) => {
-//   return executeTask('doSelectAccountAccess', { accountNumber });
-// };
 
 
 const doCheckNoLongerSupportVersion = async () => {
@@ -182,22 +145,6 @@ const doCheckNoLongerSupportVersion = async () => {
   }
   return true;
 };
-
-// const doReceivedAccessQRCode = async (token) => {
-//   return executeTask('doReceivedAccessQRCode', { token });
-// };
-
-// const doCancelGrantingAccess = async (token) => {
-//   return executeTask('doCancelGrantingAccess', { token });
-// };
-
-// const doRemoveGrantingAccess = async (grantee) => {
-//   return executeTask('doRemoveGrantingAccess', { grantee });
-// };
-
-// const doConfirmGrantingAccess = async (token, grantee, processingData) => {
-//   return executeTask('doConfirmGrantingAccess', { token, grantee, processingData });
-// };
 
 const doAcceptEmailRecords = async (emailRecord, processingData) => {
   return executeTask('doAcceptEmailRecords', { emailRecord, processingData });
@@ -233,7 +180,6 @@ let AppProcessor = {
   doLogin,
   doLogout,
   doDeleteAccount,
-  doCreateSignatureData,
   doCheckFileToIssue,
   doIssueFile,
   doIssueMultipleFiles,
@@ -241,19 +187,11 @@ let AppProcessor = {
   doBitmarkHealthData,
 
   doGetBitmarkInformation,
-  doDownloadBitmark,
-  doDownloadHealthDataBitmark,
   doReloadUserData,
   doStartBackgroundProcess,
   doDownloadAndShareLegal,
 
   doCheckNoLongerSupportVersion,
-  // doGrantingAccess,
-  // doSelectAccountAccess,
-  // doReceivedAccessQRCode,
-  // doRemoveGrantingAccess,
-  // doCancelGrantingAccess,
-  // doConfirmGrantingAccess,
   doAcceptEmailRecords,
   doRejectEmailRecords,
 
