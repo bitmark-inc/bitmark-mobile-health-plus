@@ -9,7 +9,7 @@ const BitmarkSDK = {
   // return session id
   newAccount: async (enableTouchFaceId) => {
     // todo call authenticate before call new account for case enableTouchFaceId
-    return await SwiftBitmarkSDK.createAccount(enableTouchFaceId);
+    return await SwiftBitmarkSDK.newAccount(enableTouchFaceId);
   },
   newAccountFromPhraseWords: async (phraseWords, enableTouchFaceId) => {
     // todo call authenticate before call login for case enableTouchFaceId
@@ -53,8 +53,8 @@ const BitmarkSDK = {
   },
 
   // don use session di
-  tryPhraseWords: async (phraseWords) => {
-    return await SwiftBitmarkSDK.transferOneSignature(phraseWords);
+  tryPhrase: async (phraseWords) => {
+    return await SwiftBitmarkSDK.tryPhrase(phraseWords);
   },
 
   getAssetInfo: async (filePath) => {

@@ -71,7 +71,7 @@ class BitmarkSDKWrapper: NSObject {
     }
   }
   
-  @objc(tryPhraseWords:::)
+  @objc(tryPhrase:::)
   func tryPhrase(_ pharse: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       let account = try Account(recoverPhrase: pharse, language: .english)
@@ -98,6 +98,11 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e);
     }
   }
+
+  @objc(authenticate:::)
+  func authenticate(_network: String,_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    resolve(nil);
+  }
   
   @objc(removeAccount::)
   func removeAccount(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
@@ -111,7 +116,7 @@ class BitmarkSDKWrapper: NSObject {
   }
   
   @objc(issueFile:::)
-  func issueBitmark(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+  func issueFile(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       guard let account = self.account else {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
@@ -300,7 +305,7 @@ class BitmarkSDKWrapper: NSObject {
   }
   
   @objc(transferOneSignature:::)
-  func transferBitmark(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+  func transferOneSignature(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       guard let account = self.account else {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
@@ -326,7 +331,7 @@ class BitmarkSDKWrapper: NSObject {
   }
   
   @objc(createAndSubmitTransferOffer:::)
-  func offerBitmark(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+  func createAndSubmitTransferOffer(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       guard let account = self.account else {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
@@ -353,7 +358,7 @@ class BitmarkSDKWrapper: NSObject {
   }
   
   @objc(signForTransferOfferAndSubmit:::)
-  func respondOfferBitmark(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+  func signForTransferOfferAndSubmit(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       guard let account = self.account else {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)

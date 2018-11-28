@@ -11,7 +11,10 @@ import {
   CodePushComponent
 } from './src';
 import { config } from './src/configs';
+import { BitmarkSDK } from './src/models';
 
+
+BitmarkSDK.sdkInit(config.network);
 console.disableYellowBox = true;
 
 Text.defaultProps = Text.defaultProps || {};
