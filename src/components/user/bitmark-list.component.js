@@ -14,6 +14,7 @@ import { config } from '../../configs';
 import { Actions } from 'react-native-router-flux';
 import { UserBitmarksStore, UserBitmarksActions } from '../../stores/user-bitmarks.store';
 import { MaterialIndicator } from 'react-native-indicators';
+import moment from 'moment';
 
 class PrivateBitmarkListComponent extends Component {
   static propTypes = {
@@ -87,7 +88,7 @@ class PrivateBitmarkListComponent extends Component {
                         <TouchableOpacity style={styles.bitmarkHealthRow} onPress={() => {
                           this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
                         }}>
-                          <Text style={styles.bitmarkHealthRowText}>{`${item.asset.id.substring(0, 16)}...${item.asset.id.substring(item.asset.id.length - 16, item.asset.id.length)}`}</Text>
+                          <Text style={styles.bitmarkHealthRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
                           {item.status === 'confirmed' && <Image style={styles.bitmarkHealthRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
                           {item.status === 'pending' && <Text style={styles.bitmarkHealthPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
                         </TouchableOpacity>

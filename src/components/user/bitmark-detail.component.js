@@ -144,7 +144,7 @@ export class BitmarkDetailComponent extends Component {
                   <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
                 {/*NAME*/}
-                <Text style={styles.titleText} numberOfLines={1}>{`${this.props.bitmark.asset.id}`}</Text>
+                <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
                 {/*TAG ICON*/}
                 {this.props.bitmarkType === 'bitmark_health_issuance' &&
                   <TouchableOpacity style={this.props.bitmark.status !== 'pending' ? styles.taggingButton : styles.taggingButtonForPending} onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
@@ -161,7 +161,7 @@ export class BitmarkDetailComponent extends Component {
                   {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
                     <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({
                       filePath: this.state.filePath,
-                      title: `${this.props.bitmark.asset.id}`
+                      title: this.props.bitmark.asset.name
                     })}>
                       <Image style={styles.bitmarkImage} source={{ uri: this.props.bitmark.thumbnail ? this.props.bitmark.thumbnail.path : this.state.filePath }} />
                       <View style={styles.fullViewButton}>
