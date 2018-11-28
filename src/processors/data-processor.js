@@ -483,7 +483,7 @@ const doLogout = async () => {
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.reset());
   mapModalDisplayData = {};
-  keyIndexModalDisplaying = {};
+  keyIndexModalDisplaying = 0;
   grantedAccessAccountSelected = null;
   userInformation = {};
   return true;
@@ -1056,12 +1056,11 @@ const doMigrateFilesToLocalStorage = async () => {
       needDownload = true;
     } else {
       let list = await FileUtil.readDir(assetFolderPath);
-      if (list.length === 0) {
+      if (list.length === 0 || (list.findIndex(filename => filename.startsWith('downloading')) >= 0)) {
         needDownload = true;
-      } else {
-        needDownload =
-          (list.findIndex(filename => filename.startsWith('downloading')) >= 0) ||
-          (list.findIndex(filename => filename.startsWith('downloaded')) < 0);
+      } else if ((await FileUtil.exists(`${assetFolderPath}/downloaded`))) {
+        let listFileDownloaded = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
+        needDownload = listFileDownloaded && listFileDownloaded.length > 0;
       }
     }
     if (needDownload) {
