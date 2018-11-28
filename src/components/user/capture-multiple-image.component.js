@@ -62,7 +62,8 @@ export class CaptureMultipleImagesComponent extends Component {
 
   saveImages() {
     if (this.state.images.length > 1) {
-      Actions.recordImages({ images: this.state.images, doIssueImage: this.props.doIssueImage });
+      // Actions.recordImages({ images: this.state.images, doIssueImage: this.props.doIssueImage });
+      Actions.orderCombineImages({ images: this.state.images, doIssueImage: this.props.doIssueImage });
     } else {
       this.props.doIssueImage(this.state.images);
     }
