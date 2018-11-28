@@ -53,29 +53,6 @@ const mapModalDisplayKeyIndex = {
 let codePushUpdated = null;
 let mountedRouter = null;
 
-// const isHealthDataBitmark = (asset) => {
-//   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
-//     var regResults = /HK((\d)*)/.exec(asset.name);
-//     if (regResults && regResults.length > 1) {
-//       let randomNumber = regResults[1];
-//       return ((randomNumber.length == 8) && ('HK' + randomNumber) === asset.name);
-//     }
-//   }
-//   return false;
-// };
-
-// const isHealthAssetBitmark = (asset) => {
-//   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
-
-//     // For files
-//     if (asset.metadata['Source'] == 'Medical Records') return true;
-
-//     // For capture asset
-//     if (asset.metadata['Source'] == 'Health Records' && asset.name.startsWith('HA')) return true;
-//   }
-//   return false;
-// };
-
 let isDisplayingModal = (keyIndex) => {
   return keyIndexModalDisplaying === keyIndex && !!mapModalDisplayData[keyIndex];
 }
