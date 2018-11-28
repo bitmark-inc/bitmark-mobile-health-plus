@@ -60,10 +60,19 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
   NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:files.count];
   for (int i = 0; i < files.count; i++) {
     NSMetadataItem *item = files[i];
-    NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
-    [result setValue:path forKey:fileNames[i]];
+    NSString *downloadStatus = [item valueForAttribute:NSMetadataUbiquitousItemDownloadingStatusKey];
+    if ([downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusDownloaded] ||
+        [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusCurrent]) {
+      NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
+      [result setValue:path forKey:fileNames[i]];
+    } else {
+      NSNumber *percent = [item valueForAttribute:NSMetadataUbiquitousItemPercentDownloadedKey];
+      NSLog(@"downloading percent: %@", percent);
+    }
   }
   
-  [self sendEventWithName:@"oniCloudFileChanged" body:result];
+  if (result.count > 0) {
+    [self sendEventWithName:@"oniCloudFileChanged" body:result];
+  }
 }
 @end

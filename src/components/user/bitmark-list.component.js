@@ -89,7 +89,7 @@ class PrivateBitmarkListComponent extends Component {
                       renderItem={({ item }) => {
                         return (
                           <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
-                            if (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) {
+                            if (isFileRecord(item.asset) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) {
                               this.shareBitmark.bind(this)(item.asset)
                             } else {
                               this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);

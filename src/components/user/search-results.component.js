@@ -48,7 +48,7 @@ export class SearchResultsComponent extends Component {
               renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity style={styles.bitmarkItemContainer} onPress={() => {
-                    isFileRecord(item) ? this.shareBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_data');
+                    isFileRecord(item.asset) ? this.shareBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_data');
                   }}>
                     <View style={(index == results.healthDataBitmarks.length - 1) ? styles.bitmarkLastItem : styles.bitmarkItem}>
                       {/*Thumbnail*/}
@@ -81,7 +81,7 @@ export class SearchResultsComponent extends Component {
               renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity style={styles.bitmarkItemContainer} onPress={() => {
-                    (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) ? this.shareBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
+                    (isFileRecord(item.asset) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) ? this.shareBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
                   }}>
                     <View style={(index == results.healthAssetBitmarks.length - 1) ? styles.bitmarkLastItem : styles.bitmarkItem}>
                       {/*Thumbnail*/}

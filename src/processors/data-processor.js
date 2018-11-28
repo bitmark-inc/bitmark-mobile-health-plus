@@ -1,4 +1,4 @@
-import { Linking, Alert } from 'react-native';
+import { Linking } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Intercom from 'react-native-intercom';
 import moment from 'moment';
@@ -28,7 +28,7 @@ import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
   isPdfFile, populateAssetNameFromPdf, compareVersion,
-  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud
+  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud, isHealthDataRecord, isAssetDataRecord
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -45,33 +45,9 @@ const mapModalDisplayKeyIndex = {
   what_new: 2,
   email_record: 3,
   weekly_health_data: 4,
-  update_alpha_app: 5,
 };
 let codePushUpdated = null;
 let mountedRouter = null;
-
-const isHealthDataBitmark = (asset) => {
-  if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
-    var regResults = /HK((\d)*)/.exec(asset.name);
-    if (regResults && regResults.length > 1) {
-      let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HK' + randomNumber) === asset.name);
-    }
-  }
-  return false;
-};
-
-const isHealthAssetBitmark = (asset) => {
-  if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
-
-    // For files
-    if (asset.metadata['Source'] == 'Medical Records') return true;
-
-    // For capture asset
-    if (asset.metadata['Source'] == 'Health Records' && asset.name.startsWith('HA')) return true;
-  }
-  return false;
-};
 
 let isDisplayingModal = (keyIndex) => {
   return keyIndexModalDisplaying === keyIndex && !!mapModalDisplayData[keyIndex];
@@ -96,16 +72,6 @@ let checkDisplayModal = () => {
       } else if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && mountedRouter) {
         Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
         keyIndexModalDisplaying = keyIndex;
-        break;
-      } else if (keyIndex === mapModalDisplayKeyIndex.update_alpha_app) {
-        keyIndexModalDisplaying = keyIndex;
-        Alert.alert(i18n.t('AlphaAppUpdate_title'), i18n.t('AlphaAppUpdate_message'), [{
-          text: i18n.t('AlphaAppUpdate_button'), onPress: () => {
-            let url = mapModalDisplayData[keyIndex];
-            updateModal(mapModalDisplayKeyIndex.update_alpha_app);
-            Linking.openURL(url);
-          }
-        }]);
         break;
       }
     }
@@ -194,7 +160,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         if (asset) {
           let oldBitmark = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).find(b => b.id === bitmark.id);
           let oldAsset = oldBitmark ? oldBitmark.asset : {};
-          if (isHealthDataBitmark(asset)) {
+          if (isHealthDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               asset = merge({}, asset, oldAsset);
               if (!asset.filePath) {
@@ -207,7 +173,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
             }
             healthDataBitmarks.push(bitmark);
           }
-          if (isHealthAssetBitmark(asset)) {
+          if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               asset = merge({}, asset, oldAsset);
               if (!asset.filePath) {
@@ -601,20 +567,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     configNotification();
   }
 
-  if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
-    let appId = '953845cde6b940cea3adac0ff1103f8c';
-    let token = '828e099f430442aa924a8a3a87b3f14b';
-    let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
-    if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
-      let url = returnedData.app_versions[0].download_url;
-      let newestVersion = returnedData.app_versions[0].shortversion;
-      if (compareVersion(newestVersion, DeviceInfo.getVersion()) > 0) {
-        updateModal(mapModalDisplayKeyIndex.update_alpha_app, url);
-      }
-    }
-  }
-
-
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
   console.log('userInformation :', userInformation);
   return userInformation;
@@ -840,7 +792,14 @@ const doTransferBitmark = async (bitmark, receiver) => {
   let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
   let result = await BitmarkService.doTransferBitmark(bitmark.id, receiver);
   await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
-  await iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`)
+  await iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
+  if (bitmark.thumbnail && bitmark.thumbnail.path && (await FileUtil.exists(bitmark.thumbnail.path))) {
+    let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
+    await iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
+  }
+  iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_indexedData_${bitmark.asset.id}.txt`);
+  iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_indexTag_${bitmark.id}.txt`);
+
   await deleteIndexedDataByBitmarkId(bitmark.id);
   await deleteTagsByBitmarkId(bitmark.id);
   await doReloadUserData();

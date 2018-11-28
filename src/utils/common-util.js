@@ -389,17 +389,24 @@ const getThumbnail = (bitmarkId, isCombineFile) => {
   return isCombineFile ? `${thumbnailsFolderPath}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${thumbnailsFolderPath}/${bitmarkId}.PNG`;
 };
 
-const isFileRecord = (bitmark) => {
-  return bitmark.asset && bitmark.asset.metadata && bitmark.asset.metadata.Source === 'Medical Records';
+const isFileRecord = (asset) => {
+  return asset && asset.metadata && asset.metadata.Source === 'Medical Records' && asset.metadata['Saved Time'];
 };
-const isCaptureDataRecord = (bitmark) => {
-  return bitmark.asset && bitmark.asset.metadata && bitmark.asset.metadata.Source === 'Health Records';
+const isCaptureDataRecord = (asset) => {
+  return asset && asset.name.startsWith('HA') && asset.metadata && asset.metadata.Source === 'Health Records' && asset.metadata['Saved Time'];
 };
-const isHealthDataRecord = (bitmark) => {
-  return bitmark.asset && bitmark.asset.metadata && bitmark.asset.metadata.Source === 'HealthKit';
+const isHealthDataRecord = (asset) => {
+  if (asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata['Saved Time']) {
+    var regResults = /HK((\d)*)/.exec(asset.name);
+    if (regResults && regResults.length > 1) {
+      let randomNumber = regResults[1];
+      return ((randomNumber.length == 8) && ('HK' + randomNumber) === asset.name);
+    }
+  }
+  return false;
 };
-const isAssetDataRecord = (bitmark) => {
-  return isCaptureDataRecord(bitmark) || isFileRecord(bitmark);
+const isAssetDataRecord = (asset) => {
+  return isCaptureDataRecord(asset) || isFileRecord(asset);
 };
 
 const getImageSize = async (imageFilePath) => {
