@@ -23,7 +23,7 @@ const search = async (searchTerm) => {
         let bitmark = allBitmarksMap[searchResultBitmarkIds[i]];
 
         if (bitmark) {
-          if (isAssetDataRecord(bitmark)) {
+          if (isAssetDataRecord(bitmark.asset)) {
             if (!bitmark.thumbnail) {
               bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
             }

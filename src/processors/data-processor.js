@@ -29,7 +29,7 @@ import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
   checkExistIndexedDataForBitmark, isPdfFile, isCaptureDataRecord, populateAssetNameFromPdf, compareVersion, detectTextsFromPdf,
-  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud
+  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud, isHealthDataRecord, isAssetDataRecord
 } from '../utils';
 
 import PDFScanner from '../models/adapters/pdf-scanner';
@@ -53,28 +53,28 @@ const mapModalDisplayKeyIndex = {
 let codePushUpdated = null;
 let mountedRouter = null;
 
-const isHealthDataBitmark = (asset) => {
-  if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
-    var regResults = /HK((\d)*)/.exec(asset.name);
-    if (regResults && regResults.length > 1) {
-      let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HK' + randomNumber) === asset.name);
-    }
-  }
-  return false;
-};
+// const isHealthDataBitmark = (asset) => {
+//   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
+//     var regResults = /HK((\d)*)/.exec(asset.name);
+//     if (regResults && regResults.length > 1) {
+//       let randomNumber = regResults[1];
+//       return ((randomNumber.length == 8) && ('HK' + randomNumber) === asset.name);
+//     }
+//   }
+//   return false;
+// };
 
-const isHealthAssetBitmark = (asset) => {
-  if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
+// const isHealthAssetBitmark = (asset) => {
+//   if (asset && asset.name && asset.metadata && asset.metadata['Source'] && asset.metadata['Saved Time']) {
 
-    // For files
-    if (asset.metadata['Source'] == 'Medical Records') return true;
+//     // For files
+//     if (asset.metadata['Source'] == 'Medical Records') return true;
 
-    // For capture asset
-    if (asset.metadata['Source'] == 'Health Records' && asset.name.startsWith('HA')) return true;
-  }
-  return false;
-};
+//     // For capture asset
+//     if (asset.metadata['Source'] == 'Health Records' && asset.name.startsWith('HA')) return true;
+//   }
+//   return false;
+// };
 
 let isDisplayingModal = (keyIndex) => {
   return keyIndexModalDisplaying === keyIndex && !!mapModalDisplayData[keyIndex];
@@ -194,7 +194,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         if (asset) {
           let oldBitmark = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).find(b => b.id === bitmark.id);
           let oldAsset = oldBitmark ? oldBitmark.asset : {};
-          if (isHealthDataBitmark(asset)) {
+          if (isHealthDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               asset = merge({}, asset, oldAsset);
               if (!asset.filePath) {
@@ -207,7 +207,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
             }
             healthDataBitmarks.push(bitmark);
           }
-          if (isHealthAssetBitmark(asset)) {
+          if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               asset = merge({}, asset, oldAsset);
               if (!asset.filePath) {
@@ -1101,7 +1101,7 @@ const doMigrateFilesToLocalStorage = async () => {
       await FileUtil.moveFileSafe(filePathAfterDownloading, downloadedFilePath);
       await FileUtil.removeSafe(downloadingFolderPath);
 
-      if (isHealthDataBitmark(bitmark.asset)) {
+      if (isHealthDataRecord(bitmark.asset)) {
         await FileUtil.unzip(downloadedFilePath, downloadedFolderPath);
         await FileUtil.removeSafe(downloadedFilePath);
         let listUnzipFile = await FileUtil.readDir(downloadedFolderPath);
@@ -1119,26 +1119,27 @@ const doMigrateFilesToLocalStorage = async () => {
     // Create search indexed data if not exist
     let isExistIndexedData = await checkExistIndexedDataForBitmark(bitmark.id);
     if (!isExistIndexedData) {
-      if (isHealthDataBitmark(bitmark.asset)) {
+      if (isHealthDataRecord(bitmark.asset)) {
         let data = await FileUtil.readFile(bitmark.asset.filePath);
         await insertHealthDataToIndexedDB(bitmark.id, {
           assetMetadata: bitmark.asset.metadata,
           assetName: bitmark.asset.name,
           data,
         });
-      } else if (isImageFile(bitmark.asset.filePath)) {
-        let detectResult = await populateAssetNameFromImage(bitmark.asset.filePath);
-        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
-      } else if (isPdfFile(bitmark.asset.filePath)) {
-        let detectResult;
-        if (isCaptureDataRecord(bitmark.asset.filePath)) {
-          let detectedTexts = await detectTextsFromPdf(bitmark.asset.filePath);
-          detectResult = { detectedTexts };
-        } else {
-          detectResult = await populateAssetNameFromPdf(bitmark.asset.filePath);
+      } else if (isAssetDataRecord(bitmark.asset)) {
+        if (isImageFile(bitmark.asset.filePath)) {
+          let detectResult = await populateAssetNameFromImage(bitmark.asset.filePath);
+          await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
+        } else if (isPdfFile(bitmark.asset.filePath)) {
+          let detectResult;
+          if (isCaptureDataRecord(bitmark.asset)) {
+            let detectedTexts = await detectTextsFromPdf(bitmark.asset.filePath);
+            detectResult = { detectedTexts };
+          } else {
+            detectResult = await populateAssetNameFromPdf(bitmark.asset.filePath);
+          }
+          await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
         }
-
-        await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, detectResult.detectedTexts);
       }
     }
 
