@@ -715,14 +715,14 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     configNotification();
   }
 
-  if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
-    let appId = '953845cde6b940cea3adac0ff1103f8c';
+  if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse') {
+    // let appId = '953845cde6b940cea3adac0ff1103f8c'; // alpha app
+    let appId = '2651f17048b54ca1a27aa6c959efbf33'; // dev app
     let token = '828e099f430442aa924a8a3a87b3f14b';
     let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
     if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
       let url = returnedData.app_versions[0].download_url;
-      let newestVersion = returnedData.app_versions[0].shortversion;
-      if (compareVersion(newestVersion, DeviceInfo.getVersion()) > 0) {
+      if (DeviceInfo.getBuildNumber() < returnedData.app_versions[0].id && returnedData.app_versions[0].restricted_to_tags === false) {
         updateModal(mapModalDisplayKeyIndex.update_alpha_app, url);
       }
     }
