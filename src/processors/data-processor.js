@@ -1,4 +1,4 @@
-import { Linking, Alert } from 'react-native';
+import { Linking } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Intercom from 'react-native-intercom';
 import moment from 'moment';
@@ -49,7 +49,6 @@ const mapModalDisplayKeyIndex = {
   what_new: 2,
   email_record: 3,
   weekly_health_data: 4,
-  update_alpha_app: 5,
 };
 let codePushUpdated = null;
 let mountedRouter = null;
@@ -104,16 +103,6 @@ let checkDisplayModal = () => {
       } else if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && mountedRouter) {
         Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
         keyIndexModalDisplaying = keyIndex;
-        break;
-      } else if (keyIndex === mapModalDisplayKeyIndex.update_alpha_app) {
-        keyIndexModalDisplaying = keyIndex;
-        Alert.alert(i18n.t('AlphaAppUpdate_title'), i18n.t('AlphaAppUpdate_message'), [{
-          text: i18n.t('AlphaAppUpdate_button'), onPress: () => {
-            let url = mapModalDisplayData[keyIndex];
-            updateModal(mapModalDisplayKeyIndex.update_alpha_app);
-            Linking.openURL(url);
-          }
-        }]);
         break;
       }
     }
@@ -714,20 +703,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     configNotification();
   }
-
-  if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse') {
-    // let appId = '953845cde6b940cea3adac0ff1103f8c'; // alpha app
-    let appId = '2651f17048b54ca1a27aa6c959efbf33'; // dev app
-    let token = '828e099f430442aa924a8a3a87b3f14b';
-    let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
-    if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
-      let url = returnedData.app_versions[0].download_url;
-      if (DeviceInfo.getBuildNumber() < returnedData.app_versions[0].id && returnedData.app_versions[0].restricted_to_tags === false) {
-        updateModal(mapModalDisplayKeyIndex.update_alpha_app, url);
-      }
-    }
-  }
-
 
   EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
   console.log('userInformation :', userInformation);

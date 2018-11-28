@@ -10,6 +10,7 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 
 import { Actions } from 'react-native-router-flux';
 
@@ -465,15 +466,34 @@ export class MainComponent extends Component {
     if (!networkStatus) {
       return;
     }
-    AppProcessor.doCheckNoLongerSupportVersion().then((result) => {
-      if (!result) {
-        Alert.alert(i18n.t('MainComponent_alertTitle1'), i18n.t('MainComponent_alertMessage1'), [{
+    AppProcessor.doCheckNoLongerSupportVersion().then((newAppLink) => {
+      if (newAppLink) {
+        let title = i18n.t('MainComponent_alertTitle1');
+        let message = i18n.t('MainComponent_alertMessage1');
+        let buttons = [{
           text: i18n.t('MainComponent_alertButton1'),
-          onPress: () => Linking.openURL(config.appLink)
-        }]);
-        return;
+          onPress: () => Linking.openURL(newAppLink)
+        }];
+        if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta' ||
+          DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse') {
+          title = i18n.t('AlphaAppUpdate_title');
+          message = i18n.t('AlphaAppUpdate_message');
+          buttons = [{
+            text: i18n.t('AlphaAppUpdate_button'),
+            onPress: () => Linking.openURL(newAppLink)
+          }];
+
+          if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse') {
+            buttons.push({
+              text: 'Cancel', style: 'cancel',
+              onPress: () => this.doAppRefresh(justCreatedBitmarkAccount)
+            });
+          }
+        }
+        Alert.alert(title, message, buttons);
+      } else {
+        this.doAppRefresh(justCreatedBitmarkAccount);
       }
-      this.doAppRefresh(justCreatedBitmarkAccount);
     }).catch(error => {
       console.log('doOpenApp error:', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
@@ -503,7 +523,6 @@ export class MainComponent extends Component {
                       this.requiringTouchId = false;
                     }
                   }]);
-
                 }
               }
             });
