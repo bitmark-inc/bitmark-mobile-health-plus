@@ -224,36 +224,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
   });
 };
 
-// let queueGetAccountAccesses = [];
-// const doCheckNewAccesses = async (accesses) => {
-//   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, accesses);
-//   DataAccountAccessesStore.dispatch(DataAccountAccessesActions.init(accesses));
-//   if (grantedAccessAccountSelected) {
-//     grantedAccessAccountSelected = (accesses.granted_from || []).find(item => item.grantor === grantedAccessAccountSelected.grantor);
-//   }
-//   if (accesses && accesses.waiting && accesses.waiting.length > 0 && didMigrationFileToLocalStorage) {
-//     Actions.confirmAccess({ token: accesses.waiting[0].id, grantee: accesses.waiting[0].grantee });
-//   }
-// };
-// const runGetAccountAccessesInBackground = () => {
-//   return new Promise((resolve) => {
-//     queueGetAccountAccesses = queueGetAccountAccesses || [];
-//     queueGetAccountAccesses.push(resolve);
-//     if (queueGetAccountAccesses.length > 1) {
-//       return;
-//     }
-//     AccountService.doGetAllGrantedAccess(userInformation.bitmarkAccountNumber, jwt).then(accesses => {
-//       queueGetAccountAccesses.forEach(queueResolve => queueResolve(accesses));
-//       queueGetAccountAccesses = [];
-//       doCheckNewAccesses(accesses);
-//     }).catch(error => {
-//       queueGetAccountAccesses.forEach(queueResolve => queueResolve());
-//       queueGetAccountAccesses = [];
-//       console.log(' runGetAccountAccessesInBackground error:', error);
-//     });
-//   });
-// };
-
 const finishedDisplayEmailRecords = () => {
   updateModal(mapModalDisplayKeyIndex.email_record);
 };
@@ -269,17 +239,6 @@ const doCheckNewEmailRecords = async (mapEmailRecords) => {
   } else {
     updateModal(mapModalDisplayKeyIndex.email_record);
   }
-
-  // if (!mapEmailRecords) {
-  //   isDisplayingEmailRecord = false;
-  //   return;
-  // }
-  // if (Object.keys(mapEmailRecords).length > 0 && !isDisplayingEmailRecord && didMigrationFileToLocalStorage) {
-  //   isDisplayingEmailRecord = true;
-  //   Actions.emailRecords({ mapEmailRecords });
-  // } else {
-  //   isDisplayingEmailRecord = false;
-  // }
 };
 const runGetEmailRecordsInBackground = () => {
   return new Promise((resolve) => {
@@ -595,50 +554,21 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
     jwt = result.jwt_token;
 
-    // websocket = new WebSocket(config.mobile_server_url + '/ws', [], {
-    //   headers: {
-    //     'Authorization': 'Bearer ' + jwt
-    //   }
-    // });
-
-    // websocket.onopen = () => {
-    //   console.log('websocket opened');
-    // };
-    // websocket.onmessage = (event) => {
-    //   if (event.data) {
-    //     let data
-    //     try {
-    //       data = JSON.parse(event.data);
-    //     } catch (error) {
-    //       //
-    //     }
-    //     console.log('data event :', data);
-    //     // if (data && data.event === 'bitmarks_grant_access' && data.id && data.grantee && didMigrationFileToLocalStorage) {
-    //     //   Actions.confirmAccess({ token: data.id, grantee: data.grantee });
-    //     // }
-    //   }
-    // };
-    // websocket.onerror = (e) => {
-    //   console.log('websocket error : ', e);
-    // };
-    // websocket.onclose = (e) => {
-    //   console.log('websocket closed:', e.code, e.reason);
-    // };
-
     if (justCreatedBitmarkAccount) {
       await AccountModel.doMarkMigration(jwt);
-      appInfo.didMigrationFileToLocalStorage = true;
+      userInformation.didMigrationFileToLocalStorage = true;
       appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
       await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    } else if (!appInfo.didMigrationFileToLocalStorage) {
-      let didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
-      if (!didMigrationFileToLocalStorage && !isDisplayingModal(mapModalDisplayKeyIndex.local_storage_migration)) {
+    } else if (!userInformation.didMigrationFileToLocalStorage) {
+      userInformation.didMigrationFileToLocalStorage = await AccountModel.doCheckMigration(jwt);
+      if (!userInformation.didMigrationFileToLocalStorage && !isDisplayingModal(mapModalDisplayKeyIndex.local_storage_migration)) {
         updateModal(mapModalDisplayKeyIndex.local_storage_migration, true);
       }
       if (!appInfo.displayedWhatNewInformation || compareVersion(appInfo.displayedWhatNewInformation, DeviceInfo.getVersion(), 2) < 0) {
         updateModal(mapModalDisplayKeyIndex.what_new, true);
       }
     }
+    await UserModel.doUpdateUserInfo(userInformation);
 
     let userBitmarks = await doGetUserDataBitmarks(grantedAccessAccountSelected ? grantedAccessAccountSelected.grantor : userInformation.bitmarkAccountNumber);
 
@@ -1125,10 +1055,8 @@ const doMigrateFilesToLocalStorage = async () => {
   await runGetUserBitmarksInBackground();
 
   EventEmitterService.emit(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE_PERCENT, 100);
-  await AccountModel.doMarkMigration(jwt);
-  let appInfo = await doGetAppInformation();
-  appInfo.didMigrationFileToLocalStorage = true;
-  await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+  userInformation.didMigrationFileToLocalStorage = true;
+  await UserModel.doUpdateUserInfo(userInformation);
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
