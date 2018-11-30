@@ -54,9 +54,6 @@
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
   }
 #endif
-#ifdef HOCKEYAPP_UPDATE
-  [[BITHockeyManager sharedHockeyManager].updateManager setUpdateSetting:BITUpdateCheckStartup];
-#endif
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
