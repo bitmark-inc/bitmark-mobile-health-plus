@@ -189,7 +189,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
                 asset.filePath = await detectLocalAssetFilePath(asset.id);
               }
               bitmark.asset = asset;
-              bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.asset_id);
+              bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
               await doCheckAndSyncDataWithICloud(bitmark);
               healthAssetBitmarks.push(bitmark);
             }
@@ -738,7 +738,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     await BitmarkModel.doAccessGrants(userInformation.bitmarkAccountNumber, timestamp, signatures[0], body);
   }
   for (let record of results) {
-    await generateThumbnail(filePath, record.assetId, isMultipleAsset);
+    await generateThumbnail(filePath, record.id, isMultipleAsset);
 
     // Index data
     if (isImageFile(record.filePath)) {
@@ -1016,8 +1016,8 @@ const doMigrateFilesToLocalStorage = async () => {
       }
     }
     // Create thumbnail if not exist
-    if (!checkThumbnailForBitmark(bitmark.asset_id).exists) {
-      await generateThumbnail(bitmark.asset.filePath, bitmark.asset_id);
+    if (!checkThumbnailForBitmark(bitmark.id).exists) {
+      await generateThumbnail(bitmark.asset.filePath, bitmark.id);
     }
 
     // Create search indexed data if not exist
