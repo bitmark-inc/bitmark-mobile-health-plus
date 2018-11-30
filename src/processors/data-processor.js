@@ -174,9 +174,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           if (isHealthDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               asset = merge({}, asset, oldAsset);
-              if (!asset.filePath) {
-                asset.filePath = await detectLocalAssetFilePath(asset.id);
-              }
+              asset.filePath = await detectLocalAssetFilePath(asset.id);
               bitmark.asset = asset;
               await doCheckAndSyncDataWithICloud(bitmark);
             } else {
