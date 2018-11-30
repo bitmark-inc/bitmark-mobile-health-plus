@@ -1007,24 +1007,26 @@ const doMigrateFilesToLocalStorage = async () => {
       await FileUtil.mkdir(assetFolderPath);
       let downloadingFolderPath = `${assetFolderPath}/downloading`;
       await FileUtil.mkdir(downloadingFolderPath);
-      await BitmarkSDK.downloadBitmark(currentSessionId, bitmark.id, downloadingFolderPath);
-      let listDownloadFile = await FileUtil.readDir(downloadingFolderPath);
-      let filePathAfterDownloading = `${downloadingFolderPath}/${listDownloadFile[0]}`;
+      let result = await runPromiseWithoutError(BitmarkSDK.downloadBitmark(currentSessionId, bitmark.id, downloadingFolderPath));
+      if (!result || !result.error) {
+        let listDownloadFile = await FileUtil.readDir(downloadingFolderPath);
+        let filePathAfterDownloading = `${downloadingFolderPath}/${listDownloadFile[0]}`;
 
-      let downloadedFolderPath = `${assetFolderPath}/downloaded`;
-      await FileUtil.mkdir(downloadedFolderPath);
-      let downloadedFilePath = `${downloadedFolderPath}${filePathAfterDownloading.substring(filePathAfterDownloading.lastIndexOf('/'), filePathAfterDownloading.length)}`;
-      await FileUtil.moveFileSafe(filePathAfterDownloading, downloadedFilePath);
-      await FileUtil.removeSafe(downloadingFolderPath);
+        let downloadedFolderPath = `${assetFolderPath}/downloaded`;
+        await FileUtil.mkdir(downloadedFolderPath);
+        let downloadedFilePath = `${downloadedFolderPath}${filePathAfterDownloading.substring(filePathAfterDownloading.lastIndexOf('/'), filePathAfterDownloading.length)}`;
+        await FileUtil.moveFileSafe(filePathAfterDownloading, downloadedFilePath);
+        await FileUtil.removeSafe(downloadingFolderPath);
 
-      if (isHealthDataRecord(bitmark.asset)) {
-        await FileUtil.unzip(downloadedFilePath, downloadedFolderPath);
-        await FileUtil.removeSafe(downloadedFilePath);
-        let listUnzipFile = await FileUtil.readDir(downloadedFolderPath);
+        if (isHealthDataRecord(bitmark.asset)) {
+          await FileUtil.unzip(downloadedFilePath, downloadedFolderPath);
+          await FileUtil.removeSafe(downloadedFilePath);
+          let listUnzipFile = await FileUtil.readDir(downloadedFolderPath);
 
-        bitmark.asset.filePath = `${downloadedFolderPath}/${listUnzipFile[0]}`;
-      } else {
-        bitmark.asset.filePath = `${downloadedFilePath}`;
+          bitmark.asset.filePath = `${downloadedFolderPath}/${listUnzipFile[0]}`;
+        } else {
+          bitmark.asset.filePath = `${downloadedFilePath}`;
+        }
       }
     }
     // Create thumbnail if not exist
