@@ -502,6 +502,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       for (let key in mapFiles) {
         let keyList = key.split('_');
         let promiseRunAfterCopyFile;
+        let overwrite = false;
         if (keyList[0] === userInformation.bitmarkAccountNumber) {
           let keyFilePath;
           if (keyList[1] === 'assets') {
@@ -514,20 +515,31 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
           } else if (keyList[1] === 'indexTag') {
             keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_indexTag_`, `${userInformation.bitmarkAccountNumber}/indexTag/`);
             let bitmarkId = keyList[2].replace('.txt', '');
-            promiseRunAfterCopyFile = doUpdateIndexTagFromICloud(bitmarkId);
+            overwrite = true;
+            promiseRunAfterCopyFile = async () => {
+              await doUpdateIndexTagFromICloud(bitmarkId);
+            };
           }
           let doSyncFile = async () => {
             let filePath = mapFiles[key];
             let downloadedFile = `${FileUtil.DocumentDirectory}/${keyFilePath}`;
-            if ((await FileUtil.exists(filePath))) {
+            if (overwrite) {
+              await FileUtil.removeSafe(downloadedFile);
               let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
               await FileUtil.mkdir(downloadedFolder);
               await FileUtil.copyFile(filePath, downloadedFile);
               if (promiseRunAfterCopyFile) {
                 await promiseRunAfterCopyFile();
+                promiseRunAfterCopyFile = null;
               }
             } else {
-              console.log('file in iCloude is not exist!', { key, filePath });
+              let existFileICloud = await FileUtil.exists(filePath);
+              let existFileLocal = await FileUtil.exists(downloadedFile);
+              if (existFileICloud && !existFileLocal) {
+                let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
+                await FileUtil.mkdir(downloadedFolder);
+                await FileUtil.copyFile(filePath, downloadedFile);
+              }
             }
           };
           runPromiseWithoutError(doSyncFile());
