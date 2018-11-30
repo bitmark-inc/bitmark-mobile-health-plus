@@ -988,7 +988,7 @@ const doMigrateFilesToLocalStorage = async () => {
         needDownload = true;
       } else if ((await FileUtil.exists(`${assetFolderPath}/downloaded`))) {
         let listFileDownloaded = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
-        needDownload = listFileDownloaded && listFileDownloaded.length > 0;
+        needDownload = !listFileDownloaded || listFileDownloaded.length < 0;
       }
     }
     if (needDownload) {
