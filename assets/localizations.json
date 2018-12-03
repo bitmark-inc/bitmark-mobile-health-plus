@@ -107,6 +107,7 @@
     "BitmarkHealthDataComponent_title2": "BitmarkHealthDataComponent_title2",
     "BitmarkHealthDataComponent_message": "BitmarkHealthDataComponent_message",
     "BitmarkHealthDataComponent_signButtonText": "BitmarkHealthDataComponent_signButtonText",
+    "BitmarkHealthDataComponent_skipButtonText": "BitmarkHealthDataComponent_skipButtonText",
     "BitmarkHealthDataComponent_alertTitle": "BitmarkHealthDataComponent_alertTitle",
     "BitmarkListComponent_accountNumberDisplayText": "BitmarkListComponent_accountNumberDisplayText",
     "BitmarkListComponent_titleText1": "BitmarkListComponent_titleText1",
@@ -403,6 +404,7 @@
     "BitmarkHealthDataComponent_title2": "Register your weekly data",
     "BitmarkHealthDataComponent_message": "Once health data is registered as your property, you will be able to donate, share, or transfer it to another party (medical professional, family member, etc.) at your complete discretion.",
     "BitmarkHealthDataComponent_signButtonText": "REGISTER",
+    "BitmarkHealthDataComponent_skipButtonText": "SKIP",
     "BitmarkHealthDataComponent_alertTitle": "Encrypting and protecting your health data...",
     "BitmarkListComponent_accountNumberDisplayText": "Viewing [{{accountNumber}}], tap here to cancel.",
     "BitmarkListComponent_titleText1": "Health data",
@@ -699,6 +701,7 @@
     "BitmarkHealthDataComponent_title2": "登記你的每週健康數據",
     "BitmarkHealthDataComponent_message": "一旦你將健康數據登記為你的資產，你將能夠自由地將其捐贈、分享或傳送給他人（例如：醫療專業人員、家人）。",
     "BitmarkHealthDataComponent_signButtonText": "登記",
+    "BitmarkHealthDataComponent_skipButtonText": "略過",
     "BitmarkHealthDataComponent_alertTitle": "正在加密和保護您的健康數據...",
     "BitmarkListComponent_accountNumberDisplayText": "正在查看[{{accountNumber}}]，請按此退出",
     "BitmarkListComponent_titleText1": "健康資料",
@@ -883,9 +886,9 @@
     "TaggingComponent_noTags": "目前尚無任何標籤。",
     "TaggingComponent_addTags": "新增標籤",
     "TaggingComponent_enterATag": "請輸入一個標籤",
-    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
-    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
-    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
+    "AlphaAppUpdate_title": "更新通知",
+    "AlphaAppUpdate_message": "現在有更新的 Bitmark Health 了！請前往下載更新。",
+    "AlphaAppUpdate_button": "查看"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -995,6 +998,7 @@
     "BitmarkHealthDataComponent_title2": "Đăng ký dữ liệu hàng tuần của bạn",
     "BitmarkHealthDataComponent_message": "Một khi dữ liệu sức khỏe được đăng ký thành tài sản cá nhân, bạn có \bquyền tự do quyên góp, chia sẻ hoặc chuyển nhượng chúng cho người khác (chuyên gia sức khỏe, người thân trong gia đình v.v...).",
     "BitmarkHealthDataComponent_signButtonText": "ĐĂNG KÝ",
+    "BitmarkHealthDataComponent_skipButtonText": "Bỏ qua",
     "BitmarkHealthDataComponent_alertTitle": "Đang mã hóa và bảo vệ dữ liệu sức khỏe của bạn...",
     "BitmarkListComponent_accountNumberDisplayText": "Đang xem tài khoản [{{accountNumber}}]，Chạm vào đây để trở về.",
     "BitmarkListComponent_titleText1": "Dữ liệu sức khỏe",
@@ -1179,8 +1183,8 @@
     "TaggingComponent_noTags": "Bạn chưa có thẻ nào, chạm để gắn thẻ",
     "TaggingComponent_addTags": "Thêm thẻ",
     "TaggingComponent_enterATag": "Tạo thẻ",
-    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
-    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
-    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
+    "AlphaAppUpdate_title": "Có cập nhật mới.",
+    "AlphaAppUpdate_message": "Có phiên bản mới của Bitmark Health. Vui lòng kiểm tra.",
+    "AlphaAppUpdate_button": "\rXem"
   }
 }
