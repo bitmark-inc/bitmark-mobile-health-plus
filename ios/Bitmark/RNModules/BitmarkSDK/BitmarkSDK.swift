@@ -19,10 +19,8 @@ class BitmarkSDKWrapper: NSObject {
   
   @objc(sdkInit:::)
   func sdkInit(_network: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-    guard let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
-      let myDict = NSDictionary(contentsOfFile: path),
-      let apiKey = myDict["BitmarkSDKAPIKey"] as? String else {
-        reject("0", "Cannot find default bundle", nil);
+    guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "BitmarkSDKAPIKey") as? String else {
+        reject(nil, "Cannot find default bundle", nil);
         return
     }
     
