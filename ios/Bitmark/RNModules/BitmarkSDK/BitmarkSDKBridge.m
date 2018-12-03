@@ -20,6 +20,7 @@ RCT_EXTERN_METHOD(authenticate:(NSString)message:(RCTPromiseResolveBlock)resolve
 // TODO
 RCT_EXTERN_METHOD(createAccountFromPhrase:(NSArray<NSString *> *)pharse:(NSString *)network:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(issueFile:(NSString *)filePath:(NSString *)name:(NSDictionary *)metadata:(int)quantity:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(storeFileSecurely:(NSString *)filePath:(NSString *)destination:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getAssetInfo:(NSString *)filePath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 //RCT_EXTERN_METHOD(issueThenTransferFile:(NSDictionary *)input:(NSString *)localFolderPath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 //RCT_EXTERN_METHOD(downloadBitmark:(NSString *)bitmarkId:(NSString *)localFolderPath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)

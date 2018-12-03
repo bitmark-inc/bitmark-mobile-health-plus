@@ -100,8 +100,20 @@ class BitmarkSDKWrapper: NSObject {
   }
 
   @objc(authenticate:::)
-  func authenticate(_network: String,_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-    resolve(nil);
+  func authenticate(_ message: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      guard let core = try KeychainUtil.getCore(reason: message) else {
+        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+        return
+      }
+      
+      let seed = try Seed.fromCore(core, version: KeychainUtil.getAccountVersion())
+      self.account = try Account(seed: seed)
+      resolve(nil)
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
   }
   
   @objc(removeAccount::)
@@ -148,6 +160,18 @@ class BitmarkSDKWrapper: NSObject {
       let bitmarkIds = try Bitmark.issue(issueParams)
       
       resolve([bitmarkIds, assetId])
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
+  
+  @objc(storeFileSecurely::::)
+  func storeFileSecurely(_ filePath: String, _ destination: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
+      try data.write(to: URL(fileURLWithPath: destination), options: [.completeFileProtection, .atomic])
+      resolve(nil);
     }
     catch let e {
       reject(nil, nil, e);
@@ -397,13 +421,7 @@ class BitmarkSDKWrapper: NSObject {
   }
   
   func getBitmarks(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-    
-  }
-}
-
-extension Data {
-  func saveFileLocally(url: URL) throws {
-    try self.write(to: url, options: [.completeFileProtection, .atomic])
+      
   }
 }
 
