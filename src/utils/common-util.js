@@ -435,6 +435,12 @@ const removeVietnameseSigns = (str) => {
   return str;
 };
 
+const asyncAlert = (title, message) => {
+  return new Promise((resolve) => {
+    Alert.alert(title, message, [{ text: 'OK', onPress: resolve }]);
+  });
+};
+
 export {
   issue,
   populateAssetNameFromImage,
@@ -451,5 +457,6 @@ export {
   isJPGFile,
   getImageSize,
   detectTextsFromPdf,
-  removeVietnameseSigns
+  removeVietnameseSigns,
+  asyncAlert,
 }

@@ -188,7 +188,7 @@ class PrivateUserComponent extends Component {
       if (images.length === 1) {
         this.doIssueImage(images);
       } else {
-        Actions.recordImages({ images, doIssueImage: this.doIssueImage });
+        Actions.orderCombineImages({ images, doIssueImage: this.doIssueImage });
       }
     });
 

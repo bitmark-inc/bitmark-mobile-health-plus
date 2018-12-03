@@ -118,7 +118,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   }
 
   if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthDataAt) {
-    let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.activeHealthDataAt);
+    let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.activeHealthDataAt, userInformation.restActiveHealthDataAt);
     if (list && list.length > 0) {
       updateModal(mapModalDisplayKeyIndex.weekly_health_data, { list });
     }
@@ -466,7 +466,29 @@ const doRequireHealthKitPermission = async () => {
     EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
   }
   return result;
-}
+};
+
+const doResetHealthDataTasks = async (list) => {
+  console.log('doResetHealthDataTasks :', list);
+  let restActiveHealthDataAt;
+  for (let dateRange of list) {
+    if ((!restActiveHealthDataAt && dateRange.endDate) ||
+      (restActiveHealthDataAt && dateRange.endDate && moment(restActiveHealthDataAt).toDate().getTime() < moment(dateRange.endDate).toDate().getTime())) {
+      restActiveHealthDataAt = dateRange.endDate;
+    }
+  }
+  console.log('restActiveHealthDataAt :', restActiveHealthDataAt);
+  userInformation.restActiveHealthDataAt = restActiveHealthDataAt;
+  await UserModel.doUpdateUserInfo(userInformation);
+
+  let dateNotification = HealthKitService.getNextSunday11AM();
+  PushNotificationIOS.scheduleLocalNotification({
+    fireDate: dateNotification.toDate(),
+    alertTitle: '',
+    alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
+    repeatInterval: 'week'
+  });
+};
 
 const doDeactiveApplication = async () => {
   stopInterval();
@@ -1187,6 +1209,7 @@ const DataProcessor = {
   doReloadUserData,
 
   doRequireHealthKitPermission,
+  doResetHealthDataTasks,
   doDeactiveApplication,
   doBitmarkHealthData,
   doMarkDoneBitmarkHealthData,
