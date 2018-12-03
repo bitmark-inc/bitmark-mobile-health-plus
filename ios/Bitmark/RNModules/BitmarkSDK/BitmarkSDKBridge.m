@@ -10,25 +10,24 @@
 
 @interface RCT_EXTERN_MODULE(BitmarkSDKWrapper, NSObject)
 
-RCT_EXTERN_METHOD(newAccount:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(removeAccount:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(tryPhrase:(NSArray<NSString *> *)pharse:(NSString *)network:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(sdkInit:(NSString)network:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(createAccount:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(createAccountFromPhrase:(NSArray<NSString *> *)pharse:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(tryPhrase:(NSArray<NSString *> *)pharse:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(accountInfo:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(authenticate:(NSString)message:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(removeAccount:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 
-// TODO
-RCT_EXTERN_METHOD(createAccountFromPhrase:(NSArray<NSString *> *)pharse:(NSString *)network:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(issueFile:(NSString *)filePath:(NSString *)name:(NSDictionary *)metadata:(int)quantity:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(issueFile:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(storeFileSecurely:(NSString *)filePath:(NSString *)destination:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getAssetInfo:(NSString *)filePath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 //RCT_EXTERN_METHOD(issueThenTransferFile:(NSDictionary *)input:(NSString *)localFolderPath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 //RCT_EXTERN_METHOD(downloadBitmark:(NSString *)bitmarkId:(NSString *)localFolderPath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 //RCT_EXTERN_METHOD(downloadBitmarkWithGrantId:(NSString *)grantId:(NSString *)localFolderPath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(sign:(NSArray<NSString *>)messages:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(transferOneSignature:(NSString *)bitmarkId:(NSString *)address:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(createAndSubmitTransferOffer:(NSString *)bitmarkId:(NSString *)address:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(signForTransferOfferAndSubmit:(NSString *)txId:(NSString *)signature:(NSString *)offerId:(NSString *)action:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(transferOneSignature:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(createAndSubmitTransferOffer:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(signForTransferOfferAndSubmit:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(validateMetadata:(NSDictionary *)metadata:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(validateAccountNumber:(NSString *)address:(NSString *)network:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 // grant access bitmark
