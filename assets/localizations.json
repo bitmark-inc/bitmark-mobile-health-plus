@@ -858,8 +858,8 @@
     "CaptureMultipleImagesComponent_buttonText2": "登記",
     "CaptureMultipleImagesComponent_buttonText3": "重拍",
     "CaptureMultipleImagesComponent_buttonText4": "繼續拍攝",
-    "CaptureMultipleImagesComponent_titleLimitModal": "超出限制",
-    "CaptureMultipleImagesComponent_messageLimitModal": "CaptureMultipleImagesComponent_messageLimitModal",
+    "CaptureMultipleImagesComponent_titleLimitModal": "超出限制！",
+    "CaptureMultipleImagesComponent_messageLimitModal": "很抱歉，我們目前僅支援單次對 {{maximum}} 張影像加密，請重新選擇影像或者減少數量。",
     "OrderCombineImagesComponent_titleText": "排列照片",
     "OrderCombineImagesComponent_message": "拖放以排列照片",
     "OrderCombineImagesComponent_nextButtonText": "登記",
@@ -886,9 +886,9 @@
     "TaggingComponent_noTags": "目前尚無任何標籤。",
     "TaggingComponent_addTags": "新增標籤",
     "TaggingComponent_enterATag": "請輸入一個標籤",
-    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
-    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
-    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
+    "AlphaAppUpdate_title": "更新通知",
+    "AlphaAppUpdate_message": "現在有更新的 Bitmark Health 了！請前往下載更新。",
+    "AlphaAppUpdate_button": "查看"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -1183,8 +1183,8 @@
     "TaggingComponent_noTags": "Bạn chưa có thẻ nào, chạm để gắn thẻ",
     "TaggingComponent_addTags": "Thêm thẻ",
     "TaggingComponent_enterATag": "Tạo thẻ",
-    "AlphaAppUpdate_title": "AlphaAppUpdate_title",
-    "AlphaAppUpdate_message": "AlphaAppUpdate_message",
-    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
+    "AlphaAppUpdate_title": "Có cập nhật mới.",
+    "AlphaAppUpdate_message": "Có phiên bản mới của Bitmark Health. Vui lòng kiểm tra.",
+    "AlphaAppUpdate_button": "\rXem"
   }
 }
