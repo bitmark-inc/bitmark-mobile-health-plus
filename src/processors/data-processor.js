@@ -185,11 +185,13 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               asset = merge({}, oldAsset, asset);
-              if (!asset.filePath) {
+              if (!asset.filePath || asset.filePath.indexOf(FileUtil.DocumentDirectory) < 0) {
                 asset.filePath = await detectLocalAssetFilePath(asset.id);
               }
+              if (!bitmark.thumbnail || !bitmark.thumbnail.path || bitmark.thumbnail.path.indexOf(FileUtil.DocumentDirectory) < 0) {
+                bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
+              }
               bitmark.asset = asset;
-              bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
               await doCheckAndSyncDataWithICloud(bitmark);
               healthAssetBitmarks.push(bitmark);
             }

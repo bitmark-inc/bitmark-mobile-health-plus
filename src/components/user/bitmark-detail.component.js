@@ -127,7 +127,6 @@ export class BitmarkDetailComponent extends Component {
   render() {
     // let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
     // let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
-    console.log('this.state :', this.state, this.props)
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         {/* {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
