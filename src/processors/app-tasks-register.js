@@ -106,6 +106,10 @@ const doBitmarkHealthData = async ({ list, processingData }) => {
   return await submitting(DataProcessor.doBitmarkHealthData(touchFaceIdSession, list), processingData);
 };
 
+const doResetHealthDataTasks = async ({ list }) => {
+  return await processing(DataProcessor.doResetHealthDataTasks(list));
+};
+
 const doDownloadBitmark = async ({ bitmarkIdOrGrantedId, assetId, processingData }) => {
   // let touchFaceIdSession = await CommonModel.doStartFaceTouchSessionId('Please sign to access private health data.');
   // if (!touchFaceIdSession) {
@@ -201,6 +205,7 @@ let AppTasks = {
   doIssueFile,
   doIssueMultipleFiles,
   doBitmarkHealthData,
+  doResetHealthDataTasks,
   doDownloadBitmark,
   doDownloadHealthDataBitmark,
   doGetBitmarkInformation,

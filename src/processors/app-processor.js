@@ -146,6 +146,11 @@ const doIssueMultipleFiles = async (listInfo, processingInfo) => {
 const doBitmarkHealthData = async (list, processingData) => {
   return executeTask('doBitmarkHealthData', { list, processingData });
 };
+
+const doResetHealthDataTasks = async (list) => {
+  return executeTask('doResetHealthDataTasks', { list });
+};
+
 const doDownloadBitmark = async (bitmarkIdOrGrantedId, assetId, processingData) => {
   return executeTask('doDownloadBitmark', { bitmarkIdOrGrantedId, assetId, processingData });
 };
@@ -239,6 +244,7 @@ let AppProcessor = {
   doIssueMultipleFiles,
   doRequireHealthKitPermission,
   doBitmarkHealthData,
+  doResetHealthDataTasks,
 
   doGetBitmarkInformation,
   doDownloadBitmark,

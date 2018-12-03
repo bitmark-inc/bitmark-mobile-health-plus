@@ -403,6 +403,12 @@ const getImageSize = async (imageFilePath) => {
   })
 };
 
+const asyncAlert = (title, message) => {
+  return new Promise((resolve) => {
+    Alert.alert(title, message, [{ text: 'OK', onPress: resolve }]);
+  });
+};
+
 export {
   issue,
   populateAssetNameFromImage,
@@ -418,5 +424,6 @@ export {
   isAssetDataRecord,
   isJPGFile,
   getImageSize,
-  detectTextsFromPdf
+  detectTextsFromPdf,
+  asyncAlert,
 }
