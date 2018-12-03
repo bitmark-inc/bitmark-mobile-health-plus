@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     paddingRight: 5,
-    flex: 1
+    flex: 1,
   },
   bitmarkHealthRowIcon: {
     width: convertWidth(8),

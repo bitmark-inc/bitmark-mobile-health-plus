@@ -89,6 +89,10 @@ const doBitmarkHealthData = async ({ list, processingData }) => {
   return await submitting(DataProcessor.doBitmarkHealthData(list), processingData);
 };
 
+const doResetHealthDataTasks = async ({ list }) => {
+  return await processing(DataProcessor.doResetHealthDataTasks(list));
+};
+
 const doGetBitmarkInformation = async ({ bitmarkId }) => {
   let { asset, bitmark } = await processing(BitmarkService.doGetBitmarkInformation(bitmarkId));
   return { asset, bitmark };
@@ -112,7 +116,7 @@ const doRejectEmailRecords = async ({ emailRecord }) => {
 };
 
 const doMigrateFilesToLocalStorage = async () => {
-  return processing(DataProcessor.doMigrateFilesToLocalStorage());
+  return DataProcessor.doMigrateFilesToLocalStorage();
 }
 const doProcessEmailRecords = async ({ bitmarkAccountNumber, emailIssueRequestsFromAnEmail }) => {
   return AccountService.doProcessEmailRecords(bitmarkAccountNumber, emailIssueRequestsFromAnEmail);
@@ -138,6 +142,7 @@ let AppTasks = {
   doIssueFile,
   doIssueMultipleFiles,
   doBitmarkHealthData,
+  doResetHealthDataTasks,
   doGetBitmarkInformation,
   doDownloadAndShareLegal,
   doAcceptEmailRecords,

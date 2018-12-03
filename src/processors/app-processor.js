@@ -125,6 +125,10 @@ const doBitmarkHealthData = async (list, processingData) => {
   return executeTask('doBitmarkHealthData', { list, processingData });
 };
 
+const doResetHealthDataTasks = async (list) => {
+  return executeTask('doResetHealthDataTasks', { list });
+};
+
 const doGetBitmarkInformation = async (bitmarkId) => {
   return executeTask('doGetBitmarkInformation', { bitmarkId });
 };
@@ -200,6 +204,7 @@ let AppProcessor = {
   doIssueMultipleFiles,
   doRequireHealthKitPermission,
   doBitmarkHealthData,
+  doResetHealthDataTasks,
 
   doGetBitmarkInformation,
   doReloadUserData,

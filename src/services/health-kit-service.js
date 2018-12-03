@@ -4,7 +4,11 @@ import {
   AppleHealthKitModel,
   BitmarkModel,
 } from '../models';
-import { FileUtil, getLocalAssetsFolderPath, } from '../utils';
+
+import {
+  FileUtil, getLocalAssetsFolderPath,
+  // asyncAlert
+} from '../utils';
 
 let allDataTypes = [
   'ActiveEnergyBurned',
@@ -386,7 +390,7 @@ const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
   return results;
 };
 
-const doCheckBitmarkHealthDataTask = (healthDataBitmarks, activeAt) => {
+const doCheckBitmarkHealthDataTask = (healthDataBitmarks, activeAt, resetAt) => {
   let lastTimeBitmarkHealthData;
   (healthDataBitmarks || []).forEach(bitmark => {
     if (bitmark.asset.metadata['Saved Time']) {
@@ -396,10 +400,17 @@ const doCheckBitmarkHealthDataTask = (healthDataBitmarks, activeAt) => {
       }
     }
   });
+  if ((lastTimeBitmarkHealthData && resetAt && lastTimeBitmarkHealthData.toDate().getTime() < moment(resetAt).toDate().getTime()) ||
+    (!lastTimeBitmarkHealthData && resetAt)) {
+    lastTimeBitmarkHealthData = resetAt;
+  }
   let list = [];
   let startDate, endDate;
   if (!lastTimeBitmarkHealthData) {
     lastTimeBitmarkHealthData = moment(activeAt);
+    if (lastTimeBitmarkHealthData.toDate().getTime() > moment().toDate().getTime()) {
+      return list;
+    }
     startDate = getPreviousDay(lastTimeBitmarkHealthData, SUNDAY);
     startDate = getBeginDay(startDate);
     endDate = moment(lastTimeBitmarkHealthData);

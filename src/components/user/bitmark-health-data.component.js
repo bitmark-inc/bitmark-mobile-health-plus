@@ -37,6 +37,17 @@ export class BitmarkHealthDataComponent extends Component {
             </View>
 
             <View style={styles.signButtonArea}>
+              <TouchableOpacity style={styles.skipButton} onPress={() => {
+                AppProcessor.doResetHealthDataTasks(this.props.list).then(() => {
+                  Actions.pop();
+                  DataProcessor.doMarkDoneBitmarkHealthData();
+                }).catch(error => {
+                  console.log('doResetHealthDataTasks error:', error);
+                  EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+                });
+              }} >
+                <Text style={styles.skipButtonText}>{i18n.t('BitmarkHealthDataComponent_skipButtonText')}</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={styles.signButton} onPress={() => {
                 AppProcessor.doBitmarkHealthData(this.props.list, {
                   indicator: true, title: i18n.t('BitmarkHealthDataComponent_alertTitle'), message: ''
@@ -103,13 +114,14 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: convertWidth(20),
     paddingRight: convertWidth(20),
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
   signButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     height: constants.buttonHeight,
-    width: '100%',
+    width: '45%',
     backgroundColor: '#FF4444'
   },
   signButtonText: {
@@ -117,6 +129,20 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontSize: 16,
     color: 'white'
+  },
+  skipButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: constants.buttonHeight,
+    width: '45%',
+    borderColor: '#FF4444', borderWidth: 1,
+  },
+  skipButtonText: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontWeight: '500',
+    fontSize: 16,
+    color: '#FF4444'
   },
 
 

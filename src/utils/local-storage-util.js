@@ -88,7 +88,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
     iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${assetFilename}`);
 
     //sync thumbnail
-    if (bitmark.thumbnail && bitmark.thumbnail.path && !(await FileUtil.exists(bitmark.thumbnail.path))) {
+    if (bitmark.thumbnail && bitmark.thumbnail.path && (await FileUtil.exists(bitmark.thumbnail.path))) {
       let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
       await iCloudSyncAdapter.uploadFileToCloud(bitmark.thumbnail.path, `${bitmarkAccountNumber}_thumbnails_${filename}`);
     }
