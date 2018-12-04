@@ -34,4 +34,9 @@ RCT_EXTERN_METHOD(validateAccountNumber:(NSString *)address:(NSString *)network:
 //RCT_EXTERN_METHOD(createSessionDataForRecipient:(NSString *)bitmarkId:(NSString *)recipient:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 //RCT_EXTERN_METHOD(createSessionDataFromLocalForRecipient:(NSString *)bitmarkId:(NSDictionary *)sessionData:(NSString *)recipient:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 
+// Query APIs
+RCT_EXTERN_METHOD(getBitmarks:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getTransactions:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getAssets:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+
 @end

@@ -418,8 +418,159 @@ class BitmarkSDKWrapper: NSObject {
     resolve(AccountNumber(address).isValid())
   }
   
+  @objc(getBitmarks:::)
   func getBitmarks(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      var queryParams = Bitmark.newBitmarkQueryParams()
+      for (key, value) in params {
+        switch key {
+        case "limit":
+          guard let v = value as? Int else {
+            reject(nil, "Invalid param for limit, should be an int", nil)
+            continue
+          }
+          queryParams = try queryParams.limit(size: v)
+        case "issuer":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for issuer, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.issued(by: v)
+        case "owner":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for owner, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.owned(by: v)
+        case "offer_from":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for offer_from, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.offer(from: v)
+        case "offer_to":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for offer_to, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.offer(to: v)
+        case "asset_id":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for asset_id, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.referenced(toAssetID: v)
+        case "load_asset":
+          guard let v = value as? Bool else {
+            reject(nil, "Invalid param for load_asset, should be a boolean", nil)
+            continue
+          }
+          queryParams = queryParams.loadAsset(v)
+        default:
+          reject(nil, "Invalid key " + key, nil)
+          continue
+        }
+      }
       
+      let (bitmarks, asset) = try Bitmark.list(params: queryParams)
+      var result: [Any] = [try bitmarks.map { try $0.asDictionary() }]
+      if let a = asset {
+        result.append(try a.asDictionary())
+      }
+      
+      resolve(result)
+      
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
+  
+  @objc(getTransactions:::)
+  func getTransactions(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      var queryParams = Transaction.newTransactionQueryParams()
+      for (key, value) in params {
+        switch key {
+        case "limit":
+          guard let v = value as? Int else {
+            reject(nil, "Invalid param for limit, should be an int", nil)
+            continue
+          }
+          queryParams = try queryParams.limit(size: v)
+        case "owner":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for owner, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.owned(by: v)
+        case "asset_id":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for asset_id, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.referenced(toAssetID: v)
+        case "bitmark_id":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for bitmark_id, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.referenced(toBitmarkID: v)
+        case "load_asset":
+          guard let v = value as? Bool else {
+            reject(nil, "Invalid param for load_asset, should be a boolean", nil)
+            continue
+          }
+          queryParams = queryParams.loadAsset(v)
+        default:
+          reject(nil, "Invalid key " + key, nil)
+          continue
+        }
+      }
+      
+      let (transactions, asset) = try Transaction.list(params: queryParams)
+      var result: [Any] = [try transactions.map { try $0.asDictionary() }]
+      if let a = asset {
+        result.append(try a.asDictionary())
+      }
+      
+      resolve(result)
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
+  
+  @objc(getAssets:::)
+  func getAssets(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      var queryParams = Asset.newQueryParams()
+      for (key, value) in params {
+        switch key {
+        case "limit":
+          guard let v = value as? Int else {
+            reject(nil, "Invalid param for limit, should be an int", nil)
+            continue
+          }
+          queryParams = try queryParams.limit(size: v)
+        case "registrant":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for registrant, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.registeredBy(registrant: v)
+        default:
+          reject(nil, "Invalid key " + key, nil)
+          continue
+        }
+      }
+      
+      let assets = try Asset.list(params: queryParams)
+      resolve(try assets.map { try $0.asDictionary() } )
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
   }
 }
 
@@ -454,4 +605,12 @@ extension BitmarkSDKWrapper {
   }
 }
 
-
+extension Encodable {
+  func asDictionary() throws -> [String: Any] {
+    let data = try JSONEncoder().encode(self)
+    guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
+      throw NSError()
+    }
+    return dictionary
+  }
+}
