@@ -164,7 +164,6 @@ let setApplicationIconBadgeNumber = (number) => {
 let doRegisterJWT = (accountNumber, timestamp, signature) => {
   return new Promise((resolve, reject) => {
     let statusCode;
-    //TODO API
     let tempURL = `${config.mobile_server_url}/api/auth`;
     fetch(tempURL, {
       method: 'POST',

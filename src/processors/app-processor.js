@@ -2,7 +2,7 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 import { registerTasks } from './app-tasks-register';
 
-import { AccountModel, FaceTouchId, BitmarkSDK } from './../models';
+import { AccountModel, FaceTouchId } from './../models';
 import { EventEmitterService, } from './../services'
 import { DataProcessor } from './data-processor';
 import { config } from '../configs';

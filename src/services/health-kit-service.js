@@ -3,6 +3,7 @@ import randomString from 'random-string';
 import {
   AppleHealthKitModel,
   BitmarkModel,
+  BitmarkSDK,
 } from '../models';
 
 import {
@@ -365,7 +366,9 @@ const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
     await FileUtil.mkdir(assetFolderPath);
     await FileUtil.mkdir(downloadedFolder);
     let filename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
-    await FileUtil.moveFileSafe(filePath, `${downloadedFolder}/${filename}`);
+    await BitmarkSDK.storeFileSecurely(filePath, `${downloadedFolder}/${filename}`);
+    await FileUtil.removeSafe(filePath);
+    // await FileUtil.moveFileSafe(filePath, `${downloadedFolder}/${filename}`);
 
     let listFiles = await FileUtil.readDir(downloadedFolder);
     let zipFilePath = `${downloadedFolder}/${listFiles[0]}`;
