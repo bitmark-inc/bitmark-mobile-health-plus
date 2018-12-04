@@ -19,7 +19,7 @@ const doGetCurrentAccount = async () => {
 };
 
 const doCheckPhraseWords = async (phraseWords) => {
-  return await BitmarkSDK.tryPhraseWords(phraseWords);
+  return await BitmarkSDK.tryPhrase(phraseWords);
 };
 
 const doLogout = async (jwt) => {

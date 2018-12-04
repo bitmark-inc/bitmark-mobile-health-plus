@@ -62,7 +62,6 @@ const doLogin = async ({ phraseWords, enableTouchFaceId }) => {
   if (Platform.OS === 'ios' && config.isIPhoneX && enableTouchFaceId) {
     await FaceTouchId.authenticate();
   }
-  await BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp'));
   await AccountModel.doLogin(phraseWords, enableTouchFaceId);
   return await processing(DataProcessor.doLogin());
 };
