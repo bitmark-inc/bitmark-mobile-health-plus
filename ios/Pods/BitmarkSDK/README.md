@@ -55,7 +55,7 @@ $ brew install carthage
 To integrate BitmarkSDK into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "bitmark-inc/bitmark-sdk-swift" ~> 2.0.0
+github "bitmark-inc/bitmark-sdk-swift" ~> 2.2.0
 ```
 
 Run `carthage update` to build the framework and drag the built `BitmarkSDK.framework` into your Xcode project.
@@ -71,7 +71,7 @@ import BitmarkSDK
 
 ## Documentation
 
-Reference: https://sdk-docs.test.bitmark.com/?swift
+Reference: https://sdk-docs.bitmark.com/?swift
 
 
 # License

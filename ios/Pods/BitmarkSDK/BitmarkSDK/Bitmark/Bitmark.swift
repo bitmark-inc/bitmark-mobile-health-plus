@@ -148,3 +148,19 @@ extension Bitmark {
         return try api.listBitmark(builder: params)
     }
 }
+
+extension Bitmark: Hashable {
+    public var hashValue: Int {
+        return self.id.hashValue
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+}
+
+extension Bitmark: Equatable {
+    public static func == (lhs: Bitmark, rhs: Bitmark) -> Bool {
+        return lhs.id == rhs.id
+    }
+}

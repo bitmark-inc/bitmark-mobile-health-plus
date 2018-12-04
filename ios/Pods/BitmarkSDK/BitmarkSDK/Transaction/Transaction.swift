@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Transaction: Codable {
+public struct Transaction: Codable {
     let id: String
     let bitmark_id: String
     let asset_id: String
@@ -54,5 +54,21 @@ extension Transaction {
     public static func list(params: QueryParam) throws -> ([Transaction], [Asset]?) {
         let api = API()
         return try api.listTransaction(builder: params)
+    }
+}
+
+extension Transaction: Hashable {
+    public var hashValue: Int {
+        return self.id.hashValue
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+}
+
+extension Transaction: Equatable {
+    public static func == (lhs: Transaction, rhs: Transaction) -> Bool {
+        return lhs.id == rhs.id
     }
 }

@@ -3118,7 +3118,7 @@
 				PROVISIONING_PROFILE = "965b76b3-db39-4944-b288-a3aee506dc8e";
 				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -3153,7 +3153,7 @@
 				PRODUCT_NAME = BitmarkHealthPlus;
 				PROVISIONING_PROFILE = "824ea5ca-f7be-4719-9c78-af531275f01a";
 				PROVISIONING_PROFILE_SPECIFIER = "Health Plus Distribution";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -3194,7 +3194,7 @@
 				PROVISIONING_PROFILE = "d33a3f18-e17d-4e43-9956-1ff9a756759f";
 				PROVISIONING_PROFILE_SPECIFIER = "Health beta development";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -3234,7 +3234,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d8d34896-37b2-42fb-8942-ad0b914f9b50";
 				PROVISIONING_PROFILE_SPECIFIER = "match InHouse com.bitmark.healthplus.beta";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -3358,6 +3358,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Bitmark-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -3393,6 +3394,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Bitmark-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

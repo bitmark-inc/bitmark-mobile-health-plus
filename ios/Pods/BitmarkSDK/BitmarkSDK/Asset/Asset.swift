@@ -76,3 +76,19 @@ public extension Asset {
         return try api.listAsset(builder: params)
     }
 }
+
+extension Asset: Hashable {
+    public var hashValue: Int {
+        return self.id.hashValue
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+}
+
+extension Asset: Equatable {
+    public static func == (lhs: Asset, rhs: Asset) -> Bool {
+        return lhs.id == rhs.id
+    }
+}

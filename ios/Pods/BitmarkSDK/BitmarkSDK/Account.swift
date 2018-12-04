@@ -38,7 +38,7 @@ public struct Account {
     
     // MARK:- Seed
     
-    public init(fromSeed seedString: String, version: SeedVersion = .v1) throws {
+    public init(fromSeed seedString: String, version: SeedVersion = .v2) throws {
         let seed = try Seed.fromBase58(seedString, version: version)
         try self.init(seed: seed)
     }
