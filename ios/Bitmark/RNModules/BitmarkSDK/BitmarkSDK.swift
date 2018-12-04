@@ -418,6 +418,17 @@ class BitmarkSDKWrapper: NSObject {
     resolve(AccountNumber(address).isValid())
   }
   
+  @objc(getBitmark:::)
+  func getBitmark(_ bitmarkID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      let bitmark = try Bitmark.get(bitmarkID: bitmarkID)
+      resolve(try bitmark.asDictionary())
+    }
+    catch let e {
+      reject(nil, nil, e)
+    }
+  }
+  
   @objc(getBitmarks:::)
   func getBitmarks(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -486,6 +497,17 @@ class BitmarkSDKWrapper: NSObject {
     }
   }
   
+  @objc(getTransaction:::)
+  func getTransaction(_ transactionID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      let transaction = try Transaction.get(transactionID: transactionID)
+      resolve(try transaction.asDictionary())
+    }
+    catch let e {
+      reject(nil, nil, e)
+    }
+  }
+  
   @objc(getTransactions:::)
   func getTransactions(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -538,6 +560,17 @@ class BitmarkSDKWrapper: NSObject {
     }
     catch let e {
       reject(nil, nil, e);
+    }
+  }
+  
+  @objc(getAsset:::)
+  func getAsset(_ assetID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      let asset = try Asset.get(assetID: assetID)
+      resolve(try asset.asDictionary())
+    }
+    catch let e {
+      reject(nil, nil, e)
     }
   }
   
