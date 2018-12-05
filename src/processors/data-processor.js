@@ -39,7 +39,6 @@ let userInformation = {};
 let grantedAccessAccountSelected = null;
 let jwt;
 // let websocket;
-let isLoadingData = false;
 let notificationUUID;
 
 let mapModalDisplayData = {};
@@ -293,14 +292,6 @@ const runOnBackground = async (justOpenApp) => {
   }
 };
 // ================================================================================================================================================
-const doReloadUserData = async () => {
-  isLoadingData = true;
-  EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
-  await runOnBackground();
-  isLoadingData = false;
-  EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
-  return true;
-};
 
 const configNotification = () => {
   const onRegistered = async (registeredNotificationInfo) => {
@@ -465,6 +456,7 @@ const doRequireHealthKitPermission = async () => {
   if (emptyHealthKitData) {
     EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
   }
+
   return result;
 };
 
@@ -645,7 +637,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     configNotification();
   }
 
-  EventEmitterService.emit(EventEmitterService.events.APP_LOADING_DATA, isLoadingData);
   console.log('userInformation :', userInformation);
   return userInformation;
 };
@@ -786,7 +777,7 @@ const doIssueFile = async (touchFaceIdSession, filePath, assetName, metadataList
     }
   }
 
-  await doReloadUserData();
+  await runGetUserBitmarksInBackground();
   return results;
 };
 
@@ -1201,7 +1192,7 @@ const doTransferBitmark = async (touchFaceIdSession, bitmark, receiver) => {
 
   await deleteIndexedDataByBitmarkId(bitmark.id);
   await deleteTagsByBitmarkId(bitmark.id);
-  await doReloadUserData();
+  await runGetUserBitmarksInBackground();
   return result;
 };
 
@@ -1211,7 +1202,6 @@ const DataProcessor = {
   doLogin,
   doLogout,
   doStartBackgroundProcess,
-  doReloadUserData,
 
   doRequireHealthKitPermission,
   doResetHealthDataTasks,
@@ -1228,7 +1218,6 @@ const DataProcessor = {
   getApplicationBuildNumber,
   getUserInformation,
   finishedDisplayEmailRecords,
-  isAppLoadingData: () => isLoadingData,
 
   // doGrantingAccess,
   // doGetAccountAccesses,

@@ -109,9 +109,6 @@ const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {
   return await processing(AccountService.doCreateSignatureData(touchFaceIdMessage));
 };
 
-const doReloadUserData = async () => {
-  return await DataProcessor.doReloadUserData();
-};
 
 const doRequireHealthKitPermission = async () => {
   return DataProcessor.doRequireHealthKitPermission();
@@ -264,7 +261,6 @@ let AppProcessor = {
   doGetBitmarkInformation,
   doDownloadBitmark,
   doDownloadHealthDataBitmark,
-  doReloadUserData,
   doStartBackgroundProcess,
   doDownloadAndShareLegal,
 
