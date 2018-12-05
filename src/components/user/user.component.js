@@ -17,7 +17,7 @@ import {
   FileUtil,
   convertWidth, issue,
   populateAssetNameFromImage, populateAssetNameFromPdf, isImageFile, isPdfFile,
-  search, insertDetectedDataToIndexedDB
+  search,
 } from './../../utils';
 import { config } from '../../configs';
 import { constants } from '../../constants';
@@ -100,8 +100,6 @@ class PrivateUserComponent extends Component {
           metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
         }
 
-
-
         let detectedTexts;
         let detectResult;
         if (combineFilesList && combineFilesList.length) {
@@ -139,7 +137,6 @@ class PrivateUserComponent extends Component {
 
       if (bitmarks) {
         for (let i = 0; i < listInfo.length; i++) {
-          await insertDetectedDataToIndexedDB(bitmarks[i].id, listInfo[i].assetName, listInfo[i].metadataList, listInfo[i].detectedTexts);
           FileUtil.removeSafe(listInfo[i].filePath);
         }
         return listAssetName;
@@ -234,7 +231,6 @@ class PrivateUserComponent extends Component {
 
       let filePath = info.filePath;
       let assetName = response.fileName;
-      let detectedTexts;
 
       let willDetectAssetNameAutomatically = false;
       if (isPdfFile(filePath)) {
@@ -242,14 +238,12 @@ class PrivateUserComponent extends Component {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
         let detectResult = await populateAssetNameFromPdf(filePath, assetName);
         assetName = detectResult.assetName;
-        detectedTexts = detectResult.detectedTexts;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       } else if (isImageFile(filePath)) {
         willDetectAssetNameAutomatically = true;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
         let detectResult = await populateAssetNameFromImage(filePath, assetName);
         assetName = detectResult.assetName;
-        detectedTexts = detectResult.detectedTexts;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       }
 
@@ -257,9 +251,7 @@ class PrivateUserComponent extends Component {
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file', 1, async (data) => {
-        let bitmarkId = data[0].id;
-        await insertDetectedDataToIndexedDB(bitmarkId, assetName, metadataList, detectedTexts);
+      issue(filePath, assetName, metadataList, 'file', 1, async () => {
 
         if (willDetectAssetNameAutomatically) {
           Actions.assetNameInform({ assetNames: [assetName] });

@@ -57,3 +57,5 @@ buck-out/
 
 .travis/ssh-deploy.sh
 ./package-lock.json
+
+package-lock.json

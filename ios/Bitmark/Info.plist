@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.51.4</string>
+	<string>1.52.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -89,22 +89,6 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>AndaleMono.ttf</string>
-    <string>AvenirNextLTPro-Bold.ttf</string>
-    <string>AvenirNextLTPro-BoldIt.ttf</string>
-    <string>AvenirNextLTPro-Demi.ttf</string>
-    <string>AvenirNextLTPro-DemiIt.ttf</string>
-    <string>AvenirNextLTPro-Heavy.ttf</string>
-    <string>AvenirNextLTPro-HeavyIt.ttf</string>
-    <string>AvenirNextLTPro-It.ttf</string>
-    <string>AvenirNextLTPro-Light.ttf</string>
-    <string>AvenirNextLTPro-LightIt.ttf</string>
-    <string>AvenirNextLTPro-Medium.ttf</string>
-    <string>AvenirNextLTPro-MediumIt.ttf</string>
-    <string>AvenirNextLTPro-Regular.ttf</string>
-    <string>AvenirNextLTPro-Thin.ttf</string>
-    <string>AvenirNextLTPro-ThinIt.ttf</string>
-    <string>AvenirNextLTPro-UltLt.ttf</string>
-    <string>AvenirNextLTPro-UltLtIt.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

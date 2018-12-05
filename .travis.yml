@@ -1,6 +1,6 @@
 language: swift
-osx_image: xcode10
-xcode_sdk: iphonesimulator12.0
+osx_image: xcode10.1
+xcode_sdk: iphonesimulator12.1
 node_js:
 - '8'
 branches:

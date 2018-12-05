@@ -306,7 +306,7 @@ const doGetDataSources = async () => {
 
 let doCreateFile = async (prefix, userId, date, data, randomId, extFiles) => {
   let folderPath = FileUtil.CacheDirectory + '/' + userId;
-  let assetFilename = prefix + '_' + userId + '_' + date.toString() + '_' + randomId;
+  let assetFilename = prefix + '_' + userId + '_' + date.toISOString() + '_' + randomId;
   let assetFolder = folderPath + '/' + assetFilename;
 
   let filename = assetFilename + '.txt';
@@ -371,7 +371,7 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     await FileUtil.mkdir(downloadedFolder);
     let list = await FileUtil.readDir(tempFolderDownloaded);
     for (let filename of list) {
-      await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
+      await FileUtil.moveFileSafe(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
     }
     await FileUtil.removeSafe(tempFolder);
 
@@ -380,12 +380,18 @@ const doBitmarkHealthData = async (touchFaceIdSession, bitmarkAccountNumber, lis
     await FileUtil.unzip(zipFilePath, downloadedFolder);
     await FileUtil.removeSafe(zipFilePath);
 
+    let listFile = await FileUtil.readDir(downloadedFolder);
+
     let encryptedAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
     await FileUtil.mkdir(encryptedAssetFolder);
     await FileUtil.create(`${encryptedAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
 
     issueResult.bitmarkIds.forEach(id => {
-      results.push({ id, sessionData: issueResult.sessionData, healthData });
+      results.push({
+        id, sessionData: issueResult.sessionData,
+        healthData,
+        filePath: `${downloadedFolder}/${listFile[0]}`
+      });
     });
   }
   return results;

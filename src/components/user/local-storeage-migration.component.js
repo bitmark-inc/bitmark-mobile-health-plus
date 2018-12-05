@@ -7,7 +7,7 @@ import KeepAwake from 'react-native-keep-awake';
 
 import { EventEmitterService } from '../../services';
 import { Actions } from 'react-native-router-flux';
-import { DataProcessor } from '../../processors';
+import { DataProcessor, AppProcessor } from '../../processors';
 import { config } from '../../configs';
 
 export class LocalStorageMigrationComponent extends React.Component {
@@ -21,7 +21,7 @@ export class LocalStorageMigrationComponent extends React.Component {
 
     setTimeout(() => {
       KeepAwake.activate();
-      DataProcessor.doMigrateFilesToLocalStorage().then(() => {
+      AppProcessor.doMigrateFilesToLocalStorage().then(() => {
         KeepAwake.deactivate();
       }).catch(error => {
         KeepAwake.deactivate();

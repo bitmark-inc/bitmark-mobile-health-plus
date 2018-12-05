@@ -17,12 +17,12 @@ export class SearchResultsComponent extends Component {
   }
 
   goToDetailScreen(bitmark, bitmarkType) {
-    Actions.bitmarkDetail({bitmark, bitmarkType});
+    Actions.bitmarkDetail({ bitmark, bitmarkType });
   }
 
   downloadBitmark(asset) {
     if (asset.filePath) {
-      Share.share({title: i18n.t('BitmarkListComponent_shareTitle'), url: asset.filePath}).then(() => {
+      Share.share({ title: i18n.t('BitmarkListComponent_shareTitle'), url: asset.filePath }).then(() => {
       }).catch(error => {
         console.log('Share error:', error);
       })
@@ -45,14 +45,14 @@ export class SearchResultsComponent extends Component {
               scrollEnabled={false}
               data={results.healthDataBitmarks}
               extraData={this.props}
-              renderItem={({item, index}) => {
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity style={styles.bitmarkItemContainer} onPress={() => {
-                    isFileRecord(item) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_data');
+                    isFileRecord(item.asset) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_data');
                   }}>
                     <View style={(index == results.healthDataBitmarks.length - 1) ? styles.bitmarkLastItem : styles.bitmarkItem}>
                       {/*Thumbnail*/}
-                      <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/health_data_icon.png')}/>
+                      <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/health_data_icon.png')} />
 
                       {/*Content*/}
                       <View style={styles.itemContent}>
@@ -78,23 +78,23 @@ export class SearchResultsComponent extends Component {
               scrollEnabled={false}
               data={results.healthAssetBitmarks}
               extraData={this.props}
-              renderItem={({item, index}) => {
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity style={styles.bitmarkItemContainer} onPress={() => {
-                    (isFileRecord(item) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
+                    (isFileRecord(item.asset) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) ? this.downloadBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
                   }}>
                     <View style={(index == results.healthAssetBitmarks.length - 1) ? styles.bitmarkLastItem : styles.bitmarkItem}>
                       {/*Thumbnail*/}
                       {item && item.thumbnail && item.thumbnail.exists ? (
                         <View>
-                          <Image style={styles.bitmarkThumbnail} source={{uri: `${item.thumbnail.path}`}}/>
+                          <Image style={styles.bitmarkThumbnail} source={{ uri: `${item.thumbnail.path}` }} />
                           {item.thumbnail.multiple &&
-                          <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')}/>
+                            <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')} />
                           }
                         </View>
                       ) : (
-                        <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/unknown_file_type_icon.png')}/>
-                      )}
+                          <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/unknown_file_type_icon.png')} />
+                        )}
 
                       {/*Content*/}
                       <View style={styles.itemContent}>
@@ -112,10 +112,10 @@ export class SearchResultsComponent extends Component {
                                   <Text style={styles.taggingItem}>#{tag.value}</Text>
                                 </View>
                               );
-                              })
+                            })
                             }
                           </View>
-                          ) : null
+                        ) : null
                         }
                       </View>
                     </View>
@@ -130,9 +130,9 @@ export class SearchResultsComponent extends Component {
 
         {/*NO RESULTS*/}
         {(results.length == 0) ?
-        <View style={styles.noResultsContainer}>
-          <Text style={styles.noResultsText}>{global.i18n.t("SearchResultsComponent_noResults")}</Text>
-        </View> : null
+          <View style={styles.noResultsContainer}>
+            <Text style={styles.noResultsText}>{global.i18n.t("SearchResultsComponent_noResults")}</Text>
+          </View> : null
         }
       </View>
     );

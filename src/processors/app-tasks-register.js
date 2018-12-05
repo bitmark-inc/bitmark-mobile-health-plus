@@ -179,7 +179,7 @@ const doRejectEmailRecords = async ({ emailRecord }) => {
 };
 
 const doMigrateFilesToLocalStorage = async () => {
-  return processing(DataProcessor.doMigrateFilesToLocalStorage());
+  return DataProcessor.doMigrateFilesToLocalStorage();
 }
 const doProcessEmailRecords = async ({ bitmarkAccountNumber, emailIssueRequestsFromAnEmail }) => {
   return AccountService.doProcessEmailRecords(bitmarkAccountNumber, emailIssueRequestsFromAnEmail);

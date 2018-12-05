@@ -31,7 +31,6 @@ export class FullViewCaptureAssetComponent extends Component {
   }
 
   render() {
-    console.log('this.state :', this.state, this.props)
     return (
       <View style={[styles.bodySafeView]}>
         <View style={styles.bodyContent}>

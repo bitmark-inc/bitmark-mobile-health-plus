@@ -9,7 +9,10 @@ const convertWidth = (width) => {
 
 const runPromiseWithoutError = (promise) => {
   return new Promise((resolve) => {
-    promise.then(resolve).catch(error => resolve({ error }));
+    promise.then(resolve).catch(error => {
+      console.log('runPromiseWithoutError :', error);
+      resolve({ error })
+    });
   });
 };
 

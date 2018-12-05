@@ -43,19 +43,16 @@ export class IndexedDB {
 
   static async queryIndexedData(accountNumber, term) {
     let query = `SELECT * FROM ${INDEXED_DATA_TABLE_NAME} WHERE accountNumber='${accountNumber}' AND (asset_name MATCH '${term}' OR metadata MATCH '${term}' OR content MATCH '${term}')`;
-    console.log('query:', query);
     return this.executeQuery(query);
   }
 
   static async queryIndexedDataByBitmarkId(bitmarkId) {
     let query = `SELECT * FROM ${INDEXED_DATA_TABLE_NAME} WHERE bitmarkId='${bitmarkId}'`;
-    console.log('query by Bitmark Id:', query);
     return this.executeQuery(query);
   }
 
   static async insertIndexedData(accountNumber, bitmarkId, assetName, metadata, content) {
     let query = `INSERT INTO ${INDEXED_DATA_TABLE_NAME} VALUES (?,?,?,?,?)`;
-    console.log('insert-query:', query, [accountNumber, bitmarkId, assetName, metadata, content]);
     return this.executeQuery(query, [accountNumber, bitmarkId, assetName, metadata, content]);
   }
 
@@ -72,25 +69,21 @@ export class IndexedDB {
 
   static async queryTags(accountNumber, term) {
     let query = `SELECT * FROM ${TAGS_TABLE_NAME} WHERE accountNumber='${accountNumber}' AND tags MATCH '${term}'`;
-    console.log('tag query:', query);
     return this.executeQuery(query);
   }
 
   static async queryTagsByBitmarkId(bitmarkId) {
     let query = `SELECT * FROM ${TAGS_TABLE_NAME} WHERE bitmarkId='${bitmarkId}'`;
-    console.log('query by Bitmark Id:', query);
     return this.executeQuery(query);
   }
 
   static async insertTag(accountNumber, bitmarkId, tagsStr) {
     let query = `INSERT INTO ${TAGS_TABLE_NAME} VALUES (?,?,?)`;
-    console.log('insert-query:', query, [accountNumber, bitmarkId, tagsStr]);
     return this.executeQuery(query, [accountNumber, bitmarkId, tagsStr]);
   }
 
   static async updateTag(bitmarkId, tagsStr) {
     let query = `UPDATE ${TAGS_TABLE_NAME} SET tags='${tagsStr}' WHERE bitmarkId='${bitmarkId}'`;
-    console.log('updateTag-query:', query);
     return this.executeQuery(query);
   }
 

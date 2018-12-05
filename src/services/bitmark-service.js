@@ -1,7 +1,7 @@
-import randomString from "random-string";
+import randomString from 'random-string';
 import moment from 'moment';
-import { BitmarkModel, BitmarkSDK } from "../models";
-import { FileUtil, getLocalAssetsFolderPath } from "../utils";
+import { BitmarkModel, BitmarkSDK } from '../models';
+import { FileUtil, getLocalAssetsFolderPath } from '../utils';
 
 // ================================================================================================
 // ================================================================================================
@@ -69,7 +69,7 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
   await FileUtil.mkdir(downloadedFolder);
   let list = await FileUtil.readDir(tempFolderDownloaded);
   for (let filename of list) {
-    await FileUtil.moveFile(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
+    await FileUtil.moveFileSafe(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
   }
   await FileUtil.removeSafe(tempFolder);
 
@@ -77,9 +77,15 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
   await FileUtil.mkdir(sessionAssetFolder);
   await FileUtil.create(`${sessionAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
 
+  let listFile = await FileUtil.readDir(downloadedFolder);
   let results = [];
   issueResult.bitmarkIds.forEach(id => {
-    results.push({ id, sessionData: issueResult.sessionData });
+    results.push({
+      id,
+      sessionData: issueResult.sessionData,
+      assetId: issueResult.assetId,
+      filePath: `${downloadedFolder}/${listFile[0]}`
+    });
   });
   return results;
 };
