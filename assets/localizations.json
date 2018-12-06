@@ -294,7 +294,13 @@
     "TaggingComponent_enterATag": "TaggingComponent_enterATag",
     "AlphaAppUpdate_title": "AlphaAppUpdate_title",
     "AlphaAppUpdate_message": "AlphaAppUpdate_message",
-    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
+    "AlphaAppUpdate_button": "AlphaAppUpdate_button",
+    "ReleaseNoteComponent_closeButtonText": "ReleaseNoteComponent_closeButtonText",
+    "ReleaseNoteComponent_headerTitle2": "ReleaseNoteComponent_headerTitle2",
+    "ReleaseNoteComponent_versionInformationText": "ReleaseNoteComponent_versionInformationText",
+    "ReleaseNoteComponent_versionInformationReleaseDiff1": "ReleaseNoteComponent_versionInformationReleaseDiff1",
+    "ReleaseNoteComponent_versionInformationReleaseDiff2": "ReleaseNoteComponent_versionInformationReleaseDiff2",
+    "ReleaseNoteComponent_releaseNoteText": "ReleaseNoteComponent_releaseNoteText"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -591,7 +597,13 @@
     "TaggingComponent_enterATag": "Enter a tag",
     "AlphaAppUpdate_title": "Update Available",
     "AlphaAppUpdate_message": "New version of Bitmark Health is available. Please check it out.",
-    "AlphaAppUpdate_button": "View"
+    "AlphaAppUpdate_button": "View",
+    "ReleaseNoteComponent_closeButtonText": "Close",
+    "ReleaseNoteComponent_headerTitle2": "RELEASE NOTES",
+    "ReleaseNoteComponent_versionInformationText": "VERSION {{version}}",
+    "ReleaseNoteComponent_versionInformationReleaseDiff1": "just now",
+    "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ago",
+    "ReleaseNoteComponent_releaseNoteText": "New Features:\n• Now supports iCloud backup.\n• The same account will now synchronize across both Bitmark Health and Bitmark Registry apps.\n• Alpha version will now display notifications and in-app updates.\n\nUX Improvements:\n• Removed the \"record type\" screen on multiple image capture and selection features - all images are now always registered as one document.\n• Added option to skip registering incomplete weekly health data from previous weeks, restarting the data collection process in the next week."
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "沒有網路連線",
@@ -877,9 +889,9 @@
     "WhatNew_S51_Component_doneButtonText": "完成",
     "WhatNew_S51_Component_closeButtonText": "關閉",
     "WhatNew_S51_Component_headerTitle2": "版本歷史紀錄",
-    "WhatNew_S51_Component_versionInformationText": "版本",
+    "WhatNew_S51_Component_versionInformationText": "版本{{version}}",
     "WhatNew_S51_Component_versionInformationReleaseDiff1": "今天",
-    "WhatNew_S51_Component_versionInformationReleaseDiff2": "天前",
+    "WhatNew_S51_Component_versionInformationReleaseDiff2": "{{day}}天前",
     "WhatNew_S51_Component_releaseNoteText": "新增功能：\n\n• 資料標籤 — 開始在你的健康資料內新增標籤來幫助記錄與更輕易地搜尋。\n\n• 搜索功能 — 快速藉由健康資料中的文字或者標籤來搜尋你的健康資料。目前我們支援英文，中文和越南文。\n\n• 刪除資料 — 可以刪除帳戶內不需要或者錯誤的健康資料。\n\n• 更新項目畫面 — 現在每次app更新過後，我們都會顯示更新的項目。",
     "TaggingComponent_tags": "標籤",
     "TaggingComponent_existingTags": "現有標籤",
@@ -888,7 +900,13 @@
     "TaggingComponent_enterATag": "請輸入一個標籤",
     "AlphaAppUpdate_title": "更新通知",
     "AlphaAppUpdate_message": "現在有更新的 Bitmark Health 了！請前往下載更新。",
-    "AlphaAppUpdate_button": "查看"
+    "AlphaAppUpdate_button": "查看",
+    "ReleaseNoteComponent_closeButtonText": "關閉",
+    "ReleaseNoteComponent_headerTitle2": "版本歷史紀錄",
+    "ReleaseNoteComponent_versionInformationText": "版本{{version}}",
+    "ReleaseNoteComponent_versionInformationReleaseDiff1": "今天",
+    "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}天前",
+    "ReleaseNoteComponent_releaseNoteText": "新功能：\n• 現在支持iCloud備份\n• 同一帳戶將同時在Bitmark Health和Bitmark Registry應用程序中同步\n• Alpha版現在將顯示通知和應用內更新\n\nUX 使用者體驗改善：\n• 移除新增病例時，整合與分頁病歷選項， 所有的影像將直接登記為一份文件。\n• 新增略過登記健康選項，略過後下週將重新開始計算蒐集健康數據時間。"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -1174,7 +1192,7 @@
     "WhatNew_S51_Component_doneButtonText": "Xong",
     "WhatNew_S51_Component_closeButtonText": "Đóng",
     "WhatNew_S51_Component_headerTitle2": "GHI CHÚ PHÁT HÀNH",
-    "WhatNew_S51_Component_versionInformationText": "Phiên bản",
+    "WhatNew_S51_Component_versionInformationText": "Phiên bản{{version}}",
     "WhatNew_S51_Component_versionInformationReleaseDiff1": "vừa xong",
     "WhatNew_S51_Component_versionInformationReleaseDiff2": "{{day}}d ngày trước",
     "WhatNew_S51_Component_releaseNoteText": "Tính năng mới: \n\n• Gắn thẻ cho bản ghi y tế — Từ giờ trở đi bạn có thể gắn thẻ cho các bản ghi y tế của bạn, nó sẽ giúp bạn tìm kiếm các bản ghi nhanh hơn trong tương lai.\n\n• Tìm kiếm — Tìm kiếm các bản ghi sức khoẻ một cách nhanh chóng dựa theo các thẻ đã gắn và nội dung của các bản ghi. Hiện tại chúng tôi hỗ trợ tìm kiếm cho các bản ghi Tiếng Anh, Tiếng Việt, và Tiếng Trung. \n\n• Xoá bản ghi y tế — Bạn có thể xoá bất kỳ bản ghi nào mà bạn đã thêm nhầm hoặc không còn cần nữa. \n\n• Màn hình \"Có gì mới\" — Từ giờ trở đi chúng tôi sẽ hiển thị bản giới thiệu rút gọn cho các tính năng mới của ứng dụng khi bạn cập nhật phiên bản mới. Bạn có thể xem lại phần giới thiệu này ở màn hình Cài đặt Tài khoản. ",
@@ -1184,7 +1202,13 @@
     "TaggingComponent_addTags": "Thêm thẻ",
     "TaggingComponent_enterATag": "Tạo thẻ",
     "AlphaAppUpdate_title": "Có cập nhật mới.",
-    "AlphaAppUpdate_message": "Có phiên bản mới của Bitmark Health. Vui lòng cập nhật.",
-    "AlphaAppUpdate_button": "Xem"
+    "AlphaAppUpdate_message": "Đã có phiên bản mới của Bitmark Health. Vui lòng cập nhật.",
+    "AlphaAppUpdate_button": "Xem",
+    "ReleaseNoteComponent_closeButtonText": "Đóng",
+    "ReleaseNoteComponent_headerTitle2": "GHI CHÚ PHÁT HÀNH",
+    "ReleaseNoteComponent_versionInformationText": "Phiên bản{{version}}",
+    "ReleaseNoteComponent_versionInformationReleaseDiff1": "vừa xong",
+    "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ngày trước",
+    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\n• Hỗ trợ sao lưu trên iCloud.\n• Dữ liệu của cùng một tài khoản bitmark sẽ được đồng bộ trên ứng dụng Bitmark Health và Bitmark Registry.\n• Phiên bản Alpha giờ đây sẽ hiển thị thông báo và cập nhật trong ứng dụng.\n\nCải tiến UX:\n• Bỏ màn hình \"loại bản ghi\" khi chụp hoặc lựa chọn nhiều hình ảnh, tất cả các hình ảnh sẽ được đăng ký vào một bản ghi duy nhất.\n• Thêm tuỳ chọn mới để bỏ qua việc đăng ký dữ liệu sức khỏe của các tuần chưa hoàn thành và khởi động lại quá trình thu thập dữ liệu trong tuần tiếp theo."
   }
 }
