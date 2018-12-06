@@ -76,19 +76,19 @@ export class BitmarkDetailComponent extends Component {
               <View style={styles.titleRow}>
                 {/*BACK ICON*/}
                 <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
-                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                  <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
                 {/*NAME*/}
                 <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
                 {/*TAG ICON*/}
                 {this.props.bitmarkType === 'bitmark_health_issuance' &&
                   <TouchableOpacity style={this.props.bitmark.status !== 'pending' ? styles.taggingButton : styles.taggingButtonForPending} onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
-                    <Image style={styles.taggingIcon} source={require('./../../../assets/imgs/tagging.png')} />
+                    <Image style={styles.taggingIcon} source={require('assets/imgs/tagging.png')} />
                   </TouchableOpacity>
                 }
                 {/*DELETE ICON*/}
                 {this.props.bitmark.status !== 'pending' && this.props.bitmarkType === 'bitmark_health_issuance' && <TouchableOpacity style={styles.deleteButton} onPress={this.deleteBitmark.bind(this)}>
-                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/delete_icon_red.png')} />
+                  <Image style={styles.closeIcon} source={require('assets/imgs/delete_icon_red.png')} />
                 </TouchableOpacity>}
               </View>
               <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
@@ -100,7 +100,7 @@ export class BitmarkDetailComponent extends Component {
                     })}>
                       <Image style={styles.bitmarkImage} source={{ uri: this.props.bitmark.thumbnail ? this.props.bitmark.thumbnail.path : this.state.filePath }} />
                       <View style={styles.fullViewButton}>
-                        <Image style={styles.fullViewIcon} source={require('./../../../assets/imgs/full_view_icon.png')} />
+                        <Image style={styles.fullViewIcon} source={require('assets/imgs/full_view_icon.png')} />
                         <Text style={styles.fullViewButtonText}>{i18n.t('BitmarkDetailComponent_fullViewButtonText')}</Text>
                       </View>
                     </TouchableOpacity>}

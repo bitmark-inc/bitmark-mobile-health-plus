@@ -74,8 +74,8 @@ export class TouchFaceIdComponent extends React.Component {
           <View style={styles.swipePageContent}>
             <View style={styles.swipePageMainContent}>
               <View style={styles.remindImages}>
-                <Image style={[styles.touchIdImage]} source={require('../../../assets/imgs/touch_id_icon.png')} />
-                <Image style={[styles.faceIdImage]} source={require('../../../assets/imgs/face_id_icon.png')} />
+                <Image style={[styles.touchIdImage]} source={require('assets/imgs/touch_id_icon.png')} />
+                <Image style={[styles.faceIdImage]} source={require('assets/imgs/face_id_icon.png')} />
               </View>
               <Text style={[styles.faceTouchIdTitle]}>{i18n.t('TouchFaceIdComponent_faceTouchIdTitle')}</Text>
               <Text style={[styles.faceTouchIdDescription,]}>{i18n.t('TouchFaceIdComponent_faceTouchIdDescription')}</Text>

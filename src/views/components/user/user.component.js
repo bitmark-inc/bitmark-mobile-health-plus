@@ -365,7 +365,7 @@ class PrivateUserComponent extends Component {
                   </Text>
                 </TouchableOpacity>
                 {isCurrentUser && <TouchableOpacity style={styles.addHealthRecordButton} onPress={this.addRecord.bind(this)}>
-                  <Image style={styles.addHealthRecordButtonIcon} source={require('./../../../assets/imgs/plus_icon_red.png')} />
+                  <Image style={styles.addHealthRecordButtonIcon} source={require('assets/imgs/plus_icon_red.png')} />
                   <Text style={styles.addHealthRecordButtonText}> {i18n.t('UserComponent_addHealthRecordButtonText').toUpperCase()}</Text>
                 </TouchableOpacity>}
               </View>

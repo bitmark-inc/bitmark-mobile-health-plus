@@ -198,11 +198,11 @@ export class AccountPhraseComponent extends Component {
                 <View style={styles.titleArea}>
                   <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1') : i18n.t('AccountPhraseComponent_titleText3')).toUpperCase()}</Text>
                   <TouchableOpacity onPress={Actions.pop}>
-                    <Image style={styles.titleBackIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                    <Image style={styles.titleBackIcon} source={require('assets/imgs/back_icon_red.png')} />
                   </TouchableOpacity>
                 </View>
                 <View style={styles.warningIconArea}>
-                  <Image style={styles.warningIcon} source={require('./../../../assets/imgs/warning_icon.png')} />
+                  <Image style={styles.warningIcon} source={require('assets/imgs/warning_icon.png')} />
                 </View>
                 {!this.props.isLogout && <Text style={styles.warningMessage}>
                   {i18n.t('AccountPhraseComponent_warningMessage1')}
@@ -224,7 +224,7 @@ export class AccountPhraseComponent extends Component {
                 <View style={styles.titleArea}>
                   <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1') : i18n.t('AccountPhraseComponent_titleText3')).toUpperCase()}</Text>
                   <TouchableOpacity onPress={Actions.pop}>
-                    <Image style={styles.titleBackIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                    <Image style={styles.titleBackIcon} source={require('assets/imgs/back_icon_red.png')} />
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.phraseWordMessage}>

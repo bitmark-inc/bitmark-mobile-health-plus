@@ -12,7 +12,7 @@ import {
 export class SearchInputComponent extends Component {
   static defaultProps = {
     throttle: 200,
-    onSearchTermChange: () => {}
+    onSearchTermChange: () => { }
   };
 
   constructor(props) {
@@ -36,7 +36,7 @@ export class SearchInputComponent extends Component {
   }
 
   onFocus() {
-    this.setState({focusing: true});
+    this.setState({ focusing: true });
     this.props.setSearchFocus(true);
   }
 
@@ -46,7 +46,7 @@ export class SearchInputComponent extends Component {
 
   _keyboardDidHide() {
     if (this.state.inputFocus) {
-      this.setState({inputFocus: false})
+      this.setState({ inputFocus: false })
     }
   }
 
@@ -55,12 +55,12 @@ export class SearchInputComponent extends Component {
       <View style={[styles.searchView, this.props.style]}>
         <View style={[styles.inputContainer]}>
           {/*SEARCH ICON*/}
-          <Image style={styles.searchIcon} source={require('../../../assets/imgs/search-icon.png')}/>
+          <Image style={styles.searchIcon} source={require('assets/imgs/search-icon.png')} />
 
           {/*SEARCH INPUT*/}
           <TextInput
             style={styles.textInput}
-            ref={(input) =>  this.searchInput = input}
+            ref={(input) => this.searchInput = input}
             onChangeText={(term) => this.updateSearch(term)}
             returnKeyType={this.props.returnKeyType}
             onSubmitEditing={this.props.onSubmitEditing}
@@ -82,7 +82,7 @@ export class SearchInputComponent extends Component {
                 searchTerm: ''
               })
             }}>
-              <Image style={styles.searchCloseIcon} source={require('../../../assets/imgs/search-close-icon.png')}/>
+              <Image style={styles.searchCloseIcon} source={require('assets/imgs/search-close-icon.png')} />
             </TouchableOpacity>
             : null
           }

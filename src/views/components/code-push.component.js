@@ -61,7 +61,7 @@ export class CodePushComponent extends React.Component {
           <View style={{ flex: 1 }} />
           <View style={styles.content}>
             <View>
-              <Image style={styles.bitmarkIcon} source={require('./../../assets/imgs/loading.png')} />
+              <Image style={styles.bitmarkIcon} source={require('assets/imgs/loading.png')} />
             </View>
             <View style={styles.statusContainer}>
               <Text style={this.state.status === 'downloading' ? styles.updatingStatus : styles.completedStatus}>

@@ -36,15 +36,15 @@ export class GetStartComponent extends React.Component {
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.titleRow}>
           <TouchableOpacity onPress={Actions.pop}>
-            <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
+            <Image style={styles.closeIcon} source={require('assets/imgs/close_icon_red.png')} />
           </TouchableOpacity>
         </View>
         <View style={[styles.body]}>
           <View style={styles.swipePageContent}>
             <View style={styles.accessIconArea}>
-              <Image style={styles.accessIcon} source={require('../../../assets/imgs/icon_health.png')} />
-              <Image style={styles.accessIconPlus} source={require('../../../assets/imgs/plus-icon.png')} />
-              <Image style={styles.accessIcon} source={require('../../../assets/imgs/bitmark-logo.png')} />
+              <Image style={styles.accessIcon} source={require('assets/imgs/icon_health.png')} />
+              <Image style={styles.accessIconPlus} source={require('assets/imgs/plus-icon.png')} />
+              <Image style={styles.accessIcon} source={require('assets/imgs/bitmark-logo.png')} />
             </View>
             <Text style={[styles.getStartTitle]}>{i18n.t('GetStartComponent_getStartTitle')}</Text>
             <Text style={[styles.getStartDescription,]}>{i18n.t('GetStartComponent_getStartDescription')}</Text>

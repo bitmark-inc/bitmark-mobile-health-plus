@@ -52,7 +52,7 @@ export class SearchResultsComponent extends Component {
                   }}>
                     <View style={(index == results.healthDataBitmarks.length - 1) ? styles.bitmarkLastItem : styles.bitmarkItem}>
                       {/*Thumbnail*/}
-                      <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/health_data_icon.png')} />
+                      <Image style={styles.bitmarkThumbnail} source={require('assets/imgs/health_data_icon.png')} />
 
                       {/*Content*/}
                       <View style={styles.itemContent}>
@@ -89,11 +89,11 @@ export class SearchResultsComponent extends Component {
                         <View>
                           <Image style={styles.bitmarkThumbnail} source={{ uri: `${item.thumbnail.path}` }} />
                           {item.thumbnail.multiple &&
-                            <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')} />
+                            <Image style={styles.multipleFilesIcon} source={require('assets/imgs/multiple_files_icon.png')} />
                           }
                         </View>
                       ) : (
-                          <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/unknown_file_type_icon.png')} />
+                          <Image style={styles.bitmarkThumbnail} source={require('assets/imgs/unknown_file_type_icon.png')} />
                         )}
 
                       {/*Content*/}

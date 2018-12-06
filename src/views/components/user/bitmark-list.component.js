@@ -45,7 +45,7 @@ class PrivateBitmarkListComponent extends Component {
             <View style={styles.bodyContent}>
               <View style={styles.titleRow}>
                 <TouchableOpacity style={styles.closeButton} onPress={() => Actions.reset('user')}>
-                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                  <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
                 {this.props.bitmarkType === 'bitmark_health_data' &&
                   <Text style={styles.titleText}>{i18n.t('BitmarkListComponent_titleText1')}</Text>}
@@ -67,7 +67,7 @@ class PrivateBitmarkListComponent extends Component {
                           this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
                         }}>
                           <Text style={styles.bitmarkHealthRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
-                          {item.status === 'confirmed' && <Image style={styles.bitmarkHealthRowIcon} source={require('./../../../assets/imgs/arrow_left_icon_red.png')} />}
+                          {item.status === 'confirmed' && <Image style={styles.bitmarkHealthRowIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />}
                           {item.status === 'pending' && <Text style={styles.bitmarkHealthPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
                         </TouchableOpacity>
                       );
@@ -96,11 +96,11 @@ class PrivateBitmarkListComponent extends Component {
                               <View>
                                 <Image style={styles.bitmarkThumbnail} source={{ uri: `${item.thumbnail.path}` }} />
                                 {item.thumbnail.multiple &&
-                                  <Image style={styles.multipleFilesIcon} source={require('./../../../assets/imgs/multiple_files_icon.png')} />
+                                  <Image style={styles.multipleFilesIcon} source={require('assets/imgs/multiple_files_icon.png')} />
                                 }
                               </View>
                               :
-                              <Image style={styles.bitmarkThumbnail} source={require('./../../../assets/imgs/unknown_file_type_icon.png')} />
+                              <Image style={styles.bitmarkThumbnail} source={require('assets/imgs/unknown_file_type_icon.png')} />
                             }
 
                             {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]} />}

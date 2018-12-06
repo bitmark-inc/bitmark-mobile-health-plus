@@ -56,7 +56,7 @@ export class LocalStorageMigrationComponent extends React.Component {
     return (
       <View style={styles.body}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Image style={styles.bitmarkIcon} source={require('./../../../assets/imgs/loading.png')} />
+          <Image style={styles.bitmarkIcon} source={require('assets/imgs/loading.png')} />
         </View>
         <View style={styles.statusContainer}>
           {!!this.state.status && <Text style={this.state.status === 'updating' ? styles.updatingStatus : styles.completedStatus}>

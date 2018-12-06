@@ -45,7 +45,7 @@ export class CaptureAssetComponent extends Component {
           <View style={[styles.header, config.isIPhoneX ? { paddingTop: constants.iPhoneXStatusBarHeight } : {}]}>
             <Text style={styles.headerTitle}>{i18n.t('CaptureAssetComponent_headerTitle')}</Text>
             <TouchableOpacity onPress={Actions.pop}>
-              <Image style={styles.backIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />
+              <Image style={styles.backIcon} source={require('assets/imgs/close_icon_white.png')} />
             </TouchableOpacity>
           </View>
           <View style={[styles.content]}>

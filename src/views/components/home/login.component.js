@@ -243,7 +243,7 @@ export class LoginComponent extends Component {
                   <View style={styles.titleRow}>
                     <Text style={styles.title}>{i18n.t('LoginComponent_title').toUpperCase()}</Text>
                     <TouchableOpacity onPress={Actions.pop}>
-                      <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                      <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
                     </TouchableOpacity>
                   </View>
                   <Text style={styles.description}>{i18n.t('LoginComponent_description', { number: this.state.numberPhraseWords })}</Text>
@@ -327,10 +327,10 @@ export class LoginComponent extends Component {
         {this.state.keyboardHeight > 0 &&
           <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
             <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 1) % this.state.numberPhraseWords)}>
-              <Image style={styles.nextButtonImage} source={require('./../../../assets/imgs/arrow_down_enable.png')} />
+              <Image style={styles.nextButtonImage} source={require('assets/imgs/arrow_down_enable.png')} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.prevButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + (this.state.numberPhraseWords - 1)) % this.state.numberPhraseWords)}>
-              <Image style={styles.prevButtonImage} source={require('./../../../assets/imgs/arrow_up_enable.png')} />
+              <Image style={styles.prevButtonImage} source={require('assets/imgs/arrow_up_enable.png')} />
             </TouchableOpacity>
             {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
               <FlatList

@@ -90,7 +90,7 @@ export class OrderCombineImagesComponent extends Component {
         <View style={styles.body}>
           <View style={styles.header}>
             <TouchableOpacity style={styles.button} onPress={Actions.pop}>
-              <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('../../../assets/imgs/back_icon_white.png')} />
+              <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('assets/imgs/back_icon_white.png')} />
             </TouchableOpacity>
             <Text style={styles.titleText}>{i18n.t('OrderCombineImagesComponent_titleText')}</Text>
             <Text />

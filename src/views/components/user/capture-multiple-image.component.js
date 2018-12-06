@@ -110,7 +110,7 @@ export class CaptureMultipleImagesComponent extends Component {
               {this.state.images.length > 0 && <Image style={styles.captureIcon} source={{ uri: this.state.images[this.state.images.length - 1].uri }} />}
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, { width: '33%', alignItems: 'center', justifyContent: 'center' }]} onPress={this.captureImage.bind(this)}>
-              <Image style={styles.captureIcon} source={require('./.././../../assets/imgs/capture-image-icon.png')} />
+              <Image style={styles.captureIcon} source={require('assets/imgs/capture-image-icon.png')} />
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, { width: '33%', justifyContent: 'flex-end' }]}>
             </TouchableOpacity>

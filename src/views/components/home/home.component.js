@@ -41,12 +41,12 @@ export class HomeComponent extends Component {
             <View style={styles.swipeDotButton} />
           }>
           <View style={[styles.swipePage, { paddingBottom: 0 }]}>
-            <Image style={styles.loadingLogo} source={require('./../../../assets/imgs/loading.png')} />
+            <Image style={styles.loadingLogo} source={require('assets/imgs/loading.png')} />
           </View>
 
           <View style={styles.swipePage}>
             <View style={styles.introductionImageArea}>
-              <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome1.png')} />
+              <Image style={styles.onBoardingImage} source={require('assets/imgs/welcome1.png')} />
             </View>
             <View style={styles.introductionArea}>
               <Text style={[styles.introductionTitle]}>{i18n.t('HomeComponent_introductionTitle1').toUpperCase()}</Text>
@@ -58,7 +58,7 @@ export class HomeComponent extends Component {
 
           <View style={styles.swipePage}>
             <View style={styles.introductionImageArea}>
-              <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome2.png')} />
+              <Image style={styles.onBoardingImage} source={require('assets/imgs/welcome2.png')} />
             </View>
             <View style={styles.introductionArea}>
               <Text style={[styles.introductionTitle]}>{i18n.t('HomeComponent_introductionTitle2').toUpperCase()}</Text>
@@ -69,7 +69,7 @@ export class HomeComponent extends Component {
           </View>
           <View style={styles.swipePage}>
             <View style={styles.introductionImageArea}>
-              <Image style={styles.onBoardingImage} source={require('./../../../assets/imgs/welcome3.png')} />
+              <Image style={styles.onBoardingImage} source={require('assets/imgs/welcome3.png')} />
             </View>
             <View style={styles.introductionArea}>
               <Text style={[styles.introductionTitle]}>{i18n.t('HomeComponent_introductionTitle3').toUpperCase()}</Text>

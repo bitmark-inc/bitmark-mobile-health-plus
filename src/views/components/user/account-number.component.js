@@ -25,7 +25,7 @@ export class AccountNumberComponent extends React.Component {
               <Text style={styles.titleText}>{i18n.t('AccountNumberComponent_titleText')}</Text>
               {/* <Text style={styles.titleText}>Account{'\n'}number</Text> */}
               <TouchableOpacity onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
               </TouchableOpacity>
             </View>
 
@@ -45,7 +45,7 @@ export class AccountNumberComponent extends React.Component {
                 Linking.openURL(`${config.registry_server_url}/account/${DataProcessor.getUserInformation().bitmarkAccountNumber}`)
               }}>
                 <Text style={styles.viewOnRegistryButtonText}>{i18n.t('AccountNumberComponent_viewOnRegistryButtonText')}</Text>
-                <Image style={styles.viewOnRegistryButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                <Image style={styles.viewOnRegistryButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>
             </ScrollView>
           </View>

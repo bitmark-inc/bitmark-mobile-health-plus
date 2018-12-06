@@ -53,21 +53,21 @@ export class WhatNew_S51_Component extends Component {
                 }}
               >
                 <View style={styles.newContentSwipePage}>
-                  <Image style={styles.newSwipeImage} source={require('./../../../../assets/imgs/s51_new_1.png')} />
+                  <Image style={styles.newSwipeImage} source={require('assets/imgs/s51_new_1.png')} />
                   <View style={styles.newSwipeInformationArea}>
                     <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description1')}</Text>
                   </View>
                 </View>
 
                 <View style={styles.newContentSwipePage}>
-                  <Image style={styles.newSwipeImage} source={require('./../../../../assets/imgs/s51_new_2.png')} />
+                  <Image style={styles.newSwipeImage} source={require('assets/imgs/s51_new_2.png')} />
                   <View style={styles.newSwipeInformationArea}>
                     <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description2')}</Text>
                   </View>
                 </View>
 
                 {/* <View style={styles.newContentSwipePage}>
-                  <Image style={styles.newSwipeImage} source={require('./../../../../assets/imgs/s51_new_3.png')} />
+                  <Image style={styles.newSwipeImage} source={require('assets/imgs/s51_new_3.png')} />
                   <View style={styles.newSwipeInformationArea}>
                     <Text style={styles.s51New1Description}>{i18n.t('WhatNew_S51_Component_s51New1Description3')}</Text>
                   </View>

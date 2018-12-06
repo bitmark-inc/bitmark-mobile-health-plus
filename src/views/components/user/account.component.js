@@ -81,7 +81,7 @@ export class AccountComponent extends Component {
                 <View style={[styles.accountNumberTitleRow,]}>
                   <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
                   <TouchableOpacity onPress={Actions.pop}>
-                    <Image style={styles.closeIcon} source={require('../../../assets/imgs/close_icon_red.png')} />
+                    <Image style={styles.closeIcon} source={require('assets/imgs/close_icon_red.png')} />
                   </TouchableOpacity>
                 </View>
 
@@ -95,7 +95,7 @@ export class AccountComponent extends Component {
 
                 <TouchableOpacity style={styles.rowButton} onPress={Actions.accountNumber}>
                   <Text style={[styles.accountNumberLabel, styles.rowButtonText]}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
               </View>
 
@@ -103,12 +103,12 @@ export class AccountComponent extends Component {
                 <Text style={styles.securityTitle} >{i18n.t('AccountComponent_securityTitle')}</Text>
                 <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => Actions.accountPhrase()}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText3')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
                   {/* <TouchableOpacity style={styles.rowButton} onPress={this.doLogout.bind(this)}> */}
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText4')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
               </View>
               <View style={styles.aboutArea}>
@@ -117,20 +117,20 @@ export class AccountComponent extends Component {
                   Intercom.displayMessageComposer();
                 }}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText1')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowButton} onPress={() => Linking.openURL('https://www.facebook.com/groups/274018259885853/')} >
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText9')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.rowButton} onPress={() => Share.share({ title: 'Bitmark', message: '', url: config.appLink })}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText6')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText2')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} disabled={true}>
@@ -139,7 +139,7 @@ export class AccountComponent extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.rowButton]} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText8')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
               </View>
             </ScrollView>

@@ -9,7 +9,7 @@ export class LoadingComponent extends Component {
     return (
       <View style={styles.body}>
         <View style={styles.bodyContent}>
-          <Image style={styles.loadingLogo} source={require('./../../../assets/imgs/loading.png')} />
+          <Image style={styles.loadingLogo} source={require('assets/imgs/loading.png')} />
         </View>
       </View>
     );

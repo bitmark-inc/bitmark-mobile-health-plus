@@ -37,7 +37,7 @@ export class FullViewCaptureAssetComponent extends Component {
           <View style={styles.titleRow}>
             <Text style={styles.titleText} numberOfLines={1} >{this.props.title.toUpperCase()}</Text>
             <TouchableOpacity onPress={Actions.pop}>
-              <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_white.png')} />
+              <Image style={styles.closeIcon} source={require('assets/imgs/close_icon_white.png')} />
             </TouchableOpacity>
           </View>
           <View style={styles.content}>

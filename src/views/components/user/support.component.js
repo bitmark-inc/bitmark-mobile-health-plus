@@ -21,21 +21,21 @@ export class SupportComponent extends Component {
             <View style={styles.titleRow}>
               <Text style={styles.title}>{i18n.t('SupportComponent_title')}</Text>
               <TouchableOpacity onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
               </TouchableOpacity>
             </View>
             <ScrollView contentContainerStyle={styles.content}>
               <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.TermOfService.name })}>
                 <Text style={styles.rowButtonText}>{i18n.t('SupportComponent_rowButtonText1')}</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.PrivacyPolicy.name })}>
                 <Text style={styles.rowButtonText}>{i18n.t('SupportComponent_rowButtonText2')}</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.rowButton} onPress={() => Actions.legal({ displayedContentName: BitmarkLegalComponent.Contents.KnowYourRights.name })}>
                 <Text style={styles.rowButtonText}>{i18n.t('SupportComponent_rowButtonText3')}</Text>
-                <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
+                <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
               </TouchableOpacity>
             </ScrollView>
           </View>

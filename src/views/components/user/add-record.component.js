@@ -25,7 +25,7 @@ export class AddRecordComponent extends Component {
             <View style={styles.titleRow}>
               <Text style={styles.titleText}>{i18n.t('AddRecordComponent_titleText')}</Text>
               <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('./../../../assets/imgs/close_icon_red.png')} />
+                <Image style={styles.closeIcon} source={require('assets/imgs/close_icon_red.png')} />
               </TouchableOpacity>
             </View>
 
@@ -36,7 +36,7 @@ export class AddRecordComponent extends Component {
                 </Text>
               </Hyperlink>
               <View style={{ flex: 1, padding: 30 }}>
-                <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('./../../../assets/imgs/add-record.png')} />
+                <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('assets/imgs/add-record.png')} />
               </View>
             </View>
             <View style={styles.bottomButtonArea}>

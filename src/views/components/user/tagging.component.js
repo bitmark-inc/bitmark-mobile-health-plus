@@ -141,7 +141,7 @@ export class TaggingComponent extends Component {
               {/*TITLE*/}
               <View style={styles.titleRow}>
                 <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
-                  <Image style={styles.closeIcon} source={require('./../../../assets/imgs/back_icon_red.png')} />
+                  <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
                 </TouchableOpacity>
                 <Text style={styles.titleText}>{global.i18n.t("TaggingComponent_tags")}</Text>
               </View>
@@ -150,7 +150,7 @@ export class TaggingComponent extends Component {
               <ScrollView style={[styles.content]}>
                 {/*LABEL*/}
                 <View style={[styles.existingTagsContainer]}>
-                  <Image style={styles.taggingIcon} source={require('./../../../assets/imgs/tagging-red.png')} />
+                  <Image style={styles.taggingIcon} source={require('assets/imgs/tagging-red.png')} />
                   <Text style={styles.existingTagsLabel}>{global.i18n.t("TaggingComponent_existingTags")}</Text>
                 </View>
 
@@ -164,7 +164,7 @@ export class TaggingComponent extends Component {
                         return (
                           <TouchableOpacity style={styles.taggingItemContainer} onPress={() => this.removeTag.bind(this)(item)}>
                             <Text style={styles.taggingItem}>#{item}</Text>
-                            <Image style={styles.removeTagIcon} source={require('./../../../assets/imgs/remove-tag-icon.png')} />
+                            <Image style={styles.removeTagIcon} source={require('assets/imgs/remove-tag-icon.png')} />
                           </TouchableOpacity>
                         );
                       }}
@@ -177,7 +177,7 @@ export class TaggingComponent extends Component {
 
                 {/*ADD TAGS*/}
                 <TouchableOpacity style={[styles.addTagsContainer]} onPress={this.showInputTag.bind(this)}>
-                  <Image style={styles.addTagsIcon} source={require('./../../../assets/imgs/add-tags-icon.png')} />
+                  <Image style={styles.addTagsIcon} source={require('assets/imgs/add-tags-icon.png')} />
                   <Text style={styles.addTagsLabel}>{global.i18n.t("TaggingComponent_addTags")}</Text>
                 </TouchableOpacity>
               </ScrollView>
@@ -205,7 +205,7 @@ export class TaggingComponent extends Component {
 
                 {/*SUBMIT TAG*/}
                 <TouchableOpacity onPress={() => this.addTag.bind(this)(this.state.tag)}>
-                  <Image style={[styles.addTagIcon]} source={require('./../../../assets/imgs/add-tag-icon.png')} />
+                  <Image style={[styles.addTagIcon]} source={require('assets/imgs/add-tag-icon.png')} />
                 </TouchableOpacity>
               </View>
 
