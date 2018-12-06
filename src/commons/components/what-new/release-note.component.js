@@ -20,7 +20,7 @@ export class ReleaseNoteComponent extends Component {
   }
 
   render() {
-    let releaseDate = moment('22-11-2018', 'DD-MM-YYYY');
+    let releaseDate = moment('07-12-2018', 'DD-MM-YYYY');
     let diffDay = moment().diff(releaseDate, 'days');
     return (
       <SafeAreaView style={styles.bodySafeView}>
@@ -37,7 +37,7 @@ export class ReleaseNoteComponent extends Component {
                 <View style={styles.versionInformation}>
                   <Text style={styles.versionInformationText} >{i18n.t('ReleaseNoteComponent_versionInformationText', { version: DataProcessor.getApplicationVersion() })}</Text>
                   <Text style={styles.versionInformationReleaseDiff}>
-                    {this.state.diffDay === 0 ? i18n.t('ReleaseNoteComponent_versionInformationReleaseDiff1') : i18n.t('ReleaseNoteComponent_versionInformationReleaseDiff2', { day: diffDay })}
+                    {diffDay === 0 ? i18n.t('ReleaseNoteComponent_versionInformationReleaseDiff1') : i18n.t('ReleaseNoteComponent_versionInformationReleaseDiff2', { day: diffDay })}
                   </Text>
                 </View>
 
