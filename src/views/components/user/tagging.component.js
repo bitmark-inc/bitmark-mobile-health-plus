@@ -7,9 +7,9 @@ import {
 
 import { Actions } from 'react-native-router-flux';
 import { uniq } from "lodash";
-import { getTagsCache, doUpdateIndexTagToICloud, writeTagsCache, convertWidth } from 'src/utils';
+import { convertWidth } from 'src/utils';
 import { config, constants } from 'src/configs';
-import { IndexDBService } from 'src/processors';
+import { IndexDBService, LocalFileService } from 'src/processors';
 
 export class TaggingComponent extends Component {
   static propTypes = {
@@ -36,7 +36,7 @@ export class TaggingComponent extends Component {
 
     let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmarkId);
     console.log('tags:', tags);
-    let tagsCache = await getTagsCache();
+    let tagsCache = await LocalFileService.getTagsCache();
     console.log('tagsCache:', tagsCache);
     let tagsSuggestion = tagsCache.filter((item) => tags.indexOf(item) == -1);
     console.log('tagsSuggestion:', tagsSuggestion);
@@ -95,7 +95,7 @@ export class TaggingComponent extends Component {
       if (tags.indexOf(tag) == -1) {
         tags.push(tag);
         await IndexDBService.updateTag(this.props.bitmarkId, tags);
-        await doUpdateIndexTagToICloud(this.props.bitmarkId, tags);
+        await LocalFileService.doUpdateIndexTagToICloud(this.props.bitmarkId, tags);
 
         let tagsCache = this.state.tagsCache;
         // Insert to the beginning of the list
@@ -106,7 +106,7 @@ export class TaggingComponent extends Component {
         let tagsSuggestion = tagsCache.filter((item) => tags.indexOf(item) == -1);
 
         this.setState({ tag: '', tags, tagsCache, tagsSuggestion });
-        await writeTagsCache(tagsCache);
+        await LocalFileService.writeTagsCache(tagsCache);
       }
     }
   }
@@ -117,7 +117,7 @@ export class TaggingComponent extends Component {
     if (tags.indexOf(tag) > -1) {
       tags = tags.filter(item => item != tag);
       await IndexDBService.updateTag(this.props.bitmarkId, tags);
-      await doUpdateIndexTagToICloud(this.props.bitmarkId, tags);
+      await LocalFileService.doUpdateIndexTagToICloud(this.props.bitmarkId, tags);
 
       let tagsSuggestion = this.state.tagsCache.filter((item) => { return tags.indexOf(item) == -1 });
 

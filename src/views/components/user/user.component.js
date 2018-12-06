@@ -19,7 +19,6 @@ import {
   FileUtil,
   convertWidth, issue,
   isImageFile, isPdfFile,
-  search,
 } from 'src/utils';
 import { config, constants } from 'src/configs';
 
@@ -27,6 +26,7 @@ import { SearchInputComponent } from './search-input.component';
 import { SearchResultsComponent } from './search-results.component';
 import { AppProcessor, DataProcessor, EventEmitterService, CommonModel } from 'src/processors';
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
+import { search } from 'src/views/controllers';
 
 class PrivateUserComponent extends Component {
   static propTypes = {

@@ -10,9 +10,10 @@ import JSONTree from 'react-native-json-tree';
 import { Map } from 'immutable'
 
 import { Actions } from 'react-native-router-flux';
-import { runPromiseWithoutError, FileUtil, searchAgain, convertWidth } from 'src/utils';
+import { runPromiseWithoutError, FileUtil, convertWidth } from 'src/utils';
 import { EventEmitterService, AppProcessor } from 'src/processors';
 import { config, constants } from 'src/configs';
+import { searchAgain } from 'src/views/controllers';
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {

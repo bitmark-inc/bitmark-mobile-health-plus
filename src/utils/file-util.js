@@ -72,27 +72,48 @@ class FileUtil {
     return await RNFS.stat(filePath);
   }
   static async copyDir(sourceFolderPath, destinationFolderPath) {
-    await this.mkdir(destinationFolderPath);
+    await FileUtil.mkdir(destinationFolderPath);
 
-    let items = await this.readDirItem(sourceFolderPath);
+    let items = await FileUtil.readDirItem(sourceFolderPath);
 
     for (let i = 0; i < items.length; i++) {
       let item = items[i];
       if (item.isFile()) {
-        await this.copyFile(item.path, `${destinationFolderPath}/${item.name}`)
+        await FileUtil.copyFile(item.path, `${destinationFolderPath}/${item.name}`)
       }
 
       if (item.isDirectory()) {
         let destDir = `${destinationFolderPath}/${item.name}`;
-        await this.mkdir(destDir);
-        await this.copyDir(item.path, destDir);
+        await FileUtil.mkdir(destDir);
+        await FileUtil.copyDir(item.path, destDir);
       }
     }
   }
   static async moveDir(sourceFolderPath, destinationFolderPath) {
-    await this.copyDir(sourceFolderPath, destinationFolderPath);
-    await this.removeSafe(sourceFolderPath);
+    await FileUtil.copyDir(sourceFolderPath, destinationFolderPath);
+    await FileUtil.removeSafe(sourceFolderPath);
   }
+
+  static getUserLocalStorageFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber}`;
+  }
+
+  static getLocalAssetsFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.getUserLocalStorageFolderPath(bitmarkAccountNumber)}/assets`;
+  }
+
+  static getLocalThumbnailsFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.getUserLocalStorageFolderPath(bitmarkAccountNumber)}/thumbnails`;
+  }
+
+  static getLocalDatabasesFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.getUserLocalStorageFolderPath(bitmarkAccountNumber)}/databases`;
+  }
+
+  static getLocalCachesFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.getUserLocalStorageFolderPath(bitmarkAccountNumber)}/caches`;
+  }
+
 }
 
 export { FileUtil };

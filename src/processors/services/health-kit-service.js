@@ -7,7 +7,7 @@ import {
 } from '../models';
 
 import {
-  FileUtil, getLocalAssetsFolderPath,
+  FileUtil,
   // asyncAlert
 } from 'src/utils';
 
@@ -361,7 +361,7 @@ const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
 
     let issueResult = await BitmarkModel.doIssueFile(filePath, healthData.assetName, healthData.assetMetadata, 1);
 
-    let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
+    let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
     let downloadedFolder = `${assetFolderPath}/downloaded`;
     await FileUtil.mkdir(assetFolderPath);
     await FileUtil.mkdir(downloadedFolder);

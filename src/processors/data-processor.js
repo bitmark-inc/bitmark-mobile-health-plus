@@ -18,7 +18,8 @@ import {
   BitmarkService,
   AccountService,
   HealthKitService,
-  IndexDBService
+  IndexDBService,
+  LocalFileService
 } from './services';
 
 import {
@@ -27,9 +28,9 @@ import {
 } from './models';
 import {
   FileUtil, runPromiseWithoutError,
-  isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
+  isImageFile,
   isPdfFile, compareVersion,
-  doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud, isHealthDataRecord, isAssetDataRecord
+  isHealthDataRecord, isAssetDataRecord
 } from 'src/utils';
 
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views';
@@ -166,7 +167,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
             if (bitmark.owner === bitmarkAccountNumber) {
               asset.filePath = await detectLocalAssetFilePath(asset.id);
               bitmark.asset = asset;
-              await doCheckAndSyncDataWithICloud(bitmark);
+              await LocalFileService.doCheckAndSyncDataWithICloud(bitmark);
             } else {
               bitmark.asset = asset;
             }
@@ -181,7 +182,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
                 bitmark.thumbnail = await CommonModel.checkThumbnailForBitmark(bitmark.id);
               }
               bitmark.asset = asset;
-              await doCheckAndSyncDataWithICloud(bitmark);
+              await LocalFileService.doCheckAndSyncDataWithICloud(bitmark);
               healthAssetBitmarks.push(bitmark);
             }
           }
@@ -476,8 +477,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${userInformation.bitmarkAccountNumber}`);
 
-    await moveOldDataFilesToNewLocalStorageFolder();
-    await initializeLocalStorage();
+    await LocalFileService.moveOldDataFilesToNewLocalStorageFolder();
+    await LocalFileService.initializeLocalStorage();
     await IndexDBService.initializeIndexedDB();
 
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
@@ -499,7 +500,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
             let bitmarkId = keyList[2].replace('.txt', '');
             overwrite = true;
             promiseRunAfterCopyFile = async () => {
-              await doUpdateIndexTagFromICloud(bitmarkId);
+              await LocalFileService.doUpdateIndexTagFromICloud(bitmarkId);
             };
           }
           let doSyncFile = async () => {
@@ -732,7 +733,7 @@ const doRejectEmailRecords = async (emailRecord) => {
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
-  let assetFolderPath = `${getLocalAssetsFolderPath(userInformation.bitmarkAccountNumber)}/${assetId}`;
+  let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(userInformation.bitmarkAccountNumber)}/${assetId}`;
   let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
   if (!existAssetFolder || existAssetFolder.error) {
     return null;

@@ -1,5 +1,5 @@
 import { BitmarkModel, BitmarkSDK } from '../models';
-import { FileUtil, getLocalAssetsFolderPath } from 'src/utils';
+import { FileUtil } from 'src/utils';
 
 // ================================================================================================
 // ================================================================================================
@@ -54,7 +54,7 @@ const doIssueFile = async (bitmarkAccountNumber, filePath, assetName, metadataLi
 
   let issueResult = await BitmarkModel.doIssueFile(filePath, assetName, metadata, quantity);
 
-  let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
+  let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
   let downloadedFolder = `${assetFolderPath}/downloaded`;
   await FileUtil.mkdir(assetFolderPath);
   await FileUtil.mkdir(downloadedFolder);

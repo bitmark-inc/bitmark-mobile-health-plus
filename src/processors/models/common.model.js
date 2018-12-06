@@ -6,7 +6,8 @@ import DeviceInfo from 'react-native-device-info/deviceinfo';
 
 import { FaceTouchId, BitmarkSDK, PDFScanner, RNTextDetector } from './adapters'
 import { config } from 'src/configs';
-import { runPromiseWithoutError, isJPGFile, getImageSize, FileUtil, getLocalThumbnailsFolderPath, isImageFile, isPdfFile } from 'src/utils';
+import { runPromiseWithoutError, isJPGFile, getImageSize, FileUtil, isImageFile, isPdfFile } from 'src/utils';
+import { CacheData } from '../caches';
 
 const COMBINE_FILE_SUFFIX = 'combine';
 
@@ -403,7 +404,7 @@ const detectTextsFromPdf = async (filePath) => {
 
 const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => {
   // Create new one if thumbnail folder is not existing
-  let thumbnailsFolderPath = getLocalThumbnailsFolderPath();
+  let thumbnailsFolderPath = FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber);
   let outputFilePath = isCombineFile ? `${thumbnailsFolderPath}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${thumbnailsFolderPath}/${bitmarkId}.PNG`;
 
   const THUMBNAIL_WIDTH = 300;
@@ -424,7 +425,7 @@ const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => 
 const checkThumbnailForBitmark = async (bitmarkId) => {
   let thumbnailInfo = { exists: false };
 
-  let thumbnailsFolderPath = getLocalThumbnailsFolderPath();
+  let thumbnailsFolderPath = FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber);
   let thumbnailFilePath = `${thumbnailsFolderPath}/${bitmarkId}.PNG`;
   let thumbnailMultipleFilePath = `${thumbnailsFolderPath}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG`;
 

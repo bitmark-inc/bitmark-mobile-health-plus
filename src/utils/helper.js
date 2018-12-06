@@ -1,6 +1,5 @@
 import { } from 'react-native';
 import { Dimensions, Alert, Image } from 'react-native';
-import { FileUtil } from './file-util';
 let currentSize = Dimensions.get('window');
 let widthDesign = 375;
 
@@ -102,26 +101,6 @@ const asyncAlert = (title, message) => {
   });
 };
 
-const getUserLocalStorageFolderPath = (bitmarkAccountNumber) => {
-  return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber}`;
-};
-
-const getLocalAssetsFolderPath = (bitmarkAccountNumber) => {
-  return `${getUserLocalStorageFolderPath(bitmarkAccountNumber)}/assets`;
-};
-
-const getLocalThumbnailsFolderPath = (bitmarkAccountNumber) => {
-  return `${getUserLocalStorageFolderPath(bitmarkAccountNumber)}/thumbnails`;
-};
-
-const getLocalDatabasesFolderPath = (bitmarkAccountNumber) => {
-  return `${getUserLocalStorageFolderPath(bitmarkAccountNumber)}/databases`;
-};
-
-const getLocalCachesFolderPath = (bitmarkAccountNumber) => {
-  return `${getUserLocalStorageFolderPath(bitmarkAccountNumber)}/caches`;
-};
-
 export {
   convertWidth,
   runPromiseWithoutError,
@@ -135,9 +114,4 @@ export {
   isJPGFile,
   getImageSize,
   asyncAlert,
-
-  getLocalAssetsFolderPath,
-  getLocalThumbnailsFolderPath,
-  getLocalDatabasesFolderPath,
-  getLocalCachesFolderPath,
 };
