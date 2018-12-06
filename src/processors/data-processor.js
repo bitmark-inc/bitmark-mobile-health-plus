@@ -170,9 +170,10 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         if (asset) {
           let oldBitmark = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).find(b => b.id === bitmark.id);
           let oldAsset = oldBitmark ? oldBitmark.asset : {};
+          bitmark = merge({}, oldBitmark || {}, bitmark);
+          asset = merge({}, oldAsset, asset);
           if (isHealthDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
-              asset = merge({}, oldAsset, asset);
               asset.filePath = await detectLocalAssetFilePath(asset.id);
               bitmark.asset = asset;
               await doCheckAndSyncDataWithICloud(bitmark);
@@ -183,7 +184,6 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           }
           if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
-              asset = merge({}, oldAsset, asset);
               if (!asset.filePath || asset.filePath.indexOf(FileUtil.DocumentDirectory) < 0) {
                 asset.filePath = await detectLocalAssetFilePath(asset.id);
               }
