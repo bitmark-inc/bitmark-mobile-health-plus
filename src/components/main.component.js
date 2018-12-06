@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
-import { Actions } from 'react-native-router-flux';
-
 import KeepAwake from 'react-native-keep-awake';
 import Mailer from 'react-native-mail';
 import RNExitApp from 'react-native-exit-app';
@@ -23,7 +21,7 @@ import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponen
 import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
 import { EventEmitterService } from '../services';
-import { UserModel, CommonModel } from '../models';
+import { UserModel, CommonModel, BitmarkSDK } from '../models';
 import { FileUtil, convertWidth, runPromiseWithoutError } from '../utils';
 import { DataProcessor, AppProcessor } from '../processors';
 import { config } from '../configs';
@@ -34,7 +32,6 @@ const CRASH_LOG_FILE_NAME = 'crash_log.txt';
 const CRASH_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + CRASH_LOG_FILE_NAME;
 const ERROR_LOG_FILE_NAME = 'error_log.txt';
 const ERROR_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + ERROR_LOG_FILE_NAME;
-let isMainComponentMounted = false;
 class MainEventsHandlerComponent extends Component {
   constructor(props) {
     super(props);
@@ -47,7 +44,6 @@ class MainEventsHandlerComponent extends Component {
     this.handleDeepLink = this.handleDeepLink.bind(this);
     this.displayEmptyDataSource = this.displayEmptyDataSource.bind(this);
     this.doRefresh = this.doRefresh.bind(this);
-    this.migrationFilesToLocalStorage = this.migrationFilesToLocalStorage.bind(this);
 
     this.state = {
       processingCount: false,
@@ -75,7 +71,6 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.on(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
-    EventEmitterService.on(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
 
     // Handle Crashes
     this.checkAndShowCrashLog();
@@ -90,22 +85,13 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
     EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
-    EventEmitterService.remove(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
-  }
-
-  migrationFilesToLocalStorage() {
-    Alert.alert(i18n.t('LocalStorageMigrationComponent_title'), i18n.t('LocalStorageMigrationComponent_message'), [{
-      text: i18n.t('LocalStorageMigrationComponent_buttonText'), style: 'cancel',
-      onPress: () => Actions.localStorageMigration()
-    }]);
   }
 
   async doRefresh(justCreatedBitmarkAccount) {
     if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
-      let passTouchFaceId = !!CommonModel.getFaceTouchSessionId();
-      if (!passTouchFaceId) {
-        passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
-      }
+      // TODO authenticate touch face id
+      let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
+      let passTouchFaceId = !result || !result.error;
       this.setState({ passTouchFaceId });
       if (passTouchFaceId && this.state.networkStatus) {
         EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus: this.state.networkStatus, justCreatedBitmarkAccount });
@@ -118,40 +104,7 @@ class MainEventsHandlerComponent extends Component {
   handleDeepLink(event) {
     const route = event.url.replace(/.*?:\/\//g, '');
     const params = route.split('/');
-    // `granting-access/[token]`
     switch (params[0]) {
-      case 'granting-access': {
-
-        let waitTouchFaceId = async () => {
-          let wait100ms = () => new Promise((resolve) => setTimeout(resolve, 100));
-          let continueWait = !CommonModel.getFaceTouchSessionId() || !isMainComponentMounted;
-          let oldAppState = this.appState;
-          while (continueWait) {
-            if (oldAppState !== this.appState && this.appState.match(/inactive|background/)) {
-              return false;
-            }
-            await wait100ms();
-            oldAppState = this.appState;
-            continueWait = !CommonModel.getFaceTouchSessionId() || !isMainComponentMounted;
-          }
-          return true;
-        };
-
-        UserModel.doTryGetCurrentUser().then(userInformation => {
-          if (!userInformation || !userInformation.bitmarkAccountNumber) {
-            Alert.alert('', i18n.t('MainComponent_alertMessage3'), [{ text: i18n.t('MainComponent_alertButton3'), style: 'cancel' }]);
-          } else {
-            waitTouchFaceId().then((result) => {
-              if (result) {
-                setTimeout(() => {
-                  Actions.scanAccessQRCode({ token: params[1] });
-                }, 500);
-              }
-            });
-          }
-        });
-        break;
-      }
       default: {
         // TODO
         break;
@@ -164,7 +117,8 @@ class MainEventsHandlerComponent extends Component {
     if (networkStatus) {
       UserModel.doTryGetCurrentUser().then(async (userInformation) => {
         if (userInformation && userInformation.bitmarkAccountNumber) {
-          let passTouchFaceId = !!(await CommonModel.doStartFaceTouchSessionId(i18n.t('FaceTouchId_doOpenApp')));
+          let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
+          let passTouchFaceId = !result || !result.error;
           this.setState({ passTouchFaceId });
           if (passTouchFaceId) {
             EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus });
@@ -182,9 +136,6 @@ class MainEventsHandlerComponent extends Component {
       runPromiseWithoutError(DataProcessor.doMetricOnScreen(true));
     }
     if (nextAppState.match(/background/)) {
-      if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
-        CommonModel.resetFaceTouchSessionId();
-      }
       runPromiseWithoutError(DataProcessor.doMetricOnScreen(false));
     }
     this.appState = nextAppState;
@@ -447,12 +398,10 @@ export class MainComponent extends Component {
   componentDidMount() {
 
     EventEmitterService.on(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
-    isMainComponentMounted = true;
   }
   componentWillUnmount() {
 
     EventEmitterService.remove(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
-    isMainComponentMounted = false;
   }
 
   shouldComponentUpdate(nextProps, nextState) {

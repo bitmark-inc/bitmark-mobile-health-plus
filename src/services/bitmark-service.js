@@ -1,5 +1,3 @@
-import randomString from 'random-string';
-import moment from 'moment';
 import { BitmarkModel, BitmarkSDK } from '../models';
 import { FileUtil, getLocalAssetsFolderPath } from '../utils';
 
@@ -48,7 +46,7 @@ const doCheckMetadata = (metadataList) => {
   });
 };
 
-const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset) => {
+const doIssueFile = async (bitmarkAccountNumber, filePath, assetName, metadataList, quantity) => {
   let metadata = {};
   metadataList.forEach(item => {
     if (item.label && item.value) {
@@ -56,26 +54,17 @@ const doIssueFile = async (touchFaceIdSession, bitmarkAccountNumber, filePath, a
     }
   });
 
-  let tempFolder = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/temp_${randomString({ length: 8, numeric: true, letters: false, }) + moment().toDate().getTime()}`;
-  let tempFolderDownloaded = `${tempFolder}/downloaded`;
-  await FileUtil.mkdir(tempFolder);
-  await FileUtil.mkdir(tempFolderDownloaded);
-
-  let issueResult = await BitmarkModel.doIssueFile(touchFaceIdSession, tempFolderDownloaded, filePath, assetName, metadata, quantity, isPublicAsset);
+  let issueResult = await BitmarkModel.doIssueFile(filePath, assetName, metadata, quantity);
 
   let assetFolderPath = `${getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
   let downloadedFolder = `${assetFolderPath}/downloaded`;
   await FileUtil.mkdir(assetFolderPath);
   await FileUtil.mkdir(downloadedFolder);
-  let list = await FileUtil.readDir(tempFolderDownloaded);
-  for (let filename of list) {
-    await FileUtil.moveFileSafe(`${tempFolderDownloaded}/${filename}`, `${downloadedFolder}/${filename}`);
-  }
-  await FileUtil.removeSafe(tempFolder);
 
-  let sessionAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
-  await FileUtil.mkdir(sessionAssetFolder);
-  await FileUtil.create(`${sessionAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
+  //TODO need change to write file level4
+  let filename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
+  await BitmarkSDK.storeFileSecurely(filePath, `${downloadedFolder}/${filename}`);
+  // await FileUtil.copyFile(filePath, `${downloadedFolder}/${filename}`);
 
   let listFile = await FileUtil.readDir(downloadedFolder);
   let results = [];
@@ -94,8 +83,8 @@ const doGetBitmarkInformation = async (bitmarkId) => {
   return await BitmarkModel.doGetBitmarkInformation(bitmarkId);
 };
 
-const doTransferBitmark = async (touchFaceIdSession, bitmarkId, receiver) => {
-  return await BitmarkSDK.transferOneSignature(touchFaceIdSession, bitmarkId, receiver);
+const doTransferBitmark = async (bitmarkId, receiver) => {
+  return await BitmarkSDK.transferOneSignature(bitmarkId, receiver);
 };
 
 // ================================================================================================

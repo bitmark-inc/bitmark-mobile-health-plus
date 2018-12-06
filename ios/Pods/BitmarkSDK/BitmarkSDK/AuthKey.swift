@@ -9,51 +9,51 @@
 import Foundation
 import TweetNacl
 
-public struct AuthKey: AsymmetricKey {
+internal struct AuthKey: KeypairSignable {
     
-    public let address: AccountNumber
-    public let privateKey: Data
-    public let publicKey: Data
-    public let type: KeyType
-    public let network: Network
-    public let kif: String
+    let address: AccountNumber
+    let privateKey: Data
+    let publicKey: Data
+    let type: KeyType
+    let network: Network
+    let kif: String
     
-    public init(fromKIF kifString: String) throws {
+    init(fromKIF kifString: String) throws {
         guard let kifBuffer = kifString.base58DecodedData else {
-            throw(BMError("Can not convert base58"))
+            throw("Can not convert base58")
         }
         self.kif = kifString
         
         let (_keyVariant, _keyVariantBufferLength) = kifBuffer.toVarint64WithLength()
         guard let keyVariant = _keyVariant,
             let keyVariantLength = _keyVariantBufferLength else {
-                throw(BMError("Private key error: can not parse the kif string"))
+                throw("Private key error: can not parse the kif string")
         }
         
         // check for whether this is a kif
         let keyPartVal = Config.KeyPart.privateKey
         if keyVariant & 1 != keyPartVal {
-            throw(BMError("Private key error: can not parse the kif string"))
+            throw("Private key error: can not parse the kif string")
         }
         
         // detect network
         let networkVal = (keyVariant >> 1) & 0x01
         guard let network = Common.getNetwork(byAddressValue: networkVal) else {
-            throw(BMError("Unknow network"))
+            throw("Unknow network")
         }
         self.network = network
         
         // key type
         let keyTypeVal = (keyVariant >> 4) & 0x07
         guard let keyType = Common.getKey(byValue: keyTypeVal) else {
-            throw(BMError("Unknow key type"))
+            throw("Unknow key type")
         }
         self.type = keyType
         
         // check the length of kif
         let kifLength = keyVariantLength + keyType.seedLength + Config.checksumLength
         if kifLength != kifBuffer.count {
-            throw(BMError("Private key error: KIF for"  + keyType.name + " must be " + String(kifLength) + " bytes"))
+            throw("Private key error: KIF for"  + keyType.name + " must be " + String(kifLength) + " bytes")
         }
         
         // get private key
@@ -64,17 +64,17 @@ public struct AuthKey: AsymmetricKey {
         let checksum = checksumData.sha3(length: 256).slice(start: 0, end: Config.checksumLength)
         
         if checksum != kifBuffer.slice(start: kifLength - Config.checksumLength, end: kifLength) {
-            throw(BMError("Private key error: checksum mismatch"))
+            throw("Private key error: checksum mismatch")
         }
         
         // get address
         let keyPair = try Ed25519.generateKeyPair(fromSeed: seed)
         self.privateKey = keyPair.privateKey
         self.publicKey = keyPair.publicKey
-        self.address = AccountNumber(fromPubKey: keyPair.publicKey, network: network, keyType: type)
+        self.address = AccountNumber.build(fromPubKey: keyPair.publicKey, network: network, keyType: type)
     }
     
-    public init(fromKeyPair keyPairData: Data, network: Network = Network.livenet, type: KeyType = KeyType.ed25519) throws {
+    init(fromKeyPair keyPairData: Data, network: Network, type: KeyType = KeyType.ed25519) throws {
         // Check length to determine the keypair
         
         var keyPair: (publicKey: Data, privateKey: Data)
@@ -93,11 +93,11 @@ public struct AuthKey: AsymmetricKey {
             keyPair = keyPairResult
         }
         else {
-            throw(BMError("Unknown cases"))
+            throw("Unknown cases")
         }
         
         let keyPartVal = UInt8(Config.KeyPart.privateKey)
-        let networkVal = UInt8(network.addressValue)
+        let networkVal = UInt8(network.rawValue)
         let keyTypeVal = UInt8(type.value)
         
         var keyVariantVal = (keyTypeVal << 3) | networkVal
@@ -114,23 +114,15 @@ public struct AuthKey: AsymmetricKey {
         self.type = type
         self.privateKey = keyPair.privateKey
         self.publicKey = keyPair.publicKey
-        self.address = AccountNumber(fromPubKey: keyPair.publicKey, network: network, keyType: type)
+        self.address = AccountNumber.build(fromPubKey: keyPair.publicKey, network: network, keyType: type)
     }
     
-    public init(fromKeyPairString keyPairString: String, network: Network = Network.livenet, type: KeyType = KeyType.ed25519) throws {
+    init(fromKeyPairString keyPairString: String, network: Network, type: KeyType = KeyType.ed25519) throws {
         let keyPairData = keyPairString.hexDecodedData
         try self.init(fromKeyPair: keyPairData, network: network, type: type)
     }
     
-    public func sign(message: String) throws -> Data {
-        return try NaclSign.signDetached(message: message.data(using: .utf8)!, secretKey: privateKey)
-    }
-    
-    public func sign(message: Data) throws -> Data {
+    func sign(message: Data) throws -> Data {
         return try NaclSign.signDetached(message: message, secretKey: privateKey)
-    }
-    
-    var algorithm: Algorithm {
-        return .ed25519
     }
 }

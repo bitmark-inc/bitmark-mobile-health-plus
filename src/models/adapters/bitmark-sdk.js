@@ -1,310 +1,80 @@
 import { NativeModules } from 'react-native'
-let SwiftBitmarkSDK = NativeModules.BitmarkSDK;
-
-const newError = (reason, defaultMessage) => {
-  let message = (reason && typeof (reason) === 'string') ? reason : defaultMessage;
-  message = message || 'Internal application error!'
-  return new Error(message);
-}
+let SwiftBitmarkSDK = NativeModules.BitmarkSDKWrapper;
 
 const BitmarkSDK = {
+
+  sdkInit: async (network) => {
+    return await SwiftBitmarkSDK.sdkInit(network);
+  },
   // return session id
-  newAccount: (network, enableTouchFaceId, version = 'v2') => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccount(network, version, enableTouchFaceId, (ok, result) => {
-        if (ok) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not create new Account!'));
-        }
-      });
-    });
+  newAccount: async (enableTouchFaceId) => {
+    // todo call authenticate before call new account for case enableTouchFaceId
+    return await SwiftBitmarkSDK.createAccount(enableTouchFaceId);
   },
-  newAccountFromPhraseWords: (phraseWords, network, enableTouchFaceId) => {
-    console.log('phraseWords :', phraseWords);
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.newAccountFromPhraseWords(phraseWords, network, enableTouchFaceId, (ok, result) => {
-        if (ok) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not recovery account from 24 words!'));
-        }
-      });
-    });
+  newAccountFromPhraseWords: async (phraseWords, enableTouchFaceId) => {
+    // todo call authenticate before call login for case enableTouchFaceId
+    return await SwiftBitmarkSDK.createAccountFromPhrase(phraseWords, enableTouchFaceId);
   },
-  requestSession: (network, message) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.requestSession(network, message, (ok, result) => {
-        if (ok) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not request session!'));
-        }
-      });
-    });
+  requestSession: async (message) => {
+    return await SwiftBitmarkSDK.authenticate(message);
   },
 
   // one time
-  removeAccount: () => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.removeAccount((ok, result) => {
-        if (ok) {
-          resolve();
-        } else {
-          reject(newError(result, 'Can not remove account!'));
-        }
-      });
-    });
+  removeAccount: async () => {
+    return await SwiftBitmarkSDK.removeAccount();
   },
 
-  // use session id
-  disposeSession: (sessionId) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.disposeSession(sessionId, (ok, result) => {
-        if (ok && sessionId) {
-          resolve(sessionId);
-        } else {
-          reject(newError(result, 'Can not dispose session!'));
-        }
-      });
-    });
+  accountInfo: async () => {
+    let list = await SwiftBitmarkSDK.accountInfo();
+    return {
+      bitmarkAccountNumber: list[0],
+      phraseWords: list[1],
+    };
   },
-  accountInfo: (sessionId) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.accountInfo(sessionId, (ok, result, phraseWords) => {
-        if (ok) {
-          resolve({ bitmarkAccountNumber: result, phraseWords });
-        } else {
-          reject(newError(result, 'Can not get current account!'));
-        }
-      });
-    });
+  storeFileSecurely: async (filePath, desFilePath) => {
+    return await SwiftBitmarkSDK.storeFileSecurely(filePath, desFilePath);
   },
-  signMessage: (message, sessionId) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.sign(sessionId, message, (ok, result) => {
-        if (ok) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not sign message!'));
-        }
-      });
-    });
+  signMessages: async (messages) => {
+    return await SwiftBitmarkSDK.sign(messages);
   },
-  rickySignMessage: (messages, sessionId) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.rickySign(sessionId, messages, (ok, results) => {
-        if (ok && results && results.length === messages.length) {
-          resolve(results);
-        } else {
-          reject(new Error(results || 'Can not sign message!'));
-        }
-      });
+  issueFile: async (filePath, propertyName, metadata, quantity) => {
+    let list = await SwiftBitmarkSDK.issueFile({
+      url: filePath,
+      property_name: propertyName,
+      metadata,
+      quantity,
     });
+    return {
+      bitmarkIds: list[0],
+      assetId: list[1],
+    };
   },
-  registerAccessPublicKey: (sessionId) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.registerAccessPublicKey(sessionId, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not register access public key!'));
-        }
-      });
-    });
-  },
-
-  createSessionData: (sessionId, encryptionKey) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.createSessionData(sessionId, encryptionKey, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not create session data!'));
-        }
-      });
-    });
-  },
-
-  issueRecord: (sessionId, fingerprint, property_name, metadata, quantity) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.issueRecord(sessionId, { fingerprint, property_name, metadata, quantity }, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not issue bitmark!'));
-        }
-      });
-    });
-  },
-
-  issueFile: (sessionId, localFolderPath, filePath, propertyName, metadata, quantity, isPublicAsset) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.issueFile(sessionId, {
-        url: filePath,
-        property_name: propertyName,
-        metadata,
-        quantity,
-        is_public_asset: !!isPublicAsset
-      }, localFolderPath,
-        (ok, bitmarkIds, assetId, sessionData, encryptedFilePath) => {
-          console.log('issueFile :', ok, bitmarkIds, assetId, sessionData, encryptedFilePath);
-          if (ok) {
-            resolve({ bitmarkIds, assetId, sessionData, encryptedFilePath });
-          } else {
-            reject(new Error(bitmarkIds || 'Can not issue file!'));
-          }
-        });
-    });
-  },
-  transferOneSignature: (sessionId, bitmarkId, address) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.transferOneSignature(sessionId, bitmarkId, address, (ok, results) => {
-        if (ok) {
-          resolve({ result: ok });
-        } else {
-          reject(new Error(results || 'Can transfer One Signature!'));
-        }
-      });
-    });
-  },
-
-  issueThenTransferFile: (sessionId, localFolderPath, filePath, property_name, metadata, receiver, extra_info) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.issueThenTransferFile(sessionId, {
-        url: filePath,
-        property_name,
-        metadata,
-        receiver,
-        extra_info,
-      }, localFolderPath,
-        (ok, result) => {
-          if (ok && result) {
-            resolve(result);
-          } else {
-            reject(newError(result, 'Can not issue then transfer file!'));
-          }
-        });
-    });
-  },
-
-  createAndSubmitTransferOffer: (sessionId, bitmarkId, receiver) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.createAndSubmitTransferOffer(sessionId, bitmarkId, receiver, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not sign first signature for transfer!'));
-        }
-      });
-    });
-  },
-  signForTransferOfferAndSubmit: (sessionId, txid, signature1, offerId, action) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.signForTransferOfferAndSubmit(sessionId, txid, signature1, offerId, action, (ok, result) => {
-        if (ok) {
-          resolve({ result: ok });
-        } else {
-          reject(newError(result, 'Can not sign second signature for transfer!'));
-        }
-      });
+  transferOneSignature: async (bitmarkId, address) => {
+    return await SwiftBitmarkSDK.transferOneSignature({
+      address, bitmark_id: bitmarkId
     });
   },
 
   // don use session di
-  tryPhraseWords: (phraseWords, network) => {
-    console.log('phraseWords :', phraseWords);
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.tryPhraseWords(phraseWords, network, (ok, result, phraseWords) => {
-        if (ok) {
-          resolve({ bitmarkAccountNumber: result, phraseWords });
-        } else {
-          reject(newError(result, 'Can not try 24 words!'));
-        }
-      });
-    });
+  tryPhrase: async (phraseWords) => {
+    return await SwiftBitmarkSDK.tryPhrase(phraseWords);
   },
 
-  getAssetInfo: (filePath) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.getAssetInfo(filePath, (ok, result, fingerprint) => {
-        if (ok) {
-          resolve({ fingerprint, id: result });
-        } else {
-          reject(newError(result, 'Can not get basic asset information!'));
-        }
-      });
-    });
+  getAssetInfo: async (filePath) => {
+    let list = await SwiftBitmarkSDK.getAssetInfo(filePath);
+    return { id: list[0], fingerprint: list[1] };
   },
-  validateMetadata: (metadata) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.validateMetadata(metadata, (ok, result) => {
-        if (ok) {
-          resolve();
-        } else {
-          reject(newError(result, 'Metadata invalid!'));
-        }
-      });
-    });
+  validateMetadata: async (metadata) => {
+    try {
+      await SwiftBitmarkSDK.validateMetadata(metadata);
+      return true;
+    } catch (error) {
+      return false;
+    }
   },
-  validateAccountNumber: (accountNumber, network) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.validateAccountNumber(accountNumber, network, (ok, result) => {
-        if (ok) {
-          resolve();
-        } else {
-          reject(newError(result, 'Account invalid!'));
-        }
-      });
-    });
+  validateAccountNumber: async (accountNumber) => {
+    return await SwiftBitmarkSDK.validateAccountNumber(accountNumber);
   },
-  downloadBitmark: (sessionId, bitmarkId, localFolderPath) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.downloadBitmark(sessionId, bitmarkId, localFolderPath, (ok, result) => {
-        if (ok) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not download bitmark!'));
-        }
-      });
-    });
-  },
-  downloadBitmarkWithGrantId: (sessionId, grantId, localFolderPath) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.downloadBitmarkWithGrantId(sessionId, grantId, localFolderPath, (ok, result) => {
-        if (ok) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not download bitmark via grand id!'));
-        }
-      });
-    });
-  },
-
-
-  createSessionDataFromLocalForRecipient: (sessionId, bitmarkId, sessionData, recipient) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.createSessionDataFromLocalForRecipient(sessionId, bitmarkId, sessionData, recipient, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not create session data local!'));
-        }
-      });
-    });
-  },
-  createSessionDataForRecipient: (sessionId, bitmarkId, recipient) => {
-    return new Promise((resolve, reject) => {
-      SwiftBitmarkSDK.createSessionDataForRecipient(sessionId, bitmarkId, recipient, (ok, result) => {
-        if (ok && result) {
-          resolve(result);
-        } else {
-          reject(newError(result, 'Can not create session data!'));
-        }
-      });
-    });
-  },
-
 
 };
 export { BitmarkSDK };

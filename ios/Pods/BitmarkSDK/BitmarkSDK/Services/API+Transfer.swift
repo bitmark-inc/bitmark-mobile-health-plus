@@ -9,23 +9,14 @@
 import Foundation
 
 extension API {
-    internal func transfer(withData transfer: Transfer) throws {
-        let json = try JSONSerialization.data(withJSONObject: transfer.getRPCParam(), options: [])
-        
-        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v1/transfer")
-        
-        var urlRequest = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData)
-        urlRequest.httpBody = json
-        urlRequest.httpMethod = "POST"
-        
-        let _ = try urlSession.synchronousDataTask(with: urlRequest)
+    struct TransferResponse: Codable {
+        let txid: String
     }
     
-    internal func transfer(withData countersignTransfer: CountersignedTransferRecord) throws -> String {
-        let body = ["transfer": countersignTransfer]
-        let json = try JSONEncoder().encode(body)
+    internal func transfer(_ transfer: TransferParams) throws -> String {
+        let json = try JSONSerialization.data(withJSONObject: transfer.toJSON(), options: [])
         
-        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v1/transfer")
+        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v3/transfer")
         
         var urlRequest = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData)
         urlRequest.httpBody = json
@@ -33,84 +24,70 @@ extension API {
         
         let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
         
-        let responseData = try JSONDecoder().decode([[String: String]].self, from: data)
-        guard let txid = responseData[0]["txid"] else {
-            throw("Invalid response from gateway server")
-        }
-        
-        return txid
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full)
+        let transferResponse = try decoder.decode(TransferResponse.self, from: data)
+        return transferResponse.txid
     }
     
-    internal func submitTransferOffer(withSender sender: Account, offer: TransferOffer, extraInfo: [String: Any]?) throws -> String {
-        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v2/transfer_offers")
+    internal func offer(_ offer: OfferParams) throws {
+        let json = try JSONSerialization.data(withJSONObject: offer.toJSON(), options: [])
         
-        var params: [String: Any] = ["from": sender.accountNumber.string,
-                    "record": try offer.serialize()]
-        if let extraInfo = extraInfo {
-            params["extra_info"] = extraInfo
-        }
+        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v3/transfer")
         
-        var urlRequest = URLRequest(url: requestURL)
+        var urlRequest = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData)
+        urlRequest.httpBody = json
         urlRequest.httpMethod = "POST"
-        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
         
-        let action = "transferOffer"
-        let resource = String(data: try JSONEncoder().encode(try offer.serialize()), encoding: .utf8)!
-        
-        try urlRequest.signRequest(withAccount: sender, action: action, resource: resource)
-        
-        let (data, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        
-        let responseData = try JSONDecoder().decode([String: String].self, from: data)
-        guard let offerId = responseData["offer_id"] else {
-            throw("Invalid response from gateway server")
-        }
-        
-        return offerId
+        _ = try urlSession.synchronousDataTask(with: urlRequest)
     }
     
-    internal func completeTransferOffer(withAccount account: Account, offerId: String, action: String, counterSignature: String) throws -> Bool {
-        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v2/transfer_offers")
+    internal func response(_ offerResponse: OfferResponseParams) throws {
+        let json = try JSONSerialization.data(withJSONObject: offerResponse.toJSON(), options: [])
         
-        let params: [String: Any]  = ["id": offerId,
-                                      "reply":
-                                        ["action": action,
-                                         "countersignature": counterSignature]]
+        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v3/transfer")
         
-        var urlRequest = URLRequest(url: requestURL)
+        var urlRequest = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData)
+        urlRequest.httpBody = json
         urlRequest.httpMethod = "PATCH"
-        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
-        try urlRequest.signRequest(withAccount: account, action: "transferOffer", resource: "patch")
+        for (k, v) in offerResponse.apiHeader! {
+            urlRequest.setValue(v, forHTTPHeaderField: k)
+        }
         
-        let (data, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        
-        return true
+        _ = try urlSession.synchronousDataTask(with: urlRequest)
+    }
+}
+
+extension API {
+    struct TransactionQueryResponse: Codable {
+        let tx: Transaction
     }
     
-    internal func getTransferOffer(withId offerID: String) throws -> TransferOffer {
-        var url = URLComponents(url: endpoint.apiServerURL.appendingPathComponent("/v2/transfer_offers"), resolvingAgainstBaseURL: false)!
-        url.queryItems = [
-            URLQueryItem(name: "offer_id", value: offerID)
-        ]
+    struct TransactionsQueryResponse: Codable {
+        let txs: [Transaction]
+        let assets: [Asset]?
+    }
+    
+    internal func get(transactionID: String) throws -> Transaction {
+        var urlComponents = URLComponents(url: endpoint.apiServerURL.appendingPathComponent("/v3/txs/" + transactionID), resolvingAgainstBaseURL: false)!
+        urlComponents.queryItems = [URLQueryItem(name: "pending", value: "true")]
+        let urlRequest = URLRequest(url: urlComponents.url!)
+        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
         
-        let urlRequest = URLRequest(url: url.url!)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full)
+        let result = try decoder.decode(TransactionQueryResponse.self, from: data)
+        return result.tx
+    }
+    
+    internal func listTransaction(builder: Transaction.QueryParam) throws -> ([Transaction], [Asset]?) {
+        let requestURL = builder.buildURL(baseURL: endpoint.apiServerURL, path: "/v3/txs")
+        let urlRequest = URLRequest(url: requestURL)
+        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
         
-        let (data, res) = try urlSession.synchronousDataTask(with: urlRequest)
-        
-        guard let responseData = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-            throw("Cannot parse response")
-        }
-        
-        guard let offerInfo = responseData["offer"] as? [String: Any],
-            let record = offerInfo["record"] as? [String: Any],
-            let link = record["link"] as? String,
-            let owner = record["owner"] as? String,
-            let signature = record["signature"] as? String else {
-                throw("Invalid response from gateway server")
-        }
-        
-        let offer = TransferOffer(txId: link, receiver: try AccountNumber(address: owner), signature: signature.hexDecodedData)
-        
-        return offer
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full)
+        let result = try decoder.decode(TransactionsQueryResponse.self, from: data)
+        return (result.txs, result.assets)
     }
 }

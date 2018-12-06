@@ -11,404 +11,304 @@ import BitmarkSDK
 import KeychainAccess
 import iCloudDocumentSync
 
-@objc(BitmarkSDK)
-class BitmarkSDK: NSObject {
+@objc(BitmarkSDKWrapper)
+class BitmarkSDKWrapper: NSObject {
   
-  static let accountNotFound = "Cannot find account associated with that session id"
+  static let accountNotFound = "Account not found in native layer"
+  var account: Account?
   
-  @objc(newAccount::::)
-  func newAccount(_ network: String, version: String, _ authentication: Bool, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(sdkInit:::)
+  func sdkInit(_network: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "BitmarkSDKAPIKey") as? String else {
+        reject(nil, "Cannot find default bundle", nil);
+        return
+    }
+    
+    BitmarkSDK.initialize(config: SDKConfig(apiToken: apiKey,
+                                            network: .testnet,
+                                            urlSession: URLSession.shared))
+    resolve(nil);
+  }
+  
+  @objc(createAccount:::)
+  func createAccount(_ authentication: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let network = BitmarkSDK.networkWithName(name: network)
-      let account = try Account(version: BitmarkSDK.versionFromString(version), network: network)
-      try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDK.stringFromVersion(account.seed.version), authentication: authentication)
-      _ = try? account.registerPublicEncryptionKey()
-      let sessionId = AccountSession.shared.addSessionForAccount(account)
-      callback([true, sessionId])
+      let account = try Account()
+      try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDKWrapper.stringFromVersion(account.seed.version), authentication: authentication)
+      self.account = account
+      resolve(nil);
     }
     catch let e {
       if let status = e as? KeychainAccess.Status,
         status == KeychainAccess.Status.userCanceled || status == KeychainAccess.Status.authFailed {
-        callback([true])
+        resolve(nil);
       }
       else {
-        if let msg = e as? NSString {
-          callback([false, msg])
-        } else {
-          callback([false])
-        }
+        reject(nil, nil, e);
       }
     }
   }
   
-  @objc(newAccountFromPhraseWords::::)
-  func newAccountFromPhraseWords(_ pharse: [String], _ network: String, _ authentication: Bool, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(createAccountFromPhrase::::)
+  func createAccountFromPhrase(_ pharse: [String], _ authentication: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let network = BitmarkSDK.networkWithName(name: network)
-      let account = try Account(recoverPhrase: pharse)
+      let account = try Account(recoverPhrase: pharse, language: .english)
       
-      if account.accountNumber.network != network {
-        callback([false])
-        return
-      }
-      
-      try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDK.stringFromVersion(account.seed.version), authentication: authentication)
-      _ = try? account.registerPublicEncryptionKey()
-      let sessionId = AccountSession.shared.addSessionForAccount(account)
-      callback([true, sessionId])
+      try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDKWrapper.stringFromVersion(account.seed.version), authentication: authentication)
+      self.account = account
+      resolve(nil);
     }
     catch let e {
       if let status = e as? KeychainAccess.Status,
         status == KeychainAccess.Status.userCanceled || status == KeychainAccess.Status.authFailed {
-        callback([true])
+        resolve(nil);
       }
       else {
-        if let msg = e as? NSString {
-          callback([false, msg])
-        } else {
-          callback([false])
-        }
+        reject(nil, nil, e);
       }
     }
   }
   
-  @objc(tryPhraseWords:::)
-  func tryPhraseWords(_ pharse: [String], _ network: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(tryPhrase:::)
+  func tryPhrase(_ pharse: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let network = BitmarkSDK.networkWithName(name: network)
-      let account = try Account(recoverPhrase: pharse)
+      let account = try Account(recoverPhrase: pharse, language: .english)
       
-      if account.accountNumber.network != network {
-        callback([false])
-        return
-      }
-
-      callback([true, account.accountNumber.string])
+      resolve(account.accountNumber)
     }
     catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
+      reject(nil, nil, e);
     }
   }
   
   @objc(accountInfo::)
-  func accountInfo(_ sessionId: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  func accountInfo(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      callback([true, account.accountNumber.string, account.getRecoverPhrase(), BitmarkSDK.stringFromVersion(account.seed.version)])
+      guard let account = self.account else {
+        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+        return
+      }
+      resolve([account.accountNumber,
+               try account.getRecoverPhrase(language: .english),
+               BitmarkSDKWrapper.stringFromVersion(account.seed.version)])
     }
     catch let e {
-      if let error = e as? String,
-        error == BitmarkSDK.accountNotFound {
-        callback([true])
+      reject(nil, nil, e);
+    }
+  }
+
+  @objc(authenticate:::)
+  func authenticate(_ message: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      guard let core = try KeychainUtil.getCore(reason: message) else {
+        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
       
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
+      let seed = try Seed.fromCore(core, version: KeychainUtil.getAccountVersion())
+      self.account = try Account(seed: seed)
+      resolve(nil)
+    }
+    catch let e {
+      reject(nil, nil, e);
     }
   }
   
-  @objc(removeAccount:)
-  func removeAccount(callback: @escaping RCTResponseSenderBlock) {
+  @objc(removeAccount::)
+  func removeAccount(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       try KeychainUtil.clearCore()
-      callback([true])
+      resolve(nil);
     }
     catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
+      reject(nil, nil, e);
     }
   }
   
-  @objc(registerAccessPublicKey::)
-  func registerAccessPublicKey(_ sessionId: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(issueFile:::)
+  func issueFile(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      callback([try account.registerPublicEncryptionKey()])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(issueFile::::)
-  func issueFile(_ sessionId: String, _ input: [String: Any], localFolderPath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let fileURL = input["url"] as! String
-      let propertyName = input["property_name"] as! String
-      let metadata = input["metadata"] as! [String: String]
-      let quantity = input["quantity"] as! Int
-      let isPublicAsset = input["is_public_asset"] as! Bool
-      
-      var accessibility = Accessibility.privateAsset
-      if isPublicAsset {
-        accessibility = Accessibility.publicAsset
+      guard let account = self.account else {
+        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+        return
       }
       
-      let result = try account.issueBitmarks(assetFile: URL(fileURLWithPath: fileURL), accessibility: accessibility, propertyName: propertyName, propertyMetadata: metadata, quantity: quantity)
-      let issues = result.0
-      let issueIds = issues.map {$0.txId! }
-      
-      if let sessionData = result.2{
-        let url = URL(fileURLWithPath: fileURL)
-        let filename = url.lastPathComponent
-        let saveFileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
-        let assetFile = try Data(contentsOf: URL(fileURLWithPath: fileURL))
-        try assetFile.saveFileLocally(url: saveFileURL)
-        
-        callback([true, issueIds, result.1.id!, sessionData, localFolderPath])
-      } else {
-        callback([true, issueIds])
-      }
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(downloadBitmark::::)
-  func downloadBitmark(_ sessionId: String, _ bitmarkId: String, localFolderPath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let (f, d) = try account.downloadAsset(bitmarkId: bitmarkId)
-      guard let filename = f,
-        let data = d else {
-          callback([false])
+      guard let fileURL = params["url"] as? String,
+        let name = params["property_name"] as? String,
+        let metadata = params["metadata"] as? [String: String],
+        let quantity = params["quantity"] as? Int else {
+          reject(nil, "Invalid fingerprint", nil)
           return
       }
       
-      let fileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
-      try data.saveFileLocally(url: fileURL)
-      callback([true, localFolderPath])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(downloadBitmarkWithGrantId::::)
-  func downloadBitmarkWithGrantId(_ sessionId: String, _ grantID: String, localFolderPath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let (f, d) = try account.downloadAssetGrant(grantId: grantID)
-      guard let filename = f,
-        let data = d else {
-          callback([false])
-          return
-      }
+      // Register asset
+      var assetParams = try Asset.newRegistrationParams(name: name,
+                                                        metadata: metadata)
       
-      let fileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
-      try data.saveFileLocally(url: fileURL)
-      callback([true, localFolderPath])
+      try assetParams.setFingerprint(fromFileURL: fileURL)
+      try assetParams.sign(account)
+      let assetId = try Asset.register(assetParams)
+      
+      // Issue bitmarks
+      
+      var issueParams = try Bitmark.newIssuanceParams(assetID: assetId,
+                                                      owner: account.accountNumber,
+                                                      quantity: quantity)
+      try issueParams.sign(account)
+      let bitmarkIds = try Bitmark.issue(issueParams)
+      
+      resolve([bitmarkIds, assetId])
     }
     catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
+      reject(nil, nil, e);
     }
   }
   
-  @objc(getAssetInfo::)
-  func getAssetInfo(_ filePath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(storeFileSecurely::::)
+  func storeFileSecurely(_ filePath: String, _ destination: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
+      try data.write(to: URL(fileURLWithPath: destination), options: [.completeFileProtection, .atomic])
+      resolve(nil);
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
+  
+  //  @objc(downloadBitmark::::)
+  //  func downloadBitmark(_ bitmarkId: String, localFolderPath: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+  //    do {
+  //      guard let account = self.account else {
+  //        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+  //        return
+  //      }
+  //      let (f, d) = try account.downloadAsset(bitmarkId: bitmarkId)
+  //      guard let filename = f,
+  //        let data = d else {
+  //          callback([false])
+  //          return
+  //      }
+  //
+  //      let fileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
+  //      try data.saveFileLocally(url: fileURL)
+  //      callback([true, localFolderPath])
+  //    }
+  //    catch let e {
+  //      if let msg = e as? NSString {
+  //        callback([false, msg])
+  //      } else {
+  //        callback([false])
+  //      }
+  //    }
+  //  }
+  //
+  //  @objc(downloadBitmarkWithGrantId::::)
+  //  func downloadBitmarkWithGrantId(_ grantID: String, localFolderPath: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+  //    do {
+  //      guard let account = self.account else {
+  //        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+  //        return
+  //      }
+  //      let (f, d) = try account.downloadAssetGrant(grantId: grantID)
+  //      guard let filename = f,
+  //        let data = d else {
+  //          callback([false])
+  //          return
+  //      }
+  //
+  //      let fileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
+  //      try data.saveFileLocally(url: fileURL)
+  //      callback([true, localFolderPath])
+  //    }
+  //    catch let e {
+  //      if let msg = e as? NSString {
+  //        callback([false, msg])
+  //      } else {
+  //        callback([false])
+  //      }
+  //    }
+  //  }
+  
+  @objc(getAssetInfo:::)
+  func getAssetInfo(_ filePath: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       let url = URL(fileURLWithPath: filePath)
       let data = try Data(contentsOf: url)
-      let fingerprint = FileUtil.Fingerprint.computeFingerprint(data: data)
+      let fingerprint = FileUtil.computeFingerprint(data: data)
       
       guard let fingerprintData = fingerprint.data(using: .utf8) else {
-        callback([false])
+        reject(nil, "Invalid fingerprint", nil)
         return
       }
       
       let assetid = fingerprintData.sha3(length: 512).hexEncodedString
-      callback([true, assetid, fingerprint])
+      resolve([assetid, fingerprint])
     }
     catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
+      reject(nil, nil, e);
     }
   }
   
-  @objc(issueThenTransferFile::::)
-  func issueThenTransferFile(_ sessionId: String, _ input: [String: Any], localFolderPath: String, _ callback: @escaping RCTResponseSenderBlock) -> Void {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let fileURL = input["url"] as! String
-      let propertyName = input["property_name"] as! String
-      let metadata = input["metadata"] as! [String: String]
-      let receiver = input["receiver"] as! String
-      let extraInfo = input["extra_info"] as? [String: Any]
-      
-      let bitmarkId = try account.createAndSubmitGiveawayIssue(assetFile: URL(fileURLWithPath: fileURL),
-                                                            accessibility: .privateAsset,
-                                                            propertyName: propertyName,
-                                                            propertyMetadata: metadata,
-                                                            toAccount: receiver,
-                                                            extraInfo: extraInfo)
-      
-      let url = URL(fileURLWithPath: fileURL)
-      let filename = url.lastPathComponent
-      let saveFileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
-      let assetFile = try Data(contentsOf: URL(fileURLWithPath: fileURL))
-      try assetFile.saveFileLocally(url: saveFileURL)
-      
-      callback([true, bitmarkId])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
+  //  @objc(issueThenTransferFile::::)
+  //  func issueThenTransferFile(_ params: [String: Any], localFolderPath: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+  //    do {
+  //      guard let account = self.account else {
+  //        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+  //        return
+  //      }
+  //      let fileURL = input["url"] as! String
+  //      let propertyName = input["property_name"] as! String
+  //      let metadata = input["metadata"] as! [String: String]
+  //      let receiver = input["receiver"] as! String
+  //      let extraInfo = input["extra_info"] as? [String: Any]
+  //
+  //      let bitmarkId = try account.createAndSubmitGiveawayIssue(assetFile: URL(fileURLWithPath: fileURL),
+  //                                                            accessibility: .privateAsset,
+  //                                                            propertyName: propertyName,
+  //                                                            propertyMetadata: metadata,
+  //                                                            toAccount: receiver,
+  //                                                            extraInfo: extraInfo)
+  //
+  //      let url = URL(fileURLWithPath: fileURL)
+  //      let filename = url.lastPathComponent
+  //      let saveFileURL = URL(fileURLWithPath: localFolderPath, isDirectory: true).appendingPathComponent(filename)
+  //      let assetFile = try Data(contentsOf: URL(fileURLWithPath: fileURL))
+  //      try assetFile.saveFileLocally(url: saveFileURL)
+  //
+  //      callback([true, bitmarkId])
+  //    }
+  //    catch let e {
+  //      if let msg = e as? NSString {
+  //        callback([false, msg])
+  //      } else {
+  //        callback([false])
+  //      }
+  //    }
+  //  }
   
   @objc(sign:::)
-  func sign(_ sessionId: String, _ message: String, _ callback: @escaping RCTResponseSenderBlock) {
+  func sign(_ messages: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let signature = try account.sign(withMessage: message, forAction: .Indentity)
-      callback([true, signature.hexEncodedString])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(rickySign:::)
-  func rickySign(_ sessionId: String, _ messages: [String], _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let signatures = try messages.map({ (message) -> String in
-        return (try account.riskySign(withMessage: message)).hexEncodedString
-      })
-      callback([true, signatures])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(transferOneSignature::::)
-  func transferOneSignature(_ sessionId: String, _ bitmarkId: String, address: String, _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      try account.transferBitmark(bitmarkId: bitmarkId, toAccount: address)
-      
-      callback([true])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(createAndSubmitTransferOffer::::)
-  func createAndSubmitTransferOffer(_ sessionId: String, _ bitmarkId: String, _ address: String, _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let offerId = try account.createAndSubmitTransferOffer(bitmarkId: bitmarkId, recipient: address)
-      
-      callback([true, offerId])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(signForTransferOfferAndSubmit::::::)
-  func signForTransferOfferAndSubmit(_ sessionId: String, _ txId: String, _ signature: String, _ offerId: String, _ action: String, _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let offer = TransferOffer(txId: txId, receiver: account.accountNumber, signature: signature.hexDecodedData)
-      let success = try account.signForTransferOfferAndSubmit(offerId: offerId, offer: offer, action: action)
-      callback([success])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(requestSession:::)
-  func requestSession(_ network: String, _ reason: String, _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      guard let sessionId = try AccountSession.shared.requestSession(reason: reason, network: network) else {
-        callback([false])
+      guard let account = self.account else {
+        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
       
-      callback([true, sessionId])
+      let signatures = try messages.map({ (message) -> String in
+        let messageData = message.data(using: .utf8)!
+        return (try account.sign(withMessage: messageData)).hexEncodedString
+      })
+      
+      resolve(signatures)
     }
     catch let e {
-      if let status = e as? KeychainAccess.Status,
-        status == KeychainAccess.Status.userCanceled {
-        callback([true])
-      }
-      else {
-        if let msg = e as? NSString {
-          callback([false, msg])
-        } else {
-          callback([false])
-        }
-      }
+      reject(nil, nil, e);
     }
   }
   
-  @objc(disposeSession::)
-  func disposeSession(_ sessionId: String, _ callback: @escaping RCTResponseSenderBlock) {
-    AccountSession.shared.disposeSession(sessionId: sessionId)
-    callback([true])
-  }
-  
-  @objc(validateMetadata::)
-  func validateMetadata(_ metadata: [String: String], _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(validateMetadata:::)
+  func validateMetadata(_ metadata: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     let tmp = metadata.reduce([]) { (result, keyvalue) -> [String] in
       var newResult = result
       newResult.append(keyvalue.key)
@@ -419,118 +319,295 @@ class BitmarkSDK: NSObject {
     let metadataString = tmp.joined(separator: "\u{0000}")
     
     if metadataString.utf8.count > 2048 {
-      callback([false])
+      reject(nil, "metadata reached limit", nil)
     }
     else {
-      callback([true])
+      resolve(nil);
+    }
+  }
+  
+  @objc(transferOneSignature:::)
+  func transferOneSignature(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      guard let account = self.account else {
+        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+        return
+      }
+      
+      guard let address = params["address"] as? String,
+        let bitmarkId = params["bitmark_id"] as? String else {
+          reject(nil, "Invalid parameter", nil)
+          return
+      }
+      
+      var transferParams = try Bitmark.newTransferParams(to: address)
+      try transferParams.from(bitmarkID: bitmarkId)
+      try transferParams.sign(account)
+      let txId = try Bitmark.transfer(withTransferParams: transferParams)
+      
+      resolve(txId)
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
+  
+  @objc(createAndSubmitTransferOffer:::)
+  func createAndSubmitTransferOffer(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      guard let account = self.account else {
+        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+        return
+      }
+      
+      guard let address = params["address"] as? String,
+        let bitmarkId = params["bitmark_id"] as? String else {
+          reject(nil, "Invalid parameter", nil)
+          return
+      }
+      
+      var offerParam = try Bitmark.newOfferParams(to: address, info: nil)
+      try offerParam.from(bitmarkID: bitmarkId)
+      try offerParam.sign(account)
+      
+      try Bitmark.offer(withOfferParams: offerParam)
+      
+      resolve(nil);
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
+  
+  @objc(signForTransferOfferAndSubmit:::)
+  func signForTransferOfferAndSubmit(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      guard let account = self.account else {
+        reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
+        return
+      }
+      
+      guard let action = params["action"] as? String,
+        let bitmarkId = params["bitmark_id"] as? String else {
+          reject(nil, "Invalid parameter", nil)
+          return
+      }
+      
+      let respondAction: CountersignedTransferAction
+      if action == "accept" {
+        respondAction = .accept
+      } else {
+        respondAction = .reject
+      }
+      
+      let bitmark = try Bitmark.get(bitmarkID: bitmarkId)
+      var responseOfferParam = try Bitmark.newTransferResponseParams(withBitmark: bitmark, action: respondAction)
+      try responseOfferParam.sign(account)
+      
+      try Bitmark.response(withResponseParams: responseOfferParam)
+      
+      resolve(nil);
+    }
+    catch let e {
+      reject(nil, nil, e);
     }
   }
   
   @objc(validateAccountNumber:::)
-  func validateAccountNumber(_ address: String, _ network: String, _ callback: @escaping RCTResponseSenderBlock) {
+  func validateAccountNumber(_ address: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    resolve(AccountNumber(address).isValid())
+  }
+  
+  @objc(getBitmark:::)
+  func getBitmark(_ bitmarkID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let account = try AccountNumber(address: address)
-      let n = BitmarkSDK.networkWithName(name: network)
-      if account.network == n {
-        callback([true])
-      } else {
-        callback([false])
-      }
+      let bitmark = try Bitmark.get(bitmarkID: bitmarkID)
+      resolve(try bitmark.asDictionary())
     }
     catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
+      reject(nil, nil, e)
     }
   }
   
-  @objc(createSessionData:::)
-  func createSessionData(_ sessionId: String, _ encryptionKey: String, _ callback: @escaping RCTResponseSenderBlock) {
+  @objc(getBitmarks:::)
+  func getBitmarks(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let sessionData = try account.createSessionData(encryptionKey: encryptionKey)
-      callback([true, sessionData])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(createSessionDataForRecipient::::)
-  func createSessionDataForRecipient(_ sessionId: String, _ bitmarkId: String, _ recipient: String, _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let sessionData = try account.createSessionData(forBitmark: bitmarkId, recipient: recipient)
-      callback([true, sessionData])
-    }
-    catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
-    }
-  }
-  
-  @objc(createSessionDataFromLocalForRecipient:::::)
-  func createSessionDataFromLocalForRecipient(_ sessionId: String, _ bitmarkId: String, _ sessionData: [String: String], _ recipient: String, _ callback: @escaping RCTResponseSenderBlock) {
-    do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      guard let encryptedDataKeyHex = sessionData["enc_data_key"],
-        let dataKeyAlgorithm = sessionData["data_key_alg"]  else {
-          throw(BMError("Wrong session data"))
+      var queryParams = Bitmark.newBitmarkQueryParams()
+      for (key, value) in params {
+        switch key {
+        case "limit":
+          guard let v = value as? Int else {
+            reject(nil, "Invalid param for limit, should be an int", nil)
+            continue
+          }
+          queryParams = try queryParams.limit(size: v)
+        case "issuer":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for issuer, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.issued(by: v)
+        case "owner":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for owner, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.owned(by: v)
+        case "offer_from":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for offer_from, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.offer(from: v)
+        case "offer_to":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for offer_to, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.offer(to: v)
+        case "asset_id":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for asset_id, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.referenced(toAssetID: v)
+        case "load_asset":
+          guard let v = value as? Bool else {
+            reject(nil, "Invalid param for load_asset, should be a boolean", nil)
+            continue
+          }
+          queryParams = queryParams.loadAsset(v)
+        default:
+          reject(nil, "Invalid key " + key, nil)
+          continue
+        }
       }
       
-      let s = SessionData(encryptedDataKey: encryptedDataKeyHex.hexDecodedData, dataKeyAlgorithm: dataKeyAlgorithm)
-      let sessionData = try account.createSessionData(forBitmark: bitmarkId, sessionData: s, recipient: recipient)
-      callback([true, sessionData])
+      let (bitmarks, asset) = try Bitmark.list(params: queryParams)
+      var result: [Any] = [try bitmarks.map { try $0.asDictionary() }]
+      if let a = asset {
+        result.append(try a.asDictionary())
+      }
+      
+      resolve(result)
+      
     }
     catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
-      }
+      reject(nil, nil, e);
     }
   }
   
-  @objc(issueRecord:::)
-  func issueRecord(_ sessionId: String, _ input: [String: Any], _ callback: @escaping RCTResponseSenderBlock) -> Void {
+  @objc(getTransaction:::)
+  func getTransaction(_ transactionID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let account = try BitmarkSDK.getAccount(sessionId: sessionId)
-      let fingerprint = input["fingerprint"] as! String
-      let propertyName = input["property_name"] as! String
-      let metadata = input["metadata"] as! [String: String]
-      let quantity = input["quantity"] as! Int
-      
-      let result = try account.issueBitmarks(fingerprint: fingerprint, propertyName: propertyName, propertyMetadata: metadata, quantity: quantity)
-      let issues = result.0
-      let issueIds = issues.map {$0.txId! }
-      callback([true, issueIds])
+      let transaction = try Transaction.get(transactionID: transactionID)
+      resolve(try transaction.asDictionary())
     }
     catch let e {
-      if let msg = e as? NSString {
-        callback([false, msg])
-      } else {
-        callback([false])
+      reject(nil, nil, e)
+    }
+  }
+  
+  @objc(getTransactions:::)
+  func getTransactions(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      var queryParams = Transaction.newTransactionQueryParams()
+      for (key, value) in params {
+        switch key {
+        case "limit":
+          guard let v = value as? Int else {
+            reject(nil, "Invalid param for limit, should be an int", nil)
+            continue
+          }
+          queryParams = try queryParams.limit(size: v)
+        case "owner":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for owner, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.owned(by: v)
+        case "asset_id":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for asset_id, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.referenced(toAssetID: v)
+        case "bitmark_id":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for bitmark_id, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.referenced(toBitmarkID: v)
+        case "load_asset":
+          guard let v = value as? Bool else {
+            reject(nil, "Invalid param for load_asset, should be a boolean", nil)
+            continue
+          }
+          queryParams = queryParams.loadAsset(v)
+        default:
+          reject(nil, "Invalid key " + key, nil)
+          continue
+        }
       }
+      
+      let (transactions, asset) = try Transaction.list(params: queryParams)
+      var result: [Any] = [try transactions.map { try $0.asDictionary() }]
+      if let a = asset {
+        result.append(try a.asDictionary())
+      }
+      
+      resolve(result)
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
+  
+  @objc(getAsset:::)
+  func getAsset(_ assetID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      let asset = try Asset.get(assetID: assetID)
+      resolve(try asset.asDictionary())
+    }
+    catch let e {
+      reject(nil, nil, e)
+    }
+  }
+  
+  @objc(getAssets:::)
+  func getAssets(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      var queryParams = Asset.newQueryParams()
+      for (key, value) in params {
+        switch key {
+        case "limit":
+          guard let v = value as? Int else {
+            reject(nil, "Invalid param for limit, should be an int", nil)
+            continue
+          }
+          queryParams = try queryParams.limit(size: v)
+        case "registrant":
+          guard let v = value as? String else {
+            reject(nil, "Invalid param for registrant, should be a string", nil)
+            continue
+          }
+          queryParams = queryParams.registeredBy(registrant: v)
+        default:
+          reject(nil, "Invalid key " + key, nil)
+          continue
+        }
+      }
+      
+      let assets = try Asset.list(params: queryParams)
+      resolve(try assets.map { try $0.asDictionary() } )
+    }
+    catch let e {
+      reject(nil, nil, e);
     }
   }
 }
 
-extension Data {
-  func saveFileLocally(url: URL) throws {
-    try self.write(to: url, options: [.completeFileProtection, .atomic])
-  }
-}
-
-extension BitmarkSDK {
+extension BitmarkSDKWrapper {
   
   static func networkWithName(name: String) -> Network {
     switch(name) {
@@ -539,18 +616,8 @@ extension BitmarkSDK {
     case "testnet":
       return Network.testnet
     default:
-      var network = Network.testnet
-      network.setEndpoint(api: URL(string: "https://api.devel.bitmark.com")!, asset: URL(string: "https://assets.devel.bitmark.com")!)
-      return network
+      return Network.livenet
     }
-  }
-  
-  static func getAccount(sessionId: String) throws -> Account {
-    guard let account = AccountSession.shared.getAccount(sessionId: sessionId) else {
-      throw accountNotFound
-    }
-    
-    return account
   }
   
   static func versionFromString(_ version: String) -> SeedVersion {
@@ -568,5 +635,15 @@ extension BitmarkSDK {
     case .v2:
       return "v2"
     }
+  }
+}
+
+extension Encodable {
+  func asDictionary() throws -> [String: Any] {
+    let data = try JSONEncoder().encode(self)
+    guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
+      throw NSError()
+    }
+    return dictionary
   }
 }

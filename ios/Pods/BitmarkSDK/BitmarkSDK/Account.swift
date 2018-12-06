@@ -9,26 +9,26 @@
 import Foundation
 import TweetNacl
 
-public enum SignMethod: String {
-    case Indentity = "identity"
-}
-
 public struct Account {
     
     public let seed: Seedable
     let authKey: AuthKey
-    let encryptionKey: EncryptionKey
     
     // MARK:- Basic init
     
-    public init(keyType: KeyType = KeyType.ed25519, version: SeedVersion, network: Network = Network.livenet) throws {
-        let seed = try Seed.fromBase58(network: network, version: version)
-        try self.init(fromSeed: seed, version: version)
+    public init(version: SeedVersion = .v2) throws {
+        let seed = try Seed.fromBase58(network: globalConfig.network, version: version)
+        try self.init(seed: seed)
     }
     
-    public init(core: Data, version: SeedVersion, network: Network = Network.livenet) throws {
-        let seed = try Seed.fromCore(core, version: version, network: network)
-        try self.init(fromSeed: seed, version: version)
+    public init(keyType: KeyType = KeyType.ed25519, version: SeedVersion = .v2, network: Network) throws {
+        let seed = try Seed.fromBase58(network: network, version: version)
+        try self.init(seed: seed)
+    }
+    
+    public init(seed: Seedable) throws {
+        self.seed = seed
+        authKey = try AuthKey(fromKeyPair: try seed.getAuthKeyData(), network: seed.network)
     }
     
     public var accountNumber: AccountNumber {
@@ -38,15 +38,9 @@ public struct Account {
     
     // MARK:- Seed
     
-    public init(fromSeed seed: Seedable, version: SeedVersion) throws {
-        self.seed = seed
-        authKey = try AuthKey(fromKeyPair: try seed.getAuthKeyData(), network: seed.network)
-        encryptionKey = try Account.encryptionKeypair(fromSeed: try seed.getEncKeyData())
-    }
-    
-    public init(fromSeed seedString: String, version: SeedVersion) throws {
+    public init(fromSeed seedString: String, version: SeedVersion = .v2) throws {
         let seed = try Seed.fromBase58(seedString, version: version)
-        try self.init(core: seed.core, version: version, network: seed.network)
+        try self.init(seed: seed)
     }
     
     public func toSeed() throws -> String {
@@ -55,38 +49,43 @@ public struct Account {
     
     // MARK:- Recover phrase
     
-    public init(recoverPhrase phrases: [String]) throws {
-        let seed = try Seed.fromRecoveryPhrase(phrases)
-        try self.init(fromSeed: seed, version: seed.version)
+    public init(recoverPhrase phrases: [String], language: RecoveryLanguage) throws {
+        let seed = try Seed.fromRecoveryPhrase(phrases, language: language)
+        if seed.network != globalConfig.network {
+            throw(SeedError.wrongNetwork)
+        }
+        
+        try self.init(seed: seed)
     }
     
-    public func getRecoverPhrase() -> [String] {
-        return seed.recoveryPhrase
+    public func getRecoverPhrase(language: RecoveryLanguage) throws -> [String] {
+        return try getRecoverPhrase(withNetwork: authKey.network, language: language)
     }
-    
-    // MARK:- Helpers
-    private static func derive(seed: Data, indexData: Data) throws -> Data {
-        let nonce = Data(count: 24)
-        return try NaclSecretBox.secretBox(message: indexData, nonce: nonce, key: seed)
+
+    public func getRecoverPhrase(withNetwork network: Network, language: RecoveryLanguage) throws -> [String] {
+        return try seed.getRecoveryPhrase(language: language)
     }
     
     // MARK:- Sign
-    public func sign(withMessage message: String, forAction action: SignMethod) throws -> Data {
-        let actualMessage = action.rawValue + "|" + message
-        return try authKey.sign(message: actualMessage)
-    }
-    
-    // TODO: Discuss and remove this function
-    public func riskySign(withMessage message: String) throws -> Data {
+    public func sign(withMessage message: Data) throws -> Data {
         return try authKey.sign(message:message)
     }
 }
 
-internal extension Account {
-    
-    internal static func encryptionKeypair(fromSeed seed: Data) throws -> EncryptionKey {
-        let publicKey = try TweetNacl.NaclScalarMult.base(n: seed)
-        return EncryptionKey(privateKey: seed, publicKey: publicKey)
+extension Account: KeypairSignable {
+    public func sign(message: Data) throws -> Data {
+        return try self.authKey.sign(message: message)
     }
     
+    public var publicKey: Data {
+        get {
+            return self.authKey.publicKey
+        }
+    }
+    
+    public var address: AccountNumber {
+        get {
+            return self.authKey.address
+        }
+    }
 }

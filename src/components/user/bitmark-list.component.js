@@ -31,18 +31,7 @@ class PrivateBitmarkListComponent extends Component {
     Actions.bitmarkDetail({ bitmark, bitmarkType });
   }
 
-  // backToUserAccount() {
-  //   AppProcessor.doSelectAccountAccess(DataProcessor.getUserInformation().bitmarkAccountNumber).then(result => {
-  //     if (result) {
-  //       Actions.reset('user');
-  //     }
-  //   }).catch(error => {
-  //     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
-  //   });
-  // }
-
-
-  downloadBitmark(asset) {
+  shareBitmark(asset) {
     if (asset.filePath) {
       Share.share({ title: i18n.t('BitmarkListComponent_shareTitle'), url: asset.filePath }).then(() => {
       }).catch(error => {
@@ -52,16 +41,8 @@ class PrivateBitmarkListComponent extends Component {
   }
 
   render() {
-    // let accountNumberDisplay = DataProcessor.getAccountAccessSelected() || DataProcessor.getUserInformation().bitmarkAccountNumber;
-    // let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
-
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
-        {/* {!isCurrentUser && <TouchableOpacity style={styles.accountNumberDisplayArea} onPress={this.backToUserAccount.bind(this)}>
-          <Text style={styles.accountNumberDisplayText}>
-            {i18n.t('BitmarkListComponent_accountNumberDisplayText', { accountNumber: accountNumberDisplay.substring(0, 4) + '...' + accountNumberDisplay.substring(accountNumberDisplay.length - 4, accountNumberDisplay.length) })}
-          </Text>
-        </TouchableOpacity>} */}
         <SafeAreaView style={styles.bodySafeView}>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
@@ -109,7 +90,7 @@ class PrivateBitmarkListComponent extends Component {
                         return (
                           <TouchableOpacity style={styles.bitmarkItem} onPress={() => {
                             if (isFileRecord(item.asset) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) {
-                              this.downloadBitmark.bind(this)(item.asset)
+                              this.shareBitmark.bind(this)(item.asset)
                             } else {
                               this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
                             }
@@ -144,23 +125,6 @@ class PrivateBitmarkListComponent extends Component {
 }
 
 const styles = StyleSheet.create({
-  // accountNumberDisplayArea: {
-  //   position: 'absolute',
-  //   top: 0,
-  //   width: '100%',
-  //   height: convertWidth(32) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-  //   paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
-  //   backgroundColor: '#E6FF00',
-  //   zIndex: 10,
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
-  // accountNumberDisplayText: {
-  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
-  //   fontWeight: '800',
-  //   fontSize: 14,
-  // },
   bodySafeView: {
     flex: 1,
     backgroundColor: 'white',

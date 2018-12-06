@@ -94,7 +94,7 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
         text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
       }]);
     } else {
-      AppProcessor.doIssueFile(filePath, assetName, metadataList, quality, false, {
+      AppProcessor.doIssueFile(filePath, assetName, metadataList, quality, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       }).then(async (data) => {
         if (data) {

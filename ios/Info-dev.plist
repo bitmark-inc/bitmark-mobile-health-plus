@@ -92,6 +92,8 @@
 	<array>
 		<string>AndaleMono.ttf</string>
 	</array>
+	<key>BitmarkSDKAPIKey</key>
+	<string>bmk-lljpzkhqdkzmblhg</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

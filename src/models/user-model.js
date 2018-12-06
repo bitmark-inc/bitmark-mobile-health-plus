@@ -34,7 +34,6 @@ const doUpdateUserInfo = async (userInfo) => {
 const resetUserLocalData = async () => {
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_COMMON, {});
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, {});
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_ACCOUNT_ACCESSES, {});
 };
 
 const doRemoveUserInfo = async () => {

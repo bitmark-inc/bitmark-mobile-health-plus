@@ -8,39 +8,38 @@
 
 #import <React/RCTBridgeModule.h>
 
-@interface RCT_EXTERN_MODULE(BitmarkSDK, NSObject)
+@interface RCT_EXTERN_MODULE(BitmarkSDKWrapper, NSObject)
 
-RCT_EXTERN_METHOD(newAccount:(NSString)network:(NSString *)version:(BOOL)authentication:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(removeAccount:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(sdkInit:(NSString)network:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(createAccount:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(createAccountFromPhrase:(NSArray<NSString *> *)pharse:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(tryPhrase:(NSArray<NSString *> *)pharse:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(accountInfo:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(authenticate:(NSString)message:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(removeAccount:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(requestSession:(NSString)network:(NSString)reason:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(disposeSession:(NSString)sessionId:(RCTResponseSenderBlock)callback)
-
-RCT_EXTERN_METHOD(tryPhraseWords:(NSArray<NSString *> *)pharse:(NSString *)network:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(accountInfo:(NSString)sessionId:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(registerAccessPublicKey:(NSString *)sessionId:(RCTResponseSenderBlock)callback)
-
-// TODO
-RCT_EXTERN_METHOD(newAccountFromPhraseWords:(NSArray<NSString *> *)pharse:(NSString *)network:(BOOL)authentication:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(issueFile:(NSString *)sessionId:(NSDictionary *)input:(NSString *)localFolderPath:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(getAssetInfo:(NSString *)filePath:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(issueThenTransferFile:(NSString *)sessionId:(NSDictionary *)input:(NSString *)localFolderPath:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(downloadBitmark:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)localFolderPath:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(downloadBitmarkWithGrantId:(NSString *)sessionId:(NSString *)grantId:(NSString *)localFolderPath:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(sign:(NSString *)sessionId:(NSString *)message:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(rickySign:(NSString *)sessionId:(NSArray<NSString *>)messages:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(transferOneSignature:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)address:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(createAndSubmitTransferOffer:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)address:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(signForTransferOfferAndSubmit:(NSString *)sessionId:(NSString *)txId:(NSString *)signature:(NSString *)offerId:(NSString *)action:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(validateMetadata:(NSDictionary *)metadata:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(validateAccountNumber:(NSString *)address:(NSString *)network:(RCTResponseSenderBlock)callback)
-
-// Decentrailized issuance
-RCT_EXTERN_METHOD(createSessionData:(NSString *)sessionId:(NSString *)encryptionKey:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(issueRecord:(NSString *)sessionId:(NSDictionary *)input:(RCTResponseSenderBlock)callback)
-
+RCT_EXTERN_METHOD(issueFile:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(storeFileSecurely:(NSString *)filePath:(NSString *)destination:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getAssetInfo:(NSString *)filePath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+//RCT_EXTERN_METHOD(issueThenTransferFile:(NSDictionary *)input:(NSString *)localFolderPath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+//RCT_EXTERN_METHOD(downloadBitmark:(NSString *)bitmarkId:(NSString *)localFolderPath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+//RCT_EXTERN_METHOD(downloadBitmarkWithGrantId:(NSString *)grantId:(NSString *)localFolderPath:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(sign:(NSArray<NSString *>)messages:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(transferOneSignature:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(createAndSubmitTransferOffer:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(signForTransferOfferAndSubmit:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(validateMetadata:(NSDictionary *)metadata:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(validateAccountNumber:(NSString *)address:(NSString *)network:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 // grant access bitmark
-RCT_EXTERN_METHOD(createSessionDataForRecipient:(NSString *)sessionId:(NSString *)bitmarkId:(NSString *)recipient:(RCTResponseSenderBlock)callback)
-RCT_EXTERN_METHOD(createSessionDataFromLocalForRecipient:(NSString *)sessionId:(NSString *)bitmarkId:(NSDictionary *)sessionData:(NSString *)recipient:(RCTResponseSenderBlock)callback)
+//RCT_EXTERN_METHOD(createSessionDataForRecipient:(NSString *)bitmarkId:(NSString *)recipient:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+//RCT_EXTERN_METHOD(createSessionDataFromLocalForRecipient:(NSString *)bitmarkId:(NSDictionary *)sessionData:(NSString *)recipient:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+
+// Query APIs
+RCT_EXTERN_METHOD(getBitmark:(NSString *)bitmarkID:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getBitmarks:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getTransaction:(NSString *)transactionID:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getTransactions:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getAsset:(NSString *)assetID:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getAssets:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 
 @end
