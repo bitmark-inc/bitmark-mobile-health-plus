@@ -8,7 +8,7 @@ import {
 import { convertWidth } from 'src/utils';
 
 
-export class LoadingComponent extends Component {
+export class BitmarkHeaderComponent extends Component {
   static propTypes = {
     headerLeft: PropTypes.any,
     hideHeaderLeft: PropTypes.bool,

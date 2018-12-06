@@ -24,7 +24,7 @@ import { config, constants } from 'src/configs';
 
 import { SearchInputComponent } from './search-input.component';
 import { SearchResultsComponent } from './search-results.component';
-import { AppProcessor, DataProcessor, EventEmitterService, CommonModel } from 'src/processors';
+import { AppProcessor, EventEmitterService, CommonModel, CacheData } from 'src/processors';
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
 import { search } from 'src/views/controllers';
 
@@ -69,7 +69,7 @@ class PrivateUserComponent extends Component {
         let filePath = imageInfo.uri.replace('file://', '');
         let { asset } = await AppProcessor.doCheckFileToIssue(filePath);
         if (asset && asset.name && !asset.canIssue) {
-          let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
+          let message = asset.registrant === CacheData.userInformation.bitmarkAccountNumber
             ? i18n.t('CaptureAssetComponent_alertMessage11', { type: 'image' })
             : i18n.t('CaptureAssetComponent_alertMessage12', { type: 'image' });
           return message;
@@ -276,7 +276,7 @@ class PrivateUserComponent extends Component {
 
     // Move file from "tmp" folder to "cache" folder
     let fileName = response.fileName ? response.fileName : response.uri.substring(response.uri.lastIndexOf('/') + 1);
-    let destPath = FileUtil.CacheDirectory + '/' + DataProcessor.getUserInformation().bitmarkAccountNumber + '/' + fileName;
+    let destPath = FileUtil.CacheDirectory + '/' + CacheData.userInformation.bitmarkAccountNumber + '/' + fileName;
     await FileUtil.moveFileSafe(filePath, destPath);
     filePath = destPath;
 
@@ -299,8 +299,8 @@ class PrivateUserComponent extends Component {
   }
 
   render() {
-    let accountNumberDisplay = DataProcessor.getUserInformation().bitmarkAccountNumber;
-    let isCurrentUser = accountNumberDisplay === DataProcessor.getUserInformation().bitmarkAccountNumber;
+    let accountNumberDisplay = CacheData.userInformation.bitmarkAccountNumber;
+    let isCurrentUser = accountNumberDisplay === CacheData.userInformation.bitmarkAccountNumber;
 
     return (
       <View style={{ flex: 1, }}>
@@ -341,7 +341,7 @@ class PrivateUserComponent extends Component {
               <View style={styles.dataArea}>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => {
 
-                  if (isCurrentUser && !DataProcessor.getUserInformation().activeHealthDataAt) {
+                  if (isCurrentUser && !CacheData.userInformation.activeHealthDataAt) {
                     Actions.getStart();
                   } else {
                     Actions.bitmarkList({ bitmarkType: 'bitmark_health_data' });

@@ -35,44 +35,39 @@ import {
 
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views';
 import { config } from 'src/configs';
+import { CacheData } from './caches';
 
-let userInformation = {};
-let jwt;
-let notificationUUID;
 
 let mapModalDisplayData = {};
-let keyIndexModalDisplaying = 0;
 const mapModalDisplayKeyIndex = {
   what_new: 2,
   email_record: 3,
   weekly_health_data: 4,
 };
-let codePushUpdated = null;
-let mountedRouter = null;
 
 let isDisplayingModal = (keyIndex) => {
-  return keyIndexModalDisplaying === keyIndex && !!mapModalDisplayData[keyIndex];
+  return CacheData.keyIndexModalDisplaying === keyIndex && !!mapModalDisplayData[keyIndex];
 }
 
 let checkDisplayModal = () => {
-  if (keyIndexModalDisplaying > 0 && !mapModalDisplayData[keyIndexModalDisplaying]) {
-    keyIndexModalDisplaying = 0;
+  if (CacheData.keyIndexModalDisplaying > 0 && !mapModalDisplayData[CacheData.keyIndexModalDisplaying]) {
+    CacheData.keyIndexModalDisplaying = 0;
   }
   let keyIndexArray = Object.keys(mapModalDisplayData).sort();
   for (let index = 0; index < keyIndexArray.length; index++) {
     let keyIndex = parseInt(keyIndexArray[index]);
-    if (mapModalDisplayData[keyIndex] && (keyIndexModalDisplaying <= 0 || keyIndexModalDisplaying > keyIndex)) {
-      if (keyIndex === mapModalDisplayKeyIndex.what_new && mountedRouter) {
+    if (mapModalDisplayData[keyIndex] && (CacheData.keyIndexModalDisplaying <= 0 || CacheData.keyIndexModalDisplaying > keyIndex)) {
+      if (keyIndex === mapModalDisplayKeyIndex.what_new && CacheData.mountedRouter) {
         Actions.whatNew();
-        keyIndexModalDisplaying = keyIndex;
+        CacheData.keyIndexModalDisplaying = keyIndex;
         break;
-      } else if (keyIndex === mapModalDisplayKeyIndex.email_record && mountedRouter) {
+      } else if (keyIndex === mapModalDisplayKeyIndex.email_record && CacheData.mountedRouter) {
         Actions.emailRecords(mapModalDisplayData[keyIndex]);
-        keyIndexModalDisplaying = keyIndex;
+        CacheData.keyIndexModalDisplaying = keyIndex;
         break;
-      } else if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && mountedRouter) {
+      } else if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && CacheData.mountedRouter) {
         Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
-        keyIndexModalDisplaying = keyIndex;
+        CacheData.keyIndexModalDisplaying = keyIndex;
         break;
       }
     }
@@ -86,7 +81,7 @@ let updateModal = (keyIndex, data) => {
 
 // ================================================================================================================================================
 const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber) => {
-  bitmarkAccountNumber = bitmarkAccountNumber || userInformation.bitmarkAccountNumber;
+  bitmarkAccountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
   let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
   userDataBitmarks[bitmarkAccountNumber] = {
     healthDataBitmarks: (healthDataBitmarks || []).filter(b => b.owner === bitmarkAccountNumber),
@@ -96,7 +91,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
 
 
-  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber) {
+  if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].healthDataBitmarks;
 
@@ -104,13 +99,13 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
 
-  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber &&
-    !userInformation.activeHealthDataAt && healthDataBitmarks && healthDataBitmarks.length > 0) {
+  if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber &&
+    !CacheData.userInformation.activeHealthDataAt && healthDataBitmarks && healthDataBitmarks.length > 0) {
     await runPromiseWithoutError(doRequireHealthKitPermission());
   }
 
-  if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && userInformation.activeHealthDataAt) {
-    let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, userInformation.activeHealthDataAt, userInformation.restActiveHealthDataAt);
+  if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber && CacheData.userInformation.activeHealthDataAt) {
+    let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
     if (list && list.length > 0) {
       updateModal(mapModalDisplayKeyIndex.weekly_health_data, { list });
     }
@@ -119,7 +114,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
 
 let queueGetUserDataBitmarks = {};
 const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
-  bitmarkAccountNumber = bitmarkAccountNumber || userInformation.bitmarkAccountNumber;
+  bitmarkAccountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
   return new Promise((resolve) => {
     queueGetUserDataBitmarks[bitmarkAccountNumber] = queueGetUserDataBitmarks[bitmarkAccountNumber] || [];
     queueGetUserDataBitmarks[bitmarkAccountNumber].push(resolve);
@@ -134,14 +129,14 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         if (data && data.assets && data.bitmarks && data.assets.length > 0 && data.bitmarks.length > 0) {
           data.assets.forEach(asset => {
             let exist = totalAssets.findIndex(as => as.id == asset.id) >= 0;
-            if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && !exist) {
+            if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber && !exist) {
               totalAssets.push(asset);
             }
           });
           data.bitmarks.forEach(bitmark => {
             lastOffset = lastOffset ? Math.max(lastOffset, bitmark.offset) : bitmark.offset;
             let exist = totalBitmarks.findIndex(b => b.id == bitmark.id) >= 0;
-            if (bitmarkAccountNumber === userInformation.bitmarkAccountNumber && !exist) {
+            if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber && !exist) {
               totalBitmarks.push(bitmark);
             }
           });
@@ -154,7 +149,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     };
 
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
-      let userBitmarks = (await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber)) || {};
+      let userBitmarks = (await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber)) || {};
       let healthDataBitmarks = [], healthAssetBitmarks = [];
       for (let bitmark of bitmarks) {
         let asset = assets.find(as => as.id === bitmark.asset_id);
@@ -237,7 +232,7 @@ const runGetEmailRecordsInBackground = () => {
     if (queueGetEmailRecords.length > 1) {
       return;
     }
-    AccountService.doGetAllEmailRecords(userInformation.bitmarkAccountNumber, jwt).then(emailIssueRequests => {
+    AccountService.doGetAllEmailRecords(CacheData.userInformation.bitmarkAccountNumber, CacheData.jwt).then(emailIssueRequests => {
       queueGetEmailRecords.forEach(queueResolve => queueResolve(emailIssueRequests));
       queueGetEmailRecords = [];
       doCheckNewEmailRecords(emailIssueRequests);
@@ -254,8 +249,8 @@ const runOnBackground = async (justOpenApp) => {
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
   }
   let userInfo = await UserModel.doTryGetCurrentUser();
-  if (userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(userInformation)) {
-    userInformation = userInfo;
+  if (CacheData.userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(CacheData.userInformation)) {
+    CacheData.userInformation = userInfo;
     EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);
   }
 
@@ -265,7 +260,7 @@ const runOnBackground = async (justOpenApp) => {
   appInfo.offScreenAt = moment().toDate().getTime();
   await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 
-  if (userInformation && userInformation.bitmarkAccountNumber) {
+  if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
     if (!isDisplayingModal(mapModalDisplayKeyIndex.email_record)) {
       await runGetEmailRecordsInBackground();
@@ -279,25 +274,25 @@ const runOnBackground = async (justOpenApp) => {
 
 const configNotification = () => {
   const onRegistered = async (registeredNotificationInfo) => {
-    notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
-    if (!userInformation || !userInformation.bitmarkAccountNumber) {
-      userInformation = await UserModel.doGetCurrentUser();
+    CacheData.notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
+    if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
+      CacheData.userInformation = await UserModel.doGetCurrentUser();
     }
-    if (!userInformation || !userInformation.bitmarkAccountNumber) {
+    if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
       let appInfo = (await doGetAppInformation()) || {};
-      if (appInfo.notificationUUID !== notificationUUID) {
-        AccountService.doRegisterNotificationInfo(null, notificationUUID, appInfo.intercomUserId).then(() => {
-          userInformation.notificationUUID = notificationUUID;
-          return UserModel.doUpdateUserInfo(userInformation);
+      if (appInfo.notificationUUID !== CacheData.notificationUUID) {
+        AccountService.doRegisterNotificationInfo(null, CacheData.notificationUUID, appInfo.intercomUserId).then(() => {
+          CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
+          return UserModel.doUpdateUserInfo(CacheData.userInformation);
         }).catch(error => {
           console.log('DataProcessor doRegisterNotificationInfo error:', error);
         });
       }
     } else {
-      if (notificationUUID && userInformation.notificationUUID !== notificationUUID) {
-        AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, userInformation.intercomUserId).then(() => {
-          userInformation.notificationUUID = notificationUUID;
-          return UserModel.doUpdateUserInfo(userInformation);
+      if (CacheData.notificationUUID && CacheData.userInformation.notificationUUID !== CacheData.notificationUUID) {
+        AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, CacheData.userInformation.intercomUserId).then(() => {
+          CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
+          return UserModel.doUpdateUserInfo(CacheData.userInformation);
         }).catch(error => {
           console.log('DataProcessor doRegisterNotificationInfo error:', error);
         });
@@ -350,10 +345,10 @@ const checkAppNeedResetLocalData = async (appInfo) => {
 // ================================================================================================================================================
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
   startInterval();
-  if (!justCreatedBitmarkAccount && userInformation && userInformation.bitmarkAccountNumber) {
+  if (!justCreatedBitmarkAccount && CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
     await AccountService.doCheckNotificationPermission();
   }
-  return userInformation;
+  return CacheData.userInformation;
 };
 
 const doCreateAccount = async () => {
@@ -362,11 +357,11 @@ const doCreateAccount = async () => {
 
   let signatureData = await CommonModel.doCreateSignatureData();
   await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
-  if (notificationUUID) {
+  if (CacheData.notificationUUID) {
     let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
     userInformation.intercomUserId = intercomUserId;
-    AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, notificationUUID, intercomUserId).then(() => {
-      userInformation.notificationUUID = notificationUUID;
+    AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, CacheData.notificationUUID, intercomUserId).then(() => {
+      userInformation.notificationUUID = CacheData.notificationUUID;
       return UserModel.doUpdateUserInfo(userInformation);
     }).catch(error => {
       console.log('DataProcessor doRegisterNotificationInfo error:', error);
@@ -380,38 +375,38 @@ const doCreateAccount = async () => {
 };
 
 const doLogin = async () => {
-  userInformation = await AccountService.doGetCurrentAccount();
+  CacheData.userInformation = await AccountService.doGetCurrentAccount();
   let signatureData = await CommonModel.doCreateSignatureData();
-  await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+  await AccountModel.doTryRegisterAccount(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await checkAppNeedResetLocalData();
-  return userInformation;
+  return CacheData.userInformation;
 };
 
 const doLogout = async () => {
-  let result = await AccountModel.doLogout(jwt);
+  let result = await AccountModel.doLogout(CacheData.jwt);
   if (!result) {
     return null;
   }
-  if (userInformation.notificationUUID) {
+  if (CacheData.userInformation.notificationUUID) {
     let signatureData = await CommonModel.doCreateSignatureData()
-    await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
+    await AccountService.doTryDeregisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.userInformation.notificationUUID, signatureData);
   }
   PushNotificationIOS.cancelAllLocalNotifications();
 
   await UserModel.doRemoveUserInfo();
-  await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
+  await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}`);
   await Intercom.logout();
   UserBitmarksStore.dispatch(UserBitmarksActions.reset());
   mapModalDisplayData = {};
-  keyIndexModalDisplaying = 0;
-  userInformation = {};
+  CacheData.keyIndexModalDisplaying = 0;
+  CacheData.userInformation = {};
   return true;
 };
 
 const doRequireHealthKitPermission = async () => {
   let result = await HealthKitService.initHealthKit();
-  userInformation.activeHealthDataAt = moment().toDate().toISOString();
-  await UserModel.doUpdateUserInfo(userInformation);
+  CacheData.userInformation.activeHealthDataAt = moment().toDate().toISOString();
+  await UserModel.doUpdateUserInfo(CacheData.userInformation);
 
   let dateNotification = HealthKitService.getNextSunday11AM();
   PushNotificationIOS.scheduleLocalNotification({
@@ -439,8 +434,8 @@ const doResetHealthDataTasks = async (list) => {
     }
   }
   console.log('restActiveHealthDataAt :', restActiveHealthDataAt);
-  userInformation.restActiveHealthDataAt = restActiveHealthDataAt;
-  await UserModel.doUpdateUserInfo(userInformation);
+  CacheData.userInformation.restActiveHealthDataAt = restActiveHealthDataAt;
+  await UserModel.doUpdateUserInfo(CacheData.userInformation);
 
   let dateNotification = HealthKitService.getNextSunday11AM();
   PushNotificationIOS.scheduleLocalNotification({
@@ -457,11 +452,11 @@ const doDeactiveApplication = async () => {
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
 
-  userInformation = await UserModel.doTryGetCurrentUser();
+  CacheData.userInformation = await UserModel.doTryGetCurrentUser();
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
-
+  console.log('run1');
   if (!appInfo.trackEvents || !appInfo.trackEvents['health_plus_download']) {
     appInfo.trackEvents = appInfo.trackEvents || {};
     appInfo.trackEvents['health_plus_download'] = true;
@@ -469,34 +464,35 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     await CommonModel.doTrackEvent({
       event_name: 'health_plus_download',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+      account_number: CacheData.userInformation ? CacheData.userInformation.bitmarkAccountNumber : null,
     });
   }
+  console.log('run2');
 
-  if (userInformation && userInformation.bitmarkAccountNumber) {
-    await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
-    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${userInformation.bitmarkAccountNumber}`);
+  if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
+    await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}`);
+    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${CacheData.userInformation.bitmarkAccountNumber}`);
 
     await LocalFileService.moveOldDataFilesToNewLocalStorageFolder();
     await LocalFileService.initializeLocalStorage();
     await IndexDBService.initializeIndexedDB();
-
+    console.log('run3');
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
       for (let key in mapFiles) {
         let keyList = key.split('_');
         let promiseRunAfterCopyFile;
         let overwrite = false;
-        if (keyList[0] === userInformation.bitmarkAccountNumber) {
+        if (keyList[0] === CacheData.userInformation.bitmarkAccountNumber) {
           let keyFilePath;
           if (keyList[1] === 'assets') {
             let assetId = base58.decode(keyList[2]).toString('hex');
-            keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_assets_${keyList[2]}_`, `${userInformation.bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
+            keyFilePath = key.replace(`${CacheData.userInformation.bitmarkAccountNumber}_assets_${keyList[2]}_`, `${CacheData.userInformation.bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
           } else if (keyList[1] === 'thumbnails') {
-            keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_thumbnails_`, `${userInformation.bitmarkAccountNumber}/thumbnails/`);
+            keyFilePath = key.replace(`${CacheData.userInformation.bitmarkAccountNumber}_thumbnails_`, `${CacheData.userInformation.bitmarkAccountNumber}/thumbnails/`);
           } else if (keyList[1] === 'indexedData') {
-            keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_indexedData_`, `${userInformation.bitmarkAccountNumber}/indexedData/`);
+            keyFilePath = key.replace(`${CacheData.userInformation.bitmarkAccountNumber}_indexedData_`, `${CacheData.userInformation.bitmarkAccountNumber}/indexedData/`);
           } else if (keyList[1] === 'indexTag') {
-            keyFilePath = key.replace(`${userInformation.bitmarkAccountNumber}_indexTag_`, `${userInformation.bitmarkAccountNumber}/indexTag/`);
+            keyFilePath = key.replace(`${CacheData.userInformation.bitmarkAccountNumber}_indexTag_`, `${CacheData.userInformation.bitmarkAccountNumber}/indexTag/`);
             let bitmarkId = keyList[2].replace('.txt', '');
             overwrite = true;
             promiseRunAfterCopyFile = async () => {
@@ -530,22 +526,23 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       }
     });
     iCloudSyncAdapter.syncCloud();
+    console.log('run4');
     configNotification();
-    if (!userInformation.intercomUserId) {
-      let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
-      userInformation.intercomUserId = intercomUserId;
-      await UserModel.doUpdateUserInfo(userInformation);
+    if (!CacheData.userInformation.intercomUserId) {
+      let intercomUserId = `HealthPlus_${sha3_256(CacheData.userInformation.bitmarkAccountNumber)}`;
+      CacheData.userInformation.intercomUserId = intercomUserId;
+      await UserModel.doUpdateUserInfo(CacheData.userInformation);
       Intercom.logout().then(() => {
         return Intercom.registerIdentifiedUser({ userId: intercomUserId })
       }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
       });
     }
-    configNotification();
+    console.log('run5');
 
     let signatureData = await CommonModel.doCreateSignatureData();
-    let result = await AccountModel.doRegisterJWT(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
-    jwt = result.jwt_token;
+    let result = await AccountModel.doRegisterJWT(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+    CacheData.jwt = result.jwt_token;
 
     if (justCreatedBitmarkAccount) {
       appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
@@ -555,20 +552,22 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         updateModal(mapModalDisplayKeyIndex.what_new, true);
       }
     }
-    await UserModel.doUpdateUserInfo(userInformation);
+    await UserModel.doUpdateUserInfo(CacheData.userInformation);
+    console.log('run6');
 
-    let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
+    let userBitmarks = await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber);
 
-    if (!userInformation.activeHealthDataAt && userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
+    if (!CacheData.userInformation.activeHealthDataAt && userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
       await runPromiseWithoutError(doRequireHealthKitPermission());
     }
+    console.log('run7');
 
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(userBitmarks || {}));
     await checkAppNeedResetLocalData(appInfo);
-
+    console.log('run8');
     AccountService.removeAllDeliveredNotifications();
     PushNotificationIOS.cancelAllLocalNotifications();
-    if (userInformation.activeHealthDataAt) {
+    if (CacheData.userInformation.activeHealthDataAt) {
       let dateNotification = HealthKitService.getNextSunday11AM();
       PushNotificationIOS.scheduleLocalNotification({
         fireDate: dateNotification.toDate(),
@@ -577,7 +576,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         repeatInterval: 'week'
       });
     }
-  } else if (!userInformation || !userInformation.bitmarkAccountNumber) {
+    console.log('run9');
+  } else if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
     let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
     if (!appInfo.intercomUserId) {
       appInfo.intercomUserId = intercomUserId;
@@ -596,12 +596,12 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     configNotification();
   }
 
-  console.log('userInformation :', userInformation);
-  return userInformation;
+  console.log('CacheData.userInformation :', CacheData.userInformation);
+  return CacheData.userInformation;
 };
 
 const doBitmarkHealthData = async (list) => {
-  let results = await HealthKitService.doBitmarkHealthData(userInformation.bitmarkAccountNumber, list);
+  let results = await HealthKitService.doBitmarkHealthData(CacheData.userInformation.bitmarkAccountNumber, list);
 
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
@@ -609,7 +609,7 @@ const doBitmarkHealthData = async (list) => {
     (appInfo.lastTimeIssued && (moment().toDate().getTime() - appInfo.lastTimeIssued) > 7 * 24 * 60 * 60 * 1000))) {
     await CommonModel.doTrackEvent({
       event_name: 'health_plus_weekly_active_user',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+      account_number: CacheData.userInformation ? CacheData.userInformation.bitmarkAccountNumber : null,
     });
     appInfo.lastTimeIssued = moment().toDate().getTime();
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
@@ -628,7 +628,7 @@ const doMarkDoneBitmarkHealthData = () => {
 };
 
 const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultipleAsset = false) => {
-  let results = await BitmarkService.doIssueFile(userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity);
+  let results = await BitmarkService.doIssueFile(CacheData.userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity);
 
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
@@ -636,7 +636,7 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultip
     (appInfo.lastTimeIssued && (moment().toDate().getTime() - appInfo.lastTimeIssued) > 7 * 24 * 60 * 60 * 1000))) {
     await CommonModel.doTrackEvent({
       event_name: 'health_plus_weekly_active_user',
-      account_number: userInformation ? userInformation.bitmarkAccountNumber : null,
+      account_number: CacheData.userInformation ? CacheData.userInformation.bitmarkAccountNumber : null,
     });
     appInfo.lastTimeIssued = moment().toDate().getTime();
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
@@ -669,7 +669,7 @@ const doIssueMultipleFiles = async (listInfo) => {
 };
 
 const getUserInformation = () => {
-  return userInformation;
+  return CacheData.userInformation;
 };
 
 const getApplicationVersion = () => {
@@ -681,7 +681,7 @@ const getApplicationBuildNumber = () => {
 };
 
 const doGetUserDataBitmarks = (bitmarkAccountNumber) => {
-  bitmarkAccountNumber = bitmarkAccountNumber || userInformation.bitmarkAccountNumber;
+  bitmarkAccountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
   return new Promise((resolve) => {
     CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK).then(userDataBitmarks => {
       resolve(userDataBitmarks[bitmarkAccountNumber]);
@@ -693,11 +693,11 @@ const doGetUserDataBitmarks = (bitmarkAccountNumber) => {
 };
 
 const doCheckFileToIssue = async (filePath) => {
-  let result = await BitmarkService.doCheckFileToIssue(filePath, userInformation.bitmarkAccountNumber);
+  let result = await BitmarkService.doCheckFileToIssue(filePath, CacheData.userInformation.bitmarkAccountNumber);
   let canIssue = true;
   if (result && result.asset && result.asset.name) {
-    if (result.asset.registrant === userInformation.bitmarkAccountNumber) {
-      let userBitmarks = await doGetUserDataBitmarks(userInformation.bitmarkAccountNumber);
+    if (result.asset.registrant === CacheData.userInformation.bitmarkAccountNumber) {
+      let userBitmarks = await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber);
       userBitmarks = userBitmarks || {};
       canIssue = ((userBitmarks.healthAssetBitmarks || []).findIndex(bm => bm.asset_id === result.asset.id) < 0) &&
         ((userBitmarks.healthDataBitmarks || []).findIndex(bm => bm.asset_id === result.asset.id) < 0);
@@ -710,7 +710,7 @@ const doCheckFileToIssue = async (filePath) => {
 };
 
 const doDeleteAccount = async () => {
-  return await AccountModel.doDeleteAccount(jwt);
+  return await AccountModel.doDeleteAccount(CacheData.jwt);
 };
 
 const doAcceptEmailRecords = async (emailRecord) => {
@@ -720,20 +720,20 @@ const doAcceptEmailRecords = async (emailRecord) => {
     }
   }
   for (let id of emailRecord.ids) {
-    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
-    await AccountModel.doDeleteEmailRecord(jwt, id);
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/email_records/${id}`);
+    await AccountModel.doDeleteEmailRecord(CacheData.jwt, id);
   }
 };
 
 const doRejectEmailRecords = async (emailRecord) => {
   for (let id of emailRecord.ids) {
-    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/email_records/${id}`);
-    await AccountModel.doDeleteEmailRecord(jwt, id);
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/email_records/${id}`);
+    await AccountModel.doDeleteEmailRecord(CacheData.jwt, id);
   }
 };
 
 const detectLocalAssetFilePath = async (assetId) => {
-  let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(userInformation.bitmarkAccountNumber)}/${assetId}`;
+  let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${assetId}`;
   let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
   if (!existAssetFolder || existAssetFolder.error) {
     return null;
@@ -752,7 +752,7 @@ const doCombineImages = async (images) => {
   for (let imageInfo of images) {
     listFilePath.push(imageInfo.uri.replace('file://', ''));
   }
-  let tempFolderPath = `${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}/combine-images`;
+  let tempFolderPath = `${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/combine-images`;
   await FileUtil.mkdir(tempFolderPath);
   let tempFilePath = `${tempFolderPath}/${moment().toDate().getTime()}.pdf`;
   await PDFScanner.pdfCombine(listFilePath, tempFilePath);
@@ -765,7 +765,7 @@ const doMetricOnScreen = async (isActive) => {
   let offScreenAt = appInfo.offScreenAt;
   if (isActive && onScreenAt && offScreenAt) {
     if (offScreenAt && offScreenAt > onScreenAt) {
-      let userInfo = userInformation || await UserModel.doTryGetCurrentUser() || {};
+      let userInfo = CacheData.userInformation || await UserModel.doTryGetCurrentUser() || {};
 
       let totalOnScreenAtPreTime = Math.floor((offScreenAt - onScreenAt) / (1000 * 60));
       await CommonModel.doTrackEvent({
@@ -783,13 +783,13 @@ const doMetricOnScreen = async (isActive) => {
 };
 
 const setMountedRouter = () => {
-  mountedRouter = true;
+  CacheData.mountedRouter = true;
   checkDisplayModal();
 };
 
 let setCodePushUpdated = (updated) => {
   console.log('setCodePushUpdated :', updated);
-  codePushUpdated = !!updated;
+  CacheData.codePushUpdated = !!updated;
 };
 
 let doCheckHaveCodePushUpdate = () => {
@@ -800,8 +800,8 @@ let doCheckHaveCodePushUpdate = () => {
     }
 
     let checkHaveCodePushUpdate = () => {
-      if (codePushUpdated === true || codePushUpdated === false) {
-        return resolve(codePushUpdated);
+      if (CacheData.codePushUpdated === true || CacheData.codePushUpdated === false) {
+        return resolve(CacheData.codePushUpdated);
       }
       setTimeout(checkHaveCodePushUpdate, 1000);
     };
@@ -814,7 +814,7 @@ let doMarkDisplayedWhatNewInformation = async () => {
   appInfo = appInfo || {};
   appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
   updateModal(mapModalDisplayKeyIndex.what_new);
-  keyIndexModalDisplaying = 0;
+  CacheData.keyIndexModalDisplaying = 0;
   await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
 };
 const doDisplayedWhatNewInformation = async () => {
@@ -824,14 +824,14 @@ const doDisplayedWhatNewInformation = async () => {
 const doTransferBitmark = async (bitmark, receiver) => {
   let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
   let result = await BitmarkService.doTransferBitmark(bitmark.id, receiver);
-  await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
-  await iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
+  await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
+  await iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
   if (bitmark.thumbnail && bitmark.thumbnail.path && (await FileUtil.exists(bitmark.thumbnail.path))) {
     let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
-    await iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
+    await iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
   }
-  iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_indexedData_${bitmark.asset.id}.txt`);
-  iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_indexTag_${bitmark.id}.txt`);
+  iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_indexedData_${bitmark.asset.id}.txt`);
+  iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${bitmark.id}.txt`);
 
   await IndexDBService.deleteIndexedDataByBitmarkId(bitmark.id);
   await IndexDBService.deleteTagsByBitmarkId(bitmark.id);

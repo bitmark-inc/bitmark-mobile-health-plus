@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import { AppProcessor, DataProcessor, EventEmitterService, IndexDBService, CommonModel } from "src/processors";
+import { AppProcessor, EventEmitterService, IndexDBService, CommonModel, CacheData } from "src/processors";
 import { FileUtil, isAssetDataRecord } from 'src/utils';
 import { UserBitmarksStore, UserBitmarksActions } from '../stores';
 
@@ -8,7 +8,7 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
 
   AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
     if (asset && asset.name && !asset.canIssue) {
-      let message = asset.registrant === DataProcessor.getUserInformation().bitmarkAccountNumber
+      let message = asset.registrant === CacheData.userInformation.bitmarkAccountNumber
         ? i18n.t('CaptureAssetComponent_alertMessage11', { type })
         : i18n.t('CaptureAssetComponent_alertMessage12', { type });
 

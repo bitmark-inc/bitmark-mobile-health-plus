@@ -6,9 +6,9 @@ import {
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux';
-import { DataProcessor } from 'src/processors';
 import { config, constants } from 'src/configs';
 import { convertWidth } from 'src/utils';
+import { CacheData } from 'src/processors';
 
 export class AccountNumberComponent extends React.Component {
 
@@ -34,15 +34,15 @@ export class AccountNumberComponent extends React.Component {
               <Text style={styles.description}>{i18n.t('AccountNumberComponent_description')}</Text>
               <Text style={styles.fullAccountNumberLabel}>{i18n.t('AccountNumberComponent_fullAccountNumberLabel')}</Text>
               <View style={styles.barLine}>
-                <Text style={styles.fullAccountNumberValue}>{DataProcessor.getUserInformation().bitmarkAccountNumber}</Text>
+                <Text style={styles.fullAccountNumberValue}>{CacheData.userInformation.bitmarkAccountNumber}</Text>
               </View>
               <Text style={styles.shortAccountNumberLabel}>{i18n.t('AccountNumberComponent_shortAccountNumberLabel')}</Text>
               <View style={styles.barLine}>
-                <Text style={styles.shortAccountNumberValue}>{'[' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(0, 4) + '...' + DataProcessor.getUserInformation().bitmarkAccountNumber.substring(DataProcessor.getUserInformation().bitmarkAccountNumber.length - 4, DataProcessor.getUserInformation().bitmarkAccountNumber.length) + ']'}</Text>
+                <Text style={styles.shortAccountNumberValue}>{'[' + CacheData.userInformation.bitmarkAccountNumber.substring(0, 4) + '...' + CacheData.userInformation.bitmarkAccountNumber.substring(CacheData.userInformation.bitmarkAccountNumber.length - 4, CacheData.userInformation.bitmarkAccountNumber.length) + ']'}</Text>
               </View>
 
               <TouchableOpacity style={styles.viewOnRegistryButton} onPress={() => {
-                Linking.openURL(`${config.registry_server_url}/account/${DataProcessor.getUserInformation().bitmarkAccountNumber}`)
+                Linking.openURL(`${config.registry_server_url}/account/${CacheData.userInformation.bitmarkAccountNumber}`)
               }}>
                 <Text style={styles.viewOnRegistryButtonText}>{i18n.t('AccountNumberComponent_viewOnRegistryButtonText')}</Text>
                 <Image style={styles.viewOnRegistryButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />

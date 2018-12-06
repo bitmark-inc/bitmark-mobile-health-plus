@@ -1,8 +1,8 @@
 
 import base58 from 'bs58';
-import { iCloudSyncAdapter } from "../models";
-import { IndexDBService } from "./index-db.service";
-import { CacheData } from "../caches";
+import { iCloudSyncAdapter } from '../models';
+import { IndexDBService } from './index-db.service';
+import { CacheData } from '../caches';
 import { FileUtil } from 'src/utils';
 
 const moveOldDataFilesToNewLocalStorageFolder = async () => {

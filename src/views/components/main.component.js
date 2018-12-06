@@ -17,11 +17,14 @@ import Mailer from 'react-native-mail';
 import RNExitApp from 'react-native-exit-app';
 import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler';
 
-import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent, } from '../commons'
+import {
+  LoadingComponent, BitmarkInternetOffComponent,
+  DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent,
+} from '../commons'
 import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
 import { FileUtil, runPromiseWithoutError, convertWidth } from 'src/utils';
-import { EventEmitterService, DataProcessor, BitmarkSDK, UserModel, AppProcessor, CommonModel } from 'src/processors';
+import { EventEmitterService, DataProcessor, BitmarkSDK, UserModel, AppProcessor, CommonModel, CacheData } from 'src/processors';
 import { constants, config } from 'src/configs';
 
 
@@ -85,7 +88,7 @@ class MainEventsHandlerComponent extends Component {
   }
 
   async doRefresh(justCreatedBitmarkAccount) {
-    if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
+    if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
       // TODO authenticate touch face id
       let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
       let passTouchFaceId = !result || !result.error;
@@ -447,6 +450,7 @@ export class MainComponent extends Component {
   }
   doAppRefresh(justCreatedBitmarkAccount) {
     DataProcessor.doCheckHaveCodePushUpdate().then(updated => {
+      console.log('doCheckHaveCodePushUpdate ', updated);
       if (updated) {
         return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
           user = user || {};

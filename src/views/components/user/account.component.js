@@ -10,7 +10,7 @@ import {
 import Intercom from 'react-native-intercom';
 import Mailer from 'react-native-mail';
 import { Actions } from 'react-native-router-flux';
-import { AppProcessor, EventEmitterService, DataProcessor } from 'src/processors';
+import { AppProcessor, EventEmitterService, DataProcessor, CacheData } from 'src/processors';
 import { config, constants } from 'src/configs';
 import { convertWidth } from 'src/utils';
 
@@ -68,8 +68,8 @@ export class AccountComponent extends Component {
 
   render() {
     let emailAddress = config.network === config.NETWORKS.livenet
-      ? `${DataProcessor.getUserInformation().bitmarkAccountNumber}@health.bitmark.com`
-      : `${DataProcessor.getUserInformation().bitmarkAccountNumber}@drop.test.bitmark.com`;
+      ? `${CacheData.userInformation.bitmarkAccountNumber}@health.bitmark.com`
+      : `${CacheData.userInformation.bitmarkAccountNumber}@drop.test.bitmark.com`;
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.body}>

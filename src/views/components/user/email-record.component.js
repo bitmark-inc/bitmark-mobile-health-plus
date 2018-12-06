@@ -7,7 +7,7 @@ import {
 
 import KeepAwake from 'react-native-keep-awake';
 import { Actions } from 'react-native-router-flux';
-import { AppProcessor, DataProcessor, EventEmitterService } from 'src/processors';
+import { AppProcessor, DataProcessor, EventEmitterService, CacheData } from 'src/processors';
 import { isImageFile, convertWidth } from 'src/utils';
 import { config, constants } from 'src/configs';
 
@@ -44,7 +44,7 @@ export class EmailRecordComponent extends Component {
   async processEmailRecordsFromAnEmail(selectedEmail) {
     this.setState({ processing: true });
     KeepAwake.activate();
-    let results = await AppProcessor.doProcessEmailRecords(DataProcessor.getUserInformation().bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
+    let results = await AppProcessor.doProcessEmailRecords(CacheData.userInformation.bitmarkAccountNumber, this.props.mapEmailRecords[selectedEmail]);
     KeepAwake.deactivate();
     this.setState({
       list: results.list || [],
