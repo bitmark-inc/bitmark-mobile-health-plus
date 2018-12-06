@@ -81,49 +81,60 @@ const writeTagFile = async (tagFilePath, tags) => {
 
 const doCheckAndSyncDataWithICloud = async (bitmark) => {
   // upload to iCloud
-  if (bitmark.asset && !bitmark.asset.iCloudSynced && bitmark.asset.filePath) {
-    let bitmarkAccountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
-    //sync files
+  if (!bitmark) {
+    return;
+  }
+  let bitmarkAccountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
+  if (bitmark.asset && !bitmark.asset.assetFileSyncedToICloud && bitmark.asset.filePath && (await FileUtil.exists(bitmark.asset.filePath))) {
     let assetFilename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
     iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${assetFilename}`);
+    bitmark.asset.assetFileSyncedToICloud = true;
+  }
 
-    //sync thumbnail
-    if (bitmark.thumbnail && bitmark.thumbnail.path && (await FileUtil.exists(bitmark.thumbnail.path))) {
-      let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
-      await iCloudSyncAdapter.uploadFileToCloud(bitmark.thumbnail.path, `${bitmarkAccountNumber}_thumbnails_${filename}`);
-    }
+  if (!bitmark.thumbnailSyncedToICloud && bitmark.thumbnail && bitmark.thumbnail.path && (await FileUtil.exists(bitmark.thumbnail.path))) {
+    let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
+    await iCloudSyncAdapter.uploadFileToCloud(bitmark.thumbnail.path, `${bitmarkAccountNumber}_thumbnails_${filename}`);
+    bitmark.thumbnailSyncedToICloud = true;
+  }
 
-    //sync index asset
+  if (bitmark.asset && (!bitmark.asset.indexDataFileSyncedToICloud || !bitmark.asset.indexDataFileSyncedFromICloud)) {
     let indexedFileName = `${bitmark.asset.id}.txt`;
     let indexedDataFilePath = `${getUserLocalStorageFolderPath()}/indexedData/${indexedFileName}`;
     let existFileIndexedData = await FileUtil.exists(indexedDataFilePath);
     let indexedDataRecord = await getIndexedDataByBitmarkId(bitmark.id);
-    if (existFileIndexedData && !indexedDataRecord) {
+    if (existFileIndexedData && !indexedDataRecord && !bitmark.asset.indexDataFileSyncedFromICloud) {
       let indexedData = await readIndexedDataFile(indexedDataFilePath);
       await insertDetectedDataToIndexedDB(bitmark.id, bitmark.asset.name, bitmark.asset.metadata, indexedData);
+      bitmark.asset.indexDataFileSyncedFromICloud = true;
+    } else if (indexedDataRecord) {
+      bitmark.asset.indexDataFileSyncedFromICloud = true;
     }
-    if (!existFileIndexedData && indexedDataRecord) {
+    if (!existFileIndexedData && indexedDataRecord && !bitmark.asset.indexDataFileSyncedToICloud) {
       await FileUtil.mkdir(`${getUserLocalStorageFolderPath()}/indexedData`);
       await writeIndexedDataFile(indexedDataFilePath, indexedDataRecord.content);
       iCloudSyncAdapter.uploadFileToCloud(indexedDataFilePath, `${DataProcessor.getUserInformation().bitmarkAccountNumber}_indexedData_${indexedFileName}`);
+      bitmark.asset.indexDataFileSyncedToICloud = true;
     }
-    //sync index tags
+  }
+
+  if (!bitmark.indexTagFileSyncedToICloud || !bitmark.indexTagFileSyncedFromICloud) {
     let tagFileName = `${bitmark.id}.txt`;
     let tagFilePath = `${getUserLocalStorageFolderPath()}/indexTag/${tagFileName}`;
     let existFileIndexedTags = await FileUtil.exists(tagFilePath);
     let tagRecord = await getTagRecordByBitmarkId(bitmark.id);
 
-    if (existFileIndexedTags && !tagRecord) {
+    if (existFileIndexedTags && !tagRecord && !bitmark.indexTagFileSyncedFromICloud) {
       let tags = await readTagFile(tagFilePath);
       await updateTag(bitmark.id, tags);
+      bitmark.indexTagFileSyncedFromICloud = true;
     }
 
-    if (!existFileIndexedTags && tagRecord) {
+    if (!existFileIndexedTags && tagRecord && !bitmark.indexTagFileSyncedToICloud) {
       await FileUtil.mkdir(`${getUserLocalStorageFolderPath()}/indexTag`);
       await writeTagFile(tagFilePath, tagRecord.tags);
       iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${DataProcessor.getUserInformation().bitmarkAccountNumber}_indexTag_${tagFileName}`);
+      bitmark.indexTagFileSyncedToICloud = true;
     }
-    bitmark.asset.iCloudSynced = true;
   }
 };
 
