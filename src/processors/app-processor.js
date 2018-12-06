@@ -2,12 +2,12 @@ import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 import { registerTasks } from './app-tasks-register';
 
-import { AccountModel, FaceTouchId } from './../models';
-import { EventEmitterService, } from './../services'
+import { AccountModel, FaceTouchId } from './models';
+import { EventEmitterService, } from './services'
 import { DataProcessor } from './data-processor';
-import { config } from '../configs';
-import { compareVersion, runPromiseWithoutError } from '../utils';
 import DeviceInfo from 'react-native-device-info';
+import { config } from 'src/configs';
+import { compareVersion, runPromiseWithoutError } from 'src/utils';
 
 registerTasks();
 // ================================================================================================

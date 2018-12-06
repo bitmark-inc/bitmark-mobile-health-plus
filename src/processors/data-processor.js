@@ -14,25 +14,25 @@ const {
 } = ReactNative;
 
 import {
-  UserBitmarksStore, UserBitmarksActions,
-} from './../stores';
-import {
   EventEmitterService,
   BitmarkService,
   AccountService,
-} from "../services";
-import { CommonModel, AccountModel, UserModel, BitmarkModel } from '../models';
-import { HealthKitService } from '../services/health-kit-service';
-import { config } from '../configs';
+  HealthKitService
+} from './services';
+
+import {
+  CommonModel, AccountModel, UserModel, BitmarkModel,
+  iCloudSyncAdapter, PDFScanner
+} from './models';
 import {
   FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
   populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
   isPdfFile, populateAssetNameFromPdf, compareVersion,
   deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud, isHealthDataRecord, isAssetDataRecord
-} from '../utils';
+} from 'src/utils';
 
-import PDFScanner from '../models/adapters/pdf-scanner';
-import iCloudSyncAdapter from '../models/adapters/icloud';
+import { UserBitmarksStore, UserBitmarksActions } from 'src/views';
+import { config } from 'src/configs';
 
 let userInformation = {};
 let jwt;

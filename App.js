@@ -10,7 +10,7 @@ import {
   // MainComponent,
   CodePushComponent
 } from './src';
-import { config } from './src/configs';
+import { config } from './src/configs/config';
 import { BitmarkSDK } from './src/models';
 
 

@@ -1,11 +1,11 @@
 import { Platform, AppRegistry } from 'react-native';
 import moment from 'moment';
 
-import { AccountModel, FaceTouchId, } from './../models';
-import { EventEmitterService, BitmarkService, AccountService, } from './../services'
+import { AccountModel, FaceTouchId, } from './models';
+import { EventEmitterService, BitmarkService, AccountService, } from './services'
 import { DataProcessor } from './data-processor';
-import { config } from '../configs';
-import { FileUtil } from '../utils';
+import { config } from 'src/configs';
+import { FileUtil } from 'src/utils';
 
 // ================================================================================================
 // ================================================================================================

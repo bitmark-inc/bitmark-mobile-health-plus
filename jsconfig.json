@@ -5,8 +5,8 @@
       "assets/*": [
         "assets/*"
       ],
-      "src/*": [
-        "src/*"
+      "src-new/*": [
+        "src-new/*"
       ]
     }
   }
