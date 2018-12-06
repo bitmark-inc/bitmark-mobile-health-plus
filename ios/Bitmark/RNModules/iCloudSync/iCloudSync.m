@@ -22,6 +22,11 @@ RCT_EXPORT_MODULE();
   return @[@"oniCloudFileChanged"];
 }
 
+- (dispatch_queue_t)methodQueue
+{
+  return dispatch_queue_create("iCloud_queue", DISPATCH_QUEUE_SERIAL);
+}
+
 RCT_EXPORT_METHOD(uploadFileToCloud:(NSString *)filePath:(NSString *)iCloudKey:(RCTResponseSenderBlock)callback)
 {
   // Ignore the case that file
