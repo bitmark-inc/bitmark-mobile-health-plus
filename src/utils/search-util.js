@@ -1,12 +1,12 @@
-import { UserBitmarksActions, UserBitmarksStore } from "../stores";
-import { searchIndexedBitmarks } from "./index";
-import { checkThumbnailForBitmark, isAssetDataRecord } from "./common-util";
+import { isAssetDataRecord } from './common-util';
+import { UserBitmarksStore, UserBitmarksActions } from 'src/views';
+import { CommonModel, IndexDBService } from 'src/processors';
 
 const search = async (searchTerm) => {
   let searchResults = { length: 0, healthDataBitmarks: [], healthAssetBitmarks: [] };
 
   if (searchTerm) {
-    let queryResult = await searchIndexedBitmarks(searchTerm);
+    let queryResult = await IndexDBService.searchIndexedBitmarks(searchTerm);
     let searchResultBitmarkIds = queryResult.bitmarkIds;
     let tagRecords = queryResult.tagRecords;
 
@@ -25,7 +25,7 @@ const search = async (searchTerm) => {
         if (bitmark) {
           if (isAssetDataRecord(bitmark.asset)) {
             if (!bitmark.thumbnail) {
-              bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
+              bitmark.thumbnail = await CommonModel.checkThumbnailForBitmark(bitmark.id);
             }
 
             if (tagRecordsMap[bitmark.id]) {

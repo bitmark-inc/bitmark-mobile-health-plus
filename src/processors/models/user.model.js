@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { CommonModel } from './common-model';
+import { CommonModel } from './common.model';
 import { merge } from 'lodash';
 import { config } from 'src/configs';
 

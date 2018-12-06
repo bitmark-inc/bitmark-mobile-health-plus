@@ -1,9 +1,11 @@
 import { FileUtil } from "./index";
 import base58 from 'bs58';
-import { DataProcessor, iCloudSyncAdapter, IndexDBService } from "src/processors";
+import { CacheData } from "../caches";
+import { iCloudSyncAdapter } from "../models";
+import { IndexDBService } from "./index-db.service";
 
 const getUserLocalStorageFolderPath = (bitmarkAccountNumber) => {
-  return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber || DataProcessor.getUserInformation().bitmarkAccountNumber}`;
+  return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber}`;
 };
 
 const getLocalAssetsFolderPath = (bitmarkAccountNumber) => {
@@ -23,7 +25,7 @@ const getLocalCachesFolderPath = (bitmarkAccountNumber) => {
 };
 
 const moveOldDataFilesToNewLocalStorageFolder = async () => {
-  let bitmarkAccountNumber = DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber;
+  let bitmarkAccountNumber = CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber;
   if (bitmarkAccountNumber) {
     // Move asset folder
     let localAssetsFolderPath = getLocalAssetsFolderPath();
@@ -78,7 +80,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
   if (!bitmark) {
     return;
   }
-  let bitmarkAccountNumber = DataProcessor.getUserInformation().bitmarkAccountNumber;
+  let bitmarkAccountNumber = CacheData.userInformation.bitmarkAccountNumber;
   if (bitmark.asset && !bitmark.asset.assetFileSyncedToICloud && bitmark.asset.filePath && (await FileUtil.exists(bitmark.asset.filePath))) {
     let assetFilename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
     iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${assetFilename}`);
@@ -106,7 +108,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
     if (!existFileIndexedData && indexedDataRecord && !bitmark.asset.indexDataFileSyncedToICloud) {
       await FileUtil.mkdir(`${getUserLocalStorageFolderPath()}/indexedData`);
       await writeIndexedDataFile(indexedDataFilePath, indexedDataRecord.content);
-      iCloudSyncAdapter.uploadFileToCloud(indexedDataFilePath, `${DataProcessor.getUserInformation().bitmarkAccountNumber}_indexedData_${indexedFileName}`);
+      iCloudSyncAdapter.uploadFileToCloud(indexedDataFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexedData_${indexedFileName}`);
       bitmark.asset.indexDataFileSyncedToICloud = true;
     }
   }
@@ -126,7 +128,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
     if (!existFileIndexedTags && tagRecord && !bitmark.indexTagFileSyncedToICloud) {
       await FileUtil.mkdir(`${getUserLocalStorageFolderPath()}/indexTag`);
       await writeTagFile(tagFilePath, tagRecord.tags);
-      iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${DataProcessor.getUserInformation().bitmarkAccountNumber}_indexTag_${tagFileName}`);
+      iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${tagFileName}`);
       bitmark.indexTagFileSyncedToICloud = true;
     }
   }
@@ -154,12 +156,12 @@ const doUpdateIndexTagToICloud = async (bitmarkId, tags) => {
   if (tags) {
     await FileUtil.mkdir(`${getUserLocalStorageFolderPath()}/indexTag`);
     await writeTagFile(tagFilePath, tags);
-    iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${DataProcessor.getUserInformation().bitmarkAccountNumber}_indexTag_${tagFileName}`);
+    iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${tagFileName}`);
   }
 };
 
 const initializeLocalStorage = async () => {
-  if (DataProcessor.getUserInformation() && DataProcessor.getUserInformation().bitmarkAccountNumber) {
+  if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(getUserLocalStorageFolderPath());
     await FileUtil.mkdir(getLocalAssetsFolderPath());
     await FileUtil.mkdir(getLocalThumbnailsFolderPath());
@@ -168,7 +170,7 @@ const initializeLocalStorage = async () => {
   }
 };
 
-export {
+let LocalFileService = {
   initializeLocalStorage,
   getLocalAssetsFolderPath,
   getLocalThumbnailsFolderPath,
@@ -183,4 +185,5 @@ export {
   doCheckAndSyncDataWithICloud,
   doUpdateIndexTagFromICloud,
   doUpdateIndexTagToICloud,
-}
+};
+export { LocalFileService };

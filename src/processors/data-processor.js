@@ -17,7 +17,8 @@ import {
   EventEmitterService,
   BitmarkService,
   AccountService,
-  HealthKitService
+  HealthKitService,
+  IndexDBService
 } from './services';
 
 import {
@@ -25,10 +26,10 @@ import {
   iCloudSyncAdapter, PDFScanner
 } from './models';
 import {
-  FileUtil, checkThumbnailForBitmark, runPromiseWithoutError, generateThumbnail, insertHealthDataToIndexedDB, insertDetectedDataToIndexedDB,
-  populateAssetNameFromImage, isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
-  isPdfFile, populateAssetNameFromPdf, compareVersion,
-  deleteIndexedDataByBitmarkId, initializeIndexedDB, deleteTagsByBitmarkId, doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud, isHealthDataRecord, isAssetDataRecord
+  FileUtil, runPromiseWithoutError,
+  isImageFile, moveOldDataFilesToNewLocalStorageFolder, initializeLocalStorage, getLocalAssetsFolderPath,
+  isPdfFile, compareVersion,
+  doCheckAndSyncDataWithICloud, doUpdateIndexTagFromICloud, isHealthDataRecord, isAssetDataRecord
 } from 'src/utils';
 
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views';
@@ -177,7 +178,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
                 asset.filePath = await detectLocalAssetFilePath(asset.id);
               }
               if (!bitmark.thumbnail || !bitmark.thumbnail.path || bitmark.thumbnail.path.indexOf(FileUtil.DocumentDirectory) < 0) {
-                bitmark.thumbnail = await checkThumbnailForBitmark(bitmark.id);
+                bitmark.thumbnail = await CommonModel.checkThumbnailForBitmark(bitmark.id);
               }
               bitmark.asset = asset;
               await doCheckAndSyncDataWithICloud(bitmark);
@@ -477,7 +478,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     await moveOldDataFilesToNewLocalStorageFolder();
     await initializeLocalStorage();
-    await initializeIndexedDB();
+    await IndexDBService.initializeIndexedDB();
 
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
       for (let key in mapFiles) {
@@ -614,7 +615,7 @@ const doBitmarkHealthData = async (list) => {
   }
 
   for (let item of results) {
-    await insertHealthDataToIndexedDB(item.id, item.healthData);
+    await IndexDBService.insertHealthDataToIndexedDB(item.id, item.healthData);
   }
 
   await runGetUserBitmarksInBackground();
@@ -641,15 +642,15 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultip
   }
 
   for (let record of results) {
-    await generateThumbnail(filePath, record.id, isMultipleAsset);
+    await CommonModel.generateThumbnail(filePath, record.id, isMultipleAsset);
 
     // Index data
     if (isImageFile(record.filePath)) {
-      let detectResult = await populateAssetNameFromImage(record.filePath, assetName);
-      await insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
+      let detectResult = await CommonModel.populateAssetNameFromImage(record.filePath, assetName);
+      await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
     } else if (isPdfFile(record.filePath)) {
-      let detectResult = await populateAssetNameFromPdf(record.filePath, assetName);
-      await insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
+      let detectResult = await CommonModel.populateAssetNameFromPdf(record.filePath, assetName);
+      await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
     }
   }
 
@@ -831,8 +832,8 @@ const doTransferBitmark = async (bitmark, receiver) => {
   iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_indexedData_${bitmark.asset.id}.txt`);
   iCloudSyncAdapter.deleteFileFromCloud(`${userInformation.bitmarkAccountNumber}_indexTag_${bitmark.id}.txt`);
 
-  await deleteIndexedDataByBitmarkId(bitmark.id);
-  await deleteTagsByBitmarkId(bitmark.id);
+  await IndexDBService.deleteIndexedDataByBitmarkId(bitmark.id);
+  await IndexDBService.deleteTagsByBitmarkId(bitmark.id);
   await runGetUserBitmarksInBackground();
   return result;
 };

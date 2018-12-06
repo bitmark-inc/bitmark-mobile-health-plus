@@ -5,7 +5,7 @@ import randomString from 'random-string';
 import { AccountModel, CommonModel, UserModel, BitmarkModel, CryptoAdapter } from '../models';
 import {
   FileUtil, isPdfFile, isImageFile,
-  runPromiseWithoutError, populateAssetNameFromPdf, populateAssetNameFromImage,
+  runPromiseWithoutError,
 } from 'src/utils';
 const {
   PushNotificationIOS,
@@ -144,11 +144,11 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
               let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
 
               if (isPdfFile(filePath)) {
-                let detectResult = await populateAssetNameFromPdf(filePath, defaultAssetName);
+                let detectResult = await CommonModel.populateAssetNameFromPdf(filePath, defaultAssetName);
                 assetName = detectResult.assetName;
                 detectedTexts = detectResult.detectedTexts;
               } else if (isImageFile(filePath)) {
-                let detectResult = await populateAssetNameFromImage(filePath, defaultAssetName);
+                let detectResult = await CommonModel.populateAssetNameFromImage(filePath, defaultAssetName);
                 assetName = detectResult.assetName;
                 detectedTexts = detectResult.detectedTexts;
               } else {

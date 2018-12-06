@@ -10,8 +10,8 @@ import {
   // MainComponent,
   CodePushComponent
 } from './src';
-import { config } from './src/configs/config';
-import { BitmarkSDK } from './src/models';
+import { BitmarkSDK } from 'src/processors';
+import { config } from 'src/configs';
 
 
 BitmarkSDK.sdkInit(config.network);

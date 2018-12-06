@@ -7,9 +7,10 @@ import {
 import randomString from "random-string";
 
 import { Actions } from 'react-native-router-flux';
-import { EventEmitterService } from 'src/processors';
-import { populateAssetNameFromImage, convertWidth, issue } from 'src/utils';
+import { EventEmitterService, CommonModel } from 'src/processors';
+import { convertWidth } from 'src/utils';
 import { config, constants } from 'src/configs';
+import { issue } from 'src/views/controllers';
 
 export class CaptureAssetComponent extends Component {
   static propTypes = {
@@ -28,7 +29,7 @@ export class CaptureAssetComponent extends Component {
     metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
 
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-    let detectResult = await populateAssetNameFromImage(filePath, assetName);
+    let detectResult = await CommonModel.populateAssetNameFromImage(filePath, assetName);
     assetName = detectResult.assetName;
 
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);

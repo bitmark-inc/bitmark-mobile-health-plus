@@ -7,8 +7,9 @@ import {
 
 import { Actions } from 'react-native-router-flux';
 import { uniq } from "lodash";
-import { getTagsByBitmarkId, getTagsCache, updateTag, doUpdateIndexTagToICloud, writeTagsCache, convertWidth } from 'src/utils';
+import { getTagsCache, doUpdateIndexTagToICloud, writeTagsCache, convertWidth } from 'src/utils';
 import { config, constants } from 'src/configs';
+import { IndexDBService } from 'src/processors';
 
 export class TaggingComponent extends Component {
   static propTypes = {
@@ -33,7 +34,7 @@ export class TaggingComponent extends Component {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
 
-    let tags = await getTagsByBitmarkId(this.props.bitmarkId);
+    let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmarkId);
     console.log('tags:', tags);
     let tagsCache = await getTagsCache();
     console.log('tagsCache:', tagsCache);
@@ -93,7 +94,7 @@ export class TaggingComponent extends Component {
       let tags = this.state.tags;
       if (tags.indexOf(tag) == -1) {
         tags.push(tag);
-        await updateTag(this.props.bitmarkId, tags);
+        await IndexDBService.updateTag(this.props.bitmarkId, tags);
         await doUpdateIndexTagToICloud(this.props.bitmarkId, tags);
 
         let tagsCache = this.state.tagsCache;
@@ -115,7 +116,7 @@ export class TaggingComponent extends Component {
 
     if (tags.indexOf(tag) > -1) {
       tags = tags.filter(item => item != tag);
-      await updateTag(this.props.bitmarkId, tags);
+      await IndexDBService.updateTag(this.props.bitmarkId, tags);
       await doUpdateIndexTagToICloud(this.props.bitmarkId, tags);
 
       let tagsSuggestion = this.state.tagsCache.filter((item) => { return tags.indexOf(item) == -1 });

@@ -18,14 +18,14 @@ import { DocumentPicker } from 'react-native-document-picker';
 import {
   FileUtil,
   convertWidth, issue,
-  populateAssetNameFromImage, populateAssetNameFromPdf, isImageFile, isPdfFile,
+  isImageFile, isPdfFile,
   search,
 } from 'src/utils';
 import { config, constants } from 'src/configs';
 
 import { SearchInputComponent } from './search-input.component';
 import { SearchResultsComponent } from './search-results.component';
-import { AppProcessor, DataProcessor, EventEmitterService } from 'src/processors';
+import { AppProcessor, DataProcessor, EventEmitterService, CommonModel } from 'src/processors';
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
 
 class PrivateUserComponent extends Component {
@@ -107,7 +107,7 @@ class PrivateUserComponent extends Component {
           let inCombineAssetNames = [];
           let inCombineDetectedTexts = [];
           for (let i = 0; i < combineFilesList.length; i++) {
-            let inCombineDetectResult = await populateAssetNameFromImage(combineFilesList[i].uri, assetName);
+            let inCombineDetectResult = await CommonModel.populateAssetNameFromImage(combineFilesList[i].uri, assetName);
             inCombineAssetNames.push(inCombineDetectResult.assetName);
             inCombineDetectedTexts = inCombineDetectedTexts.concat(inCombineDetectResult.detectedTexts);
           }
@@ -115,7 +115,7 @@ class PrivateUserComponent extends Component {
           assetName = inCombineAssetNames[0];
           detectedTexts = inCombineDetectedTexts;
         } else {
-          detectResult = await populateAssetNameFromImage(filePath, assetName);
+          detectResult = await CommonModel.populateAssetNameFromImage(filePath, assetName);
           assetName = detectResult.assetName;
           detectedTexts = detectResult.detectedTexts;
         }
@@ -235,13 +235,13 @@ class PrivateUserComponent extends Component {
       if (isPdfFile(filePath)) {
         willDetectAssetNameAutomatically = true;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-        let detectResult = await populateAssetNameFromPdf(filePath, assetName);
+        let detectResult = await CommonModel.populateAssetNameFromPdf(filePath, assetName);
         assetName = detectResult.assetName;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       } else if (isImageFile(filePath)) {
         willDetectAssetNameAutomatically = true;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-        let detectResult = await populateAssetNameFromImage(filePath, assetName);
+        let detectResult = await CommonModel.populateAssetNameFromImage(filePath, assetName);
         assetName = detectResult.assetName;
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       }

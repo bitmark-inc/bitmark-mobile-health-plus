@@ -7,7 +7,7 @@ const DB_LOCATION = 'Documents'; //Documents subdirectory - visible to iTunes an
 const INDEXED_DATA_TABLE_NAME = 'IndexedData';
 const TAGS_TABLE_NAME = 'UserTags';
 
-export class IndexedDB {
+export class IndexedDBModel {
   static async connectDB() {
     let databaseFilePath = `${getLocalDatabasesFolderPath()}/${DB_NAME}`;
     // Relative path to "Documents" folder
