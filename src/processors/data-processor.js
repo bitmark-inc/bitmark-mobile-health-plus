@@ -33,7 +33,7 @@ import {
   isHealthDataRecord, isAssetDataRecord
 } from 'src/utils';
 
-import { UserBitmarksStore, UserBitmarksActions } from 'src/views';
+import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
 import { config } from 'src/configs';
 import { CacheData } from './caches';
 
@@ -456,7 +456,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
-  console.log('run1');
   if (!appInfo.trackEvents || !appInfo.trackEvents['health_plus_download']) {
     appInfo.trackEvents = appInfo.trackEvents || {};
     appInfo.trackEvents['health_plus_download'] = true;
@@ -467,7 +466,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       account_number: CacheData.userInformation ? CacheData.userInformation.bitmarkAccountNumber : null,
     });
   }
-  console.log('run2');
 
   if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}`);
@@ -476,7 +474,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await LocalFileService.moveOldDataFilesToNewLocalStorageFolder();
     await LocalFileService.initializeLocalStorage();
     await IndexDBService.initializeIndexedDB();
-    console.log('run3');
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
       for (let key in mapFiles) {
         let keyList = key.split('_');
@@ -526,7 +523,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       }
     });
     iCloudSyncAdapter.syncCloud();
-    console.log('run4');
     configNotification();
     if (!CacheData.userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(CacheData.userInformation.bitmarkAccountNumber)}`;
@@ -538,7 +534,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         console.log('registerIdentifiedUser error :', error);
       });
     }
-    console.log('run5');
 
     let signatureData = await CommonModel.doCreateSignatureData();
     let result = await AccountModel.doRegisterJWT(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
@@ -553,18 +548,15 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       }
     }
     await UserModel.doUpdateUserInfo(CacheData.userInformation);
-    console.log('run6');
 
     let userBitmarks = await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber);
 
     if (!CacheData.userInformation.activeHealthDataAt && userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
       await runPromiseWithoutError(doRequireHealthKitPermission());
     }
-    console.log('run7');
 
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(userBitmarks || {}));
     await checkAppNeedResetLocalData(appInfo);
-    console.log('run8');
     AccountService.removeAllDeliveredNotifications();
     PushNotificationIOS.cancelAllLocalNotifications();
     if (CacheData.userInformation.activeHealthDataAt) {
@@ -576,7 +568,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         repeatInterval: 'week'
       });
     }
-    console.log('run9');
   } else if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
     let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
     if (!appInfo.intercomUserId) {
@@ -864,7 +855,6 @@ const DataProcessor = {
   doDeleteAccount,
   doAcceptEmailRecords,
   doRejectEmailRecords,
-  detectLocalAssetFilePath,
   doCombineImages,
   doMetricOnScreen,
   checkDisplayModal,
