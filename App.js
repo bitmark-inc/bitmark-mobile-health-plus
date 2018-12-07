@@ -13,9 +13,9 @@ import {
 import { config } from './src/configs';
 
 import { Sentry } from 'react-native-sentry';
-import { envConfig } from 'react-native-config';
+import Config from 'react-native-config';
 
-Sentry.config(envConfig.SENTRY_URL).install();
+Sentry.config(Config.SENTRY_URL).install();
 
 console.disableYellowBox = true;
 
