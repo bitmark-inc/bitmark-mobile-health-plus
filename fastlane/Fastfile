@@ -43,7 +43,7 @@ platform :ios do
       api_token: ENV['HOCKEYAPP_KEY']
     )
 
-    sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
+    sh "node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
   lane :beta do
     reset_git_repo(
@@ -74,7 +74,7 @@ platform :ios do
       api_token: ENV['HOCKEYAPP_KEY']
       )
 
-    sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
+    sh "node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
   lane :alpha do
     reset_git_repo(
@@ -104,7 +104,7 @@ platform :ios do
       api_token: ENV['HOCKEYAPP_KEY']
       )
 
-    sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
+    sh "node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
   lane :betatravis do
     sh "npm install"
@@ -153,7 +153,7 @@ platform :ios do
       tags: "internal_testers",
       )
 
-    sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
+    sh "node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
   lane :developtravis do
     sh "npm install"
@@ -205,6 +205,6 @@ platform :ios do
       repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus",
       )
     
-      sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
+      sh "node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
 end
