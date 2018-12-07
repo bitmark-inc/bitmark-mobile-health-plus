@@ -12,6 +12,11 @@ import {
 } from './src';
 import { config } from './src/configs';
 
+import { Sentry } from 'react-native-sentry';
+import { envConfig } from 'react-native-config';
+
+Sentry.config(envConfig.SENTRY_URL).install();
+
 console.disableYellowBox = true;
 
 Text.defaultProps = Text.defaultProps || {};

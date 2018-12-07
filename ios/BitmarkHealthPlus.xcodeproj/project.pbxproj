@@ -206,12 +206,18 @@
 		58AC1ED821901F7800B4CA8F /* iCloudSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC1ED721901F7800B4CA8F /* iCloudSync.m */; };
 		58AC1ED921901F7800B4CA8F /* iCloudSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC1ED721901F7800B4CA8F /* iCloudSync.m */; };
 		58AC1EDA21901F7800B4CA8F /* iCloudSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC1ED721901F7800B4CA8F /* iCloudSync.m */; };
+		58B2719C21BAC96E005DC24F /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B2719921BAC95D005DC24F /* libReactNativeConfig.a */; };
+		58B2719D21BAC976005DC24F /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B2719921BAC95D005DC24F /* libReactNativeConfig.a */; };
+		58B2719E21BAC97E005DC24F /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B2719921BAC95D005DC24F /* libReactNativeConfig.a */; };
 		58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		58BA32BF2186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
 		58BA32C02186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
 		58BA32C12186C457007E35FE /* AESDecrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA32BE2186C457007E35FE /* AESDecrypt.m */; };
 		58C9513920202AF80050A9D4 /* TouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9510D20202AF70050A9D4 /* TouchID.m */; };
 		58CB4892201EC63A0058B364 /* KeychainUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CB4891201EC63A0058B364 /* KeychainUtil.swift */; };
+		58D2569521BABAE7005027EE /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D2569021BABAC6005027EE /* libRNSentry.a */; };
+		58D2569621BABAF2005027EE /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D2569021BABAC6005027EE /* libRNSentry.a */; };
+		58D2569721BABAFB005027EE /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D2569021BABAC6005027EE /* libRNSentry.a */; };
 		58DBAEEF217984C2005B0E32 /* PDFScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DBAEEE217984C2005B0E32 /* PDFScanner.m */; };
 		58DBAEF0217984C2005B0E32 /* PDFScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DBAEEE217984C2005B0E32 /* PDFScanner.m */; };
 		58DBAEF1217984C2005B0E32 /* PDFScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DBAEEE217984C2005B0E32 /* PDFScanner.m */; };
@@ -517,6 +523,34 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
 			remoteInfo = "privatedata-tvOS";
+		};
+		58B2719821BAC95D005DC24F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58B2719321BAC95C005DC24F /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EB2648DF1C7BE17A00B8F155;
+			remoteInfo = ReactNativeConfig;
+		};
+		58B2719A21BAC95D005DC24F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58B2719321BAC95C005DC24F /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3DF7F6AC203AA09B00D0EAB7;
+			remoteInfo = "ReactNativeConfig-tvOS";
+		};
+		58D2568F21BABAC6005027EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58D2564C21BABAC5005027EE /* RNSentry.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNSentry;
+		};
+		58D2569121BABAC6005027EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58D2564C21BABAC5005027EE /* RNSentry.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 274692C321B4414400BF91A8;
+			remoteInfo = "RNSentry-tvOS";
 		};
 		58FC1DDD201B14CB00F60AF9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -843,6 +877,7 @@
 		58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		58AC1ED621901F7800B4CA8F /* iCloudSync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudSync.h; sourceTree = "<group>"; };
 		58AC1ED721901F7800B4CA8F /* iCloudSync.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iCloudSync.m; sourceTree = "<group>"; };
+		58B2719321BAC95C005DC24F /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		58B92EA5205A23450037AB9D /* Bitmark-beta.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "Bitmark-beta.entitlements"; path = "Bitmark/Bitmark-beta.entitlements"; sourceTree = "<group>"; };
 		58BA32BD2186C457007E35FE /* AESDecrypt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AESDecrypt.h; sourceTree = "<group>"; };
 		58BA32BE2186C457007E35FE /* AESDecrypt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AESDecrypt.m; sourceTree = "<group>"; };
@@ -850,6 +885,7 @@
 		58C9510D20202AF70050A9D4 /* TouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchID.m; sourceTree = "<group>"; };
 		58CB488F201EC5670058B364 /* Bitmark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Bitmark.entitlements; path = Bitmark/Bitmark.entitlements; sourceTree = "<group>"; };
 		58CB4891201EC63A0058B364 /* KeychainUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainUtil.swift; sourceTree = "<group>"; };
+		58D2564C21BABAC5005027EE /* RNSentry.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSentry.xcodeproj; path = "../node_modules/react-native-sentry/ios/RNSentry.xcodeproj"; sourceTree = "<group>"; };
 		58DBAEED217984C2005B0E32 /* PDFScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFScanner.h; sourceTree = "<group>"; };
 		58DBAEEE217984C2005B0E32 /* PDFScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFScanner.m; sourceTree = "<group>"; };
 		58FC1E54201B21CC00F60AF9 /* Bitmark-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bitmark-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -918,6 +954,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58B2719C21BAC96E005DC24F /* libReactNativeConfig.a in Frameworks */,
+				58D2569521BABAE7005027EE /* libRNSentry.a in Frameworks */,
 				F109F891219D7CB10067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F88F219D7CA30067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E34938A21902DA500796D52 /* libsqlite3.0.tbd in Frameworks */,
@@ -964,6 +1002,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58B2719E21BAC97E005DC24F /* libReactNativeConfig.a in Frameworks */,
+				58D2569721BABAFB005027EE /* libRNSentry.a in Frameworks */,
 				F109F893219D7CBF0067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F890219D7CA90067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E34938C21902DB300796D52 /* libsqlite3.0.tbd in Frameworks */,
@@ -1010,6 +1050,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58B2719D21BAC976005DC24F /* libReactNativeConfig.a in Frameworks */,
+				58D2569621BABAF2005027EE /* libRNSentry.a in Frameworks */,
 				F109F892219D7CB70067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F88E219D7C9E0067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E4B7F2D218988D200816D2E /* libsqlite3.0.tbd in Frameworks */,
@@ -1348,6 +1390,15 @@
 			path = iCloudSync;
 			sourceTree = "<group>";
 		};
+		58B2719421BAC95C005DC24F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				58B2719921BAC95D005DC24F /* libReactNativeConfig.a */,
+				58B2719B21BAC95D005DC24F /* libReactNativeConfig-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		58BA32812186C434007E35FE /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
@@ -1374,6 +1425,15 @@
 			);
 			name = Keychain;
 			path = Bitmark/Keychain;
+			sourceTree = "<group>";
+		};
+		58D2564D21BABAC5005027EE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				58D2569021BABAC6005027EE /* libRNSentry.a */,
+				58D2569221BABAC6005027EE /* libRNSentry-tvOS.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		58DBAEB121798495005B0E32 /* PDFScanner */ = {
@@ -1457,6 +1517,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				58B2719321BAC95C005DC24F /* ReactNativeConfig.xcodeproj */,
+				58D2564C21BABAC5005027EE /* RNSentry.xcodeproj */,
 				F109F888219D7C860067DEC1 /* RCTPdf.xcodeproj */,
 				F109F882219D7C580067DEC1 /* RNFetchBlob.xcodeproj */,
 				0E4B7EE82189882600816D2E /* SQLite.xcodeproj */,
@@ -1695,6 +1757,7 @@
 				912484C07EACD4CABE823B67 /* [CP] Embed Pods Frameworks */,
 				D4DA50A7A9F24FB7689D49B4 /* [CP] Copy Pods Resources */,
 				F194593C2186C5DA004F8624 /* Embed Frameworks */,
+				5754BA54EF364A7895C92787 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -1764,7 +1827,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = Z5CE7A3A7N;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 920;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.HealthKit = {
@@ -1892,6 +1955,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = 58B2719421BAC95C005DC24F /* Products */;
+					ProjectRef = 58B2719321BAC95C005DC24F /* ReactNativeConfig.xcodeproj */;
+				},
+				{
 					ProductGroup = 0E7B97A220EF55C90064EEEC /* Products */;
 					ProjectRef = 0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */;
 				},
@@ -1934,6 +2001,10 @@
 				{
 					ProductGroup = 58FC1DFD201B14CB00F60AF9 /* Products */;
 					ProjectRef = E3045E478EDA4BB795BE1653 /* RNMail.xcodeproj */;
+				},
+				{
+					ProductGroup = 58D2564D21BABAC5005027EE /* Products */;
+					ProjectRef = 58D2564C21BABAC5005027EE /* RNSentry.xcodeproj */;
 				},
 				{
 					ProductGroup = F15C1CDB2063B9B6002DDF98 /* Products */;
@@ -2214,6 +2285,34 @@
 			remoteRef = 587A3024201B039D00A1410E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		58B2719921BAC95D005DC24F /* libReactNativeConfig.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeConfig.a;
+			remoteRef = 58B2719821BAC95D005DC24F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		58B2719B21BAC95D005DC24F /* libReactNativeConfig-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libReactNativeConfig-tvOS.a";
+			remoteRef = 58B2719A21BAC95D005DC24F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		58D2569021BABAC6005027EE /* libRNSentry.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSentry.a;
+			remoteRef = 58D2568F21BABAC6005027EE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		58D2569221BABAC6005027EE /* libRNSentry-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNSentry-tvOS.a";
+			remoteRef = 58D2569121BABAC6005027EE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		58FC1DDE201B14CB00F60AF9 /* libRCTVideo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2463,7 +2562,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n# Run sentry cli script to upload debug symbols\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n\n# OR\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		1E657644AE179CF15219F91E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2513,6 +2612,20 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		5754BA54EF364A7895C92787 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
+		};
 		5805EE49216F31B900943FA5 /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2525,7 +2638,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		58908A7920A18A5A00C0064A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2557,7 +2670,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		58908ACD20A18A5A00C0064A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

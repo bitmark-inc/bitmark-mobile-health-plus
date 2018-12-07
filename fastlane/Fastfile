@@ -42,6 +42,8 @@ platform :ios do
     hockey(
       api_token: ENV['HOCKEYAPP_KEY']
     )
+
+    sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
   lane :beta do
     reset_git_repo(
@@ -71,6 +73,8 @@ platform :ios do
     hockey(
       api_token: ENV['HOCKEYAPP_KEY']
       )
+
+    sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
   lane :alpha do
     reset_git_repo(
@@ -99,6 +103,8 @@ platform :ios do
     hockey(
       api_token: ENV['HOCKEYAPP_KEY']
       )
+
+    sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
   lane :betatravis do
     sh "npm install"
@@ -146,6 +152,8 @@ platform :ios do
       release_type: "2",
       tags: "internal_testers",
       )
+
+    sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
   lane :developtravis do
     sh "npm install"
@@ -196,5 +204,7 @@ platform :ios do
       build_server_url: ENV['TRAVIS_JOB_WEB_URL'],
       repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus",
       )
+    
+      sh "../node_modules/@sentry/cli/bin/sentry-cli upload-dsym"
   end
 end

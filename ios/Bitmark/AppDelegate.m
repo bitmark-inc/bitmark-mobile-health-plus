@@ -12,6 +12,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RNSentry.h>
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
 #import <React/RCTLog.h>
@@ -38,11 +39,13 @@
     #else
         jsCodeLocation = [CodePush bundleURL];
     #endif
-
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"BitmarkHealthPlus"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
+
+  [RNSentry installWithRootView:rootView];
+
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
   
 #ifndef DEBUG
