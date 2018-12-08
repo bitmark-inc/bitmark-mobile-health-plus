@@ -200,6 +200,9 @@
 		58908AC820A18A5A00C0064A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		58908AC920A18A5A00C0064A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		589626E9201B28380026C4A5 /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
+		58AAAF6021BC0D1C003A0132 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */; };
+		58AAAF6121BC0D25003A0132 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */; };
+		58AAAF6221BC0D2E003A0132 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */; };
 		58AC1DF7218FEFAC00B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
 		58AC1E35218FEFB100B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
 		58AC1E36218FF0DF00B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
@@ -517,6 +520,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
 			remoteInfo = "privatedata-tvOS";
+		};
+		58AAAF5A21BC0CDD003A0132 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNSentry;
+		};
+		58AAAF5C21BC0CDD003A0132 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 274692C321B4414400BF91A8;
+			remoteInfo = "RNSentry-tvOS";
 		};
 		58FC1DDD201B14CB00F60AF9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -839,6 +856,8 @@
 		58908AD220A18A5A00C0064A /* BitmarkHealthPlus dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitmarkHealthPlus dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkSDKBridge.m; sourceTree = "<group>"; };
 		58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-beta.plist"; sourceTree = "<group>"; };
+		58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSentry.xcodeproj; path = "../node_modules/react-native-sentry/ios/RNSentry.xcodeproj"; sourceTree = "<group>"; };
+		58AAAF5E21BC0D0F003A0132 /* Sentry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Sentry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		58AC1D97218C529400B4CA8F /* Bitmark-dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Bitmark-dev.entitlements"; path = "Bitmark/Bitmark-dev.entitlements"; sourceTree = "<group>"; };
 		58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		58AC1ED621901F7800B4CA8F /* iCloudSync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudSync.h; sourceTree = "<group>"; };
@@ -918,6 +937,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58AAAF6021BC0D1C003A0132 /* libRNSentry.a in Frameworks */,
 				F109F891219D7CB10067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F88F219D7CA30067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E34938A21902DA500796D52 /* libsqlite3.0.tbd in Frameworks */,
@@ -964,6 +984,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58AAAF6221BC0D2E003A0132 /* libRNSentry.a in Frameworks */,
 				F109F893219D7CBF0067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F890219D7CA90067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E34938C21902DB300796D52 /* libsqlite3.0.tbd in Frameworks */,
@@ -1010,6 +1031,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58AAAF6121BC0D25003A0132 /* libRNSentry.a in Frameworks */,
 				F109F892219D7CB70067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F88E219D7C9E0067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E4B7F2D218988D200816D2E /* libsqlite3.0.tbd in Frameworks */,
@@ -1236,6 +1258,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58AAAF5E21BC0D0F003A0132 /* Sentry.framework */,
 				0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */,
 				58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */,
 				5841D64D21884AB9006CDCA4 /* RSKImageCropper.framework */,
@@ -1337,6 +1360,15 @@
 				588FE26D205FB71000937D78 /* PhotoExporting.m */,
 			);
 			path = OtherUtilities;
+			sourceTree = "<group>";
+		};
+		58AAAF5521BC0CDD003A0132 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */,
+				58AAAF5D21BC0CDD003A0132 /* libRNSentry-tvOS.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		58AC1ED521901F5C00B4CA8F /* iCloudSync */ = {
@@ -1457,6 +1489,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */,
 				F109F888219D7C860067DEC1 /* RCTPdf.xcodeproj */,
 				F109F882219D7C580067DEC1 /* RNFetchBlob.xcodeproj */,
 				0E4B7EE82189882600816D2E /* SQLite.xcodeproj */,
@@ -1764,7 +1797,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = Z5CE7A3A7N;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 920;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.HealthKit = {
@@ -1934,6 +1967,10 @@
 				{
 					ProductGroup = 58FC1DFD201B14CB00F60AF9 /* Products */;
 					ProjectRef = E3045E478EDA4BB795BE1653 /* RNMail.xcodeproj */;
+				},
+				{
+					ProductGroup = 58AAAF5521BC0CDD003A0132 /* Products */;
+					ProjectRef = 58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */;
 				},
 				{
 					ProductGroup = F15C1CDB2063B9B6002DDF98 /* Products */;
@@ -2214,6 +2251,20 @@
 			remoteRef = 587A3024201B039D00A1410E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSentry.a;
+			remoteRef = 58AAAF5A21BC0CDD003A0132 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		58AAAF5D21BC0CDD003A0132 /* libRNSentry-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNSentry-tvOS.a";
+			remoteRef = 58AAAF5C21BC0CDD003A0132 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		58FC1DDE201B14CB00F60AF9 /* libRCTVideo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2463,7 +2514,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		1E657644AE179CF15219F91E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2525,7 +2576,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		58908A7920A18A5A00C0064A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2557,7 +2608,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		58908ACD20A18A5A00C0064A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
