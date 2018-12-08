@@ -19,7 +19,6 @@
 #import "ReactNativeExceptionHandler.h"
 #import "Intercom/intercom.h"
 @import iCloudDocumentSync;
-@import HockeySDK;
 
 @interface AppDelegate ()
 
@@ -47,17 +46,6 @@ RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
   [RNSentry installWithRootView:rootView];
 
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-  
-#ifndef DEBUG
-  NSString *hockeyAppID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HockeyAppID"];
-  if (hockeyAppID.length > 0) {
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyAppID];
-    [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAutoSend];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-    [[BITHockeyManager sharedHockeyManager].updateManager setUpdateSetting:BITUpdateCheckManually];
-  }
-#endif
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
