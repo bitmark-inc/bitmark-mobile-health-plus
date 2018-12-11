@@ -17,7 +17,6 @@ import { Actions } from 'react-native-router-flux';
 import KeepAwake from 'react-native-keep-awake';
 import Mailer from 'react-native-mail';
 import RNExitApp from 'react-native-exit-app';
-import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-exception-handler";
 
 import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent, } from '../commons'
 import { HomeRouterComponent } from './home';
