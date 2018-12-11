@@ -62,15 +62,20 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
 }
 
 - (void)iCloudFilesDidChange:(NSMutableArray *)files withNewFileNames:(NSMutableArray *)fileNames {
-  NSArray *keptFiles = [NSArray arrayWithArray:files];
+  NSArray *keptFiles = [files copy];
+  NSArray *keptFileNames = [fileNames copy];
   NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:keptFiles.count];
   for (int i = 0; i < keptFiles.count; i++) {
+    if (i >= keptFiles.count || i >= keptFileNames.count) {
+      return;
+    }
     NSMetadataItem *item = keptFiles[i];
     NSString *downloadStatus = [item valueForAttribute:NSMetadataUbiquitousItemDownloadingStatusKey];
-    if ([downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusDownloaded] ||
-        [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusCurrent]) {
+    if (downloadStatus &&
+        ([downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusDownloaded] ||
+        [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusCurrent])) {
       NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
-      [result setValue:path forKey:fileNames[i]];
+      [result setValue:path forKey:keptFileNames[i]];
     } else {
       NSNumber *percent = [item valueForAttribute:NSMetadataUbiquitousItemPercentDownloadedKey];
       NSLog(@"downloading percent: %@", percent);

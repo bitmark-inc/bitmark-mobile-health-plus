@@ -12,13 +12,12 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RNSentry.h> // This is used for versions of react >= 0.40
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
 #import <React/RCTLog.h>
-#import "ReactNativeExceptionHandler.h"
 #import "Intercom/intercom.h"
 @import iCloudDocumentSync;
-@import HockeySDK;
 
 @interface AppDelegate ()
 
@@ -38,23 +37,14 @@
     #else
         jsCodeLocation = [CodePush bundleURL];
     #endif
-
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"BitmarkHealthPlus"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
+
+  [RNSentry installWithRootView:rootView];
+
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-  
-#ifndef DEBUG
-  NSString *hockeyAppID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HockeyAppID"];
-  if (hockeyAppID.length > 0) {
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyAppID];
-    [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAutoSend];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-    [[BITHockeyManager sharedHockeyManager].updateManager setUpdateSetting:BITUpdateCheckManually];
-  }
-#endif
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
@@ -71,24 +61,6 @@
     RCTLog(@"iCloud is not available on this device");
   }
   
-  // Handle Crash App by native code
-  [ReactNativeExceptionHandler replaceNativeExceptionHandlerBlock:^(NSException *exception, NSString *readeableException){
-    
-    // THIS IS THE IMPORTANT PART
-    // By default when an exception is raised we will show an alert box as per our code.
-    // But since our buttons wont work because our click handlers wont work.
-    // to close the app or to remove the UI lockup on exception.
-    // we need to call this method
-    // [ReactNativeExceptionHandler releaseExceptionHold]; // to release the lock and let the app crash.
-    
-    // Hence we set a timer of 1 secs and then call the method releaseExceptionHold to quit the app after
-    // 1 secs of showing the popup
-    [NSTimer scheduledTimerWithTimeInterval:1.0
-                                     target:[ReactNativeExceptionHandler class]
-                                   selector:@selector(releaseExceptionHold)
-                                   userInfo:nil
-                                    repeats:NO];
-  }];
   return YES;
 }
 

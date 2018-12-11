@@ -23,10 +23,10 @@ platform :ios do
     sh "npm install"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
-    ).to_i
+    )
     increment_build_number(
       xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
-      build_number: (version_number + 1).to_i
+      build_number: (version_number.to_i + 1)
     )
     cert
     sigh(
@@ -38,6 +38,20 @@ platform :ios do
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus",
       include_bitcode: false
+    )
+    sentry_upload_dsym(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+    )
+    sentry_create_release(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      version: "appstore_" + version_number, # release version to create
+      app_identifier: 'com.bitmark.healthplus.beta',
+      finalize: true # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
     )
     hockey(
       api_token: ENV['HOCKEYAPP_KEY']
@@ -52,10 +66,10 @@ platform :ios do
     sh "npm install"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
-    ).to_i
+    )
     increment_build_number(
       xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
-      build_number: (version_number + 1).to_i
+      build_number: (version_number.to_i + 1)
     )
     cert
     sigh(
@@ -68,9 +82,25 @@ platform :ios do
       clean: true,
       include_bitcode: false
     )
+    sentry_upload_dsym(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+    )
+    sentry_create_release(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      version: "alpha_" + version_number, # release version to create
+      app_identifier: 'com.bitmark.healthplus.beta',
+      finalize: true # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
+    )
     hockey(
-      api_token: ENV['HOCKEYAPP_KEY']
-      )
+      api_token: ENV['HOCKEYAPP_KEY'],
+      release_type: "2",
+      tags: "internal_testers"
+    )
   end
   lane :alpha do
     reset_git_repo(
@@ -81,10 +111,10 @@ platform :ios do
     sh "npm install"
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
-    ).to_i
+    )
     increment_build_number(
       xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
-      build_number: (version_number + 1).to_i
+      build_number: (version_number.to_i + 1)
     )
     cert
     sigh(
@@ -96,9 +126,27 @@ platform :ios do
       scheme: "BitmarkHealthPlus dev",
       include_bitcode: false
     )
+    sentry_upload_dsym(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+    )
+    sentry_create_release(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      version: "dev_" + version_number, # release version to create
+      app_identifier: 'com.bitmark.healthplus.beta',
+      finalize: true # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
+    )
     hockey(
-      api_token: ENV['HOCKEYAPP_KEY']
-      )
+      api_token: ENV['HOCKEYAPP_KEY'],
+      notes: "**Branch**: ```" + ENV['TRAVIS_BRANCH'] + "``` --- **CI build**: ```" + ENV['TRAVIS_JOB_WEB_URL'] + "``` --- **Commit message**: ```" + ENV['TRAVIS_COMMIT_MESSAGE'] + "```",
+      notes_type: "1",
+      build_server_url: ENV['TRAVIS_JOB_WEB_URL'],
+      repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus"
+    )
   end
   lane :betatravis do
     sh "npm install"
@@ -107,10 +155,10 @@ platform :ios do
 
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
-    ).to_i
+    )
     increment_build_number(
       xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
-      build_number: (version_number + 1).to_i
+      build_number: (version_number.to_i + 1)
     )
     create_keychain(
       name: keychain_name,
@@ -141,6 +189,20 @@ platform :ios do
       scheme: "BitmarkHealthPlus beta",
       include_bitcode: true
     )
+    sentry_upload_dsym(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+    )
+    sentry_create_release(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      version: "alpha_" + version_number, # release version to create
+      app_identifier: 'com.bitmark.healthplus.beta',
+      finalize: true # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
+    )
     hockey(
       api_token: ENV['HOCKEYAPP_KEY'],
       release_type: "2",
@@ -154,10 +216,10 @@ platform :ios do
 
     version_number = latest_hockey_build_number(
       api_token: ENV['HOCKEYAPP_KEY']
-    ).to_i
+    )
     increment_build_number(
       xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
-      build_number: (version_number + 1).to_i
+      build_number: (version_number.to_i + 1)
     )
     create_keychain(
       name: keychain_name,
@@ -187,6 +249,21 @@ platform :ios do
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus dev",
       include_bitcode: true
+    )
+
+    sentry_upload_dsym(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+    )
+    sentry_create_release(
+      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      version: "dev_" + version_number, # release version to create
+      app_identifier: 'com.bitmark.healthplus.beta',
+      finalize: true # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
     )
 
     hockey(
