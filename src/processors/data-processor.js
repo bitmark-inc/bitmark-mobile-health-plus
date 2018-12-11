@@ -837,14 +837,6 @@ const doTransferBitmark = async (bitmark, receiver) => {
   return result;
 };
 
-const doChangeNetworkStatus = async (networkStatus) => {
-  CacheData.networkStatus = networkStatus;
-  if (networkStatus) {
-    let signatureData = await CommonModel.doCreateSignatureData();
-    let result = await AccountModel.doRegisterJWT(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
-    CacheData.jwt = result.jwt_token;
-  }
-};
 
 const DataProcessor = {
   doOpenApp,
@@ -880,8 +872,6 @@ const DataProcessor = {
   doMarkDisplayedWhatNewInformation,
   doDisplayedWhatNewInformation,
   doTransferBitmark,
-
-  doChangeNetworkStatus,
 };
 
 export { DataProcessor };
