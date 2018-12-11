@@ -50,7 +50,7 @@ const readTagFile = async (tagFilePath) => {
 };
 
 const writeTagFile = async (tagFilePath, tags) => {
-  await FileUtil.writeFile(tagFilePath, tags.join(' '), 'utf8');
+  await FileUtil.writeFile(tagFilePath, tags.join ? tags.join(' ') : tags, 'utf8');
 };
 
 const doCheckAndSyncDataWithICloud = async (bitmark) => {
