@@ -62,9 +62,10 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
 }
 
 - (void)iCloudFilesDidChange:(NSMutableArray *)files withNewFileNames:(NSMutableArray *)fileNames {
-  NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:files.count];
-  for (int i = 0; i < files.count; i++) {
-    NSMetadataItem *item = files[i];
+  NSArray *keptFiles = [NSArray arrayWithArray:files];
+  NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:keptFiles.count];
+  for (int i = 0; i < keptFiles.count; i++) {
+    NSMetadataItem *item = keptFiles[i];
     NSString *downloadStatus = [item valueForAttribute:NSMetadataUbiquitousItemDownloadingStatusKey];
     if ([downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusDownloaded] ||
         [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusCurrent]) {

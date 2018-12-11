@@ -152,8 +152,9 @@ const doCheckNoLongerSupportVersion = async () => {
     let token = '828e099f430442aa924a8a3a87b3f14b';
     let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
     if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
+      let lastPublicVersion = returnedData.app_versions.find(item => item.restricted_to_tags === false);
       let url = returnedData.app_versions[0].download_url;
-      if (DeviceInfo.getBuildNumber() < returnedData.app_versions[0].version && returnedData.app_versions[0].restricted_to_tags === false) {
+      if (lastPublicVersion && DeviceInfo.getBuildNumber() < lastPublicVersion.version) {
         return url;
       }
     }
