@@ -3,12 +3,12 @@ import { NativeAppEventEmitter } from 'react-native';
 let EventEmitterService = {
   event_extra: {},
   events: {
+    APP_LOAD_DATA : 'app:load-data',
     APP_NETWORK_CHANGED: 'app-network-changed',
     APP_NEED_REFRESH: 'app-need-refresh',
     APP_PROCESSING: 'app-processing',
     APP_SUBMITTING: 'app-submitting',
     APP_PROCESS_ERROR: 'app-process-error',
-    APP_LOADING_DATA: 'app-load-fist-data',
     APP_RECEIVED_NOTIFICATION: 'app-received-notification',
     APP_TASK: 'app-task:',
 

@@ -396,11 +396,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    marginTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0) + 34 + convertWidth(14),
+    marginTop: convertWidth(16) + 34 + convertWidth(14),
     backgroundColor: 'rgba(232, 232, 232, 1.0)',
   },
   searchArea: {
-    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0)
+    paddingTop: convertWidth(16)
   },
   searchInput: {
     paddingLeft: convertWidth(16),

@@ -18,7 +18,7 @@ import RNExitApp from 'react-native-exit-app';
 import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler';
 
 import {
-  LoadingComponent, BitmarkInternetOffComponent,
+  LoadingComponent,
   DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent,
 } from '../commons'
 import { HomeRouterComponent } from './home';
@@ -48,7 +48,6 @@ class MainEventsHandlerComponent extends Component {
     this.state = {
       processingCount: false,
       submitting: null,
-      networkStatus: true,
       emptyDataSource: false,
       passTouchFaceId: true,
     };
@@ -93,11 +92,11 @@ class MainEventsHandlerComponent extends Component {
       let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
       let passTouchFaceId = !result || !result.error;
       this.setState({ passTouchFaceId });
-      if (passTouchFaceId && this.state.networkStatus) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus: this.state.networkStatus, justCreatedBitmarkAccount });
+      if (passTouchFaceId) {
+        EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, { justCreatedBitmarkAccount });
       }
-    } else if (this.state.networkStatus) {
-      EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus: this.state.networkStatus, justCreatedBitmarkAccount });
+    } else {
+      EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, { justCreatedBitmarkAccount });
     }
   }
 
@@ -113,21 +112,19 @@ class MainEventsHandlerComponent extends Component {
   }
 
   handleNetworkChange(networkStatus) {
-    this.setState({ networkStatus });
-    if (networkStatus) {
-      UserModel.doTryGetCurrentUser().then(async (userInformation) => {
-        if (userInformation && userInformation.bitmarkAccountNumber) {
-          let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
-          let passTouchFaceId = !result || !result.error;
-          this.setState({ passTouchFaceId });
-          if (passTouchFaceId) {
-            EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus });
-          }
-        } else {
-          EventEmitterService.emit(EventEmitterService.events.APP_NETWORK_CHANGED, { networkStatus });
+    CacheData.networkStatus = networkStatus;
+    UserModel.doTryGetCurrentUser().then(async (userInformation) => {
+      if (userInformation && userInformation.bitmarkAccountNumber) {
+        let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
+        let passTouchFaceId = !result || !result.error;
+        this.setState({ passTouchFaceId });
+        if (passTouchFaceId) {
+          EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, {});
         }
-      });
-    }
+      } else {
+        EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, {});
+      }
+    });
   }
 
   handleAppStateChange = (nextAppState) => {
@@ -301,14 +298,13 @@ class MainEventsHandlerComponent extends Component {
 
   render() {
     let styles = {};
-    if (!this.state.networkStatus || this.state.processingCount || this.state.emptyDataSource || !this.state.passTouchFaceId ||
+    if (this.state.processingCount || this.state.emptyDataSource || !this.state.passTouchFaceId ||
       (!!this.state.submitting && !this.state.submitting.title && !this.state.submitting.message) ||
       (!!this.state.submitting && (this.state.submitting.title || this.state.submitting.message))) {
       styles.height = '100%';
     }
     return (
       <View style={[{ position: 'absolute', width: '100%', top: 0, left: 0, zIndex: constants.zIndex.dialog }, styles]}>
-        {!this.state.networkStatus && <BitmarkInternetOffComponent tryConnectInternet={this.doTryConnectInternet} />}
         {!this.state.passTouchFaceId && <BitmarkDialogComponent dialogStyle={{
           minHeight: 0, backgroundColor: 'rgba(256,256,256, 0.7)', flex: 1, width: '100%',
 
@@ -391,17 +387,15 @@ export class MainComponent extends Component {
 
     this.state = {
       user: null,
-      networkStatus: true,
     };
   }
 
   componentDidMount() {
-
-    EventEmitterService.on(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
+    EventEmitterService.on(EventEmitterService.events.APP_LOAD_DATA, this.doOpenApp);
   }
   componentWillUnmount() {
 
-    EventEmitterService.remove(EventEmitterService.events.APP_NETWORK_CHANGED, this.doOpenApp);
+    EventEmitterService.remove(EventEmitterService.events.APP_LOAD_DATA, this.doOpenApp);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -411,10 +405,7 @@ export class MainComponent extends Component {
     return false;
   }
 
-  doOpenApp({ networkStatus, justCreatedBitmarkAccount }) {
-    if (!networkStatus) {
-      return;
-    }
+  doOpenApp({ justCreatedBitmarkAccount }) {
     AppProcessor.doCheckNoLongerSupportVersion().then((newAppLink) => {
       if (newAppLink) {
         let title = i18n.t('MainComponent_alertTitle1');

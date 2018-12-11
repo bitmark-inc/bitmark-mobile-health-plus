@@ -383,24 +383,28 @@ const doLogin = async () => {
 };
 
 const doLogout = async () => {
-  let result = await AccountModel.doLogout(CacheData.jwt);
-  if (!result) {
-    return null;
-  }
-  if (CacheData.userInformation.notificationUUID) {
-    let signatureData = await CommonModel.doCreateSignatureData()
-    await AccountService.doTryDeregisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.userInformation.notificationUUID, signatureData);
-  }
-  PushNotificationIOS.cancelAllLocalNotifications();
+  if (CacheData.networkStatus) {
+    let result = await AccountModel.doLogout(CacheData.jwt);
+    if (!result) {
+      return null;
+    }
+    if (CacheData.userInformation.notificationUUID) {
+      let signatureData = await CommonModel.doCreateSignatureData()
+      await AccountService.doTryDeregisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.userInformation.notificationUUID, signatureData);
+    }
+    PushNotificationIOS.cancelAllLocalNotifications();
 
-  await UserModel.doRemoveUserInfo();
-  await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}`);
-  await Intercom.logout();
-  UserBitmarksStore.dispatch(UserBitmarksActions.reset());
-  mapModalDisplayData = {};
-  CacheData.keyIndexModalDisplaying = 0;
-  CacheData.userInformation = {};
-  return true;
+    await UserModel.doRemoveUserInfo();
+    await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}`);
+    await Intercom.logout();
+    UserBitmarksStore.dispatch(UserBitmarksActions.reset());
+    mapModalDisplayData = {};
+    CacheData.keyIndexModalDisplaying = 0;
+    CacheData.userInformation = {};
+    return true;
+  }
+  return null;
+
 };
 
 const doRequireHealthKitPermission = async () => {
@@ -535,9 +539,12 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       });
     }
 
-    let signatureData = await CommonModel.doCreateSignatureData();
-    let result = await AccountModel.doRegisterJWT(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
-    CacheData.jwt = result.jwt_token;
+    if (CacheData.networkStatus) {
+      let signatureData = await CommonModel.doCreateSignatureData();
+      let result = await AccountModel.doRegisterJWT(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+      CacheData.jwt = result.jwt_token;
+    }
+
 
     if (justCreatedBitmarkAccount) {
       appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
@@ -830,6 +837,15 @@ const doTransferBitmark = async (bitmark, receiver) => {
   return result;
 };
 
+const doChangeNetworkStatus = async (networkStatus) => {
+  CacheData.networkStatus = networkStatus;
+  if (networkStatus) {
+    let signatureData = await CommonModel.doCreateSignatureData();
+    let result = await AccountModel.doRegisterJWT(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+    CacheData.jwt = result.jwt_token;
+  }
+};
+
 const DataProcessor = {
   doOpenApp,
   doCreateAccount,
@@ -864,6 +880,8 @@ const DataProcessor = {
   doMarkDisplayedWhatNewInformation,
   doDisplayedWhatNewInformation,
   doTransferBitmark,
+
+  doChangeNetworkStatus,
 };
 
 export { DataProcessor };
