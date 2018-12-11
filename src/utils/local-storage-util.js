@@ -1,11 +1,11 @@
-import { FileUtil } from "./index";
-import { DataProcessor } from "../processors";
+import { FileUtil } from './index';
+import { DataProcessor } from '../processors';
 import {
   getIndexedDataByBitmarkId, getTagRecordByBitmarkId,
   insertDetectedDataToIndexedDB,
   updateTag
-} from "./indexed-db-util";
-import iCloudSyncAdapter from "../models/adapters/icloud";
+} from './indexed-db-util';
+import iCloudSyncAdapter from '../models/adapters/icloud';
 import base58 from 'bs58';
 
 const getUserLocalStorageFolderPath = (bitmarkAccountNumber) => {
@@ -76,7 +76,7 @@ const readTagFile = async (tagFilePath) => {
 };
 
 const writeTagFile = async (tagFilePath, tags) => {
-  await FileUtil.writeFile(tagFilePath, tags.join(' '), 'utf8');
+  await FileUtil.writeFile(tagFilePath, tags.join ? tags.join(' ') : tags, 'utf8');
 };
 
 const doCheckAndSyncDataWithICloud = async (bitmark) => {
@@ -181,8 +181,6 @@ export {
   getLocalDatabasesFolderPath,
   getLocalCachesFolderPath,
   moveOldDataFilesToNewLocalStorageFolder,
-  readTagFile,
-  writeTagFile,
   readIndexedDataFile,
   writeIndexedDataFile,
 

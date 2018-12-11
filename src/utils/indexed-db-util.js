@@ -64,7 +64,7 @@ const searchIndexedBitmarks = async (searchTerm) => {
   let tagRecords = (await IndexedDB.queryTags(accountNumber, searchTerm)) || [];
   let records = indexedRecords.concat(tagRecords);
 
-  return {bitmarkIds: uniq(records.map(record => record.bitmarkId)), tagRecords};
+  return { bitmarkIds: uniq(records.map(record => record.bitmarkId)), tagRecords };
 };
 
 const getIndexedDataByBitmarkId = async (bitmarkId) => {
