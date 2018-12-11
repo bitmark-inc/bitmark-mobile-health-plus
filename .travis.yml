@@ -16,6 +16,7 @@ cache:
   - ~/Library/Developer/Xcode/DerivedData
     
 before_install:
+- openssl aes-256-cbc -K $encrypted_1721088a34b3_key -iv $encrypted_1721088a34b3_iv -in sentry.properties.enc -out ios/sentry.properties -d
 - openssl aes-256-cbc -K $encrypted_1721088a34b3_key -iv $encrypted_1721088a34b3_iv -in .travis/ssh-deploy.sh.enc -out ssh-deploy.sh -d
 - chmod +x ssh-deploy.sh
 - ./ssh-deploy.sh
