@@ -174,31 +174,31 @@ const doDownloadAndShareLegal = async (title, urlDownload) => {
 
 
 const doCheckNoLongerSupportVersion = async () => {
-  if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus') {
-    let data = await AccountModel.doTryGetAppVersion();
-    if (data && data.version && data.version.minimum_supported_version) {
-      let minimumSupportedVersion = data.version.minimum_supported_version;
-      let currentVersion = DataProcessor.getApplicationVersion();
-      if (compareVersion(minimumSupportedVersion, currentVersion) > 0) {
-        return config.appLink;
-      }
-    }
-  } else if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse' ||
-    DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
-    let appId = DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse'
-      ? '2651f17048b54ca1a27aa6c959efbf33' // dev app
-      : '953845cde6b940cea3adac0ff1103f8c';// alpha app
+  // if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus') {
+  //   let data = await AccountModel.doTryGetAppVersion();
+  //   if (data && data.version && data.version.minimum_supported_version) {
+  //     let minimumSupportedVersion = data.version.minimum_supported_version;
+  //     let currentVersion = DataProcessor.getApplicationVersion();
+  //     if (compareVersion(minimumSupportedVersion, currentVersion) > 0) {
+  //       return config.appLink;
+  //     }
+  //   }
+  // } else if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse' ||
+  //   DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
+  //   let appId = DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse'
+  //     ? '2651f17048b54ca1a27aa6c959efbf33' // dev app
+  //     : '953845cde6b940cea3adac0ff1103f8c';// alpha app
 
-    let token = '828e099f430442aa924a8a3a87b3f14b';
-    let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
-    if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
-      let lastPublicVersion = returnedData.app_versions.find(item => item.restricted_to_tags === false);
-      let url = returnedData.app_versions[0].download_url;
-      if (lastPublicVersion && DeviceInfo.getBuildNumber() < lastPublicVersion.version) {
-        return url;
-      }
-    }
-  }
+  //   let token = '828e099f430442aa924a8a3a87b3f14b';
+  //   let returnedData = await runPromiseWithoutError(AccountModel.doGetHockeyAppVersion(appId, token));
+  //   if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
+  //     let lastPublicVersion = returnedData.app_versions.find(item => item.restricted_to_tags === false);
+  //     let url = returnedData.app_versions[0].download_url;
+  //     if (lastPublicVersion && DeviceInfo.getBuildNumber() < lastPublicVersion.version) {
+  //       return url;
+  //     }
+  //   }
+  // }
 };
 
 // const doReceivedAccessQRCode = async (token) => {

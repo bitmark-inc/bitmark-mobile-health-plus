@@ -20,10 +20,10 @@ import { constants } from '../../constants';
 // import { EventEmitterService } from '../../services';
 import {
   DataProcessor,
-  // AppProcessor
+  AppProcessor
 } from '../../processors';
 import { DataAccountAccessesStore } from '../../stores';
-// import { EventEmitterService } from '../../services';
+import { EventEmitterService } from '../../services';
 export class PrivateAccountComponent extends Component {
   static propTypes = {
     accesses: PropTypes.shape({
@@ -209,8 +209,8 @@ export class PrivateAccountComponent extends Component {
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText3')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                  {/* <TouchableOpacity style={styles.rowButton} onPress={() => {
+                {/* <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
+                <TouchableOpacity style={styles.rowButton} onPress={() => {
                   AppProcessor.doLogout().then((result) => {
                     if (result) {
                       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
@@ -218,7 +218,7 @@ export class PrivateAccountComponent extends Component {
                   }).catch(error => {
                     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
                   })
-                }}> */}
+                }}>
                   <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText4')}</Text>
                   <Image style={styles.rowButtonIcon} source={require('../../../assets/imgs/arrow_left_icon_red.png')} />
                 </TouchableOpacity>

@@ -17,7 +17,7 @@ const iCloudSyncAdapter = {
     return new Promise((resolve) => {
       key = key.replace(new RegExp(' ', 'g'), '_');
       iCloudSyncNative.uploadFileToCloud(filePath, key, (ok) => {
-        console.log('upload file to cloud result:', ok);
+        console.log('upload file to cloud result:', { key, filePath, ok });
       });
       resolve();
     });

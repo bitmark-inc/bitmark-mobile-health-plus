@@ -507,6 +507,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   }
 
   if (userInformation && userInformation.bitmarkAccountNumber && !!CommonModel.getFaceTouchSessionId()) {
+    // await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${userInformation.bitmarkAccountNumber}`);
 
