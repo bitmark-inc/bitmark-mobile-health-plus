@@ -79,7 +79,6 @@ class MainEventsHandlerComponent extends Component {
 
     // Handle Crashes
     this.checkAndShowCrashLog();
-    this.registerCrashHandler();
   }
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
@@ -88,7 +87,8 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_NEED_REFRESH, this.doRefresh);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
-    EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR, this.handerProcessErrorEvent);
+    EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR
+    , this.handerProcessErrorEvent);
     EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
     EventEmitterService.remove(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
   }
@@ -199,31 +199,6 @@ class MainEventsHandlerComponent extends Component {
     } else if (processingCount === 0) {
       KeepAwake.deactivate();
     }
-  }
-
-  registerCrashHandler() {
-    // Handle JS error
-    setJSExceptionHandler(async (error, isFatal) => {
-      if (error && isFatal) {
-        let userInformation = await UserModel.doGetCurrentUser();
-        let crashLog = `JS error: ${error.name} : ${error.message}\r\n${error.stack ? error.stack : ''}`;
-        crashLog = `${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${crashLog}`;
-
-        console.log('Unexpected JS error:', crashLog);
-
-        await FileUtil.create(CRASH_LOG_FILE_PATH, crashLog);
-        RNExitApp.exitApp();
-      }
-    }, false);
-
-    // Handle native code error
-    setNativeExceptionHandler(async (exceptionString) => {
-      let userInformation = await UserModel.doGetCurrentUser();
-      let crashLog = `Native error: ${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${exceptionString}`;
-      console.log('Unexpected Native Code error:', crashLog);
-
-      await FileUtil.create(CRASH_LOG_FILE_PATH, crashLog);
-    });
   }
 
   async checkAndShowCrashLog() {
