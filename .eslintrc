@@ -6,7 +6,8 @@
     "browser": true
   },
   "globals": {
-    "i18n": true
+    "i18n": true,
+    "__DEV__": true
   },
   "plugins": [
     "react",

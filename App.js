@@ -14,7 +14,9 @@ import { BitmarkSDK } from 'src/processors';
 import { config } from 'src/configs';
 import { Sentry } from 'react-native-sentry';
 
-Sentry.config('https://be60f83dc4944cef8069256e4b8c0a6b@sentry.io/1339711').install();
+if (!__DEV__) {
+  Sentry.config('https://be60f83dc4944cef8069256e4b8c0a6b@sentry.io/1339711').install();
+}
 
 
 
