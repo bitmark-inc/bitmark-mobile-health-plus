@@ -40,13 +40,13 @@ platform :ios do
       include_bitcode: false
     )
     sentry_upload_dsym(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
     )
     sentry_create_release(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       version: "appstore_" + version_number, # release version to create
@@ -83,13 +83,13 @@ platform :ios do
       include_bitcode: false
     )
     sentry_upload_dsym(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: '9c23002afc0a42a8b5a674b474b7e1d1b03e67b6ee474d58afd0a7610da34109',
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
     )
     sentry_create_release(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       version: "alpha_" + version_number, # release version to create
@@ -127,13 +127,13 @@ platform :ios do
       include_bitcode: false
     )
     sentry_upload_dsym(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
     )
     sentry_create_release(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       version: "dev_" + version_number, # release version to create
@@ -190,13 +190,13 @@ platform :ios do
       include_bitcode: true
     )
     sentry_upload_dsym(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
     )
     sentry_create_release(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       version: "alpha_" + version_number, # release version to create
@@ -252,13 +252,13 @@ platform :ios do
     )
 
     sentry_upload_dsym(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
     )
     sentry_create_release(
-      auth_token: '24dadc9c759e47eebf313819d16cc39f33d7896c760f4e34a869e35e2a076101',
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
       version: "dev_" + version_number, # release version to create
