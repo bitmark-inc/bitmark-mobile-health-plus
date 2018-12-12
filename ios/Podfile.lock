@@ -1,9 +1,6 @@
 PODS:
-  - BitmarkSDK (2.2.0):
+  - BitmarkSDK (0.0.5):
     - TweetNacl
-  - HockeySDK (5.1.4):
-    - HockeySDK/DefaultLib (= 5.1.4)
-  - HockeySDK/DefaultLib (5.1.4)
   - iCloudDocumentSync (7.4.1)
   - Intercom (5.1.5)
   - KeychainAccess (3.1.2)
@@ -11,8 +8,7 @@ PODS:
   - TweetNacl (1.0.1)
 
 DEPENDENCIES:
-  - BitmarkSDK (from `https://github.com/bitmark-inc/bitmark-sdk-swift.git`)
-  - HockeySDK
+  - BitmarkSDK (from `https://github.com/bitmark-inc/bitmark-sdk-swift.git`, branch `v1`)
   - iCloudDocumentSync
   - Intercom
   - KeychainAccess
@@ -20,7 +16,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - HockeySDK
     - iCloudDocumentSync
     - Intercom
     - KeychainAccess
@@ -28,27 +23,27 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   BitmarkSDK:
+    :branch: v1
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
   TesseractOCRiOS:
     :git: https://github.com/gali8/Tesseract-OCR-iOS.git
 
 CHECKOUT OPTIONS:
   BitmarkSDK:
-    :commit: 85f3ff41e068f7a6f4552a1c64401152e0d866f5
+    :commit: a674b1b3323f78f00ce95b672f37effdc3309fce
     :git: https://github.com/bitmark-inc/bitmark-sdk-swift.git
   TesseractOCRiOS:
     :commit: 14ff7d4e344d788b462ed993b56e94674df52ca9
     :git: https://github.com/gali8/Tesseract-OCR-iOS.git
 
 SPEC CHECKSUMS:
-  BitmarkSDK: 8d528ebc33eaa1aed09db9f00c110916e127c352
-  HockeySDK: 15afe6bc0a5bfe3a531fd73dbf082095f37dac3b
+  BitmarkSDK: 3234949ba38f292e9ac3bd5d13a8981b182990a1
   iCloudDocumentSync: 961aac30ca09c221de4c236e94dae69912f2c589
   Intercom: 0a0ec9a30a12802c56ff02bb98ddf6f047035c68
   KeychainAccess: b3816fddcf28aa29d94b10ec305cd52be14c472b
   TesseractOCRiOS: 729989db3984bb60ba3addb053569b172d48c409
   TweetNacl: ea279cd32bffee69c59c73631470d3419db675df
 
-PODFILE CHECKSUM: d2a62dbe75d6ef8d5220bb1a507ae43d90f3a5cd
+PODFILE CHECKSUM: f148bea48390ca8c6f8bc2039b4996b88b2a1799
 
 COCOAPODS: 1.5.3

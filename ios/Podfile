@@ -8,8 +8,6 @@ def pods
     pod 'Intercom'
     pod 'TesseractOCRiOS', :git => 'https://github.com/gali8/Tesseract-OCR-iOS.git'
     pod 'iCloudDocumentSync'
-    pod 'HockeySDK'
-    
 end
 
 target 'BitmarkHealthPlus' do

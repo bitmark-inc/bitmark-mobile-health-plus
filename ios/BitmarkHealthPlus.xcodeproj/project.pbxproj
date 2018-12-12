@@ -12,7 +12,6 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* BitmarkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BitmarkTests.m */; };
-		0E25DDFC20F470EB00635A33 /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
 		0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		0E34934C21902D9F00796D52 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2A2189882600816D2E /* libSQLite.a */; };
 		0E34938A21902DA500796D52 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */; };
@@ -32,7 +31,6 @@
 		0E7371AD217478D3009022CC /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0E7371AC217478D3009022CC /* tessdata */; };
 		0E7371AE217478D3009022CC /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0E7371AC217478D3009022CC /* tessdata */; };
 		0E7371AF217478D3009022CC /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0E7371AC217478D3009022CC /* tessdata */; };
-		0E7B97DE20EF56170064EEEC /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -78,7 +76,6 @@
 		5805EE1C216F31B900943FA5 /* libRNIntercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F13CAA992140BF8F001414A9 /* libRNIntercom.a */; };
 		5805EE1D216F31B900943FA5 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16DDBCD213926D100EE9FF9 /* libRNDeviceInfo.a */; };
 		5805EE1E216F31B900943FA5 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
-		5805EE1F216F31B900943FA5 /* libReactNativeExceptionHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */; };
 		5805EE20216F31B900943FA5 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
 		5805EE21216F31B900943FA5 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		5805EE22216F31B900943FA5 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
@@ -197,6 +194,9 @@
 		58908AC820A18A5A00C0064A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		58908AC920A18A5A00C0064A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		589626E9201B28380026C4A5 /* BitmarkSDKBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */; };
+		58AAAF6021BC0D1C003A0132 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */; };
+		58AAAF6121BC0D25003A0132 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */; };
+		58AAAF6221BC0D2E003A0132 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */; };
 		58AC1DF7218FEFAC00B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
 		58AC1E35218FEFB100B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
 		58AC1E36218FF0DF00B4CA8F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */; };
@@ -318,13 +318,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 15209BEF1D250F63000D0F44;
 			remoteInfo = RNExitApp;
-		};
-		0E7B97D220EF55C90064EEEC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = ReactNativeExceptionHandler;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -514,6 +507,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
 			remoteInfo = "privatedata-tvOS";
+		};
+		58AAAF5A21BC0CDD003A0132 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNSentry;
+		};
+		58AAAF5C21BC0CDD003A0132 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 274692C321B4414400BF91A8;
+			remoteInfo = "RNSentry-tvOS";
 		};
 		58FC1DDD201B14CB00F60AF9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -756,7 +763,6 @@
 		0E7371A721747877009022CC /* RNTextDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTextDetector.h; sourceTree = "<group>"; };
 		0E7371A821747877009022CC /* RNTextDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTextDetector.m; sourceTree = "<group>"; };
 		0E7371AC217478D3009022CC /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = Bitmark/tessdata; sourceTree = "<group>"; };
-		0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeExceptionHandler.xcodeproj; path = "../node_modules/react-native-exception-handler/ios/ReactNativeExceptionHandler.xcodeproj"; sourceTree = "<group>"; };
 		11AD9D90D3821D2E143D47FB /* Pods-BitmarkHealthPlusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmarkHealthPlusTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BitmarkHealthPlusTests/Pods-BitmarkHealthPlusTests.debug.xcconfig"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -835,6 +841,8 @@
 		58908AD220A18A5A00C0064A /* BitmarkHealthPlus dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitmarkHealthPlus dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		589626E8201B28380026C4A5 /* BitmarkSDKBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitmarkSDKBridge.m; sourceTree = "<group>"; };
 		58A2FE4B2175F7D800DE76F9 /* Info-beta.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-beta.plist"; sourceTree = "<group>"; };
+		58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSentry.xcodeproj; path = "../node_modules/react-native-sentry/ios/RNSentry.xcodeproj"; sourceTree = "<group>"; };
+		58AAAF5E21BC0D0F003A0132 /* Sentry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Sentry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		58AC1D97218C529400B4CA8F /* Bitmark-dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Bitmark-dev.entitlements"; path = "Bitmark/Bitmark-dev.entitlements"; sourceTree = "<group>"; };
 		58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		58AC1ED621901F7800B4CA8F /* iCloudSync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudSync.h; sourceTree = "<group>"; };
@@ -914,6 +922,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58AAAF6021BC0D1C003A0132 /* libRNSentry.a in Frameworks */,
 				F109F891219D7CB10067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F88F219D7CA30067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E34938A21902DA500796D52 /* libsqlite3.0.tbd in Frameworks */,
@@ -925,7 +934,6 @@
 				F13CAA9E2140BFA5001414A9 /* libRNIntercom.a in Frameworks */,
 				F12EC13921393C69008E6F4C /* libRNDeviceInfo.a in Frameworks */,
 				0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */,
-				0E25DDFC20F470EB00635A33 /* libReactNativeExceptionHandler.a in Frameworks */,
 				F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
 				58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */,
 				588CAAD421885FE8006D846A /* RSKImageCropper.framework in Frameworks */,
@@ -960,6 +968,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58AAAF6221BC0D2E003A0132 /* libRNSentry.a in Frameworks */,
 				F109F893219D7CBF0067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F890219D7CA90067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E34938C21902DB300796D52 /* libsqlite3.0.tbd in Frameworks */,
@@ -971,7 +980,6 @@
 				5805EE1C216F31B900943FA5 /* libRNIntercom.a in Frameworks */,
 				5805EE1D216F31B900943FA5 /* libRNDeviceInfo.a in Frameworks */,
 				5805EE1E216F31B900943FA5 /* libRNExitApp.a in Frameworks */,
-				5805EE1F216F31B900943FA5 /* libReactNativeExceptionHandler.a in Frameworks */,
 				5805EE20216F31B900943FA5 /* libRNCookieManagerIOS.a in Frameworks */,
 				5805EE21216F31B900943FA5 /* libKCKeepAwake.a in Frameworks */,
 				5805EE22216F31B900943FA5 /* libRNDocumentPicker.a in Frameworks */,
@@ -1006,6 +1014,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58AAAF6121BC0D25003A0132 /* libRNSentry.a in Frameworks */,
 				F109F892219D7CB70067DEC1 /* libRCTPdf.a in Frameworks */,
 				F109F88E219D7C9E0067DEC1 /* libRNFetchBlob.a in Frameworks */,
 				0E4B7F2D218988D200816D2E /* libsqlite3.0.tbd in Frameworks */,
@@ -1017,7 +1026,6 @@
 				F13CAA9D2140BF9E001414A9 /* libRNIntercom.a in Frameworks */,
 				F12EC13A21393C70008E6F4C /* libRNDeviceInfo.a in Frameworks */,
 				0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */,
-				0E7B97DE20EF56170064EEEC /* libReactNativeExceptionHandler.a in Frameworks */,
 				58AC1E35218FEFB100B4CA8F /* CloudKit.framework in Frameworks */,
 				F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
 				F179A25020AF9775002D5539 /* libKCKeepAwake.a in Frameworks */,
@@ -1152,14 +1160,6 @@
 			path = RNTextDetector;
 			sourceTree = "<group>";
 		};
-		0E7B97A220EF55C90064EEEC /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1232,6 +1232,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58AAAF5E21BC0D0F003A0132 /* Sentry.framework */,
 				0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */,
 				58AC1DF6218FEFAC00B4CA8F /* CloudKit.framework */,
 				5841D64D21884AB9006CDCA4 /* RSKImageCropper.framework */,
@@ -1333,6 +1334,15 @@
 				588FE26D205FB71000937D78 /* PhotoExporting.m */,
 			);
 			path = OtherUtilities;
+			sourceTree = "<group>";
+		};
+		58AAAF5521BC0CDD003A0132 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */,
+				58AAAF5D21BC0CDD003A0132 /* libRNSentry-tvOS.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		58AC1ED521901F5C00B4CA8F /* iCloudSync */ = {
@@ -1452,6 +1462,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */,
 				F109F888219D7C860067DEC1 /* RCTPdf.xcodeproj */,
 				F109F882219D7C580067DEC1 /* RNFetchBlob.xcodeproj */,
 				0E4B7EE82189882600816D2E /* SQLite.xcodeproj */,
@@ -1460,7 +1471,6 @@
 				F13CAABA21410654001414A9 /* ReactNativePermissions.xcodeproj */,
 				F13CAA5E2140BF8F001414A9 /* RNIntercom.xcodeproj */,
 				0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */,
-				0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */,
 				F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */,
 				F179A21520AF9760002D5539 /* KCKeepAwake.xcodeproj */,
 				0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */,
@@ -1759,7 +1769,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = Z5CE7A3A7N;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 920;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.HealthKit = {
@@ -1888,10 +1898,6 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = 0E7B97A220EF55C90064EEEC /* Products */;
-					ProjectRef = 0E7B97A120EF55C90064EEEC /* ReactNativeExceptionHandler.xcodeproj */;
-				},
-				{
 					ProductGroup = F13CAABB21410654001414A9 /* Products */;
 					ProjectRef = F13CAABA21410654001414A9 /* ReactNativePermissions.xcodeproj */;
 				},
@@ -1930,6 +1936,10 @@
 				{
 					ProductGroup = 58FC1DFD201B14CB00F60AF9 /* Products */;
 					ProjectRef = E3045E478EDA4BB795BE1653 /* RNMail.xcodeproj */;
+				},
+				{
+					ProductGroup = 58AAAF5521BC0CDD003A0132 /* Products */;
+					ProjectRef = 58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */;
 				},
 				{
 					ProductGroup = F15C1CDB2063B9B6002DDF98 /* Products */;
@@ -2012,13 +2022,6 @@
 			fileType = archive.ar;
 			path = libRNExitApp.a;
 			remoteRef = 0E608BDA20F3126700F40874 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0E7B97D320EF55C90064EEEC /* libReactNativeExceptionHandler.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libReactNativeExceptionHandler.a;
-			remoteRef = 0E7B97D220EF55C90064EEEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {
@@ -2208,6 +2211,20 @@
 			fileType = archive.ar;
 			path = "libprivatedata-tvOS.a";
 			remoteRef = 587A3024201B039D00A1410E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		58AAAF5B21BC0CDD003A0132 /* libRNSentry.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSentry.a;
+			remoteRef = 58AAAF5A21BC0CDD003A0132 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		58AAAF5D21BC0CDD003A0132 /* libRNSentry-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNSentry-tvOS.a";
+			remoteRef = 58AAAF5C21BC0CDD003A0132 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		58FC1DDE201B14CB00F60AF9 /* libRCTVideo.a */ = {
@@ -2459,7 +2476,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		1E657644AE179CF15219F91E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2521,7 +2538,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		58908A7920A18A5A00C0064A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2553,7 +2570,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		58908ACD20A18A5A00C0064A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2588,13 +2605,11 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
 			);
@@ -2658,13 +2673,11 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
 			);
@@ -2682,7 +2695,6 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/Intercom.bundle",
 				"${PODS_ROOT}/Intercom/Intercom/Intercom.framework/Versions/A/Resources/IntercomTranslations.bundle",
 			);
@@ -2690,7 +2702,6 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Intercom.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/IntercomTranslations.bundle",
 			);
@@ -2967,7 +2978,6 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
-					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
 				INFOPLIST_FILE = Bitmark/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -3003,7 +3013,6 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
-					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
 				INFOPLIST_FILE = Bitmark/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -3043,7 +3052,6 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
-					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
 				INFOPLIST_FILE = "Info-beta.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -3084,7 +3092,6 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
-					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
 				INFOPLIST_FILE = "Info-beta.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -3124,7 +3131,6 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
-					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
 				INFOPLIST_FILE = "Info-dev.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -3164,7 +3170,6 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
-					"$(SRCROOT)/../node_modules/react-native-exception-handler/ios",
 				);
 				INFOPLIST_FILE = "Info-dev.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

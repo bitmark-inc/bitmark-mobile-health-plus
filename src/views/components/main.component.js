@@ -15,7 +15,6 @@ import DeviceInfo from 'react-native-device-info';
 import KeepAwake from 'react-native-keep-awake';
 import Mailer from 'react-native-mail';
 import RNExitApp from 'react-native-exit-app';
-import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler';
 
 import {
   LoadingComponent,
@@ -73,7 +72,6 @@ class MainEventsHandlerComponent extends Component {
 
     // Handle Crashes
     this.checkAndShowCrashLog();
-    this.registerCrashHandler();
   }
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
@@ -147,31 +145,6 @@ class MainEventsHandlerComponent extends Component {
     } else if (processingCount === 0) {
       KeepAwake.deactivate();
     }
-  }
-
-  registerCrashHandler() {
-    // Handle JS error
-    setJSExceptionHandler(async (error, isFatal) => {
-      if (error && isFatal) {
-        let userInformation = await UserModel.doGetCurrentUser();
-        let crashLog = `JS error: ${error.name} : ${error.message}\r\n${error.stack ? error.stack : ''}`;
-        crashLog = `${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${crashLog}`;
-
-        console.log('Unexpected JS error:', crashLog);
-
-        await FileUtil.create(CRASH_LOG_FILE_PATH, crashLog);
-        RNExitApp.exitApp();
-      }
-    }, false);
-
-    // Handle native code error
-    setNativeExceptionHandler(async (exceptionString) => {
-      let userInformation = await UserModel.doGetCurrentUser();
-      let crashLog = `Native error: ${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${exceptionString}`;
-      console.log('Unexpected Native Code error:', crashLog);
-
-      await FileUtil.create(CRASH_LOG_FILE_PATH, crashLog);
-    });
   }
 
   async checkAndShowCrashLog() {
