@@ -4,6 +4,7 @@
 
 import { Text } from 'react-native';
 import codePush from "react-native-code-push";
+import DeviceInfo from 'react-native-device-info';
 import i18n from 'i18n-js';
 import { Buffer } from 'safe-buffer';
 import {
@@ -16,9 +17,12 @@ import { Sentry } from 'react-native-sentry';
 
 if (!__DEV__) {
   Sentry.config('https://be60f83dc4944cef8069256e4b8c0a6b@sentry.io/1339711').install();
+  Sentry.setTagsContext({
+    "BundleId": DeviceInfo.getBundleId(),
+    "Version": DeviceInfo.getVersion(),
+    "BuildNumber": DeviceInfo.getBuildNumber(),
+  });
 }
-
-
 
 BitmarkSDK.sdkInit(config.network);
 console.disableYellowBox = true;
