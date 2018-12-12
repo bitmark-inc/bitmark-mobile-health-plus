@@ -142,9 +142,7 @@ platform :ios do
     )
     hockey(
       api_token: ENV['HOCKEYAPP_KEY'],
-      notes: "**Branch**: ```" + ENV['TRAVIS_BRANCH'] + "``` --- **CI build**: ```" + ENV['TRAVIS_JOB_WEB_URL'] + "``` --- **Commit message**: ```" + ENV['TRAVIS_COMMIT_MESSAGE'] + "```",
       notes_type: "1",
-      build_server_url: ENV['TRAVIS_JOB_WEB_URL'],
       repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus"
     )
   end
