@@ -12,7 +12,9 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#ifndef DEBUG
 #import <React/RNSentry.h> // This is used for versions of react >= 0.40
+#endif
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
 #import <React/RCTLog.h>

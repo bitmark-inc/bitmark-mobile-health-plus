@@ -26,8 +26,6 @@ import { EventEmitterService, DataProcessor, BitmarkSDK, UserModel, AppProcessor
 import { constants, config } from 'src/configs';
 
 
-const CRASH_LOG_FILE_NAME = 'crash_log.txt';
-const CRASH_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + CRASH_LOG_FILE_NAME;
 const ERROR_LOG_FILE_NAME = 'error_log.txt';
 const ERROR_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + ERROR_LOG_FILE_NAME;
 class MainEventsHandlerComponent extends Component {
@@ -70,7 +68,6 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.on(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
 
     // Handle Crashes
-    this.checkAndShowCrashLog();
   }
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
@@ -143,31 +140,6 @@ class MainEventsHandlerComponent extends Component {
       KeepAwake.activate();
     } else if (processingCount === 0) {
       KeepAwake.deactivate();
-    }
-  }
-
-  async checkAndShowCrashLog() {
-    //let crashLog = await CommonModel.doGetLocalData(CommonModel.KEYS.CRASH_LOG);
-    let hasCrashLog = await FileUtil.exists(CRASH_LOG_FILE_PATH);
-
-    if (hasCrashLog) {
-      console.log(await runPromiseWithoutError(FileUtil.readFile(CRASH_LOG_FILE_PATH)));
-
-      let title = i18n.t('MainComponent_alertTitle4');
-      let message = i18n.t('MainComponent_alertMessage4');
-
-      Alert.alert(title, message, [{
-        text: i18n.t('MainComponent_alertButton41'),
-        style: 'cancel',
-        onPress: () => {
-          FileUtil.removeSafe(CRASH_LOG_FILE_PATH);
-        }
-      }, {
-        text: i18n.t('MainComponent_alertButton42'),
-        onPress: () => {
-          this.sendReport(CRASH_LOG_FILE_PATH, CRASH_LOG_FILE_NAME);
-        }
-      }]);
     }
   }
 
