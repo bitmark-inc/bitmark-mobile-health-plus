@@ -12,7 +12,6 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* BitmarkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BitmarkTests.m */; };
-		0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		0E34934C21902D9F00796D52 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2A2189882600816D2E /* libSQLite.a */; };
 		0E34938A21902DA500796D52 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */; };
 		0E34938B21902DAE00796D52 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2A2189882600816D2E /* libSQLite.a */; };
@@ -23,7 +22,6 @@
 		0E4065AB2091E23B005E1CBD /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
 		0E4B7F2B2189889000816D2E /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2A2189882600816D2E /* libSQLite.a */; };
 		0E4B7F2D218988D200816D2E /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */; };
-		0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		0E617E4F20A2FAE4007A3A24 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
 		0E7371A921747877009022CC /* RNTextDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7371A821747877009022CC /* RNTextDetector.m */; };
 		0E7371AA21747877009022CC /* RNTextDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7371A821747877009022CC /* RNTextDetector.m */; };
@@ -75,7 +73,6 @@
 		5805EE1B216F31B900943FA5 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F13CAAEC21410655001414A9 /* libReactNativePermissions.a */; };
 		5805EE1C216F31B900943FA5 /* libRNIntercom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F13CAA992140BF8F001414A9 /* libRNIntercom.a */; };
 		5805EE1D216F31B900943FA5 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16DDBCD213926D100EE9FF9 /* libRNDeviceInfo.a */; };
-		5805EE1E216F31B900943FA5 /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E608BDB20F3126700F40874 /* libRNExitApp.a */; };
 		5805EE20216F31B900943FA5 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1F6E2D720B6BF4000CECD53 /* libRNCookieManagerIOS.a */; };
 		5805EE21216F31B900943FA5 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		5805EE22216F31B900943FA5 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E4065AA2091E015005E1CBD /* libRNDocumentPicker.a */; };
@@ -311,13 +308,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = E23D7B471ACEFE2A00C59171;
 			remoteInfo = SQLite;
-		};
-		0E608BDA20F3126700F40874 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 15209BEF1D250F63000D0F44;
-			remoteInfo = RNExitApp;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -759,7 +749,6 @@
 		0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		0E4B7EE82189882600816D2E /* SQLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SQLite.xcodeproj; path = "../node_modules/react-native-sqlite-storage/src/ios/SQLite.xcodeproj"; sourceTree = "<group>"; };
 		0E4B7F2C218988D200816D2E /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
-		0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNExitApp.xcodeproj; path = "../node_modules/react-native-exit-app/ios/RNExitApp.xcodeproj"; sourceTree = "<group>"; };
 		0E7371A721747877009022CC /* RNTextDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTextDetector.h; sourceTree = "<group>"; };
 		0E7371A821747877009022CC /* RNTextDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTextDetector.m; sourceTree = "<group>"; };
 		0E7371AC217478D3009022CC /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = Bitmark/tessdata; sourceTree = "<group>"; };
@@ -933,7 +922,6 @@
 				F13CAAFB21410668001414A9 /* libReactNativePermissions.a in Frameworks */,
 				F13CAA9E2140BFA5001414A9 /* libRNIntercom.a in Frameworks */,
 				F12EC13921393C69008E6F4C /* libRNDeviceInfo.a in Frameworks */,
-				0E25DE3520F470F500635A33 /* libRNExitApp.a in Frameworks */,
 				F1F6E2E120B6BF5200CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
 				58B4A9B720B6C89A000FF769 /* libKCKeepAwake.a in Frameworks */,
 				588CAAD421885FE8006D846A /* RSKImageCropper.framework in Frameworks */,
@@ -979,7 +967,6 @@
 				5805EE1B216F31B900943FA5 /* libReactNativePermissions.a in Frameworks */,
 				5805EE1C216F31B900943FA5 /* libRNIntercom.a in Frameworks */,
 				5805EE1D216F31B900943FA5 /* libRNDeviceInfo.a in Frameworks */,
-				5805EE1E216F31B900943FA5 /* libRNExitApp.a in Frameworks */,
 				5805EE20216F31B900943FA5 /* libRNCookieManagerIOS.a in Frameworks */,
 				5805EE21216F31B900943FA5 /* libKCKeepAwake.a in Frameworks */,
 				5805EE22216F31B900943FA5 /* libRNDocumentPicker.a in Frameworks */,
@@ -1025,7 +1012,6 @@
 				F13CAAFA2141065E001414A9 /* libReactNativePermissions.a in Frameworks */,
 				F13CAA9D2140BF9E001414A9 /* libRNIntercom.a in Frameworks */,
 				F12EC13A21393C70008E6F4C /* libRNDeviceInfo.a in Frameworks */,
-				0E608BE220F312CE00F40874 /* libRNExitApp.a in Frameworks */,
 				58AC1E35218FEFB100B4CA8F /* CloudKit.framework in Frameworks */,
 				F1F6E2E320B6BF6800CECD53 /* libRNCookieManagerIOS.a in Frameworks */,
 				F179A25020AF9775002D5539 /* libKCKeepAwake.a in Frameworks */,
@@ -1139,14 +1125,6 @@
 			isa = PBXGroup;
 			children = (
 				0E4B7F2A2189882600816D2E /* libSQLite.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		0E608BA520F3126700F40874 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0E608BDB20F3126700F40874 /* libRNExitApp.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1470,7 +1448,6 @@
 				F1EA756F2186AEA100630294 /* imageCropPicker.xcodeproj */,
 				F13CAABA21410654001414A9 /* ReactNativePermissions.xcodeproj */,
 				F13CAA5E2140BF8F001414A9 /* RNIntercom.xcodeproj */,
-				0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */,
 				F1F6E2A520B6BF4000CECD53 /* RNCookieManagerIOS.xcodeproj */,
 				F179A21520AF9760002D5539 /* KCKeepAwake.xcodeproj */,
 				0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */,
@@ -1918,10 +1895,6 @@
 					ProjectRef = 0E4065A52091E015005E1CBD /* RNDocumentPicker.xcodeproj */;
 				},
 				{
-					ProductGroup = 0E608BA520F3126700F40874 /* Products */;
-					ProjectRef = 0E608BA420F3126700F40874 /* RNExitApp.xcodeproj */;
-				},
-				{
 					ProductGroup = F109F883219D7C580067DEC1 /* Products */;
 					ProjectRef = F109F882219D7C580067DEC1 /* RNFetchBlob.xcodeproj */;
 				},
@@ -2015,13 +1988,6 @@
 			fileType = archive.ar;
 			path = libSQLite.a;
 			remoteRef = 0E4B7F292189882600816D2E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0E608BDB20F3126700F40874 /* libRNExitApp.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNExitApp.a;
-			remoteRef = 0E608BDA20F3126700F40874 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {

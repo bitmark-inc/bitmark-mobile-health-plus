@@ -14,7 +14,6 @@ import DeviceInfo from 'react-native-device-info';
 
 import KeepAwake from 'react-native-keep-awake';
 import Mailer from 'react-native-mail';
-import RNExitApp from 'react-native-exit-app';
 
 import {
   LoadingComponent,
