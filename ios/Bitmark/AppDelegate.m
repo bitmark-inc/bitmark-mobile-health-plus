@@ -36,7 +36,6 @@
       jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   #else
       jsCodeLocation = [CodePush bundleURL];
-      [RNSentry installWithRootView:rootView];
   #endif
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
@@ -51,6 +50,10 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+#ifndef DEBUG
+  [RNSentry installWithRootView:rootView];
+#endif
   
   // iCloud sync
   [[iCloud sharedCloud] setupiCloudDocumentSyncWithUbiquityContainer:nil];
