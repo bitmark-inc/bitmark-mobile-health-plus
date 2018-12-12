@@ -37,7 +37,7 @@ platform :ios do
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus",
-      include_bitcode: false
+      include_bitcode: true
     )
     sentry_upload_dsym(
       auth_token: ENV['SENTRY_AUTH_TOKEN'],
@@ -162,7 +162,9 @@ platform :ios do
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus beta",
-      include_bitcode: true
+      silent:true,
+      skip_archive: true,
+      include_bitcode: false
     )
     sentry_upload_dsym(
       auth_token: ENV['SENTRY_AUTH_TOKEN'],
@@ -215,6 +217,8 @@ platform :ios do
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus dev",
+      silent:true,
+      skip_archive: true,
       include_bitcode: true
     )
 
