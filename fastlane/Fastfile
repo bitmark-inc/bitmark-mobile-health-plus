@@ -43,7 +43,7 @@ platform :ios do
       auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
-      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+      dsym_path: './BitmarkHealthPlus.app.dSYM.zip'
     )
     hockey(
       api_token: ENV['HOCKEYAPP_KEY']
@@ -114,7 +114,7 @@ platform :ios do
       auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
-      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+      dsym_path: './BitmarkHealthPlus dev.app.dSYM.zip'
     )
     hockey(
       api_token: ENV['HOCKEYAPP_KEY'],
@@ -223,7 +223,7 @@ platform :ios do
       auth_token: ENV['SENTRY_AUTH_TOKEN'],
       org_slug: 'bitmark-inc',
       project_slug: 'bitmark-health',
-      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+      dsym_path: './BitmarkHealthPlus dev.app.dSYM.zip'
     )
 
     hockey(
