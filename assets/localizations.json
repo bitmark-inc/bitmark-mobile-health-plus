@@ -300,7 +300,8 @@
     "ReleaseNoteComponent_versionInformationText": "ReleaseNoteComponent_versionInformationText",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "ReleaseNoteComponent_versionInformationReleaseDiff1",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "ReleaseNoteComponent_versionInformationReleaseDiff2",
-    "ReleaseNoteComponent_releaseNoteText": "ReleaseNoteComponent_releaseNoteText"
+    "ReleaseNoteComponent_releaseNoteText": "ReleaseNoteComponent_releaseNoteText",
+    "AppProcessor_offlineMessage": "AppProcessor_offlineMessage"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -603,7 +604,8 @@
     "ReleaseNoteComponent_versionInformationText": "VERSION {{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "just now",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ago",
-    "ReleaseNoteComponent_releaseNoteText": "New Features:\n• Now supports iCloud backup.\n• The same account will now synchronize across both Bitmark Health and Bitmark Registry apps.\n• Alpha version will now display notifications and in-app updates.\n\nUX Improvements:\n• Removed the \"record type\" screen on multiple image capture and selection features - all images are now always registered as one document.\n• Added option to skip registering incomplete weekly health data from previous weeks, restarting the data collection process in the next week."
+    "ReleaseNoteComponent_releaseNoteText": "New Features:\n• Now supports iCloud backup.\n• The same account will now synchronize across both Bitmark Health and Bitmark Registry apps.\n• Alpha version will now display notifications and in-app updates.\n\nUX Improvements:\n• Removed the \"record type\" screen on multiple image capture and selection features - all images are now always registered as one document.\n• Added option to skip registering incomplete weekly health data from previous weeks, restarting the data collection process in the next week.",
+    "AppProcessor_offlineMessage": "Please connect to the Internet and try again!"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "沒有網路連線",
@@ -906,7 +908,8 @@
     "ReleaseNoteComponent_versionInformationText": "版本{{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "今天",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}天前",
-    "ReleaseNoteComponent_releaseNoteText": "新功能：\n• 現在支持iCloud備份\n• 同一帳戶將同時在Bitmark Health和Bitmark Registry應用程序中同步\n• Alpha版現在將顯示通知和應用內更新\n\nUX 使用者體驗改善：\n• 移除新增病例時，整合與分頁病歷選項， 所有的影像將直接登記為一份文件。\n• 新增略過登記健康選項，略過後下週將重新開始計算蒐集健康數據時間。"
+    "ReleaseNoteComponent_releaseNoteText": "新功能：\n• 現在支持iCloud備份\n• 同一帳戶將同時在Bitmark Health和Bitmark Registry應用程序中同步\n• Alpha版現在將顯示通知和應用內更新\n\nUX 使用者體驗改善：\n• 移除新增病例時，整合與分頁病歷選項， 所有的影像將直接登記為一份文件。\n• 新增略過登記健康選項，略過後下週將重新開始計算蒐集健康數據時間。",
+    "AppProcessor_offlineMessage": "Please connect to the Internet and try again!"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -1209,6 +1212,7 @@
     "ReleaseNoteComponent_versionInformationText": "Phiên bản{{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "vừa xong",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ngày trước",
-    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\n• Hỗ trợ sao lưu trên iCloud.\n• Dữ liệu của cùng một tài khoản bitmark sẽ được đồng bộ trên ứng dụng Bitmark Health và Bitmark Registry.\n• Phiên bản Alpha giờ đây sẽ hiển thị thông báo và cập nhật trong ứng dụng.\n\nCải tiến UX:\n• Bỏ màn hình \"loại bản ghi\" khi chụp hoặc lựa chọn nhiều hình ảnh, tất cả các hình ảnh sẽ được đăng ký vào một bản ghi duy nhất.\n• Thêm tuỳ chọn mới để bỏ qua việc đăng ký dữ liệu sức khỏe của các tuần chưa hoàn thành và khởi động lại quá trình thu thập dữ liệu trong tuần tiếp theo."
+    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\n• Hỗ trợ sao lưu trên iCloud.\n• Dữ liệu của cùng một tài khoản bitmark sẽ được đồng bộ trên ứng dụng Bitmark Health và Bitmark Registry.\n• Phiên bản Alpha giờ đây sẽ hiển thị thông báo và cập nhật trong ứng dụng.\n\nCải tiến UX:\n• Bỏ màn hình \"loại bản ghi\" khi chụp hoặc lựa chọn nhiều hình ảnh, tất cả các hình ảnh sẽ được đăng ký vào một bản ghi duy nhất.\n• Thêm tuỳ chọn mới để bỏ qua việc đăng ký dữ liệu sức khỏe của các tuần chưa hoàn thành và khởi động lại quá trình thu thập dữ liệu trong tuần tiếp theo.",
+    "AppProcessor_offlineMessage": "Please connect to the Internet and try again!"
   }
 }

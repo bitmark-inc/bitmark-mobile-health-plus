@@ -17,7 +17,7 @@ import { MaterialIndicator } from "react-native-indicators";
 import { DocumentPicker } from 'react-native-document-picker';
 import {
   FileUtil,
-  convertWidth, issue,
+  convertWidth,
   isImageFile, isPdfFile,
 } from 'src/utils';
 import { config, constants } from 'src/configs';
@@ -26,7 +26,7 @@ import { SearchInputComponent } from './search-input.component';
 import { SearchResultsComponent } from './search-results.component';
 import { AppProcessor, EventEmitterService, CommonModel, CacheData } from 'src/processors';
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
-import { search } from 'src/views/controllers';
+import { search, issue } from 'src/views/controllers';
 
 class PrivateUserComponent extends Component {
   static propTypes = {
@@ -217,6 +217,7 @@ class PrivateUserComponent extends Component {
     DocumentPicker.show({
       filetype: ["public.item"],
     }, async (error, response) => {
+      console.log('choose file :', { response, error });
       if (error) {
         return;
       }

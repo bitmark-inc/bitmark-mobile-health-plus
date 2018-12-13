@@ -478,22 +478,23 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await LocalFileService.moveOldDataFilesToNewLocalStorageFolder();
     await LocalFileService.initializeLocalStorage();
     await IndexDBService.initializeIndexedDB();
+    let bitmarkAccountNumber = CacheData.userInformation.bitmarkAccountNumber;
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
       for (let key in mapFiles) {
         let keyList = key.split('_');
         let promiseRunAfterCopyFile;
         let overwrite = false;
-        if (keyList[0] === CacheData.userInformation.bitmarkAccountNumber) {
+        if (keyList[0] === bitmarkAccountNumber) {
           let keyFilePath;
           if (keyList[1] === 'assets') {
             let assetId = base58.decode(keyList[2]).toString('hex');
-            keyFilePath = key.replace(`${CacheData.userInformation.bitmarkAccountNumber}_assets_${keyList[2]}_`, `${CacheData.userInformation.bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
+            keyFilePath = key.replace(`${bitmarkAccountNumber}_assets_${keyList[2]}_`, `${bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
           } else if (keyList[1] === 'thumbnails') {
-            keyFilePath = key.replace(`${CacheData.userInformation.bitmarkAccountNumber}_thumbnails_`, `${CacheData.userInformation.bitmarkAccountNumber}/thumbnails/`);
+            keyFilePath = key.replace(`${bitmarkAccountNumber}_thumbnails_`, `${bitmarkAccountNumber}/thumbnails/`);
           } else if (keyList[1] === 'indexedData') {
-            keyFilePath = key.replace(`${CacheData.userInformation.bitmarkAccountNumber}_indexedData_`, `${CacheData.userInformation.bitmarkAccountNumber}/indexedData/`);
+            keyFilePath = key.replace(`${bitmarkAccountNumber}_indexedData_`, `${bitmarkAccountNumber}/indexedData/`);
           } else if (keyList[1] === 'indexTag') {
-            keyFilePath = key.replace(`${CacheData.userInformation.bitmarkAccountNumber}_indexTag_`, `${CacheData.userInformation.bitmarkAccountNumber}/indexTag/`);
+            keyFilePath = key.replace(`${bitmarkAccountNumber}_indexTag_`, `${bitmarkAccountNumber}/indexTag/`);
             let bitmarkId = keyList[2].replace('.txt', '');
             overwrite = true;
             promiseRunAfterCopyFile = async () => {

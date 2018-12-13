@@ -7,7 +7,8 @@ import { EventEmitterService, } from './services'
 import { DataProcessor } from './data-processor';
 import DeviceInfo from 'react-native-device-info';
 import { config } from 'src/configs';
-import { compareVersion, runPromiseWithoutError } from 'src/utils';
+import { compareVersion, runPromiseWithoutError, asyncAlert } from 'src/utils';
+import { CacheData } from './caches';
 
 registerTasks();
 // ================================================================================================
@@ -61,9 +62,17 @@ const executeTask = (taskKey, data) => {
     AppRegistry.startHeadlessTask(taskId, taskKey, data);
   });
 }
+
+const showOfflineMessage = () => {
+  asyncAlert('', i18n.t('AppProcessor_offlineMessage'));
+};
 // ================================================================================================
 // ================================================================================================
 const doCreateNewAccount = async (enableTouchFaceId) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   if (Platform.OS === 'ios' && config.isIPhoneX && enableTouchFaceId) {
     await FaceTouchId.authenticate();
   }
@@ -97,38 +106,74 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 // ================================================================================================
 // ================================================================================================
 const doLogin = async (phraseWords, enableTouchFaceId) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doLogin', { phraseWords, enableTouchFaceId });
 };
 
 const doLogout = async () => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doLogout');
 };
 
 const doDeleteAccount = async (processingInfo) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doDeleteAccount', { processingInfo });
 };
 
 const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
 };
 
 const doIssueMultipleFiles = async (listInfo, processingInfo) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doIssueMultipleFiles', { listInfo, processingInfo });
 };
 
 const doBitmarkHealthData = async (list, processingData) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doBitmarkHealthData', { list, processingData });
 };
 
 const doResetHealthDataTasks = async (list) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doResetHealthDataTasks', { list });
 };
 
 const doGetBitmarkInformation = async (bitmarkId) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doGetBitmarkInformation', { bitmarkId });
 };
 
 const doDownloadAndShareLegal = async (title, urlDownload) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doDownloadAndShareLegal', { title, urlDownload });
 };
 
@@ -162,25 +207,49 @@ const doCheckNoLongerSupportVersion = async () => {
 };
 
 const doAcceptEmailRecords = async (emailRecord, processingData) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doAcceptEmailRecords', { emailRecord, processingData });
 };
 
 const doRejectEmailRecords = async (emailRecord) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doRejectEmailRecords', { emailRecord });
 };
 const doProcessEmailRecords = (bitmarkAccountNumber, emailIssueRequestsFromAnEmail) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doProcessEmailRecords', { bitmarkAccountNumber, emailIssueRequestsFromAnEmail });
 };
 
 const doMigrateFilesToLocalStorage = async () => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doMigrateFilesToLocalStorage');
 };
 
 const doCombineImages = async (images) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doCombineImages', { images });
 };
 
 const doTransferBitmark = async (bitmark, receiver) => {
+  if (!CacheData.networkStatus) {
+    showOfflineMessage();
+    return;
+  }
   return executeTask('doTransferBitmark', { bitmark, receiver });
 };
 
