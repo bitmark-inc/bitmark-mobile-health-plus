@@ -62,37 +62,40 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
 }
 
 - (void)iCloudFilesDidChange:(NSMutableArray *)files withNewFileNames:(NSMutableArray *)fileNames {
-    if (!files || !fileNames) {
-        RCTLog(@"files or filesName is missing");
-        return;
+  if (!files || !fileNames) {
+    RCTLog(@"files or filesName is missing");
+    return;
+  }
+  if (files.count != fileNames.count) {
+    RCTLog(@"File and filename's length are mismatched.");
+    return;
+  }
+  
+  NSArray *keptFiles = [files copy];
+  NSArray *keptFileNames = [fileNames copy];
+  NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:keptFiles.count];
+  for (int i = 0; i < keptFiles.count; i++) {
+    if (i >= keptFiles.count || i >= keptFileNames.count) {
+      return;
     }
-    if (files.count != fileNames.count) {
-        RCTLog(@"File and filename's length are mismatched.");
-        return;
-    }
-    
-    NSArray *keptFiles = [files copy];
-    NSArray *keptFileNames = [fileNames copy];
-    NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:keptFiles.count];
-    for (int i = 0; i < keptFiles.count; i++) {
-        if (i >= keptFiles.count || i >= keptFileNames.count) {
-            return;
+    NSMetadataItem *item = keptFiles[i];
+    NSString *downloadStatus = [item valueForAttribute:NSMetadataUbiquitousItemDownloadingStatusKey];
+    if (downloadStatus &&
+        ([downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusDownloaded] ||
+         [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusCurrent])) {
+          if (item) {
+            NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
+            [result setValue:path forKey:keptFileNames[i]];
+          }
+        } else {
+          NSNumber *percent = [item valueForAttribute:NSMetadataUbiquitousItemPercentDownloadedKey];
+          NSLog(@"downloading percent: %@", percent);
         }
-        NSMetadataItem *item = keptFiles[i];
-        NSString *downloadStatus = [item valueForAttribute:NSMetadataUbiquitousItemDownloadingStatusKey];
-        if (downloadStatus &&
-            ([downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusDownloaded] ||
-             [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusCurrent])) {
-                NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
-                [result setValue:path forKey:keptFileNames[i]];
-            } else {
-                NSNumber *percent = [item valueForAttribute:NSMetadataUbiquitousItemPercentDownloadedKey];
-                NSLog(@"downloading percent: %@", percent);
-            }
-    }
-    
-    if (result.count > 0) {
-        [self sendEventWithName:@"oniCloudFileChanged" body:result];
-    }
+  }
+  
+  if (result.count > 0) {
+    [self sendEventWithName:@"oniCloudFileChanged" body:result];
+  }
 }
+
 @end
