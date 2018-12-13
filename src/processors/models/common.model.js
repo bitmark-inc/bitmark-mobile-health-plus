@@ -458,6 +458,7 @@ let CommonModel = {
   detectTextsFromPdf,
   generateThumbnail,
   checkThumbnailForBitmark,
+  removeVietnameseSigns,
 }
 
 export {
