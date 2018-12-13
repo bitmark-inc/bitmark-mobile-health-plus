@@ -13,7 +13,7 @@ import {
 import DeviceInfo from 'react-native-device-info';
 
 import KeepAwake from 'react-native-keep-awake';
-import Mailer from 'react-native-mail';
+import { Sentry } from 'react-native-sentry';
 
 import {
   LoadingComponent,
@@ -21,13 +21,11 @@ import {
 } from '../commons'
 import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
-import { FileUtil, runPromiseWithoutError, convertWidth } from 'src/utils';
+import { runPromiseWithoutError, convertWidth } from 'src/utils';
 import { EventEmitterService, DataProcessor, BitmarkSDK, UserModel, AppProcessor, CommonModel, CacheData } from 'src/processors';
 import { constants, config } from 'src/configs';
 
 
-const ERROR_LOG_FILE_NAME = 'error_log.txt';
-const ERROR_LOG_FILE_PATH = FileUtil.CacheDirectory + '/' + ERROR_LOG_FILE_NAME;
 class MainEventsHandlerComponent extends Component {
   constructor(props) {
     super(props);
@@ -143,26 +141,6 @@ class MainEventsHandlerComponent extends Component {
     }
   }
 
-  sendReport(logFilePath, attachmentName) {
-    Mailer.mail({
-      subject: (attachmentName == CRASH_LOG_FILE_NAME) ? i18n.t('MainComponent_subject1') : i18n.t('MainComponent_subject2'),
-      recipients: ['support@bitmark.com'],
-      body: `App version: ${DataProcessor.getApplicationVersion()} (${DataProcessor.getApplicationBuildNumber()})`,
-      attachment: {
-        path: logFilePath,
-        type: 'doc',
-        name: attachmentName,
-      }
-    }, (error) => {
-      if (error) {
-        Alert.alert(i18n.t('MainComponent_alertTitle5'), i18n.t('MainComponent_alertMessage5'));
-      }
-
-      // Remove crash/error log file
-      FileUtil.removeSafe(logFilePath);
-    });
-  }
-
   handerProcessErrorEvent(processError) {
     if (processError && (processError.title || processError.message)) {
       this.handleDefaultJSError(processError);
@@ -208,10 +186,7 @@ class MainEventsHandlerComponent extends Component {
         errorLog = `${userInformation.bitmarkAccountNumber ? 'Bitmark account number:' + userInformation.bitmarkAccountNumber + '\r\n' : ''}${errorLog}`;
 
         console.log('Handled JS error:', errorLog);
-
-        await FileUtil.create(ERROR_LOG_FILE_PATH, errorLog);
-        this.sendReport(ERROR_LOG_FILE_PATH, ERROR_LOG_FILE_NAME);
-
+        Sentry.captureException(error, { logger: 'user' });
         if (processError && processError.onClose) {
           processError.onClose();
         }

@@ -18,9 +18,8 @@ import { Sentry } from 'react-native-sentry';
 if (!__DEV__) {
   Sentry.config('https://be60f83dc4944cef8069256e4b8c0a6b@sentry.io/1339711').install();
   Sentry.setTagsContext({
-    "BundleId": DeviceInfo.getBundleId(),
-    "Version": DeviceInfo.getVersion(),
-    "BuildNumber": DeviceInfo.getBuildNumber(),
+    "environment": DeviceInfo.getBundleId(),
+    "react": true,
   });
 }
 

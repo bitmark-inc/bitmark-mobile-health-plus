@@ -8,6 +8,7 @@ import ReactNative from 'react-native';
 import { sha3_256 } from 'js-sha3';
 import randomString from 'random-string';
 import base58 from 'bs58';
+import { Sentry } from 'react-native-sentry';
 
 const {
   PushNotificationIOS,
@@ -472,13 +473,14 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   }
 
   if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
-    await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}`);
-    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${CacheData.userInformation.bitmarkAccountNumber}`);
+    let bitmarkAccountNumber = CacheData.userInformation.bitmarkAccountNumber;
+    await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${bitmarkAccountNumber}`);
+    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}`);
 
     await LocalFileService.moveOldDataFilesToNewLocalStorageFolder();
     await LocalFileService.initializeLocalStorage();
     await IndexDBService.initializeIndexedDB();
-    let bitmarkAccountNumber = CacheData.userInformation.bitmarkAccountNumber;
+
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
       for (let key in mapFiles) {
         let keyList = key.split('_');
@@ -530,7 +532,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     iCloudSyncAdapter.syncCloud();
     configNotification();
     if (!CacheData.userInformation.intercomUserId) {
-      let intercomUserId = `HealthPlus_${sha3_256(CacheData.userInformation.bitmarkAccountNumber)}`;
+      let intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
       CacheData.userInformation.intercomUserId = intercomUserId;
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
       Intercom.logout().then(() => {
@@ -542,10 +544,10 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     if (CacheData.networkStatus) {
       let signatureData = await CommonModel.doCreateSignatureData();
-      let result = await AccountModel.doRegisterJWT(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
+      let result = await AccountModel.doRegisterJWT(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
       CacheData.jwt = result.jwt_token;
+      Sentry.setUserContext({ userID: bitmarkAccountNumber, });
     }
-
 
     if (justCreatedBitmarkAccount) {
       appInfo.displayedWhatNewInformation = DeviceInfo.getVersion();
@@ -557,7 +559,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     }
     await UserModel.doUpdateUserInfo(CacheData.userInformation);
 
-    let userBitmarks = await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber);
+    let userBitmarks = await doGetUserDataBitmarks(bitmarkAccountNumber);
 
     if (!CacheData.userInformation.activeHealthDataAt && userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
       await runPromiseWithoutError(doRequireHealthKitPermission());
