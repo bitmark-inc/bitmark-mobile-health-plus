@@ -40,7 +40,7 @@ const sanitizeTextDetectorResponse = (detectedItems) => {
   // Remove special characters
   detectedItems.forEach(item => {
     if (item.text) {
-      item.text = item.text.replace(/[`~!@#$%^&*()_|+\-=÷¿?;:'",.<>\{\}\[\]\\\/‘.,`~¥§˘ˆ↵˛˝”˙»]/gi, '').trim();
+      item.text = item.text.replace(/[`~!@#$%^&*()_|=÷¿?;'",.<>\{\}\[\]\\\/‘.,`~¥§˘ˆ↵˛˝”˙»]/gi, '').trim();
     }
   });
 
