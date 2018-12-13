@@ -69,7 +69,7 @@ const search = async (searchTerm) => {
               tags = tags.filter((tag) => {
                 let matched = false;
                 for (let index = 0; index < searchTermParts.length; index++) {
-                  if (tag.startsWith(searchTermParts[index])) {
+                  if (tag.toLowerCase().startsWith(searchTermParts[index].toLowerCase())) {
                     matched = true;
                     break;
                   }
