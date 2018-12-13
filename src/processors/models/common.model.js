@@ -459,7 +459,7 @@ let CommonModel = {
   generateThumbnail,
   checkThumbnailForBitmark,
   removeVietnameseSigns,
-}
+};
 
 export {
   CommonModel

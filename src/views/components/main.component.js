@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  View, Text, TouchableOpacity,
+  View, Text, TouchableOpacity, SafeAreaView,
   StatusBar,
   AppState,
   Linking,
@@ -402,11 +402,11 @@ export class MainComponent extends Component {
     }
     return (
 
-      <View style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={config.isIPhoneX ? false : true} />
         <DisplayComponent />
         <MainEventsHandlerComponent />
-      </View>
+      </SafeAreaView>
     );
   }
 }
