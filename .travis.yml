@@ -18,6 +18,7 @@ before_install:
 install:
 - fastlane add_plugin latest_hockey_build_number
 - fastlane add_plugin sentry
+- brew install getsentry/tools/sentry-cli
 script:
 - |
     if [ $TRAVIS_BRANCH == "master" ]; then
