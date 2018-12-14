@@ -170,6 +170,7 @@ platform :ios do
       project_slug: 'bitmark-health',
       dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
     )
+    sh "sentry-cli upload-dsym"
     hockey(
       api_token: ENV['HOCKEYAPP_KEY'],
       release_type: "2",
@@ -225,6 +226,8 @@ platform :ios do
       project_slug: 'bitmark-health',
       dsym_path: './BitmarkHealthPlus dev.app.dSYM.zip'
     )
+
+    sh "sentry-cli upload-dsym"
 
     hockey(
       api_token: ENV['HOCKEYAPP_KEY'],
