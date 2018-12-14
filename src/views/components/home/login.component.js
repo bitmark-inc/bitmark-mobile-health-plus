@@ -358,7 +358,6 @@ export class LoginComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
-    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0,
   },
   body: {
     flex: 1,
