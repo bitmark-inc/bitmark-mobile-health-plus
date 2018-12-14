@@ -1,5 +1,6 @@
 import RNFS from 'react-native-fs';
 import { zip, unzip } from 'react-native-zip-archive';
+import { CacheData } from "../processors/caches";
 
 class FileUtil {
   static CacheDirectory = RNFS.CachesDirectoryPath;
@@ -95,7 +96,7 @@ class FileUtil {
   }
 
   static getUserLocalStorageFolderPath(bitmarkAccountNumber) {
-    return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber}`;
+    return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber}`;
   }
 
   static getLocalAssetsFolderPath(bitmarkAccountNumber) {
