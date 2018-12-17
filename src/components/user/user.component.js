@@ -59,8 +59,8 @@ class PrivateUserComponent extends Component {
       });
   }
 
-  doIssueImage(images, combineFilesList) {
-    console.log('doIssueImage :', images, combineFilesList);
+  doIssueImage(images, isMultipleAsset = false) {
+    console.log('doIssueImage :', images);
     //check existing assets
     let mapFileAssets = {};
     let doCheckExistingAsset = async () => {
@@ -98,7 +98,7 @@ class PrivateUserComponent extends Component {
         }
         if (assetName.length > 64) assetName = assetName.substring(0, 64);
         listInfo.push({
-          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false, isMultipleAsset: !!combineFilesList
+          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false, isMultipleAsset
         });
 
         listAssetName.push(assetName);
