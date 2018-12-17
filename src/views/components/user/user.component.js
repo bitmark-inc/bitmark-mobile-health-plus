@@ -61,20 +61,24 @@ class PrivateUserComponent extends Component {
   }
 
   doIssueImage(images, combineFilesList) {
+    if (!CacheData.networkStatus) {
+      AppProcessor.showOfflineMessage();
+      return;
+    }
     console.log('doIssueImage :', images, combineFilesList);
     //check existing assets
     let mapFileAssets = {};
     let doCheckExistingAsset = async () => {
       for (let imageInfo of images) {
         let filePath = imageInfo.uri.replace('file://', '');
-        let { asset } = await AppProcessor.doCheckFileToIssue(filePath);
-        if (asset && asset.name && !asset.canIssue) {
-          let message = asset.registrant === CacheData.userInformation.bitmarkAccountNumber
+        let result = await AppProcessor.doCheckFileToIssue(filePath);
+        if (result && result.asset && result.asset.name && !result.asset.canIssue) {
+          let message = result.asset.registrant === CacheData.userInformation.bitmarkAccountNumber
             ? i18n.t('CaptureAssetComponent_alertMessage11', { type: 'image' })
             : i18n.t('CaptureAssetComponent_alertMessage12', { type: 'image' });
           return message;
         }
-        mapFileAssets[filePath] = asset;
+        mapFileAssets[filePath] = result ? result.asset : null;
       }
     };
     // issue images
@@ -130,6 +134,7 @@ class PrivateUserComponent extends Component {
       }
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
 
+      console.log('listInfo :', listInfo);
       let bitmarks = await AppProcessor.doIssueMultipleFiles(listInfo, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       });
@@ -143,6 +148,7 @@ class PrivateUserComponent extends Component {
       return null;
     };
     doCheckExistingAsset().then(message => {
+      console.log('doCheckExistingAsset :', { message });
       if (message) {
         Alert.alert('', message, [{
           text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'

@@ -14,6 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import { EventEmitterService, AppProcessor } from 'src/processors';
 import { convertWidth } from 'src/utils';
 import { config, constants } from 'src/configs';
+import { CacheData } from 'src/processors/caches';
 
 
 
@@ -52,6 +53,10 @@ export class BitmarkLegalComponent extends React.Component {
   }
 
   shareLegal() {
+    if (!CacheData.networkStatus) {
+      AppProcessor.showOfflineMessage();
+      return;
+    }
     let displayedContentName = this.state.displayedContentName || 'BitmarkLegal'
     let filePathUrl = this.state.displayedContent ? this.state.displayedContent.filePathUrl : 'https://s3-ap-northeast-1.amazonaws.com/bitmark-mobile-files/3+combination.pdf';
 

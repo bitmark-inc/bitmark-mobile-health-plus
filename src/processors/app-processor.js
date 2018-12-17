@@ -63,14 +63,14 @@ const executeTask = (taskKey, data) => {
   });
 }
 
-const showOfflineMessage = () => {
-  asyncAlert('', i18n.t('AppProcessor_offlineMessage'));
+const showOfflineMessage = async () => {
+  return await asyncAlert('', i18n.t('AppProcessor_offlineMessage'));
 };
 // ================================================================================================
 // ================================================================================================
 const doCreateNewAccount = async (enableTouchFaceId) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   if (Platform.OS === 'ios' && config.isIPhoneX && enableTouchFaceId) {
@@ -91,6 +91,10 @@ const doCheckPhraseWords = async (phraseWords) => {
 
 
 const doCheckFileToIssue = async (filePath) => {
+  if (!CacheData.networkStatus) {
+    await showOfflineMessage();
+    return;
+  }
   return await processing(DataProcessor.doCheckFileToIssue(filePath));
 };
 
@@ -107,7 +111,7 @@ const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {
 // ================================================================================================
 const doLogin = async (phraseWords, enableTouchFaceId) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doLogin', { phraseWords, enableTouchFaceId });
@@ -115,7 +119,7 @@ const doLogin = async (phraseWords, enableTouchFaceId) => {
 
 const doLogout = async () => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doLogout');
@@ -123,7 +127,7 @@ const doLogout = async () => {
 
 const doDeleteAccount = async (processingInfo) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doDeleteAccount', { processingInfo });
@@ -131,7 +135,7 @@ const doDeleteAccount = async (processingInfo) => {
 
 const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
@@ -139,7 +143,7 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublic
 
 const doIssueMultipleFiles = async (listInfo, processingInfo) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doIssueMultipleFiles', { listInfo, processingInfo });
@@ -147,7 +151,7 @@ const doIssueMultipleFiles = async (listInfo, processingInfo) => {
 
 const doBitmarkHealthData = async (list, processingData) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doBitmarkHealthData', { list, processingData });
@@ -155,7 +159,7 @@ const doBitmarkHealthData = async (list, processingData) => {
 
 const doResetHealthDataTasks = async (list) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doResetHealthDataTasks', { list });
@@ -163,7 +167,7 @@ const doResetHealthDataTasks = async (list) => {
 
 const doGetBitmarkInformation = async (bitmarkId) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doGetBitmarkInformation', { bitmarkId });
@@ -171,7 +175,7 @@ const doGetBitmarkInformation = async (bitmarkId) => {
 
 const doDownloadAndShareLegal = async (title, urlDownload) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doDownloadAndShareLegal', { title, urlDownload });
@@ -208,7 +212,7 @@ const doCheckNoLongerSupportVersion = async () => {
 
 const doAcceptEmailRecords = async (emailRecord, processingData) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doAcceptEmailRecords', { emailRecord, processingData });
@@ -216,14 +220,14 @@ const doAcceptEmailRecords = async (emailRecord, processingData) => {
 
 const doRejectEmailRecords = async (emailRecord) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doRejectEmailRecords', { emailRecord });
 };
-const doProcessEmailRecords = (bitmarkAccountNumber, emailIssueRequestsFromAnEmail) => {
+const doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromAnEmail) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doProcessEmailRecords', { bitmarkAccountNumber, emailIssueRequestsFromAnEmail });
@@ -231,7 +235,7 @@ const doProcessEmailRecords = (bitmarkAccountNumber, emailIssueRequestsFromAnEma
 
 const doMigrateFilesToLocalStorage = async () => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doMigrateFilesToLocalStorage');
@@ -239,7 +243,7 @@ const doMigrateFilesToLocalStorage = async () => {
 
 const doCombineImages = async (images) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doCombineImages', { images });
@@ -247,7 +251,7 @@ const doCombineImages = async (images) => {
 
 const doTransferBitmark = async (bitmark, receiver) => {
   if (!CacheData.networkStatus) {
-    showOfflineMessage();
+    await showOfflineMessage();
     return;
   }
   return executeTask('doTransferBitmark', { bitmark, receiver });
@@ -283,6 +287,7 @@ let AppProcessor = {
   doProcessEmailRecords,
   doCombineImages,
   doTransferBitmark,
+  showOfflineMessage,
 }
 
 export {

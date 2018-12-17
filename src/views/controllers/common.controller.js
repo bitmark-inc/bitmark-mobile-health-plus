@@ -4,6 +4,10 @@ import { FileUtil, isAssetDataRecord } from 'src/utils';
 import { UserBitmarksStore, UserBitmarksActions } from '../stores';
 
 const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
+  if (!CacheData.networkStatus) {
+    AppProcessor.showOfflineMessage();
+    return;
+  }
   if (assetName.length > 64) assetName = assetName.substring(0, 64);
 
   AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
