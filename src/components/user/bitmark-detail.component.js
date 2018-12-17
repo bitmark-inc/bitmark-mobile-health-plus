@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   //   justifyContent: 'center',
   // },
   // accountNumberDisplayText: {
-  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
   //   fontWeight: '800',
   //   fontSize: 14,
   // },
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#FF4444', borderBottomWidth: 1,
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     flex: 1,
     fontSize: 24,

@@ -13,7 +13,7 @@ import { config } from '../../configs';
 // import { DataProcessor, AppProcessor } from '../../processors';
 import { Actions } from 'react-native-router-flux';
 import { UserBitmarksStore, UserBitmarksActions } from '../../stores/user-bitmarks.store';
-import { MaterialIndicator } from 'react-native-indicators';
+// import { MaterialIndicator } from 'react-native-indicators';
 import moment from 'moment';
 
 class PrivateBitmarkListComponent extends Component {
@@ -126,7 +126,6 @@ class PrivateBitmarkListComponent extends Component {
                             }
 
                             {item.status === 'pending' && <View style={[styles.bitmarkThumbnail, styles.thumbnailPendingCover]} />}
-                            {item.status === 'pending' && <MaterialIndicator style={styles.indicator} color={'white'} size={32} />}
                             {item.status === 'pending' && <Text style={styles.bitmarkPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
                           </TouchableOpacity>
                         );
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
   //   justifyContent: 'center',
   // },
   // accountNumberDisplayText: {
-  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
   //   fontWeight: '800',
   //   fontSize: 14,
   // },
@@ -187,7 +186,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#FF4444', borderBottomWidth: 1,
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
     marginTop: 6,
@@ -209,7 +208,7 @@ const styles = StyleSheet.create({
     padding: 3
   },
   bitmarkPending: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontSize: 14,
     fontStyle: 'italic',
     fontWeight: '300',
@@ -248,12 +247,12 @@ const styles = StyleSheet.create({
     right: 5,
     zIndex: 2,
   },
-  indicator: {
-    position: 'absolute',
-    top: convertWidth(35),
-    left: convertWidth(35),
-    zIndex: 2,
-  },
+  // indicator: {
+  //   position: 'absolute',
+  //   top: convertWidth(35),
+  //   left: convertWidth(35),
+  //   zIndex: 2,
+  // },
 
   bitmarkHealthList: {
     padding: convertWidth(20),

@@ -14,20 +14,20 @@ import { getLocalThumbnailsFolderPath } from "./local-storage-util";
 
 const COMBINE_FILE_SUFFIX = 'combine';
 
-const isPascalCase = (str) => {
-  let pascalCase1 = str.replace(/(\w)(\w*)/g,
-    function (g0, g1, g2) {
-      return g1.toUpperCase() + g2.toLowerCase();
-    });
+// const isPascalCase = (str) => {
+//   let pascalCase1 = str.replace(/(\w)(\w*)/g,
+//     function (g0, g1, g2) {
+//       return g1.toUpperCase() + g2.toLowerCase();
+//     });
 
-  let pascalCase2 =
-    str.replace(/(\w)(\w*)/g,
-      function (g0, g1, g2) {
-        return g1 + g2.toLowerCase();
-      });
+//   let pascalCase2 =
+//     str.replace(/(\w)(\w*)/g,
+//       function (g0, g1, g2) {
+//         return g1 + g2.toLowerCase();
+//       });
 
-  return pascalCase1 === pascalCase2;
-};
+//   return pascalCase1 === pascalCase2;
+// };
 
 const getLanguageForTextDetector = () => {
   let lang = 'eng';
@@ -112,54 +112,53 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
   });
 };
 
-const detectAssetNameByCommonRules = (texts) => {
-  let potentialAssetNameItem;
-  // RULE 1: Choose the first item has all characters in UPPER case (ex: BITMARK MANUAL)
-  // Note: This rule can not apply for Chinese or any languages which don't have capital letters
-  if (!potentialAssetNameItem) {
-    for (let i = 0; i < texts.length; i++) {
-      if (texts[i].text && (texts[i].text.toUpperCase() === texts[i].text)) {
-        potentialAssetNameItem = texts[i];
-        break;
-      }
-    }
-  }
+// const detectAssetNameByCommonRules = (texts) => {
+//   let potentialAssetNameItem;
+//   // RULE 1: Choose the first item has all characters in UPPER case (ex: BITMARK MANUAL)
+//   // Note: This rule can not apply for Chinese or any languages which don't have capital letters
+//   if (!potentialAssetNameItem) {
+//     for (let i = 0; i < texts.length; i++) {
+//       if (texts[i].text && (texts[i].text.toUpperCase() === texts[i].text)) {
+//         potentialAssetNameItem = texts[i];
+//         break;
+//       }
+//     }
+//   }
 
 
-  // RULE 2: Choose the first item has all words in Pascal case (ex: Bitmark Manual)
-  // Note: This rule can not apply for Chinese or any languages which don't have capital letters
-  if (!potentialAssetNameItem) {
-    for (let i = 0; i < texts.length; i++) {
-      if (texts[i].text && isPascalCase(texts[i].text)) {
-        potentialAssetNameItem = texts[i];
-        break;
-      }
-    }
-  }
+//   // RULE 2: Choose the first item has all words in Pascal case (ex: Bitmark Manual)
+//   // Note: This rule can not apply for Chinese or any languages which don't have capital letters
+//   if (!potentialAssetNameItem) {
+//     for (let i = 0; i < texts.length; i++) {
+//       if (texts[i].text && isPascalCase(texts[i].text)) {
+//         potentialAssetNameItem = texts[i];
+//         break;
+//       }
+//     }
+//   }
 
 
-  // RULE 3: Choose the first item has CAPITAL character at the beginning (ex: Bitmark manual)
-  // Note: This rule can not apply for Chinese or any languages which don't have capital letters
-  if (!potentialAssetNameItem) {
-    for (let i = 0; i < texts.length; i++) {
-      if (texts[i].text && (texts[i].text.charAt(0).toUpperCase() === texts[i].text.charAt(0))) {
-        potentialAssetNameItem = texts[i];
-        break;
-      }
-    }
-  }
+//   // RULE 3: Choose the first item has CAPITAL character at the beginning (ex: Bitmark manual)
+//   // Note: This rule can not apply for Chinese or any languages which don't have capital letters
+//   if (!potentialAssetNameItem) {
+//     for (let i = 0; i < texts.length; i++) {
+//       if (texts[i].text && (texts[i].text.charAt(0).toUpperCase() === texts[i].text.charAt(0))) {
+//         potentialAssetNameItem = texts[i];
+//         break;
+//       }
+//     }
+//   }
 
 
-  // RULE 4: Just Choose the first item
-  if (!potentialAssetNameItem) {
-    potentialAssetNameItem = texts[0];
-  }
+//   // RULE 4: Just Choose the first item
+//   if (!potentialAssetNameItem) {
+//     potentialAssetNameItem = texts[0];
+//   }
 
-  return potentialAssetNameItem;
-};
+//   return potentialAssetNameItem;
+// };
 
-const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
-  let assetName = defaultAssetName;
+const populateAssetNameFromImage = async (filePath) => {
   let detectFilePath = filePath;
 
   if (isJPGFile(filePath)) {
@@ -187,7 +186,6 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   }
 
   if (visionResp && !visionResp.error && visionResp.length) {
-    let potentialAssetNameItem;
     let demension = calculateDocDimension(visionResp);
     let centerTextX = demension.centerTextX;
 
@@ -216,14 +214,6 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
       // Choose top 5 candidates for next RULES
       visionRespInOrder = visionRespInOrder.slice(0, 5);
       console.log('Top 5:', visionRespInOrder);
-
-      potentialAssetNameItem = detectAssetNameByCommonRules(visionRespInOrder);
-    } else {
-      potentialAssetNameItem = visionResp[0];
-    }
-
-    if (potentialAssetNameItem && potentialAssetNameItem.text.trim()) {
-      assetName = 'HA ' + potentialAssetNameItem.text.trim();
     }
   }
 
@@ -237,22 +227,17 @@ const populateAssetNameFromImage = async (filePath, defaultAssetName) => {
   let detectedTextsStr = detectedTexts.join(' ');
   detectedTextsStr = removeVietnameseSigns(detectedTextsStr);
 
-  console.log('assetName:', assetName);
   console.log('allDetectedTexts:', detectedTexts);
 
   return {
     detectedTexts: detectedTextsStr,
-    assetName
   };
 };
 
-const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
+const populateAssetNameFromPdf = async (filePath) => {
   let allDetectedTexts = [];
-  let assetName = defaultAssetName;
   console.log('populateAssetFromPDF...');
-
   let detectedTexts = await runPromiseWithoutError(PDFScanner.pdfScan(filePath));
-  console.log('original-DetectedTexts:', detectedTexts);
 
   if (detectedTexts && !detectedTexts.error && detectedTexts.length) {
     detectedTexts = detectedTexts.map(item => {
@@ -263,16 +248,6 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
     });
     console.log('detectedTexts-sanitized:', detectedTexts);
 
-    let potentialAssetNameItem;
-    // Take the first page to detect asset name
-    if (detectedTexts[0].length) {
-      potentialAssetNameItem = detectAssetNameByCommonRules(detectedTexts[0]);
-    }
-
-    if (potentialAssetNameItem && potentialAssetNameItem.text.trim()) {
-      assetName = 'HA ' + potentialAssetNameItem.text.trim();
-    }
-
     flatten(detectedTexts).forEach(item => {
       allDetectedTexts.push(item.text);
     });
@@ -280,13 +255,9 @@ const populateAssetNameFromPdf = async (filePath, defaultAssetName) => {
 
   let detectedTextsStr = allDetectedTexts.join(' ');
   detectedTextsStr = removeVietnameseSigns(detectedTextsStr);
-
-  console.log('assetName:', assetName);
   console.log('allDetectedTexts:', allDetectedTexts);
-
   return {
     detectedTexts: detectedTextsStr,
-    assetName
   };
 };
 
@@ -390,18 +361,16 @@ const getThumbnail = (bitmarkId, isCombineFile) => {
 };
 
 const isFileRecord = (asset) => {
-  return asset && asset.metadata && asset.metadata.Source === 'Medical Records' && asset.metadata['Saved Time'];
+  return asset && asset.metadata && asset.metadata.Source === 'Medical Records' && asset.metadata['Saved Time'] &&
+    (asset.name.startsWith('HA') || asset.name.startsWith('HR'));
 };
 const isCaptureDataRecord = (asset) => {
-  return asset && asset.name.startsWith('HA') && asset.metadata && asset.metadata.Source === 'Health Records' && asset.metadata['Saved Time'];
+  return asset && asset.metadata && asset.metadata.Source === 'Health Records' && asset.metadata['Saved Time'] &&
+    (asset.name.startsWith('HA') || asset.name.startsWith('HR'));
 };
 const isHealthDataRecord = (asset) => {
   if (asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata['Saved Time']) {
-    var regResults = /HK((\d)*)/.exec(asset.name);
-    if (regResults && regResults.length > 1) {
-      let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HK' + randomNumber) === asset.name);
-    }
+    return asset.name.startsWith('HK') || asset.name.startsWith('HD');
   }
   return false;
 };

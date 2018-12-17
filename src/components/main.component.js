@@ -16,7 +16,6 @@ import { Actions } from 'react-native-router-flux';
 
 import KeepAwake from 'react-native-keep-awake';
 import Mailer from 'react-native-mail';
-import RNExitApp from 'react-native-exit-app';
 
 import { LoadingComponent, BitmarkInternetOffComponent, DefaultIndicatorComponent, BitmarkIndicatorComponent, BitmarkDialogComponent, } from '../commons'
 import { HomeRouterComponent } from './home';
@@ -87,7 +86,7 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESSING, this.handerProcessingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_SUBMITTING, this.handerSubmittingEvent);
     EventEmitterService.remove(EventEmitterService.events.APP_PROCESS_ERROR
-    , this.handerProcessErrorEvent);
+      , this.handerProcessErrorEvent);
     EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
     EventEmitterService.remove(EventEmitterService.events.APP_MIGRATION_FILE_LOCAL_STORAGE, this.migrationFilesToLocalStorage);
   }
@@ -377,12 +376,12 @@ let mainStyle = StyleSheet.create({
   },
   emptyDataSourceTitle: {
     width: convertWidth(256),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
   },
   emptyDataSourceDescription: {
     width: convertWidth(256),
     marginTop: 20,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
   },
   emptyDataSourceOKButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
@@ -390,14 +389,14 @@ let mainStyle = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   emptyDataSourceOKButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
   },
   emptyDataSourceLaterButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     width: convertWidth(260), marginTop: 10,
   },
   emptyDataSourceLaterButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
   },
 });
 

@@ -413,19 +413,19 @@ const doLogout = async () => {
     await AccountService.doTryDeregisterNotificationInfo(userInformation.bitmarkAccountNumber, userInformation.notificationUUID, signatureData);
   }
   PushNotificationIOS.cancelAllLocalNotifications();
-  let accesses = await doGetAccountAccesses();
-  for (let grantedInfo of (accesses.granted_from || [])) {
-    let timestamp = moment().toDate().getTime();
-    let message = `accessGrant|${grantedInfo.id}|${userInformation.bitmarkAccountNumber}|${timestamp}`;
-    let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
-    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
-  }
-  for (let grantedInfo of (accesses.granted_to || [])) {
-    let timestamp = moment().toDate().getTime();
-    let message = `accessGrant|${grantedInfo.id}|${userInformation.bitmarkAccountNumber}|${timestamp}`;
-    let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
-    await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
-  }
+  // let accesses = await doGetAccountAccesses();
+  // for (let grantedInfo of (accesses.granted_from || [])) {
+  //   let timestamp = moment().toDate().getTime();
+  //   let message = `accessGrant|${grantedInfo.id}|${userInformation.bitmarkAccountNumber}|${timestamp}`;
+  //   let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
+  //   await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
+  // }
+  // for (let grantedInfo of (accesses.granted_to || [])) {
+  //   let timestamp = moment().toDate().getTime();
+  //   let message = `accessGrant|${grantedInfo.id}|${userInformation.bitmarkAccountNumber}|${timestamp}`;
+  //   let signatures = await CommonModel.doTryRickSignMessage([message], CommonModel.getFaceTouchSessionId());
+  //   await AccountModel.doRemoveGrantingAccess(grantedInfo.grantor, grantedInfo.grantee, userInformation.bitmarkAccountNumber, timestamp, signatures[0]);
+  // }
   CommonModel.resetFaceTouchSessionId();
   await UserModel.doRemoveUserInfo();
   await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${userInformation.bitmarkAccountNumber}`);

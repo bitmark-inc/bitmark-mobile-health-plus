@@ -96,7 +96,7 @@ const doCheckPhraseWords = async (phraseWords) => {
 
 
 const doCheckFileToIssue = async (filePath) => {
-  return await processing(DataProcessor.doCheckFileToIssue(filePath));
+  return await DataProcessor.doCheckFileToIssue(filePath);
 };
 
 const doCreateSignatureData = async (touchFaceIdMessage, newSession) => {

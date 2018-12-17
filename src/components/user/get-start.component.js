@@ -5,7 +5,7 @@ import {
   StyleSheet,
 } from 'react-native'
 
-import { AppProcessor, DataProcessor } from '../../processors';
+import { AppProcessor } from '../../processors';
 import { EventEmitterService } from '../../services';
 import { Actions } from 'react-native-router-flux';
 import { convertWidth } from '../../utils';
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   // getStart
   getStartTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     color: '#FF4444',
     fontSize: 17,
     fontWeight: '900',
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   getStartDescription: {
     marginTop: 25,
     width: convertWidth(296),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
     textAlign: 'center',
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   enableButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

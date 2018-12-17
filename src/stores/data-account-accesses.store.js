@@ -29,8 +29,8 @@ const data = (state = initialState, action) => {
       return merge({}, initialState);
     case ACTION_TYPES.INIT: {
       let tempState = merge({}, state);
-      tempState.accesses.granted_from = action.accesses.granted_from || [];
-      tempState.accesses.granted_to = action.accesses.granted_to || [];
+      // tempState.accesses.granted_from = action.accesses.granted_from || [];
+      // tempState.accesses.granted_to = action.accesses.granted_to || [];
       return tempState;
     }
     default:

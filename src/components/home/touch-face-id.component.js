@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
 
   // notification
   faceTouchIdTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     color: '#FF4444',
     fontSize: 17,
     fontWeight: '900',
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   faceTouchIdDescription: {
     marginTop: 29,
     width: convertWidth(294),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir light',
     fontWeight: '300',
     fontSize: 16,
     lineHeight: 20,
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   enableButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   skipButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

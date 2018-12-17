@@ -142,11 +142,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between',
   },
   titleText: {
-    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black', color: 'white',
+    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black', color: 'white',
   },
   message: {
     width: convertWidth(375), textAlign: 'center',
-    fontSize: 16, fontWeight: '300', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light', color: 'white',
+    fontSize: 16, fontWeight: '300', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', color: 'white',
     marginBottom: 10,
   },
 
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: config.isIPhoneX ? 44 : 20,
   },
   nextButtonText: {
-    fontSize: 16, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy', color: 'white',
+    fontSize: 16, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy', color: 'white',
   },
 
 });

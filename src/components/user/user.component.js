@@ -8,7 +8,6 @@ let { ActionSheetIOS } = ReactNative;
 import moment from 'moment';
 
 import { Provider, connect } from 'react-redux';
-import randomString from 'random-string';
 
 import ImagePicker from 'react-native-image-crop-picker';
 // import ImagePicker from 'react-native-image-picker';
@@ -16,7 +15,6 @@ import { DocumentPicker } from 'react-native-document-picker';
 import {
   FileUtil,
   convertWidth, issue,
-  populateAssetNameFromImage, populateAssetNameFromPdf, isImageFile, isPdfFile,
   search,
 } from './../../utils';
 import { config } from '../../configs';
@@ -82,7 +80,6 @@ class PrivateUserComponent extends Component {
     let doIssuance = async () => {
       let listAssetName = [];
       let listInfo = [];
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
       for (let imageInfo of images) {
         let filePath = imageInfo.uri.replace('file://', '');
         let asset = mapFileAssets[filePath];
@@ -94,43 +91,18 @@ class PrivateUserComponent extends Component {
             metadataList.push({ label, value: asset.metadata[label] });
           }
         } else {
-          assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+          assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
           metadataList = [];
           metadataList.push({ label: 'Source', value: 'Health Records' });
           metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
         }
-
-        let detectedTexts;
-        let detectResult;
-        if (combineFilesList && combineFilesList.length) {
-          // In the case of combined file. "images" array only has one file path (combined PDF file)
-          // Take the first image from combineFilesList to detect asset name
-          let inCombineAssetNames = [];
-          let inCombineDetectedTexts = [];
-          for (let i = 0; i < combineFilesList.length; i++) {
-            let inCombineDetectResult = await populateAssetNameFromImage(combineFilesList[i].uri, assetName);
-            inCombineAssetNames.push(inCombineDetectResult.assetName);
-            inCombineDetectedTexts = inCombineDetectedTexts.concat(inCombineDetectResult.detectedTexts);
-          }
-
-          assetName = inCombineAssetNames[0];
-          detectedTexts = inCombineDetectedTexts;
-        } else {
-          detectResult = await populateAssetNameFromImage(filePath, assetName);
-          assetName = detectResult.assetName;
-          detectedTexts = detectResult.detectedTexts;
-        }
-
         if (assetName.length > 64) assetName = assetName.substring(0, 64);
-
         listInfo.push({
-          filePath, assetName, metadataList, detectedTexts, quantity: 1, isPublicAsset: false, isMultipleAsset: !!combineFilesList
+          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false, isMultipleAsset: !!combineFilesList
         });
 
         listAssetName.push(assetName);
       }
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-
       let bitmarks = await AppProcessor.doIssueMultipleFiles(listInfo, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       });
@@ -230,34 +202,14 @@ class PrivateUserComponent extends Component {
       let info = await this.prepareToIssue(response, 'chooseFile');
 
       let filePath = info.filePath;
-      let assetName = response.fileName;
-
-      let willDetectAssetNameAutomatically = false;
-      if (isPdfFile(filePath)) {
-        willDetectAssetNameAutomatically = true;
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-        let detectResult = await populateAssetNameFromPdf(filePath, assetName);
-        assetName = detectResult.assetName;
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-      } else if (isImageFile(filePath)) {
-        willDetectAssetNameAutomatically = true;
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-        let detectResult = await populateAssetNameFromImage(filePath, assetName);
-        assetName = detectResult.assetName;
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-      }
+      let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
 
       let metadataList = [];
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
       issue(filePath, assetName, metadataList, 'file', 1, async () => {
-
-        if (willDetectAssetNameAutomatically) {
-          Actions.assetNameInform({ assetNames: [assetName] });
-        } else {
-          Actions.pop();
-        }
+        Actions.assetNameInform({ assetNames: [assetName] });
       });
     });
   }
@@ -417,7 +369,7 @@ const styles = StyleSheet.create({
   //   justifyContent: 'center',
   // },
   // accountNumberDisplayText: {
-  //   fontFamily: 'Avenir Next W1G Heavy',
+  //   fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G Heavy' : 'Avenir Heavy',
   //   fontWeight: '800',
   //   fontSize: 14,
   // },
@@ -480,7 +432,7 @@ const styles = StyleSheet.create({
     padding: convertWidth(20),
   },
   dataTitle: {
-    fontFamily: 'Avenir Next W1G',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -499,7 +451,7 @@ const styles = StyleSheet.create({
   },
   addHealthRecordButtonText: {
     marginLeft: convertWidth(6),
-    fontFamily: 'Avenir Next W1G',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -518,7 +470,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   accountButtonText: {
-    fontFamily: 'Avenir Next W1G',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     color: '#FF1F1F'

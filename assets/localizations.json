@@ -243,6 +243,7 @@
     "AccountNumberComponent_fullAccountNumberLabel": "AccountNumberComponent_fullAccountNumberLabel",
     "AccountNumberComponent_shortAccountNumberLabel": "AccountNumberComponent_shortAccountNumberLabel",
     "AccountNumberComponent_viewOnRegistryButtonText": "AccountNumberComponent_viewOnRegistryButtonText",
+    "AccountNumberComponent_accountCopiedText": "AccountNumberComponent_accountCopiedText",
     "AddRecordComponent_titleText": "AddRecordComponent_titleText",
     "AddRecordComponent_message": "AddRecordComponent_message",
     "AddRecordComponent_bottomButtonText": "AddRecordComponent_bottomButtonText",
@@ -300,7 +301,8 @@
     "ReleaseNoteComponent_versionInformationText": "ReleaseNoteComponent_versionInformationText",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "ReleaseNoteComponent_versionInformationReleaseDiff1",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "ReleaseNoteComponent_versionInformationReleaseDiff2",
-    "ReleaseNoteComponent_releaseNoteText": "ReleaseNoteComponent_releaseNoteText"
+    "ReleaseNoteComponent_releaseNoteText": "ReleaseNoteComponent_releaseNoteText",
+    "AppProcessor_offlineMessage": "AppProcessor_offlineMessage"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -546,6 +548,7 @@
     "AccountNumberComponent_fullAccountNumberLabel": "Full account number:",
     "AccountNumberComponent_shortAccountNumberLabel": "Shorten account number:",
     "AccountNumberComponent_viewOnRegistryButtonText": "View this account on blockchain",
+    "AccountNumberComponent_accountCopiedText": "Copied!",
     "AddRecordComponent_titleText": "Medical records",
     "AddRecordComponent_message": "You have no medical records now. \nTap on “+ ADD RECORD” button to add your first medical record.",
     "AddRecordComponent_bottomButtonText": "Add Record",
@@ -603,7 +606,8 @@
     "ReleaseNoteComponent_versionInformationText": "VERSION {{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "just now",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ago",
-    "ReleaseNoteComponent_releaseNoteText": "New Features:\n• Now supports iCloud backup.\n• The same account will now synchronize across both Bitmark Health and Bitmark Registry apps.\n• Alpha version will now display notifications and in-app updates.\n\nUX Improvements:\n• Removed the \"record type\" screen on multiple image capture and selection features - all images are now always registered as one document.\n• Added option to skip registering incomplete weekly health data from previous weeks, restarting the data collection process in the next week."
+    "ReleaseNoteComponent_releaseNoteText": "New Features:\n• Now supports iCloud backup.\n• The same account will now synchronize across both Bitmark Health and Bitmark Registry apps.\n• Alpha version will now display notifications and in-app updates.\n\nUX Improvements:\n• Removed the \"record type\" screen on multiple image capture and selection features - all images are now always registered as one document.\n• Added option to skip registering incomplete weekly health data from previous weeks, restarting the data collection process in the next week.",
+    "AppProcessor_offlineMessage": "Please connect to the Internet and try again!"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "沒有網路連線",
@@ -849,6 +853,7 @@
     "AccountNumberComponent_fullAccountNumberLabel": "完整的帳戶號碼",
     "AccountNumberComponent_shortAccountNumberLabel": "縮短的帳戶號碼",
     "AccountNumberComponent_viewOnRegistryButtonText": "在 Bitmark 區塊鏈上查看此帳號",
+    "AccountNumberComponent_accountCopiedText": "已複製！",
     "AddRecordComponent_titleText": "醫療資料",
     "AddRecordComponent_message": "你現在沒有任何資料。按「新增資料」來新增你的第一份醫療資料。",
     "AddRecordComponent_bottomButtonText": "新增資料",
@@ -906,7 +911,8 @@
     "ReleaseNoteComponent_versionInformationText": "版本{{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "今天",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}天前",
-    "ReleaseNoteComponent_releaseNoteText": "新功能：\n• 現在支持iCloud備份\n• 同一帳戶將同時在Bitmark Health和Bitmark Registry應用程序中同步\n• Alpha版現在將顯示通知和應用內更新\n\nUX 使用者體驗改善：\n• 移除新增病例時，整合與分頁病歷選項， 所有的影像將直接登記為一份文件。\n• 新增略過登記健康選項，略過後下週將重新開始計算蒐集健康數據時間。"
+    "ReleaseNoteComponent_releaseNoteText": "新功能：\n• 現在支持iCloud備份\n• 同一帳戶將同時在Bitmark Health和Bitmark Registry應用程序中同步\n• Alpha版現在將顯示通知和應用內更新\n\nUX 使用者體驗改善：\n• 移除新增病例時，整合與分頁病歷選項， 所有的影像將直接登記為一份文件。\n• 新增略過登記健康選項，略過後下週將重新開始計算蒐集健康數據時間。",
+    "AppProcessor_offlineMessage": "網路異常，請確保已連線至網路並再嘗試一次。"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -1152,6 +1158,7 @@
     "AccountNumberComponent_fullAccountNumberLabel": "Số tài khoản đầy đủ:",
     "AccountNumberComponent_shortAccountNumberLabel": "Số tài khoản rút gọn:",
     "AccountNumberComponent_viewOnRegistryButtonText": "Xem thông tin tài khoản trên blockchain",
+    "AccountNumberComponent_accountCopiedText": "Đã sao chép",
     "AddRecordComponent_titleText": "Bản ghi y tế",
     "AddRecordComponent_message": "Bạn chưa có bản ghi y tế nào.\nSử dụng nút \"+THÊM BẢN GHI\" để thêm bản ghi đầu tiên.",
     "AddRecordComponent_bottomButtonText": "Thêm bản ghi",
@@ -1209,6 +1216,7 @@
     "ReleaseNoteComponent_versionInformationText": "Phiên bản{{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "vừa xong",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ngày trước",
-    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\n• Hỗ trợ sao lưu trên iCloud.\n• Dữ liệu của cùng một tài khoản bitmark sẽ được đồng bộ trên ứng dụng Bitmark Health và Bitmark Registry.\n• Phiên bản Alpha giờ đây sẽ hiển thị thông báo và cập nhật trong ứng dụng.\n\nCải tiến UX:\n• Bỏ màn hình \"loại bản ghi\" khi chụp hoặc lựa chọn nhiều hình ảnh, tất cả các hình ảnh sẽ được đăng ký vào một bản ghi duy nhất.\n• Thêm tuỳ chọn mới để bỏ qua việc đăng ký dữ liệu sức khỏe của các tuần chưa hoàn thành và khởi động lại quá trình thu thập dữ liệu trong tuần tiếp theo."
+    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\n• Hỗ trợ sao lưu trên iCloud.\n• Dữ liệu của cùng một tài khoản bitmark sẽ được đồng bộ trên ứng dụng Bitmark Health và Bitmark Registry.\n• Phiên bản Alpha giờ đây sẽ hiển thị thông báo và cập nhật trong ứng dụng.\n\nCải tiến UX:\n• Bỏ màn hình \"loại bản ghi\" khi chụp hoặc lựa chọn nhiều hình ảnh, tất cả các hình ảnh sẽ được đăng ký vào một bản ghi duy nhất.\n• Thêm tuỳ chọn mới để bỏ qua việc đăng ký dữ liệu sức khỏe của các tuần chưa hoàn thành và khởi động lại quá trình thu thập dữ liệu trong tuần tiếp theo.",
+    "AppProcessor_offlineMessage": "Vui lòng kết nối mạng và thử lại!"
   }
 }

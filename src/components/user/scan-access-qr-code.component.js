@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   title: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '900',
     fontSize: 34,
     flex: 1,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   },
   authorizedMessage: {
     padding: convertWidth(20),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   deniedButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
     fontWeight: '900',
     fontSize: 16,
     color: 'white',
