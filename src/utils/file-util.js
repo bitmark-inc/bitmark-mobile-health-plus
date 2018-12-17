@@ -5,6 +5,7 @@ import { CacheData } from "../processors/caches";
 class FileUtil {
   static CacheDirectory = RNFS.CachesDirectoryPath;
   static DocumentDirectory = RNFS.DocumentDirectoryPath;
+  static SharedGroupDirectory = '';
 
   static async mkdir(folderPath) {
     return await RNFS.mkdir(folderPath, {
@@ -72,7 +73,7 @@ class FileUtil {
   static async stat(filePath) {
     return await RNFS.stat(filePath);
   }
-  static async copyDir(sourceFolderPath, destinationFolderPath) {
+  static async copyDir(sourceFolderPath, destinationFolderPath, ignoreDuplication) {
     await FileUtil.mkdir(destinationFolderPath);
 
     let items = await FileUtil.readDirItem(sourceFolderPath);
@@ -80,13 +81,20 @@ class FileUtil {
     for (let i = 0; i < items.length; i++) {
       let item = items[i];
       if (item.isFile()) {
-        await FileUtil.copyFile(item.path, `${destinationFolderPath}/${item.name}`)
+        if (ignoreDuplication) {
+          let existingFile = await FileUtil.exists(`${destinationFolderPath}/${item.name}`);
+          if (!existingFile) {
+            await FileUtil.copyFile(item.path, `${destinationFolderPath}/${item.name}`)
+          }
+        } else {
+          await FileUtil.copyFile(item.path, `${destinationFolderPath}/${item.name}`)
+        }
       }
 
       if (item.isDirectory()) {
         let destDir = `${destinationFolderPath}/${item.name}`;
         await FileUtil.mkdir(destDir);
-        await FileUtil.copyDir(item.path, destDir);
+        await FileUtil.copyDir(item.path, destDir, ignoreDuplication);
       }
     }
   }
@@ -95,24 +103,28 @@ class FileUtil {
     await FileUtil.removeSafe(sourceFolderPath);
   }
 
-  static getUserLocalStorageFolderPath(bitmarkAccountNumber) {
-    return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber}`;
+  static async pathForGroup(groupIdentifier) {
+    return await RNFS.pathForGroup(groupIdentifier);
+  }
+
+  static getSharedLocalStorageFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.SharedGroupDirectory}/${bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber}`;
   }
 
   static getLocalAssetsFolderPath(bitmarkAccountNumber) {
-    return `${FileUtil.getUserLocalStorageFolderPath(bitmarkAccountNumber)}/assets`;
+    return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/assets`;
   }
 
   static getLocalThumbnailsFolderPath(bitmarkAccountNumber) {
-    return `${FileUtil.getUserLocalStorageFolderPath(bitmarkAccountNumber)}/thumbnails`;
+    return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/thumbnails`;
   }
 
   static getLocalDatabasesFolderPath(bitmarkAccountNumber) {
-    return `${FileUtil.getUserLocalStorageFolderPath(bitmarkAccountNumber)}/databases`;
+    return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/databases`;
   }
 
   static getLocalCachesFolderPath(bitmarkAccountNumber) {
-    return `${FileUtil.getUserLocalStorageFolderPath(bitmarkAccountNumber)}/caches`;
+    return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/caches`;
   }
 
 }

@@ -4,26 +4,56 @@ import { iCloudSyncAdapter } from '../models';
 import { IndexDBService } from './index-db.service';
 import { CacheData } from '../caches';
 import { FileUtil } from 'src/utils';
+import DeviceInfo from "react-native-device-info/deviceinfo";
+
+const setShareLocalStoragePath = async () => {
+  let appBundleId = DeviceInfo.getBundleId();
+  try {
+    if (appBundleId === 'com.bitmark.healthplus.inhouse') {
+      // Dev
+      FileUtil.SharedGroupDirectory = await FileUtil.pathForGroup('group.com.bitmark.localstorage.dev');
+    } else if (appBundleId === 'com.bitmark.healthplus.beta') {
+      // Beta
+      FileUtil.SharedGroupDirectory = await FileUtil.pathForGroup('group.com.bitmark.localstorage.beta');
+    } else {
+      // Live
+      FileUtil.SharedGroupDirectory = await FileUtil.pathForGroup('group.com.bitmark.localstorage');
+    }
+  } catch {
+    FileUtil.SharedGroupDirectory = FileUtil.DocumentDirectory;
+  }
+
+  console.log('FileUtil.ShareGroupDirectory :', FileUtil.SharedGroupDirectory );
+};
+
+const moveFilesFromLocalStorageToSharedStorage = async () => {
+  let localStorageFolderPath = `${FileUtil.DocumentDirectory}/${CacheData.userInformation.bitmarkAccountNumber}`;
+  let sharedStorageFolderPath = FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber);
+
+  if (await FileUtil.exists(localStorageFolderPath)) {
+    await FileUtil.copyDir(localStorageFolderPath, sharedStorageFolderPath, true);
+  }
+};
 
 const moveOldDataFilesToNewLocalStorageFolder = async () => {
-  // Move asset folder
+  // Copy assets folder
   let localAssetsFolderPath = FileUtil.getLocalAssetsFolderPath(CacheData.userInformation.bitmarkAccountNumber);
   if (!(await FileUtil.exists(localAssetsFolderPath))) {
     let oldAssetsFolderPath = `${FileUtil.DocumentDirectory}/assets/${CacheData.userInformation.bitmarkAccountNumber}`;
 
     if (await FileUtil.exists(oldAssetsFolderPath)) {
-      await FileUtil.copyDir(oldAssetsFolderPath, localAssetsFolderPath);
+      await FileUtil.copyDir(oldAssetsFolderPath, localAssetsFolderPath, true);
     }
   }
 
-  // Copy asset folder
+  // Copy thumbnails folder
   let thumbnailsAssetsFolderPath = FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber);
   if (!(await FileUtil.exists(thumbnailsAssetsFolderPath))) {
     await FileUtil.mkdir(`${thumbnailsAssetsFolderPath}`);
     let oldThumbnailsFolderPath = `${FileUtil.DocumentDirectory}/thumbnails/`;
 
     if (await FileUtil.exists(oldThumbnailsFolderPath)) {
-      await FileUtil.copyDir(oldThumbnailsFolderPath, thumbnailsAssetsFolderPath);
+      await FileUtil.copyDir(oldThumbnailsFolderPath, thumbnailsAssetsFolderPath, true);
     }
   }
 };
@@ -72,7 +102,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
 
   if (bitmark.asset && (!bitmark.asset.indexDataFileSyncedToICloud || !bitmark.asset.indexDataFileSyncedFromICloud)) {
     let indexedFileName = `${bitmark.asset.id}.txt`;
-    let indexedDataFilePath = `${FileUtil.getUserLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexedData/${indexedFileName}`;
+    let indexedDataFilePath = `${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexedData/${indexedFileName}`;
     let existFileIndexedData = await FileUtil.exists(indexedDataFilePath);
     let indexedDataRecord = await IndexDBService.getIndexedDataByBitmarkId(bitmark.id);
     if (existFileIndexedData && !indexedDataRecord && !bitmark.asset.indexDataFileSyncedFromICloud) {
@@ -83,7 +113,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
       bitmark.asset.indexDataFileSyncedFromICloud = true;
     }
     if (!existFileIndexedData && indexedDataRecord && !bitmark.asset.indexDataFileSyncedToICloud) {
-      await FileUtil.mkdir(`${FileUtil.getUserLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexedData`);
+      await FileUtil.mkdir(`${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexedData`);
       await writeIndexedDataFile(indexedDataFilePath, indexedDataRecord.content);
       iCloudSyncAdapter.uploadFileToCloud(indexedDataFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexedData_${indexedFileName}`);
       bitmark.asset.indexDataFileSyncedToICloud = true;
@@ -92,7 +122,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
 
   if (!bitmark.indexTagFileSyncedToICloud || !bitmark.indexTagFileSyncedFromICloud) {
     let tagFileName = `${bitmark.id}.txt`;
-    let tagFilePath = `${FileUtil.getUserLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
+    let tagFilePath = `${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
     let existFileIndexedTags = await FileUtil.exists(tagFilePath);
     let tagRecord = await IndexDBService.getTagRecordByBitmarkId(bitmark.id);
 
@@ -103,7 +133,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
     }
 
     if (!existFileIndexedTags && tagRecord && !bitmark.indexTagFileSyncedToICloud) {
-      await FileUtil.mkdir(`${FileUtil.getUserLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag`);
+      await FileUtil.mkdir(`${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag`);
       await writeTagFile(tagFilePath, tagRecord.tags);
       iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${tagFileName}`);
       bitmark.indexTagFileSyncedToICloud = true;
@@ -114,7 +144,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
 const doUpdateIndexTagFromICloud = async (bitmarkId) => {
   //sync index tags
   let tagFileName = `${bitmarkId}.txt`;
-  let tagFilePath = `${FileUtil.getUserLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
+  let tagFilePath = `${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
   let existFileIndexedTags = await FileUtil.exists(tagFilePath);
   if (existFileIndexedTags) {
     let tags = await readTagFile(tagFilePath);
@@ -125,13 +155,13 @@ const doUpdateIndexTagFromICloud = async (bitmarkId) => {
 const doUpdateIndexTagToICloud = async (bitmarkId, tags) => {
   //sync index tags
   let tagFileName = `${bitmarkId}.txt`;
-  let tagFilePath = `${FileUtil.getUserLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
+  let tagFilePath = `${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
   if (!tags) {
     let tagRecord = await IndexDBService.getTagRecordByBitmarkId(bitmarkId);
     tags = tagRecord ? tagRecord.tags : null;
   }
   if (tags) {
-    await FileUtil.mkdir(`${FileUtil.getUserLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag`);
+    await FileUtil.mkdir(`${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag`);
     await writeTagFile(tagFilePath, tags);
     iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${tagFileName}`);
   }
@@ -139,7 +169,7 @@ const doUpdateIndexTagToICloud = async (bitmarkId, tags) => {
 
 const initializeLocalStorage = async () => {
   if (CacheData.userInformation.bitmarkAccountNumber) {
-    await FileUtil.mkdir(FileUtil.getUserLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber));
+    await FileUtil.mkdir(FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber));
     await FileUtil.mkdir(FileUtil.getLocalAssetsFolderPath(CacheData.userInformation.bitmarkAccountNumber));
     await FileUtil.mkdir(FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber));
     await FileUtil.mkdir(FileUtil.getLocalDatabasesFolderPath(CacheData.userInformation.bitmarkAccountNumber));
@@ -169,8 +199,10 @@ const writeTagsCache = async (tags, bitmarkAccountNumber) => {
 };
 
 let LocalFileService = {
+  setShareLocalStoragePath,
   initializeLocalStorage,
   moveOldDataFilesToNewLocalStorageFolder,
+  moveFilesFromLocalStorageToSharedStorage,
 
   doCheckAndSyncDataWithICloud,
   doUpdateIndexTagFromICloud,

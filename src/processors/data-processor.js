@@ -171,10 +171,10 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           }
           if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
-              if (!asset.filePath || asset.filePath.indexOf(FileUtil.DocumentDirectory) < 0) {
+              if (!asset.filePath || asset.filePath.indexOf(FileUtil.SharedGroupDirectory) < 0) {
                 asset.filePath = await detectLocalAssetFilePath(asset.id);
               }
-              if (!bitmark.thumbnail || !bitmark.thumbnail.path || bitmark.thumbnail.path.indexOf(FileUtil.DocumentDirectory) < 0) {
+              if (!bitmark.thumbnail || !bitmark.thumbnail.path || bitmark.thumbnail.path.indexOf(FileUtil.SharedGroupDirectory) < 0) {
                 bitmark.thumbnail = await CommonModel.checkThumbnailForBitmark(bitmark.id);
               }
               bitmark.asset = asset;
@@ -456,8 +456,9 @@ const doDeactiveApplication = async () => {
 };
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
-
   CacheData.userInformation = await UserModel.doTryGetCurrentUser();
+  await LocalFileService.setShareLocalStoragePath();
+
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
 
@@ -477,8 +478,9 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${bitmarkAccountNumber}`);
     await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}`);
 
-    await LocalFileService.moveOldDataFilesToNewLocalStorageFolder();
     await LocalFileService.initializeLocalStorage();
+    await LocalFileService.moveOldDataFilesToNewLocalStorageFolder();
+    await LocalFileService.moveFilesFromLocalStorageToSharedStorage();
     await IndexDBService.initializeIndexedDB();
 
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
@@ -512,7 +514,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
               }
               let doSyncFile = async () => {
                 let filePath = mapFiles[key];
-                let downloadedFile = `${FileUtil.DocumentDirectory}/${keyFilePath}`;
+                let downloadedFile = `${FileUtil.SharedGroupDirectory}/${keyFilePath}`;
                 if (overwrite) {
                   await FileUtil.removeSafe(downloadedFile);
                   let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
@@ -835,7 +837,7 @@ const doDisplayedWhatNewInformation = async () => {
 const doTransferBitmark = async (bitmark, receiver) => {
   let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
   let result = await BitmarkService.doTransferBitmark(bitmark.id, receiver);
-  await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/assets/${bitmark.asset_id}`);
+  await FileUtil.removeSafe(`${FileUtil.getLocalAssetsFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${bitmark.asset_id}`);
   await iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
   if (bitmark.thumbnail && bitmark.thumbnail.path && (await FileUtil.exists(bitmark.thumbnail.path))) {
     let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);

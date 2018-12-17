@@ -1,6 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
 
 import { FileUtil } from 'src/utils';
+import { CacheData } from "../caches";
 
 const DB_NAME = 'bitmark_indexed_data.db';
 const DB_LOCATION = 'Documents'; //Documents subdirectory - visible to iTunes and backed up by iCloud
@@ -9,7 +10,13 @@ const TAGS_TABLE_NAME = 'UserTags';
 
 export class IndexedDBModel {
   static async connectDB(bitmarkAccountNumber) {
-    let databaseFilePath = `${FileUtil.getLocalDatabasesFolderPath(bitmarkAccountNumber)}/${DB_NAME}`;
+    let databaseFolderPath = `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber}/databases`;
+    let databaseFilePath = `${databaseFolderPath}/${DB_NAME}`;
+
+    if (!(await FileUtil.exists(databaseFolderPath))) {
+      await FileUtil.mkdir(databaseFolderPath);
+    }
+
     // Relative path to "Documents" folder
     // Ex: /User/xxx/Documents/accountNumber/databases/bitmark_indexed_data.db -> /accountNumber/databases/bitmark_indexed_data.db
     let relativeDBFilePath = databaseFilePath.substring(databaseFilePath.indexOf(DB_LOCATION) + DB_LOCATION.length);
