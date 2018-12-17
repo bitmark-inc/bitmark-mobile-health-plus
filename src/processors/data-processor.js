@@ -482,52 +482,62 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await IndexDBService.initializeIndexedDB();
 
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
-      for (let key in mapFiles) {
-        let keyList = key.split('_');
-        let promiseRunAfterCopyFile;
-        let overwrite = false;
-        if (keyList[0] === bitmarkAccountNumber) {
-          let keyFilePath;
-          if (keyList[1] === 'assets') {
-            let assetId = base58.decode(keyList[2]).toString('hex');
-            keyFilePath = key.replace(`${bitmarkAccountNumber}_assets_${keyList[2]}_`, `${bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
-          } else if (keyList[1] === 'thumbnails') {
-            keyFilePath = key.replace(`${bitmarkAccountNumber}_thumbnails_`, `${bitmarkAccountNumber}/thumbnails/`);
-          } else if (keyList[1] === 'indexedData') {
-            keyFilePath = key.replace(`${bitmarkAccountNumber}_indexedData_`, `${bitmarkAccountNumber}/indexedData/`);
-          } else if (keyList[1] === 'indexTag') {
-            keyFilePath = key.replace(`${bitmarkAccountNumber}_indexTag_`, `${bitmarkAccountNumber}/indexTag/`);
-            let bitmarkId = keyList[2].replace('.txt', '');
-            overwrite = true;
-            promiseRunAfterCopyFile = async () => {
-              await LocalFileService.doUpdateIndexTagFromICloud(bitmarkId);
-            };
-          }
-          let doSyncFile = async () => {
-            let filePath = mapFiles[key];
-            let downloadedFile = `${FileUtil.DocumentDirectory}/${keyFilePath}`;
-            if (overwrite) {
-              await FileUtil.removeSafe(downloadedFile);
-              let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
-              await FileUtil.mkdir(downloadedFolder);
-              await FileUtil.copyFile(filePath, downloadedFile);
-              if (promiseRunAfterCopyFile) {
-                await promiseRunAfterCopyFile();
-                promiseRunAfterCopyFile = null;
-              }
-            } else {
-              let existFileICloud = await FileUtil.exists(filePath);
-              let existFileLocal = await FileUtil.exists(downloadedFile);
-              if (existFileICloud && !existFileLocal) {
-                let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
-                await FileUtil.mkdir(downloadedFolder);
-                await FileUtil.copyFile(filePath, downloadedFile);
-              }
-            }
-          };
-          runPromiseWithoutError(doSyncFile());
-        }
+      if (this.iCloudFileChangedTimeout) {
+        clearTimeout(this.iCloudFileChangedTimeout)
       }
+
+      this.iCloudFileChangedTimeout = setTimeout(
+        () => {
+          console.log('mapFiles:', Object.keys(mapFiles).length);
+          for (let key in mapFiles) {
+            let keyList = key.split('_');
+            let promiseRunAfterCopyFile;
+            let overwrite = false;
+            if (keyList[0] === bitmarkAccountNumber) {
+              let keyFilePath;
+              if (keyList[1] === 'assets') {
+                let assetId = base58.decode(keyList[2]).toString('hex');
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_assets_${keyList[2]}_`, `${bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
+              } else if (keyList[1] === 'thumbnails') {
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_thumbnails_`, `${bitmarkAccountNumber}/thumbnails/`);
+              } else if (keyList[1] === 'indexedData') {
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_indexedData_`, `${bitmarkAccountNumber}/indexedData/`);
+              } else if (keyList[1] === 'indexTag') {
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_indexTag_`, `${bitmarkAccountNumber}/indexTag/`);
+                let bitmarkId = keyList[2].replace('.txt', '');
+                overwrite = true;
+                promiseRunAfterCopyFile = async () => {
+                  await LocalFileService.doUpdateIndexTagFromICloud(bitmarkId);
+                };
+              }
+              let doSyncFile = async () => {
+                let filePath = mapFiles[key];
+                let downloadedFile = `${FileUtil.DocumentDirectory}/${keyFilePath}`;
+                if (overwrite) {
+                  await FileUtil.removeSafe(downloadedFile);
+                  let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
+                  await FileUtil.mkdir(downloadedFolder);
+                  await FileUtil.copyFile(filePath, downloadedFile);
+                  if (promiseRunAfterCopyFile) {
+                    await promiseRunAfterCopyFile();
+                    promiseRunAfterCopyFile = null;
+                  }
+                } else {
+                  let existFileICloud = await FileUtil.exists(filePath);
+                  let existFileLocal = await FileUtil.exists(downloadedFile);
+                  if (existFileICloud && !existFileLocal) {
+                    let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
+                    await FileUtil.mkdir(downloadedFolder);
+                    await FileUtil.copyFile(filePath, downloadedFile);
+                  }
+                }
+              };
+              runPromiseWithoutError(doSyncFile());
+            }
+          }
+        },
+        1000 * 15 // 15s
+      );
     });
     iCloudSyncAdapter.syncCloud();
     configNotification();
