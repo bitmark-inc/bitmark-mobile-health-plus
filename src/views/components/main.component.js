@@ -401,12 +401,11 @@ export class MainComponent extends Component {
       DisplayComponent = this.state.user.bitmarkAccountNumber ? UserRouterComponent : HomeRouterComponent;
     }
     return (
-
-      <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, }}>
         <StatusBar hidden={config.isIPhoneX ? false : true} />
         <DisplayComponent />
         <MainEventsHandlerComponent />
-      </SafeAreaView>
+      </View>
     );
   }
 }
