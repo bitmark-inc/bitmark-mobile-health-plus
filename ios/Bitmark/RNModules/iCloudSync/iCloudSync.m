@@ -81,8 +81,7 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
     NSMetadataItem *item = keptFiles[i];
     NSString *downloadStatus = [item valueForAttribute:NSMetadataUbiquitousItemDownloadingStatusKey];
     if (downloadStatus &&
-        ([downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusDownloaded] ||
-         [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusCurrent])) {
+        [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusDownloaded]) {
           if (item) {
             NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
             [result setValue:path forKey:keptFileNames[i]];
