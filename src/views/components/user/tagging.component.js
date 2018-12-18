@@ -50,7 +50,7 @@ export class TaggingComponent extends Component {
   }
 
   onKeyboardDidShow(keyboardEvent) {
-    let keyboardHeight = keyboardEvent.endCoordinates.height - (config.isIPhoneX ? constants.keyboardExternalHeight : 0);
+    let keyboardHeight = keyboardEvent.endCoordinates.height;
     this.setState({ keyboardHeight });
 
     let listAnimations = [];
