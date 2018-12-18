@@ -446,6 +446,7 @@ const checkThumbnailForBitmark = async (bitmarkId) => {
 // ================================================================================================
 // ==
 let CommonModel = {
+  COMBINE_FILE_SUFFIX,
   KEYS,
   doCheckPasscodeAndFaceTouchId,
   doSetLocalData,

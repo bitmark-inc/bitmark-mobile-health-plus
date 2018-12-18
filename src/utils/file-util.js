@@ -127,6 +127,14 @@ class FileUtil {
     return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/caches`;
   }
 
+  static getLocalIndexedDataFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/indexedData`;
+  }
+
+  static getLocalIndexedTagFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/indexTag`;
+  }
+
 }
 
 export { FileUtil };

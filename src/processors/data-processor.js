@@ -841,9 +841,15 @@ const doTransferBitmark = async (bitmark, receiver) => {
   await iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
   if (bitmark.thumbnail && bitmark.thumbnail.path && (await FileUtil.exists(bitmark.thumbnail.path))) {
     let filename = bitmark.thumbnail.path.substring(bitmark.thumbnail.path.lastIndexOf('/') + 1, bitmark.thumbnail.path.length);
+    await FileUtil.removeSafe(`${FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${bitmark.id}.PNG`);
+    await FileUtil.removeSafe(`${FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${bitmark.id}_${CommonModel.COMBINE_FILE_SUFFIX}.PNG`);
     await iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_thumbnails_${filename}`);
   }
+
+  await FileUtil.removeSafe(`${FileUtil.getLocalIndexedDataFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${bitmark.asset_id}.txt`);
   iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_indexedData_${bitmark.asset.id}.txt`);
+
+  await FileUtil.removeSafe(`${FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${bitmark.id}.txt`);
   iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${bitmark.id}.txt`);
 
   await IndexDBService.deleteIndexedDataByBitmarkId(bitmark.id);

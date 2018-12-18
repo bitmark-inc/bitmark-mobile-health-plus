@@ -102,7 +102,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
 
   if (bitmark.asset && (!bitmark.asset.indexDataFileSyncedToICloud || !bitmark.asset.indexDataFileSyncedFromICloud)) {
     let indexedFileName = `${bitmark.asset.id}.txt`;
-    let indexedDataFilePath = `${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexedData/${indexedFileName}`;
+    let indexedDataFilePath = `${FileUtil.getLocalIndexedDataFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${indexedFileName}`;
     let existFileIndexedData = await FileUtil.exists(indexedDataFilePath);
     let indexedDataRecord = await IndexDBService.getIndexedDataByBitmarkId(bitmark.id);
     if (existFileIndexedData && !indexedDataRecord && !bitmark.asset.indexDataFileSyncedFromICloud) {
@@ -113,7 +113,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
       bitmark.asset.indexDataFileSyncedFromICloud = true;
     }
     if (!existFileIndexedData && indexedDataRecord && !bitmark.asset.indexDataFileSyncedToICloud) {
-      await FileUtil.mkdir(`${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexedData`);
+      await FileUtil.mkdir(`${FileUtil.getLocalIndexedDataFolderPath(CacheData.userInformation.bitmarkAccountNumber)}`);
       await writeIndexedDataFile(indexedDataFilePath, indexedDataRecord.content);
       iCloudSyncAdapter.uploadFileToCloud(indexedDataFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexedData_${indexedFileName}`);
       bitmark.asset.indexDataFileSyncedToICloud = true;
@@ -122,7 +122,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
 
   if (!bitmark.indexTagFileSyncedToICloud || !bitmark.indexTagFileSyncedFromICloud) {
     let tagFileName = `${bitmark.id}.txt`;
-    let tagFilePath = `${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
+    let tagFilePath = `${FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${tagFileName}`;
     let existFileIndexedTags = await FileUtil.exists(tagFilePath);
     let tagRecord = await IndexDBService.getTagRecordByBitmarkId(bitmark.id);
 
@@ -133,7 +133,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
     }
 
     if (!existFileIndexedTags && tagRecord && !bitmark.indexTagFileSyncedToICloud) {
-      await FileUtil.mkdir(`${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag`);
+      await FileUtil.mkdir(`${FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber)}`);
       await writeTagFile(tagFilePath, tagRecord.tags);
       iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${tagFileName}`);
       bitmark.indexTagFileSyncedToICloud = true;
@@ -144,7 +144,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
 const doUpdateIndexTagFromICloud = async (bitmarkId) => {
   //sync index tags
   let tagFileName = `${bitmarkId}.txt`;
-  let tagFilePath = `${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
+  let tagFilePath = `${FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${tagFileName}`;
   let existFileIndexedTags = await FileUtil.exists(tagFilePath);
   if (existFileIndexedTags) {
     let tags = await readTagFile(tagFilePath);
@@ -155,13 +155,13 @@ const doUpdateIndexTagFromICloud = async (bitmarkId) => {
 const doUpdateIndexTagToICloud = async (bitmarkId, tags) => {
   //sync index tags
   let tagFileName = `${bitmarkId}.txt`;
-  let tagFilePath = `${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag/${tagFileName}`;
+  let tagFilePath = `${FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${tagFileName}`;
   if (!tags) {
     let tagRecord = await IndexDBService.getTagRecordByBitmarkId(bitmarkId);
     tags = tagRecord ? tagRecord.tags : null;
   }
   if (tags) {
-    await FileUtil.mkdir(`${FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/indexTag`);
+    await FileUtil.mkdir(`${FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber)}`);
     await writeTagFile(tagFilePath, tags);
     iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${tagFileName}`);
   }
