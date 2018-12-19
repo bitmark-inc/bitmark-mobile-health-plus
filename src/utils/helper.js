@@ -68,20 +68,16 @@ const isPdfFile = (filePath) => {
 };
 
 const isFileRecord = (asset) => {
-  return asset && asset.metadata && asset.metadata.Source === 'Medical Records' && asset.metadata['Saved Time'];
+  return asset && asset.metadata && asset.metadata.Source === 'Medical Records' && asset.metadata['Saved Time'] &&
+    (asset.name.startsWith('HR') || asset.name.startsWith('HA'));
 };
 const isCaptureDataRecord = (asset) => {
-  return asset && asset.name.startsWith('HA') && asset.metadata && asset.metadata.Source === 'Health Records' && asset.metadata['Saved Time'];
+  return asset && asset.metadata && asset.metadata.Source === 'Health Records' && asset.metadata['Saved Time'] &&
+    (asset.name.startsWith('HR') || asset.name.startsWith('HA'));
 };
 const isHealthDataRecord = (asset) => {
-  if (asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata['Saved Time']) {
-    var regResults = /HK((\d)*)/.exec(asset.name);
-    if (regResults && regResults.length > 1) {
-      let randomNumber = regResults[1];
-      return ((randomNumber.length == 8) && ('HK' + randomNumber) === asset.name);
-    }
-  }
-  return false;
+  return asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata['Saved Time'] &&
+    (asset.name.startsWith('HD') || asset.name.startsWith('HK'));
 };
 const isAssetDataRecord = (asset) => {
   return isCaptureDataRecord(asset) || isFileRecord(asset);
