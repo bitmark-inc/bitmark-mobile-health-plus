@@ -13,7 +13,7 @@ let network = NETWORKS.livenet;
 network = DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse' ? NETWORKS.testnet : network;
 
 const currentSize = Dimensions.get('window');
-const isIPhoneX = (currentSize.height === 812);
+const isIPhoneX = (currentSize.height === 812 || currentSize.width === 812 || currentSize.height === 896 || currentSize.width === 896);
 
 let config = {
   isIPhoneX,
