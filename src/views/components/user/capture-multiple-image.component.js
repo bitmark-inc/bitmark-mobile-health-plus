@@ -9,7 +9,6 @@ import {
   View, TouchableOpacity, Text, Image,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { EventEmitterService } from 'src/processors';
 import { config } from 'src/configs';
 import { convertWidth } from 'src/utils';
 
@@ -38,7 +37,6 @@ export class CaptureMultipleImagesComponent extends Component {
         Alert.alert(i18n.t('CaptureMultipleImagesComponent_titleLimitModal'), i18n.t('CaptureMultipleImagesComponent_messageLimitModal', { maximum: 10 }));
         return;
       }
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
       const options = { quality: 1 };
       const data = await this.cameraRef.takePictureAsync(options);
       let images = this.state.images;
@@ -55,7 +53,6 @@ export class CaptureMultipleImagesComponent extends Component {
         selectedIndex,
         step: CaptureMultipleImagesComponent.STEP.detail
       });
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
     }
   }
 
@@ -211,7 +208,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   paginationText: {
-    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black', color: 'white',
+    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black', color: 'white',
   },
   footer: {
     padding: 20, paddingTop: 40, paddingBottom: 40,
@@ -223,7 +220,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   buttonText: {
-    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black', color: 'white',
+    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black', color: 'white',
   },
   captureIcon: {
     width: convertWidth(68),

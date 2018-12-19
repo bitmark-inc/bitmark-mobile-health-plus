@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     borderColor: '#FF4444',
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '400',
     flex: 1,
     fontSize: 24,
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   existingTagsLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     flex: 1,
     fontSize: 17
   },
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   taggingItem: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontSize: 14,
     fontWeight: '300',
   },
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   noTagsText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontSize: 12,
     marginTop: 5,
     marginLeft: 25,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     marginTop: 3
   },
   addTagsLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     flex: 1,
     fontSize: 17,
     color: '#FF003C'
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
     borderColor: '#C1C1C1',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontSize: 17,
     fontWeight: '300',
     padding: 5,
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     marginRight: 15
   },
   suggestionItemText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontSize: 17,
     color: '#0060F2'
   },

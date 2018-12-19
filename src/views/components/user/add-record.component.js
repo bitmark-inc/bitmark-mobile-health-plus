@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 24,
     flex: 1,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
 
   },
   bottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '900',
     fontSize: 16,
     color: 'white'

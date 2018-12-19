@@ -4,13 +4,13 @@ import {
   StyleSheet,
   Image, View, TouchableOpacity, Text, SafeAreaView,
 } from 'react-native';
-import randomString from "random-string";
 
 import { Actions } from 'react-native-router-flux';
-import { EventEmitterService, CommonModel } from 'src/processors';
 import { convertWidth } from 'src/utils';
 import { config, constants } from 'src/configs';
 import { issue } from 'src/views/controllers';
+import moment from 'moment';
+
 
 export class CaptureAssetComponent extends Component {
   static propTypes = {
@@ -23,16 +23,10 @@ export class CaptureAssetComponent extends Component {
 
   async issueFile() {
     let filePath = this.props.filePath;
-    let assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+    let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
     let metadataList = [];
     metadataList.push({ label: 'Source', value: 'Health Records' });
     metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
-
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-    let detectResult = await CommonModel.populateAssetNameFromImage(filePath, assetName);
-    assetName = detectResult.assetName;
-
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
     issue(filePath, assetName, metadataList, 'image', 1, async () => {
       Actions.assetNameInform({ assetNames: [assetName] });
     });
@@ -84,7 +78,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
   },
   headerTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     fontSize: 28,
     fontWeight: '900',
     color: 'white',
@@ -118,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',

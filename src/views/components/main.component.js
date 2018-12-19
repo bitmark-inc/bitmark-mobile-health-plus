@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  View, Text, TouchableOpacity, SafeAreaView,
+  View, Text, TouchableOpacity,
   StatusBar,
   AppState,
   Linking,
@@ -269,12 +269,12 @@ let mainStyle = StyleSheet.create({
   },
   emptyDataSourceTitle: {
     width: convertWidth(256),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
   },
   emptyDataSourceDescription: {
     width: convertWidth(256),
     marginTop: 20,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
   },
   emptyDataSourceOKButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
@@ -282,14 +282,14 @@ let mainStyle = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   emptyDataSourceOKButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
   },
   emptyDataSourceLaterButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     width: convertWidth(260), marginTop: 10,
   },
   emptyDataSourceLaterButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
   },
 });
 

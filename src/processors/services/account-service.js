@@ -1,12 +1,12 @@
 import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
-import randomString from 'random-string';
 
-import { AccountModel, CommonModel, UserModel, BitmarkModel, CryptoAdapter } from '../models';
-import {
-  FileUtil, isPdfFile, isImageFile,
-  runPromiseWithoutError,
-} from 'src/utils';
+import { AccountModel, CommonModel, UserModel, BitmarkModel } from './../models';
+import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError } from './../utils';
+import { CryptoAdapter } from '../models/adapters/crypto';
+import { isImageFile, isPdfFile } from "../utils";
+import moment from 'moment';
+
 const {
   PushNotificationIOS,
   Platform,
@@ -141,18 +141,13 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
               assetName = assetInformation.name;
             } else {
 
-              let defaultAssetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
-
+              assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
               if (isPdfFile(filePath)) {
-                let detectResult = await CommonModel.populateAssetNameFromPdf(filePath, defaultAssetName);
-                assetName = detectResult.assetName;
+                let detectResult = await populateAssetNameFromPdf(filePath);
                 detectedTexts = detectResult.detectedTexts;
               } else if (isImageFile(filePath)) {
-                let detectResult = await CommonModel.populateAssetNameFromImage(filePath, defaultAssetName);
-                assetName = detectResult.assetName;
+                let detectResult = await populateAssetNameFromImage(filePath);
                 detectedTexts = detectResult.detectedTexts;
-              } else {
-                assetName = defaultAssetName;
               }
               metadataList.push({ label: 'Source', value: 'Medical Records' });
               metadataList.push({ label: 'Saved Time', value: new Date(emailIssueRequest.created_at).toISOString() });

@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.53.4</string>
+	<string>1.53.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -91,6 +91,22 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>AndaleMono.ttf</string>
+    <string>AvenirNextW1G-DemiItalic.ttf</string>
+    <string>AvenirNextW1G-UltraLightIt.ttf</string>
+    <string>AvenirNextW1G-Italic.ttf</string>
+    <string>AvenirNextW1G-UltraLight.ttf</string>
+    <string>AvenirNextW1G-Medium.ttf</string>
+    <string>AvenirNextW1G-Thin.ttf</string>
+    <string>AvenirNextW1G-Heavy.ttf</string>
+    <string>AvenirNextW1G-Bold.ttf</string>
+    <string>AvenirNextW1G-HeavyItalic.ttf</string>
+    <string>AvenirNextW1G-LightItalic.ttf</string>
+    <string>AvenirNextW1G-BoldItalic.ttf</string>
+    <string>AvenirNextW1G-Light.ttf</string>
+    <string>AvenirNextW1G-ThinItalic.ttf</string>
+    <string>AvenirNextW1G-MediumItalic.ttf</string>
+    <string>AvenirNextW1G-Demi.ttf</string>
+    <string>AvenirNextW1G-Regular.ttf</string>
 	</array>
 	<key>BitmarkSDKAPIKey</key>
 	<string>bmk-lljpzkhqdkzmblhg</string>

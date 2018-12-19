@@ -8,7 +8,6 @@ let { ActionSheetIOS } = ReactNative;
 import moment from 'moment';
 
 import { Provider, connect } from 'react-redux';
-import randomString from 'random-string';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import { Actions } from 'react-native-router-flux';
@@ -18,15 +17,15 @@ import { DocumentPicker } from 'react-native-document-picker';
 import {
   FileUtil,
   convertWidth,
-  isImageFile, isPdfFile,
 } from 'src/utils';
 import { config, constants } from 'src/configs';
 
 import { SearchInputComponent } from './search-input.component';
 import { SearchResultsComponent } from './search-results.component';
-import { AppProcessor, EventEmitterService, CommonModel, CacheData } from 'src/processors';
+import { AppProcessor, EventEmitterService, CacheData } from 'src/processors';
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
 import { search, issue } from 'src/views/controllers';
+
 
 class PrivateUserComponent extends Component {
   static propTypes = {
@@ -60,13 +59,13 @@ class PrivateUserComponent extends Component {
       });
   }
 
-  doIssueImage(images, combineFilesList) {
+  doIssueImage(images, isMultipleAsset = false) {
+    console.log('doIssueImage :', images);
+    //check existing assets
     if (!CacheData.networkStatus) {
       AppProcessor.showOfflineMessage();
       return;
     }
-    console.log('doIssueImage :', images, combineFilesList);
-    //check existing assets
     let mapFileAssets = {};
     let doCheckExistingAsset = async () => {
       for (let imageInfo of images) {
@@ -85,7 +84,6 @@ class PrivateUserComponent extends Component {
     let doIssuance = async () => {
       let listAssetName = [];
       let listInfo = [];
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
       for (let imageInfo of images) {
         let filePath = imageInfo.uri.replace('file://', '');
         let asset = mapFileAssets[filePath];
@@ -97,44 +95,18 @@ class PrivateUserComponent extends Component {
             metadataList.push({ label, value: asset.metadata[label] });
           }
         } else {
-          assetName = `HA${randomString({ length: 8, numeric: true, letters: false, })}`;
+          assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
           metadataList = [];
           metadataList.push({ label: 'Source', value: 'Health Records' });
           metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
         }
-
-        let detectedTexts;
-        let detectResult;
-        if (combineFilesList && combineFilesList.length) {
-          // In the case of combined file. "images" array only has one file path (combined PDF file)
-          // Take the first image from combineFilesList to detect asset name
-          let inCombineAssetNames = [];
-          let inCombineDetectedTexts = [];
-          for (let i = 0; i < combineFilesList.length; i++) {
-            let inCombineDetectResult = await CommonModel.populateAssetNameFromImage(combineFilesList[i].uri, assetName);
-            inCombineAssetNames.push(inCombineDetectResult.assetName);
-            inCombineDetectedTexts = inCombineDetectedTexts.concat(inCombineDetectResult.detectedTexts);
-          }
-
-          assetName = inCombineAssetNames[0];
-          detectedTexts = inCombineDetectedTexts;
-        } else {
-          detectResult = await CommonModel.populateAssetNameFromImage(filePath, assetName);
-          assetName = detectResult.assetName;
-          detectedTexts = detectResult.detectedTexts;
-        }
-
         if (assetName.length > 64) assetName = assetName.substring(0, 64);
-
         listInfo.push({
-          filePath, assetName, metadataList, detectedTexts, quantity: 1, isPublicAsset: false, isMultipleAsset: !!combineFilesList
+          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false, isMultipleAsset
         });
 
         listAssetName.push(assetName);
       }
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-
-      console.log('listInfo :', listInfo);
       let bitmarks = await AppProcessor.doIssueMultipleFiles(listInfo, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       });
@@ -236,34 +208,14 @@ class PrivateUserComponent extends Component {
       let info = await this.prepareToIssue(response, 'chooseFile');
 
       let filePath = info.filePath;
-      let assetName = response.fileName;
-
-      let willDetectAssetNameAutomatically = false;
-      if (isPdfFile(filePath)) {
-        willDetectAssetNameAutomatically = true;
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-        let detectResult = await CommonModel.populateAssetNameFromPdf(filePath, assetName);
-        assetName = detectResult.assetName;
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-      } else if (isImageFile(filePath)) {
-        willDetectAssetNameAutomatically = true;
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-        let detectResult = await CommonModel.populateAssetNameFromImage(filePath, assetName);
-        assetName = detectResult.assetName;
-        EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
-      }
+      let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
 
       let metadataList = [];
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
       issue(filePath, assetName, metadataList, 'file', 1, async () => {
-
-        if (willDetectAssetNameAutomatically) {
-          Actions.assetNameInform({ assetNames: [assetName] });
-        } else {
-          Actions.pop();
-        }
+        Actions.assetNameInform({ assetNames: [assetName] });
       });
     });
   }
@@ -453,7 +405,7 @@ const styles = StyleSheet.create({
     padding: convertWidth(20),
   },
   dataTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -472,7 +424,7 @@ const styles = StyleSheet.create({
   },
   addHealthRecordButtonText: {
     marginLeft: convertWidth(6),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -491,7 +443,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   accountButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '300',
     fontSize: 16,
     color: '#FF1F1F'

@@ -12,7 +12,7 @@ import { Map } from 'immutable'
 import { Actions } from 'react-native-router-flux';
 import { runPromiseWithoutError, FileUtil, convertWidth } from 'src/utils';
 import { EventEmitterService, AppProcessor } from 'src/processors';
-import { config, constants } from 'src/configs';
+import { config, } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
 
 export class BitmarkDetailComponent extends Component {
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#FF4444', borderBottomWidth: 1,
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     flex: 1,
     fontSize: 24,

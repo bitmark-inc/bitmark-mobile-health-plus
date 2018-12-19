@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     marginTop: 13
   },
   taggingItem: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontSize: 14,
     fontWeight: '300',
   }

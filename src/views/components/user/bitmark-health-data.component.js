@@ -94,14 +94,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '900',
     fontSize: 36,
     color: '#464646',
   },
   message: {
     marginTop: 24,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444'
   },
   signButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '800',
     fontSize: 16,
     color: 'white'
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     borderColor: '#FF4444', borderWidth: 1,
   },
   skipButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '500',
     fontSize: 16,
     color: '#FF4444'

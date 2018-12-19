@@ -1,12 +1,13 @@
 import React from 'react';
 import {
   View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView,
+  Clipboard,
   StyleSheet,
   Linking,
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux';
-import { config, constants } from 'src/configs';
+import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
 import { CacheData } from 'src/processors';
 
@@ -14,6 +15,7 @@ export class AccountNumberComponent extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = { copied: false };
   }
   render() {
 
@@ -33,8 +35,15 @@ export class AccountNumberComponent extends React.Component {
 
               <Text style={styles.description}>{i18n.t('AccountNumberComponent_description')}</Text>
               <Text style={styles.fullAccountNumberLabel}>{i18n.t('AccountNumberComponent_fullAccountNumberLabel')}</Text>
-              <View style={styles.barLine}>
+              <TouchableOpacity style={styles.barLine} onPress={() => {
+                Clipboard.setString(CacheData.userInformation.bitmarkAccountNumber);
+                this.setState({ copied: true });
+                setTimeout(() => this.setState({ copied: false }), 1000);
+              }}>
                 <Text style={styles.fullAccountNumberValue}>{CacheData.userInformation.bitmarkAccountNumber}</Text>
+              </TouchableOpacity>
+              <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', marginTop: 9, minHeight: 20, }}>
+                {this.state.copied && <Text style={{ color: '#0064FC', fontFamily: 'Avenir Medium', fontSize: 14, fontWeight: '600', }}>{i18n.t('AccountNumberComponent_accountCopiedText')}</Text>}
               </View>
               <Text style={styles.shortAccountNumberLabel}>{i18n.t('AccountNumberComponent_shortAccountNumberLabel')}</Text>
               <View style={styles.barLine}>
@@ -78,7 +87,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -93,17 +102,17 @@ const styles = StyleSheet.create({
 
   },
   description: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontSize: 16,
     marginTop: 30,
   },
   fullAccountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Book',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book',
     fontSize: 16,
     marginTop: 25,
   },
   fullAccountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
     fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
@@ -117,12 +126,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   shortAccountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Book',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book',
     fontSize: 16,
-    marginTop: 40,
+    marginTop: 15,
   },
   shortAccountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
     fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
@@ -142,7 +151,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   viewOnRegistryButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '400',
     fontSize: 16,
     color: 'black'

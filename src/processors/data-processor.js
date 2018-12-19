@@ -405,7 +405,6 @@ const doLogout = async () => {
     return true;
   }
   return null;
-
 };
 
 const doRequireHealthKitPermission = async () => {
@@ -660,10 +659,10 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultip
 
     // Index data
     if (isImageFile(record.filePath)) {
-      let detectResult = await CommonModel.populateAssetNameFromImage(record.filePath, assetName);
+      let detectResult = await CommonModel.populateAssetNameFromImage(record.filePath);
       await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
     } else if (isPdfFile(record.filePath)) {
-      let detectResult = await CommonModel.populateAssetNameFromPdf(record.filePath, assetName);
+      let detectResult = await CommonModel.populateAssetNameFromPdf(record.filePath);
       await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
     }
   }

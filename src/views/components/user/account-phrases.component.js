@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 18,
   },
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   titleCancelText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '300',
     fontSize: 16,
     color: "#FF4444"
@@ -439,13 +439,13 @@ const styles = StyleSheet.create({
   },
   warningMessage: {
     marginTop: 20,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '300',
     fontSize: 17,
   },
 
   phraseWordMessage: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
     marginTop: 16,
@@ -468,13 +468,13 @@ const styles = StyleSheet.create({
   },
   recoveryPhraseIndex: {
     width: convertWidth(39),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 15,
     color: '#C1C1C1'
   },
   recoveryPhraseWord: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 15,
     color: '#FF4444',
@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   recoveryPhraseChooseButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 15,
     color: '#FF4444',
@@ -502,25 +502,25 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   errorTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
     fontWeight: '600',
     fontSize: 15,
     color: '#FF4444'
   },
   errorMessage: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
     fontWeight: '300',
     fontSize: 15,
     color: '#FF4444',
     textAlign: 'center',
   },
   successTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
     fontWeight: '600',
     fontSize: 15,
   },
   successMessage: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
     fontWeight: '300',
     fontSize: 15,
     textAlign: 'center',
@@ -537,7 +537,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Heavy',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
     fontSize: 16,
     color: 'white',
   }

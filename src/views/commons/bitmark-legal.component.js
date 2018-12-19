@@ -581,13 +581,13 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     fontSize: 18,
     fontWeight: '900',
     flex: 1,
   },
   doneButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontSize: 16,
     color: '#FF4444',
     textAlign: 'right',
@@ -603,7 +603,7 @@ const styles = StyleSheet.create({
 
   contentSubTitleText: {
     width: '100%',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     fontSize: 15,
     fontWeight: '900',
     paddingLeft: convertWidth(19),
@@ -615,7 +615,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: convertWidth(19),
     paddingRight: convertWidth(19),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontSize: 15,
     fontStyle: 'italic',
     fontWeight: '300',
@@ -629,7 +629,7 @@ const styles = StyleSheet.create({
     paddingRight: convertWidth(19),
     fontSize: 15,
     fontWeight: '300',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     marginTop: 5,
   },
 
@@ -646,7 +646,7 @@ const styles = StyleSheet.create({
   knowYourRightsRowText: {
     fontSize: 12,
     fontWeight: '300',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     lineHeight: 21,
   },
 
@@ -664,7 +664,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '800',
