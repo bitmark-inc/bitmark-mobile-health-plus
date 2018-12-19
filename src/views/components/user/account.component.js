@@ -11,7 +11,7 @@ import Intercom from 'react-native-intercom';
 import Mailer from 'react-native-mail';
 import { Actions } from 'react-native-router-flux';
 import { AppProcessor, EventEmitterService, DataProcessor, CacheData } from 'src/processors';
-import { config, constants } from 'src/configs';
+import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
 
 export class AccountComponent extends Component {
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     paddingBottom: convertWidth(10),
   },
   accountNumberTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 36,
   },
@@ -189,13 +189,13 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   accountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
     fontSize: 14,
     marginTop: 15,
     color: '#FF1F1F'
   },
   accountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontSize: 16,
     color: '#6D6D72',
   },
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   accountNumberShareButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '600',
     fontSize: 14,
     color: '#0064FC',
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   },
   accountNumberDescription: {
     marginTop: 12,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 16,
   },
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     paddingBottom: 45,
   },
   securityTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 34,
   },
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   aboutTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
     fontSize: 34,
   },
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   rowButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
     fontWeight: '400',
     fontSize: 16,
     color: 'black'
