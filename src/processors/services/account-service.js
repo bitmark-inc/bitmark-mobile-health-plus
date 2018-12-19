@@ -2,9 +2,8 @@ import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
 
 import { AccountModel, CommonModel, UserModel, BitmarkModel } from './../models';
-import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError } from './../utils';
+import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError, isPdfFile, isImageFile } from 'src/utils';
 import { CryptoAdapter } from '../models/adapters/crypto';
-import { isImageFile, isPdfFile } from "../utils";
 import moment from 'moment';
 
 const {

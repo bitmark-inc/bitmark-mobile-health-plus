@@ -1,6 +1,6 @@
 import { WhatNew_S51_Component } from './new-51.component';
-import { DataProcessor } from '../../../processors';
 import { ReleaseNoteComponent } from './release-note.component';
+import { DataProcessor } from 'src/processors';
 
 let currentVersion = DataProcessor.getApplicationVersion();
 
