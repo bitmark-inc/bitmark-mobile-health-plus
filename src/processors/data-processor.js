@@ -28,10 +28,9 @@ import {
   iCloudSyncAdapter, PDFScanner
 } from './models';
 import {
-  FileUtil, runPromiseWithoutError,
-  isImageFile,
-  isPdfFile, compareVersion,
-  isHealthDataRecord, isAssetDataRecord
+  FileUtil,
+  isImageFile, isPdfFile, isHealthDataRecord, isAssetDataRecord,
+  compareVersion, runPromiseWithoutError, runPromiseIgnoreError,
 } from 'src/utils';
 
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
@@ -161,9 +160,9 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           asset = merge({}, oldAsset, asset);
           if (isHealthDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
-              asset.filePath = await detectLocalAssetFilePath(asset.id);
+              asset.filePath = await runPromiseIgnoreError(detectLocalAssetFilePath(asset.id));
               bitmark.asset = asset;
-              await LocalFileService.doCheckAndSyncDataWithICloud(bitmark);
+              await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(bitmark));
             } else {
               bitmark.asset = asset;
             }
@@ -172,13 +171,13 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               if (!asset.filePath || asset.filePath.indexOf(FileUtil.SharedGroupDirectory) < 0) {
-                asset.filePath = await detectLocalAssetFilePath(asset.id);
+                asset.filePath = await runPromiseIgnoreError(detectLocalAssetFilePath(asset.id));
               }
               if (!bitmark.thumbnail || !bitmark.thumbnail.path || bitmark.thumbnail.path.indexOf(FileUtil.SharedGroupDirectory) < 0) {
-                bitmark.thumbnail = await CommonModel.checkThumbnailForBitmark(bitmark.id);
+                bitmark.thumbnail = await runPromiseIgnoreError(CommonModel.checkThumbnailForBitmark(bitmark.id));
               }
               bitmark.asset = asset;
-              await LocalFileService.doCheckAndSyncDataWithICloud(bitmark);
+              await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(bitmark));
               healthAssetBitmarks.push(bitmark);
             }
           }
@@ -196,9 +195,16 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
 
         return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
       };
-      healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
-      healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
-
+      if (healthDataBitmarks.length === 0) {
+        healthDataBitmarks = userBitmarks.healthDataBitmarks || [];
+      } else {
+        healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
+      }
+      if (healthAssetBitmarks.length === 0) {
+        healthAssetBitmarks = userBitmarks.healthAssetBitmarks || [];
+      } else {
+        healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
+      }
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
       return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
@@ -424,7 +430,7 @@ const doRequireHealthKitPermission = async () => {
   if (emptyHealthKitData) {
     EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
   }
-
+  await runGetUserBitmarksInBackground();
   return result;
 };
 

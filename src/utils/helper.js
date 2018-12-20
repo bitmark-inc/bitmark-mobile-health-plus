@@ -7,12 +7,20 @@ const convertWidth = (width) => {
   return width * currentSize.width / widthDesign;
 };
 
+const runPromiseIgnoreError = (promise) => {
+  return new Promise((resolve) => {
+    promise.then(resolve).catch(error => {
+      console.log('runPromiseIgnoreError :', error);
+      resolve();
+    });
+  });
+};
 
 const runPromiseWithoutError = (promise) => {
   return new Promise((resolve) => {
     promise.then(resolve).catch(error => {
       console.log('runPromiseWithoutError :', error);
-      resolve({ error })
+      resolve({ error });
     });
   });
 };
@@ -99,6 +107,7 @@ const asyncAlert = (title, message) => {
 
 export {
   convertWidth,
+  runPromiseIgnoreError,
   runPromiseWithoutError,
   compareVersion,
   isImageFile,
