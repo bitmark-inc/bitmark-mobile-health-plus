@@ -18,14 +18,14 @@ class BitmarkSDKWrapper: NSObject {
   var account: Account?
   
   @objc(sdkInit:::)
-  func sdkInit(_network: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+  func sdkInit(_ network: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "BitmarkSDKAPIKey") as? String else {
         reject(nil, "Cannot find default bundle", nil);
         return
     }
     
     BitmarkSDK.initialize(config: SDKConfig(apiToken: apiKey,
-                                            network: .testnet,
+                                            network: BitmarkSDKWrapper.networkWithName(name: network),
                                             urlSession: URLSession.shared))
     resolve(nil);
   }
