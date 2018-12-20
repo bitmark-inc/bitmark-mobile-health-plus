@@ -91,6 +91,10 @@ const isAssetDataRecord = (asset) => {
   return isCaptureDataRecord(asset) || isFileRecord(asset);
 };
 
+const isMMRRecord = (asset) => {
+  return asset && asset.metadata && asset.metadata.type === 'HEALTH-MMR' && asset.name.startsWith('MMR');
+};
+
 const getImageSize = async (imageFilePath) => {
   return new Promise((resolve) => {
     Image.getSize(imageFilePath, (width, height) => {
@@ -116,6 +120,7 @@ export {
   isCaptureDataRecord,
   isHealthDataRecord,
   isAssetDataRecord,
+  isMMRRecord,
   isJPGFile,
   getImageSize,
   asyncAlert,
