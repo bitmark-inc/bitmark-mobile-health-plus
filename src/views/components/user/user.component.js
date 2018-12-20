@@ -95,7 +95,7 @@ class PrivateUserComponent extends Component {
             metadataList.push({ label, value: asset.metadata[label] });
           }
         } else {
-          assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
+          assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
           metadataList = [];
           metadataList.push({ label: 'Source', value: 'Health Records' });
           metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
@@ -208,7 +208,7 @@ class PrivateUserComponent extends Component {
       let info = await this.prepareToIssue(response, 'chooseFile');
 
       let filePath = info.filePath;
-      let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
+      let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
 
       let metadataList = [];
       metadataList.push({ label: 'Source', value: 'Medical Records' });

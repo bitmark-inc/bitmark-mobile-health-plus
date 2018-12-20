@@ -350,7 +350,7 @@ const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
       date: dateRange.endDate,
       data: JSON.stringify(removeEmptyValueData(healthRawData)),
 
-      assetName: `HD${moment().format('YYYYMMMDDHHmmss')}`,
+      assetName: `HD${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase(),
       assetMetadata: {
         "Source": 'HealthKit',
         "Saved Time": moment(dateRange.endDate).toISOString()

@@ -23,7 +23,7 @@ export class CaptureAssetComponent extends Component {
 
   async issueFile() {
     let filePath = this.props.filePath;
-    let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
+    let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
     let metadataList = [];
     metadataList.push({ label: 'Source', value: 'Health Records' });
     metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });

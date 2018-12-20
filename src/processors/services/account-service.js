@@ -140,7 +140,7 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
               assetName = assetInformation.name;
             } else {
 
-              assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`;
+              assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
               if (isPdfFile(filePath)) {
                 let detectResult = await populateAssetNameFromPdf(filePath);
                 detectedTexts = detectResult.detectedTexts;
