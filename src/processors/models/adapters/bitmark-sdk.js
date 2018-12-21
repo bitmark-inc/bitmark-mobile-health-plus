@@ -37,8 +37,8 @@ const BitmarkSDK = {
   signMessages: async (messages) => {
     return await SwiftBitmarkSDK.sign(messages);
   },
-  issueFile: async (filePath, propertyName, metadata, quantity) => {
-    let list = await SwiftBitmarkSDK.issueFile({
+  issue: async (filePath, propertyName, metadata, quantity) => {
+    let list = await SwiftBitmarkSDK.issue({
       url: filePath,
       property_name: propertyName,
       metadata,
@@ -49,8 +49,8 @@ const BitmarkSDK = {
       assetId: list[1],
     };
   },
-  transferOneSignature: async (bitmarkId, address) => {
-    return await SwiftBitmarkSDK.transferOneSignature({
+  transfer: async (bitmarkId, address) => {
+    return await SwiftBitmarkSDK.transfer({
       address, bitmark_id: bitmarkId
     });
   },
