@@ -741,6 +741,7 @@ const doAcceptEmailRecords = async (emailRecord) => {
     await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/email_records/${id}`);
     await AccountModel.doDeleteEmailRecord(CacheData.jwt, id);
   }
+  return true;
 };
 
 const doRejectEmailRecords = async (emailRecord) => {
