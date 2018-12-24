@@ -19,7 +19,7 @@ export class ReleaseNoteComponent extends Component {
   }
 
   render() {
-    let releaseDate = moment('07-12-2018', 'DD-MM-YYYY');
+    let releaseDate = moment('24-12-2018', 'DD-MM-YYYY');
     let diffDay = moment().diff(releaseDate, 'days');
     return (
       <SafeAreaView style={styles.bodySafeView}>
