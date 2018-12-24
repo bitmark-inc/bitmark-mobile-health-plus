@@ -78,9 +78,67 @@ export class AccountComponent extends Component {
           <View style={styles.headerRight} />
         </View>
         <ScrollView contentContainerStyle={styles.body}>
-          <View style={{
-          }} />
           <MMRCardComponent />
+          <View style={{
+            marginTop: 16,
+            width: convertWidth(344),
+            shadowOffset: { width: 0, height: 3, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
+            borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
+            paddingBottom: 14,
+            backgroundColor: '#F4F2EE',
+          }}>
+            <View style={{
+              flexDirection: 'row', alignItems: 'center',
+              height: 40, width: '100%',
+              backgroundColor: '#F4F2EE',
+              shadowOffset: { width: 0, height: 1, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 4,
+              borderTopWidth: 0.1, borderTopLeftRadius: 4, borderTopRightRadius: 4, borderTopColor: '#F4F2EE',
+              zIndex: 1,
+            }}>
+              <Text style={{
+                fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300',
+                marginLeft: convertWidth(15),
+              }}>ADDRESS</Text>
+            </View>
+            <View style={{
+              flex: 1,
+              backgroundColor: '#F4F2EE',
+              marginTop: 7,
+            }}>
+              <View style={{
+                flexDirection: 'row', alignItems: 'center',
+                paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+                height: 43,
+              }}>
+                <Text >Your vault is addressed using your{'\n'}Bitmark account number: </Text>
+              </View>
+              <View style={{
+                flexDirection: 'row', alignItems: 'center',
+                paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+                height: 43,
+                borderTopWidth: 0.3, borderTopColor: 'rgba(0,0,0,0.05)'
+              }}>
+                <Text>[e4fT2...gAB1o]</Text>
+              </View>
+              <View style={{
+                flexDirection: 'row', alignItems: 'center',
+                paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+                height: 43,
+                borderTopWidth: 0.3, borderTopColor: 'rgba(0,0,0,0.05)'
+              }}>
+                <Text>Others can send you medical records at the following email address:</Text>
+              </View>
+              <View style={{
+                flexDirection: 'row', alignItems: 'center',
+                paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+                height: 43,
+                borderTopWidth: 0.3, borderTopColor: 'rgba(0,0,0,0.05)'
+              }}>
+                <Text>account_number@health.bitmark.com</Text>
+              </View>
+            </View>
+
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
@@ -90,13 +148,12 @@ export class AccountComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#E5E5E5',
   },
   body: {
     padding: convertWidth(15),
     paddingTop: convertWidth(15),
     flexGrow: 1,
-    borderWidth: 1,
   },
   header: {
     height: 56, width: '100%',
@@ -111,7 +168,7 @@ const styles = StyleSheet.create({
     width: 16, height: '100%', resizeMode: 'contain',
   },
   headerTitle: {
-    textAlign: 'center',
+    fontFamily: 'Avenir Black', fontSize: 24, fontWeight: '900', textAlign: 'center',
     flex: 1
   },
   headerRight: {

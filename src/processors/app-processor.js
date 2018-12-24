@@ -183,6 +183,9 @@ const doDownloadAndShareLegal = async (title, urlDownload) => {
 
 
 const doCheckNoLongerSupportVersion = async () => {
+  if (__DEV__) {
+    return;
+  }
   if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus') {
     let data = await AccountModel.doTryGetAppVersion();
     if (data && data.version && data.version.minimum_supported_version) {
