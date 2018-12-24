@@ -911,7 +911,7 @@
     "ReleaseNoteComponent_versionInformationText": "版本{{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "今天",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}天前",
-    "ReleaseNoteComponent_releaseNoteText": "ReleaseNoteComponent_releaseNoteText",
+    "ReleaseNoteComponent_releaseNoteText": "新功能：\n支援離線存取並查看帳戶資訊、健康數據及健康紀錄。\n\n\n用戶體驗改進：\n\n提升登記健康數據及醫療紀錄的的速度。\n透過本機儲存使用者的健康數據來增加安全性。\n改善了啟動app時畫面停格幾秒鐘的錯誤。",
     "AppProcessor_offlineMessage": "網路異常，請確保已連線至網路並再嘗試一次。"
   },
   "vi": {
@@ -1216,7 +1216,7 @@
     "ReleaseNoteComponent_versionInformationText": "Phiên bản{{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "vừa xong",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ngày trước",
-    "ReleaseNoteComponent_releaseNoteText": "ReleaseNoteComponent_releaseNoteText",
+    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\nCho phép người dùng xem các thông tin về tài khoản, xem chi tiết dữ liệu sức khoẻ và các bản ghi y tế khi không có Internet.\nCải tiến UX:\n\nCải thiện tốc độ đăng ký dữ liệu sức khoẻ và bản ghi y tế\nTăng bảo mật bằng cách lưu dữ liệu sức khoẻ người dùng hoàn toàn trên thiết bị.\nSửa lỗi gây ra việc ứng dụng bị đứng trong quá trình khởi động. ",
     "AppProcessor_offlineMessage": "Vui lòng kết nối mạng và thử lại!"
   }
 }
