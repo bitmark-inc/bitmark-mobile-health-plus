@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View,
+  View, Text, Image
 } from 'react-native';
 import { convertWidth } from 'src/utils';
 
@@ -15,6 +15,10 @@ export class MMRCardComponent extends Component {
     return (
       <View style={styles.body}>
         <View style={styles.bodyContent}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardHeaderTitle}>GET STARTED</Text>
+            <Image style={styles.cardHeaderImage} source={require('assets/imgs/mmr_setup_icon.png')} />
+          </View>
         </View>
       </View>
     );
@@ -34,4 +38,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: convertWidth(16), paddingBottom: convertWidth(20),
   },
+  cardHeader: {
+    flexDirection: 'row',
+    height: 40,
+  },
+  cardHeaderTitle: {
+
+  },
+  cardHeaderImage: {
+    width: 34, height: '100%', resizeMode: 'contain'
+  }
+
 });
