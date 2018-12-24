@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     flex: 1,
-    textAlign: 'center', fontFamily: 'Avenir Black', fontStyle: 'italic', fontWeight: '600', fontSize: 18,
+    textAlign: 'center', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black', fontStyle: 'italic', fontWeight: '600', fontSize: 18,
   },
   newContent: {
     flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   closeButtonText: {
-    fontFamily: 'Avenir Light', color: '#FF4444', textAlign: 'center', textAlignVertical: 'center', fontSize: 16,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', color: '#FF4444', textAlign: 'center', textAlignVertical: 'center', fontSize: 16,
   },
 
   versionInformation: {
@@ -95,16 +95,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
   versionInformationText: {
-    fontFamily: 'Avenir Heavy', fontSize: 17, fontWeight: 'bold',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy', fontSize: 17, fontWeight: 'bold',
 
   },
   versionInformationReleaseDiff: {
-    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '300', color: '#999999',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 14, fontWeight: '300', color: '#999999',
   },
   releaseNoteText: {
     width: '100%',
     paddingLeft: convertWidth(20), paddingRight: convertWidth(20),
-    fontFamily: 'Avenir Light', fontSize: 16, fontWeight: '300'
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 16, fontWeight: '300'
   },
 
 });
