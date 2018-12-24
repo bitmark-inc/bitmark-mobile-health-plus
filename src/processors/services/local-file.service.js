@@ -23,7 +23,7 @@ const setShareLocalStoragePath = async () => {
     FileUtil.SharedGroupDirectory = FileUtil.DocumentDirectory;
   }
 
-  console.log('FileUtil.ShareGroupDirectory :', FileUtil.SharedGroupDirectory );
+  console.log('FileUtil.ShareGroupDirectory :', FileUtil.SharedGroupDirectory);
 };
 
 const moveFilesFromLocalStorageToSharedStorage = async () => {

@@ -82,7 +82,7 @@ const doGetBitmarkInformation = async (bitmarkId) => {
 };
 
 const doTransferBitmark = async (bitmarkId, receiver) => {
-  return await BitmarkSDK.transferOneSignature(bitmarkId, receiver);
+  return await BitmarkSDK.transfer(bitmarkId, receiver);
 };
 
 // ================================================================================================

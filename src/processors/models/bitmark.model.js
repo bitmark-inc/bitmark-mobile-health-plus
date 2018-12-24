@@ -224,7 +224,7 @@ const doCheckMetadata = async (metadata) => {
 };
 
 const doIssueFile = async (touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity) => {
-  let result = await BitmarkSDK.issueFile(touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity);
+  let result = await BitmarkSDK.issue(touchFaceIdSession, localFolderPath, filePath, assetName, metadata, quantity);
   return result;
 };
 

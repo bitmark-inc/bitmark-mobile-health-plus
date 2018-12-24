@@ -29,7 +29,7 @@ export class BitmarkDetailComponent extends Component {
 
     if (this.props.bitmark) {
       if (this.props.bitmarkType === 'bitmark_health_data') {
-        runPromiseWithoutError(FileUtil.readFile(this.props.bitmark.asset.filePath)).then(result => {
+        runPromiseWithoutError(FileUtil.readFile(this.props.bitmark.asset.viewFilePath)).then(result => {
           if (result && result.error) {
             console.log('error:', result.error);
             EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });

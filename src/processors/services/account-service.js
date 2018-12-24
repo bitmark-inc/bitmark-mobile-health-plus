@@ -2,7 +2,7 @@ import DeviceInfo from 'react-native-device-info';
 import ReactNative from 'react-native';
 
 import { AccountModel, CommonModel, UserModel, BitmarkModel } from './../models';
-import { FileUtil, populateAssetNameFromPdf, populateAssetNameFromImage, runPromiseWithoutError, isPdfFile, isImageFile } from 'src/utils';
+import { FileUtil, runPromiseWithoutError, isPdfFile, isImageFile } from 'src/utils';
 import { CryptoAdapter } from '../models/adapters/crypto';
 import moment from 'moment';
 
@@ -142,10 +142,10 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
 
               assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
               if (isPdfFile(filePath)) {
-                let detectResult = await populateAssetNameFromPdf(filePath);
+                let detectResult = await CommonModel.populateAssetNameFromPdf(filePath);
                 detectedTexts = detectResult.detectedTexts;
               } else if (isImageFile(filePath)) {
-                let detectResult = await populateAssetNameFromImage(filePath);
+                let detectResult = await CommonModel.populateAssetNameFromImage(filePath);
                 detectedTexts = detectResult.detectedTexts;
               }
               metadataList.push({ label: 'Source', value: 'Medical Records' });

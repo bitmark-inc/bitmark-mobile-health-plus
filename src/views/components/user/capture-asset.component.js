@@ -21,7 +21,7 @@ export class CaptureAssetComponent extends Component {
     super(props);
   }
 
-  async issueFile() {
+  async issue() {
     let filePath = this.props.filePath;
     let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
     let metadataList = [];
@@ -47,7 +47,7 @@ export class CaptureAssetComponent extends Component {
             <Image style={styles.previewImage} source={{ uri: 'file://' + this.props.filePath }} />
           </View>
           <View style={styles.lastBottomButtonArea}>
-            <TouchableOpacity style={styles.lastBottomButton} onPress={this.issueFile.bind(this)}>
+            <TouchableOpacity style={styles.lastBottomButton} onPress={this.issue.bind(this)}>
               <Text style={styles.lastBottomButtonText}>{i18n.t('CaptureAssetComponent_lastBottomButtonText')}</Text>
             </TouchableOpacity>
           </View>

@@ -1838,6 +1838,9 @@
 						LastSwiftMigration = 920;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.HealthKit = {
 								enabled = 1;
 							};
@@ -3088,7 +3091,7 @@
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
 				);
-				INFOPLIST_FILE = Bitmark/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -3123,7 +3126,7 @@
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
 				);
-				INFOPLIST_FILE = Bitmark/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

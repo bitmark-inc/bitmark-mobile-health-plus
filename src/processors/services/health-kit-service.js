@@ -368,25 +368,17 @@ const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
     let filename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
     await BitmarkSDK.storeFileSecurely(filePath, `${downloadedFolder}/${filename}`);
     await FileUtil.removeSafe(filePath);
-    // await FileUtil.moveFileSafe(filePath, `${downloadedFolder}/${filename}`);
 
     let listFiles = await FileUtil.readDir(downloadedFolder);
     let zipFilePath = `${downloadedFolder}/${listFiles[0]}`;
-    await FileUtil.unzip(zipFilePath, downloadedFolder);
-    await FileUtil.removeSafe(zipFilePath);
-
-    let listFile = await FileUtil.readDir(downloadedFolder);
-
-    let encryptedAssetFolder = `${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}/${issueResult.assetId}`;
-    await FileUtil.mkdir(encryptedAssetFolder);
-    await FileUtil.create(`${encryptedAssetFolder}/session_data.txt`, JSON.stringify(issueResult.sessionData));
+    await FileUtil.unzip(zipFilePath, `${assetFolderPath}/view`);
 
     issueResult.bitmarkIds.forEach(id => {
       results.push({
         id,
         assetId: issueResult.asset,
         healthData,
-        filePath: `${downloadedFolder}/${listFile[0]}`
+        filePath: `${downloadedFolder}/${listFiles[0]}`
       });
     });
   }

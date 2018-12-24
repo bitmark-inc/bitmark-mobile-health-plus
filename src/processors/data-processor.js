@@ -170,7 +170,9 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           asset = merge({}, oldAsset, asset);
           if (isHealthDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
-              asset.filePath = await runPromiseIgnoreError(detectLocalAssetFilePath(asset.id));
+              let result = await runPromiseIgnoreError(detectLocalAssetFilePath(asset));
+              asset.filePath = result ? result.filePath : null;
+              asset.viewFilePath = result ? result.viewFilePath : null;
               bitmark.asset = asset;
               await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(bitmark));
             } else {
@@ -180,7 +182,8 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
           } else if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               if (!asset.filePath || asset.filePath.indexOf(FileUtil.SharedGroupDirectory) < 0) {
-                asset.filePath = await runPromiseIgnoreError(detectLocalAssetFilePath(asset.id));
+                let result = await runPromiseIgnoreError(detectLocalAssetFilePath(asset));
+                asset.filePath = result ? result.filePath : null;
               }
               if (!bitmark.thumbnail || !bitmark.thumbnail.path || bitmark.thumbnail.path.indexOf(FileUtil.SharedGroupDirectory) < 0) {
                 bitmark.thumbnail = await runPromiseIgnoreError(CommonModel.checkThumbnailForBitmark(bitmark.id));
@@ -495,7 +498,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
     let bitmarkAccountNumber = CacheData.userInformation.bitmarkAccountNumber;
     await FileUtil.mkdir(`${FileUtil.CacheDirectory}/${bitmarkAccountNumber}`);
-    await FileUtil.mkdir(`${FileUtil.DocumentDirectory}/assets-session-data/${bitmarkAccountNumber}`);
 
     await LocalFileService.initializeLocalStorage();
     await LocalFileService.moveOldDataFilesToNewLocalStorageFolder();
@@ -514,10 +516,11 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
             let keyList = key.split('_');
             let promiseRunAfterCopyFile;
             let overwrite = false;
+            let assetId;
             if (keyList[0] === bitmarkAccountNumber) {
               let keyFilePath;
               if (keyList[1] === 'assets') {
-                let assetId = base58.decode(keyList[2]).toString('hex');
+                assetId = base58.decode(keyList[2]).toString('hex');
                 keyFilePath = key.replace(`${bitmarkAccountNumber}_assets_${keyList[2]}_`, `${bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
               } else if (keyList[1] === 'thumbnails') {
                 keyFilePath = key.replace(`${bitmarkAccountNumber}_thumbnails_`, `${bitmarkAccountNumber}/thumbnails/`);
@@ -532,6 +535,14 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
                 };
               }
               let doSyncFile = async () => {
+                if (assetId) {
+                  let assetInfo = await BitmarkModel.doGetAssetInformation(assetId);
+                  console.log('assetId', assetId, assetInfo);
+                  if (isHealthDataRecord(assetInfo) && keyFilePath.endsWith('.txt')) {
+                    iCloudSyncAdapter.deleteFileFromCloud(key);
+                    return;
+                  }
+                }
                 let filePath = mapFiles[key];
                 let downloadedFile = `${FileUtil.SharedGroupDirectory}/${keyFilePath}`;
                 if (overwrite) {
@@ -755,6 +766,7 @@ const doAcceptEmailRecords = async (emailRecord) => {
     await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/email_records/${id}`);
     await AccountModel.doDeleteEmailRecord(CacheData.jwt, id);
   }
+  return true;
 };
 
 const doRejectEmailRecords = async (emailRecord) => {
@@ -764,19 +776,66 @@ const doRejectEmailRecords = async (emailRecord) => {
   }
 };
 
-const detectLocalAssetFilePath = async (assetId) => {
-  let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${assetId}`;
+const detectLocalAssetFilePath = async (asset) => {
+  let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${asset.id}`;
   let existAssetFolder = await runPromiseWithoutError(FileUtil.exists(assetFolderPath));
+  let filePath, viewFilePath;
   if (!existAssetFolder || existAssetFolder.error) {
-    return null;
+    return { filePath, viewFilePath };
   }
-  let downloadedFolder = `${assetFolderPath}/downloaded`;
-  let existDownloadedFolder = await runPromiseWithoutError(FileUtil.exists(downloadedFolder));
-  if (!existDownloadedFolder || existDownloadedFolder.error) {
-    return null;
+  let detectFilePath = async () => {
+    let downloadedFolder = `${assetFolderPath}/downloaded`;
+    let existDownloadedFolder = await runPromiseWithoutError(FileUtil.exists(downloadedFolder));
+    if (!existDownloadedFolder || existDownloadedFolder.error) {
+      return null;
+    }
+    let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
+    return `${assetFolderPath}/downloaded/${list[0]}`;
   }
-  let list = await FileUtil.readDir(`${assetFolderPath}/downloaded`);
-  return `${assetFolderPath}/downloaded/${list[0]}`;
+
+  let detectViewFilePath = async () => {
+    let viewFolder = `${assetFolderPath}/view`;
+    let existViewFolder = await runPromiseWithoutError(FileUtil.exists(viewFolder));
+    if (!existViewFolder || existViewFolder.error) {
+      return null;
+    }
+    let list = await FileUtil.readDir(`${assetFolderPath}/view`);
+    return `${assetFolderPath}/view/${list[0]}`;
+  }
+  filePath = await detectFilePath();
+  if (isHealthDataRecord(asset)) {
+    if (filePath && filePath.substring(filePath.lastIndexOf('.'), filePath.length) === '.txt') {
+      asset.assetFileSyncedToICloud = false;
+      let fullFilename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
+      let filename = fullFilename.replace('.txt', '');
+      await FileUtil.removeSafe(`${assetFolderPath}/downloaded/${filename}.zip`);
+      await FileUtil.removeSafe(`${assetFolderPath}/view`);
+
+      let tempZipFilePath = `${assetFolderPath}/${filename}.zip`;
+      await FileUtil.zip(`${assetFolderPath}/downloaded`, tempZipFilePath);
+      await FileUtil.copyFile(tempZipFilePath, `${assetFolderPath}/downloaded/${filename}.zip`);
+      await FileUtil.removeSafe(tempZipFilePath);
+
+      await FileUtil.mkdir(`${assetFolderPath}/view`);
+      await FileUtil.copyFile(filePath, `${assetFolderPath}/view/${filename}.txt`);
+      await FileUtil.removeSafe(filePath);
+      //remove old file in sandbox of app
+      await FileUtil.removeSafe(`${FileUtil.DocumentDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/assets/${asset.id}/downloaded/${filename}.txt`);
+      await iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(asset.id, 'hex'))}_${fullFilename}`);
+
+      return {
+        filePath: `${assetFolderPath}/downloaded/${filename}.zip`,
+        viewFilePath: `${assetFolderPath}/view/${filename}.txt`
+      }
+    }
+    viewFilePath = await detectViewFilePath();
+    if (!viewFilePath && filePath && filePath.endsWith('.zip')) {
+      await FileUtil.mkdir(`${assetFolderPath}/view`);
+      await FileUtil.unzip(filePath, `${assetFolderPath}/view`);
+      viewFilePath = await detectViewFilePath();
+    }
+  }
+  return { filePath, viewFilePath };
 };
 
 const doCombineImages = async (images) => {

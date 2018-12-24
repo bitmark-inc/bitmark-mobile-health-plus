@@ -56,22 +56,24 @@ export class EmailRecordComponent extends Component {
   doAccept() {
     AppProcessor.doAcceptEmailRecords({ list: this.state.list, ids: this.state.ids }, {
       indicator: true, title: i18n.t('EmailRecordComponent_alertTitle'), message: ''
-    }).then(() => {
-      let acceptedList = this.state.acceptedList;
-      acceptedList = acceptedList.concat(this.state.list.filter(item => !item.existingAsset));
-      if (this.state.emailIndex < this.state.emailAddress.length - 1) {
-        this.setState({
-          selectedEmail: this.state.emailAddress[this.state.emailIndex + 1],
-          emailIndex: this.state.emailIndex + 1,
-          acceptedList
-        });
-        this.processEmailRecordsFromAnEmail(this.state.emailAddress[this.state.emailIndex + 1]);
-      } else {
-        if (acceptedList.length > 0) {
-          this.setState({ step: EmailRecordComponent.STEPS.view, acceptedList });
+    }).then((results) => {
+      if (results) {
+        let acceptedList = this.state.acceptedList;
+        acceptedList = acceptedList.concat(this.state.list.filter(item => !item.existingAsset));
+        if (this.state.emailIndex < this.state.emailAddress.length - 1) {
+          this.setState({
+            selectedEmail: this.state.emailAddress[this.state.emailIndex + 1],
+            emailIndex: this.state.emailIndex + 1,
+            acceptedList
+          });
+          this.processEmailRecordsFromAnEmail(this.state.emailAddress[this.state.emailIndex + 1]);
         } else {
-          Actions.reset('user');
-          DataProcessor.finishedDisplayEmailRecords();
+          if (acceptedList.length > 0) {
+            this.setState({ step: EmailRecordComponent.STEPS.view, acceptedList });
+          } else {
+            Actions.reset('user');
+            DataProcessor.finishedDisplayEmailRecords();
+          }
         }
       }
     }).catch(error => {
