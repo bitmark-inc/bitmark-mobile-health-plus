@@ -4,15 +4,13 @@ import {
   StyleSheet,
   Linking,
   Alert,
-  Share,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
+  Image, View, SafeAreaView, ScrollView, Text, TouchableOpacity,
 } from 'react-native';
-import Intercom from 'react-native-intercom';
 import Mailer from 'react-native-mail';
-import { Actions } from 'react-native-router-flux';
 import { AppProcessor, EventEmitterService, DataProcessor, CacheData } from 'src/processors';
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
+import { MMRCardComponent } from './mmr';
 
 export class AccountComponent extends Component {
   static propTypes = {
@@ -73,10 +71,16 @@ export class AccountComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
-          <Image style={styles.headerBackIcon} source={require('assets/imgs/back_icon_black_white.png')} />
+          <TouchableOpacity style={styles.headerLeft}>
+            <Image style={styles.headerLeftBackIcon} source={require('assets/imgs/back_icon_black_white.png')} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Vault</Text>
+          <View style={styles.headerRight} />
         </View>
         <ScrollView contentContainerStyle={styles.body}>
-
+          <View style={{
+          }} />
+          <MMRCardComponent />
         </ScrollView>
       </SafeAreaView>
     );
@@ -96,9 +100,23 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 56, width: '100%',
+    flexDirection: 'row', alignItems: 'center',
   },
-  headerBackIcon: {
-    width: 16, height: 16, resizeMode: 'contain'
-  }
+  headerLeft: {
+    paddingLeft: convertWidth(19),
+    width: convertWidth(35),
+  },
+
+  headerLeftBackIcon: {
+    width: 16, height: '100%', resizeMode: 'contain',
+  },
+  headerTitle: {
+    textAlign: 'center',
+    flex: 1
+  },
+  headerRight: {
+    paddingRight: convertWidth(19),
+    width: convertWidth(35),
+  },
 
 });

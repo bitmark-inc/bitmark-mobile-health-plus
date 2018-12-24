@@ -23,15 +23,15 @@ export class MMRCardComponent extends Component {
 
 const styles = StyleSheet.create({
   body: {
-    padding: convertWidth(16),
-    paddingTop: convertWidth(16),
-    flex: 1,
+    width: convertWidth(344), minHeight: 224,
+    shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
+    borderWidth: 1, borderRadius: 4, borderColor: '#F4F2EE',
   },
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: '#FF4444',
     width: "100%",
+    backgroundColor: 'white',
+    padding: convertWidth(16), paddingBottom: convertWidth(20),
   },
 });
