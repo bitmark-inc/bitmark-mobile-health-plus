@@ -606,7 +606,7 @@
     "ReleaseNoteComponent_versionInformationText": "VERSION {{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "just now",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ago",
-    "ReleaseNoteComponent_releaseNoteText": "New Features:\n\n• Now supports offline access and viewing of account information, health data, and health records\n\n\nUX Improvements:\n\n• Improved speed of registering health and medical records\n\n• Increased security by storing users’ health data locally on devices\n\n• Fixed minor bug causing app to freeze for a few seconds at startup",
+    "ReleaseNoteComponent_releaseNoteText": "New Features:\n• Now supports offline access and viewing of account information, health data, and health records\n\nUX Improvements:\n• Improved speed of registering health and medical records\n• Increased security by storing users’ health data locally on devices\n• Fixed minor bug causing app to freeze for a few seconds at startup",
     "AppProcessor_offlineMessage": "Please connect to the Internet and try again!"
   },
   "zh": {
@@ -911,7 +911,7 @@
     "ReleaseNoteComponent_versionInformationText": "版本{{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "今天",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}天前",
-    "ReleaseNoteComponent_releaseNoteText": "新功能：\n\n• 支援離線存取並查看帳戶資訊、健康數據及健康紀錄。\n\n\n用戶體驗改進：\n\n• 提升登記健康數據及醫療紀錄的的速度。\n\n• 透過本機儲存使用者的健康數據來增加安全性。\n\n• 改善了啟動app時畫面停格幾秒鐘的錯誤。",
+    "ReleaseNoteComponent_releaseNoteText": "新功能：\n• 支援離線存取並查看帳戶資訊、健康數據及健康紀錄。\n\n用戶體驗改進：\n• 提升登記健康數據及醫療紀錄的的速度。\n• 透過本機儲存使用者的健康數據來增加安全性。\n• 改善了啟動app時畫面停格幾秒鐘的錯誤。",
     "AppProcessor_offlineMessage": "網路異常，請確保已連線至網路並再嘗試一次。"
   },
   "vi": {
@@ -1216,7 +1216,7 @@
     "ReleaseNoteComponent_versionInformationText": "Phiên bản{{version}}",
     "ReleaseNoteComponent_versionInformationReleaseDiff1": "vừa xong",
     "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ngày trước",
-    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\n\n• Cho phép người dùng xem các thông tin về tài khoản, xem chi tiết dữ liệu sức khoẻ và các bản ghi y tế khi không có Internet.\n\n\nCải tiến UX:\n\n• Cải thiện tốc độ đăng ký dữ liệu sức khoẻ và bản ghi y tế\n\n• Tăng bảo mật bằng cách lưu dữ liệu sức khoẻ người dùng hoàn toàn trên thiết bị.\n\n• Sửa lỗi gây ra việc ứng dụng bị đứng trong quá trình khởi động. ",
+    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\n• Cho phép người dùng xem các thông tin về tài khoản, xem chi tiết dữ liệu sức khoẻ và các bản ghi y tế khi không có Internet.\n\nCải tiến UX:\n• Cải thiện tốc độ đăng ký dữ liệu sức khoẻ và bản ghi y tế\n• Tăng bảo mật bằng cách lưu dữ liệu sức khoẻ người dùng hoàn toàn trên thiết bị.\n• Sửa lỗi gây ra việc ứng dụng bị đứng trong quá trình khởi động. ",
     "AppProcessor_offlineMessage": "Vui lòng kết nối mạng và thử lại!"
   }
 }
