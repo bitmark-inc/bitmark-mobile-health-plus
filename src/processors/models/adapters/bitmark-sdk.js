@@ -31,6 +31,14 @@ const BitmarkSDK = {
       phraseWords: list[1],
     };
   },
+
+  generatePhrase: async () => {
+    let list = await SwiftBitmarkSDK.generatePhrase();
+    return {
+      bitmarkAccountNumber: list[0],
+      phraseWords: list[1],
+    };
+  },
   storeFileSecurely: async (filePath, desFilePath) => {
     return await SwiftBitmarkSDK.storeFileSecurely(filePath, desFilePath);
   },

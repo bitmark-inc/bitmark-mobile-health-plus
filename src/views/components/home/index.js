@@ -6,8 +6,7 @@ import { Router, Scene, Stack, } from 'react-native-router-flux';
 import { TouchFaceIdComponent } from './touch-face-id.component';
 import { DataProcessor } from 'src/processors';
 import { BitmarkLegalComponent, WhatNewComponent } from 'src/views/commons';
-
-
+import { GenerateHealthCodeComponent } from "./generate-health-code.component";
 
 export class HomeRouterComponent extends Component {
   componentDidMount() {
@@ -23,6 +22,7 @@ export class HomeRouterComponent extends Component {
           <Scene key="login" component={LoginComponent} />
           <Scene key="touchFaceId" component={TouchFaceIdComponent} />
           <Scene key="legal" component={BitmarkLegalComponent} />
+          <Scene key="generateHealthCode" component={GenerateHealthCodeComponent} />
           <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
         </Stack>
       </Router>

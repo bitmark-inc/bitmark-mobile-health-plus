@@ -11,10 +11,14 @@ const doCreateAccount = async (enableTouchFaceId) => {
   return await BitmarkSDK.newAccount(enableTouchFaceId);
 };
 
+const doGeneratePhrase = async () => {
+  return await BitmarkSDK.generatePhrase();
+};
+
 const doLogin = async (phraseWords, enableTouchFaceId) => {
   await CookieManager.clearAll();
   return await BitmarkSDK.newAccountFromPhraseWords(phraseWords, enableTouchFaceId);
-}
+};
 
 const doGetCurrentAccount = async () => {
   return await BitmarkSDK.accountInfo();
@@ -305,6 +309,7 @@ let doGetHockeyAppVersion = (appId, token) => {
 
 let AccountModel = {
   doGetCurrentAccount,
+  doGeneratePhrase,
   doCheckPhraseWords,
   doCreateAccount,
   doLogin,

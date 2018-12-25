@@ -13,23 +13,23 @@ import iCloudDocumentSync
 
 @objc(BitmarkSDKWrapper)
 class BitmarkSDKWrapper: NSObject {
-  
+
   static let accountNotFound = "Account not found in native layer"
   var account: Account?
-  
+
   @objc(sdkInit:::)
   func sdkInit(_ network: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "BitmarkSDKAPIKey") as? String else {
         reject(nil, "Cannot find default bundle", nil);
         return
     }
-    
+
     BitmarkSDK.initialize(config: SDKConfig(apiToken: apiKey,
                                             network: BitmarkSDKWrapper.networkWithName(name: network),
                                             urlSession: URLSession.shared))
     resolve(nil);
   }
-  
+
   @objc(createAccount:::)
   func createAccount(_ authentication: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -48,12 +48,25 @@ class BitmarkSDKWrapper: NSObject {
       }
     }
   }
-  
+
+  @objc(generatePhrase::)
+  func generatePhrase(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      let account = try Account()
+      resolve([account.accountNumber,
+               try account.getRecoverPhrase(language: .english),
+               BitmarkSDKWrapper.stringFromVersion(account.seed.version)])
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
+
   @objc(createAccountFromPhrase::::)
   func createAccountFromPhrase(_ pharse: [String], _ authentication: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       let account = try Account(recoverPhrase: pharse, language: .english)
-      
+
       try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDKWrapper.stringFromVersion(account.seed.version), authentication: authentication)
       self.account = account
       resolve(nil);
@@ -68,19 +81,19 @@ class BitmarkSDKWrapper: NSObject {
       }
     }
   }
-  
+
   @objc(tryPhrase:::)
   func tryPhrase(_ pharse: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       let account = try Account(recoverPhrase: pharse, language: .english)
-      
+
       resolve(account.accountNumber)
     }
     catch let e {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(accountInfo::)
   func accountInfo(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -104,7 +117,7 @@ class BitmarkSDKWrapper: NSObject {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
-      
+
       let seed = try Seed.fromCore(core, version: KeychainUtil.getAccountVersion())
       self.account = try Account(seed: seed)
       resolve(nil)
@@ -113,7 +126,7 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(removeAccount::)
   func removeAccount(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -124,7 +137,7 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(issue:::)
   func issue(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -132,7 +145,7 @@ class BitmarkSDKWrapper: NSObject {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
-      
+
       guard let fileURL = params["url"] as? String,
         let name = params["property_name"] as? String,
         let metadata = params["metadata"] as? [String: String],
@@ -140,30 +153,30 @@ class BitmarkSDKWrapper: NSObject {
           reject(nil, "Invalid fingerprint", nil)
           return
       }
-      
+
       // Register asset
       var assetParams = try Asset.newRegistrationParams(name: name,
                                                         metadata: metadata)
-      
+
       try assetParams.setFingerprint(fromFileURL: fileURL)
       try assetParams.sign(account)
       let assetId = try Asset.register(assetParams)
-      
+
       // Issue bitmarks
-      
+
       var issueParams = try Bitmark.newIssuanceParams(assetID: assetId,
                                                       owner: account.accountNumber,
                                                       quantity: quantity)
       try issueParams.sign(account)
       let bitmarkIds = try Bitmark.issue(issueParams)
-      
+
       resolve([bitmarkIds, assetId])
     }
     catch let e {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(storeFileSecurely::::)
   func storeFileSecurely(_ filePath: String, _ destination: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -175,7 +188,7 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e);
     }
   }
-  
+
   //  @objc(downloadBitmark::::)
   //  func downloadBitmark(_ bitmarkId: String, localFolderPath: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
   //    do {
@@ -229,19 +242,19 @@ class BitmarkSDKWrapper: NSObject {
   //      }
   //    }
   //  }
-  
+
   @objc(getAssetInfo:::)
   func getAssetInfo(_ filePath: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       let url = URL(fileURLWithPath: filePath)
       let data = try Data(contentsOf: url)
       let fingerprint = FileUtil.computeFingerprint(data: data)
-      
+
       guard let fingerprintData = fingerprint.data(using: .utf8) else {
         reject(nil, "Invalid fingerprint", nil)
         return
       }
-      
+
       let assetid = fingerprintData.sha3(length: 512).hexEncodedString
       resolve([assetid, fingerprint])
     }
@@ -249,7 +262,7 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e);
     }
   }
-  
+
   //  @objc(issueThenTransferFile::::)
   //  func issueThenTransferFile(_ params: [String: Any], localFolderPath: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
   //    do {
@@ -286,7 +299,7 @@ class BitmarkSDKWrapper: NSObject {
   //      }
   //    }
   //  }
-  
+
   @objc(sign:::)
   func sign(_ messages: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -294,19 +307,19 @@ class BitmarkSDKWrapper: NSObject {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
-      
+
       let signatures = try messages.map({ (message) -> String in
         let messageData = message.data(using: .utf8)!
         return (try account.sign(withMessage: messageData)).hexEncodedString
       })
-      
+
       resolve(signatures)
     }
     catch let e {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(validateMetadata:::)
   func validateMetadata(_ metadata: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     let tmp = metadata.reduce([]) { (result, keyvalue) -> [String] in
@@ -315,9 +328,9 @@ class BitmarkSDKWrapper: NSObject {
       newResult.append(keyvalue.value)
       return newResult
     }
-    
+
     let metadataString = tmp.joined(separator: "\u{0000}")
-    
+
     if metadataString.utf8.count > 2048 {
       reject(nil, "metadata reached limit", nil)
     }
@@ -325,7 +338,7 @@ class BitmarkSDKWrapper: NSObject {
       resolve(nil);
     }
   }
-  
+
   @objc(transfer:::)
   func transfer(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -333,25 +346,25 @@ class BitmarkSDKWrapper: NSObject {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
-      
+
       guard let address = params["address"] as? String,
         let bitmarkId = params["bitmark_id"] as? String else {
           reject(nil, "Invalid parameter", nil)
           return
       }
-      
+
       var transferParams = try Bitmark.newTransferParams(to: address)
       try transferParams.from(bitmarkID: bitmarkId)
       try transferParams.sign(account)
       let txId = try Bitmark.transfer(withTransferParams: transferParams)
-      
+
       resolve(txId)
     }
     catch let e {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(offer:::)
   func offer(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -359,26 +372,26 @@ class BitmarkSDKWrapper: NSObject {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
-      
+
       guard let address = params["address"] as? String,
         let bitmarkId = params["bitmark_id"] as? String else {
           reject(nil, "Invalid parameter", nil)
           return
       }
-      
+
       var offerParam = try Bitmark.newOfferParams(to: address, info: nil)
       try offerParam.from(bitmarkID: bitmarkId)
       try offerParam.sign(account)
-      
+
       try Bitmark.offer(withOfferParams: offerParam)
-      
+
       resolve(nil);
     }
     catch let e {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(response:::)
   func response(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -386,38 +399,38 @@ class BitmarkSDKWrapper: NSObject {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
-      
+
       guard let action = params["action"] as? String,
         let bitmarkId = params["bitmark_id"] as? String else {
           reject(nil, "Invalid parameter", nil)
           return
       }
-      
+
       let respondAction: CountersignedTransferAction
       if action == "accept" {
         respondAction = .accept
       } else {
         respondAction = .reject
       }
-      
+
       let bitmark = try Bitmark.get(bitmarkID: bitmarkId)
       var responseOfferParam = try Bitmark.newTransferResponseParams(withBitmark: bitmark, action: respondAction)
       try responseOfferParam.sign(account)
-      
+
       try Bitmark.response(withResponseParams: responseOfferParam)
-      
+
       resolve(nil);
     }
     catch let e {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(validateAccountNumber:::)
   func validateAccountNumber(_ address: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     resolve(AccountNumber(address).isValid())
   }
-  
+
   @objc(getBitmark:::)
   func getBitmark(_ bitmarkID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -428,7 +441,7 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e)
     }
   }
-  
+
   @objc(getBitmarks:::)
   func getBitmarks(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -482,21 +495,21 @@ class BitmarkSDKWrapper: NSObject {
           continue
         }
       }
-      
+
       let (bitmarks, asset) = try Bitmark.list(params: queryParams)
       var result: [Any] = [try bitmarks.map { try $0.asDictionary() }]
       if let a = asset {
         result.append(try a.asDictionary())
       }
-      
+
       resolve(result)
-      
+
     }
     catch let e {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(getTransaction:::)
   func getTransaction(_ transactionID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -507,7 +520,7 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e)
     }
   }
-  
+
   @objc(getTransactions:::)
   func getTransactions(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -549,20 +562,20 @@ class BitmarkSDKWrapper: NSObject {
           continue
         }
       }
-      
+
       let (transactions, asset) = try Transaction.list(params: queryParams)
       var result: [Any] = [try transactions.map { try $0.asDictionary() }]
       if let a = asset {
         result.append(try a.asDictionary())
       }
-      
+
       resolve(result)
     }
     catch let e {
       reject(nil, nil, e);
     }
   }
-  
+
   @objc(getAsset:::)
   func getAsset(_ assetID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -573,7 +586,7 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e)
     }
   }
-  
+
   @objc(getAssets:::)
   func getAssets(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
@@ -597,7 +610,7 @@ class BitmarkSDKWrapper: NSObject {
           continue
         }
       }
-      
+
       let assets = try Asset.list(params: queryParams)
       resolve(try assets.map { try $0.asDictionary() } )
     }
@@ -608,7 +621,7 @@ class BitmarkSDKWrapper: NSObject {
 }
 
 extension BitmarkSDKWrapper {
-  
+
   static func networkWithName(name: String) -> Network {
     switch(name) {
     case "livenet":
@@ -619,7 +632,7 @@ extension BitmarkSDKWrapper {
       return Network.livenet
     }
   }
-  
+
   static func versionFromString(_ version: String) -> SeedVersion {
     if version == "v2" {
       return SeedVersion.v2
@@ -627,7 +640,7 @@ extension BitmarkSDKWrapper {
       return SeedVersion.v1
     }
   }
-  
+
   static func stringFromVersion(_ version: SeedVersion) -> String {
     switch version {
     case .v1:
