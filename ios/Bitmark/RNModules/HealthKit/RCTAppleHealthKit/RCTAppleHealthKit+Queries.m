@@ -965,6 +965,8 @@
         if (error) {
             // Perform proper error handling here
             NSLog(@"*** An error occurred while calculating the statistics: %@ ***", error.localizedDescription);
+          completionHandler(nil, error);
+          return;
         }
 
         NSMutableArray *data = [NSMutableArray arrayWithCapacity:1];
