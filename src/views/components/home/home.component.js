@@ -40,7 +40,7 @@ export class HomeComponent extends Component {
             {/*CONTENT*/}
             <View style={styles.contentArea}>
               {/*IMAGE*/}
-              <View style={styles.introductionImageArea}>
+              <View style={[styles.introductionImageArea, {alignItems: 'flex-end', justifyContent: 'flex-end', width: '100%'}]}>
                 <Image style={styles.onBoardingImage1} source={require('assets/imgs/onboarding_1.png')}/>
               </View>
               {/*DESC*/}
@@ -85,9 +85,9 @@ export class HomeComponent extends Component {
                 </Text>
 
                 {/*Terms and Privacy Policy */}
-                <Hyperlink style={[styles.introductionDescription, {fontStyle: 'italic'}]} linkText={ url => url === 'https://bitmark.com/legal/terms' ? 'Terms' : 'Privacy Policy' } onPress={ (url) => Linking.openURL(url) }>
-                  <Text style={[styles.introductionDescription, {marginTop: 0, fontStyle: 'italic'}]}>
-                    By creating a vault, you agree to our <Text style={[{textDecorationLine: 'underline', fontStyle: 'italic'}]}>https://bitmark.com/legal/terms</Text> and <Text style={[{textDecorationLine: 'underline', fontStyle: 'italic'}]}>https://bitmark.com/legal/privacy.</Text>
+                <Hyperlink style={[styles.introductionDescription, styles.hyperLinkText, {fontStyle: 'italic'}]} linkText={ url => url === 'https://bitmark.com/legal/terms' ? 'Terms' : 'Privacy Policy' } onPress={ (url) => Linking.openURL(url) }>
+                  <Text style={[styles.introductionDescription, styles.hyperLinkText, {marginTop: 0, fontStyle: 'italic'}]}>
+                    By creating a vault, you agree to our <Text style={[{textDecorationLine: 'underline', fontStyle: 'italic'}, styles.hyperLinkText]}>https://bitmark.com/legal/terms</Text> and <Text style={[{textDecorationLine: 'underline', fontStyle: 'italic'}, styles.hyperLinkText]}>https://bitmark.com/legal/privacy.</Text>
                   </Text>
                 </Hyperlink>
               </View>
@@ -168,8 +168,8 @@ const styles = StyleSheet.create({
   },
   onBoardingImage1: {
     resizeMode: 'contain',
-    width: convertWidth(117),
-    height: 334 * convertWidth(117) / 117,
+    width: config.isIPhoneX ? convertWidth(250) : convertWidth(206),
+    height: config.isIPhoneX ? (385 * convertWidth(250) / 250) : (318 * convertWidth(206) / 206),
   },
   onBoardingImage2: {
     resizeMode: 'contain',
@@ -195,12 +195,15 @@ const styles = StyleSheet.create({
   },
   introductionDescription: {
     marginTop: 15,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir book',
-    fontWeight: '300',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book',
+    fontWeight: '200',
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
     textAlign: 'left',
+  },
+  hyperLinkText: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light'
   },
   buttonNext: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',

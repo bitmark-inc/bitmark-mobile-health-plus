@@ -413,7 +413,7 @@ export class GenerateHealthCodeComponent extends Component {
 
                     {/*KEY PHRASE SET!*/}
                     {(this.state.step === STEPS.generated) &&
-                    <TouchableOpacity style={[styles.button, {marginTop: 20, backgroundColor: 'rgba(0, 0, 0, 0.12)'}]}>
+                    <TouchableOpacity style={[styles.button, {marginTop: 20, backgroundColor: 'rgba(0, 0, 0, 0.12)'}]} disabled={true}>
                       <Text style={[styles.buttonText, {color: '#000000', opacity: 0.4}]}>KEY PHRASE SET!</Text>
                     </TouchableOpacity>}
                   </View>
@@ -714,7 +714,7 @@ const styles = StyleSheet.create({
   introductionDescription: {
     marginTop: 10,
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir book',
-    fontWeight: '300',
+    fontWeight: '200',
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
