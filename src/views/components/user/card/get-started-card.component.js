@@ -1,0 +1,115 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import {
+  View, Text, Image,
+  StyleSheet,
+} from 'react-native'
+
+import { convertWidth } from 'src/utils';
+import { config } from 'src/configs';
+
+export class GetStartedCardComponent extends React.Component {
+  static propTypes = {
+    cardIconSource: PropTypes.any,
+    cardHeader: PropTypes.string,
+    cardText: PropTypes.string,
+    cardTopBarStyle: PropTypes.any,
+    isStickCard: PropTypes.boolean,
+    cardNextIconSource: PropTypes.any,
+  };
+
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <View style={[styles.cardContainer]}>
+        {/*TOP BAR*/}
+        <View style={[styles.cardTopBar, this.props.cardTopBarStyle]}>
+          <Text style={[styles.cardTitle]}>GET STARTED</Text>
+          <Image style={styles.cardIcon} source={this.props.cardIconSource} />
+        </View>
+
+        {/*CONTENT*/}
+        <View style={[styles.cardContent]}>
+          <Text style={[styles.cardHeader]}>{this.props.cardHeader}</Text>
+          <Text style={[styles.cardText]}>{this.props.cardText}</Text>
+        </View>
+
+        {/*BOTTOM BAR*/}
+        {this.props.isStickCard &&
+        <View style={[styles.cardBottomBar]}>
+          <Image style={styles.cardNextIcon} source={this.props.cardNextIconSource} />
+        </View>
+        }
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    width: '100%',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    backgroundColor: '#F4F2EE',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    paddingBottom: 16,
+  },
+  cardTopBar: {
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  cardTitle: {
+    marginTop: 16,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontSize: 10,
+    color: 'rgba(0, 0, 0, 0.87)'
+  },
+  cardIcon: {
+    width: 26,
+    height: 33,
+    resizeMode: 'contain'
+  },
+  cardContent: {
+    marginTop: 16,
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+  },
+  cardHeader: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontSize: 24,
+    lineHeight: 36,
+    fontWeight: '900',
+    color: 'rgba(0, 0, 0, 0.87)'
+  },
+  cardText: {
+    marginTop: 10,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Book',
+    fontSize: 14,
+    color: 'rgba(0, 0, 0, 0.6)'
+  },
+  cardBottomBar: {
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
+  },
+  cardNextIcon: {
+    width: 16,
+    height: 16,
+    resizeMode: 'contain',
+  }
+});
