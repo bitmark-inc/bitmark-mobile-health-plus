@@ -317,8 +317,10 @@ class PrivateUserComponent extends Component {
           {/*SEARCH AREA*/}
           <View style={[styles.searchArea, (this.props.searchTerm ? { flex: 1 } : {})]}>
             <View style={styles.searchInputContainer}>
+              {/*Search Input*/}
               <SearchInputComponent
                 throttle={300}
+                ref={(ref) => {this.searchInput = ref}}
                 onSearchTermChange={(searchTerm) => {
                   this.setState({
                     isSearching: true
@@ -328,7 +330,7 @@ class PrivateUserComponent extends Component {
                 }}
                 setSearchFocus={this.setSearchFocus.bind(this)}
                 style={styles.searchInput}
-                placeholder={global.i18n.t("UserComponent_search")}>
+                placeholder={global.i18n.t("UserComponent_search").toUpperCase()}>
               </SearchInputComponent>
 
               {/*Setting button*/}
@@ -347,17 +349,11 @@ class PrivateUserComponent extends Component {
               <Text>{global.i18n.t("UserComponent_searching")}</Text>
             </View>
             }
-            {(this.props.searchTerm && !this.state.isSearching) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} /> : null}
+            {(this.state.searchFocusing) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} cancel={this.searchInput.cancelSearch.bind(this.searchInput)} /> : null}
           </View>
-
-          {/*SEARCH COVER*/}
-          {this.state.searchFocusing && !this.props.searchTerm &&
-          <View style={styles.searchCover}>
-          </View>
-          }
 
           {/*DATA PANEL*/}
-          {!this.props.searchTerm && <View style={styles.body}>
+          {!this.state.searchFocusing && <View style={styles.body}>
             <View style={[styles.bodyContent]}>
               {/*-----STICK CARD-----*/}
               {/*GET_STARTED_MMR*/}
@@ -556,9 +552,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchResultsContainer: {
-    paddingLeft: convertWidth(8),
-    paddingRight: convertWidth(8),
-    backgroundColor: '#F5F5F5',
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+    backgroundColor: '#FFFFFF',
     flex: 1,
   },
   indicatorContainer: {

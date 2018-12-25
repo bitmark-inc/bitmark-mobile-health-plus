@@ -14,7 +14,7 @@ export class GetStartedCardComponent extends React.Component {
     cardHeader: PropTypes.string,
     cardText: PropTypes.string,
     cardTopBarStyle: PropTypes.any,
-    isStickCard: PropTypes.boolean,
+    isStickCard: PropTypes.bool,
     cardNextIconSource: PropTypes.any,
   };
 
