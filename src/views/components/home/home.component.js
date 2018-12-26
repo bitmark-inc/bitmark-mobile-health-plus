@@ -207,13 +207,13 @@ const styles = StyleSheet.create({
   },
   buttonNext: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
-    fontSize: 10,
+    fontSize: 16,
     color: '#FF003C',
   },
   buttonText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
     fontWeight: '900',
-    fontSize: 10,
+    fontSize: 16,
   },
   linkButtonText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book',
