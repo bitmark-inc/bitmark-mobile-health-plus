@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingLogo: {
-    width: 177,
-    height: 61,
+    width: 122,
+    height: 146,
     resizeMode: 'contain',
   },
 });
