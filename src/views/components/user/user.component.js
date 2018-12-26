@@ -349,7 +349,7 @@ class PrivateUserComponent extends Component {
               <Text>{global.i18n.t("UserComponent_searching")}</Text>
             </View>
             }
-            {(this.state.searchFocusing) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} cancel={this.searchInput.cancelSearch.bind(this.searchInput)} /> : null}
+            {(this.state.searchFocusing || this.props.searchResults.length) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm} cancel={this.searchInput.cancelSearch.bind(this.searchInput)} /> : null}
           </View>
 
           {/*DATA PANEL*/}
@@ -513,7 +513,6 @@ const styles = StyleSheet.create({
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    // borderWidth: 1,
     borderBottomWidth: 0,
     width: "100%",
   },
@@ -521,7 +520,6 @@ const styles = StyleSheet.create({
   cardListContainer: {
     marginTop: 60,
     width: '100%',
-    // borderWidth: 1,
     flex: 1,
   },
 
@@ -533,14 +531,6 @@ const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  searchCover: {
-    position: 'absolute',
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    marginTop: convertWidth(16) + 34 + convertWidth(14),
-    backgroundColor: 'rgba(232, 232, 232, 1.0)',
   },
   searchArea: {
     paddingTop: convertWidth(16)

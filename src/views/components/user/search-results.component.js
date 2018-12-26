@@ -9,6 +9,7 @@ import { Actions } from 'react-native-router-flux';
 import moment from "moment/moment";
 import { isFileRecord, isImageFile, isPdfFile } from 'src/utils';
 import { config } from 'src/configs';
+import Highlighter from 'react-native-highlight-words';
 
 
 export class SearchResultsComponent extends Component {
@@ -71,9 +72,24 @@ export class SearchResultsComponent extends Component {
                       {/*Content*/}
                       <View style={styles.itemContent}>
                         {/*Name*/}
-                        <Text style={styles.assetName}>{item.asset.name}</Text>
+                        <Highlighter
+                          style={styles.assetName}
+                          highlightStyle={[styles.highlightingText]}
+                          searchWords={this.props.searchTerm.split(' ')}
+                          textToHighlight={item.asset.name}
+                        />
                         {/*Status*/}
-                        <Text style={styles.bitmarkStatus}>{item.status === 'pending' ? i18n.t('BitmarkListComponent_bitmarkPending') : moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
+                        {item.status === 'pending' ? (
+                          <Text style={styles.bitmarkStatus}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>
+                        ) : (
+                          <Highlighter
+                            style={styles.bitmarkStatus}
+                            highlightStyle={[styles.highlightingText]}
+                            searchWords={this.props.searchTerm.split(' ')}
+                            textToHighlight={moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}
+                          />
+                        )
+                        }
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -115,9 +131,24 @@ export class SearchResultsComponent extends Component {
                       {/*Content*/}
                       <View style={styles.itemContent}>
                         {/*Name*/}
-                        <Text style={styles.assetName}>{item.asset.name}</Text>
+                        <Highlighter
+                          style={styles.assetName}
+                          highlightStyle={[styles.highlightingText]}
+                          searchWords={this.props.searchTerm.split(' ')}
+                          textToHighlight={item.asset.name}
+                        />
                         {/*Status*/}
-                        <Text style={styles.bitmarkStatus}>{item.status === 'pending' ? i18n.t('BitmarkListComponent_bitmarkPending').toUpperCase() : moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}</Text>
+                        {item.status === 'pending' ? (
+                          <Text style={styles.bitmarkStatus}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>
+                        ) : (
+                          <Highlighter
+                            style={styles.bitmarkStatus}
+                            highlightStyle={[styles.highlightingText]}
+                            searchWords={this.props.searchTerm.split(' ')}
+                            textToHighlight={moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}
+                          />
+                        )
+                        }
 
                         {/*Tags*/}
                         {(item.tags && item.tags.length) ? (
@@ -125,7 +156,13 @@ export class SearchResultsComponent extends Component {
                             {(item.tags || []).map(tag => {
                               return (
                                 <View key={tag.value} style={styles.taggingItemContainer}>
-                                  <Text style={styles.taggingItem}>#{tag.value}</Text>
+                                  {/*<Text style={styles.taggingItem}>#{tag.value}</Text>*/}
+                                  <Highlighter
+                                    style={styles.taggingItem}
+                                    highlightStyle={[styles.highlightingTag]}
+                                    searchWords={this.props.searchTerm.split(' ')}
+                                    textToHighlight={'#' + tag.value}
+                                  />
                                 </View>
                               );
                             })
@@ -151,7 +188,8 @@ export class SearchResultsComponent extends Component {
 SearchResultsComponent.propTypes = {
   results: PropTypes.object,
   style: PropTypes.object,
-  cancel: PropTypes.func
+  cancel: PropTypes.func,
+  searchTerm: PropTypes.string,
 };
 
 const styles = StyleSheet.create({
@@ -168,7 +206,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   numberOfResultsText: {
-    fontSize: 17,
+    fontSize: 12,
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
     color: 'rgba(0, 0, 0, 0.6)'
   },
@@ -187,10 +225,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: '#F5F5F5',
     borderWidth: 1,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 1 },
-    // shadowOpacity: 0.2,
-    // shadowRadius: 1,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+
+    elevation: 0,
   },
   resultHeaderText: {
     fontSize: 10,
@@ -210,10 +254,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderLeftWidth: 1,
     borderRightWidth: 1,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 0 },
-    // shadowOpacity: 0.2,
-    // shadowRadius: 1,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+
+    elevation: 0,
   },
   bitmarkLastItemContainer: {
     borderBottomWidth: 1,
@@ -240,13 +290,15 @@ const styles = StyleSheet.create({
   },
   itemContent: {
     marginLeft: 10,
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     flex: 1
   },
   assetName: {
-    fontSize: 16,
+    fontSize: 18,
+    lineHeight: 20,
     fontFamily: 'Avenir black',
-    color: '#000000',
+    color: 'rgba(0, 0, 0, 0.87)',
     fontWeight: '900'
   },
   bitmarkStatus: {
@@ -262,16 +314,24 @@ const styles = StyleSheet.create({
   taggingItemContainer: {
     flexDirection: 'row',
     padding: 5,
-    paddingTop: 2,
-    paddingBottom: 2,
-    backgroundColor: '#ECECEC',
+    paddingTop: 5,
+    paddingBottom: 5,
+    backgroundColor: 'rgba(0, 96, 242, 0.2)',
     marginRight: 10,
-    marginTop: 13
+    marginTop: 13,
+    borderRadius: 5,
   },
   taggingItem: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
     fontSize: 14,
     fontWeight: '300',
+    color: '#0060F2',
+  },
+  highlightingText: {
+    color: '#0060F2'
+  },
+  highlightingTag: {
+    color: '#0060F2'
   }
 
 });
