@@ -12,6 +12,7 @@ import moment from 'moment';
 import { isFileRecord, isImageFile, isPdfFile, convertWidth } from 'src/utils';
 import { config, } from 'src/configs';
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
+import { constants } from "../../../configs";
 
 class PrivateBitmarkListComponent extends Component {
   static propTypes = {
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: convertWidth(16),
+    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
     flex: 1,
   },
   bodyContent: {

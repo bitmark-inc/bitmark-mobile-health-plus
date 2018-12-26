@@ -13,6 +13,7 @@ import { Actions } from 'react-native-router-flux';
 import { AppProcessor, EventEmitterService, DataProcessor, CacheData } from 'src/processors';
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
+import { constants } from "../../../configs";
 
 export class AccountComponent extends Component {
   static propTypes = {
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: convertWidth(16),
+    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
     flex: 1,
   },
   bodyContent: {

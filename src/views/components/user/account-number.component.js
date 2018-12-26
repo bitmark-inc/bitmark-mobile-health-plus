@@ -10,6 +10,7 @@ import { Actions } from 'react-native-router-flux';
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
 import { CacheData } from 'src/processors';
+import { constants } from "../../../configs";
 
 export class AccountNumberComponent extends React.Component {
 
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: convertWidth(16),
+    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
     flex: 1,
   },
   bodyContent: {
