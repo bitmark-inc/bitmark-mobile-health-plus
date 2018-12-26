@@ -607,20 +607,20 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       });
     }
   } else if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
-    // let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
-    // if (!appInfo.intercomUserId) {
-    //   appInfo.intercomUserId = intercomUserId;
-    //   Intercom.logout().then(() => {
-    //     return Intercom.registerIdentifiedUser({ userId: intercomUserId })
-    //   }).catch(error => {
-    //     console.log('registerIdentifiedUser error :', error);
-    //   });
-    //   CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-    // } else {
-    //   Intercom.registerIdentifiedUser({ userId: intercomUserId }).catch(error => {
-    //     console.log('registerIdentifiedUser error :', error);
-    //   });
-    // }
+    let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
+    if (!appInfo.intercomUserId) {
+      appInfo.intercomUserId = intercomUserId;
+      Intercom.logout().then(() => {
+        return Intercom.registerIdentifiedUser({ userId: intercomUserId })
+      }).catch(error => {
+        console.log('registerIdentifiedUser error :', error);
+      });
+      CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
+    } else {
+      Intercom.registerIdentifiedUser({ userId: intercomUserId }).catch(error => {
+        console.log('registerIdentifiedUser error :', error);
+      });
+    }
 
     configNotification();
   }
