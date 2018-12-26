@@ -33,7 +33,7 @@ import {
   compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isMMRRecord,
 } from 'src/utils';
 
-import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
+import { UserBitmarksStore, UserBitmarksActions, MMRInformationStore, MMRInformationActions } from 'src/views/stores';
 import { config } from 'src/configs';
 import { CacheData } from './caches';
 
@@ -97,8 +97,9 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
       CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(filePath));
     }
     await UserModel.doUpdateUserInfo(CacheData.userInformation);
-    //TODO update store
   }
+  let storeState = { mmrInformation: CacheData.userInformation.currentMMRAsset };
+  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
 
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber) {
     let storeState = merge({}, UserBitmarksStore.getState().data);

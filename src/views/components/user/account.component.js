@@ -11,6 +11,7 @@ import { AppProcessor, EventEmitterService, DataProcessor, CacheData } from 'src
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
 import { MMRCardComponent } from './mmr';
+import { ShadowTopComponent, ShadowComponent } from 'src/views/commons';
 
 export class AccountComponent extends Component {
   static propTypes = {
@@ -72,75 +73,84 @@ export class AccountComponent extends Component {
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.headerLeft}>
-            <Image style={styles.headerLeftBackIcon} source={require('assets/imgs/back_icon_black_white.png')} />
+            <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Vault</Text>
           <View style={styles.headerRight} />
         </View>
         <ScrollView contentContainerStyle={styles.body}>
           <MMRCardComponent />
-          <View style={{
-            marginTop: 16,
-            width: convertWidth(344),
-            shadowOffset: { width: 0, height: 3, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
-            borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
-            paddingBottom: 14,
-            backgroundColor: '#F4F2EE',
-          }}>
-            <View style={{
-              flexDirection: 'row', alignItems: 'center',
-              height: 40, width: '100%',
-              backgroundColor: '#F4F2EE',
-              shadowOffset: { width: 0, height: 1, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 4,
-              borderTopWidth: 0.1, borderTopLeftRadius: 4, borderTopRightRadius: 4, borderTopColor: '#F4F2EE',
-              zIndex: 1,
-            }}>
-              <Text style={{
-                fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300',
-                marginLeft: convertWidth(15),
-              }}>ADDRESS</Text>
-            </View>
-            <View style={{
-              flex: 1,
-              backgroundColor: '#F4F2EE',
-              marginTop: 7,
-            }}>
-              <View style={{
-                flexDirection: 'row', alignItems: 'center',
-                paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
-                height: 43,
-              }}>
-                <Text >Your vault is addressed using your{'\n'}Bitmark account number: </Text>
-              </View>
-              <View style={{
-                flexDirection: 'row', alignItems: 'center',
-                paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
-                height: 43,
-                borderTopWidth: 0.3, borderTopColor: 'rgba(0,0,0,0.05)'
-              }}>
-                <Text>[e4fT2...gAB1o]</Text>
-              </View>
-              <View style={{
-                flexDirection: 'row', alignItems: 'center',
-                paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
-                height: 43,
-                borderTopWidth: 0.3, borderTopColor: 'rgba(0,0,0,0.05)'
-              }}>
-                <Text>Others can send you medical records at the following email address:</Text>
-              </View>
-              <View style={{
-                flexDirection: 'row', alignItems: 'center',
-                paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
-                height: 43,
-                borderTopWidth: 0.3, borderTopColor: 'rgba(0,0,0,0.05)'
-              }}>
-                <Text>account_number@health.bitmark.com</Text>
-              </View>
-            </View>
 
+          <ShadowComponent style={styles.cardBody}>
+            <ShadowTopComponent contentStyle={styles.cardHeader}>
+              <Text style={styles.cardTitle}>ADDRESS</Text>
+            </ShadowTopComponent>
+            <View style={styles.cardContentRow}>
+              <Text style={styles.itemDescription}>Your vault is addressed using your{'\n'}Bitmark account number: </Text>
+            </View>
+            <View style={styles.cardContentRow}>
+              <Text style={styles.accountNumber}>[e4fT2...gAB1o]</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </View>
+            <View style={styles.cardContentRow}>
+              <Text style={styles.itemDescription}>Others can send you medical records at the following email address:</Text>
+            </View>
+            <View style={[styles.cardContentRow, {
+              borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+            }]}>
+              <Text style={styles.emailAddress}>{emailAddress}</Text>
+              <Image style={styles.shareIcon} source={require('assets/imgs2/share_icon.png')} />
+            </View>
+          </ShadowComponent>
+
+          <ShadowComponent style={styles.cardBody}>
+            <ShadowTopComponent contentStyle={styles.cardHeader}>
+              <Text style={styles.cardTitle}>SECURITY</Text>
+            </ShadowTopComponent>
+            <View style={styles.cardContentRow}>
+              <Text style={styles.cardContentRowButtonText}>Write down vault key phrase</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </View>
+            <View style={[styles.cardContentRow, {
+              borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+            }]}>
+              <Text style={styles.cardContentRowButtonText}>Lock your vault</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </View>
+          </ShadowComponent>
+
+          <ShadowComponent style={styles.cardBody}>
+            <ShadowTopComponent contentStyle={styles.cardHeader}>
+              <Text style={styles.cardTitle}>ABOUT</Text>
+            </ShadowTopComponent>
+            <View style={styles.cardContentRow}>
+              <Text style={styles.cardContentRowButtonText}>Chat with us</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </View>
+            <View style={[styles.cardContentRow]}>
+              <Text style={styles.cardContentRowButtonText}>Join our Alpha Tester Group</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </View>
+            <View style={[styles.cardContentRow, {
+              borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+            }]}>
+              <Text style={styles.cardContentRowButtonText}>Legal</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </View>
+          </ShadowComponent>
+
+          <View style={[styles.normalRow, { marginTop: 16 }]}>
+            <Text style={styles.rowLabel}>VERSION</Text>
+            <Text style={styles.rowValue}>1.0</Text>
           </View>
+
+          <View style={styles.normalRow}>
+            <Text style={styles.rowLabel}>WHAT’S NEW</Text>
+            <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+          </View>
+
         </ScrollView>
-      </SafeAreaView>
+      </SafeAreaView >
     );
   }
 }
@@ -148,7 +158,7 @@ export class AccountComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
-    backgroundColor: '#E5E5E5',
+    backgroundColor: 'white',
   },
   body: {
     padding: convertWidth(15),
@@ -174,6 +184,61 @@ const styles = StyleSheet.create({
   headerRight: {
     paddingRight: convertWidth(19),
     width: convertWidth(35),
+  },
+
+
+  cardBody: {
+    flexDirection: 'column',
+    marginTop: 16,
+    width: convertWidth(344),
+  },
+  cardHeader: {
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
+    height: 40,
+  },
+  cardTitle: {
+    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300',
+    marginLeft: convertWidth(15),
+  },
+  cardContentRow: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    minHeight: 43, width: '100%',
+    paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+    backgroundColor: 'white',
+  },
+  itemDescription: {
+    fontSize: 14, fontWeight: '300', fontFamily: 'Avenir', marginTop: 6, color: 'rgba(0,0,0,0.6)',
+  },
+  accountNumber: {
+    fontFamily: 'Andale Mono', fontSize: 12, color: '#FF003C',
+  },
+  copyIcon: {
+    width: 12, height: 20, resizeMode: 'contain',
+  },
+  emailAddress: {
+    flex: 1,
+    fontFamily: 'Andale Mono', fontSize: 12, color: '#FF003C',
+  },
+  shareIcon: {
+    width: 19, height: 22, resizeMode: 'contain'
+  },
+
+  cardContentRowButtonText: {
+    fontFamily: 'Avenir Black', fontSize: 18, fontWeight: '900', color: 'rgba(0,0,0,0.87)'
+  },
+
+  normalRow: {
+    minHeight: 43, width: '100%',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+  },
+  rowLabel: {
+    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300', color: 'rgba(0,0,0,0.87)',
+    flex: 1,
+  },
+
+  rowValue: {
+    fontFamily: 'Avenir Black', fontSize: 10, fontWeight: '900', color: 'rgba(0,0,0,0.87)'
   },
 
 });
