@@ -3,7 +3,7 @@ let CacheData = {
   keyIndexModalDisplaying: 0,
   jwt: null,
 
-  codePushUpdated: false,
+  codePushUpdated: undefined,
   notificationUUID: null,
   networkStatus: true,
   mountedRouter: false,
