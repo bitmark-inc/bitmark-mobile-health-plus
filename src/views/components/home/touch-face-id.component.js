@@ -59,7 +59,7 @@ export class TouchFaceIdComponent extends React.Component {
     }
     promise.then((user) => {
       if (user) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, !phraseWords);
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {justCreatedBitmarkAccount: !phraseWords, indicator: true});
       }
     }).catch(error => {
       console.log('error :', error);

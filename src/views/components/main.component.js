@@ -78,17 +78,17 @@ class MainEventsHandlerComponent extends Component {
     EventEmitterService.remove(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY, this.displayEmptyDataSource);
   }
 
-  async doRefresh(justCreatedBitmarkAccount) {
+  async doRefresh(options) {
     if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
       // TODO authenticate touch face id
       let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
       let passTouchFaceId = !result || !result.error;
       this.setState({ passTouchFaceId });
       if (passTouchFaceId) {
-        EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, { justCreatedBitmarkAccount });
+        EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, options);
       }
     } else {
-      EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, { justCreatedBitmarkAccount });
+      EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, options);
     }
   }
 
@@ -324,7 +324,9 @@ export class MainComponent extends Component {
     return false;
   }
 
-  doOpenApp({ justCreatedBitmarkAccount }) {
+  doOpenApp(options) {
+    options && options.indicator && EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
+
     AppProcessor.doCheckNoLongerSupportVersion().then((newAppLink) => {
       if (newAppLink) {
         let title = i18n.t('MainComponent_alertTitle1');
@@ -345,24 +347,27 @@ export class MainComponent extends Component {
           if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus.inhouse') {
             buttons.push({
               text: 'Cancel', style: 'cancel',
-              onPress: () => this.doAppRefresh(justCreatedBitmarkAccount)
+              onPress: () => this.doAppRefresh(options)
             });
           }
         }
         Alert.alert(title, message, buttons);
       } else {
-        this.doAppRefresh(justCreatedBitmarkAccount);
+        this.doAppRefresh(options);
       }
+
+      options && options.indicator && EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
     }).catch(error => {
       console.log('doOpenApp error:', error);
+      options && options.indicator && EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
-  doAppRefresh(justCreatedBitmarkAccount) {
+  async doAppRefresh(options) {
     DataProcessor.doCheckHaveCodePushUpdate().then(updated => {
       console.log('doCheckHaveCodePushUpdate ', updated);
       if (updated) {
-        return DataProcessor.doOpenApp(justCreatedBitmarkAccount).then(user => {
+        return DataProcessor.doOpenApp(options && options.justCreatedBitmarkAccount).then(user => {
           user = user || {};
           console.log('doOpenApp user:', user);
           if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {

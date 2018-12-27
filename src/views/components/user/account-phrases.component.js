@@ -179,7 +179,7 @@ export class AccountPhraseComponent extends Component {
   doLogout() {
     AppProcessor.doLogout().then((result) => {
       if (result) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {indicator: true});
       }
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })

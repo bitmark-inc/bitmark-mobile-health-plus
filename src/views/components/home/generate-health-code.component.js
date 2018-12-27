@@ -6,8 +6,7 @@ import {
 
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { convertWidth, dictionaryPhraseWords } from 'src/utils';
-import { config } from 'src/configs';
-import { constants } from "../../../configs";
+import { config, constants } from 'src/configs';
 
 const STEPS = {
   init: 1,
@@ -91,7 +90,7 @@ export class GenerateHealthCodeComponent extends Component {
   async loginWithPhraseWords() {
     let phraseWords = this.state.phraseWords.map(item => item.word);
     await AppProcessor.doLogin(phraseWords, false);
-    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {justCreatedBitmarkAccount: true, indicator: true});
   }
 
   computePhraseWords(sourcePhraseWords) {

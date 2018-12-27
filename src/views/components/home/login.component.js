@@ -174,7 +174,7 @@ export class LoginComponent extends Component {
 
   async loginWithPhraseWords(phraseWords) {
     await AppProcessor.doLogin(phraseWords, false);
-    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {justCreatedBitmarkAccount: false, indicator: true});
   }
 
   doCheckPhraseWords() {
@@ -234,7 +234,7 @@ export class LoginComponent extends Component {
   //   this.doCheckPhraseWords().then(async (result) => {
   //     if (result) {
   //       await AppProcessor.doLogin(result, false);
-  //       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+  //       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {justCreatedBitmarkAccount: false, indicator: true});
   //     }
   //   });
   // }
