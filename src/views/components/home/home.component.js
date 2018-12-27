@@ -26,87 +26,87 @@ export class HomeComponent extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.body}>
           {/*ONBOARDING SCREEN 1*/}
           {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_1) &&
-          <View style={styles.bodyContent}>
-            {/*TOP AREA*/}
-            <View style={[styles.topArea]}>
-              <Text style={[styles.title]}>BITMARK HEALTH</Text>
-              <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')}/>
-            </View>
-
-            {/*CONTENT*/}
-            <View style={styles.contentArea}>
-              {/*IMAGE*/}
-              <View style={[styles.introductionImageArea, {alignItems: 'flex-end', justifyContent: 'flex-end', width: '100%'}]}>
-                <Image style={styles.onBoardingImage1} source={require('assets/imgs/onboarding_1.png')}/>
+            <View style={styles.bodyContent}>
+              {/*TOP AREA*/}
+              <View style={[styles.topArea]}>
+                <Text style={[styles.title]}>BITMARK HEALTH</Text>
+                <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
               </View>
-              {/*DESC*/}
-              <View style={styles.introductionTextArea}>
-                <Text style={[styles.introductionTitle]}>Control your health</Text>
-                <Text style={[styles.introductionDescription]}>
-                  Take ownership of your health history and control how it is shared with healthcare providers, family, and researchers.
+
+              {/*CONTENT*/}
+              <View style={styles.contentArea}>
+                {/*IMAGE*/}
+                <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'flex-end', width: '100%' }]}>
+                  <Image style={styles.onBoardingImage1} source={require('assets/imgs/onboarding_1.png')} />
+                </View>
+                {/*DESC*/}
+                <View style={styles.introductionTextArea}>
+                  <Text style={[styles.introductionTitle]}>Control your health</Text>
+                  <Text style={[styles.introductionDescription]}>
+                    Take ownership of your health history and control how it is shared with healthcare providers, family, and researchers.
                 </Text>
+                </View>
+              </View>
+
+              {/*BOTTOM AREA*/}
+              <View style={[styles.bottomArea]}>
+                <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-1.png')} />
+                <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.setState({ ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_2 })}>
+                  <Text style={[styles.buttonText, { color: '#FF003C' }]}>NEXT</Text>
+                </TouchableOpacity>
               </View>
             </View>
-
-            {/*BOTTOM AREA*/}
-            <View style={[styles.bottomArea]}>
-              <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-1.png')}/>
-              <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.setState({ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_2})}>
-                <Text style={[styles.buttonText, {color: '#FF003C'}]}>NEXT</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
           }
 
           {/*ONBOARDING SCREEN 2*/}
           {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_2) &&
-          <View style={styles.bodyContent}>
-            {/*TOP AREA*/}
-            <View style={[styles.topArea]}>
-              <Text style={[styles.title]}>BITMARK HEALTH</Text>
-              <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
-            </View>
-
-            {/*CONTENT*/}
-            <View style={styles.contentArea}>
-              {/*IMAGE*/}
-              <View style={styles.introductionImageArea}>
-                <Image style={styles.onBoardingImage2} source={require('assets/imgs/onboarding_2.png')} />
+            <View style={styles.bodyContent}>
+              {/*TOP AREA*/}
+              <View style={[styles.topArea]}>
+                <Text style={[styles.title]}>BITMARK HEALTH</Text>
+                <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
               </View>
-              {/*DESC*/}
-              <View style={styles.introductionTextArea}>
-                <Text style={[styles.introductionTitle]}>Create your health vault</Text>
-                <Text style={[styles.introductionDescription]}>
-                  Your unique health vault locks data away from unauthorized 3rd-party access.
+
+              {/*CONTENT*/}
+              <View style={styles.contentArea}>
+                {/*IMAGE*/}
+                <View style={styles.introductionImageArea}>
+                  <Image style={styles.onBoardingImage2} source={require('assets/imgs/onboarding_2.png')} />
+                </View>
+                {/*DESC*/}
+                <View style={styles.introductionTextArea}>
+                  <Text style={[styles.introductionTitle]}>Create your health vault</Text>
+                  <Text style={[styles.introductionDescription]}>
+                    Your unique health vault locks data away from unauthorized 3rd-party access.
                 </Text>
 
-                {/*Terms and Privacy Policy */}
-                <Hyperlink style={[styles.introductionDescription, styles.hyperLinkText, {fontStyle: 'italic'}]} linkText={ url => url === 'https://bitmark.com/legal/terms' ? 'Terms' : 'Privacy Policy' } onPress={ (url) => Linking.openURL(url) }>
-                  <Text style={[styles.introductionDescription, styles.hyperLinkText, {marginTop: 0, fontStyle: 'italic'}]}>
-                    By creating a vault, you agree to our <Text style={[{textDecorationLine: 'underline', fontStyle: 'italic'}, styles.hyperLinkText]}>https://bitmark.com/legal/terms</Text> and <Text style={[{textDecorationLine: 'underline', fontStyle: 'italic'}, styles.hyperLinkText]}>https://bitmark.com/legal/privacy.</Text>
-                  </Text>
-                </Hyperlink>
+                  {/*Terms and Privacy Policy */}
+                  <Hyperlink style={[styles.introductionDescription, styles.hyperLinkText, { fontStyle: 'italic' }]} linkText={url => url === 'https://bitmark.com/legal/terms' ? 'Terms' : 'Privacy Policy'} onPress={(url) => Linking.openURL(url)}>
+                    <Text style={[styles.introductionDescription, styles.hyperLinkText, { marginTop: 0, fontStyle: 'italic' }]}>
+                      By creating a vault, you agree to our <Text style={[{ textDecorationLine: 'underline', fontStyle: 'italic' }, styles.hyperLinkText]}>https://bitmark.com/legal/terms</Text> and <Text style={[{ textDecorationLine: 'underline', fontStyle: 'italic' }, styles.hyperLinkText]}>https://bitmark.com/legal/privacy.</Text>
+                    </Text>
+                  </Hyperlink>
+                </View>
+              </View>
+
+              {/*BOTTOM AREA*/}
+              <View style={[styles.bottomArea]}>
+                <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-2.png')} />
+
+                {/*Login link*/}
+                <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.login}>
+                  <Text style={[styles.linkButtonText]}>Already have a vault?</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[styles.buttonNext]} onPress={() => Actions.generateHealthCode()}>
+                  <Text style={[styles.buttonText, { color: '#FF003C' }]}>NEXT</Text>
+                </TouchableOpacity>
               </View>
             </View>
-
-            {/*BOTTOM AREA*/}
-            <View style={[styles.bottomArea]}>
-              <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-2.png')} />
-
-              {/*Login link*/}
-              <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.login}>
-                <Text style={[styles.linkButtonText]}>Already have a vault?</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.buttonNext]} onPress={() => Actions.generateHealthCode()}>
-                <Text style={[styles.buttonText, { color: '#FF003C' }]}>NEXT</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
           }
         </View>
       </SafeAreaView>
@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: convertWidth(16),
-    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : convertWidth(16),
   },
 
   bodyContent: {

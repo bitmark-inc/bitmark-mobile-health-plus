@@ -336,7 +336,7 @@ export class GenerateHealthCodeComponent extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.wrapper}>
           <View style={styles.body}>
             {/*GENERATE PHRASE WORDS*/}

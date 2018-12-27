@@ -21,12 +21,14 @@ const { ActionSheetIOS } = ReactNative;
 export class MMRInformationComponent extends Component {
   static propTypes = {
     mmrInformation: PropTypes.any,
+    displayFromUserScreen: PropTypes.bool,
+    edit: PropTypes.bool
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      isEditing: this.props.mmrInformation ? false : true,
+      isEditing: this.props.mmrInformation ? (this.props.edit ? true : false) : true,
       mmrInformation: this.props.mmrInformation || {},
     };
   }
@@ -102,7 +104,7 @@ export class MMRInformationComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.headerLeft} onPress={Actions.pop}>
+          <TouchableOpacity style={styles.headerLeft} onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.pop()}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Minimum Medical Record</Text>

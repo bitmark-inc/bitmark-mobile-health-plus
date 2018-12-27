@@ -16,15 +16,15 @@ import { Actions } from 'react-native-router-flux';
 class PrivateMMRCardComponent extends Component {
   static propTypes = {
     mmrInformation: PropTypes.any,
+    displayFromUserScreen: PropTypes.bool
   };
   render() {
     let displaySeeMoreButton = this.props.mmrInformation && this.props.mmrInformation.avatar
       && this.props.mmrInformation.name && this.props.mmrInformation.birthday && this.props.mmrInformation.sex;
-
     return (
       <ShadowComponent style={styles.body}>
         {!this.props.mmrInformation &&
-          <TouchableOpacity style={styles.bodyContent} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation })}>
+          <TouchableOpacity style={styles.bodyContent} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
             <Text style={styles.cardHeaderTitleText}>Personalize your vault</Text>
             <Text style={styles.cardContentDescription}>Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency. </Text>
             <View style={styles.cardNextButton}>
@@ -34,8 +34,8 @@ class PrivateMMRCardComponent extends Component {
         }
 
         {this.props.mmrInformation &&
-          <View style={styles.bodyContent}>
-            <Text style={styles.mmrUserTitle}>My Account</Text>
+          <TouchableOpacity style={styles.bodyContent} disabled={!this.props.displayFromUserScreen} onPress={Actions.account}>
+            <Text style={styles.mmrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Minimum Medical Record'}</Text>
             <View style={styles.mmrInformation}>
               <Image style={styles.mmrInformationAvatar} source={{ uri: this.props.mmrInformation.avatar }} />
               <View style={styles.mmrInformationBasic}>
@@ -54,11 +54,11 @@ class PrivateMMRCardComponent extends Component {
               </View>
             </View>
             <View style={styles.cardNextButton}>
-              <TouchableOpacity style={{ padding: convertWidth(5) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation })}>
+              <TouchableOpacity style={{ padding: convertWidth(5) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, edit: !displaySeeMoreButton })}>
                 <Text style={styles.mmrInformationSeeMoreButtonText}>{displaySeeMoreButton ? 'SEE MORE' : 'EDIT'}</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </TouchableOpacity>
         }
       </ShadowComponent>
     );
@@ -67,7 +67,7 @@ class PrivateMMRCardComponent extends Component {
 
 const styles = StyleSheet.create({
   body: {
-    width: convertWidth(344),
+    width: convertWidth(344), minHeight: 200,
     borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
     backgroundColor: '#F4F2EE',
   },
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     width: 16, height: 16, resizeMode: 'contain',
   },
   mmrUserTitle: {
-    fontFamily: 'Avenir Black', fontSize: 24, fontWeight: '900',
+    fontFamily: 'Avenir Black', fontSize: 18, fontWeight: '900',
     padding: convertWidth(15), paddingBottom: 0,
   },
   mmrInformation: {
@@ -120,20 +120,18 @@ const styles = StyleSheet.create({
 
 
 const StoreMMRCardComponent = connect(
-  (state) => state.data,
+  (state, ) => state.data
 )(PrivateMMRCardComponent);
 
 export class MMRCardComponent extends Component {
-  constructor(props) {
-    super(props);
+  propTypes = {
+    displayFromUserScreen: PropTypes.bool
   }
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <Provider store={MMRInformationStore}>
-          <StoreMMRCardComponent />
-        </Provider>
-      </View>
+      <Provider store={MMRInformationStore}>
+        <StoreMMRCardComponent displayFromUserScreen={this.props.displayFromUserScreen} />
+      </Provider>
     );
   }
 }

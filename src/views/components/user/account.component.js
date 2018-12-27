@@ -12,6 +12,7 @@ import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
 import { MMRCardComponent } from './mmr';
 import { ShadowTopComponent, ShadowComponent } from 'src/views/commons';
+import { Actions } from 'react-native-router-flux';
 
 export class AccountComponent extends Component {
   static propTypes = {
@@ -72,7 +73,7 @@ export class AccountComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.headerLeft}>
+          <TouchableOpacity style={styles.headerLeft} onPress={() => Actions.reset('user')}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Vault</Text>

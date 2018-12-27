@@ -92,6 +92,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   if (currentMMRAsset && currentMMRAsset.id !== CacheData.userInformation.currentMMRAssetId) {
     CacheData.userInformation.currentMMRAssetId = currentMMRAsset.id;
     let result = await runPromiseIgnoreError(detectLocalAssetFilePath(currentMMRAsset));
+    console.log('result :', result);
     if (result.filePath && (await FileUtil.exists(result.filePath))) {
       CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
     }
@@ -192,8 +193,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               healthAssetBitmarks.push(bitmark);
             }
           } else if (isMMRRecord(asset)) {
-            if (!currentMMRAsset ||
-              moment(currentMMRAsset.created_at).toDate().getTime() < moment(asset.created_at).toDate().getTime()) {
+            if (!currentMMRAsset || currentMMRAsset.offset < asset.offset) {
               currentMMRAsset = asset;
             }
           }
@@ -571,7 +571,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       );
     });
     iCloudSyncAdapter.syncCloud();
-    //configNotification();
+    configNotification();
     if (!CacheData.userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
       CacheData.userInformation.intercomUserId = intercomUserId;
