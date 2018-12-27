@@ -8,6 +8,7 @@ import {
   Text,
   Image, StyleSheet
 } from 'react-native';
+import { config } from 'src/configs';
 
 export class SearchInputComponent extends Component {
   static defaultProps = {
@@ -54,9 +55,6 @@ export class SearchInputComponent extends Component {
     return (
       <View style={[styles.searchView, this.props.style]}>
         <View style={[styles.inputContainer]}>
-          {/*SEARCH ICON*/}
-          <Image style={styles.searchIcon} source={require('assets/imgs/search-icon.png')} />
-
           {/*SEARCH INPUT*/}
           <TextInput
             style={styles.textInput}
@@ -84,29 +82,21 @@ export class SearchInputComponent extends Component {
             }}>
               <Image style={styles.searchCloseIcon} source={require('assets/imgs/search-close-icon.png')} />
             </TouchableOpacity>
-            : null
+            : <Image style={styles.searchIcon} source={require('assets/imgs/search-icon.png')} />
           }
         </View>
-
-        {/*CANCEL BUTTON*/}
-        {this.state && this.state.focusing
-          ? <View style={styles.clearButtonContainer}>
-            <TouchableOpacity onPress={() => {
-              this.props.onSearchTermChange('');
-              this.props.setSearchFocus(false);
-              this.searchInput.blur();
-              this.setState({
-                searchTerm: '',
-                focusing: false
-              })
-            }}>
-              <Text style={styles.clearButtonText}>{global.i18n.t("SearchInputComponent_cancel")}</Text>
-            </TouchableOpacity>
-          </View>
-          : null
-        }
       </View>
     )
+  }
+
+  cancelSearch() {
+    this.props.onSearchTermChange('');
+    this.props.setSearchFocus(false);
+    this.searchInput.blur();
+    this.setState({
+      searchTerm: '',
+      focusing: false
+    })
   }
 
   updateSearch(searchTerm) {
@@ -135,11 +125,14 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     flexDirection: 'row',
-    borderColor: '#CCC',
+    borderColor: '#FFFFFF',
     borderWidth: 1,
-    backgroundColor: '#F4F4F4',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    flex: 1
+    flex: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
   },
 
   searchCloseIcon: {
@@ -153,25 +146,13 @@ const styles = StyleSheet.create({
     width: 13,
     height: 13,
     resizeMode: 'contain',
-    marginRight: 10,
+    marginRight: 5,
   },
 
   textInput: {
-    fontFamily: 'Avenir medium',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
     fontSize: 14,
     flex: 1
-  },
-
-  clearButtonContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 10
-  },
-
-  clearButtonText: {
-    fontFamily: 'Avenir medium',
-    fontSize: 14,
-    color: '#0060F2'
   }
 });
 

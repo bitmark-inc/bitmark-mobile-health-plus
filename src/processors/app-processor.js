@@ -85,6 +85,11 @@ const doGetCurrentAccount = async () => {
   return userInfo;
 };
 
+const doGeneratePhrase = async () => {
+  let phraseInfo = await processing(AccountModel.doGeneratePhrase());
+  return phraseInfo;
+};
+
 const doCheckPhraseWords = async (phraseWords) => {
   return await AccountModel.doCheckPhraseWords(phraseWords);
 };
@@ -274,6 +279,7 @@ const doIssueMMR = async (data) => {
 
 let AppProcessor = {
   doCreateNewAccount,
+  doGeneratePhrase,
   doGetCurrentAccount,
   doCheckPhraseWords,
   doLogin,

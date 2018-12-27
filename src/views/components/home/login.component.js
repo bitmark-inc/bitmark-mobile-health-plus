@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Keyboard,
-  Image, View, TouchableOpacity, Text, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Animated, SafeAreaView,
+  Image, View, TouchableOpacity, Text, FlatList, TextInput, Animated, SafeAreaView,
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
 import { dictionaryPhraseWords, convertWidth } from 'src/utils';
-import { AppProcessor } from 'src/processors';
+import { AppProcessor, EventEmitterService } from 'src/processors';
 import { constants, config } from 'src/configs';
 
 const statuses = {
@@ -53,9 +53,9 @@ export class LoginComponent extends Component {
       keyboardExternalBottom: new Animated.Value(0),
       keyboardExternalOpacity: new Animated.Value(0),
       keyboardExternalDataSource: dictionaryPhraseWords,
+      testingResult: null,
       numberPhraseWords,
     };
-    // setTimeout(this.checkStatusInputting.bind(this), 200);
   }
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
@@ -67,11 +67,11 @@ export class LoginComponent extends Component {
     this.keyboardDidHideListener.remove();
   }
 
-  changeNumberPhraseWord() {
-    let numberPhraseWords = this.state.numberPhraseWords === 12 ? 24 : 12
-    this.setState({ numberPhraseWords });
-    this.doReset(numberPhraseWords);
-  }
+  // changeNumberPhraseWord() {
+  //   let numberPhraseWords = this.state.numberPhraseWords === 12 ? 24 : 12
+  //   this.setState({ numberPhraseWords });
+  //   this.doReset(numberPhraseWords);
+  // }
 
   onKeyboardDidShow(keyboardEvent) {
     let keyboardHeight = keyboardEvent.endCoordinates.height;
@@ -172,23 +172,30 @@ export class LoginComponent extends Component {
     this.setState({ keyboardExternalDataSource, currentInputtedText: text });
   }
 
+  async loginWithPhraseWords(phraseWords) {
+    await AppProcessor.doLogin(phraseWords, false);
+    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+  }
+
   doCheckPhraseWords() {
     return new Promise((resolve) => {
       Keyboard.dismiss();
       if (this.state.remainWordNumber === 0) {
         let inputtedWords = [];
-        this.state.smallerList.forEach(item => inputtedWords.push(item.word));
-        this.state.biggerList.forEach(item => inputtedWords.push(item.word));
+        this.state.smallerList.forEach(item => inputtedWords.push(item.word.toLowerCase()));
+        this.state.biggerList.forEach(item => inputtedWords.push(item.word.toLowerCase()));
+        console.log('inputtedWords:', inputtedWords);
         AppProcessor.doCheckPhraseWords(inputtedWords).then(() => {
-          this.setState({ preCheckResult: i18n.t('LoginComponent_submitButtonText1') });
+          this.setState({ testingResult: true });
+          this.loginWithPhraseWords(inputtedWords);
           resolve(inputtedWords);
         }).catch((error) => {
+          this.setState({ testingResult: false });
           resolve(false);
           console.log('doCheckPhraseWords error: ', error);
-          this.setState({ preCheckResult: i18n.t('LoginComponent_submitButtonText2') });
         });
       } else {
-        this.setState({ preCheckResult: null });
+        this.setState({ testingResult: null });
         resolve(null);
       }
     });
@@ -214,116 +221,146 @@ export class LoginComponent extends Component {
     this.setState({
       smallerList: smallerList,
       biggerList: biggerList,
-      preCheckResult: null,
       selectedIndex: -1,
       remainWordNumber: numberPhraseWords,
     });
   }
 
-  doSignIn() {
-    if (this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText2')) {
-      this.doReset();
-      return;
-    }
-    this.doCheckPhraseWords().then((result) => {
-      if (result) {
-        Actions.touchFaceId({ phraseWords: result });
-      }
-    });
-  }
+  // doSignIn() {
+  //   if (this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText2')) {
+  //     this.doReset();
+  //     return;
+  //   }
+  //   this.doCheckPhraseWords().then(async (result) => {
+  //     if (result) {
+  //       await AppProcessor.doLogin(result, false);
+  //       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH);
+  //     }
+  //   });
+  // }
 
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-        <View style={styles.bodySafeView}>
-          <View style={styles.body}>
-            <KeyboardAvoidingView behavior="padding" enabled style={styles.avoidingView} keyboardVerticalOffset={constants.keyboardExternalHeight} >
-              <View style={styles.bodyContent}>
-                <ScrollView style={styles.bodyScroll} >
-                  <View style={styles.titleRow}>
-                    <Text style={styles.title}>{i18n.t('LoginComponent_title').toUpperCase()}</Text>
-                    <TouchableOpacity onPress={Actions.pop}>
-                      <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
+        <View style={styles.body}>
+          {/*<KeyboardAvoidingView behavior="padding" enabled style={styles.avoidingView} keyboardVerticalOffset={constants.keyboardExternalHeight} >*/}
+            <View style={[styles.bodyContent, {paddingLeft: 0, paddingRight: 0}]}>
+              <View style={{ flex: 1 }}>
+                {/*TOP AREA*/}
+                {/*BITMARK Header*/}
+                {this.state.testingResult === null &&
+                <View style={[styles.topArea, styles.paddingContent]}>
+                  <Text style={[styles.title]}>BITMARK HEALTH</Text>
+                  <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
+                </View>
+                }
+
+                {/*Failed Test*/}
+                {this.state.testingResult === false &&
+                <View style={[styles.topArea, styles.paddingContent, {backgroundColor: '#FF003C', borderTopLeftRadius: 10, borderTopRightRadius: 10}]}>
+                  <Text style={[styles.testResultMessage]}>WRONG COMBINATION</Text>
+                </View>
+                }
+
+                {/*Successful test*/}
+                {this.state.testingResult === true &&
+                <View style={[styles.topArea, styles.paddingContent, {backgroundColor: '#0060F2', borderTopLeftRadius: 10, borderTopRightRadius: 10}]}>
+                  <Text style={[styles.testResultMessage]}>VAULT UNLOCKED</Text>
+                </View>
+                }
+
+                {/*CONTENT*/}
+                <View style={[styles.contentArea, styles.paddingContent]}>
+                  {/*PHRASE WORDS*/}
+                  <View style={styles.phraseWordsArea}>
+                    <View style={[styles.phraseWordsList]}>
+                      {/*SELECTED WORDS*/}
+                      {/*Smaller list*/}
+                      <FlatList data={this.state.smallerList}
+                                keyExtractor={(item, index) => index + ''}
+                                scrollEnabled={false}
+                                extraData={this.state}
+                                renderItem={({ item, index }) => {
+                                  return (
+                                    <View style={[styles.recoveryPhraseSet,]}>
+                                      <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
+                                      <View style={[styles.phraseWordContainer]}>
+                                        {/*Input word*/}
+                                        <TextInput
+                                          style={[styles.recoveryPhraseInputWord, {
+                                            borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                            color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                          }]}
+                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                          value={item.word.toUpperCase()}
+                                          autoCorrect={false}
+                                          autoCapitalize="none"
+                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                          onFocus={() => this.onFocus.bind(this)(item.key)}
+                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                                        />
+                                      </View>
+                                    </View>
+                                  )
+                                }}
+                      />
+                      {/*Bigger list*/}
+                      <FlatList data={this.state.biggerList}
+                                keyExtractor={(item, index) => index + ''}
+                                style={{ marginLeft: 9 }}
+                                scrollEnabled={false}
+                                extraData={this.state}
+                                renderItem={({ item, index }) => {
+                                  return (
+                                    <View style={[styles.recoveryPhraseSet,]}>
+                                      <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
+                                      <View style={[styles.phraseWordContainer]}>
+                                        {/*Input word*/}
+                                        <TextInput
+                                          style={[styles.recoveryPhraseInputWord, {
+                                            borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                            color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                          }]}
+                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                          value={item.word.toUpperCase()}
+                                          autoCorrect={false}
+                                          autoCapitalize="none"
+                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                          onFocus={() => this.onFocus.bind(this)(item.key)}
+                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                                        />
+                                      </View>
+                                    </View>
+                                  )
+                                }}
+                      />
+                    </View>
+                  </View>
+
+                  {/*DESC*/}
+                  <View style={styles.introductionTextArea}>
+                    <Text style={[styles.introductionTitle]}>Access existing vault</Text>
+                    <Text style={[styles.introductionDescription]}>
+                      Type all 12-word phrase in the exact sequence.
+                    </Text>
+                  </View>
+                </View>
+
+                {/*BOTTOM AREA*/}
+                <View style={[styles.bottomArea, styles.paddingContent, {height: 80}]}>
+                  {/*Buttons*/}
+                  <View style={{flexDirection: 'row'}}>
+                    {/*Go Back*/}
+                    <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
+                      <Text style={[styles.buttonNextText]}>GO BACK</Text>
                     </TouchableOpacity>
                   </View>
-                  <Text style={styles.description}>{i18n.t('LoginComponent_description', { number: this.state.numberPhraseWords })}</Text>
-                  <View style={styles.inputArea}>
-                    <View style={styles.inputAreaHalf}>
-                      <FlatList data={this.state.smallerList}
-                        keyExtractor={(item) => item.key + ''}
-                        scrollEnabled={false}
-                        extraData={this.state}
-                        renderItem={({ item }) => {
-                          return (<View style={styles.recoveryPhraseSet}>
-                            <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                            <TextInput
-                              style={[styles.recoveryPhraseWord, {
-                                backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-                                borderColor: '#FF4444',
-                                borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
-                              }]}
-                              ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                              value={item.word}
-                              autoCorrect={false}
-                              autoCapitalize="none"
-                              onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                              onFocus={() => this.onFocus.bind(this)(item.key)}
-                              onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                            />
-                          </View>)
-                        }}
-                      />
-                    </View>
-                    <View style={[styles.inputAreaHalf, { marginLeft: 15, }]}>
-                      <FlatList data={this.state.biggerList}
-                        keyExtractor={(item) => item.key + ''}
-                        scrollEnabled={false}
-                        extraData={this.state}
-                        renderItem={({ item }) => {
-                          return (<View style={styles.recoveryPhraseSet}>
-                            <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                            <TextInput
-                              style={[styles.recoveryPhraseWord, {
-                                backgroundColor: (item.word ? 'white' : '#F5F5F5'),
-                                borderColor: '#FF4444',
-                                borderWidth: (item.key === this.state.selectedIndex ? 1 : 0),
-                              }]}
-                              ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                              value={item.word}
-                              autoCorrect={false}
-                              autoCapitalize="none"
-                              onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                              onFocus={() => this.onFocus.bind(this)(item.key)}
-                              onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                            />
-                          </View>)
-                        }}
-                      />
-                    </View>
-                  </View>
-                </ScrollView>
-
-                {this.state.keyboardHeight === 0 && this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText2') && <View style={styles.resultStatusArea}>
-                  <Text style={[styles.resultTitle, { color: '#FF4444' }]}>{i18n.t('LoginComponent_resultTitle1')}</Text>
-                  <Text style={[styles.resultMessage, { color: '#FF4444' }]}>{i18n.t('LoginComponent_resultMessage1')}</Text>
-                </View>}
-                {this.state.keyboardHeight === 0 && this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText1') && <View style={styles.resultStatusArea}>
-                  <Text style={styles.resultTitle}>{i18n.t('LoginComponent_resultTitle2')}</Text>
-                  <Text style={styles.resultMessage}>{i18n.t('LoginComponent_resultMessage2')}</Text>
-                </View>}
+                </View>
               </View>
+            </View>
+        </View>
 
-              <View style={styles.submitButtonArea}>
-                <TouchableOpacity style={styles.switchFormMessageButton} onPress={this.changeNumberPhraseWord.bind(this)}>
-                  <Text style={[styles.switchFormMessage,]}>{i18n.t('LoginComponent_switchFormMessage', { number: this.state.numberPhraseWords === 12 ? 24 : 12 })}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.submitButton]} onPress={this.doSignIn.bind(this)} disabled={this.state.remainWordNumber > 0}>
-                  <Text style={[styles.submitButtonText,]}>{this.state.preCheckResult || i18n.t('LoginComponent_submitButtonText1')}</Text>
-                </TouchableOpacity>
-              </View>
-            </KeyboardAvoidingView>
-          </View>
-        </View >
+        {/*KEYBOARD & SUGGESTIONS*/}
         {this.state.keyboardHeight > 0 &&
           <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
             <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 1) % this.state.numberPhraseWords)}>
@@ -356,132 +393,128 @@ export class LoginComponent extends Component {
 }
 
 const styles = StyleSheet.create({
-  bodySafeView: {
-    flex: 1,
-  },
   body: {
     flex: 1,
-    padding: convertWidth(16),
     backgroundColor: 'white',
-  },
-  bodyScroll: {
-    flex: 1,
-  },
-  avoidingView: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#FF4444',
+    padding: convertWidth(16),
+    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : convertWidth(16),
   },
   bodyContent: {
     flex: 1,
-    flexDirection: 'column',
-    padding: convertWidth(17),
+    backgroundColor: '#F4F2EE',
+    borderRadius: 10,
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
-  titleRow: {
+
+  topArea: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    height: 40,
   },
-  title: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 18,
-    paddingLeft: 3,
-    paddingRight: 3,
+  contentArea: {
     flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    width: '100%',
   },
-  closeIcon: {
-    width: convertWidth(21),
-    height: convertWidth(21),
+  bottomArea: {
+    height: config.isIPhoneX ? 70 : 50,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    paddingBottom: 18,
+  },
+  paddingContent: {
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16)
+  },
+  logo: {
+    width: 22,
+    height: 22,
     resizeMode: 'contain',
   },
-  description: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 17,
-    marginTop: 16,
+  title: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir light',
+    fontSize: 10,
+    color: 'rgba(0, 0, 0, 0.87)'
   },
-  inputArea: {
+  phraseWordsArea: {
+    marginTop: 40,
     width: '100%',
-    flexDirection: 'row',
-    marginTop: 17,
-  },
-  inputAreaHalf: {
     flex: 1,
+    justifyContent: 'flex-start'
+  },
+  phraseWordsList: {
+    paddingTop: convertWidth(30),
+    paddingBottom: convertWidth(30),
+    borderTopWidth: 3,
+    borderBottomWidth: 3,
+    borderColor: '#FF003C',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  phraseWordContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
   },
   recoveryPhraseSet: {
-    flexDirection: 'row',
-    marginTop: 9,
     flex: 1,
-    minHeight: 18,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginTop: 2,
+    paddingTop: 3,
+    paddingBottom: 3,
+    width: convertWidth(140),
   },
   recoveryPhraseIndex: {
-    textAlign: 'left',
     width: convertWidth(39),
-    color: '#C1C1C1',
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
-    fontSize: 15,
+    fontSize: 10,
+    color: 'rgba(0, 0, 0, 0.87)'
   },
-  recoveryPhraseWord: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '300',
-    color: '#FF4444',
-    fontSize: 15,
-  },
-
-  resultStatusArea: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  resultTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    fontWeight: '900',
-    fontSize: 15,
-  },
-  resultMessage: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    fontWeight: '300',
-    fontSize: 15,
-    textAlign: 'center',
-  },
-
-  submitButtonArea: {
-    padding: 20,
-  },
-
-  switchFormMessageButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  switchFormMessage: {
-    width: convertWidth(240),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    textAlign: 'center',
-    fontSize: 14,
-    color: '#0054FC',
-    marginBottom: 24,
-  },
-  submitButton: {
-    height: constants.buttonHeight,
+  recoveryPhraseInputWord: {
     width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FF4444',
+    height: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontSize: 13,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
-  submitButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    textAlign: 'center',
-    fontSize: 16,
+  introductionTextArea: {
+    marginTop: 20,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
+    width: '100%',
+    height: 110,
+  },
+  introductionTitle: {
+    marginTop: 25,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: 24,
     fontWeight: '900',
-    color: 'white'
+    textAlign: 'left',
   },
-
+  introductionDescription: {
+    marginTop: 10,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir book',
+    fontWeight: '300',
+    fontSize: 14,
+    lineHeight: 20,
+    color: 'rgba(0, 0, 0, 0.6)',
+    textAlign: 'left',
+  },
 
   keyboardExternal: {
     position: 'absolute',
@@ -534,6 +567,18 @@ const styles = StyleSheet.create({
   },
   selectionItemText: {
     color: 'blue',
+  },
+  buttonNext: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontSize: 16,
+    color: '#FF003C',
+    marginLeft: 15,
+  },
+  buttonNextText: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontWeight: '900',
+    fontSize: 16,
+    color: '#FF003C'
   },
 
 });

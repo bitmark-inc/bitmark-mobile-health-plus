@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
 
   bitmarkIcon: {
     marginTop: -24,
-    width: 285,
-    height: 48,
+    width: 122,
+    height: 146,
     resizeMode: 'contain'
   },
 

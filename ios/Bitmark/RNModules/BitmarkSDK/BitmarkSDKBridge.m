@@ -12,6 +12,7 @@
 
 RCT_EXTERN_METHOD(sdkInit:(NSString)network:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(createAccount:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(generatePhrase:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(createAccountFromPhrase:(NSArray<NSString *> *)pharse:(BOOL)authentication:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(tryPhrase:(NSArray<NSString *> *)pharse:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(accountInfo:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
