@@ -5,14 +5,17 @@ import {
   Linking,
   Alert,
   Share,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
+  Image, View, SafeAreaView, ScrollView, Text, TouchableOpacity,
 } from 'react-native';
-import Intercom from 'react-native-intercom';
 import Mailer from 'react-native-mail';
-import { Actions } from 'react-native-router-flux';
 import { AppProcessor, EventEmitterService, DataProcessor, CacheData } from 'src/processors';
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
+import { MMRCardComponent } from './mmr';
+import { ShadowTopComponent, ShadowComponent } from 'src/views/commons';
+import { Actions } from 'react-native-router-flux';
+import Intercom from 'react-native-intercom';
+
 
 export class AccountComponent extends Component {
   static propTypes = {
@@ -72,80 +75,95 @@ export class AccountComponent extends Component {
       : `${CacheData.userInformation.bitmarkAccountNumber}@drop.test.bitmark.com`;
     return (
       <SafeAreaView style={styles.bodySafeView}>
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-
-
-            <ScrollView>
-              <View style={styles.accountNumberArea}>
-                <View style={[styles.accountNumberTitleRow,]}>
-                  <Text style={styles.accountNumberTitle} >{i18n.t('AccountComponent_accountNumberTitle')}</Text>
-                  <TouchableOpacity onPress={Actions.pop}>
-                    <Image style={styles.closeIcon} source={require('assets/imgs/close_icon_red.png')} />
-                  </TouchableOpacity>
-                </View>
-
-                <Text style={styles.accountNumberDescription}>{i18n.t('AccountComponent_accountNumberDescription')}</Text>
-                <Text style={styles.accountNumberValue}>{emailAddress}</Text>
-                <View style={[styles.accountNumberCopiedArea]} >
-                  <TouchableOpacity onPress={() => Share.share({ title: '', message: emailAddress })}>
-                    <Text style={styles.accountNumberShareButtonText}>{i18n.t('AccountComponent_accountNumberShareButtonText')}</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <TouchableOpacity style={styles.rowButton} onPress={Actions.accountNumber}>
-                  <Text style={[styles.accountNumberLabel, styles.rowButtonText]}>{i18n.t('AccountComponent_accountNumberLabel')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.securityArea}>
-                <Text style={styles.securityTitle} >{i18n.t('AccountComponent_securityTitle')}</Text>
-                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => Actions.accountPhrase()}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText3')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                  {/* <TouchableOpacity style={styles.rowButton} onPress={this.doLogout.bind(this)}> */}
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText4')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.aboutArea}>
-                <Text style={styles.aboutTitle}>{i18n.t('AccountComponent_aboutTitle')}</Text>
-                <TouchableOpacity style={[styles.rowButton, { marginTop: 25 }]} onPress={() => {
-                  Intercom.displayMessageComposer();
-                }}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText1')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={() => Linking.openURL('https://www.facebook.com/groups/274018259885853/')} >
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText9')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.rowButton} onPress={() => Share.share({ title: 'Bitmark', message: '', url: config.appLink })}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText6')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rowButton} onPress={Actions.support}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText2')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.rowButton, { marginTop: 53 }]} disabled={true}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText7')}</Text>
-                  <Text style={styles.rowButtonText}>{DataProcessor.getApplicationVersion()} ({DataProcessor.getApplicationBuildNumber() + (config.network !== config.NETWORKS.livenet ? '-' + config.network : '')})</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.rowButton]} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
-                  <Text style={styles.rowButtonText}>{i18n.t('AccountComponent_rowButtonText8')}</Text>
-                  <Image style={styles.rowButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </View>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.headerLeft} onPress={() => Actions.reset('user')}>
+            <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Vault</Text>
+          <View style={styles.headerRight} />
         </View>
-      </SafeAreaView>
+        <ScrollView contentContainerStyle={styles.body}>
+          <MMRCardComponent />
+
+          <ShadowComponent style={styles.cardBody}>
+            <ShadowTopComponent contentStyle={styles.cardHeader}>
+              <Text style={styles.cardTitle}>ADDRESS</Text>
+            </ShadowTopComponent>
+            <View style={styles.cardContentRow}>
+              <Text style={styles.itemDescription}>Your vault is addressed using your{'\n'}Bitmark account number: </Text>
+            </View>
+            <TouchableOpacity style={styles.cardContentRow} onPress={Actions.accountNumber}>
+              <Text style={styles.accountNumber}>{`[${CacheData.userInformation.bitmarkAccountNumber.substring(0, 4)}...${CacheData.userInformation.bitmarkAccountNumber.substring(CacheData.userInformation.bitmarkAccountNumber.length - 4, CacheData.userInformation.bitmarkAccountNumber.length)}]`}</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </TouchableOpacity>
+            <View style={styles.cardContentRow}>
+              <Text style={styles.itemDescription}>Others can send you medical records at the following email address:</Text>
+            </View>
+            <TouchableOpacity style={[styles.cardContentRow, {
+              borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+            }]}
+              onPress={() => Share.share({ title: '', message: emailAddress })}
+            >
+              <Text style={styles.emailAddress}>{emailAddress}</Text>
+              <Image style={styles.shareIcon} source={require('assets/imgs2/share_icon.png')} />
+            </TouchableOpacity>
+
+          </ShadowComponent>
+
+          <ShadowComponent style={styles.cardBody}>
+            <ShadowTopComponent contentStyle={styles.cardHeader}>
+              <Text style={styles.cardTitle}>SECURITY</Text>
+            </ShadowTopComponent>
+            <TouchableOpacity style={styles.cardContentRow}
+              onPress={() => Actions.accountPhrase()}
+            >
+              <Text style={styles.cardContentRowButtonText}>Write down vault key phrase</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.cardContentRow, {
+              borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+            }]}
+              onPress={() => Actions.accountPhrase({ isLogout: true })}
+            >
+              <Text style={styles.cardContentRowButtonText}>Lock your vault</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </TouchableOpacity>
+          </ShadowComponent>
+
+          <ShadowComponent style={styles.cardBody}>
+            <ShadowTopComponent contentStyle={styles.cardHeader}>
+              <Text style={styles.cardTitle}>ABOUT</Text>
+            </ShadowTopComponent>
+            <TouchableOpacity style={styles.cardContentRow} onPress={() => Intercom.displayMessageComposer()}>
+              <Text style={styles.cardContentRowButtonText}>Chat with us</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.cardContentRow]} onPress={() => Linking.openURL('https://www.facebook.com/groups/274018259885853/')} >
+              <Text style={styles.cardContentRowButtonText}>Join our Alpha Tester Group</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.cardContentRow, {
+              borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+            }]}
+              onPress={Actions.support}
+            >
+              <Text style={styles.cardContentRowButtonText}>Legal</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </TouchableOpacity>
+          </ShadowComponent>
+
+          <View style={[styles.normalRow, { marginTop: 16 }]}>
+            <Text style={styles.rowLabel}>VERSION</Text>
+            <Text style={styles.rowValue}>1.0</Text>
+          </View>
+
+          <TouchableOpacity style={styles.normalRow} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
+            <Text style={styles.rowLabel}>WHAT’S NEW</Text>
+            <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+          </TouchableOpacity>
+
+        </ScrollView>
+      </SafeAreaView >
     );
   }
 }
@@ -156,111 +174,84 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   body: {
-    padding: convertWidth(16),
-    paddingTop: convertWidth(16),
-    flex: 1,
+    padding: convertWidth(15),
+    paddingTop: convertWidth(15),
+    flexGrow: 1,
   },
-  bodyContent: {
-    flex: 1,
+  header: {
+    height: 56, width: '100%',
+    flexDirection: 'row', alignItems: 'center',
+  },
+  headerLeft: {
+    paddingLeft: convertWidth(19),
+    width: convertWidth(35),
+  },
+
+  headerLeftBackIcon: {
+    width: 16, height: '100%', resizeMode: 'contain',
+  },
+  headerTitle: {
+    fontFamily: 'Avenir Black', fontSize: 24, fontWeight: '900', textAlign: 'center',
+    flex: 1
+  },
+  headerRight: {
+    paddingRight: convertWidth(19),
+    width: convertWidth(35),
+  },
+
+
+  cardBody: {
     flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: '#FF4444',
-    width: "100%",
+    marginTop: 16,
+    width: convertWidth(344),
   },
-  accountNumberArea: {
-    flexDirection: 'column',
-    padding: convertWidth(20),
-    paddingBottom: 45,
+  cardHeader: {
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
+    height: 40,
   },
-  accountNumberTitleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: convertWidth(10),
+  cardTitle: {
+    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300',
+    marginLeft: convertWidth(15),
   },
-  accountNumberTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 36,
-  },
-  closeIcon: {
-    width: convertWidth(20),
-    height: convertWidth(20),
-    resizeMode: 'contain',
-  },
-  accountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
-    fontSize: 14,
-    marginTop: 15,
-    color: '#FF1F1F'
-  },
-  accountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontSize: 16,
-    color: '#6D6D72',
-  },
-  accountNumberCopiedArea: {
+  cardContentRow: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    minHeight: 43, width: '100%',
+    paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
     backgroundColor: 'white',
-    marginTop: 8,
-    minHeight: 21,
-    flexDirection: 'row',
   },
-  accountNumberShareButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontWeight: '600',
-    fontSize: 14,
-    color: '#0064FC',
-    marginTop: 5,
-    minWidth: 54,
+  itemDescription: {
+    fontSize: 14, fontWeight: '300', fontFamily: 'Avenir', marginTop: 6, color: 'rgba(0,0,0,0.6)',
   },
-  accountNumberDescription: {
-    marginTop: 12,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 16,
+  accountNumber: {
+    fontFamily: 'Andale Mono', fontSize: 12, color: '#FF003C',
   },
-
-  securityArea: {
-    borderTopWidth: 1,
-    borderColor: '#FF4444',
-    padding: convertWidth(20),
-    paddingBottom: 45,
+  copyIcon: {
+    width: 12, height: 20, resizeMode: 'contain',
   },
-  securityTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 34,
+  emailAddress: {
+    flex: 1,
+    fontFamily: 'Andale Mono', fontSize: 12, color: '#FF003C',
+  },
+  shareIcon: {
+    width: 19, height: 22, resizeMode: 'contain'
   },
 
-  aboutArea: {
-    borderTopWidth: 1,
-    borderColor: '#FF4444',
-    padding: convertWidth(20),
-    paddingBottom: 20,
+  cardContentRowButtonText: {
+    fontFamily: 'Avenir Black', fontSize: 18, fontWeight: '900', color: 'rgba(0,0,0,0.87)'
   },
-  aboutTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 34,
+
+  normalRow: {
+    minHeight: 43, width: '100%',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
   },
-  rowButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 12.5,
-    minHeight: 24.5,
+  rowLabel: {
+    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300', color: 'rgba(0,0,0,0.87)',
+    flex: 1,
   },
-  rowButtonIcon: {
-    width: convertWidth(8),
-    height: 14 * convertWidth(8) / 8,
-    resizeMode: 'contain',
+
+  rowValue: {
+    fontFamily: 'Avenir Black', fontSize: 10, fontWeight: '900', color: 'rgba(0,0,0,0.87)'
   },
-  rowButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontWeight: '400',
-    fontSize: 16,
-    color: 'black'
-  }
 
 });

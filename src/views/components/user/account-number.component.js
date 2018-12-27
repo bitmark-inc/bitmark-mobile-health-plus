@@ -10,6 +10,7 @@ import { Actions } from 'react-native-router-flux';
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
 import { CacheData } from 'src/processors';
+import { ShadowComponent, ShadowTopComponent } from 'src/views/commons';
 
 export class AccountNumberComponent extends React.Component {
 
@@ -21,44 +22,42 @@ export class AccountNumberComponent extends React.Component {
 
     return (<View style={{ flex: 1, }}>
       <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.body}>
-          <View style={[styles.bodyContent]} >
-            <View style={styles.titleRow}>
-              <Text style={styles.titleText}>{i18n.t('AccountNumberComponent_titleText')}</Text>
-              {/* <Text style={styles.titleText}>Account{'\n'}number</Text> */}
-              <TouchableOpacity onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView contentContainerStyle={styles.content}>
-
-              <Text style={styles.description}>{i18n.t('AccountNumberComponent_description')}</Text>
-              <Text style={styles.fullAccountNumberLabel}>{i18n.t('AccountNumberComponent_fullAccountNumberLabel')}</Text>
-              <TouchableOpacity style={styles.barLine} onPress={() => {
-                Clipboard.setString(CacheData.userInformation.bitmarkAccountNumber);
-                this.setState({ copied: true });
-                setTimeout(() => this.setState({ copied: false }), 1000);
-              }}>
-                <Text style={styles.fullAccountNumberValue}>{CacheData.userInformation.bitmarkAccountNumber}</Text>
-              </TouchableOpacity>
-              <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', marginTop: 9, minHeight: 20, }}>
-                {this.state.copied && <Text style={{ color: '#0064FC', fontFamily: 'Avenir Medium', fontSize: 14, fontWeight: '600', }}>{i18n.t('AccountNumberComponent_accountCopiedText')}</Text>}
-              </View>
-              <Text style={styles.shortAccountNumberLabel}>{i18n.t('AccountNumberComponent_shortAccountNumberLabel')}</Text>
-              <View style={styles.barLine}>
-                <Text style={styles.shortAccountNumberValue}>{'[' + CacheData.userInformation.bitmarkAccountNumber.substring(0, 4) + '...' + CacheData.userInformation.bitmarkAccountNumber.substring(CacheData.userInformation.bitmarkAccountNumber.length - 4, CacheData.userInformation.bitmarkAccountNumber.length) + ']'}</Text>
-              </View>
-
-              <TouchableOpacity style={styles.viewOnRegistryButton} onPress={() => {
-                Linking.openURL(`${config.registry_server_url}/account/${CacheData.userInformation.bitmarkAccountNumber}`)
-              }}>
-                <Text style={styles.viewOnRegistryButtonText}>{i18n.t('AccountNumberComponent_viewOnRegistryButtonText')}</Text>
-                <Image style={styles.viewOnRegistryButtonIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.headerLeft} onPress={() => Actions.reset('user')}>
+            <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
+          </TouchableOpacity>
         </View>
+        <ScrollView contentContainerStyle={styles.content}>
+          <ShadowComponent style={styles.cardBody}>
+            <ShadowTopComponent contentStyle={styles.cardHeader}>
+              <Text style={styles.cardTitle}>ACCOUNT NUMBER</Text>
+            </ShadowTopComponent>
+            <Text style={styles.description}>{i18n.t('AccountNumberComponent_description')}</Text>
+            <Text style={styles.fullAccountNumberLabel}>{i18n.t('AccountNumberComponent_fullAccountNumberLabel')}</Text>
+            <TouchableOpacity style={styles.barLine} onPress={() => {
+              Clipboard.setString(CacheData.userInformation.bitmarkAccountNumber);
+              this.setState({ copied: true });
+              setTimeout(() => this.setState({ copied: false }), 1000);
+            }}>
+              <Text style={styles.fullAccountNumberValue}>{CacheData.userInformation.bitmarkAccountNumber}</Text>
+            </TouchableOpacity>
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', marginTop: 2, minHeight: 20, }}>
+              {this.state.copied && <Text style={{ color: '#0064FC', fontFamily: 'Avenir Medium', fontSize: 14, fontWeight: '600', }}>{i18n.t('AccountNumberComponent_accountCopiedText')}</Text>}
+            </View>
+            <Text style={styles.shortAccountNumberLabel}>{i18n.t('AccountNumberComponent_shortAccountNumberLabel')}</Text>
+            <View style={styles.barLine}>
+              <Text style={styles.shortAccountNumberValue}>{'[' + CacheData.userInformation.bitmarkAccountNumber.substring(0, 4) + '...' + CacheData.userInformation.bitmarkAccountNumber.substring(CacheData.userInformation.bitmarkAccountNumber.length - 4, CacheData.userInformation.bitmarkAccountNumber.length) + ']'}</Text>
+            </View>
+          </ShadowComponent>
+          <ShadowComponent style={styles.cardBody}>
+            <TouchableOpacity style={styles.viewOnRegistryButton} onPress={() => {
+              Linking.openURL(`${config.registry_server_url}/account/${CacheData.userInformation.bitmarkAccountNumber}`)
+            }}>
+              <Text style={styles.viewOnRegistryButtonText}>{i18n.t('AccountNumberComponent_viewOnRegistryButtonText')}</Text>
+              <Image style={styles.viewOnRegistryButtonIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </TouchableOpacity>
+          </ShadowComponent>
+        </ScrollView>
       </SafeAreaView>
     </View>
     );
@@ -70,71 +69,71 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  body: {
-    padding: convertWidth(16),
-    paddingTop: convertWidth(16),
-    flex: 1,
+  header: {
+    height: 56, width: '100%',
+    flexDirection: 'row', alignItems: 'center',
   },
-  bodyContent: {
-    flex: 1,
-    flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: '#FF4444',
-    padding: convertWidth(20),
+  headerLeft: {
+    paddingLeft: convertWidth(19),
+    width: convertWidth(35),
   },
-  titleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 36,
-  },
-  closeIcon: {
-    width: convertWidth(20),
-    height: convertWidth(20),
-    resizeMode: 'contain',
-    marginTop: 14,
+
+  headerLeftBackIcon: {
+    width: 16, height: '100%', resizeMode: 'contain',
   },
   content: {
     flexGrow: 1,
-
+    padding: convertWidth(16),
+    paddingTop: convertWidth(16),
   },
+  cardBody: {
+    flexDirection: 'column',
+    marginTop: 16,
+    width: convertWidth(344),
+  },
+  cardHeader: {
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
+    height: 40,
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
+  },
+  cardTitle: {
+    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300',
+  },
+
   description: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontSize: 16,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', color: 'rgba(0, 0, 0, 0.6)', fontSize: 14, fontWeight: '300',
     marginTop: 30,
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   fullAccountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book',
-    fontSize: 16,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book', fontSize: 18, fontWeight: '700',
     marginTop: 25,
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   fullAccountNumberValue: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
     fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   barLine: {
     paddingBottom: 3,
-    borderBottomColor: '#FF4444',
-    borderBottomWidth: 1,
     flex: 0,
     width: 'auto',
     alignSelf: 'flex-start',
   },
   shortAccountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book',
-    fontSize: 16,
-    marginTop: 15,
+    marginTop: 10,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book', fontSize: 18, fontWeight: '700',
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   shortAccountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
-    fontSize: 12,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono', fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
+    height: 43,
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
 
   viewOnRegistryButton: {
@@ -142,19 +141,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: 40,
-    minHeight: 22,
+    minHeight: 43,
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 9, paddingBottom: 9,
   },
   viewOnRegistryButtonIcon: {
-    width: convertWidth(8),
-    height: 14 * convertWidth(8) / 8,
+    width: 12,
+    height: 20,
     resizeMode: 'contain',
   },
   viewOnRegistryButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontWeight: '400',
-    fontSize: 16,
-    color: 'black'
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium', color: 'rgba(0, 0, 0, 0.87)',
+    fontWeight: '700',
+    fontSize: 18,
   }
 
 });

@@ -188,6 +188,9 @@ const doDownloadAndShareLegal = async (title, urlDownload) => {
 
 
 const doCheckNoLongerSupportVersion = async () => {
+  if (__DEV__) {
+    return;
+  }
   if (DeviceInfo.getBundleId() === 'com.bitmark.healthplus') {
     let data = await AccountModel.doTryGetAppVersion();
     if (data && data.version && data.version.minimum_supported_version) {
@@ -262,6 +265,14 @@ const doTransferBitmark = async (bitmark, receiver) => {
   return executeTask('doTransferBitmark', { bitmark, receiver });
 };
 
+const doIssueMMR = async (data) => {
+  if (!CacheData.networkStatus) {
+    await showOfflineMessage();
+    return;
+  }
+  return executeTask('doIssueMMR', { data });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -294,6 +305,7 @@ let AppProcessor = {
   doCombineImages,
   doTransferBitmark,
   showOfflineMessage,
+  doIssueMMR,
 }
 
 export {

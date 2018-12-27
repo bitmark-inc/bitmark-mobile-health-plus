@@ -30,10 +30,10 @@ import {
 import {
   FileUtil,
   isImageFile, isPdfFile, isHealthDataRecord, isAssetDataRecord,
-  compareVersion, runPromiseWithoutError, runPromiseIgnoreError,
+  compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isMMRRecord,
 } from 'src/utils';
 
-import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
+import { UserBitmarksStore, UserBitmarksActions, MMRInformationStore, MMRInformationActions } from 'src/views/stores';
 import { config } from 'src/configs';
 import { CacheData } from './caches';
 
@@ -80,7 +80,7 @@ let updateModal = (keyIndex, data) => {
 };
 
 // ================================================================================================================================================
-const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber) => {
+const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmarks, currentMMRAsset, bitmarkAccountNumber) => {
   bitmarkAccountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
   let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
   userDataBitmarks[bitmarkAccountNumber] = {
@@ -89,8 +89,17 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   };
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
-
-
+  if (currentMMRAsset && currentMMRAsset.id !== CacheData.userInformation.currentMMRAssetId) {
+    CacheData.userInformation.currentMMRAssetId = currentMMRAsset.id;
+    let result = await runPromiseIgnoreError(detectLocalAssetFilePath(currentMMRAsset));
+    console.log('result :', result);
+    if (result.filePath && (await FileUtil.exists(result.filePath))) {
+      CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
+    }
+    await UserModel.doUpdateUserInfo(CacheData.userInformation);
+  }
+  let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
+  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].healthDataBitmarks;
@@ -151,6 +160,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
       let userBitmarks = (await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber)) || {};
       let healthDataBitmarks = [], healthAssetBitmarks = [];
+      let currentMMRAsset;
       for (let bitmark of bitmarks) {
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
@@ -169,8 +179,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               bitmark.asset = asset;
             }
             healthDataBitmarks.push(bitmark);
-          }
-          if (isAssetDataRecord(asset)) {
+          } else if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               if (!asset.filePath || asset.filePath.indexOf(FileUtil.SharedGroupDirectory) < 0) {
                 let result = await runPromiseIgnoreError(detectLocalAssetFilePath(asset));
@@ -182,6 +191,10 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               bitmark.asset = asset;
               await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(bitmark));
               healthAssetBitmarks.push(bitmark);
+            }
+          } else if (isMMRRecord(asset)) {
+            if (!currentMMRAsset || currentMMRAsset.offset < asset.offset) {
+              currentMMRAsset = asset;
             }
           }
         }
@@ -208,9 +221,9 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       } else {
         healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
       }
-      (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks }));
+      (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks, currentMMRAsset }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
-      return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, bitmarkAccountNumber);
+      return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, currentMMRAsset, bitmarkAccountNumber);
     }).catch(error => {
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve());
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
@@ -558,7 +571,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       );
     });
     iCloudSyncAdapter.syncCloud();
-    //configNotification();
+    configNotification();
     if (!CacheData.userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
       CacheData.userInformation.intercomUserId = intercomUserId;
@@ -922,6 +935,19 @@ const doTransferBitmark = async (bitmark, receiver) => {
   return result;
 };
 
+const doIssueMMR = async (data) => {
+  let assetName = `MMR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
+  let metadata = {
+    type: 'HEALTH-MMR'
+  };
+  let filePath = `${FileUtil.CacheDirectory}/${assetName}.json`;
+  await FileUtil.writeFile(filePath, JSON.stringify(data));
+
+  let result = await doIssueFile(filePath, assetName, metadata, 1);
+  await FileUtil.removeSafe(filePath);
+  return result;
+};
+
 
 const DataProcessor = {
   doOpenApp,
@@ -957,6 +983,7 @@ const DataProcessor = {
   doMarkDisplayedWhatNewInformation,
   doDisplayedWhatNewInformation,
   doTransferBitmark,
+  doIssueMMR,
 };
 
 export { DataProcessor };

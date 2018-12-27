@@ -22,8 +22,7 @@ import { OrderCombineImagesComponent } from './order-combine-images.component';
 import { TaggingComponent } from "./tagging.component";
 import { DataProcessor } from 'src/processors';
 import { BitmarkLegalComponent, WhatNewComponent } from 'src/views/commons';
-
-
+import { MMRInformationComponent } from './mmr';
 
 export class UserRouterComponent extends Component {
   componentDidMount() {
@@ -53,6 +52,7 @@ export class UserRouterComponent extends Component {
           <Scene key="orderCombineImages" component={OrderCombineImagesComponent} />
           <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
           <Scene key="tagging" component={TaggingComponent} />
+          <Scene key="mmrInformation" component={MMRInformationComponent} panHandlers={null} />
         </Stack>
       </Router>
     );

@@ -6,3 +6,4 @@ export * from './bitmark-indicator.component';
 export * from './bitmark-internet-off.component';
 export * from './bitmark-legal.component';
 export * from './loading.component';
+export * from './shadow.component';
