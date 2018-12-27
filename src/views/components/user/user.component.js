@@ -353,7 +353,7 @@ class PrivateUserComponent extends Component {
           </View>
 
           {/*DATA PANEL*/}
-          {!this.state.searchFocusing && <View style={styles.body}>
+          {(!this.state.searchFocusing && !this.props.searchTerm) && <View style={styles.body}>
             <View style={[styles.bodyContent]}>
               {/*-----STICK CARD-----*/}
               {/*GET_STARTED_MMR*/}
