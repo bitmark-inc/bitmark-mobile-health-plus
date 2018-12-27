@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   inputContainer: {
+    borderRadius: 5,
     height: 35,
     padding: 10,
     paddingTop: 5,

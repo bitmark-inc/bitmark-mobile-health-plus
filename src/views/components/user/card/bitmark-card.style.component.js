@@ -8,9 +8,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     backgroundColor: '#F4F2EE',
-    borderRadius: 10,
+    borderRadius: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
     paddingBottom: 16,
@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
     zIndex: 2,
   },
   cardTitle: {
@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
     paddingRight: convertWidth(16),
   },
   cardImageContainer: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
     overflow: "hidden"
   },
   cardImage: {

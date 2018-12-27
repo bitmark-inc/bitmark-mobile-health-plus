@@ -11,9 +11,12 @@ import { Map } from 'immutable'
 
 import { Actions } from 'react-native-router-flux';
 import { runPromiseWithoutError, FileUtil, convertWidth } from 'src/utils';
-import { EventEmitterService, AppProcessor } from 'src/processors';
-import { config, } from 'src/configs';
+import { EventEmitterService, AppProcessor, IndexDBService } from 'src/processors';
+import { config, constants } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
+import moment from "moment/moment";
+import {styles as cardStyles} from "./card/bitmark-card.style.component";
+import { humanFileSize } from "../../../utils";
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -48,6 +51,13 @@ export class BitmarkDetailComponent extends Component {
     }
   }
 
+  async componentDidMount() {
+    let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
+    let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmark.id);
+
+    this.setState({fileSize: humanFileSize(fileStat.size), tags});
+  }
+
   deleteBitmark() {
     ActionSheetIOS.showActionSheetWithOptions({
       title: i18n.t('BitmarkDetailComponent_titleDeleteModal'),
@@ -69,74 +79,154 @@ export class BitmarkDetailComponent extends Component {
   }
 
   render() {
+    let bitmark = this.props.bitmark;
+    let bitmarkType = this.props.bitmarkType;
+    let tags = this.state.tags;
+
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <SafeAreaView style={[styles.bodySafeView]}>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
-              <View style={styles.titleRow}>
-                {/*BACK ICON*/}
+              {/*TOP BAR*/}
+              <View style={styles.topBar}>
+                {/*Back Icon*/}
                 <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
-                  <Image style={styles.closeIcon} source={require('assets/imgs/back_icon_red.png')} />
+                  <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
                 </TouchableOpacity>
-                {/*NAME*/}
-                <Text style={styles.titleText} numberOfLines={1}>{this.props.bitmark.asset.name}</Text>
-                {/*TAG ICON*/}
-                {this.props.bitmarkType === 'bitmark_health_issuance' &&
-                  <TouchableOpacity style={this.props.bitmark.status !== 'pending' ? styles.taggingButton : styles.taggingButtonForPending} onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
-                    <Image style={styles.taggingIcon} source={require('assets/imgs/tagging.png')} />
-                  </TouchableOpacity>
-                }
-                {/*DELETE ICON*/}
-                {this.props.bitmark.status !== 'pending' && this.props.bitmarkType === 'bitmark_health_issuance' && <TouchableOpacity style={styles.deleteButton} onPress={this.deleteBitmark.bind(this)}>
-                  <Image style={styles.closeIcon} source={require('assets/imgs/delete_icon_red.png')} />
-                </TouchableOpacity>}
+                {/*MMR Icon*/}
+                <TouchableOpacity onPress={() => {}}>
+                  <Image style={styles.profileIcon} source={require('assets/imgs/profile-icon.png')} />
+                </TouchableOpacity>
               </View>
-              <View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>
-                <ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }} scrollEnabled={this.props.bitmarkType !== 'bitmark_health_issuance'}>
-                  {this.props.bitmarkType === 'bitmark_health_issuance' && !!this.state.filePath &&
-                    <TouchableOpacity style={styles.bitmarkImageArea} onPress={() => Actions.fullViewCaptureAsset({
-                      filePath: this.state.filePath,
-                      title: this.props.bitmark.asset.name
-                    })}>
-                      <Image style={styles.bitmarkImage} source={{ uri: this.props.bitmark.thumbnail ? this.props.bitmark.thumbnail.path : this.state.filePath }} />
-                      <View style={styles.fullViewButton}>
-                        <Image style={styles.fullViewIcon} source={require('assets/imgs/full_view_icon.png')} />
-                        <Text style={styles.fullViewButtonText}>{i18n.t('BitmarkDetailComponent_fullViewButtonText')}</Text>
-                      </View>
-                    </TouchableOpacity>}
 
-                  {this.props.bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>
-                    <ScrollView horizontal={true}>
-                      <JSONTree data={this.state.content}
-                        getItemString={() => <Text></Text>}
-                        labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
-                        valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}
-                        hideRoot={true}
-                        theme={{
-                          scheme: 'monokai',
-                          author: 'wimer hazenberg (http://www.monokai.nl)',
-                          base00: '#000000',
-                          base01: '#383830',
-                          base02: '#49483e',
-                          base03: '#75715e',
-                          base04: '#a59f85',
-                          base05: '#f8f8f2',
-                          base06: '#f5f4f1',
-                          base07: '#f9f8f5',
-                          base08: '#f92672',
-                          base09: '#fd971f',
-                          base0A: '#f4bf75',
-                          base0B: '#a6e22e',
-                          base0C: '#a1efe4',
-                          base0D: '#FF4444',
-                          base0E: '#ae81ff',
-                          base0F: '#cc6633'
-                        }}
-                      />
-                    </ScrollView>
-                  </ScrollView>}
-                </ScrollView>
+              {/*CONTENT*/}
+              <View style={[cardStyles.cardContainer]}>
+                {/*IMAGE*/}
+                <View style={[cardStyles.cardImageContainer]}>
+                  <TouchableOpacity onPress={() => {
+                    if (bitmark.thumbnail) {
+                      Actions.fullViewCaptureAsset({
+                        filePath: this.state.filePath,
+                        title: this.props.bitmark.asset.name
+                      });
+                    }
+                  }}>
+                    {bitmarkType !== 'bitmark_health_issuance' ? (
+                      <Image style={cardStyles.cardImage} source={require('assets/imgs/health-data-thumbnail.png')} />
+                    ) : (
+                      bitmark.thumbnail ? (
+                        <Image style={cardStyles.cardImage} source={{ uri: bitmark.thumbnail.path }} />
+                      ) : (
+                        <Image style={cardStyles.cardImage} source={require('assets/imgs/unknown-file-thumbnail.png')} />
+                      )
+                    )
+                    }
+                  </TouchableOpacity>
+
+                  {bitmark.thumbnail && bitmark.thumbnail.multiple &&
+                  <Image style={styles.multipleFilesIcon} source={require('assets/imgs/multiple-files-icon.png')} />
+                  }
+                </View>
+
+                {/*TOP BAR*/}
+                <View style={[cardStyles.cardTopBar]}>
+                  <Text style={[cardStyles.cardTitle]}>{bitmarkType == 'bitmark_health_issuance' ? 'MEDICAL RECORD' : 'HEALTH KIT DATA'}</Text>
+                  <Image style={cardStyles.cardIcon} source={bitmarkType == 'bitmark_health_issuance' ? require('assets/imgs/medical-record-card-icon.png') : require('assets/imgs/health-data-card-icon.png')} />
+                </View>
+
+                {/*CONTENT*/}
+                <View style={[cardStyles.cardContent]}>
+                  {/*Name*/}
+                  <Text style={[cardStyles.cardHeader]}>{bitmark.asset.name}</Text>
+                  {/*Status*/}
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Text style={[cardStyles.cardText]}>{bitmark.asset.created_at ? (bitmarkType == 'bitmark_health_issuance' ? 'ADDED ON ' : 'RECORDED ON ' + moment(bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()) : 'REGISTERING...'}</Text>
+                    {this.state.fileSize &&
+                    <Text style={[cardStyles.cardText]}>{this.state.fileSize}</Text>
+                    }
+                  </View>
+
+                  {/*Notes*/}
+                  <View style={[styles.notesContainer]}>
+                    <Text style={[styles.notesText]}>Notes:</Text>
+                  </View>
+
+                  {/*Tags*/}
+                  <View style={[styles.notesContainer]}>
+                    <Text style={[styles.notesText]}>Tags:</Text>
+
+                    <View style={[styles.tagsContainer]}>
+                      {/*Tag icon*/}
+                      <TouchableOpacity onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
+                        <Image style={styles.taggingIcon} source={require('assets/imgs/tag-icon.png')} />
+                      </TouchableOpacity>
+
+                      {(tags && tags.length) ? (
+                        <View style={styles.tagListContainer}>
+                          {(tags || []).map(tag => {
+                            return (
+                              <View key={tag} style={styles.taggingItemContainer}>
+                                <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
+                              </View>
+                            );
+                          })
+                          }
+                        </View>
+                      ) : null
+                      }
+                    </View>
+                  </View>
+
+                  <View style={[styles.actionsContainer]}>
+                    {/*Tag icon*/}
+                    <TouchableOpacity onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
+                      <Image style={styles.taggingIcon} source={require('assets/imgs/edit-icon.png')} />
+                    </TouchableOpacity>
+
+                    {/*Delete Icon*/}
+                    {this.props.bitmark.status !== 'pending' && this.props.bitmarkType === 'bitmark_health_issuance' &&
+                    <TouchableOpacity onPress={this.deleteBitmark.bind(this)}>
+                      <Image style={[styles.closeIcon, {marginLeft: 30}]} source={require('assets/imgs/delete-icon.png')} />
+                    </TouchableOpacity>}
+                  </View>
+
+
+                  {/*<View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>*/}
+                    {/*<ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }} scrollEnabled={this.props.bitmarkType !== 'bitmark_health_issuance'}>*/}
+                      {/*{bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>*/}
+                        {/*<ScrollView horizontal={true}>*/}
+                          {/*<JSONTree data={this.state.content}*/}
+                                    {/*getItemString={() => <Text></Text>}*/}
+                                    {/*labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}*/}
+                                    {/*valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}*/}
+                                    {/*hideRoot={true}*/}
+                                    {/*theme={{*/}
+                                      {/*scheme: 'monokai',*/}
+                                      {/*author: 'wimer hazenberg (http://www.monokai.nl)',*/}
+                                      {/*base00: '#000000',*/}
+                                      {/*base01: '#383830',*/}
+                                      {/*base02: '#49483e',*/}
+                                      {/*base03: '#75715e',*/}
+                                      {/*base04: '#a59f85',*/}
+                                      {/*base05: '#f8f8f2',*/}
+                                      {/*base06: '#f5f4f1',*/}
+                                      {/*base07: '#f9f8f5',*/}
+                                      {/*base08: '#f92672',*/}
+                                      {/*base09: '#fd971f',*/}
+                                      {/*base0A: '#f4bf75',*/}
+                                      {/*base0B: '#a6e22e',*/}
+                                      {/*base0C: '#a1efe4',*/}
+                                      {/*base0D: '#FF4444',*/}
+                                      {/*base0E: '#ae81ff',*/}
+                                      {/*base0F: '#cc6633'*/}
+                                    {/*}}*/}
+                          {/*/>*/}
+                        {/*</ScrollView>*/}
+                      {/*</ScrollView>}*/}
+                    {/*</ScrollView>*/}
+                  {/*</View>*/}
+                </View>
               </View>
             </View>
           </View>
@@ -153,63 +243,84 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: convertWidth(16),
+    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : convertWidth(16),
     flex: 1,
   },
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: "#FF4444",
     width: "100%",
   },
 
-  titleRow: {
+  topBar: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    height: 54,
+    height: 56,
     width: '100%',
-    borderBottomColor: '#FF4444', borderBottomWidth: 1,
-  },
-  titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    flex: 1,
-    fontSize: 24,
-    marginTop: 12,
   },
   closeButton: {
     height: '100%',
-    paddingRight: convertWidth(10),
-    paddingLeft: convertWidth(15),
-    alignItems: 'center', justifyContent: 'center',
-  },
-  deleteButton: {
-    height: '100%',
-    paddingRight: convertWidth(20),
-    paddingLeft: convertWidth(15),
-    alignItems: 'center', justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   closeIcon: {
-    width: convertWidth(21),
-    height: convertWidth(21),
+    width: convertWidth(16),
+    height: convertWidth(16),
     resizeMode: 'contain',
   },
-  taggingButton: {
-    height: '100%',
-    paddingLeft: convertWidth(15),
-    alignItems: 'center', justifyContent: 'center',
+  profileIcon: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain'
   },
-  taggingButtonForPending: {
-    height: '100%',
-    paddingRight: convertWidth(20),
-    paddingLeft: convertWidth(15),
-    alignItems: 'center', justifyContent: 'center',
+  multipleFilesIcon: {
+    position: 'absolute',
+    width: 22,
+    height: 22,
+    bottom: 15,
+    right: 15,
+  },
+  notesContainer: {
+    marginTop: 25,
+  },
+  notesText: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
+    fontSize: 14,
+  },
+  tagsContainer:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
   },
   taggingIcon: {
-    width: convertWidth(21),
-    height: convertWidth(21),
+    width: 16,
+    height: 16,
     resizeMode: 'contain',
+  },
+  tagListContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginLeft: 12,
+  },
+  taggingItemContainer: {
+    flexDirection: 'row',
+    padding: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.12)',
+    marginRight: 10,
+    borderRadius: 5,
+  },
+  taggingItem: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontSize: 10,
+    fontWeight: '300',
+    color: 'rgba(0, 0, 0, 0.87)',
+  },
+  actionsContainer: {
+    marginTop: 35,
+    flexDirection: 'row'
   },
 
   content: {
@@ -219,27 +330,6 @@ const styles = StyleSheet.create({
   },
   contentScroll: {
     flexDirection: 'column',
-  },
-  fullViewButton: {
-    position: 'absolute', bottom: 20, width: '100%',
-    justifyContent: 'center', flexDirection: 'row', alignItems: 'center'
-  },
-  fullViewIcon: {
-    width: 14, height: 17, resizeMode: 'contain', marginRight: 15,
-  },
-  fullViewButtonText: {
-    textAlign: 'center', color: '#FF1F1F', fontSize: 16, fontWeight: '600'
-  },
-
-  bitmarkImageArea: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-  },
-  bitmarkImage: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
   },
   bitmarkContent: {
     paddingTop: convertWidth(20),
