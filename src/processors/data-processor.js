@@ -694,6 +694,8 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultip
     } else if (isPdfFile(record.filePath)) {
       let detectResult = await CommonModel.populateAssetNameFromPdf(record.filePath);
       await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
+    } else {
+      await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, '');
     }
   }
 

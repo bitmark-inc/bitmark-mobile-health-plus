@@ -461,7 +461,7 @@ class PrivateUserComponent extends Component {
                       if (card.type === STICK_CARD_TYPES.MEDICAL_RECORD) {
                         return (
                           <TouchableOpacity style={[styles.cardItem, {top: card.top}]} onPress={() => {this.setState({stickCardType: STICK_CARD_TYPES.MEDICAL_RECORD, stickMedicalRecord: card})}}>
-                            <MedicalRecordFeedCardComponent bitmark={card.data} bitmarkType={'bitmark_health_issuance'}/>
+                            <MedicalRecordFeedCardComponent bitmark={card.data} />
                           </TouchableOpacity>
                         );
                       }
@@ -470,7 +470,7 @@ class PrivateUserComponent extends Component {
                       if (card.type === STICK_CARD_TYPES.HEALTH_DATA) {
                         return (
                           <TouchableOpacity style={[styles.cardItem, {top: card.top}]} onPress={() => {this.setState({stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickHealthData: card})}}>
-                            <HealthDataFeedCardComponent bitmark={card.data}  bitmarkType={'bitmark_health_data'}/>
+                            <HealthDataFeedCardComponent bitmark={card.data} />
                           </TouchableOpacity>
                         );
                       }
