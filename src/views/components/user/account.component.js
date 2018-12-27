@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Linking,
   Alert,
+  Share,
   Image, View, SafeAreaView, ScrollView, Text, TouchableOpacity,
 } from 'react-native';
 import Mailer from 'react-native-mail';
@@ -13,6 +14,8 @@ import { convertWidth } from 'src/utils';
 import { MMRCardComponent } from './mmr';
 import { ShadowTopComponent, ShadowComponent } from 'src/views/commons';
 import { Actions } from 'react-native-router-flux';
+import Intercom from 'react-native-intercom';
+
 
 export class AccountComponent extends Component {
   static propTypes = {
@@ -89,55 +92,64 @@ export class AccountComponent extends Component {
             <View style={styles.cardContentRow}>
               <Text style={styles.itemDescription}>Your vault is addressed using your{'\n'}Bitmark account number: </Text>
             </View>
-            <View style={styles.cardContentRow}>
-              <Text style={styles.accountNumber}>[e4fT2...gAB1o]</Text>
+            <TouchableOpacity style={styles.cardContentRow} onPress={Actions.accountNumber}>
+              <Text style={styles.accountNumber}>{`[${CacheData.userInformation.bitmarkAccountNumber.substring(0, 4)}...${CacheData.userInformation.bitmarkAccountNumber.substring(CacheData.userInformation.bitmarkAccountNumber.length - 4, CacheData.userInformation.bitmarkAccountNumber.length)}]`}</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </View>
+            </TouchableOpacity>
             <View style={styles.cardContentRow}>
               <Text style={styles.itemDescription}>Others can send you medical records at the following email address:</Text>
             </View>
-            <View style={[styles.cardContentRow, {
+            <TouchableOpacity style={[styles.cardContentRow, {
               borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
-            }]}>
+            }]}
+              onPress={() => Share.share({ title: '', message: emailAddress })}
+            >
               <Text style={styles.emailAddress}>{emailAddress}</Text>
               <Image style={styles.shareIcon} source={require('assets/imgs2/share_icon.png')} />
-            </View>
+            </TouchableOpacity>
+
           </ShadowComponent>
 
           <ShadowComponent style={styles.cardBody}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
               <Text style={styles.cardTitle}>SECURITY</Text>
             </ShadowTopComponent>
-            <View style={styles.cardContentRow}>
+            <TouchableOpacity style={styles.cardContentRow}
+              onPress={() => Actions.accountPhrase()}
+            >
               <Text style={styles.cardContentRowButtonText}>Write down vault key phrase</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </View>
-            <View style={[styles.cardContentRow, {
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.cardContentRow, {
               borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
-            }]}>
+            }]}
+              onPress={() => Actions.accountPhrase({ isLogout: true })}
+            >
               <Text style={styles.cardContentRowButtonText}>Lock your vault</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </View>
+            </TouchableOpacity>
           </ShadowComponent>
 
           <ShadowComponent style={styles.cardBody}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
               <Text style={styles.cardTitle}>ABOUT</Text>
             </ShadowTopComponent>
-            <View style={styles.cardContentRow}>
+            <TouchableOpacity style={styles.cardContentRow} onPress={() => Intercom.displayMessageComposer()}>
               <Text style={styles.cardContentRowButtonText}>Chat with us</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </View>
-            <View style={[styles.cardContentRow]}>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.cardContentRow]} onPress={() => Linking.openURL('https://www.facebook.com/groups/274018259885853/')} >
               <Text style={styles.cardContentRowButtonText}>Join our Alpha Tester Group</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </View>
-            <View style={[styles.cardContentRow, {
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.cardContentRow, {
               borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
-            }]}>
+            }]}
+              onPress={Actions.support}
+            >
               <Text style={styles.cardContentRowButtonText}>Legal</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </View>
+            </TouchableOpacity>
           </ShadowComponent>
 
           <View style={[styles.normalRow, { marginTop: 16 }]}>
@@ -145,10 +157,10 @@ export class AccountComponent extends Component {
             <Text style={styles.rowValue}>1.0</Text>
           </View>
 
-          <View style={styles.normalRow}>
+          <TouchableOpacity style={styles.normalRow} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
             <Text style={styles.rowLabel}>WHAT’S NEW</Text>
             <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-          </View>
+          </TouchableOpacity>
 
         </ScrollView>
       </SafeAreaView >
