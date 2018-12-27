@@ -378,13 +378,6 @@ class PrivateUserComponent extends Component {
               {/*GET_STARTED_MMR*/}
               {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
               <TouchableOpacity>
-                <GetStartedCardComponent cardIconSource={require('assets/imgs/mma-card-icon.png')}
-                                         cardHeader={'Personalize your vault'}
-                                         cardText={'Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency.'}
-                                         isStickCard={true}
-                                         cardNextIconSource={require('assets/imgs/arrow-right-icon.png')}
-                />
-                {/*TODO: Add condition here*/}
                 <MMRCardComponent displayFromUserScreen={true} />
               </TouchableOpacity>
               }
