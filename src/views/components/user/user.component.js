@@ -357,7 +357,10 @@ class PrivateUserComponent extends Component {
           {!this.state.searchFocusing && <View style={styles.body}>
             <View style={[styles.bodyContent]}>
               {/*-----STICK CARD-----*/}
-              <MMRCardComponent displayFromUserScreen={true} />
+              {/*GET_STARTED_MMR*/}
+              {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
+                <MMRCardComponent displayFromUserScreen={true} />
+              }
 
               {/*GET_STARTED_MEDICAL_RECORD*/}
               {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD &&
@@ -407,12 +410,7 @@ class PrivateUserComponent extends Component {
                     // SETUP MMR
                     if (card.type === STICK_CARD_TYPES.GET_STARTED_MMR) {
                       return (
-                        <TouchableOpacity key={index} style={[styles.cardItem, { top: 140 * index }]} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR }) }}>
-                          <GetStartedCardComponent cardIconSource={require('assets/imgs/mma-card-icon.png')}
-                            cardHeader={'Set up your minimum medical record'}
-                            cardText={'Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency.'}
-                          />
-                        </TouchableOpacity>
+                        <MMRCardComponent displayFromUserScreen={true} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR }) }} />
                       );
                     }
 

@@ -16,7 +16,8 @@ import { Actions } from 'react-native-router-flux';
 class PrivateMMRCardComponent extends Component {
   static propTypes = {
     mmrInformation: PropTypes.any,
-    displayFromUserScreen: PropTypes.bool
+    displayFromUserScreen: PropTypes.bool,
+    onPress: PropTypes.func
   };
   render() {
     let displaySeeMoreButton = this.props.mmrInformation && this.props.mmrInformation.avatar
@@ -24,7 +25,7 @@ class PrivateMMRCardComponent extends Component {
     return (
       <ShadowComponent style={styles.body}>
         {!this.props.mmrInformation &&
-          <TouchableOpacity style={styles.bodyContent} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
+          <TouchableOpacity style={styles.bodyContent} onPress={() => this.props.onPress ? this.props.onPress() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
             <Text style={styles.cardHeaderTitleText}>Personalize your vault</Text>
             <Text style={styles.cardContentDescription}>Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency. </Text>
             <View style={styles.cardNextButton}>
@@ -34,7 +35,7 @@ class PrivateMMRCardComponent extends Component {
         }
 
         {this.props.mmrInformation &&
-          <TouchableOpacity style={styles.bodyContent} disabled={!this.props.displayFromUserScreen} onPress={Actions.account}>
+          <TouchableOpacity style={styles.bodyContent} disabled={!this.props.displayFromUserScreen} onPress={this.props.onPress ? this.props.onPress : Actions.account}>
             <Text style={styles.mmrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Minimum Medical Record'}</Text>
             <View style={styles.mmrInformation}>
               <Image style={styles.mmrInformationAvatar} source={{ uri: this.props.mmrInformation.avatar }} />
@@ -125,12 +126,13 @@ const StoreMMRCardComponent = connect(
 
 export class MMRCardComponent extends Component {
   propTypes = {
-    displayFromUserScreen: PropTypes.bool
+    displayFromUserScreen: PropTypes.bool,
+    onPress: PropTypes.func
   }
   render() {
     return (
       <Provider store={MMRInformationStore}>
-        <StoreMMRCardComponent displayFromUserScreen={this.props.displayFromUserScreen} />
+        <StoreMMRCardComponent displayFromUserScreen={this.props.displayFromUserScreen} onPress={this.props.onPress} />
       </Provider>
     );
   }
