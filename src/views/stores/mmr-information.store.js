@@ -19,6 +19,7 @@ const MMRInformationActions = {
 const initialState = { mmrInformation: null };
 
 const data = (state = initialState, action) => {
+  console.log('action :', action);
   switch (action.type) {
     case ACTION_TYPES.RESET:
       return merge({}, initialState);

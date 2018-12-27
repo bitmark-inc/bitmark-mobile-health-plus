@@ -260,6 +260,14 @@ const doTransferBitmark = async (bitmark, receiver) => {
   return executeTask('doTransferBitmark', { bitmark, receiver });
 };
 
+const doIssueMMR = async (data) => {
+  if (!CacheData.networkStatus) {
+    await showOfflineMessage();
+    return;
+  }
+  return executeTask('doIssueMMR', { data });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -291,6 +299,7 @@ let AppProcessor = {
   doCombineImages,
   doTransferBitmark,
   showOfflineMessage,
+  doIssueMMR,
 }
 
 export {

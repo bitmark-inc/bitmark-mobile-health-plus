@@ -89,18 +89,16 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   };
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
-
   if (currentMMRAsset && currentMMRAsset.id !== CacheData.userInformation.currentMMRAssetId) {
     CacheData.userInformation.currentMMRAssetId = currentMMRAsset.id;
-    let filePath = await runPromiseIgnoreError(detectLocalAssetFilePath(currentMMRAsset.id));
-    if (filePath && (await FileUtil.exists(filePath))) {
-      CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(filePath));
+    let result = await runPromiseIgnoreError(detectLocalAssetFilePath(currentMMRAsset));
+    if (result.filePath && (await FileUtil.exists(result.filePath))) {
+      CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
     }
     await UserModel.doUpdateUserInfo(CacheData.userInformation);
   }
-  let storeState = { mmrInformation: CacheData.userInformation.currentMMRAsset };
+  let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
   MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
-
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].healthDataBitmarks;

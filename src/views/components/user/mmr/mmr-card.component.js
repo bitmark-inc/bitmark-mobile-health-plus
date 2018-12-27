@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   mmrInformationAvatar: {
-    width: 76, height: 76, resizeMode: 'contain',
+    width: 76, height: 76, resizeMode: 'center',
     borderWidth: 1, borderColor: 'white', borderRadius: 38,
     marginRight: convertWidth(15),
   },

@@ -46,11 +46,15 @@ const doCheckMetadata = (metadataList) => {
 
 const doIssueFile = async (bitmarkAccountNumber, filePath, assetName, metadataList, quantity) => {
   let metadata = {};
-  metadataList.forEach(item => {
-    if (item.label && item.value) {
-      metadata[item.label] = item.value;
-    }
-  });
+  if (Array.isArray(metadataList)) {
+    metadataList.forEach(item => {
+      if (item.label && item.value) {
+        metadata[item.label] = item.value;
+      }
+    });
+  } else {
+    metadata = metadataList;
+  }
 
   let issueResult = await BitmarkModel.doIssueFile(filePath, assetName, metadata, quantity);
 
