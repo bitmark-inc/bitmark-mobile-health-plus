@@ -32,6 +32,7 @@ export class SearchResultsComponent extends Component {
 
   render() {
     let results = this.props.results;
+    let numberOfResults = (results && results.length) ? results.length : 0;
 
     return (
       <View style={this.props.style}>
@@ -43,7 +44,7 @@ export class SearchResultsComponent extends Component {
           </TouchableOpacity>
 
           {/*Number of results*/}
-          <Text style={styles.numberOfResultsText}>{global.i18n.t("SearchResultsComponent_numberOfResults", {number: (results && results.length) ? results.length : 0})}</Text>
+          <Text style={styles.numberOfResultsText}>{numberOfResults} {numberOfResults == 1 ? 'RESULT FOUND' : 'RESULTS FOUND'}</Text>
         </View>
 
         {/*RESULTS*/}
