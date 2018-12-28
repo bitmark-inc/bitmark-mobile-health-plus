@@ -323,12 +323,15 @@ class PrivateUserComponent extends Component {
       <SafeAreaView style={[styles.bodySafeView,]}>
         <View style={[styles.wrapper]}>
           {/*SEARCH AREA*/}
-          <View style={[styles.searchArea, (this.props.searchTerm ? { flex: 1 } : {})]}>
+          {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
+          <View style={[styles.searchArea, (this.props.searchTerm ? {flex: 1} : {})]}>
             <View style={styles.searchInputContainer}>
               {/*Search Input*/}
               <SearchInputComponent
                 throttle={300}
-                ref={(ref) => { this.searchInput = ref }}
+                ref={(ref) => {
+                  this.searchInput = ref
+                }}
                 onSearchTermChange={(searchTerm) => {
                   this.setState({
                     isSearching: true
@@ -344,25 +347,28 @@ class PrivateUserComponent extends Component {
               {/*Setting button*/}
               {(!this.state.searchFocusing && !this.props.searchTerm) &&
               <TouchableOpacity onPress={Actions.account}>
-                <Image style={styles.settingIcon} source={require('assets/imgs/setting-icon.png')} />
+                <Image style={styles.settingIcon} source={require('assets/imgs/setting-icon.png')}/>
               </TouchableOpacity>
               }
 
               {/*Add record button*/}
               {(!this.state.searchFocusing && !this.props.searchTerm) &&
               <TouchableOpacity onPress={this.addRecord.bind(this)}>
-                <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-icon.png')} />
+                <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-icon.png')}/>
               </TouchableOpacity>
               }
             </View>
 
             {this.state.isSearching && <View style={styles.indicatorContainer}>
-              <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />
+              <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16}/>
               <Text>{global.i18n.t("UserComponent_searching")}</Text>
             </View>
             }
-            {(this.state.searchFocusing || this.props.searchTerm) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm} cancel={this.searchInput.cancelSearch.bind(this.searchInput)} /> : null}
+            {(this.state.searchFocusing || this.props.searchTerm) ?
+              <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm}
+                                      cancel={this.searchInput.cancelSearch.bind(this.searchInput)}/> : null}
           </View>
+          }
 
           {/*DATA PANEL*/}
           {(!this.state.searchFocusing && !this.props.searchTerm) && <View style={styles.body}>
