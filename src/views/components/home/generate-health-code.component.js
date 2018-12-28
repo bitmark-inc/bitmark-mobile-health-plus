@@ -446,7 +446,7 @@ export class GenerateHealthCodeComponent extends Component {
                     <Text style={[styles.writeDownPhraseWordsInformTitle]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
                   </View>
                   <View>
-                    <Text style={[styles.writeDownPhraseWordsInformText]}>Internet services normally require user accounts that are stored on servers in “the cloud.” Servers can be (and are often) hacked, thus your data and privacy are constantly at risk.</Text>
+                    <Text style={[styles.writeDownPhraseWordsInformText]}>Internet services normally require user accounts that are stored on servers in “the cloud”. Servers can be (and are often) hacked, thus your data and privacy are constantly at risk.</Text>
                     <Text style={[styles.writeDownPhraseWordsInformText]}>In contrast, your vault is stored on your phone and secured by a 12-word phrase that only you know. Think of this as a magic phrase — it instantly restores all your data if your phone is ever lost, stolen, or damaged.</Text>
                     <Text style={[styles.writeDownPhraseWordsInformText]}>Keep it safe and protect what’s most important: control of your health.</Text>
                   </View>

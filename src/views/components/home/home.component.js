@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux';
 import Hyperlink from 'react-native-hyperlink';
 
 import { convertWidth } from 'src/utils';
-import { config } from 'src/configs';
+import { config, constants } from 'src/configs';
 
 const ONBOARDING_STATES = {
   ONBOARDING_1: 'ONBOARDING_1',
@@ -41,7 +41,7 @@ export class HomeComponent extends Component {
               <View style={styles.contentArea}>
                 {/*IMAGE*/}
                 <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'flex-end', width: '100%' }]}>
-                  <Image style={styles.onBoardingImage1} source={require('assets/imgs/onboarding_1.png')} />
+                  <Image style={[styles.onBoardingImage1, config.isIPhoneX ? {position: 'absolute', right: -18} : {}]} source={require('assets/imgs/onboarding_1.png')} />
                 </View>
                 {/*DESC*/}
                 <View style={styles.introductionTextArea}>
@@ -98,7 +98,7 @@ export class HomeComponent extends Component {
                 <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-2.png')} />
 
                 {/*Login link*/}
-                <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.login}>
+                <TouchableOpacity style={[styles.buttonNext, {marginBottom: 2}]} onPress={Actions.login}>
                   <Text style={[styles.linkButtonText]}>Already have a vault?</Text>
                 </TouchableOpacity>
 
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: convertWidth(16),
+    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : convertWidth(16),
   },
 
   bodyContent: {
@@ -127,6 +128,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
 
   topArea: {
@@ -155,8 +160,8 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.87)'
   },
   logo: {
-    width: 22,
-    height: 22,
+    width: 23,
+    height: 23,
     resizeMode: 'contain',
   },
   sliderIcon: {
@@ -217,7 +222,7 @@ const styles = StyleSheet.create({
   },
   linkButtonText: {
     fontFamily: 'AvenirNextW1G-Regular',
-    fontSize: 14,
+    fontSize: 16,
     color: '#0060F2',
     textDecorationLine: 'underline'
   },
