@@ -267,7 +267,7 @@ export class AccountPhraseComponent extends Component {
                           <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
                           <View style={styles.recoveryPhraseValue}>
                             {item.word.split('').map((char, cIndex) =>
-                              <Text key={cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
+                              <Text key={STEPS.phraseWord + 's' + cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
                             )}
                           </View>
                         </View>
@@ -285,7 +285,7 @@ export class AccountPhraseComponent extends Component {
                           <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
                           <View style={styles.recoveryPhraseValue}>
                             {item.word.split('').map((char, cIndex) =>
-                              <Text key={cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
+                              <Text key={STEPS.phraseWord + 'b' + cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
                             )}
                           </View>
                         </View>
@@ -343,7 +343,7 @@ export class AccountPhraseComponent extends Component {
                             <Text style={styles.recoveryPhraseIndex}>{index + 1}</Text>
                             {!!item.word && <View style={[styles.recoveryPhraseValue]}>
                               {item.word.split('').map((char, cIndex) =>
-                                <Text key={cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
+                                <Text key={STEPS.testing + 's' + cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
                               )}
                             </View>}
                             {!item.word && <View style={[styles.recoveryPhraseValue, {
@@ -373,7 +373,7 @@ export class AccountPhraseComponent extends Component {
                             <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
                             {!!item.word && <View style={[styles.recoveryPhraseValue]}>
                               {item.word.split('').map((char, cIndex) =>
-                                <Text key={cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
+                                <Text key={STEPS.testing + 'b' + cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
                               )}
                             </View>}
                             {!item.word && <View style={[styles.recoveryPhraseValue, {

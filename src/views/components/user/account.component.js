@@ -31,7 +31,7 @@ export class AccountComponent extends Component {
   doLogout() {
     AppProcessor.doLogout().then((result) => {
       if (result) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {indicator: true});
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { indicator: true });
       }
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
@@ -145,7 +145,7 @@ export class AccountComponent extends Component {
             <TouchableOpacity style={[styles.cardContentRow, {
               borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
             }]}
-              onPress={Actions.support}
+              onPress={() => Linking.openURL('https://bitmark.com/legal/terms')}
             >
               <Text style={styles.cardContentRowButtonText}>Legal</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
