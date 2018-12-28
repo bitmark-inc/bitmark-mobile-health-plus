@@ -44,9 +44,9 @@ export class MMRInformationComponent extends Component {
     ActionSheetIOS.showActionSheetWithOptions({
       title: 'Add an image',
       options: ['Cancel',
-      'Take Photo...',
-      'Choose from Library...',
-      'Files...',
+        'Take Photo...',
+        'Choose from Library...',
+        'Files...',
       ],
       cancelButtonIndex: 0,
     },
@@ -212,10 +212,11 @@ export class MMRInformationComponent extends Component {
                     <View style={{ flex: 1, flexDirection: 'column' }}>
                       <Text style={styles.mmrInformationLabel}>Date of birth</Text>
                       <DatePicker style={styles.mmrInformationValueInput}
-                        date={this.state.mmrInformation.birthday ? moment(this.state.mmrInformation.birthday).toDate() : moment().toDate()}
+                        date={this.state.mmrInformation.birthday}
                         onDateChange={(birthday) => this.updateMMRInformationState.bind(this)({ birthday: moment(birthday, 'DD|MM|YYYY').toDate() })}
                         maxDate={moment().toDate()}
                         format="DD|MM|YYYY"
+                        placeholder="DD|MM|YYYY"
                         showIcon={false}
                         mode="date"
                         customStyles={{
