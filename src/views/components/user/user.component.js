@@ -381,7 +381,7 @@ class PrivateUserComponent extends Component {
                 </View>
               }
 
-              <ScrollView style={{}} contentContainerStyle={{ flex: this.shouldHasScroll ? 0 : 1, paddingLeft: 4, paddingRight: 4, }}>
+              <ScrollView style={{}} contentContainerStyle={{ flexGrow: this.shouldHasScroll ? 0 : 1, paddingLeft: 4, paddingRight: 4, }}>
                 <View style={{ flex: 1, paddingTop: 20, }}>
                   {/*-----STICK CARD-----*/}
                   <View style={[styles.stickCardContainer,]}>
