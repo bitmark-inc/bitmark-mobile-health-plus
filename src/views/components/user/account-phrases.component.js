@@ -267,7 +267,7 @@ export class AccountPhraseComponent extends Component {
               EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
             })
           } else {
-            setTimeout(Actions.pop, 200);
+            setTimeout(Actions.pop, 2000);
           }
         }
 
@@ -529,7 +529,7 @@ export class AccountPhraseComponent extends Component {
                   {/*Successful test*/}
                   {this.state.testingResult === true &&
                     <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#0060F2', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
-                      <Text style={[styles.testResultMessage]}>VAULT LOCKED</Text>
+                      <Text style={[styles.testResultMessage]}>{(this.props.isLogout ? 'VAULT LOCKED' : 'Correct combination').toUpperCase()}</Text>
                     </View>
                   }
 
