@@ -342,14 +342,18 @@ class PrivateUserComponent extends Component {
               </SearchInputComponent>
 
               {/*Setting button*/}
+              {(!this.state.searchFocusing && !this.props.searchTerm) &&
               <TouchableOpacity onPress={Actions.account}>
                 <Image style={styles.settingIcon} source={require('assets/imgs/setting-icon.png')} />
               </TouchableOpacity>
+              }
 
               {/*Add record button*/}
+              {(!this.state.searchFocusing && !this.props.searchTerm) &&
               <TouchableOpacity onPress={this.addRecord.bind(this)}>
                 <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-icon.png')} />
               </TouchableOpacity>
+              }
             </View>
 
             {this.state.isSearching && <View style={styles.indicatorContainer}>
@@ -357,7 +361,7 @@ class PrivateUserComponent extends Component {
               <Text>{global.i18n.t("UserComponent_searching")}</Text>
             </View>
             }
-            {(this.state.searchFocusing || this.props.searchResults.length) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm} cancel={this.searchInput.cancelSearch.bind(this.searchInput)} /> : null}
+            {(this.state.searchFocusing || this.props.searchTerm) ? <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm} cancel={this.searchInput.cancelSearch.bind(this.searchInput)} /> : null}
           </View>
 
           {/*DATA PANEL*/}
@@ -504,12 +508,14 @@ const styles = StyleSheet.create({
     height: 28,
     resizeMode: 'contain',
     marginTop: 5,
+    // marginLeft: 16,
   },
   settingIcon: {
     width: 18,
     height: 18,
     resizeMode: 'contain',
     marginTop: 8,
+    marginLeft: 16,
     marginRight: 10,
   },
 
@@ -556,7 +562,6 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     paddingLeft: convertWidth(16),
-    paddingRight: convertWidth(16),
     paddingBottom: convertWidth(14),
     flex: 1,
   },
