@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux';
 import Hyperlink from 'react-native-hyperlink';
 
 import { convertWidth } from 'src/utils';
-import { config, constants } from 'src/configs';
+import { config } from 'src/configs';
 
 const ONBOARDING_STATES = {
   ONBOARDING_1: 'ONBOARDING_1',
@@ -85,9 +85,9 @@ export class HomeComponent extends Component {
                 </Text>
 
                   {/*Terms and Privacy Policy */}
-                  <Hyperlink style={[styles.introductionDescription, styles.hyperLinkText, { fontStyle: 'italic' }]} linkText={url => url === 'https://bitmark.com/legal/terms' ? 'Terms' : 'Privacy Policy'} onPress={(url) => Linking.openURL(url)}>
-                    <Text style={[styles.introductionDescription, styles.hyperLinkText, { marginTop: 0, fontStyle: 'italic' }]}>
-                      By creating a vault, you agree to our <Text style={[{ textDecorationLine: 'underline', fontStyle: 'italic' }, styles.hyperLinkText]}>https://bitmark.com/legal/terms</Text> and <Text style={[{ textDecorationLine: 'underline', fontStyle: 'italic' }, styles.hyperLinkText]}>https://bitmark.com/legal/privacy.</Text>
+                  <Hyperlink style={[styles.introductionDescription, styles.hyperLinkText]} linkText={url => url === 'https://bitmark.com/legal/terms' ? 'Terms' : 'Privacy Policy'} onPress={(url) => Linking.openURL(url)}>
+                    <Text style={[styles.introductionDescription, styles.hyperLinkText, { marginTop: 0 }]}>
+                      By creating a vault, you agree to our <Text style={[{ textDecorationLine: 'underline' }, styles.hyperLinkText]}>https://bitmark.com/legal/terms</Text> and <Text style={[{ textDecorationLine: 'underline' }, styles.hyperLinkText]}>https://bitmark.com/legal/privacy.</Text>
                     </Text>
                   </Hyperlink>
                 </View>
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   title: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir light',
+    fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
     color: 'rgba(0, 0, 0, 0.87)'
   },
@@ -186,15 +186,15 @@ const styles = StyleSheet.create({
   },
   introductionTitle: {
     marginTop: 25,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
-    fontSize: 24,
+    fontSize: 23,
     fontWeight: '900',
     textAlign: 'left',
   },
   introductionDescription: {
     marginTop: 15,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book',
+    fontFamily: 'AvenirNextW1G-Regular',
     fontWeight: '200',
     fontSize: 14,
     lineHeight: 20,
@@ -202,20 +202,21 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   hyperLinkText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light'
+    fontFamily: 'AvenirNextW1G-LightItalic',
+    color: 'rgba(0, 0, 0, 0.6)',
   },
   buttonNext: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
     color: '#FF003C',
   },
   buttonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontWeight: '900',
     fontSize: 16,
   },
   linkButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book',
+    fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 14,
     color: '#0060F2',
     textDecorationLine: 'underline'

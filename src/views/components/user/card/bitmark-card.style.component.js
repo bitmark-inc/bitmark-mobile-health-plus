@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     marginTop: 16,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Light',
+    fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
     color: 'rgba(0, 0, 0, 0.87)'
   },
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch'
   },
   cardHeader: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 24,
     lineHeight: 36,
     fontWeight: '900',

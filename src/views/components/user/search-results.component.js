@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   },
   resultHeaderText: {
     fontSize: 10,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir light',
+    fontFamily: 'AvenirNextW1G-Light',
     color: 'rgba(0, 0, 0, 0.87)',
     marginLeft: 16,
   },
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   assetName: {
     fontSize: 18,
     lineHeight: 20,
-    fontFamily: 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
     fontWeight: '900'
   },

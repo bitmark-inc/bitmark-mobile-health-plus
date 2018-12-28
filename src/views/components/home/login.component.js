@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   title: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir light',
+    fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
     color: 'rgba(0, 0, 0, 0.87)'
   },
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
   },
   recoveryPhraseIndex: {
     width: convertWidth(39),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
+    fontFamily: 'AvenirNextW1G-Light',
     fontWeight: '300',
     fontSize: 10,
     color: 'rgba(0, 0, 0, 0.87)'
@@ -500,15 +500,15 @@ const styles = StyleSheet.create({
   },
   introductionTitle: {
     marginTop: 25,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
-    fontSize: 24,
+    fontSize: 23,
     fontWeight: '900',
     textAlign: 'left',
   },
   introductionDescription: {
     marginTop: 10,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir book',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontWeight: '300',
     fontSize: 14,
     lineHeight: 20,
@@ -569,13 +569,13 @@ const styles = StyleSheet.create({
     color: 'blue',
   },
   buttonNext: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
     color: '#FF003C',
     marginLeft: 15,
   },
   buttonNextText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontWeight: '900',
     fontSize: 16,
     color: '#FF003C'

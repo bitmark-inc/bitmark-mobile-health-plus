@@ -541,11 +541,6 @@ const styles = StyleSheet.create({
     height: 32,
     resizeMode: 'contain'
   },
-  cardListContainer: {
-    marginTop: 60,
-    width: '100%',
-    flex: 1,
-  },
 
   cardItem: {
     position: 'absolute',

@@ -83,6 +83,7 @@ export class BitmarkDetailComponent extends Component {
     let bitmarkType = this.props.bitmarkType;
     let tags = this.state.tags;
 
+    console.log('bitmark:', bitmark);
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <SafeAreaView style={[styles.bodySafeView]}>
@@ -124,9 +125,16 @@ export class BitmarkDetailComponent extends Component {
                     }
                   </TouchableOpacity>
 
+                  {/*Multiple files icon*/}
                   {bitmark.thumbnail && bitmark.thumbnail.multiple &&
-                  <Image style={styles.multipleFilesIcon} source={require('assets/imgs/multiple-files-icon.png')} />
+                    <Image style={styles.multipleFilesIcon} source={require('assets/imgs/multiple-files-icon.png')} />
                   }
+
+                  {/*Multiple files number*/}
+                  {bitmark.thumbnail && bitmark.thumbnail.multiple && bitmark.thumbnail.numberOfFiles &&
+                    <Text style={styles.multipleFilesText}>bitmark.thumbnail.numberOfFiles</Text>
+                  }
+
                 </View>
 
                 {/*TOP BAR*/}
@@ -281,11 +289,20 @@ const styles = StyleSheet.create({
     bottom: 15,
     right: 15,
   },
+  multipleFilesText: {
+    position: 'absolute',
+    width: 22,
+    height: 22,
+    bottom: 13,
+    right: 5,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontSize: 12,
+  },
   notesContainer: {
     marginTop: 25,
   },
   notesText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
+    fontFamily: 'AvenirNextW1G-Light',
     fontSize: 14,
   },
   tagsContainer:{
