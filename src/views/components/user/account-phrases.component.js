@@ -376,7 +376,7 @@ export class AccountPhraseComponent extends Component {
                 <View style={styles.dotArea}>
                   <View style={styles.activeDot} />
                   <View style={styles.normalDot} />
-                  <View style={styles.normalDot} />
+                  {!this.props.isLogout && <View style={styles.normalDot} />}
                 </View>
                 <TouchableOpacity style={styles.bottomButton} onPress={Actions.pop}>
                   <Text style={styles.bottomButtonText}>CANCEL</Text>
@@ -464,9 +464,13 @@ export class AccountPhraseComponent extends Component {
 
                   {/*BOTTOM AREA*/}
                   <View style={[styles.bottomArea]}>
-                    <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-3.png')} />
+                    <View style={styles.dotArea}>
+                      <View style={styles.normalDot} />
+                      <View style={styles.activeDot} />
+                      <View style={styles.normalDot} />
+                    </View>
 
-                    <TouchableOpacity style={[styles.buttonNext]} disabled={this.state.step === STEPS.init} onPress={Actions.pop}>
+                    <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
                       <Text style={styles.buttonNextText}>GO BACK</Text>
                     </TouchableOpacity>
                   </View>
@@ -626,7 +630,11 @@ export class AccountPhraseComponent extends Component {
 
                   {/*BOTTOM AREA*/}
                   <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
-                    <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-4.png')} />
+                    <View style={styles.dotArea}>
+                      <View style={styles.normalDot} />
+                      {!this.props.isLogout && <View style={styles.normalDot} />}
+                      <View style={styles.activeDot} />
+                    </View>
 
                     {/*Buttons*/}
                     <View style={{ flexDirection: 'row' }}>
