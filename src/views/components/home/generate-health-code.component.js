@@ -362,7 +362,10 @@ export class GenerateHealthCodeComponent extends Component {
                                   return (
                                     <View style={styles.recoveryPhraseSet}>
                                       <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                      <View style={[styles.phraseWordContainer]}>
+                                      <View style={[styles.phraseWordContainer, {
+                                        backgroundColor: '#FFFFFF',
+                                        borderWidth: 1,
+                                        borderColor: '#FFFFFF'}]}>
                                         {item.characters.map((character, index) => <Text style={[styles.character]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
                                       </View>
                                     </View>
@@ -378,7 +381,10 @@ export class GenerateHealthCodeComponent extends Component {
                                   return (
                                     <View style={styles.recoveryPhraseSet}>
                                       <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                                      <View style={[styles.phraseWordContainer]}>
+                                      <View style={[styles.phraseWordContainer, {
+                                        backgroundColor: '#FFFFFF',
+                                        borderWidth: 1,
+                                        borderColor: '#FFFFFF'}]}>
                                         {item.characters.map((character, index) => <Text style={[styles.character]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
                                       </View>
                                     </View>
@@ -503,7 +509,10 @@ export class GenerateHealthCodeComponent extends Component {
                                                       onPress={() => this.setState({ selectingIndex: index })}
                                     >
                                       <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                      <View style={[styles.phraseWordContainer]}>
+                                      <View style={[styles.phraseWordContainer, item.characters ? {
+                                        backgroundColor: '#FFFFFF',
+                                        borderWidth: 1,
+                                        borderColor: '#FFFFFF'} : {}]}>
                                         {/*Selected word*/}
                                         {item.characters && item.characters.map((character, index) => <Text style={[styles.character,  {color: item.selected ? '#828282' : '#FF4444'}]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
                                         {/*Input word*/}
@@ -541,7 +550,10 @@ export class GenerateHealthCodeComponent extends Component {
                                                       onPress={() => this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) })}
                                     >
                                       <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                                      <View style={[styles.phraseWordContainer]}>
+                                      <View style={[styles.phraseWordContainer, item.characters ? {
+                                        backgroundColor: '#FFFFFF',
+                                        borderWidth: 1,
+                                        borderColor: '#FFFFFF'} : {}]}>
                                         {/*Selected word*/}
                                         {item.characters && item.characters.map((character, index) => <Text style={[styles.character,  {color: item.selected ? '#828282' : '#FF4444'}]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
                                         {/*Input word*/}
@@ -732,6 +744,7 @@ const styles = StyleSheet.create({
   character: {
     flex: 1,
     height: 20,
+    borderRadius: 2,
     borderWidth: 1,
     borderColor: '#FFFFFF',
     backgroundColor: '#F1F1F1',
@@ -739,7 +752,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Andale Mono',
     fontSize: 13,
     lineHeight: 15,
-    color: 'rgba(0, 0, 0, 0.6)'
+    color: 'rgba(0, 0, 0, 0.6)',
   },
   recoveryPhraseSet: {
     flex: 1,
