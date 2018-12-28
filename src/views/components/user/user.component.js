@@ -284,12 +284,12 @@ class PrivateUserComponent extends Component {
 
     if (this.props.healthAssetBitmarks.length === 0 && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
       cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD, top: accumulatedTop });
-      accumulatedTop += 100;
+      accumulatedTop += 110;
     }
 
     if (isCurrentUser && !CacheData.userInformation.activeHealthDataAt && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
       cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA, top: accumulatedTop });
-      accumulatedTop += 100;
+      accumulatedTop += 110;
     }
 
     if (this.props.healthAssetBitmarks.length) {
@@ -414,7 +414,7 @@ class PrivateUserComponent extends Component {
                     {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&
                       <TouchableOpacity onPress={Actions.getStart}>
                         <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                          cardHeader={'Automatically add health data'}
+                          cardHeader={'Learn about your health'}
                           cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
                           cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
                           isStickCard={true}
