@@ -284,12 +284,12 @@ class PrivateUserComponent extends Component {
 
     if (this.props.healthAssetBitmarks.length === 0 && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
       cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD, top: accumulatedTop });
-      accumulatedTop += 110;
+      accumulatedTop += 105;
     }
 
     if (isCurrentUser && !CacheData.userInformation.activeHealthDataAt && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
       cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA, top: accumulatedTop });
-      accumulatedTop += 110;
+      accumulatedTop += 105;
     }
 
     if (this.props.healthAssetBitmarks.length) {
@@ -434,7 +434,7 @@ class PrivateUserComponent extends Component {
                   <View style={{ flex: 1 }}></View>
 
                   {/*----FEED CARD LIST CONTAINER----*/}
-                  <View style={{ flexDirection: 'column', marginTop: 20, height: this.accumulatedTop }}>
+                  <View style={{ flexDirection: 'column', marginTop: 20, height: this.accumulatedTop + 20 }}>
                     {cardListData.map((card, index) => {
                       // ADD FIRST MEDICAL RECORD
                       if (card.type === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {

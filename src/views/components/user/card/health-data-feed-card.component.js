@@ -47,7 +47,6 @@ export class HealthDataFeedCardComponent extends React.Component {
 
         {/*BOTTOM BAR*/}
         <View style={[styles.cardBottomBar]}>
-          <Image style={styles.cardNextIcon} source={require('assets/imgs/options-icon.png')} />
         </View>
       </View>
     );
