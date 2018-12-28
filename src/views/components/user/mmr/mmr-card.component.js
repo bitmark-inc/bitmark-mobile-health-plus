@@ -68,7 +68,7 @@ class PrivateMMRCardComponent extends Component {
 
 const styles = StyleSheet.create({
   body: {
-    width: convertWidth(344), minHeight: 200,
+    width: '100%', minHeight: 200,
     borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
     backgroundColor: '#F4F2EE',
   },

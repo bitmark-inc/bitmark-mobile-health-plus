@@ -7,3 +7,4 @@ export * from './bitmark-internet-off.component';
 export * from './bitmark-legal.component';
 export * from './loading.component';
 export * from './shadow.component';
+export * from './bitmark-safe-view.component';

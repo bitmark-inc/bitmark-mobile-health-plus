@@ -214,6 +214,7 @@ export class MMRInformationComponent extends Component {
                       <DatePicker style={styles.mmrInformationValueInput}
                         date={this.state.mmrInformation.birthday ? moment(this.state.mmrInformation.birthday).toDate() : moment().toDate()}
                         onDateChange={(birthday) => this.updateMMRInformationState.bind(this)({ birthday: moment(birthday, 'DD|MM|YYYY').toDate() })}
+                        maxDate={moment().toDate()}
                         format="DD|MM|YYYY"
                         showIcon={false}
                         mode="date"

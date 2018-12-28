@@ -24,7 +24,7 @@ export class ShadowComponent extends Component {
 
 const styles = StyleSheet.create({
   body: {
-    shadowOffset: { width: 0, height: 3, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
+    shadowOffset: { width: 0, height: 1, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
   },
   bodyContent: {
     flex: 1,
