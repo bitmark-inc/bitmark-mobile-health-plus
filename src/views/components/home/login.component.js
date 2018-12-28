@@ -67,12 +67,6 @@ export class LoginComponent extends Component {
     this.keyboardDidHideListener.remove();
   }
 
-  // changeNumberPhraseWord() {
-  //   let numberPhraseWords = this.state.numberPhraseWords === 12 ? 24 : 12
-  //   this.setState({ numberPhraseWords });
-  //   this.doReset(numberPhraseWords);
-  // }
-
   onKeyboardDidShow(keyboardEvent) {
     let keyboardHeight = keyboardEvent.endCoordinates.height;
     this.setState({ keyboardHeight });
@@ -148,6 +142,7 @@ export class LoginComponent extends Component {
   }
   onSubmitWord(word) {
     let selectedIndex = this.state.selectedIndex;
+
     if (selectedIndex < 0) {
       return;
     }
@@ -164,7 +159,14 @@ export class LoginComponent extends Component {
         this.setState({ biggerList: inputtedWords });
       }
     }
-    this.selectedIndex((selectedIndex + 1) % this.state.numberPhraseWords);
+
+    if (word) {
+      if (this.state.status == statuses.done) {
+        this.doCheckPhraseWords();
+      } else {
+        this.selectedIndex((selectedIndex + 1) % this.state.numberPhraseWords);
+      }
+    }
   }
 
   doFilter(text) {
@@ -293,6 +295,7 @@ export class LoginComponent extends Component {
                                           }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
                                           value={item.word.toUpperCase()}
+                                          returnKeyType={'done'}
                                           autoCorrect={false}
                                           autoCapitalize="none"
                                           onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
@@ -323,6 +326,7 @@ export class LoginComponent extends Component {
                                           }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
                                           value={item.word.toUpperCase()}
+                                          returnKeyType={'done'}
                                           autoCorrect={false}
                                           autoCapitalize="none"
                                           onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
@@ -383,9 +387,6 @@ export class LoginComponent extends Component {
                 }}
               />
             </View>}
-            <TouchableOpacity style={styles.doneButton} onPress={this.doCheckPhraseWords.bind(this)} disabled={this.state.status !== statuses.done}>
-              <Text style={[styles.doneButtonText, { color: this.state.status === statuses.done ? '#0060F2' : 'gray' }]}>{i18n.t('LoginComponent_doneButtonText')}</Text>
-            </TouchableOpacity>
           </Animated.View>}
       </SafeAreaView>
     );
@@ -488,6 +489,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     paddingLeft: 5,
     paddingRight: 5,
+    borderRadius: 3,
   },
   introductionTextArea: {
     marginTop: 20,
@@ -506,7 +508,7 @@ const styles = StyleSheet.create({
   },
   introductionDescription: {
     marginTop: 10,
-    fontFamily: 'AvenirNextW1G-Bold',
+    fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
@@ -548,7 +550,7 @@ const styles = StyleSheet.create({
     color: '#0060F2',
   },
   selectionList: {
-    width: convertWidth(200),
+    flex: 1,
     height: 30,
     marginLeft: 20,
     marginRight: 20,

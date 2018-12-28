@@ -515,6 +515,7 @@ export class GenerateHealthCodeComponent extends Component {
                                           }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
                                           value={item.word.toUpperCase()}
+                                          returnKeyType={'done'}
                                           autoCorrect={false}
                                           autoCapitalize="none"
                                           onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
@@ -552,6 +553,7 @@ export class GenerateHealthCodeComponent extends Component {
                                           }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
                                           value={item.word.toUpperCase()}
+                                          returnKeyType={'done'}
                                           autoCorrect={false}
                                           autoCapitalize="none"
                                           onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
@@ -763,6 +765,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     paddingLeft: 5,
     paddingRight: 5,
+    borderRadius: 3,
   },
   infoLinkTextContainer: {
     flexDirection: 'row',
@@ -832,6 +835,22 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 8,
     backgroundColor: '#EEEFF1',
+  },
+  prevButton: {
+    marginLeft: 10,
+  },
+  prevButtonImage: {
+    width: convertWidth(16),
+    height: convertWidth(16),
+    resizeMode: 'contain'
+  },
+  nextButton: {
+    marginLeft: 5,
+  },
+  nextButtonImage: {
+    width: convertWidth(16),
+    height: convertWidth(16),
+    resizeMode: 'contain'
   },
   selectionList: {
     flex: 1,
