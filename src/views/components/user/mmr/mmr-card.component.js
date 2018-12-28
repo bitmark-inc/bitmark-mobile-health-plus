@@ -25,7 +25,7 @@ class PrivateMMRCardComponent extends Component {
     return (
       <ShadowComponent style={styles.body}>
         {!this.props.mmrInformation &&
-          <TouchableOpacity style={styles.bodyContent} onPress={() => this.props.onPress ? this.props.onPress() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
+          <TouchableOpacity style={[styles.bodyContent, { padding: convertWidth(16), }]} onPress={() => this.props.onPress ? this.props.onPress() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
             <Text style={styles.cardHeaderTitleText}>Personalize your vault</Text>
             <Text style={styles.cardContentDescription}>Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency. </Text>
             <View style={[styles.cardNextButton, { marginTop: 20 }]}>
