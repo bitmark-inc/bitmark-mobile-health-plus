@@ -8,6 +8,7 @@ import codePush from "react-native-code-push";
 import { MainComponent } from './main.component';
 import { DataProcessor } from 'src/processors';
 import { config } from 'src/configs';
+import { Sentry } from 'react-native-sentry';
 
 export class CodePushComponent extends React.Component {
   constructor(props) {
@@ -27,6 +28,11 @@ export class CodePushComponent extends React.Component {
       console.log('current package :', updateInfo);
     }).catch(error => {
       console.log('getCurrentPackage error :', error);
+    });
+    codePush.getUpdateMetadata().then((update) => {
+      if (update) {
+        Sentry.setVersion(update.appVersion + '-codepush:' + update.label);
+      }
     });
   }
 

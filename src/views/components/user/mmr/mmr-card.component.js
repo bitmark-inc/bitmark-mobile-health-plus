@@ -28,7 +28,7 @@ class PrivateMMRCardComponent extends Component {
           <TouchableOpacity style={styles.bodyContent} onPress={() => this.props.onPress ? this.props.onPress() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
             <Text style={styles.cardHeaderTitleText}>Personalize your vault</Text>
             <Text style={styles.cardContentDescription}>Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency. </Text>
-            <View style={[styles.cardNextButton, {marginTop: 20}]}>
+            <View style={[styles.cardNextButton, { marginTop: 20 }]}>
               <Image style={styles.cardNextButtonIcon} source={require('assets/imgs2/next_icon_grey.png')} />
             </View>
           </TouchableOpacity>
@@ -55,7 +55,7 @@ class PrivateMMRCardComponent extends Component {
               </View>
             </View>
             <View style={styles.cardNextButton}>
-              <TouchableOpacity style={{ padding: convertWidth(5) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, edit: !displaySeeMoreButton })}>
+              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, edit: !displaySeeMoreButton })}>
                 <Text style={styles.mmrInformationSeeMoreButtonText}>{displaySeeMoreButton ? 'SEE MORE' : 'EDIT'}</Text>
               </TouchableOpacity>
             </View>
@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
     backgroundColor: 'white',
-    padding: convertWidth(16),
   },
   cardHeaderTitleText: {
     fontFamily: 'Avenir Light', fontSize: 24, fontWeight: '900',
