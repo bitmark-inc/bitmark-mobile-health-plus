@@ -405,16 +405,11 @@ export class GenerateHealthCodeComponent extends Component {
                     </Text>
 
                     {/*GENERATE HEALTH CODE*/}
-                    {(this.state.step === STEPS.init) &&
+                    {(this.state.step === STEPS.init || this.state.step === STEPS.generated) &&
                     <TouchableOpacity style={[styles.button, {marginTop: 20}]} onPress={this.generatePhraseWords.bind(this)}>
                       <Text style={[styles.buttonText]}>GENERATE KEY PHRASE</Text>
-                    </TouchableOpacity>}
-
-                    {/*KEY PHRASE SET!*/}
-                    {(this.state.step === STEPS.generated) &&
-                    <TouchableOpacity style={[styles.button, {marginTop: 20, backgroundColor: 'rgba(0, 0, 0, 0.12)'}]} disabled={true}>
-                      <Text style={[styles.buttonText, {color: '#000000', opacity: 0.4}]}>KEY PHRASE SET!</Text>
-                    </TouchableOpacity>}
+                    </TouchableOpacity>
+                    }
                   </View>
                 </View>
 
@@ -422,7 +417,7 @@ export class GenerateHealthCodeComponent extends Component {
                 <View style={[styles.bottomArea]}>
                   <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-3.png')} />
 
-                  <TouchableOpacity style={[styles.buttonNext]} onPress={() => {if (this.state.step === STEPS.generated) {this.goToTest.bind(this)(this.state.phraseWords)}}}>
+                  <TouchableOpacity style={[styles.buttonNext]} disabled={this.state.step === STEPS.init} onPress={() => {if (this.state.step === STEPS.generated) {this.goToTest.bind(this)(this.state.phraseWords)}}}>
                     <Text style={[styles.buttonNextText, { opacity: this.state.step === STEPS.init ? 0.3: 1 }]}>NEXT</Text>
                   </TouchableOpacity>
                 </View>
