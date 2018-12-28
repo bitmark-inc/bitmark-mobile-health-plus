@@ -253,6 +253,7 @@ export class GenerateHealthCodeComponent extends Component {
         }
 
         if (testingResult) {
+          Keyboard.dismiss();
           this.loginWithPhraseWords();
         }
 
@@ -585,11 +586,7 @@ export class GenerateHealthCodeComponent extends Component {
                     <TouchableOpacity style={[styles.buttonNext]} onPress={this.resetTest.bind(this)}>
                       <Text style={[styles.buttonNextText]}>GO BACK</Text>
                     </TouchableOpacity>
-
-                    {/*Next*/}
-                    <TouchableOpacity style={[styles.buttonNext]} disable={this.state.testingResult !== true} onPress={() => {if (this.state.testingResult === true) {this.setState({step: STEPS.writeDownPhraseWordsInform})}}}>
-                      <Text style={[styles.buttonNextText, { opacity: this.state.testingResult === true ? 1 : 0.3 }]}>NEXT</Text>
-                    </TouchableOpacity></View>
+                  </View>
                 </View>
               </View>
             </View>
