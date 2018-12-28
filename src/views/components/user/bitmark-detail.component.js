@@ -116,7 +116,7 @@ export class BitmarkDetailComponent extends Component {
                     {bitmarkType !== 'bitmark_health_issuance' ? (
                       <Image style={cardStyles.cardImage} source={require('assets/imgs/health-data-thumbnail.png')} />
                     ) : (
-                      bitmark.thumbnail ? (
+                      (bitmark.thumbnail && bitmark.thumbnail.path) ? (
                         <Image style={cardStyles.cardImage} source={{ uri: bitmark.thumbnail.path }} />
                       ) : (
                         <Image style={cardStyles.cardImage} source={require('assets/imgs/unknown-file-thumbnail.png')} />

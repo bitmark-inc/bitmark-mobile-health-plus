@@ -30,7 +30,7 @@ export class MedicalRecordCardComponent extends React.Component {
       <View style={[styles.cardContainer]}>
         {/*IMAGE*/}
         <View style={[styles.cardImageContainer]}>
-          {bitmark.thumbnail ? (
+          {(bitmark.thumbnail && bitmark.thumbnail.path) ? (
             <Image style={styles.cardImage} source={{ uri: bitmark.thumbnail.path }} />
           ) : (
             <Image style={styles.cardImage} source={require('assets/imgs/unknown-file-thumbnail.png')} />
