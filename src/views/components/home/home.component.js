@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: convertWidth(16),
-    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : convertWidth(16),
+    paddingTop: convertWidth(16),
   },
 
   bodyContent: {

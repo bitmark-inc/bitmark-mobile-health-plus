@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : convertWidth(16),
+    paddingTop: convertWidth(16),
     flex: 1,
   },
   bodyContent: {

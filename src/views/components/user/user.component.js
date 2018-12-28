@@ -446,7 +446,7 @@ class PrivateUserComponent extends Component {
                       // ADD FIRST MEDICAL RECORD
                       if (card.type === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
                         return (
-                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD }) }}>
+                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD }) }}>
                             <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}
                               cardHeader={'Add first medical record'}
                             />
@@ -457,7 +457,7 @@ class PrivateUserComponent extends Component {
                       // AUTOMATICALLY ADD HEALTH DATA
                       if (card.type === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
                         return (
-                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA }) }}>
+                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA }) }}>
                             <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
                               cardHeader={'Learn about your health'}
                             />
@@ -468,7 +468,7 @@ class PrivateUserComponent extends Component {
                       // MEDICAL_RECORD
                       if (card.type === STICK_CARD_TYPES.MEDICAL_RECORD) {
                         return (
-                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.MEDICAL_RECORD, stickMedicalRecord: card }) }}>
+                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.MEDICAL_RECORD, stickMedicalRecord: card }) }}>
                             <MedicalRecordFeedCardComponent bitmark={card.data} />
                           </TouchableOpacity>
                         );
@@ -477,7 +477,7 @@ class PrivateUserComponent extends Component {
                       // HEALTH_DATA
                       if (card.type === STICK_CARD_TYPES.HEALTH_DATA) {
                         return (
-                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickHealthData: card }) }}>
+                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickHealthData: card }) }}>
                             <HealthDataFeedCardComponent bitmark={card.data} />
                           </TouchableOpacity>
                         );
@@ -501,7 +501,7 @@ class PrivateUserComponent extends Component {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    paddingTop: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : convertWidth(16),
+    paddingTop: convertWidth(16),
   },
   searchInputContainer: {
     flexDirection: 'row',

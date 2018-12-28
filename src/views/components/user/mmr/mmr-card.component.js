@@ -125,10 +125,11 @@ const StoreMMRCardComponent = connect(
 )(PrivateMMRCardComponent);
 
 export class MMRCardComponent extends Component {
-  propTypes = {
+  static propTypes = {
     displayFromUserScreen: PropTypes.bool,
     onPress: PropTypes.func
   }
+
   render() {
     return (
       <Provider store={MMRInformationStore}>
