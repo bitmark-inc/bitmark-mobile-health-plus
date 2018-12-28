@@ -50,6 +50,7 @@ export class GetStartedCardComponent extends React.Component {
 const styles = StyleSheet.create({
   cardContainer: {
     width: '100%',
+    height: 255,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     backgroundColor: '#F4F2EE',
@@ -82,6 +83,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   cardContent: {
+    flex: 1,
     marginTop: 16,
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
