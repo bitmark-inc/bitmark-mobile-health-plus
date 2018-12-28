@@ -300,7 +300,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
-    fontWeight: '900'
   },
   bitmarkStatus: {
     fontSize: 14,

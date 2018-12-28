@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 24,
     lineHeight: 36,
-    fontWeight: '900',
     color: 'rgba(0, 0, 0, 0.87)'
   },
   cardText: {

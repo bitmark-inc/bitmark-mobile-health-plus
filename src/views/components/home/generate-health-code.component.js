@@ -686,7 +686,6 @@ const styles = StyleSheet.create({
   testResultMessage: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 10,
-    fontWeight: '900',
     color: '#FFFFFF'
   },
   introductionTextArea: {
@@ -701,14 +700,12 @@ const styles = StyleSheet.create({
     marginTop: 25,
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
-    fontSize: 23,
-    fontWeight: '900',
+    fontSize: 24,
     textAlign: 'left',
   },
   introductionDescription: {
     marginTop: 10,
     fontFamily: 'AvenirNextW1G-Regular',
-    fontWeight: '200',
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
@@ -757,7 +754,6 @@ const styles = StyleSheet.create({
   recoveryPhraseIndex: {
     width: convertWidth(39),
     fontFamily: 'AvenirNextW1G-Light',
-    fontWeight: '300',
     fontSize: 10,
     color: 'rgba(0, 0, 0, 0.87)'
   },
@@ -795,7 +791,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
     fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 14,
-    fontWeight: '900',
     color: 'rgba(0, 0, 0, 0.6)',
   },
   writeDownPhraseWordsInformText: {
@@ -817,7 +812,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 14,
-    fontWeight: '900',
     color: 'white',
   },
   buttonNext: {
@@ -828,7 +822,6 @@ const styles = StyleSheet.create({
   },
   buttonNextText: {
     fontFamily: 'AvenirNextW1G-Bold',
-    fontWeight: '900',
     fontSize: 16,
     color: '#FF003C'
   },

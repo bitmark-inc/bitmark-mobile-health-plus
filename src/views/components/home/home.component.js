@@ -193,14 +193,12 @@ const styles = StyleSheet.create({
     marginTop: 25,
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
-    fontSize: 23,
-    fontWeight: '900',
+    fontSize: 24,
     textAlign: 'left',
   },
   introductionDescription: {
     marginTop: 15,
     fontFamily: 'AvenirNextW1G-Regular',
-    fontWeight: '200',
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
@@ -217,7 +215,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'AvenirNextW1G-Bold',
-    fontWeight: '900',
     fontSize: 16,
   },
   linkButtonText: {

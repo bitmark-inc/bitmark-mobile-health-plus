@@ -476,7 +476,6 @@ const styles = StyleSheet.create({
   recoveryPhraseIndex: {
     width: convertWidth(39),
     fontFamily: 'AvenirNextW1G-Light',
-    fontWeight: '300',
     fontSize: 10,
     color: 'rgba(0, 0, 0, 0.87)'
   },
@@ -503,13 +502,11 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 23,
-    fontWeight: '900',
     textAlign: 'left',
   },
   introductionDescription: {
     marginTop: 10,
     fontFamily: 'AvenirNextW1G-Bold',
-    fontWeight: '300',
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
@@ -549,7 +546,6 @@ const styles = StyleSheet.create({
   doneButtonText: {
     fontSize: 16,
     color: '#0060F2',
-    fontWeight: '600',
   },
   selectionList: {
     width: convertWidth(200),
@@ -576,7 +572,6 @@ const styles = StyleSheet.create({
   },
   buttonNextText: {
     fontFamily: 'AvenirNextW1G-Bold',
-    fontWeight: '900',
     fontSize: 16,
     color: '#FF003C'
   },
