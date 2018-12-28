@@ -1,21 +1,34 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList,
+  Keyboard,
+  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList, TextInput, KeyboardAvoidingView, Animated
 } from 'react-native';
 
 import PropTypes from 'prop-types';
 
 import { Actions } from 'react-native-router-flux';
 import { AppProcessor, EventEmitterService } from 'src/processors';
-import { convertWidth } from 'src/utils';
-import { config, constants } from 'src/configs';
+import { convertWidth, dictionaryPhraseWords } from 'src/utils';
+import { config, constants, } from 'src/configs';
+import { ShadowComponent, ShadowTopComponent } from 'src/views/commons';
 
 const STEPS = {
   warning: 1,
   phraseWord: 2,
   testing: 3,
 }
+
+const NUMBER_CHARACTERS_OF_PHRASE_WORD = 8;
+
+const fillUpArrayByEmptyString = (word, length) => {
+  let arrayLength = word.length;
+  for (let i = 0; i < length - arrayLength; i++) {
+    word += ' ';
+  }
+
+  return word;
+};
 
 export class AccountPhraseComponent extends Component {
   static propTypes = {
@@ -28,12 +41,46 @@ export class AccountPhraseComponent extends Component {
       smallerList: [],
       biggerList: [],
       phraseWords: [],
-      randomWords: [],
-      selectingIndex: -1,
-      remainIndex: [],
       testingResult: null,
+      testInputs: {},
+      selectedIndex: -1,
+      keyboardExternalOpacity: new Animated.Value(0),
+      keyboardExternalDataSource: dictionaryPhraseWords,
     }
   }
+
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  onKeyboardDidShow(keyboardEvent) {
+    let keyboardHeight = keyboardEvent.endCoordinates.height - (config.isIPhoneX ? 35 : 0);
+    this.setState({ keyboardHeight });
+
+    let listAnimations = [];
+    listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
+      toValue: 1,
+      duration: 200,
+    }));
+    Animated.parallel(listAnimations).start();
+  }
+
+  onKeyboardDidHide() {
+    this.setState({ keyboardHeight: 0 });
+    let listAnimations = [];
+    listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
+      toValue: 0,
+      duration: 200,
+    }));
+    Animated.parallel(listAnimations).start();
+  }
+
   accessPhraseWords() {
     AppProcessor.doGetCurrentAccount().then((userInfo) => {
       if (!userInfo) {
@@ -45,11 +92,11 @@ export class AccountPhraseComponent extends Component {
       let phraseWords = [];
       for (let index in userInfo.phraseWords) {
         if (index < (userInfo.phraseWords.length / 2)) {
-          smallerList.push({ word: userInfo.phraseWords[index] });
+          smallerList.push({ word: fillUpArrayByEmptyString(userInfo.phraseWords[index], NUMBER_CHARACTERS_OF_PHRASE_WORD) });
         } else {
-          biggerList.push({ word: userInfo.phraseWords[index] });
+          biggerList.push({ word: fillUpArrayByEmptyString(userInfo.phraseWords[index], NUMBER_CHARACTERS_OF_PHRASE_WORD) });
         }
-        phraseWords.push({ index, word: userInfo.phraseWords[index] });
+        phraseWords.push({ index, word: fillUpArrayByEmptyString(userInfo.phraseWords[index], NUMBER_CHARACTERS_OF_PHRASE_WORD) });
       }
       if (this.props.isLogout) {
         this.goToTest(phraseWords);
@@ -65,8 +112,7 @@ export class AccountPhraseComponent extends Component {
     }));
   }
   goToTest(phraseWords) {
-    console.log('phraseWords :', phraseWords);
-    let numberWorldFilled = phraseWords.length - 4;
+    let numberWorldFilled = phraseWords.length - 3;
     let countPreFill = 0;
     let smallerList = [];
     let biggerList = [];
@@ -89,97 +135,76 @@ export class AccountPhraseComponent extends Component {
         countPreFill++;
       }
     }
-    let randomWords = [];
-    let remainIndex = [];
-    for (let index = 0; index < phraseWords.length; index++) {
-      if (!phraseWords[index].selected) {
-        randomWords.push({ word: phraseWords[index].word });
-        remainIndex.push(index);
-      }
-    }
-    randomWords = randomWords.sort((a, b) => a.word < b.word ? -1 : (a.word > b.word ? 1 : 0));
 
-    randomWords.forEach(item => item.selected = null);
     smallerList.forEach(item => item.word = item.selected ? item.word : '');
     biggerList.forEach(item => item.word = item.selected ? item.word : '');
 
     this.setState({
       step: STEPS.testing,
-      randomWords,
       phraseWords,
       smallerList,
       biggerList,
-      remainIndex,
-      selectingIndex: remainIndex[0],
     });
   }
-  selectRandomWord(item) {
-    let randomWords = this.state.randomWords;
-    let remainIndex = this.state.remainIndex;
 
-    for (let it of randomWords) {
-      if (!it.selected && it.word === item.word) {
-        it.selected = true;
+  filterTest(text) {
+    text = text || '';
+    let keyboardExternalDataSource = dictionaryPhraseWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
+    this.setState({ keyboardExternalDataSource });
+  }
+
+  testInputText(index, text) {
+    let testInputs = this.state.testInputs;
+    testInputs[index] = text;
+    this.setState({ testInputs });
+    this.filterTest(text);
+  }
+
+  onFocus(index) {
+    console.log('onFocus :', index);
+    this.setState({ selectedIndex: index, testingResult: null });
+    this.filterTest.bind(this)(this.state.testInputs[index]);
+  }
+
+  testPhrases(testInputs) {
+    let indexInputs = Object.keys(testInputs);
+    if (indexInputs.length === 3) {
+      let inputtedWords = [];
+      this.state.smallerList.concat(this.state.biggerList).forEach(item => inputtedWords.push(item.word));
+      for (let index of indexInputs) {
+        inputtedWords[index] = testInputs[index];
       }
+      inputtedWords.forEach(item => item = item.toLowerCase().trim());
+      AppProcessor.doCheckPhraseWords(inputtedWords).then(() => {
+        this.setState({ testingResult: true });
+      }).catch(() => {
+        this.setState({ testingResult: false });
+      });
     }
+  }
 
-    let smallerList = this.state.smallerList;
-    let biggerList = this.state.biggerList;
-    let selectingIndex = this.state.selectingIndex;
-    if (selectingIndex < (this.state.phraseWords.length / 2)) {
-      smallerList[selectingIndex].word = item.word;
-    } else {
-      biggerList[selectingIndex - (this.state.phraseWords.length / 2)].word = item.word;
+  onSubmitWord(word) {
+    let selectedIndex = this.state.selectedIndex;
+    if (selectedIndex >= 0) {
+      let testInputs = this.state.testInputs;
+      testInputs[selectedIndex] = word;
+      this.setState({ testInputs });
+      this.testPhrases(testInputs);
     }
-
-    let testingResult = null;
-    if (remainIndex.length === 1) {
-      testingResult = true;
-
-      for (let index = 0; index < this.state.phraseWords.length; index++) {
-        if ((index < (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== smallerList[index].word) ||
-          (index >= (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== biggerList[index - (this.state.phraseWords.length / 2)].word)) {
-          testingResult = false;
-          console.log('testingResult  false :', index);
-          break;
-        }
-      }
-    } else {
-      let tempIndex = remainIndex.findIndex(id => id === selectingIndex);
-      selectingIndex = remainIndex[(tempIndex + 1) % remainIndex.length];
-      remainIndex.splice(tempIndex, 1);
-    }
-    this.setState({ randomWords, smallerList, biggerList, remainIndex, selectingIndex, testingResult });
   }
 
   resetTest() {
-    let randomWords = this.state.randomWords;
-    let smallerList = this.state.smallerList;
-    let biggerList = this.state.biggerList;
-
-    randomWords.forEach(item => item.selected = null);
-    smallerList.forEach(item => item.word = item.selected ? item.word : '');
-    biggerList.forEach(item => item.word = item.selected ? item.word : '');
-    let remainIndex = [];
-    for (let index = 0; index < this.state.phraseWords.length; index++) {
-      if (!this.state.phraseWords[index].selected) {
-        remainIndex.push(index);
-      }
-    }
     this.setState({
       testingResult: null,
-      randomWords,
-      smallerList,
-      biggerList,
-      remainIndex,
-      selectingIndex: remainIndex[0],
+      testInputs: {},
+      selectedIndex: -1,
     });
   }
 
   doLogout() {
     AppProcessor.doLogout().then((result) => {
       if (result) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {indicator: true});
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { indicator: true });
       }
     }).catch(error => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
@@ -192,44 +217,45 @@ export class AccountPhraseComponent extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
 
-
-            {this.state.step === STEPS.warning && <View style={{ flex: 1 }}>
+            {this.state.step === STEPS.warning && <ShadowComponent style={{ flex: 1, }}>
+              <ShadowTopComponent style={{ height: 40 }} contentStyle={styles.titleArea}>
+                <Text style={styles.titleText}>WARNING</Text>
+                <Image style={styles.warningIcon} source={require('assets/imgs2/warning_icon.png')} />
+              </ShadowTopComponent>
               <ScrollView style={styles.content}>
-                <View style={styles.titleArea}>
-                  <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1') : i18n.t('AccountPhraseComponent_titleText3')).toUpperCase()}</Text>
-                  <TouchableOpacity onPress={Actions.pop}>
-                    <Image style={styles.titleBackIcon} source={require('assets/imgs/back_icon_red.png')} />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.warningIconArea}>
-                  <Image style={styles.warningIcon} source={require('assets/imgs/warning_icon.png')} />
-                </View>
-                {!this.props.isLogout && <Text style={styles.warningMessage}>
-                  {i18n.t('AccountPhraseComponent_warningMessage1')}
-                </Text>}
-                {this.props.isLogout && <Text style={styles.warningMessage}>
-                  {i18n.t('AccountPhraseComponent_warningMessage2')}
-                </Text>}
+                {!this.props.isLogout && <View style={styles.warningArea}>
+                  <Text style={styles.warningTitle}>View your vault key phrase.</Text>
+                  {/* <Text style={styles.warningTitle}>{i18n.t('AccountPhraseComponent_warningTitle1')}</Text> */}
+                  <Text style={styles.warningMessage}>{i18n.t('AccountPhraseComponent_warningMessage1')}</Text>
+                </View>}
+                {this.props.isLogout && <View style={styles.warningArea}>
+                  <Text style={styles.warningTitle}>Lock your vault.</Text>
+                  {/* <Text style={styles.warningTitle}>{i18n.t('AccountPhraseComponent_warningTitle2')}</Text> */}
+                  <Text style={styles.warningMessage}>{i18n.t('AccountPhraseComponent_warningMessage2')}</Text>
+                </View>}
               </ScrollView>
-
               <View style={styles.bottomButtonArea}>
+                <View style={styles.dotArea}>
+                  <View style={styles.activeDot} />
+                  <View style={styles.normalDot} />
+                  <View style={styles.normalDot} />
+                </View>
+                <TouchableOpacity style={styles.bottomButton} onPress={Actions.pop}>
+                  <Text style={styles.bottomButtonText}>CANCEL</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhraseWords.bind(this)}>
-                  <Text style={styles.bottomButtonText}>{i18n.t('AccountPhraseComponent_bottomButtonText1')}</Text>
+                  <Text style={styles.bottomButtonText}>NEXT</Text>
                 </TouchableOpacity>
               </View>
-            </View>}
+            </ShadowComponent>}
 
-            {this.state.step === STEPS.phraseWord && <View style={{ flex: 1 }}>
-              <ScrollView style={styles.content}>
-                <View style={styles.titleArea}>
-                  <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1') : i18n.t('AccountPhraseComponent_titleText3')).toUpperCase()}</Text>
-                  <TouchableOpacity onPress={Actions.pop}>
-                    <Image style={styles.titleBackIcon} source={require('assets/imgs/back_icon_red.png')} />
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.phraseWordMessage}>
-                  {i18n.t('AccountPhraseComponent_phraseWordMessage1')}
-                </Text>
+            {this.state.step === STEPS.phraseWord && <ShadowComponent style={{ flex: 1 }}>
+              <View style={[styles.titleArea, { backgroundColor: '#F4F2EE', }]}>
+                <Text style={styles.titleText}>BITMARK HEALTH</Text>
+                <Image style={styles.warningIcon} source={require('assets/imgs2/health_app_icon.png')} />
+              </View>
+
+              <ScrollView style={styles.content} contentContainerStyle={{ flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, paddingBottom: 20 }}>
                 <View style={styles.phraseWordsArea}>
                   <FlatList data={this.state.smallerList}
                     keyExtractor={(item, index) => index + ''}
@@ -239,7 +265,11 @@ export class AccountPhraseComponent extends Component {
                       return (
                         <View style={styles.recoveryPhraseSet}>
                           <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                          <Text style={styles.recoveryPhraseWord}>{item.word}</Text>
+                          <View style={styles.recoveryPhraseValue}>
+                            {item.word.split('').map((char, cIndex) =>
+                              <Text key={cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
+                            )}
+                          </View>
                         </View>
                       )
                     }}
@@ -253,126 +283,153 @@ export class AccountPhraseComponent extends Component {
                       return (
                         <View style={styles.recoveryPhraseSet}>
                           <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                          <Text style={styles.recoveryPhraseWord}>{item.word}</Text>
+                          <View style={styles.recoveryPhraseValue}>
+                            {item.word.split('').map((char, cIndex) =>
+                              <Text key={cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
+                            )}
+                          </View>
                         </View>
                       )
                     }}
                   />
                 </View>
+                <TouchableOpacity style={styles.infoArea} >
+                  <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
+                  <Text style={[styles.infoLinkText, { marginLeft: 5 }]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
+                </TouchableOpacity>
+                <Text style={styles.vaultTitle}>Your vault key phrase</Text>
+                <Text style={styles.vaultMessage}>A {this.state.phraseWords.length}-word phrase that only you know.</Text>
+                <TouchableOpacity style={styles.testButton} onPress={() => this.goToTest.bind(this)(this.state.phraseWords)}>
+                  <Text style={styles.testButtonText}>{'TEST YOUR key phrase'.toUpperCase()}</Text>
+                </TouchableOpacity>
               </ScrollView>
 
+
               <View style={styles.bottomButtonArea}>
-                {!this.props.isLogout && <TouchableOpacity style={[styles.bottomButton, { borderWidth: 1, borderColor: '#FF4444', backgroundColor: 'white', }]} onPress={() => this.goToTest.bind(this)(this.state.phraseWords)}>
-                  <Text style={[styles.bottomButtonText, { color: '#FF4444' }]}>{i18n.t('AccountPhraseComponent_bottomButtonText2').toUpperCase()}</Text>
+                <View style={styles.dotArea}>
+                  <View style={styles.normalDot} />
+                  <View style={styles.activeDot} />
+                  <View style={styles.normalDot} />
+                </View>
+                <TouchableOpacity style={styles.bottomButton} onPress={Actions.pop}>
+                  <Text style={styles.bottomButtonText}>GO BACK</Text>
+                </TouchableOpacity>
+              </View>
+
+            </ShadowComponent>}
+
+            {this.state.step === STEPS.testing && <ShadowComponent style={{ flex: 1 }}>
+              {this.state.testingResult === null && <View style={[styles.titleArea, { backgroundColor: '#F4F2EE', }]}>
+                <Text style={styles.titleText}>BITMARK HEALTH</Text>
+                <Image style={styles.warningIcon} source={require('assets/imgs2/health_app_icon.png')} />
+              </View>}
+              {this.state.testingResult === false && <View style={[styles.titleArea, { backgroundColor: '#FF003C', }]}>
+                <Text style={styles.titleText}>WRONG COMBINATION</Text>
+              </View>}
+              {this.state.testingResult === true && <View style={[styles.titleArea, { backgroundColor: '#0060F2', }]}>
+                <Text style={styles.titleText}>Correct combination</Text>
+                <Image style={styles.warningIcon} source={require('assets/imgs2/health_app_icon.png')} />
+              </View>}
+              <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }} >
+                <ScrollView style={styles.content} contentContainerStyle={{ flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, paddingBottom: 20 }}>
+                  <View style={styles.phraseWordsArea}>
+                    <FlatList data={this.state.smallerList}
+                      keyExtractor={(item, index) => index + ''}
+                      scrollEnabled={false}
+                      extraData={this.state}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <View style={[styles.recoveryPhraseSet,]}>
+                            <Text style={styles.recoveryPhraseIndex}>{index + 1}</Text>
+                            {!!item.word && <View style={[styles.recoveryPhraseValue]}>
+                              {item.word.split('').map((char, cIndex) =>
+                                <Text key={cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
+                              )}
+                            </View>}
+                            {!item.word && <View style={[styles.recoveryPhraseValue, {
+                              borderWidth: 1,
+                              borderColor: this.state.testingResult === false ? '#FF003C' : '#0060F2'
+                            }]}>
+                              <TextInput style={styles.recoveryPhraseWordInput}
+                                onSubmitEditing={this.testPhrases.bind(this)(this.state.testInputs)}
+                                value={this.state.testInputs[index]}
+                                onFocus={() => this.onFocus.bind(this)(index)}
+                                onChangeText={(text) => this.testInputText.bind(this)(index, text)}
+                                ref={ref => this[`recoveryPhraseWordInput_${index}`] = ref}
+                                autoCapitalize='none'
+                              />
+                            </View>}
+                          </View>
+                        )
+                      }}
+                    />
+                    <FlatList data={this.state.biggerList}
+                      keyExtractor={(item, index) => index + ''}
+                      style={{ marginLeft: 9 }}
+                      scrollEnabled={false}
+                      extraData={this.state}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <View style={[styles.recoveryPhraseSet,]}>
+                            <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
+                            {!!item.word && <View style={[styles.recoveryPhraseValue]}>
+                              {item.word.split('').map((char, cIndex) =>
+                                <Text key={cIndex} style={styles.recoveryPhraseWord}>{char}</Text>
+                              )}
+                            </View>}
+                            {!item.word && <View style={[styles.recoveryPhraseValue, {
+                              borderWidth: 1,
+                              borderColor: this.state.testingResult === false ? '#FF003C' : '#0060F2'
+                            }]}>
+                              <TextInput style={styles.recoveryPhraseWordInput}
+                                onSubmitEditing={this.testPhrases.bind(this)(this.state.testInputs)}
+                                value={this.state.testInputs[(this.state.phraseWords.length / 2) + index]}
+                                onFocus={() => this.onFocus.bind(this)((this.state.phraseWords.length / 2) + index)}
+                                onChangeText={(text) => this.testInputText.bind(this)((this.state.phraseWords.length / 2) + index, text)}
+                                ref={ref => this[`recoveryPhraseWordInput_${(this.state.phraseWords.length / 2) + index}`] = ref}
+                                autoCapitalize='none'
+                              />
+                            </View>}
+                          </View>
+                        )
+                      }}
+                    />
+                  </View>
+                  <Text style={[styles.vaultTitle, { marginTop: 66, }]}>Test your key phrase, unlock your vault</Text>
+                  <Text style={styles.vaultMessage}>Enter the three remaining words.</Text>
+                </ScrollView>
+              </KeyboardAvoidingView>
+              <View style={styles.bottomButtonArea}>
+                <View style={styles.dotArea}>
+                  <View style={styles.normalDot} />
+                  <View style={styles.normalDot} />
+                  <View style={styles.activeDot} />
+                </View>
+                {this.state.testingResult !== true && <TouchableOpacity style={styles.bottomButton} onPress={Actions.pop}>
+                  <Text style={styles.bottomButtonText}>GO BACK {this.state.keyboardHeight}</Text>
                 </TouchableOpacity>}
-                <TouchableOpacity style={[styles.bottomButton, { marginTop: 10, }]} onPress={() => this.props.isLogout ? this.goToTest.bind(this)(this.state.phraseWords) : Actions.pop()}>
-                  <Text style={[styles.bottomButtonText,]}>{i18n.t('AccountPhraseComponent_bottomButtonText3').toUpperCase()}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>}
-
-            {this.state.step === STEPS.testing && <View style={{ flex: 1 }}>
-              <ScrollView style={styles.content} contentContainerStyle={{ flexDirection: 'column', justifyContent: 'center', flexGrow: 1, }}>
-                <View style={styles.titleArea}>
-                  <Text style={styles.titleText}>{(this.props.isLogout ? i18n.t('AccountPhraseComponent_titleText1') : i18n.t('AccountPhraseComponent_titleText2')).toUpperCase()}</Text>
-                  <TouchableOpacity onPress={Actions.pop}>
-                    <Text style={styles.titleCancelText}>{i18n.t('AccountPhraseComponent_titleCancelText')}</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <Text style={styles.phraseWordMessage}>
-                  {this.props.isLogout ? i18n.t('AccountPhraseComponent_phraseWordMessage2')
-                    : i18n.t('AccountPhraseComponent_phraseWordMessage3')}
-                </Text>
-                <View style={styles.phraseWordsArea}>
-                  <FlatList data={this.state.smallerList}
-                    keyExtractor={(item, index) => index + ''}
-                    scrollEnabled={false}
-                    extraData={this.state}
-                    renderItem={({ item, index }) => {
-                      return (
-                        <TouchableOpacity style={[styles.recoveryPhraseSet,]}
-                          disabled={item.selected}
-                          onPress={() => this.setState({ selectingIndex: index })}
-                        >
-                          <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                          <Text style={[styles.recoveryPhraseWord, {
-                            color: item.selected ? '#828282' : '#FF4444',
-                            backgroundColor: item.word ? 'white' : '#F5F5F5',
-                            borderWidth: this.state.selectingIndex === index ? 1 : 0,
-                            borderColor: '#FF4444'
-                          }]}>{item.word}</Text>
-                        </TouchableOpacity>
-                      )
-                    }}
-                  />
-                  <FlatList data={this.state.biggerList}
-                    keyExtractor={(item, index) => index + ''}
-                    style={{ marginLeft: 9 }}
-                    scrollEnabled={false}
-                    extraData={this.state}
-                    renderItem={({ item, index }) => {
-                      return (
-                        <TouchableOpacity style={[styles.recoveryPhraseSet,]}
-                          disabled={item.selected}
-                          onPress={() => this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) })}
-                        >
-                          <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                          <Text style={[styles.recoveryPhraseWord, {
-                            color: item.selected ? '#828282' : '#FF4444',
-                            backgroundColor: item.word ? 'white' : '#F5F5F5',
-                            borderWidth: this.state.selectingIndex === (index + (this.state.phraseWords.length / 2)) ? 1 : 0,
-                            borderColor: '#FF4444'
-                          }]}>{item.word}</Text>
-                        </TouchableOpacity>
-                      )
-                    }}
-                  />
-                </View>
-
-                {this.state.testingResult === null && <FlatList
-                  data={this.state.randomWords}
-                  keyExtractor={(item, index) => index + ''}
-                  scrollEnabled={false}
-                  horizontal={false}
-                  numColumns={4}
-                  contentContainerStyle={{ justifyContent: 'center', flex: 1, flexDirection: 'column', paddingBottom: 20, }}
-                  extraData={this.state}
-                  renderItem={({ item }) => {
-                    return (
-                      <TouchableOpacity style={[styles.recoveryPhraseChooseButton, {
-                        borderColor: item.selected ? 'white' : '#FF4444'
-                      }]}
-                        disabled={item.selected}
-                        onPress={() => this.selectRandomWord(item)}>
-                        <Text style={[styles.recoveryPhraseChooseButtonText, {
-                          color: item.selected ? 'white' : 'black'
-                        }]}>{item.word}</Text>
-                      </TouchableOpacity>
-                    )
-                  }}
-                />}
-                {this.state.testingResult === false && <View style={styles.testingResultArea}>
-                  <Text style={styles.errorTitle}>{i18n.t('AccountPhraseComponent_errorTitle')}</Text>
-                  <Text style={styles.errorMessage}>{i18n.t('AccountPhraseComponent_errorMessage')}</Text>
-                </View>}
-                {this.state.testingResult === true && <View style={styles.testingResultArea}>
-                  <Text style={styles.successTitle}>{i18n.t('AccountPhraseComponent_successTitle')}</Text>
-                  <Text style={styles.successMessage}>{this.props.isLogout ? i18n.t('AccountPhraseComponent_successMessage1') : i18n.t('AccountPhraseComponent_successMessage2')}</Text>
-                </View>}
-              </ScrollView>
-
-              <View style={styles.bottomButtonArea}>
-                <TouchableOpacity style={styles.bottomButton} onPress={this.state.testingResult ? (this.props.isLogout ? this.doLogout.bind(this) : Actions.pop) : this.resetTest.bind(this)}>
-                  <Text style={styles.bottomButtonText}>{(this.state.testingResult ?
-                    (this.props.isLogout ? i18n.t('AccountPhraseComponent_bottomButtonText4') : i18n.t('AccountPhraseComponent_bottomButtonText5')) :
-                    i18n.t('AccountPhraseComponent_bottomButtonText6')).toUpperCase()}</Text>
-                </TouchableOpacity>
               </View>
 
-            </View>}
+            </ShadowComponent>}
           </View>
         </View>
+        {this.state.keyboardHeight > 0 &&
+          <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardHeight, opacity: this.state.keyboardExternalOpacity, }]}>
+            {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
+              <FlatList
+                ref={(ref) => this.listViewElement = ref}
+                keyboardShouldPersistTaps="handled"
+                horizontal={true}
+                extraData={this.state}
+                data={this.state.keyboardExternalDataSource}
+                renderItem={({ item }) => {
+                  return (<TouchableOpacity style={styles.selectionItem} onPress={() => this.onSubmitWord.bind(this)(item)}>
+                    <Text style={[styles.selectionItemText, { color: this.state.currentInputtedText === item ? 'blue' : 'gray' }]}>{item}</Text>
+                  </TouchableOpacity>)
+                }}
+              />
+            </View>}
+          </Animated.View>}
       </SafeAreaView>
     );
   }
@@ -385,85 +442,56 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: convertWidth(16),
     flex: 1,
   },
   bodyContent: {
-    flex: 1,
-    flexDirection: 'column',
-    borderWidth: 1,
-    borderColor: "#FF4444",
+    flex: 1, flexDirection: 'column',
     width: "100%",
   },
   content: {
-    padding: convertWidth(20),
-    paddingTop: convertWidth(15),
-    flexDirection: 'column',
+    flex: 1, flexDirection: 'column', backgroundColor: '#F4F2EE',
+    padding: convertWidth(16),
   },
   titleArea: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: convertWidth(15),
-    paddingBottom: 0,
+    height: 40,
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
   titleText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 18,
-  },
-  titleBackIcon: {
-    width: convertWidth(21),
-    height: 21 * convertWidth(21) / 21,
-    resizeMode: 'contain',
-  },
-  titleCancelText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '300',
-    fontSize: 16,
-    color: "#FF4444"
-  },
-
-
-  warningIconArea: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 34,
+    fontSize: 10, color: 'rgba(0, 0, 0, 0.6)'
   },
   warningIcon: {
-    width: convertWidth(137),
-    height: 36 * convertWidth(137) / 137,
+    width: 24, height: 24, resizeMode: 'contain'
+  },
+  warningArea: {
+    flex: 1,
+    paddingTop: 56,
+  },
+  warningTitle: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontWeight: '600', fontSize: 14,
+    width: '100%',
   },
   warningMessage: {
     marginTop: 20,
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '300',
-    fontSize: 17,
+    fontWeight: '300', fontSize: 14,
+    width: '100%',
   },
 
-  phraseWordMessage: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 16,
-    marginTop: 16,
-  },
   phraseWordsArea: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row', alignItems: 'center',
     marginTop: 22,
-    paddingBottom: 20,
+    paddingTop: 25, paddingBottom: 25,
+    borderTopWidth: 3, borderTopColor: '#FF003C', borderBottomWidth: 3, borderBottomColor: '#FF003C',
   },
   recoveryPhraseSet: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     marginTop: 2,
     paddingTop: 3,
     paddingBottom: 3,
-    height: 28,
     width: convertWidth(140),
   },
   recoveryPhraseIndex: {
@@ -471,75 +499,122 @@ const styles = StyleSheet.create({
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
     fontWeight: '300',
     fontSize: 15,
-    color: '#C1C1C1'
+    color: 'rgba(0, 0, 0, 0.87)'
+  },
+  recoveryPhraseValue: {
+    backgroundColor: 'white',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    height: 24,
+    padding: 2,
   },
   recoveryPhraseWord: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 15,
-    color: '#FF4444',
     flex: 1,
+    borderWidth: 1, borderColor: '#FFFFFF', borderRadius: 2,
+    backgroundColor: '#F1F1F1',
+    textAlign: 'center', fontSize: 13, color: 'rgba(0, 0, 0, 0.6)',
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
+    height: '100%',
+  },
+  recoveryPhraseWordInput: {
+    flex: 1,
+    fontFamily: 'Andale Mono', fontSize: 13,
+  },
+  infoArea: {
+    flexDirection: 'row',
+    paddingLeft: convertWidth(2), paddingRight: convertWidth(2),
+    backgroundColor: '#F4F2EE',
+    marginTop: 16,
+  },
+  infoIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain'
+  },
+  infoLinkText: {
+    textDecorationLine: 'underline',
+    color: '#0060F2',
+    marginLeft: 5,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Book',
+    fontSize: 14,
+  },
+  vaultTitle: {
+    marginTop: 25,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir black',
+    color: 'rgba(0, 0, 0, 0.87)', fontSize: 24, fontWeight: '900', textAlign: 'left',
+  },
+  vaultMessage: {
+    marginTop: 10,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir book',
+    fontWeight: '300', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)', textAlign: 'left',
+  },
+  testButton: {
+    backgroundColor: '#0060F2',
+    borderWidth: 1, borderColor: '#0060F2', borderRadius: 4,
+    width: convertWidth(218),
+    height: 36,
+    alignItems: 'center', justifyContent: 'center',
+    marginTop: 26,
+    marginBottom: 20,
+  },
+  testButtonText: {
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Avenir Black',
+    fontWeight: '700', fontSize: 14, color: 'white',
   },
 
-  recoveryPhraseChooseButton: {
-    borderWidth: 1,
-    borderColor: '#FF4444',
-    padding: 4,
-    marginRight: 10,
-    marginTop: 10,
+  keyboardExternal: {
+    position: 'absolute',
+    width: '100%',
+    height: constants.keyboardExternalHeight,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 8,
+    paddingRight: 8,
+    backgroundColor: '#EEEFF1',
   },
-  recoveryPhraseChooseButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 15,
-    color: '#FF4444',
-  },
-  testingResultArea: {
+  selectionList: {
     flex: 1,
-    flexDirection: 'column',
+    height: 30,
+    flexDirection: 'row',
+    alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 20,
   },
-  errorTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    fontWeight: '600',
-    fontSize: 15,
-    color: '#FF4444'
+  selectionItem: {
+    marginLeft: 4,
+    padding: 4,
   },
-  errorMessage: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    fontWeight: '300',
-    fontSize: 15,
-    color: '#FF4444',
-    textAlign: 'center',
-  },
-  successTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    fontWeight: '600',
-    fontSize: 15,
-  },
-  successMessage: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    fontWeight: '300',
-    fontSize: 15,
-    textAlign: 'center',
+  selectionItemText: {
+    color: 'blue',
   },
 
   bottomButtonArea: {
     padding: convertWidth(20),
+    backgroundColor: '#F4F2EE',
+    height: 71,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+  },
+  dotArea: {
+    flexDirection: 'row',
+  },
+  activeDot: {
+    width: 8, height: 8,
+    borderWidth: 1, borderColor: '#FF003C', borderRadius: 4,
+    backgroundColor: '#FF003C',
+    marginRight: 8,
+  },
+  normalDot: {
+    width: 8, height: 8,
+    borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.6)', borderRadius: 4,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    marginRight: 8,
   },
   bottomButton: {
-    height: 45,
-    backgroundColor: '#FF4444',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
   },
   bottomButtonText: {
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    fontSize: 16,
-    color: 'white',
+    fontSize: 16, color: '#FF003C', fontWeight: '700',
   }
 
 });
