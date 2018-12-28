@@ -344,13 +344,6 @@ class PrivateUserComponent extends Component {
                 placeholder={global.i18n.t("UserComponent_search").toUpperCase()}>
               </SearchInputComponent>
 
-              {/*Setting button*/}
-              {(!this.state.searchFocusing && !this.props.searchTerm) &&
-              <TouchableOpacity onPress={Actions.account}>
-                <Image style={styles.settingIcon} source={require('assets/imgs/setting-icon.png')}/>
-              </TouchableOpacity>
-              }
-
               {/*Add record button*/}
               {(!this.state.searchFocusing && !this.props.searchTerm) &&
               <TouchableOpacity onPress={this.addRecord.bind(this)}>
@@ -512,15 +505,7 @@ const styles = StyleSheet.create({
     height: 28,
     resizeMode: 'contain',
     marginTop: 5,
-    // marginLeft: 16,
-  },
-  settingIcon: {
-    width: 18,
-    height: 18,
-    resizeMode: 'contain',
-    marginTop: 8,
     marginLeft: 16,
-    marginRight: 10,
   },
 
   body: {
