@@ -42,11 +42,11 @@ export class MMRInformationComponent extends Component {
 
   chooseAvatar() {
     ActionSheetIOS.showActionSheetWithOptions({
-      title: global.i18n.t('MMRInformationComponent_chooseAvatarTitle'),
-      options: [global.i18n.t('MMRInformationComponent_chooseAvatarCancel'),
-      global.i18n.t('MMRInformationComponent_chooseAvatarCapture'),
-      global.i18n.t('MMRInformationComponent_chooseAvatarPhoto'),
-      global.i18n.t('MMRInformationComponent_chooseAvatarFile'),
+      title: 'Add an image',
+      options: ['Cancel',
+      'Take Photo...',
+      'Choose from Library...',
+      'Files...',
       ],
       cancelButtonIndex: 0,
     },

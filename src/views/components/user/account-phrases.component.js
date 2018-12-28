@@ -161,8 +161,8 @@ export class AccountPhraseComponent extends Component {
   }
 
   onFocus(index) {
-    console.log('onFocus :', index);
     this.setState({ selectedIndex: index, testingResult: null });
+    this[`recoveryPhraseWordInput_${index}`].focus();
     this.filterTest.bind(this)(this.state.testInputs[index]);
   }
 
@@ -339,7 +339,7 @@ export class AccountPhraseComponent extends Component {
                       extraData={this.state}
                       renderItem={({ item, index }) => {
                         return (
-                          <View style={[styles.recoveryPhraseSet,]}>
+                          <TouchableOpacity style={[styles.recoveryPhraseSet,]} disabled={!!item.word} onPress={() => this.onFocus.bind(this)(index)}>
                             <Text style={styles.recoveryPhraseIndex}>{index + 1}</Text>
                             {!!item.word && <View style={[styles.recoveryPhraseValue]}>
                               {item.word.split('').map((char, cIndex) =>
@@ -353,13 +353,12 @@ export class AccountPhraseComponent extends Component {
                               <TextInput style={styles.recoveryPhraseWordInput}
                                 onSubmitEditing={this.testPhrases.bind(this)(this.state.testInputs)}
                                 value={this.state.testInputs[index]}
-                                onFocus={() => this.onFocus.bind(this)(index)}
                                 onChangeText={(text) => this.testInputText.bind(this)(index, text)}
                                 ref={ref => this[`recoveryPhraseWordInput_${index}`] = ref}
                                 autoCapitalize='none'
                               />
                             </View>}
-                          </View>
+                          </TouchableOpacity>
                         )
                       }}
                     />
@@ -370,7 +369,7 @@ export class AccountPhraseComponent extends Component {
                       extraData={this.state}
                       renderItem={({ item, index }) => {
                         return (
-                          <View style={[styles.recoveryPhraseSet,]}>
+                          <TouchableOpacity style={[styles.recoveryPhraseSet,]} disabled={!!item.word} onPress={() => this.onFocus.bind(this)((this.state.phraseWords.length / 2) + index)}>
                             <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
                             {!!item.word && <View style={[styles.recoveryPhraseValue]}>
                               {item.word.split('').map((char, cIndex) =>
@@ -384,13 +383,12 @@ export class AccountPhraseComponent extends Component {
                               <TextInput style={styles.recoveryPhraseWordInput}
                                 onSubmitEditing={this.testPhrases.bind(this)(this.state.testInputs)}
                                 value={this.state.testInputs[(this.state.phraseWords.length / 2) + index]}
-                                onFocus={() => this.onFocus.bind(this)((this.state.phraseWords.length / 2) + index)}
                                 onChangeText={(text) => this.testInputText.bind(this)((this.state.phraseWords.length / 2) + index, text)}
                                 ref={ref => this[`recoveryPhraseWordInput_${(this.state.phraseWords.length / 2) + index}`] = ref}
                                 autoCapitalize='none'
                               />
                             </View>}
-                          </View>
+                          </TouchableOpacity>
                         )
                       }}
                     />
@@ -406,7 +404,7 @@ export class AccountPhraseComponent extends Component {
                   <View style={styles.activeDot} />
                 </View>
                 {this.state.testingResult !== true && <TouchableOpacity style={styles.bottomButton} onPress={Actions.pop}>
-                  <Text style={styles.bottomButtonText}>GO BACK {this.state.keyboardHeight}</Text>
+                  <Text style={styles.bottomButtonText}>GO BACK</Text>
                 </TouchableOpacity>}
               </View>
 
@@ -415,6 +413,12 @@ export class AccountPhraseComponent extends Component {
         </View>
         {this.state.keyboardHeight > 0 &&
           <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardHeight, opacity: this.state.keyboardExternalOpacity, }]}>
+            <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)(this.getNextInputIndex.bind(this)())}>
+              <Image style={styles.nextButtonImage} source={require('assets/imgs/arrow_down_enable.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.prevButton} onPress={() => this.selectedIndex.bind(this)(this.getPreviousInputIndex.bind(this)())}>
+              <Image style={styles.prevButtonImage} source={require('assets/imgs/arrow_up_enable.png')} />
+            </TouchableOpacity>
             {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
               <FlatList
                 ref={(ref) => this.listViewElement = ref}
