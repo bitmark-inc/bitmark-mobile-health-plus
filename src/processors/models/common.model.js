@@ -154,7 +154,10 @@ const getLanguageForTextDetector = () => {
 
 const doSignMessages = (messages) => {
   return new Promise((resolve) => {
-    BitmarkSDK.signMessages(messages).then(resolve).catch(() => resolve());
+    BitmarkSDK.signMessages(messages).then(resolve).catch((error) => {
+      console.log('signMessages error :', error);
+      resolve([]);
+    });
   });
 };
 

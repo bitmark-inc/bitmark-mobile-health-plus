@@ -808,12 +808,16 @@ const styles = StyleSheet.create({
   },
   phraseWordContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: 'white',
   },
   character: {
     flex: 1,
     height: 20,
     borderWidth: 1,
+    borderRadius: 2,
     borderColor: '#FFFFFF',
     backgroundColor: '#F1F1F1',
     textAlign: 'center',
