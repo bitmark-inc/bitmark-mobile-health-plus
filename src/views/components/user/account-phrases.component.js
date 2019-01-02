@@ -621,9 +621,9 @@ export class AccountPhraseComponent extends Component {
 
                     {/*DESC*/}
                     <View style={styles.introductionTextArea}>
-                      <Text style={[styles.introductionTitle]}>Test your key phrase, unlock your vault</Text>
+                      <Text style={[styles.introductionTitle]}>Complete your vault key phrase to unlock your vault</Text>
                       <Text style={[styles.introductionDescription]}>
-                        Enter the three remaining words.
+                        Enter the three missing words.
                     </Text>
                     </View>
                   </View>
