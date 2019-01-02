@@ -343,9 +343,9 @@ export class LoginComponent extends Component {
 
                   {/*DESC*/}
                   <View style={styles.introductionTextArea}>
-                    <Text style={[styles.introductionTitle]}>Access existing vault</Text>
+                    <Text style={[styles.introductionTitle]}>Unlock existing vault</Text>
                     <Text style={[styles.introductionDescription]}>
-                      Type all 12-word phrase in the exact sequence.
+                      Type all 12 words of your vault key phrase in the correct sequence.
                     </Text>
                   </View>
                 </View>
