@@ -73,4 +73,10 @@ export { config, };
 // react-native run-ios --device "Bin’s iPhone" --scheme 'BitmarkHealthPlus dev'
 
 
-// code-push release-react 'BitmarkHealthPlus' ios --pre "BitmarkHealthPlus dev" --mandatory true --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.2.1.map" --plistFile=ios/Info-dev.plist
+// code-push release-react 'BitmarkHealthPlus' ios --pre "BitmarkHealthPlus dev" --mandatory true --sourcemapOutput "source-map-tool/source-map/test/main.jsbundle_1.54.6.map" --plistFile=ios/Info-dev.plist
+// export SENTRY_PROPERTIES=./sentry.properties
+
+
+// $ appcenter codepush release-react --app YourApp --output-dir ./build
+// $ export SENTRY_PROPERTIES=./ios/sentry.properties
+// $ sentry-cli react-native appcenter YourApp ios ./build/codePush
