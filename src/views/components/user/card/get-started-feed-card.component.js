@@ -33,7 +33,6 @@ export class GetStartedFeedCardComponent extends React.Component {
 
         {/*BOTTOM BAR*/}
         <View style={[styles.cardBottomBar]}>
-          <Image style={styles.cardNextIcon} source={require('assets/imgs/options-icon.png')} />
         </View>
       </View>
     );
@@ -74,27 +73,20 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   cardContent: {
-    marginTop: 5,
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
   },
   cardHeader: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 24,
-    lineHeight: 36,
     color: 'rgba(0, 0, 0, 0.87)'
   },
   cardBottomBar: {
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
-    marginTop: 5,
+    marginTop: 30,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
-  },
-  cardNextIcon: {
-    width: 12,
-    height: 24,
-    resizeMode: 'contain',
   }
 });
