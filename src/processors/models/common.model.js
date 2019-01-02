@@ -137,7 +137,7 @@ const removeVietnameseSigns = (str) => {
 
 const getLanguageForTextDetector = () => {
   let lang = 'eng';
-  let locale = DeviceInfo.getDeviceLocale();
+  let locale = config.localization;
 
   if (locale.startsWith('vi')) {
     lang = 'vie';
