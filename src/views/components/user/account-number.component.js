@@ -41,8 +41,8 @@ export class AccountNumberComponent extends React.Component {
             }}>
               <Text style={styles.fullAccountNumberValue}>{CacheData.userInformation.bitmarkAccountNumber}</Text>
             </TouchableOpacity>
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', marginTop: 2, minHeight: 20, }}>
-              {this.state.copied && <Text style={{ color: '#0064FC', fontFamily: 'Avenir Medium', fontSize: 14, fontWeight: '600', }}>{i18n.t('AccountNumberComponent_accountCopiedText')}</Text>}
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', marginTop: 2, minHeight: 22, paddingRight: convertWidth(15) }}>
+              {this.state.copied && <Text style={{ color: '#0064FC', fontFamily: 'AvenirNextW1G-Regular', fontSize: 14, }}>{i18n.t('AccountNumberComponent_accountCopiedText')}</Text>}
             </View>
             <Text style={styles.shortAccountNumberLabel}>{i18n.t('AccountNumberComponent_shortAccountNumberLabel')}</Text>
             <View style={styles.barLine}>
@@ -97,21 +97,21 @@ const styles = StyleSheet.create({
     paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   cardTitle: {
-    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
   },
 
   description: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', color: 'rgba(0, 0, 0, 0.6)', fontSize: 14, fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Light', color: 'rgba(0, 0, 0, 0.6)', fontSize: 14,
     marginTop: 30,
     paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   fullAccountNumberLabel: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book', fontSize: 18, fontWeight: '700',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,
     marginTop: 25,
     paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   fullAccountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
   },
   shortAccountNumberLabel: {
     marginTop: 10,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Book', fontSize: 18, fontWeight: '700',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,
     paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   shortAccountNumberValue: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono', fontSize: 12,
+    fontFamily: 'Andale Mono', fontSize: 12,
     color: '#FF4444',
     marginTop: 10,
     height: 43,
@@ -150,8 +150,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   viewOnRegistryButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium', color: 'rgba(0, 0, 0, 0.87)',
-    fontWeight: '700',
+    fontFamily: 'AvenirNextW1G-Bold', color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 18,
   }
 

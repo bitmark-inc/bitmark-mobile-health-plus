@@ -94,7 +94,7 @@ export class AccountComponent extends Component {
             </View>
             <TouchableOpacity style={styles.cardContentRow} onPress={Actions.accountNumber}>
               <Text style={styles.accountNumber}>{`[${CacheData.userInformation.bitmarkAccountNumber.substring(0, 4)}...${CacheData.userInformation.bitmarkAccountNumber.substring(CacheData.userInformation.bitmarkAccountNumber.length - 4, CacheData.userInformation.bitmarkAccountNumber.length)}]`}</Text>
-              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              <Image style={styles.copyIcon} source={require('assets/imgs2/copy_icon.png')} />
             </TouchableOpacity>
             <View style={styles.cardContentRow}>
               <Text style={styles.itemDescription}>Others can send you medical records at the following email address:</Text>
@@ -117,7 +117,7 @@ export class AccountComponent extends Component {
             <TouchableOpacity style={styles.cardContentRow}
               onPress={() => Actions.accountPhrase()}
             >
-              <Text style={styles.cardContentRowButtonText}>Write down vault key phrase</Text>
+              <Text style={styles.cardContentRowButtonText}>View your vault key phrase</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
             </TouchableOpacity>
             <TouchableOpacity style={[styles.cardContentRow, {
@@ -154,7 +154,7 @@ export class AccountComponent extends Component {
 
           <View style={[styles.normalRow, { marginTop: 16 }]}>
             <Text style={styles.rowLabel}>VERSION</Text>
-            <Text style={styles.rowValue}>1.0</Text>
+            <Text style={styles.rowValue}>{DataProcessor.getApplicationVersion()}</Text>
           </View>
 
           <TouchableOpacity style={styles.normalRow} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     width: 16, height: '100%', resizeMode: 'contain',
   },
   headerTitle: {
-    fontFamily: 'Avenir Black', fontSize: 24, fontWeight: '900', textAlign: 'center',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 24, textAlign: 'center',
     flex: 1
   },
   headerRight: {
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
   cardTitle: {
-    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
     marginLeft: convertWidth(15),
   },
   cardContentRow: {
@@ -220,13 +220,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   itemDescription: {
-    fontSize: 14, fontWeight: '300', fontFamily: 'Avenir', marginTop: 6, color: 'rgba(0,0,0,0.6)',
+    fontSize: 14, fontFamily: 'AvenirNextW1G-Light', marginTop: 6, color: 'rgba(0,0,0,0.6)',
   },
   accountNumber: {
     fontFamily: 'Andale Mono', fontSize: 12, color: '#FF003C',
   },
   copyIcon: {
-    width: 12, height: 20, resizeMode: 'contain',
+    width: 19, height: 11, resizeMode: 'contain',
   },
   emailAddress: {
     flex: 1,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
 
   cardContentRowButtonText: {
-    fontFamily: 'Avenir Black', fontSize: 18, fontWeight: '900', color: 'rgba(0,0,0,0.87)'
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 18, color: 'rgba(0,0,0,0.87)'
   },
 
   normalRow: {
@@ -246,12 +246,12 @@ const styles = StyleSheet.create({
     paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
   },
   rowLabel: {
-    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300', color: 'rgba(0,0,0,0.87)',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: 'rgba(0,0,0,0.87)',
     flex: 1,
   },
 
   rowValue: {
-    fontFamily: 'Avenir Black', fontSize: 10, fontWeight: '900', color: 'rgba(0,0,0,0.87)'
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10, color: 'rgba(0,0,0,0.87)'
   },
 
 });

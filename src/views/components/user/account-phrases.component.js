@@ -15,9 +15,8 @@ import { ShadowComponent, ShadowTopComponent } from 'src/views/commons';
 const STEPS = {
   warning: 0,
   init: 1,
-  generated: 2,
-  writeDownPhraseWordsInform: 3,
-  testing: 4,
+  writeDownPhraseWordsInform: 2,
+  testing: 3,
 };
 
 const NUMBER_CHARACTERS_OF_PHRASE_WORD = 8;
@@ -243,39 +242,45 @@ export class AccountPhraseComponent extends Component {
     }
 
     if (word) {
-      let testingResult = null;
-      if (this.checkIfFinishedInputting()) {
-        testingResult = true;
+      this.checkInputWrods(smallerList, biggerList);
+    }
+  }
 
-        for (let index = 0; index < this.state.phraseWords.length; index++) {
-          if ((index < (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== smallerList[index].word) ||
-            (index >= (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== biggerList[index - (this.state.phraseWords.length / 2)].word)) {
-            testingResult = false;
-            console.log('testingResult  false :', index, this.state.phraseWords, this.state.smallerList, this.state.biggerList);
-            break;
-          }
+  checkInputWrods(smallerList, biggerList) {
+    smallerList = smallerList || this.state.smallerList;
+    biggerList = biggerList || this.state.biggerList;
+    let testingResult = null;
+    if (this.checkIfFinishedInputting()) {
+      testingResult = true;
+
+      for (let index = 0; index < this.state.phraseWords.length; index++) {
+        if ((index < (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== smallerList[index].word) ||
+          (index >= (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== biggerList[index - (this.state.phraseWords.length / 2)].word)) {
+          testingResult = false;
+          console.log('testingResult  false :', index, this.state.phraseWords, this.state.smallerList, this.state.biggerList);
+          break;
         }
-
-        if (testingResult) {
-          Keyboard.dismiss();
-          if (this.props.isLogout) {
-            AppProcessor.doLogout().then((result) => {
-              if (result) {
-                EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { indicator: true });
-              }
-            }).catch(error => {
-              EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
-            })
-          } else {
-            setTimeout(Actions.pop, 2000);
-          }
-        }
-
-        this.setState({ testingResult });
-      } else {
-        // Focus on next word
-        this.selectedIndex(this.getNextInputIndex());
       }
+
+      if (testingResult) {
+        Keyboard.dismiss();
+        if (this.props.isLogout) {
+          AppProcessor.doLogout().then((result) => {
+            if (result) {
+              EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { indicator: true });
+            }
+          }).catch(error => {
+            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
+          })
+        } else {
+          setTimeout(Actions.pop, 2000);
+        }
+      }
+
+      this.setState({ testingResult });
+    } else {
+      // Focus on next word
+      this.selectedIndex(this.getNextInputIndex());
     }
   }
 
@@ -360,7 +365,7 @@ export class AccountPhraseComponent extends Component {
                 <Text style={styles.titleText}>WARNING</Text>
                 <Image style={styles.warningIcon} source={require('assets/imgs2/warning_icon.png')} />
               </ShadowTopComponent>
-              <ScrollView style={[styles.content, styles.paddingContent]}>
+              <ScrollView style={[styles.bodyContent, styles.paddingContent]}>
                 {!this.props.isLogout && <View style={styles.warningArea}>
                   <Text style={styles.warningTitle}>View your vault key phrase.</Text>
                   {/* <Text style={styles.warningTitle}>{i18n.t('AccountPhraseComponent_warningTitle1')}</Text> */}
@@ -388,7 +393,7 @@ export class AccountPhraseComponent extends Component {
             </ShadowComponent>}
 
 
-            {(this.state.step === STEPS.init || this.state.step === STEPS.generated) &&
+            {(this.state.step === STEPS.init) &&
               <View style={[styles.bodyContent]}>
                 <View style={{ flex: 1 }}>
                   {/*TOP AREA*/}
@@ -436,7 +441,7 @@ export class AccountPhraseComponent extends Component {
                       </View>
 
                       {/*INFO LINK*/}
-                      {(this.state.step === STEPS.generated) &&
+                      {(this.state.step === STEPS.init) &&
                         <View style={[styles.infoLinkTextContainer]}>
                           <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
                           <TouchableOpacity style={[]} onPress={() => this.setState({ step: STEPS.writeDownPhraseWordsInform })}>
@@ -448,7 +453,7 @@ export class AccountPhraseComponent extends Component {
 
                     {/*DESC*/}
                     <View style={styles.introductionTextArea}>
-                      <Text style={[styles.introductionTitle]}>Set your vault key phrase</Text>
+                      <Text style={[styles.introductionTitle]}>Your vault key phrase</Text>
                       <Text style={[styles.introductionDescription]}>
                         A 12-word phrase that only you know.
                     </Text>
@@ -471,7 +476,7 @@ export class AccountPhraseComponent extends Component {
                     </View>
 
                     <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
-                      <Text style={styles.buttonNextText}>GO BACK</Text>
+                      <Text style={styles.buttonNextText}>DONE</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -502,7 +507,7 @@ export class AccountPhraseComponent extends Component {
 
                   {/*BOTTOM AREA*/}
                   <View style={[styles.bottomArea, styles.paddingContent, { justifyContent: 'flex-end' }]}>
-                    <TouchableOpacity style={[styles.buttonNext]} onPress={() => { this.setState({ step: STEPS.generated }) }}>
+                    <TouchableOpacity style={[styles.buttonNext]} onPress={() => { this.setState({ step: STEPS.init }) }}>
                       <Text style={[styles.buttonNextText]}>I GOT IT</Text>
                     </TouchableOpacity>
                   </View>
@@ -621,9 +626,9 @@ export class AccountPhraseComponent extends Component {
 
                     {/*DESC*/}
                     <View style={styles.introductionTextArea}>
-                      <Text style={[styles.introductionTitle]}>Complete your vault key phrase to unlock your vault</Text>
+                      <Text style={[styles.introductionTitle]}>{this.props.isLogout ? 'Lock your vault' : 'Test your key phrase, unlock your vault'}</Text>
                       <Text style={[styles.introductionDescription]}>
-                        Enter the three missing words.
+                        Enter the three remaining words.
                     </Text>
                     </View>
                   </View>
@@ -642,6 +647,9 @@ export class AccountPhraseComponent extends Component {
                       <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
                         <Text style={[styles.buttonNextText]}>GO BACK</Text>
                       </TouchableOpacity>
+                      {this.props.isLogout && <TouchableOpacity style={[styles.buttonNext]} onPress={this.checkInputWrods.bind(this)}>
+                        <Text style={[styles.buttonNextText]}>NEXT</Text>
+                      </TouchableOpacity>}
                     </View>
                   </View>
                 </View>
@@ -707,7 +715,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
   titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10, color: 'rgba(0, 0, 0, 0.6)'
   },
   warningIcon: {
@@ -718,13 +726,13 @@ const styles = StyleSheet.create({
     paddingTop: 56,
   },
   warningTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontWeight: '600', fontSize: 14,
     width: '100%',
   },
   warningMessage: {
     marginTop: 20,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontFamily: 'AvenirNextW1G-Regular',
     fontWeight: '300', fontSize: 14,
     width: '100%',
   },
@@ -963,7 +971,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
   },
   bottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy',
-    fontSize: 16, color: '#FF003C', fontWeight: '700',
+    fontFamily: 'AvenirNextW1G-Bold',
+    fontSize: 16, color: '#FF003C',
   }
 });

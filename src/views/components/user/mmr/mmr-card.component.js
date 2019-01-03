@@ -17,15 +17,14 @@ class PrivateMMRCardComponent extends Component {
   static propTypes = {
     mmrInformation: PropTypes.any,
     displayFromUserScreen: PropTypes.bool,
-    onPress: PropTypes.func
   };
   render() {
-    let displaySeeMoreButton = this.props.mmrInformation && this.props.mmrInformation.avatar
-      && this.props.mmrInformation.name && this.props.mmrInformation.birthday && this.props.mmrInformation.sex;
+    let displaySeeMoreButton = (this.props.mmrInformation && this.props.mmrInformation.avatar
+      && this.props.mmrInformation.name && this.props.mmrInformation.birthday && this.props.mmrInformation.sex) && this.props.displayFromUserScreen;
     return (
       <ShadowComponent style={styles.body}>
         {!this.props.mmrInformation &&
-          <TouchableOpacity style={[styles.bodyContent, { padding: convertWidth(16), }]} onPress={() => this.props.onPress ? this.props.onPress() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
+          <TouchableOpacity style={[styles.bodyContent, { padding: convertWidth(16), }]} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
             <Text style={styles.cardHeaderTitleText}>Personalize your vault</Text>
             <Text style={styles.cardContentDescription}>Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency. </Text>
             <View style={[styles.cardNextButton, { marginTop: 20 }]}>
@@ -35,7 +34,8 @@ class PrivateMMRCardComponent extends Component {
         }
 
         {this.props.mmrInformation &&
-          <TouchableOpacity style={styles.bodyContent} disabled={!this.props.displayFromUserScreen} onPress={this.props.onPress ? this.props.onPress : Actions.account}>
+          <TouchableOpacity style={styles.bodyContent}
+            onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation })}>
             <Text style={styles.mmrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Minimum Medical Record'}</Text>
             <View style={styles.mmrInformation}>
               <Image style={styles.mmrInformationAvatar} source={this.props.mmrInformation.avatar ? { uri: this.props.mmrInformation.avatar } : require('assets/imgs2/mmr_avarta_default.png')} />
@@ -55,7 +55,7 @@ class PrivateMMRCardComponent extends Component {
               </View>
             </View>
             <View style={styles.cardNextButton}>
-              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, edit: !displaySeeMoreButton })}>
+              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, })}>
                 <Text style={styles.mmrInformationSeeMoreButtonText}>{displaySeeMoreButton ? 'SEE MORE' : 'EDIT'}</Text>
               </TouchableOpacity>
             </View>
