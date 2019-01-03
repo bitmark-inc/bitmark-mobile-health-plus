@@ -394,7 +394,7 @@ export class AccountPhraseComponent extends Component {
 
 
             {(this.state.step === STEPS.init) &&
-              <View style={[styles.bodyContent]}>
+              <ScrollView style={styles.bodyContent}>
                 <View style={{ flex: 1 }}>
                   {/*TOP AREA*/}
                   <View style={[styles.topArea]}>
@@ -480,12 +480,12 @@ export class AccountPhraseComponent extends Component {
                     </TouchableOpacity>
                   </View>
                 </View>
-              </View>
+              </ScrollView>
             }
 
             {/*WRITE DOWN PHRASE WORDS INFORM STEP*/}
             {this.state.step === STEPS.writeDownPhraseWordsInform &&
-              <View style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
+              <ScrollView style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
                 <View style={{ flex: 1 }}>
                   {/*TOP AREA*/}
                   <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#FFFFFF', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
@@ -512,12 +512,12 @@ export class AccountPhraseComponent extends Component {
                     </TouchableOpacity>
                   </View>
                 </View>
-              </View>
+              </ScrollView>
             }
 
             {/*TEST PHRASE WORDS*/}
             {this.state.step === STEPS.testing &&
-              <View style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
+              <ScrollView style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
                 <View style={{ flex: 1 }}>
                   {/*TOP AREA*/}
                   {/*BITMARK Header*/}
@@ -653,7 +653,7 @@ export class AccountPhraseComponent extends Component {
                     </View>
                   </View>
                 </View>
-              </View>
+              </ScrollView>
             }
           </View>
 
