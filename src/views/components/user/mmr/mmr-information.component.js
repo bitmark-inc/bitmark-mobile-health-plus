@@ -17,6 +17,7 @@ import PickerSelect from 'react-native-picker-select';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 
 const { ActionSheetIOS } = ReactNative;
+import { selectContactPhone } from 'react-native-select-contact';
 
 export class MMRInformationComponent extends Component {
   static propTypes = {
@@ -87,6 +88,33 @@ export class MMRInformationComponent extends Component {
           }
         }
       });
+  }
+  addEmergencyContact() {
+    selectContactPhone().then((contact) => {
+      Actions.mmrMergencyRelationship({
+        contact,
+        onSelectedRelation: (emergencyContactInfo) => {
+          let mmrInformation = this.state.mmrInformation;
+          mmrInformation.emergencyContacts = mmrInformation.emergencyContacts || [];
+          mmrInformation.emergencyContacts.push({
+            relationship: emergencyContactInfo.relationship,
+            name: emergencyContactInfo.contact.name,
+            phoneNumber: emergencyContactInfo.selectedPhone.number,
+            type: emergencyContactInfo.selectedPhone.type,
+          });
+          this.setState({ mmrInformation });
+        }
+      });
+    }).catch(error => {
+      console.log({ error });
+    });
+  }
+
+  deleteEmergencyContact(index) {
+    let mmrInformation = this.state.mmrInformation;
+    mmrInformation.emergencyContacts = mmrInformation.emergencyContacts || [];
+    mmrInformation.emergencyContacts.splice(index, 1);
+    this.setState({ mmrInformation });
   }
 
   saveMMRInformation() {
@@ -259,6 +287,28 @@ export class MMRInformationComponent extends Component {
                   </View>
                 </View>
               </View>
+              <View style={styles.emergencyContactArea}>
+                <Text style={styles.emergencyContactTitle}>
+                  EMERGENCY CONTACTS
+                </Text>
+                {(this.state.mmrInformation.emergencyContacts || []).map((item, index) => {
+                  return <View key={index} style={styles.emergencyContactRow}>
+                    <Text style={styles.emergencyContactRowRelationship}>{item.relationship.toUpperCase()}</Text>
+                    <View style={styles.emergencyContactRowInfo}>
+                      <Text style={styles.emergencyContactRowInfoName}>{item.name}</Text>
+                      <Text style={styles.emergencyContactRowInfoPhoneNumber}>{item.phoneNumber}</Text>
+                    </View>
+                    <TouchableOpacity style={{ padding: 4, }} onPress={() => this.deleteEmergencyContact.bind(this)(index)}>
+                      <Image style={styles.emergencyContactRowDeleteIcon} source={require('assets/imgs2/delete_icon.png')} />
+                    </TouchableOpacity>
+                  </View>
+                })}
+                <TouchableOpacity style={styles.addEmergencyContactButton} onPress={this.addEmergencyContact.bind(this)}>
+                  <Text style={styles.addEmergencyContactButtonText}>
+                    + Add emergency contact
+                    </Text>
+                </TouchableOpacity>
+              </View>
             </ShadowComponent>
 
             <ShadowComponent style={styles.cardBody}>
@@ -368,6 +418,48 @@ const styles = StyleSheet.create({
   headerRight: {
     paddingRight: convertWidth(19),
     width: convertWidth(35),
+  },
+  emergencyContactArea: {
+    flexDirection: 'column',
+    paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+  },
+  emergencyContactTitle: {
+    width: '100%',
+    paddingLeft: 76 + convertWidth(15),
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+  },
+  emergencyContactRow: {
+    flexDirection: 'row',
+    marginTop: 6,
+  },
+  emergencyContactRowRelationship: {
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10, textAlign: 'right',
+    width: 76 + convertWidth(15),
+    paddingRight: convertWidth(15),
+    marginTop: 2,
+  },
+  emergencyContactRowInfo: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  emergencyContactRowInfoName: {
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 12,
+    paddingBottom: 2,
+  },
+  emergencyContactRowInfoPhoneNumber: {
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+  },
+  addEmergencyContactButton: {
+    width: '100%',
+    paddingLeft: 76 + convertWidth(15),
+    marginTop: 12,
+    marginBottom: 15,
+  },
+  addEmergencyContactButtonText: {
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#0060F2',
+  },
+  emergencyContactRowDeleteIcon: {
+    width: 14, height: 18, resizeMode: 'contain',
   },
 
   cardBody: {

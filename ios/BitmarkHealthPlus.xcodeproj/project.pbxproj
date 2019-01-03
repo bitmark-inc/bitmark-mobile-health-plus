@@ -284,6 +284,9 @@
 		F15C1D112063B9D4002DDF98 /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15C1D102063B9B6002DDF98 /* libRNZipArchive.a */; };
 		F179A25020AF9775002D5539 /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F179A21C20AF9760002D5539 /* libKCKeepAwake.a */; };
 		F18C03B62049096100FA36E4 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F18C03932049095000FA36E4 /* libRCTPushNotification.a */; };
+		F1C290D121DE15330045BB9E /* libRCTSelectContact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C290CF21DE15280045BB9E /* libRCTSelectContact.a */; };
+		F1C290D221DE153B0045BB9E /* libRCTSelectContact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C290CF21DE15280045BB9E /* libRCTSelectContact.a */; };
+		F1C290D321DE15440045BB9E /* libRCTSelectContact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C290CF21DE15280045BB9E /* libRCTSelectContact.a */; };
 		F1C3EC4B21D4675F000FCF7A /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C3EC4321D46758000FCF7A /* libRNImagePicker.a */; };
 		F1C3EC4C21D46765000FCF7A /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C3EC4321D46758000FCF7A /* libRNImagePicker.a */; };
 		F1C3EC4D21D4676A000FCF7A /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C3EC4321D46758000FCF7A /* libRNImagePicker.a */; };
@@ -717,6 +720,13 @@
 			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
 			remoteInfo = "RCTPushNotification-tvOS";
 		};
+		F1C290CE21DE15280045BB9E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1C2908B21DE15280045BB9E /* SelectContact.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2B58405A1D10DE8700235F31;
+			remoteInfo = RCTSelectContact;
+		};
 		F1C3EC4221D46758000FCF7A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F1C3EC0621D46758000FCF7A /* RNImagePicker.xcodeproj */;
@@ -957,6 +967,7 @@
 		F179A21520AF9760002D5539 /* KCKeepAwake.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KCKeepAwake.xcodeproj; path = "../node_modules/react-native-keep-awake/ios/KCKeepAwake.xcodeproj"; sourceTree = "<group>"; };
 		F18C03802049095000FA36E4 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		F18C03B8204929BC00FA36E4 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
+		F1C2908B21DE15280045BB9E /* SelectContact.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SelectContact.xcodeproj; path = "../node_modules/react-native-select-contact/ios/SelectContact.xcodeproj"; sourceTree = "<group>"; };
 		F1C3EC0621D46758000FCF7A /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		F1CE35232186B87A00648551 /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1CE35252186B88100648551 /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -986,6 +997,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1C290D321DE15440045BB9E /* libRCTSelectContact.a in Frameworks */,
 				F1C3EC4B21D4675F000FCF7A /* libRNImagePicker.a in Frameworks */,
 				58AAAF6021BC0D1C003A0132 /* libRNSentry.a in Frameworks */,
 				F109F891219D7CB10067DEC1 /* libRCTPdf.a in Frameworks */,
@@ -1032,6 +1044,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1C290D121DE15330045BB9E /* libRCTSelectContact.a in Frameworks */,
 				F1C3EC4D21D4676A000FCF7A /* libRNImagePicker.a in Frameworks */,
 				58AAAF6221BC0D2E003A0132 /* libRNSentry.a in Frameworks */,
 				F109F893219D7CBF0067DEC1 /* libRCTPdf.a in Frameworks */,
@@ -1078,6 +1091,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1C290D221DE153B0045BB9E /* libRCTSelectContact.a in Frameworks */,
 				F1C3EC4C21D46765000FCF7A /* libRNImagePicker.a in Frameworks */,
 				58AAAF6121BC0D25003A0132 /* libRNSentry.a in Frameworks */,
 				F109F892219D7CB70067DEC1 /* libRCTPdf.a in Frameworks */,
@@ -1542,6 +1556,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F1C2908B21DE15280045BB9E /* SelectContact.xcodeproj */,
 				F1C3EC0621D46758000FCF7A /* RNImagePicker.xcodeproj */,
 				58AAAF5421BC0CDD003A0132 /* RNSentry.xcodeproj */,
 				F109F888219D7C860067DEC1 /* RCTPdf.xcodeproj */,
@@ -1718,6 +1733,14 @@
 			children = (
 				F18C03932049095000FA36E4 /* libRCTPushNotification.a */,
 				F18C03952049095000FA36E4 /* libRCTPushNotification-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1C2908C21DE15280045BB9E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1C290CF21DE15280045BB9E /* libRCTSelectContact.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2042,6 +2065,10 @@
 				{
 					ProductGroup = F15C1CDB2063B9B6002DDF98 /* Products */;
 					ProjectRef = F15C1CDA2063B9B6002DDF98 /* RNZipArchive.xcodeproj */;
+				},
+				{
+					ProductGroup = F1C2908C21DE15280045BB9E /* Products */;
+					ProjectRef = F1C2908B21DE15280045BB9E /* SelectContact.xcodeproj */;
 				},
 				{
 					ProductGroup = 0E4B7EE92189882600816D2E /* Products */;
@@ -2470,6 +2497,13 @@
 			fileType = archive.ar;
 			path = "libRCTPushNotification-tvOS.a";
 			remoteRef = F18C03942049095000FA36E4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F1C290CF21DE15280045BB9E /* libRCTSelectContact.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTSelectContact.a;
+			remoteRef = F1C290CE21DE15280045BB9E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F1C3EC4321D46758000FCF7A /* libRNImagePicker.a */ = {
