@@ -94,7 +94,7 @@ export class AccountComponent extends Component {
             </View>
             <TouchableOpacity style={styles.cardContentRow} onPress={Actions.accountNumber}>
               <Text style={styles.accountNumber}>{`[${CacheData.userInformation.bitmarkAccountNumber.substring(0, 4)}...${CacheData.userInformation.bitmarkAccountNumber.substring(CacheData.userInformation.bitmarkAccountNumber.length - 4, CacheData.userInformation.bitmarkAccountNumber.length)}]`}</Text>
-              <Image style={styles.copyIcon} source={require('assets/imgs2/copy_icon.png')} />
+              <Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/copy_icon.png')} />
             </TouchableOpacity>
             <View style={styles.cardContentRow}>
               <Text style={styles.itemDescription}>Others can send you medical records at the following email address:</Text>
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Andale Mono', fontSize: 12, color: '#FF003C',
   },
   copyIcon: {
-    width: 19, height: 11, resizeMode: 'contain',
+    width: 12, height: 20, resizeMode: 'contain',
   },
   emailAddress: {
     flex: 1,
