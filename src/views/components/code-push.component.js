@@ -64,7 +64,6 @@ export class CodePushComponent extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         {this.state.status && (this.state.status === 'downloading' || this.state.status === 'installing') && <View style={styles.body}>
-          <View style={{ flex: 1 }} />
           <View style={styles.content}>
             <View>
               <Image style={styles.bitmarkIcon} source={require('assets/imgs/loading.png')} />
@@ -106,7 +105,6 @@ const styles = StyleSheet.create({
   },
 
   bitmarkIcon: {
-    marginTop: -24,
     width: 122,
     height: 146,
     resizeMode: 'contain'
