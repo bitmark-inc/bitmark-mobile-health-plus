@@ -685,11 +685,16 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultip
   }
 
   for (let record of results) {
+    console.log('generateThumbnail...');
     await CommonModel.generateThumbnail(filePath, record.id, isMultipleAsset);
 
+    console.log('Index data...');
+    console.log('record...:', record);
+    console.log('assetName, metadataList...:', assetName, metadataList);
     // Index data
     if (isImageFile(record.filePath)) {
       let detectResult = await CommonModel.populateAssetNameFromImage(record.filePath);
+      console.log('detectResult...:', detectResult);
       await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
     } else if (isPdfFile(record.filePath)) {
       let detectResult = await CommonModel.populateAssetNameFromPdf(record.filePath);
@@ -699,6 +704,7 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultip
     }
   }
 
+  console.log('runGetUserBitmarksInBackground...');
   await runGetUserBitmarksInBackground();
   return results;
 };
