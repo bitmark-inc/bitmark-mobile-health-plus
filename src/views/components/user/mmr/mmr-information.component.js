@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactNative, {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, TextInput, KeyboardAvoidingView,
+  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, TextInput, KeyboardAvoidingView, ImageBackground,
 } from 'react-native';
 import moment from 'moment';
 import { convertWidth, } from 'src/utils';
@@ -101,13 +101,14 @@ export class MMRInformationComponent extends Component {
   }
 
   render() {
+    console.log('mmrInformation :', this.state.mmrInformation);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.headerLeft} onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.pop()}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Minimum Medical Record</Text>
+          <Text style={styles.headerTitle} numberOfLines={1}>Minimum Medical Record</Text>
           <TouchableOpacity style={styles.headerRight} disabled={this.state.isEditing} onPress={() => this.setState({ isEditing: !this.state.isEditing })}>
             {!this.state.isEditing && <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/edition_icon_black.png')} />}
           </TouchableOpacity>
@@ -147,7 +148,7 @@ export class MMRInformationComponent extends Component {
               <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_1.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Text>{this.state.mmrInformation.activeClinicalDiagnoses}</Text>
+              <Text style={styles.cardContentRowValue}>{this.state.mmrInformation.activeClinicalDiagnoses}</Text>
             </View>
           </ShadowComponent>
 
@@ -159,7 +160,7 @@ export class MMRInformationComponent extends Component {
               <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_2.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Text>{this.state.mmrInformation.currentTreatmentsAndDosages}</Text>
+              <Text style={styles.cardContentRowValue}>{this.state.mmrInformation.currentTreatmentsAndDosages}</Text>
             </View>
           </ShadowComponent>
 
@@ -171,7 +172,7 @@ export class MMRInformationComponent extends Component {
               <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_3.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Text>{this.state.mmrInformation.allergiesAndReactions}</Text>
+              <Text style={styles.cardContentRowValue}>{this.state.mmrInformation.allergiesAndReactions}</Text>
             </View>
           </ShadowComponent>
 
@@ -183,7 +184,7 @@ export class MMRInformationComponent extends Component {
               <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_4.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Text>{this.state.mmrInformation.visibleAndInvisibleDisabilities}</Text>
+              <Text style={styles.cardContentRowValue}>{this.state.mmrInformation.visibleAndInvisibleDisabilities}</Text>
             </View>
           </ShadowComponent>
         </ScrollView>}
@@ -200,10 +201,13 @@ export class MMRInformationComponent extends Component {
               <View style={styles.cardContentRow}>
                 <TouchableOpacity onPress={this.chooseAvatar.bind(this)}>
                   <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avarta_default.png')} />
+                  <ImageBackground style={styles.mmrInformationAvatarCover} source={require('assets/imgs2/mmr_avarta_edit_cover.png')}>
+                  </ImageBackground>
+                  {/* <View style={styles.mmrInformationAvatarCover}><Text style={{ fontFamily: 'Andale Mono', fontSize: 12, color: '#404040' }}>EDIT</Text></View> */}
                 </TouchableOpacity>
                 <View style={styles.mmrInformationBasic}>
                   <Text style={styles.mmrInformationLabel}>Name</Text>
-                  <TextInput style={[styles.mmrInformationValueInput, { paddingLeft: convertWidth(16), paddingRight: convertWidth(16) }]}
+                  <TextInput style={[styles.mmrInformationValueInput, { paddingLeft: convertWidth(16), paddingRight: convertWidth(16), color: '#C1C1C1' }]}
                     placeholder='TAP TO INPUT'
                     defaultValue={this.state.mmrInformation.name}
                     onChangeText={(name) => this.updateMMRInformationState.bind(this)({ name })}
@@ -211,8 +215,14 @@ export class MMRInformationComponent extends Component {
                   <View style={{ flex: 1, flexDirection: 'row', marginTop: 16 }}>
                     <View style={{ flex: 1, flexDirection: 'column' }}>
                       <Text style={styles.mmrInformationLabel}>Date of birth</Text>
-                      <DatePicker style={styles.mmrInformationValueInput}
-                        date={this.state.mmrInformation.birthday}
+                      <DatePicker style={{
+                        marginTop: 3,
+                        flex: 1, width: '100%', height: 32,
+                        backgroundColor: '#F5F5F5',
+                        borderColor: 'transparent', borderWidth: 0.1, borderRadius: 4,
+                        shadowOffset: { width: 0, height: 0, }, shadowOpacity: 0.2, shadowColor: '#000', shadowRadius: 5,
+                      }}
+                        date={this.state.mmrInformation.birthday ? moment(this.state.mmrInformation.birthday).toDate() : undefined}
                         onDateChange={(birthday) => this.updateMMRInformationState.bind(this)({ birthday: moment(birthday, 'DD|MM|YYYY').toDate() })}
                         maxDate={moment().toDate()}
                         format="DD|MM|YYYY"
@@ -352,7 +362,7 @@ const styles = StyleSheet.create({
     width: 16, height: '100%', resizeMode: 'contain',
   },
   headerTitle: {
-    fontFamily: 'Avenir Black', fontSize: 24, fontWeight: '900', textAlign: 'center',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 24, textAlign: 'center',
     flex: 1
   },
   headerRight: {
@@ -374,29 +384,41 @@ const styles = StyleSheet.create({
     paddingLeft: convertWidth(15), flexDirection: 'row', alignItems: 'center',
   },
   cardTitleText: {
-    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
   },
   cardHeaderIcon: {
     width: 26, height: 33, resizeMode: 'contain',
     marginRight: convertWidth(18),
   },
   cardContentRow: {
-    paddingTop: 25, paddingBottom: 25, paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+    paddingTop: 9, paddingBottom: 15, paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
     flex: 1, flexDirection: 'row',
+    minHeight: 50,
+  },
+  cardContentRowValue: {
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
   },
   mmrInformationAvatar: {
-    width: 76, height: 76, resizeMode: 'center',
-    borderWidth: 1, borderColor: 'white', borderRadius: 38,
+    width: 76, height: 76, resizeMode: 'stretch',
+    borderWidth: 1, borderRadius: 38,
+    borderColor: 'white',
     marginRight: convertWidth(15),
+    shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
+  },
+  mmrInformationAvatarCover: {
+    position: 'absolute',
+    top: 7, left: -3,
+    width: 82, height: 70,
+    justifyContent: 'center', alignItems: 'center',
   },
   mmrInformationBasic: {
     flex: 1,
   },
   mmrInformationLabel: {
-    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300', color: '#545454',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#545454',
   },
   mmrInformationValue: {
-    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '900', color: '#545454',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: '#545454',
     marginTop: 3,
   },
 
@@ -404,6 +426,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     flex: 1, width: '100%', height: 32,
     backgroundColor: '#F5F5F5',
+    fontFamily: 'AvenirNextW1G-Regular', color: 'rgba(0, 0, 0, 0.87)',
     borderColor: 'transparent', borderWidth: 0.1, borderRadius: 4,
     shadowOffset: { width: 0, height: 0, }, shadowOpacity: 0.2, shadowColor: '#000', shadowRadius: 5,
   },

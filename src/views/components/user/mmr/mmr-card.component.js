@@ -38,7 +38,7 @@ class PrivateMMRCardComponent extends Component {
           <TouchableOpacity style={styles.bodyContent} disabled={!this.props.displayFromUserScreen} onPress={this.props.onPress ? this.props.onPress : Actions.account}>
             <Text style={styles.mmrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Minimum Medical Record'}</Text>
             <View style={styles.mmrInformation}>
-              <Image style={styles.mmrInformationAvatar} source={{ uri: this.props.mmrInformation.avatar }} />
+              <Image style={styles.mmrInformationAvatar} source={this.props.mmrInformation.avatar ? { uri: this.props.mmrInformation.avatar } : require('assets/imgs2/mmr_avarta_default.png')} />
               <View style={styles.mmrInformationBasic}>
                 <Text style={styles.mmrInformationLabel}>Name</Text>
                 <Text style={styles.mmrInformationValue}>{this.props.mmrInformation.name}</Text>
@@ -78,11 +78,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   cardHeaderTitleText: {
-    fontFamily: 'Avenir Light', fontSize: 24, fontWeight: '900',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 24, color: 'rgba(0, 0, 0, 0.87)',
   },
   cardContentDescription: {
     marginTop: 18,
-    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '300', color: 'rgba(0, 0, 0, 0.6)',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
   },
   cardNextButton: {
     width: '100%',
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     width: 16, height: 16, resizeMode: 'contain',
   },
   mmrUserTitle: {
-    fontFamily: 'Avenir Black', fontSize: 18, fontWeight: '900',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,
     padding: convertWidth(15), paddingBottom: 0,
   },
   mmrInformation: {
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   mmrInformationAvatar: {
-    width: 76, height: 76, resizeMode: 'center',
+    width: 76, height: 76, resizeMode: 'stretch',
     borderWidth: 1, borderColor: 'white', borderRadius: 38,
     marginRight: convertWidth(15),
   },
@@ -108,13 +108,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mmrInformationLabel: {
-    fontFamily: 'Avenir Light', fontSize: 10, fontWeight: '300', color: '#545454',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#545454',
   },
   mmrInformationValue: {
-    fontFamily: 'Avenir Light', fontSize: 14, fontWeight: '900', color: '#545454',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
   },
   mmrInformationSeeMoreButtonText: {
-    fontFamily: 'Avenir Black', fontSize: 10, fontWeight: '900', color: '#FF003C',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10, color: '#FF003C',
   },
 });
 

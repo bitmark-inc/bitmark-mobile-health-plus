@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "clean": "watchman watch-del-all && rm -rf node_modules/ && rm -rf ios/build/ && npm cache clean --force && npm install",
+    "clean": "watchman watch-del-all && rm -rf node_modules && npm install && rm -rf /tmp/metro-bundler-cache-* && rm -rf /tmp/haste-map-react-native-packager-*",
     "start": "react-native start",
     "ios-test": "react-native run-ios --scheme 'BitmarkHealthPlus dev'",
     "ios-test-x": "react-native run-ios --scheme 'BitmarkHealthPlus dev' --simulator='iPhone X'",
@@ -22,6 +22,7 @@
     "moment": "^2.22.2",
     "random-string": "^0.2.0",
     "react": "16.6.1",
+    "react-base16-styling": "^0.6.0",
     "react-native": "0.57.5",
     "react-native-camera": "^1.2.0",
     "react-native-code-push": "^5.4.2",
