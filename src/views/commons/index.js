@@ -8,3 +8,4 @@ export * from './bitmark-legal.component';
 export * from './loading.component';
 export * from './shadow.component';
 export * from './bitmark-safe-view.component';
+export * from './character-flapper.component';
