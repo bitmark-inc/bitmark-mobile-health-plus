@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bitmark_logo" translatesAutoresizingMaskIntoConstraints="NO" id="pPN-qp-Gej">
-                    <rect key="frame" x="178.5" y="123" width="123" height="146.5"/>
+                    <rect key="frame" x="178.5" y="167" width="123" height="146.5"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="123" id="20t-1X-XZV"/>
                         <constraint firstAttribute="height" constant="146.5" id="hNv-Ta-4Fx"/>
@@ -26,7 +26,7 @@
             <color key="backgroundColor" red="0.95680254697799683" green="0.94925886392593384" blue="0.93333131074905396" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
                 <constraint firstItem="pPN-qp-Gej" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="3pi-0I-qcE"/>
-                <constraint firstItem="pPN-qp-Gej" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-44" id="3wu-Qg-MDU"/>
+                <constraint firstItem="pPN-qp-Gej" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="3wu-Qg-MDU"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
