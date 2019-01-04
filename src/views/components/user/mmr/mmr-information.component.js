@@ -90,17 +90,28 @@ export class MMRInformationComponent extends Component {
       });
   }
   addEmergencyContact() {
-    selectContactPhone().then((contact) => {
-      Actions.mmrMergencyRelationship({
-        contact,
-        onSelectedRelation: (emergencyContactInfo) => {
+    selectContactPhone().then((data) => {
+      let relationshipArray = [
+        'Cancel',
+        'mother',
+        'father',
+        'parrent',
+        'brother',
+        'sister',
+      ]
+      ActionSheetIOS.showActionSheetWithOptions({
+        title: 'Relationship',
+        options: relationshipArray,
+        cancelButtonIndex: 0,
+      }, (buttonIndex) => {
+        if (buttonIndex > 0) {
           let mmrInformation = this.state.mmrInformation;
           mmrInformation.emergencyContacts = mmrInformation.emergencyContacts || [];
           mmrInformation.emergencyContacts.push({
-            relationship: emergencyContactInfo.relationship,
-            name: emergencyContactInfo.contact.name,
-            phoneNumber: emergencyContactInfo.selectedPhone.number,
-            type: emergencyContactInfo.selectedPhone.type,
+            relationship: relationshipArray[buttonIndex],
+            name: data.contact.name,
+            phoneNumber: data.selectedPhone.number,
+            type: data.selectedPhone.type,
           });
           this.setState({ mmrInformation });
         }
@@ -165,6 +176,20 @@ export class MMRInformationComponent extends Component {
                   </View>
                 </View>
               </View>
+            </View>
+            <View style={styles.emergencyContactArea}>
+              <Text style={styles.emergencyContactTitle}>
+                EMERGENCY CONTACTS
+                </Text>
+              {(this.state.mmrInformation.emergencyContacts || []).map((item, index) => {
+                return <View key={index} style={styles.emergencyContactRow}>
+                  <Text style={styles.emergencyContactRowRelationship}>{item.relationship.substring(0, 1).toUpperCase() + item.relationship.substring(1, item.relationship.length).toLowerCase()}</Text>
+                  <View style={styles.emergencyContactRowInfo}>
+                    <Text style={styles.emergencyContactRowInfoName}>{item.name}</Text>
+                    <Text style={styles.emergencyContactRowInfoPhoneNumber}>{item.phoneNumber}</Text>
+                  </View>
+                </View>
+              })}
             </View>
           </ShadowComponent>
 
@@ -293,7 +318,7 @@ export class MMRInformationComponent extends Component {
                 </Text>
                 {(this.state.mmrInformation.emergencyContacts || []).map((item, index) => {
                   return <View key={index} style={styles.emergencyContactRow}>
-                    <Text style={styles.emergencyContactRowRelationship}>{item.relationship.toUpperCase()}</Text>
+                    <Text style={styles.emergencyContactRowRelationship}>{item.relationship.substring(0, 1).toUpperCase() + item.relationship.substring(1, item.relationship.length).toLowerCase()}</Text>
                     <View style={styles.emergencyContactRowInfo}>
                       <Text style={styles.emergencyContactRowInfoName}>{item.name}</Text>
                       <Text style={styles.emergencyContactRowInfoPhoneNumber}>{item.phoneNumber}</Text>
@@ -422,6 +447,7 @@ const styles = StyleSheet.create({
   emergencyContactArea: {
     flexDirection: 'column',
     paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+    paddingBottom: 10,
   },
   emergencyContactTitle: {
     width: '100%',
@@ -453,7 +479,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: 76 + convertWidth(15),
     marginTop: 12,
-    marginBottom: 15,
   },
   addEmergencyContactButtonText: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#0060F2',
