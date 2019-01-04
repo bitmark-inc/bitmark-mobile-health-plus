@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View, Text, Animated,
+  View, Animated,
 } from 'react-native';
 
 let charString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -14,26 +14,61 @@ export class CharacterFlapperComponent extends Component {
   }
   constructor(props) {
     super(props);
+    this.loadFirstHalfFlaperAnimation = this.loadFirstHalfFlaperAnimation.bind(this);
+    this.loadSecondHalfFlaperAnimation = this.loadSecondHalfFlaperAnimation.bind(this);
+    this.loadChar = this.loadChar.bind(this);
+    this.changeToChar = this.changeToChar.bind(this);
     this.state = {
       char: this.props.char,
       finalChar: this.props.char,
-      rotate: Animated.Value(0)
+      rotate: new Animated.Value(0),
+      index: 0,
     };
   }
 
   componentDidMount() {
-
+    this.changeToChar('H');
   }
 
-  loadChar(char) {
+  changeToChar(finalChar) {
+    let finalIndex = charString.indexOf(finalChar);
+    if (finalChar >= 0) {
+
+      let changeText = async (index) => {
+        if (index < charString.length) {
+          await this.loadChar(charString[index]);
+          if (index !== finalIndex) {
+            changeText(index === (charString.length - 1) ? 0 : (index + 1));
+          }
+        }
+      };
+      let index = charString.indexOf(this.state.char);
+      changeText(index === (charString.length - 1) ? 0 : (index + 1));
+    }
+  }
+
+  async loadChar(char) {
+    await this.loadFirstHalfFlaperAnimation();
     this.setState({ char });
+    await this.loadSecondHalfFlaperAnimation();
   }
 
   loadFirstHalfFlaperAnimation() {
+    return new Promise((resolve) => {
+      Animated.spring(this.state.rotate, {
+        toValue: 90,
+        duration: 10,
+      }).start(resolve);
+    })
 
   }
   loadSecondHalfFlaperAnimation() {
-
+    return new Promise((resolve) => {
+      Animated.spring(this.state.rotate, {
+        toValue: 360,
+        duration: 30,
+      }).start(resolve);
+    });
   }
 
   loadFlapper(finalChar) {
@@ -42,21 +77,17 @@ export class CharacterFlapperComponent extends Component {
   }
 
   render() {
+    let rotate = this.state.rotate.interpolate({
+      inputRange: [0, 360],
+      outputRange: ["0deg", "360deg"]
+    });
     return (
       <View style={styles.bodyContent}>
-        <Animated.View style={{
+        <Animated.Text style={[styles.char, this.props.charStyle, {
           transform: [
-            { scale: this.state.scale },
-            {
-              rotate: this.state.rotate.interpolate({
-                inputRange: [0, 1],
-                outputRange: ["0deg", "360deg"]
-              })
-            },
+            { rotateX: rotate }
           ]
-        }}>
-          <Text style={[styles.char, this.props.charStyle]}>{this.state.char}</Text>
-        </Animated.View >
+        }]}>{this.state.char}</Animated.Text>
       </View>
     );
   }
@@ -70,6 +101,7 @@ const styles = StyleSheet.create({
   },
   char: {
     fontWeight: '900',
+    fontSize: 50,
   }
 });
 
