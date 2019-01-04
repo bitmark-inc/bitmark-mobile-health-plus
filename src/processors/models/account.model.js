@@ -310,6 +310,60 @@ let doGetHockeyAppVersion = (appId, token) => {
   });
 };
 
+const doUpdateUserMetadata = (jwt, metadata) => {
+  console.log({ jwt, metadata });
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/accounts/metadata`;
+    fetch(tempURL, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+      body: JSON.stringify({ metadata }),
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doUpdateUserMetadata error :' + JSON.stringify(data)));
+      }
+      resolve(data);
+    }).catch(reject);
+  });
+};
+
+
+const doGetUserMetadata = (jwt) => {
+  return new Promise((resolve, reject) => {
+    let statusCode;
+    let tempURL = `${config.mobile_server_url}/api/accounts/metadata`;
+    fetch(tempURL, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt,
+      },
+    }).then((response) => {
+      statusCode = response.status;
+      if (statusCode >= 500) {
+        return response.text();
+      }
+      return response.json();
+    }).then((data) => {
+      if (statusCode >= 400) {
+        return reject(new Error('doGetUserMetadata error :' + JSON.stringify(data)));
+      }
+      resolve(data.metadata);
+    }).catch(reject);
+  });
+};
 
 
 let AccountModel = {
@@ -337,6 +391,8 @@ let AccountModel = {
   doDeleteEmailRecord,
 
   doGetHockeyAppVersion,
+  doGetUserMetadata,
+  doUpdateUserMetadata,
 }
 
 export {
