@@ -133,7 +133,8 @@ export class MMRInformationComponent extends Component {
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column', marginLeft: convertWidth(16), }}>
                     <Text style={styles.mmrInformationLabel}>Sex</Text>
-                    <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.sex}</Text>
+                    <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.sex ?
+                      (this.state.mmrInformation.sex.substring(0, 1).toUpperCase() + this.state.mmrInformation.sex.substring(1, this.state.mmrInformation.sex.length).toUpperCase().toLowerCase()) : ''}</Text>
                   </View>
                 </View>
               </View>
@@ -399,7 +400,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
   },
   mmrInformationAvatar: {
-    width: 76, height: 76, resizeMode: 'stretch',
+    width: 76, height: 76, resizeMode: 'center',
     borderWidth: 1, borderRadius: 38,
     borderColor: 'white',
     marginRight: convertWidth(15),
@@ -418,7 +419,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#545454',
   },
   mmrInformationValue: {
-    fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: '#545454',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 3,
   },
 
