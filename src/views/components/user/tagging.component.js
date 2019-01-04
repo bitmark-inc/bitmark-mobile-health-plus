@@ -89,7 +89,7 @@ export class TaggingComponent extends Component {
     this.setState({ inputtingTag: false, tagsSuggestion: this.state.tagsCache.filter(item => this.state.tags.indexOf(item) == -1) });
   }
 
-  async addTag(tag) {
+  async addTag(tag, fromSubmit) {
     if (tag) {
       let tags = this.state.tags;
       if (tags.indexOf(tag) == -1) {
@@ -108,6 +108,9 @@ export class TaggingComponent extends Component {
         this.setState({ tag: '', tags, tagsCache, tagsSuggestion });
         await LocalFileService.writeTagsCache(tagsCache);
       }
+    }
+    if (fromSubmit) {
+      this.hideInputTag();
     }
   }
 
@@ -196,11 +199,12 @@ export class TaggingComponent extends Component {
                   autoCorrect={false}
                   autoFocus={true}
                   autoCapitalize="none"
+                  returnKeyType='done'
                   clearTextOnFocus={true}
                   onChange={() => { this.setState({ tag: this.state.tag.replace(/\s/g, '') }) }}
                   onBlur={() => { this.setState({ tag: '' }) }}
                   onChangeText={(text) => { this.onChangeText.bind(this)(text) }}
-                  onSubmitEditing={this.hideInputTag.bind(this)}
+                  onSubmitEditing={() => this.addTag.bind(this)(this.state.tag, true)}
                   placeholder={global.i18n.t("TaggingComponent_enterATag")}
                 />
 
