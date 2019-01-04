@@ -134,6 +134,10 @@ const doIssueMMR = async ({ data }) => {
   return await processing(DataProcessor.doIssueMMR(data));
 };
 
+const doSaveUserSetting = async ({ settings }) => {
+  return await processing(DataProcessor.doSaveUserSetting(settings));
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -155,6 +159,7 @@ let AppTasks = {
   doCombineImages,
   doTransferBitmark,
   doIssueMMR,
+  doSaveUserSetting,
 };
 
 let registeredTasks = {};

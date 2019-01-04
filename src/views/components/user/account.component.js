@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Linking,
@@ -8,19 +8,20 @@ import {
   Image, View, SafeAreaView, ScrollView, Text, TouchableOpacity,
 } from 'react-native';
 import Mailer from 'react-native-mail';
-import { AppProcessor, EventEmitterService, DataProcessor, CacheData } from 'src/processors';
+import { AppProcessor, EventEmitterService, DataProcessor } from 'src/processors';
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
 import { MMRCardComponent } from './mmr';
 import { ShadowTopComponent, ShadowComponent } from 'src/views/commons';
 import { Actions } from 'react-native-router-flux';
 import Intercom from 'react-native-intercom';
+import { Provider, connect } from 'react-redux';
+import { AccountStore } from 'src/views/stores';
 
-
-export class AccountComponent extends Component {
+class PrivateAccountComponent extends Component {
   static propTypes = {
-
-  };
+    userInformation: PropTypes.object,
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -69,10 +70,18 @@ export class AccountComponent extends Component {
     });
   }
 
+
+  changeAccountSetting(userSettings) {
+    AppProcessor.doSaveUserSetting(userSettings).catch(error => {
+      console.log({ error });
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
+    });
+  }
+
   render() {
     let emailAddress = config.network === config.NETWORKS.livenet
-      ? `${CacheData.userInformation.bitmarkAccountNumber}@health.bitmark.com`
-      : `${CacheData.userInformation.bitmarkAccountNumber}@drop.test.bitmark.com`;
+      ? `${this.props.userInformation.bitmarkAccountNumber}@health.bitmark.com`
+      : `${this.props.userInformation.bitmarkAccountNumber}@drop.test.bitmark.com`;
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
@@ -87,26 +96,40 @@ export class AccountComponent extends Component {
 
           <ShadowComponent style={styles.cardBody}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
-              <Text style={styles.cardTitle}>ADDRESS</Text>
+              <Text style={styles.cardTitle}>ASSISTANT</Text>
             </ShadowTopComponent>
-            <View style={styles.cardContentRow}>
-              <Text style={styles.itemDescription}>Your vault is addressed using your{'\n'}Bitmark account number: </Text>
-            </View>
-            <TouchableOpacity style={styles.cardContentRow} onPress={Actions.accountNumber}>
-              <Text style={styles.accountNumber}>{`[${CacheData.userInformation.bitmarkAccountNumber.substring(0, 4)}...${CacheData.userInformation.bitmarkAccountNumber.substring(CacheData.userInformation.bitmarkAccountNumber.length - 4, CacheData.userInformation.bitmarkAccountNumber.length)}]`}</Text>
-              <Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/copy_icon.png')} />
+            <Text style={styles.cardDescription}>A personal assistant to help you unlock the value of your health data.</Text>
+
+            <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ sugges_health_studies: !this.props.userInformation.metadata.sugges_health_studies })}>
+              <Text style={styles.cardContentRowButtonText}>Suggest health studies</Text>
+              {this.props.userInformation.metadata.sugges_health_studies && < Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/check_box_icon_white_black.png')} />}
+              {!this.props.userInformation.metadata.sugges_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />}
             </TouchableOpacity>
-            <View style={styles.cardContentRow}>
-              <Text style={styles.itemDescription}>Others can send you medical records at the following email address:</Text>
-            </View>
-            <TouchableOpacity style={[styles.cardContentRow, {
+            <Text style={[styles.rowDescription, { fontSize: 10 }]}>I can confidentially match you with health studies based on information you provide in your Minimum Medical Record.</Text>
+
+            <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ visualize_health_data: !this.props.userInformation.metadata.visualize_health_data })}>
+              <Text style={styles.cardContentRowButtonText}>Visualize my health data</Text>
+              {this.props.userInformation.metadata.visualize_health_data && < Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/check_box_icon_white_black.png')} />}
+              {!this.props.userInformation.metadata.visualize_health_data && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />}
+            </TouchableOpacity>
+            <Text style={[styles.rowDescription, { fontSize: 10 }]}>I can confidentially generate visual reports of health data collected from your iPhone.</Text>
+
+            <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ receive_email_records: !this.props.userInformation.metadata.receive_email_records })}>
+              <Text style={styles.cardContentRowButtonText}>Add records via email</Text>
+              {this.props.userInformation.metadata.receive_email_records && < Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/check_box_icon_white_black.png')} />}
+              {!this.props.userInformation.metadata.receive_email_records && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />}
+            </TouchableOpacity>
+            <Text style={[styles.rowDescription, { fontSize: 10, marginBottom: 5, }]}>If others send health records to the following email address, I can automatically add them to your vault:</Text>
+
+            {this.props.userInformation.metadata.receive_email_records && <TouchableOpacity style={[styles.cardContentRow, {
               borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+              marginBottom: 10,
             }]}
               onPress={() => Share.share({ title: '', message: emailAddress })}
             >
               <Text style={styles.emailAddress}>{emailAddress}</Text>
               <Image style={styles.shareIcon} source={require('assets/imgs2/share_icon.png')} />
-            </TouchableOpacity>
+            </TouchableOpacity>}
 
           </ShadowComponent>
 
@@ -203,7 +226,6 @@ const styles = StyleSheet.create({
   cardBody: {
     flexDirection: 'column',
     marginTop: 16,
-    width: convertWidth(344),
   },
   cardHeader: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
@@ -213,17 +235,21 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
     marginLeft: convertWidth(15),
   },
+  cardDescription: {
+    fontSize: 14, fontFamily: 'AvenirNextW1G-Regular', color: 'rgba(0,0,0,0.6)',
+    marginTop: 6,
+    paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
+  },
   cardContentRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     minHeight: 43, width: '100%',
     paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
     backgroundColor: 'white',
   },
-  itemDescription: {
-    fontSize: 14, fontFamily: 'AvenirNextW1G-Light', marginTop: 6, color: 'rgba(0,0,0,0.6)',
-  },
-  accountNumber: {
-    fontFamily: 'Andale Mono', fontSize: 12, color: '#FF003C',
+  rowDescription: {
+    fontSize: 10, fontFamily: 'AvenirNextW1G-light', color: 'rgba(0,0,0,0.6)',
+    marginTop: 8,
+    paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
   },
   copyIcon: {
     width: 12, height: 20, resizeMode: 'contain',
@@ -231,6 +257,7 @@ const styles = StyleSheet.create({
   emailAddress: {
     flex: 1,
     fontFamily: 'Andale Mono', fontSize: 12, color: '#FF003C',
+    paddingRight: 4,
   },
   shareIcon: {
     width: 19, height: 22, resizeMode: 'contain'
@@ -255,3 +282,23 @@ const styles = StyleSheet.create({
   },
 
 });
+
+
+const StoreAccountComponent = connect(
+  (state, ) => state.data
+)(PrivateAccountComponent);
+
+export class AccountComponent extends Component {
+  static propTypes = {
+    displayFromUserScreen: PropTypes.bool,
+    onPress: PropTypes.func
+  }
+
+  render() {
+    return (
+      <Provider store={AccountStore}>
+        <StoreAccountComponent displayFromUserScreen={this.props.displayFromUserScreen} onPress={this.props.onPress} />
+      </Provider>
+    );
+  }
+}

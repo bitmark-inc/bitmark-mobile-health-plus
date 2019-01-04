@@ -1,4 +1,3 @@
-import { Linking } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Intercom from 'react-native-intercom';
 import moment from 'moment';
@@ -33,7 +32,7 @@ import {
   compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isMMRRecord,
 } from 'src/utils';
 
-import { UserBitmarksStore, UserBitmarksActions, MMRInformationStore, MMRInformationActions } from 'src/views/stores';
+import { UserBitmarksStore, UserBitmarksActions, MMRInformationStore, MMRInformationActions, AccountStore, AccountActions } from 'src/views/stores';
 import { config } from 'src/configs';
 import { CacheData } from './caches';
 
@@ -274,7 +273,6 @@ const runOnBackground = async (justOpenApp) => {
   let userInfo = await UserModel.doTryGetCurrentUser();
   if (CacheData.userInformation === null || JSON.stringify(userInfo) !== JSON.stringify(CacheData.userInformation)) {
     CacheData.userInformation = userInfo;
-    EventEmitterService.emit(EventEmitterService.events.CHANGE_USER_INFO, userInfo);
   }
 
   let appInfo = await doGetAppInformation();
@@ -285,7 +283,9 @@ const runOnBackground = async (justOpenApp) => {
 
   if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
-    if (!isDisplayingModal(mapModalDisplayKeyIndex.email_record)) {
+    CacheData.userInformation.metadata = await AccountModel.doGetUserMetadata(CacheData.jwt);
+    AccountStore.dispatch(AccountActions.reload());
+    if (!isDisplayingModal(mapModalDisplayKeyIndex.email_record) && CacheData.userInformation.metadata.receive_email_records) {
       await runGetEmailRecordsInBackground();
     }
   }
@@ -295,44 +295,44 @@ const runOnBackground = async (justOpenApp) => {
 };
 // ================================================================================================================================================
 
-const configNotification = () => {
-  const onRegistered = async (registeredNotificationInfo) => {
-    CacheData.notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
-    if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
-      CacheData.userInformation = await UserModel.doGetCurrentUser();
-    }
-    if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
-      let appInfo = (await doGetAppInformation()) || {};
-      if (appInfo.notificationUUID !== CacheData.notificationUUID) {
-        AccountService.doRegisterNotificationInfo(null, CacheData.notificationUUID, appInfo.intercomUserId).then(() => {
-          CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
-          return UserModel.doUpdateUserInfo(CacheData.userInformation);
-        }).catch(error => {
-          console.log('DataProcessor doRegisterNotificationInfo error:', error);
-        });
-      }
-    } else {
-      if (CacheData.notificationUUID && CacheData.userInformation.notificationUUID !== CacheData.notificationUUID) {
-        AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, CacheData.userInformation.intercomUserId).then(() => {
-          CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
-          return UserModel.doUpdateUserInfo(CacheData.userInformation);
-        }).catch(error => {
-          console.log('DataProcessor doRegisterNotificationInfo error:', error);
-        });
-      }
-    }
-  };
-  const onReceivedNotification = async (notificationData) => {
-    if (!notificationData.foreground && notificationData.data) {
-      if (notificationData.data.event === 'intercom_reply') {
-        setTimeout(() => { Intercom.displayConversationsList(); }, 2000);
-      } else if (notificationData.data.event === 'open_url' && DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
-        Linking.openURL(notificationData.data.url);
-      }
-    }
-  };
-  AccountService.configure(onRegistered, onReceivedNotification);
-};
+// const configNotification = () => {
+//   const onRegistered = async (registeredNotificationInfo) => {
+//     CacheData.notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
+//     if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
+//       CacheData.userInformation = await UserModel.doGetCurrentUser();
+//     }
+//     if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
+//       let appInfo = (await doGetAppInformation()) || {};
+//       if (appInfo.notificationUUID !== CacheData.notificationUUID) {
+//         AccountService.doRegisterNotificationInfo(null, CacheData.notificationUUID, appInfo.intercomUserId).then(() => {
+//           CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
+//           return UserModel.doUpdateUserInfo(CacheData.userInformation);
+//         }).catch(error => {
+//           console.log('DataProcessor doRegisterNotificationInfo error:', error);
+//         });
+//       }
+//     } else {
+//       if (CacheData.notificationUUID && CacheData.userInformation.notificationUUID !== CacheData.notificationUUID) {
+//         AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, CacheData.userInformation.intercomUserId).then(() => {
+//           CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
+//           return UserModel.doUpdateUserInfo(CacheData.userInformation);
+//         }).catch(error => {
+//           console.log('DataProcessor doRegisterNotificationInfo error:', error);
+//         });
+//       }
+//     }
+//   };
+//   const onReceivedNotification = async (notificationData) => {
+//     if (!notificationData.foreground && notificationData.data) {
+//       if (notificationData.data.event === 'intercom_reply') {
+//         setTimeout(() => { Intercom.displayConversationsList(); }, 2000);
+//       } else if (notificationData.data.event === 'open_url' && DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
+//         Linking.openURL(notificationData.data.url);
+//       }
+//     }
+//   };
+//   AccountService.configure(onRegistered, onReceivedNotification);
+// };
 
 // ================================================================================================================================================
 let dataInterval = null;
@@ -587,7 +587,32 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       let signatureData = await CommonModel.doCreateSignatureData();
       let result = await AccountModel.doRegisterJWT(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
       CacheData.jwt = result.jwt_token;
+      console.log('run1');
       Sentry.setUserContext({ userID: bitmarkAccountNumber, });
+      console.log('run2');
+      if (!CacheData.userInformation.metadata) {
+        CacheData.userInformation.metadata = {
+          receive_email_records: true,
+          sugges_health_studies: true,
+          visualize_health_data: true,
+        };
+        await AccountModel.doUpdateUserMetadata(CacheData.jwt, CacheData.userInformation.metadata);
+        console.log('run3');
+        AccountStore.dispatch(AccountActions.reload());
+      } else {
+        console.log('run4');
+        CacheData.userInformation.metadata = await AccountModel.doGetUserMetadata(CacheData.jwt);
+        AccountStore.dispatch(AccountActions.reload());
+      }
+    } else {
+      if (!CacheData.userInformation.metadata) {
+        CacheData.userInformation.metadata = {
+          receive_email_records: true,
+          sugges_health_studies: true,
+          visualize_health_data: true,
+        };
+        AccountStore.dispatch(AccountActions.reload());
+      }
     }
 
     if (justCreatedBitmarkAccount) {
@@ -950,6 +975,14 @@ const doIssueMMR = async (data) => {
   return result;
 };
 
+const doSaveUserSetting = async (metadata) => {
+  let temp = CacheData.userInformation.metadata;
+  temp = merge({}, temp, metadata);
+  CacheData.userInformation.metadata = temp;
+  await UserModel.doUpdateUserInfo(temp);
+  await AccountModel.doUpdateUserMetadata(CacheData.jwt, CacheData.userInformation);
+  AccountStore.dispatch(AccountActions.reload());
+};
 
 const DataProcessor = {
   doOpenApp,
@@ -986,6 +1019,7 @@ const DataProcessor = {
   doDisplayedWhatNewInformation,
   doTransferBitmark,
   doIssueMMR,
+  doSaveUserSetting,
 };
 
 export { DataProcessor };

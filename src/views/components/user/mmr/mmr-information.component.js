@@ -125,7 +125,7 @@ export class MMRInformationComponent extends Component {
               <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avarta_default.png')} />
               <View style={styles.mmrInformationBasic}>
                 <Text style={styles.mmrInformationLabel}>Name</Text>
-                <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.name || 'TODO'}</Text>
+                <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.name}</Text>
                 <View style={{ flex: 1, flexDirection: 'row', marginTop: 21 }}>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.mmrInformationLabel}>Date of birth</Text>
@@ -133,7 +133,7 @@ export class MMRInformationComponent extends Component {
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column', marginLeft: convertWidth(16), }}>
                     <Text style={styles.mmrInformationLabel}>Sex</Text>
-                    <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.sex || 'TODO'}</Text>
+                    <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.sex}</Text>
                   </View>
                 </View>
               </View>

@@ -273,6 +273,10 @@ const doIssueMMR = async (data) => {
   return executeTask('doIssueMMR', { data });
 };
 
+const doSaveUserSetting = async (settings) => {
+  return executeTask('doSaveUserSetting', { settings });
+};
+
 // ================================================================================================
 // ================================================================================================
 // ================================================================================================
@@ -306,6 +310,8 @@ let AppProcessor = {
   doTransferBitmark,
   showOfflineMessage,
   doIssueMMR,
+
+  doSaveUserSetting,
 }
 
 export {
