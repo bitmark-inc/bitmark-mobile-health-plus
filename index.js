@@ -1,8 +1,7 @@
 /** @format */
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
-import { TestCharacterFlapperComponent } from 'src/views/commons/index.js';
-// import App from './App';
-// console.log('i18n.translations :', i18n.locale, i18n.translations);
+// import { TestCharacterFlapperComponent } from 'src/views/commons/index.js';
+import App from './App';
 
-AppRegistry.registerComponent(appName, () => TestCharacterFlapperComponent);
+AppRegistry.registerComponent(appName, () => App);

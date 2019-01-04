@@ -109,6 +109,13 @@ const asyncAlert = (title, message) => {
   });
 };
 
+const delay = (ts) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ts);
+  });
+};
+
+
 const humanFileSize = (bytes) => {
   let thresh = 1024;
   // if (Math.abs(bytes) < thresh) {
@@ -139,4 +146,5 @@ export {
   getImageSize,
   asyncAlert,
   humanFileSize,
+  delay,
 };

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View, Animated,
+  View, Animated, TouchableOpacity, Text
 } from 'react-native';
 
 let charString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -14,66 +14,42 @@ export class CharacterFlapperComponent extends Component {
   }
   constructor(props) {
     super(props);
-    this.loadFirstHalfFlaperAnimation = this.loadFirstHalfFlaperAnimation.bind(this);
-    this.loadSecondHalfFlaperAnimation = this.loadSecondHalfFlaperAnimation.bind(this);
+    this.loadFlaperAnimation = this.loadFlaperAnimation.bind(this);
     this.loadChar = this.loadChar.bind(this);
-    this.changeToChar = this.changeToChar.bind(this);
+    this.loadFlapper = this.loadFlapper.bind(this);
     this.state = {
       char: this.props.char,
-      finalChar: this.props.char,
       rotate: new Animated.Value(0),
       index: 0,
     };
   }
 
-  componentDidMount() {
-    this.changeToChar('H');
-  }
-
-  changeToChar(finalChar) {
-    let finalIndex = charString.indexOf(finalChar);
-    if (finalChar >= 0) {
-
-      let changeText = async (index) => {
-        if (index < charString.length) {
-          await this.loadChar(charString[index]);
-          if (index !== finalIndex) {
-            changeText(index === (charString.length - 1) ? 0 : (index + 1));
-          }
-        }
-      };
-      let index = charString.indexOf(this.state.char);
-      changeText(index === (charString.length - 1) ? 0 : (index + 1));
-    }
-  }
-
   async loadChar(char) {
-    await this.loadFirstHalfFlaperAnimation();
     this.setState({ char });
-    await this.loadSecondHalfFlaperAnimation();
+    await this.loadFlaperAnimation();
   }
 
-  loadFirstHalfFlaperAnimation() {
+  loadFlaperAnimation() {
     return new Promise((resolve) => {
       Animated.spring(this.state.rotate, {
-        toValue: 90,
+        toValue: this.state.rotate.__getValue() === 360 ? 0 : 360,
         duration: 10,
       }).start(resolve);
     })
-
-  }
-  loadSecondHalfFlaperAnimation() {
-    return new Promise((resolve) => {
-      Animated.spring(this.state.rotate, {
-        toValue: 360,
-        duration: 30,
-      }).start(resolve);
-    });
   }
 
-  loadFlapper(finalChar) {
-    finalChar = finalChar || this.props.char;
-    this.setState({ finalChar });
+  async loadFlapper(finalChar) {
+    let radomChars = [];
+    // radomChars.push(charString[Math.floor(Math.random() * 26)]);
+    radomChars.push(finalChar);
+    let changeText = async (index) => {
+      if (index < radomChars.length) {
+        await this.loadChar(radomChars[index]);
+        await changeText(index + 1);
+      }
+    };
+    this.loadFlaperAnimation();
+    await changeText(0);
   }
 
   render() {
@@ -85,7 +61,7 @@ export class CharacterFlapperComponent extends Component {
       <View style={styles.bodyContent}>
         <Animated.Text style={[styles.char, this.props.charStyle, {
           transform: [
-            { rotateX: rotate }
+            { rotateX: rotate },
           ]
         }]}>{this.state.char}</Animated.Text>
       </View>
@@ -95,13 +71,10 @@ export class CharacterFlapperComponent extends Component {
 
 const styles = StyleSheet.create({
   bodyContent: {
-    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
   char: {
-    fontWeight: '900',
-    fontSize: 50,
   }
 });
 
@@ -113,7 +86,14 @@ export class TestCharacterFlapperComponent extends Component {
   render() {
     return (
       <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center', }}>
-        <CharacterFlapperComponent char={'A'} />
+        <CharacterFlapperComponent ref={ref => this.refFlapper = ref} char={'A'} />
+        <TouchableOpacity style={{
+          marginTop: 200, width: '100%',
+          alignContent: 'center', justifyContent: 'center',
+          borderWidth: 1,
+        }} onPress={() => this.refFlapper.loadFlapper(charString[Math.floor(Math.random() * 26)])}>
+          <Text style={{ textAlign: 'center' }}>Test</Text>
+        </TouchableOpacity>
       </View>
     );
   }

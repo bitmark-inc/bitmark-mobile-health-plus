@@ -86,7 +86,7 @@ const doGetCurrentAccount = async () => {
 };
 
 const doGeneratePhrase = async () => {
-  let phraseInfo = await processing(AccountModel.doGeneratePhrase());
+  let phraseInfo = AccountModel.doGeneratePhrase();
   return phraseInfo;
 };
 
