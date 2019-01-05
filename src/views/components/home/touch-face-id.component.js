@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: convertWidth(20),
     paddingRight: convertWidth(20),
-    paddingBottom: convertWidth(20),
   },
   enableButton: {
     height: constants.buttonHeight,
