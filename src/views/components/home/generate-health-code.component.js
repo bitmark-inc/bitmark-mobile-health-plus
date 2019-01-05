@@ -8,6 +8,7 @@ import { AppProcessor, EventEmitterService } from 'src/processors';
 import { convertWidth, dictionaryPhraseWords, delay } from 'src/utils';
 import { config, constants } from 'src/configs';
 import { CharacterFlapperComponent } from 'src/views/commons';
+import { merge } from 'immutable';
 
 const STEPS = {
   init: 1,
@@ -49,7 +50,7 @@ export class GenerateHealthCodeComponent extends Component {
   }
 
   componentDidMount() {
-    this.computePhraseWords(INIT_PHRASE_WORDS, true);
+    this.computePhraseWords(INIT_PHRASE_WORDS, {}, true);
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
   }
@@ -95,7 +96,7 @@ export class GenerateHealthCodeComponent extends Component {
     EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: true, indicator: true });
   }
 
-  async computePhraseWords(sourcePhraseWords, firstLoad) {
+  async computePhraseWords(sourcePhraseWords, extState, firstLoad) {
     let smallerList = [];
     let biggerList = [];
     let phraseWords = [];
@@ -115,7 +116,7 @@ export class GenerateHealthCodeComponent extends Component {
               }
             }
             Promise.all(list).then(resolve);
-          })
+          });
         }
         doFlapper();
         await delay(100);
@@ -128,15 +129,18 @@ export class GenerateHealthCodeComponent extends Component {
       }
       phraseWords.push({ index, word, characters });
     }
-
-    this.setState({ phraseWords, smallerList, biggerList });
+    this.setState(merge({}, extState, { phraseWords, smallerList, biggerList }));
+    this.canGenerateNew = true;
   }
 
   async generatePhraseWords() {
+    if (!this.canGenerateNew) {
+      return;
+    }
+    this.canGenerateNew = false;
     let phraseInfo = await AppProcessor.doGeneratePhrase();
     this.phraseWords = phraseInfo.phraseWords;
-    this.computePhraseWords(phraseInfo.phraseWords);
-    this.setState({ step: STEPS.generated });
+    this.computePhraseWords(phraseInfo.phraseWords, { step: STEPS.generated });
   }
 
   goToTest(phraseWords) {
@@ -343,13 +347,11 @@ export class GenerateHealthCodeComponent extends Component {
   }
 
   resetTest() {
-    this.computePhraseWords(INIT_PHRASE_WORDS);
-    this.inputtedRefs = {};
-
-    this.setState({
+    this.computePhraseWords(INIT_PHRASE_WORDS, {
       step: STEPS.init,
       testingResult: null
     });
+    this.inputtedRefs = {};
   }
 
   render() {
@@ -378,6 +380,7 @@ export class GenerateHealthCodeComponent extends Component {
                             scrollEnabled={false}
                             extraData={this.state}
                             renderItem={({ item, index }) => {
+                              console.log('item.characters :', item.characters);
                               return (
                                 <View style={styles.recoveryPhraseSet}>
                                   <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
@@ -530,29 +533,31 @@ export class GenerateHealthCodeComponent extends Component {
                                   onPress={() => this.setState({ selectingIndex: index })}
                                 >
                                   <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                  <View style={[styles.phraseWordContainer, item.characters ? {
-                                    backgroundColor: '#FFFFFF',
-                                    borderWidth: 1,
-                                    borderColor: '#FFFFFF'
-                                  } : {}]}>
+                                  <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
                                     {/*Selected word*/}
-                                    {item.characters && item.characters.map((character, index) => <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
+                                    {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                      <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
+                                    </View>)}
                                     {/*Input word*/}
                                     {!item.characters &&
-                                      <TextInput
-                                        style={[styles.recoveryPhraseInputWord, {
-                                          borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                          color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                        }]}
-                                        ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                        value={item.word.toUpperCase()}
-                                        returnKeyType={'done'}
-                                        autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                        onFocus={() => this.onFocus.bind(this)(item.key)}
-                                        onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                      />
+                                      <View style={[styles.characterBound, {
+                                        backgroundColor: 'white',
+                                        borderWidth: 1,
+                                        borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                        color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                        <TextInput
+                                          style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
+                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                          value={item.word.toUpperCase()}
+                                          returnKeyType={'done'}
+                                          autoCorrect={false}
+                                          autoCapitalize="none"
+                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                          onFocus={() => this.onFocus.bind(this)(item.key)}
+                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                                        />
+                                      </View>
                                     }
                                   </View>
                                 </TouchableOpacity>
@@ -572,29 +577,30 @@ export class GenerateHealthCodeComponent extends Component {
                                   onPress={() => this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) })}
                                 >
                                   <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                                  <View style={[styles.phraseWordContainer, item.characters ? {
-                                    backgroundColor: '#FFFFFF',
-                                    borderWidth: 1,
-                                    borderColor: '#FFFFFF'
-                                  } : {}]}>
+                                  <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
                                     {/*Selected word*/}
-                                    {item.characters && item.characters.map((character, index) => <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
+                                    {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                      <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
+                                    </View>)}
                                     {/*Input word*/}
                                     {!item.characters &&
-                                      <TextInput
-                                        style={[styles.recoveryPhraseInputWord, {
-                                          borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                          color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                        }]}
-                                        ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                        value={item.word.toUpperCase()}
-                                        returnKeyType={'done'}
-                                        autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                        onFocus={() => this.onFocus.bind(this)(item.key)}
-                                        onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                      />
+                                      <View style={[styles.characterBound, {
+                                        backgroundColor: 'white',
+                                        borderWidth: 1,
+                                        borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                        <TextInput
+                                          style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
+                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                          value={item.word.toUpperCase()}
+                                          returnKeyType={'done'}
+                                          autoCorrect={false}
+                                          autoCapitalize="none"
+                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                          onFocus={() => this.onFocus.bind(this)(item.key)}
+                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                                        />
+                                      </View>
                                     }
                                   </View>
                                 </TouchableOpacity>
@@ -796,14 +802,9 @@ const styles = StyleSheet.create({
   },
   recoveryPhraseInputWord: {
     width: '100%',
-    height: 20,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
     fontSize: 13,
-    paddingLeft: 5,
-    paddingRight: 5,
-    borderRadius: 3,
   },
   infoLinkTextContainer: {
     flexDirection: 'row',

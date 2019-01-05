@@ -416,7 +416,9 @@ export class AccountPhraseComponent extends Component {
                               <View style={styles.recoveryPhraseSet}>
                                 <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
                                 <View style={[styles.phraseWordContainer]}>
-                                  {item.characters.map((character, index) => <Text style={[styles.character]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
+                                  {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                    <Text style={[styles.character]} >{character.toUpperCase()}</Text>
+                                  </View>)}
                                 </View>
                               </View>
                             )
@@ -432,7 +434,9 @@ export class AccountPhraseComponent extends Component {
                               <View style={styles.recoveryPhraseSet}>
                                 <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
                                 <View style={[styles.phraseWordContainer]}>
-                                  {item.characters.map((character, index) => <Text style={[styles.character]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
+                                  {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                    <Text style={[styles.character]} >{character.toUpperCase()}</Text>
+                                  </View>)}
                                 </View>
                               </View>
                             )
@@ -560,24 +564,31 @@ export class AccountPhraseComponent extends Component {
                                 onPress={() => this.setState({ selectingIndex: index })}
                               >
                                 <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                <View style={[styles.phraseWordContainer]}>
+                                <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
                                   {/*Selected word*/}
-                                  {item.characters && item.characters.map((character, index) => <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
+                                  {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                    <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
+                                  </View>)}
                                   {/*Input word*/}
                                   {!item.characters &&
-                                    <TextInput
-                                      style={[styles.recoveryPhraseInputWord, {
-                                        borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                        color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }]}
-                                      ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                      value={item.word.toUpperCase()}
-                                      autoCorrect={false}
-                                      autoCapitalize="none"
-                                      onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                      onFocus={() => this.onFocus.bind(this)(item.key)}
-                                      onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                    />
+                                    <View style={[styles.characterBound, {
+                                      backgroundColor: 'white',
+                                      borderWidth: 1,
+                                      borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                      color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                    }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                      <TextInput
+                                        style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
+                                        ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                        value={item.word.toUpperCase()}
+                                        returnKeyType={'done'}
+                                        autoCorrect={false}
+                                        autoCapitalize="none"
+                                        onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                        onFocus={() => this.onFocus.bind(this)(item.key)}
+                                        onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                                      />
+                                    </View>
                                   }
                                 </View>
                               </TouchableOpacity>
@@ -597,24 +608,30 @@ export class AccountPhraseComponent extends Component {
                                 onPress={() => this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) })}
                               >
                                 <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                                <View style={[styles.phraseWordContainer]}>
+                                <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
                                   {/*Selected word*/}
-                                  {item.characters && item.characters.map((character, index) => <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} key={'character_' + index}>{character.toUpperCase()}</Text>)}
+                                  {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                    <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
+                                  </View>)}
                                   {/*Input word*/}
                                   {!item.characters &&
-                                    <TextInput
-                                      style={[styles.recoveryPhraseInputWord, {
-                                        borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                        color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }]}
-                                      ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                      value={item.word.toUpperCase()}
-                                      autoCorrect={false}
-                                      autoCapitalize="none"
-                                      onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                      onFocus={() => this.onFocus.bind(this)(item.key)}
-                                      onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                    />
+                                    <View style={[styles.characterBound, {
+                                      backgroundColor: 'white',
+                                      borderWidth: 1,
+                                      borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                    }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                      <TextInput
+                                        style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
+                                        ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                        value={item.word.toUpperCase()}
+                                        returnKeyType={'done'}
+                                        autoCorrect={false}
+                                        autoCapitalize="none"
+                                        onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                        onFocus={() => this.onFocus.bind(this)(item.key)}
+                                        onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                                      />
+                                    </View>
                                   }
                                 </View>
                               </TouchableOpacity>
@@ -817,22 +834,20 @@ const styles = StyleSheet.create({
   phraseWordContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    backgroundColor: 'white',
-    borderWidth: 2,
-    borderColor: 'white',
+    backgroundColor: '#FFFFFF',
+    paddingTop: 2, paddingBottom: 2,
+    paddingRight: 2,
+  },
+  characterBound: {
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    height: 16,
+    borderRadius: 3, borderWidth: 0.1, borderColor: '#F1F1F1',
+    backgroundColor: '#F1F1F1',
+    marginLeft: 2,
   },
   character: {
-    flex: 1,
-    height: 20,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: '#FFFFFF',
-    backgroundColor: '#F1F1F1',
-    textAlign: 'center',
-    fontFamily: 'Andale Mono',
-    fontSize: 13,
-    lineHeight: 15,
-    color: 'rgba(0, 0, 0, 0.6)'
+    textAlign: 'center', fontFamily: 'Andale Mono', fontSize: 13,
+    color: 'rgba(0, 0, 0, 0.6)',
   },
   recoveryPhraseSet: {
     flex: 1,
@@ -851,13 +866,9 @@ const styles = StyleSheet.create({
   },
   recoveryPhraseInputWord: {
     width: '100%',
-    height: 20,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
     fontSize: 13,
-    paddingLeft: 5,
-    paddingRight: 5,
   },
   infoLinkTextContainer: {
     flexDirection: 'row',
