@@ -380,7 +380,6 @@ export class GenerateHealthCodeComponent extends Component {
                             scrollEnabled={false}
                             extraData={this.state}
                             renderItem={({ item, index }) => {
-                              console.log('item.characters :', item.characters);
                               return (
                                 <View style={styles.recoveryPhraseSet}>
                                   <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
