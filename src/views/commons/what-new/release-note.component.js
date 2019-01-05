@@ -8,7 +8,7 @@ import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
 import { runPromiseWithoutError, convertWidth } from 'src/utils';
 import { DataProcessor } from 'src/processors';
-import { config, constants } from 'src/configs';
+import { config, } from 'src/configs';
 
 
 export class ReleaseNoteComponent extends Component {
@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   body: {
-    paddingTop: (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
     flex: 1,
   },
   bodyContent: {

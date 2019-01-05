@@ -32,21 +32,18 @@ export class TaggingComponent extends Component {
 
   async componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
+    this.keyboardWillideListener = Keyboard.addListener('keyboardWillHide', this.onKeyboardWillHide.bind(this));
 
     let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmarkId);
-    console.log('tags:', tags);
     let tagsCache = await LocalFileService.getTagsCache();
-    console.log('tagsCache:', tagsCache);
     let tagsSuggestion = tagsCache.filter((item) => tags.indexOf(item) == -1);
-    console.log('tagsSuggestion:', tagsSuggestion);
 
     this.setState({ tags, tagsCache, tagsSuggestion });
   }
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
+    this.keyboardWillideListener.remove();
   }
 
   onKeyboardDidShow(keyboardEvent) {
@@ -65,7 +62,7 @@ export class TaggingComponent extends Component {
     Animated.parallel(listAnimations).start();
   }
 
-  onKeyboardDidHide() {
+  onKeyboardWillHide() {
     this.hideInputTag();
     this.setState({ keyboardHeight: 0 });
 
@@ -89,7 +86,7 @@ export class TaggingComponent extends Component {
     this.setState({ inputtingTag: false, tagsSuggestion: this.state.tagsCache.filter(item => this.state.tags.indexOf(item) == -1) });
   }
 
-  async addTag(tag, fromSubmit) {
+  async addTag(tag) {
     if (tag) {
       let tags = this.state.tags;
       if (tags.indexOf(tag) == -1) {
@@ -108,9 +105,6 @@ export class TaggingComponent extends Component {
         this.setState({ tag: '', tags, tagsCache, tagsSuggestion });
         await LocalFileService.writeTagsCache(tagsCache);
       }
-    }
-    if (fromSubmit) {
-      this.hideInputTag();
     }
   }
 
@@ -204,7 +198,7 @@ export class TaggingComponent extends Component {
                   onChange={() => { this.setState({ tag: this.state.tag.replace(/\s/g, '') }) }}
                   onBlur={() => { this.setState({ tag: '' }) }}
                   onChangeText={(text) => { this.onChangeText.bind(this)(text) }}
-                  onSubmitEditing={() => this.addTag.bind(this)(this.state.tag, true)}
+                  onSubmitEditing={() => this.addTag.bind(this)(this.state.tag)}
                   placeholder={global.i18n.t("TaggingComponent_enterATag")}
                 />
 
