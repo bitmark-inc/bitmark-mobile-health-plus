@@ -14,7 +14,6 @@ import { runPromiseWithoutError, FileUtil, convertWidth } from 'src/utils';
 import { EventEmitterService, AppProcessor } from 'src/processors';
 import { config, } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
-import { constants } from "../../../configs";
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+    paddingTop: convertWidth(16),
     flex: 1,
   },
   bodyContent: {

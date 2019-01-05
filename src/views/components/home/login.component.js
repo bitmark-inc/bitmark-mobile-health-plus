@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     padding: convertWidth(16),
-    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+    paddingTop: convertWidth(16),
     backgroundColor: 'white',
   },
   bodyScroll: {

@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(232, 232, 232, 1.0)',
   },
   searchArea: {
-    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0)
+    paddingTop: convertWidth(16)
   },
   searchInput: {
     paddingLeft: convertWidth(16),
@@ -386,7 +386,6 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    // paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
     paddingTop: 0,
     flex: 1,
   },

@@ -6,7 +6,6 @@ import {
 import { Actions } from 'react-native-router-flux';
 import { BitmarkLegalComponent } from 'src/views/commons';
 import { convertWidth } from 'src/utils';
-import { config, constants } from 'src/configs';
 
 export class SupportComponent extends Component {
   constructor(props) {
@@ -52,7 +51,7 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(16),
-    paddingTop: convertWidth(16) + (config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 0),
+    paddingTop: convertWidth(16),
     flex: 1,
   },
   bodyContent: {
