@@ -21,7 +21,7 @@ install:
 - brew install getsentry/tools/sentry-cli
 script:
 - |
-    if [ $TRAVIS_BRANCH == "master" ]; then
+    if [ $TRAVIS_BRANCH == "master" ] || [ $TRAVIS_BRANCH == "ux-loop" ]; then
       fastlane ios betatravis
     else
       fastlane ios developtravis
