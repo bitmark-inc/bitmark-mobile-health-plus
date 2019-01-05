@@ -79,7 +79,7 @@ let updateModal = (keyIndex, data) => {
 };
 
 // ================================================================================================================================================
-const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmarks, currentMMRAsset, bitmarkAccountNumber) => {
+const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber) => {
   bitmarkAccountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
   let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
   userDataBitmarks[bitmarkAccountNumber] = {
@@ -88,14 +88,20 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   };
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
-  if (currentMMRAsset && currentMMRAsset.id !== CacheData.userInformation.currentMMRAssetId) {
-    CacheData.userInformation.currentMMRAssetId = currentMMRAsset.id;
-    let result = await runPromiseIgnoreError(detectLocalAssetFilePath(currentMMRAsset));
-    console.log('result :', result);
-    if (result.filePath && (await FileUtil.exists(result.filePath))) {
-      CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
+  if (latestMMRBitmark && latestMMRBitmark.asset.id !== CacheData.userInformation.currentMMRAssetId) {
+    if (latestMMRBitmark.owner === bitmarkAccountNumber) {
+      CacheData.userInformation.currentMMRAssetId = latestMMRBitmark.asset.id;
+      let result = await runPromiseIgnoreError(detectLocalAssetFilePath(latestMMRBitmark.asset));
+      console.log('result :', result);
+      if (result.filePath && (await FileUtil.exists(result.filePath))) {
+        CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
+      }
+      await UserModel.doUpdateUserInfo(CacheData.userInformation);
+    } else {
+      CacheData.userInformation.currentMMRAssetId = null;
+      CacheData.userInformation.currentMMrData = null;
+      await UserModel.doUpdateUserInfo(CacheData.userInformation);
     }
-    await UserModel.doUpdateUserInfo(CacheData.userInformation);
   }
   let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
   MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
@@ -159,7 +165,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
       let userBitmarks = (await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber)) || {};
       let healthDataBitmarks = [], healthAssetBitmarks = [];
-      let currentMMRAsset;
+      let latestMMRBitmark;
       for (let bitmark of bitmarks) {
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
@@ -192,8 +198,9 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               healthAssetBitmarks.push(bitmark);
             }
           } else if (isMMRRecord(asset)) {
-            if (!currentMMRAsset || currentMMRAsset.offset < asset.offset) {
-              currentMMRAsset = asset;
+            if (!latestMMRBitmark || latestMMRBitmark.offset < asset.offset) {
+              bitmark.asset = asset;
+              latestMMRBitmark = bitmark;
             }
           }
         }
@@ -220,9 +227,9 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
       } else {
         healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
       }
-      (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks, currentMMRAsset }));
+      (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
-      return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, currentMMRAsset, bitmarkAccountNumber);
+      return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber);
     }).catch(error => {
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve());
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
