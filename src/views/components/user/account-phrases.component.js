@@ -367,7 +367,7 @@ export class AccountPhraseComponent extends Component {
                 <Text style={styles.titleText}>WARNING</Text>
                 <Image style={styles.warningIcon} source={require('assets/imgs2/warning_icon.png')} />
               </ShadowTopComponent>
-              <ScrollView style={[styles.bodyContent, styles.paddingContent]} contentContainerStyle={{ flexGrow: 1, }}>
+              <ScrollView style={[styles.bodyContent, styles.paddingContent, { borderRadius: 0, }]} contentContainerStyle={{ flexGrow: 1, }}>
                 {!this.props.isLogout && <View style={styles.warningArea}>
                   <Text style={styles.warningTitle}>View your vault key phrase.</Text>
                   {/* <Text style={styles.warningTitle}>{i18n.t('AccountPhraseComponent_warningTitle1')}</Text> */}
@@ -405,7 +405,7 @@ export class AccountPhraseComponent extends Component {
                   </View>
 
                   {/*CONTENT*/}
-                  <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, }}>
+                  <ScrollView style={{ flex: 1 }} showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
                     <View style={styles.contentArea}>
                       {/*PHRASE WORDS*/}
                       <View style={styles.phraseWordsArea}>
@@ -501,7 +501,7 @@ export class AccountPhraseComponent extends Component {
                   </View>
 
                   {/*CONTENT*/}
-                  <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, }}>
+                  <ScrollView style={{ flex: 1 }} showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
                     <View style={[styles.contentArea, styles.paddingContent, { justifyContent: 'flex-start' }]}>
                       <View>
                         <Text style={[styles.writeDownPhraseWordsInformTitle]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
@@ -552,7 +552,7 @@ export class AccountPhraseComponent extends Component {
                   }
 
                   {/*CONTENT*/}
-                  <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, }}>
+                  <ScrollView style={{ flex: 1 }} showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
                     <View style={[styles.contentArea, styles.paddingContent]}>
                       {/*PHRASE WORDS*/}
                       <View style={styles.phraseWordsArea}>
@@ -585,7 +585,7 @@ export class AccountPhraseComponent extends Component {
                                         borderWidth: 1,
                                         borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
                                         color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingLeft: 1, paddingRight: 1, }]}>
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
                                         <TextInput
                                           style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -631,7 +631,7 @@ export class AccountPhraseComponent extends Component {
                                         backgroundColor: 'white',
                                         borderWidth: 1,
                                         borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingLeft: 1, paddingRight: 1, }]}>
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
                                         <TextInput
                                           style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -903,7 +903,7 @@ const styles = StyleSheet.create({
   },
   writeDownPhraseWordsInformTitle: {
     marginTop: 50,
-    fontFamily: 'AvenirNextW1G-Regular',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 14,
     color: 'rgba(0, 0, 0, 0.6)',
   },
