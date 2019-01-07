@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   addEmergencyContactButtonText: {
-    fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#0060F2',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: '#0060F2',
   },
   emergencyContactRowDeleteIcon: {
     width: 14, height: 18, resizeMode: 'contain',
