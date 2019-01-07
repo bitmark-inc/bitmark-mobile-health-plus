@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
 
   },
   introductionTextArea: {
-    flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'center',
