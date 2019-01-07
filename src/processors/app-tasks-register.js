@@ -135,7 +135,7 @@ const doIssueMMR = async ({ data }) => {
 };
 
 const doSaveUserSetting = async ({ settings }) => {
-  return await processing(DataProcessor.doSaveUserSetting(settings));
+  return await DataProcessor.doSaveUserSetting(settings);
 };
 
 // ================================================================================================
