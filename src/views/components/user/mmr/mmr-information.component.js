@@ -92,6 +92,9 @@ export class MMRInformationComponent extends Component {
   }
   addEmergencyContact() {
     selectContactPhone().then((data) => {
+      if (!data) {
+        return;
+      }
       let relationshipArray = [
         'Cancel',
         'mother',
