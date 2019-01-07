@@ -105,7 +105,7 @@ export class EditBitmarkComponent extends Component {
                 <TextInput style={[styles.inputNote]}
                            multiline={true}
                            value={this.state.note}
-                           placeholder={'TAP TO ADD PRIVATE NOTES TO YOUR RECORD'}
+                           placeholder={'Tap to add private notes to your record'}
                            onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
                 />
               </View>
@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
-    borderWidth: 1,
   },
   header: {
     width: '100%',
@@ -223,8 +222,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
     minHeight: 54,
     width: '100%',
-    borderTopWidth: 1,
-    borderColor: '#FFFFFF',
+    borderTopWidth: 0.5,
+    borderColor: '#F5F5F5',
   },
   sectionTitle: {
     fontSize: 10,
@@ -249,7 +248,7 @@ const styles = StyleSheet.create({
   inputNote: {
     height: 103,
     color: 'rgba(0, 0, 0, 0.87)',
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: 'AvenirNextW1G-Regular',
     backgroundColor: '#F5F5F5',
   },
