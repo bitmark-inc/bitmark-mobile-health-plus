@@ -981,7 +981,7 @@ const doSaveUserSetting = async (metadata) => {
   temp = merge({}, temp, metadata);
   CacheData.userInformation.metadata = temp;
   await UserModel.doUpdateUserInfo(temp);
-  await AccountModel.doUpdateUserMetadata(CacheData.jwt, CacheData.userInformation);
+  await AccountModel.doUpdateUserMetadata(CacheData.jwt, CacheData.userInformation.metadata);
   AccountStore.dispatch(AccountActions.reload());
 };
 
