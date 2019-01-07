@@ -5,7 +5,7 @@ import ReactNative, {
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, TextInput, KeyboardAvoidingView, ImageBackground,
 } from 'react-native';
 import moment from 'moment';
-import { convertWidth, } from 'src/utils';
+import { convertWidth, FileUtil, } from 'src/utils';
 import { ShadowComponent, ShadowTopComponent } from 'src/views/commons';
 import { Actions } from 'react-native-router-flux';
 import ImagePicker from 'react-native-image-picker';
@@ -78,8 +78,9 @@ export class MMRInformationComponent extends Component {
               if (error) {
                 return;
               }
-              console.log('DocumentPicker :', response);
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + response.data });
+              let filePath = response.uri.replace('file://', '');
+              let data = await FileUtil.readFile(filePath, 'base64');
+              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + data });
             });
             break;
           }
