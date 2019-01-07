@@ -23,11 +23,19 @@ export class FullViewCaptureAssetComponent extends Component {
     const pdfExtensions = ['PDF'];
     let loading = false;
     let type = 'image';
-    if (pdfExtensions.includes(this.props.filePath.substring(this.props.filePath.lastIndexOf('.') + 1).toUpperCase())) {
-      loading = true;
-      type = 'pdf';
+    if (this.props.filePath) {
+      if (pdfExtensions.includes(this.props.filePath.substring(this.props.filePath.lastIndexOf('.') + 1).toUpperCase())) {
+        loading = true;
+        type = 'pdf';
+      }
+      this.state = { type, loading };
     }
-    this.state = { type, loading };
+  }
+
+  componentDidMount() {
+    if (!this.props.filePath) {
+      Actions.pop();
+    }
   }
 
   render() {
