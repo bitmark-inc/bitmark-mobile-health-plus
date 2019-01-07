@@ -300,7 +300,11 @@ export class MMRInformationComponent extends Component {
                       <Text style={styles.mmrInformationLabel}>Sex</Text>
                       <View style={styles.mmrInformationValueInput}>
                         <PickerSelect
-                          style={{ inputIOS: { width: '100%', height: '100%', padding: 8, } }}
+                          style={{
+                            inputIOS: { width: '100%', height: '100%', padding: 8, },
+                            modalViewMiddle: { justifyContent: 'flex-end' },
+                            chevronContainer: { display: 'none' }
+                          }}
                           selectedValue={this.state.mmrInformation.sex}
                           placeholder={{
                             label: 'SELECT',
@@ -309,7 +313,6 @@ export class MMRInformationComponent extends Component {
                           }}
                           items={[{ label: 'MALE', value: 'MALE' }, { label: 'FEMALE', value: 'FEMALE' }]}
                           hideIcon={true}
-                          hideDoneBar={true}
                           onValueChange={(sex) => this.updateMMRInformationState.bind(this)({ sex })}>
                         </PickerSelect>
                       </View>
@@ -464,7 +467,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   emergencyContactRowRelationship: {
-    fontFamily: 'AvenirNextW1G-Light', fontSize: 14, textAlign: 'right',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10, textAlign: 'right',
     width: 76 + convertWidth(15),
     paddingRight: convertWidth(15),
     marginTop: 2,
@@ -474,11 +477,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   emergencyContactRowInfoName: {
-    fontFamily: 'AvenirNextW1G-Bold', fontSize: 14,
-    paddingBottom: 2,
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 12,
+    paddingBottom: 3,
   },
   emergencyContactRowInfoPhoneNumber: {
-    fontFamily: 'AvenirNextW1G-Light', fontSize: 14,
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
   },
   addEmergencyContactButton: {
     width: '100%',
