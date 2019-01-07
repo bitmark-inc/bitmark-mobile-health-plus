@@ -585,7 +585,7 @@ export class AccountPhraseComponent extends Component {
                                         borderWidth: 1,
                                         borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
                                         color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingLeft: 1, paddingRight: 1, }]}>
                                         <TextInput
                                           style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -631,7 +631,7 @@ export class AccountPhraseComponent extends Component {
                                         backgroundColor: 'white',
                                         borderWidth: 1,
                                         borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingLeft: 1, paddingRight: 1, }]}>
                                         <TextInput
                                           style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}

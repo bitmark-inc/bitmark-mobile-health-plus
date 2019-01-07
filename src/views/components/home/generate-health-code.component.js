@@ -552,7 +552,7 @@ export class GenerateHealthCodeComponent extends Component {
                                         borderWidth: 1,
                                         borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
                                         color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingRight: 1, paddingLeft: 1 }]}>
                                         <TextInput
                                           style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -598,7 +598,7 @@ export class GenerateHealthCodeComponent extends Component {
                                         backgroundColor: 'white',
                                         borderWidth: 1,
                                         borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingRight: 1, paddingLeft: 1 }]}>
                                         <TextInput
                                           style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
                                           ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -813,6 +813,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
     fontSize: 13,
+    paddingLeft: 2, paddingRight: 2,
   },
   infoLinkTextContainer: {
     flexDirection: 'row',
