@@ -90,7 +90,6 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
   if (latestMMRBitmark) {
     if (latestMMRBitmark.owner === bitmarkAccountNumber) {
-      CacheData.userInformation.currentMMRAssetId = latestMMRBitmark.asset.id;
       let result = await runPromiseIgnoreError(detectLocalAssetFilePath(latestMMRBitmark.asset));
       if (result.filePath && (await FileUtil.exists(result.filePath))) {
         CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
@@ -720,7 +719,7 @@ const doMarkDoneBitmarkHealthData = () => {
 };
 
 const doIssueFile = async (issueParams) => {
-  let {filePath, assetName, metadataList, quantity, isPublicAsset = false, isMultipleAsset = false, note, tags} = issueParams;
+  let { filePath, assetName, metadataList, quantity, isPublicAsset = false, isMultipleAsset = false, note, tags } = issueParams;
   let results = await BitmarkService.doIssueFile(CacheData.userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
   let appInfo = await doGetAppInformation();
@@ -821,7 +820,7 @@ const doDeleteAccount = async () => {
 const doAcceptEmailRecords = async (emailRecord) => {
   for (let item of emailRecord.list) {
     if (!item.existingAsset) {
-      await doIssueFile({filePath: item.filePath, assetName: item.assetName, metadata: item.metadata, quantity: 1});
+      await doIssueFile({ filePath: item.filePath, assetName: item.assetName, metadataList: item.metadata, quantity: 1 });
     }
   }
   for (let id of emailRecord.ids) {
@@ -1006,7 +1005,7 @@ const doIssueMMR = async (data) => {
   let filePath = `${FileUtil.CacheDirectory}/${assetName}.json`;
   await FileUtil.writeFile(filePath, JSON.stringify(data));
 
-  let result = await doIssueFile({filePath, assetName, metadata, quantity: 1});
+  let result = await doIssueFile({ filePath, assetName, metadataList: metadata, quantity: 1 });
   await FileUtil.removeSafe(filePath);
   return result;
 };

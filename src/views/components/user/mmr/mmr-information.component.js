@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   emergencyContactRowRelationship: {
-    fontFamily: 'AvenirNextW1G-Light', fontSize: 10, textAlign: 'right',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 14, textAlign: 'right',
     width: 76 + convertWidth(15),
     paddingRight: convertWidth(15),
     marginTop: 2,
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   emergencyContactRowInfoName: {
-    fontFamily: 'AvenirNextW1G-Bold', fontSize: 12,
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 14,
     paddingBottom: 2,
   },
   emergencyContactRowInfoPhoneNumber: {
