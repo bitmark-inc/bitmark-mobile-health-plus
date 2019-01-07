@@ -34,6 +34,44 @@ const styles = StyleSheet.create({
   },
 });
 
+export class OutterShadowComponent extends Component {
+  static propTypes = {
+    children: PropTypes.any,
+    style: PropTypes.any,
+    contentStyle: PropTypes.any,
+  };
+  render() {
+    return (
+      <View style={[outterStyles.body, this.props.style]}>
+        <View style={[outterStyles.bodyContent, this.props.contentStyle]}>
+          {this.props.children}
+        </View>
+      </View>
+    );
+  }
+}
+
+const outterStyles = StyleSheet.create({
+  body: {
+    padding: 2,
+    paddingTop: 0,
+    borderRadius: 4,
+    shadowOffset: { width: 0, height: 2, },
+    shadowOpacity: 0.2,
+    shadowColor: '#000000',
+    shadowRadius: 5,
+  },
+  bodyContent: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    borderWidth: 0.1,
+    borderTopWidth: 0,
+    borderRadius: 4,
+    borderColor: '#F4F2EE',
+  },
+});
+
 export class ShadowTopComponent extends Component {
   static propTypes = {
     children: PropTypes.any,

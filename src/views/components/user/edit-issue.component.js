@@ -11,6 +11,7 @@ import moment from 'moment';
 import { convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { InputTagComponent } from "./tag/input-tag.component";
+import { OutterShadowComponent } from "../../commons/shadow.component";
 
 
 class ItemOrderImageComponent extends Component {
@@ -41,7 +42,7 @@ class ItemOrderImageComponent extends Component {
         borderRadius: convertWidth(12),
         zIndex: 1,
       }}>
-        <Text style={{ fontFamily: 'AvenirNextW1G-Bold', color: 'white', flex: 1, fontSize: 12, lineHeight: 20}}>{this.state.index + 1}</Text>
+        <Text style={{ fontFamily: 'AvenirNextW1G-Bold', color: 'white', flex: 1, fontSize: 12, lineHeight: 20, marginTop: 1}}>{this.state.index + 1}</Text>
       </View>
       <Image style={{ width: convertWidth(100), height: convertWidth(100), resizeMode: 'cover', borderRadius: 4 }} source={{ uri: this.state.uri }} />
     </View>);
@@ -154,98 +155,104 @@ export class EditIssueComponent extends Component {
           <ScrollView style={{flex: 1}}>
             {/*ATTACHED DOCUMENTS*/}
             {!this.isSingleFile &&
-            <View style={[styles.section]}>
-              {/*Top bar*/}
-              <View style={[styles.topBar]}>
-                <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
-              </View>
+            <OutterShadowComponent style={{marginTop: 1.5}}>
+              <View style={[styles.section]}>
+                {/*Top bar*/}
+                <View style={[styles.topBar]}>
+                  <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
+                </View>
 
-              {/*Content*/}
-              <View style={[styles.contentContainer]}>
-                <Text style={styles.introductionTitle}>Arrange the photos</Text>
-                <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
+                {/*Content*/}
+                <View style={[styles.contentContainer]}>
+                  <Text style={styles.introductionTitle}>Arrange the photos</Text>
+                  <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
 
-                {/*Images*/}
-                <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
-                  <SortableGrid
-                    style={{ flex: 1, width: convertWidth(312), }}
-                    itemsPerRow={3}
-                    onDragRelease={this.newOrder.bind(this)}
-                    onDragStart={() => this.setState({ scrollEnabled: false })} >
-                    {
-                      this.props.images.map((imageInfo, index) => {
-                        return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
-                          if (this.state.itemOrder) {
-                            this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
-                          } else {
-                            this.itemOrderImageRefs[index] = ref
-                          }
-                        }} />);
-                      })
-                    }
-                  </SortableGrid>
-                </ScrollView>
+                  {/*Images*/}
+                  <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
+                    <SortableGrid
+                      style={{ flex: 1, width: convertWidth(312), }}
+                      itemsPerRow={3}
+                      onDragRelease={this.newOrder.bind(this)}
+                      onDragStart={() => this.setState({ scrollEnabled: false })} >
+                      {
+                        this.props.images.map((imageInfo, index) => {
+                          return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
+                            if (this.state.itemOrder) {
+                              this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
+                            } else {
+                              this.itemOrderImageRefs[index] = ref
+                            }
+                          }} />);
+                        })
+                      }
+                    </SortableGrid>
+                  </ScrollView>
+                </View>
               </View>
-            </View>
+            </OutterShadowComponent>
             }
 
             {/*NOTES*/}
-            <View style={[styles.section, {marginTop: this.isSingleFile ? 0: 19}]}>
-              {/*Top bar*/}
-              <View style={[styles.topBar]}>
-                <Text style={[styles.sectionTitle]}>NOTES</Text>
-              </View>
+            <OutterShadowComponent style={{marginTop: this.isSingleFile ? 1.5: 19}}>
+              <View style={[styles.section]}>
+                {/*Top bar*/}
+                <View style={[styles.topBar]}>
+                  <Text style={[styles.sectionTitle]}>NOTES</Text>
+                </View>
 
-              {/*Content*/}
-              <View style={[styles.contentContainer, {backgroundColor: '#F5F5F5'}]}>
-                <TextInput style={[styles.inputNote]}
-                           multiline={true}
-                           placeholder={'TAP TO ADD PRIVATE NOTES TO YOUR RECORD'}
-                           onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
-                />
+                {/*Content*/}
+                <View style={[styles.contentContainer, {backgroundColor: '#F5F5F5'}]}>
+                  <TextInput style={[styles.inputNote]}
+                             multiline={true}
+                             placeholder={'Tap to add private notes to your record'}
+                             onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+                  />
+                </View>
               </View>
-            </View>
+            </OutterShadowComponent>
 
             {/*TAGS*/}
-            <View style={[styles.section, {marginTop: 19}]}>
-              {/*Top bar*/}
-              <View style={[styles.topBar]}>
-                <Text style={[styles.sectionTitle]}>TAGS</Text>
-              </View>
+            <OutterShadowComponent style={{marginTop: 19}}>
+              <View style={[styles.section]}>
+                {/*Top bar*/}
+                <View style={[styles.topBar]}>
+                  <Text style={[styles.sectionTitle]}>TAGS</Text>
+                </View>
 
-              {/*Content*/}
-              <View style={[styles.contentContainer]}>
-                <Text style={styles.introductionTitle}>Add tags to your record</Text>
-                <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
-              </View>
+                {/*Content*/}
+                <View style={[styles.contentContainer]}>
+                  <Text style={styles.introductionTitle}>Add tags to your record</Text>
+                  <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
+                </View>
 
-              {/*Tags*/}
-              <View style={[styles.bottomBar]}>
-                <ScrollView horizontal={true}>
-                  <View style={[styles.tagIconContainer]}>
-                    {/*Tag icon*/}
-                    <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')}/>
-                    {/*Add tags*/}
-                    <TouchableOpacity onPress={this.showInputTag.bind(this)}>
-                      <Text style={styles.addTagText}>+ADD TAGS</Text>
-                    </TouchableOpacity>
+                {/*Tags*/}
+                <View style={[styles.bottomBar]}>
+                  <ScrollView horizontal={true}>
+                    <View style={[styles.tagIconContainer]}>
+                      {/*Tag icon*/}
+                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')}/>
+                      {/*Add tags*/}
+                      <TouchableOpacity onPress={this.showInputTag.bind(this)}>
+                        <Text style={styles.addTagText}>+ADD TAGS</Text>
+                      </TouchableOpacity>
 
-                    {/*Tag items*/}
-                    {(tags && tags.length) ? (
-                      (tags || []).map((tag, index) => {
-                        return (
-                          <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => {this.removeTag.bind(this)(tag)}}>
-                            <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
-                            <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')}/>
-                          </TouchableOpacity>
-                        );
-                      })
-                    ) : null
-                    }
-                  </View>
-                </ScrollView>
+                      {/*Tag items*/}
+                      {(tags && tags.length) ? (
+                        (tags || []).map((tag, index) => {
+                          return (
+                            <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => {this.removeTag.bind(this)(tag)}}>
+                              <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
+                              <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')}/>
+                            </TouchableOpacity>
+                          );
+                        })
+                      ) : null
+                      }
+                    </View>
+                  </ScrollView>
+                </View>
               </View>
-            </View>
+            </OutterShadowComponent>
           </ScrollView>
 
           {/*BUTTON*/}
@@ -267,7 +274,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
-    borderWidth: 1,
   },
   header: {
     width: '100%',
@@ -281,26 +287,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
-  },section: {
-    borderRadius: 4,
-
-    // shadowOffset: { width: 0, height: 1},
-    // shadowOpacity: 0.2,
-    // shadowColor: '#000000',
-    // shadowRadius: 5,
-    // borderWidth: 0.5,
-    // borderColor: '#F4F2EE',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 0,
-    borderColor: '#F5F5F5',
-    borderWidth: 1,
-
+  },
+  section: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     width: '100%',
@@ -312,7 +300,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
     borderColor: '#F4F2EE',
   },
   bottomBar: {
@@ -322,7 +310,7 @@ const styles = StyleSheet.create({
     minHeight: 54,
     width: '100%',
     borderTopWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: '#F5F5F5',
   },
   sectionTitle: {
     fontSize: 10,
@@ -347,7 +335,7 @@ const styles = StyleSheet.create({
   inputNote: {
     height: 103,
     color: 'rgba(0, 0, 0, 0.87)',
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: 'AvenirNextW1G-Regular',
     backgroundColor: '#F5F5F5',
   },

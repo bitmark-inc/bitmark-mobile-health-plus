@@ -77,7 +77,6 @@ const dialogStyles = StyleSheet.create({
     marginLeft: 16,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    flexWrap: 'wrap'
   },
   title: {
     fontFamily: 'AvenirNextW1G-Bold',
@@ -90,5 +89,6 @@ const dialogStyles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
+    width: convertWidth(250)
   },
 });
