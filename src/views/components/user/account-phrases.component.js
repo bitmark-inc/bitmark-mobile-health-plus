@@ -405,7 +405,7 @@ export class AccountPhraseComponent extends Component {
                   </View>
 
                   {/*CONTENT*/}
-                  <ScrollView style={{ flex: 1 }} showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
+                  <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
                     <View style={styles.contentArea}>
                       {/*PHRASE WORDS*/}
                       <View style={styles.phraseWordsArea}>
@@ -501,7 +501,7 @@ export class AccountPhraseComponent extends Component {
                   </View>
 
                   {/*CONTENT*/}
-                  <ScrollView style={{ flex: 1 }} showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
+                  <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
                     <View style={[styles.contentArea, styles.paddingContent, { justifyContent: 'flex-start' }]}>
                       <View>
                         <Text style={[styles.writeDownPhraseWordsInformTitle]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
@@ -552,7 +552,7 @@ export class AccountPhraseComponent extends Component {
                   }
 
                   {/*CONTENT*/}
-                  <ScrollView style={{ flex: 1 }} showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
+                  <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
                     <View style={[styles.contentArea, styles.paddingContent]}>
                       {/*PHRASE WORDS*/}
                       <View style={styles.phraseWordsArea}>
