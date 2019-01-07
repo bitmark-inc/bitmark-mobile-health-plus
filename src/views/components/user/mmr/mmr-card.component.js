@@ -56,7 +56,7 @@ class PrivateMMRCardComponent extends Component {
               </View>
             </View>
             <View style={styles.cardNextButton}>
-              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, })}>
+              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, edit: this.props.displayFromUserScreen ? false : true })}>
                 <Text style={styles.mmrInformationSeeMoreButtonText}>{displaySeeMoreButton ? 'SEE MORE' : 'EDIT'}</Text>
               </TouchableOpacity>
             </View>
