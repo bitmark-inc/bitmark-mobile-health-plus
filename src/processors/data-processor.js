@@ -88,6 +88,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   };
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
+  console.log('latestMMRBitmark :', latestMMRBitmark);
   if (latestMMRBitmark && latestMMRBitmark.asset.id !== CacheData.userInformation.currentMMRAssetId) {
     if (latestMMRBitmark.owner === bitmarkAccountNumber) {
       CacheData.userInformation.currentMMRAssetId = latestMMRBitmark.asset.id;
@@ -97,6 +98,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
         CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
       }
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
+      await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(latestMMRBitmark));
     } else {
       CacheData.userInformation.currentMMRAssetId = null;
       CacheData.userInformation.currentMMrData = null;
@@ -511,71 +513,69 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await IndexDBService.initializeIndexedDB();
 
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
+      console.log('oniCloudFileChanged :', this.iCloudFileChangedTimeout);
       if (this.iCloudFileChangedTimeout) {
         clearTimeout(this.iCloudFileChangedTimeout)
       }
 
-      this.iCloudFileChangedTimeout = setTimeout(
-        () => {
-          console.log('mapFiles:', Object.keys(mapFiles).length);
-          for (let key in mapFiles) {
-            let keyList = key.split('_');
-            let promiseRunAfterCopyFile;
-            let overwrite = false;
-            let assetId;
-            if (keyList[0] === bitmarkAccountNumber) {
-              let keyFilePath;
-              if (keyList[1] === 'assets') {
-                assetId = base58.decode(keyList[2]).toString('hex');
-                keyFilePath = key.replace(`${bitmarkAccountNumber}_assets_${keyList[2]}_`, `${bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
-              } else if (keyList[1] === 'thumbnails') {
-                keyFilePath = key.replace(`${bitmarkAccountNumber}_thumbnails_`, `${bitmarkAccountNumber}/thumbnails/`);
-              } else if (keyList[1] === 'indexedData') {
-                keyFilePath = key.replace(`${bitmarkAccountNumber}_indexedData_`, `${bitmarkAccountNumber}/indexedData/`);
-              } else if (keyList[1] === 'indexTag') {
-                keyFilePath = key.replace(`${bitmarkAccountNumber}_indexTag_`, `${bitmarkAccountNumber}/indexTag/`);
-                let bitmarkId = keyList[2].replace('.txt', '');
-                overwrite = true;
-                promiseRunAfterCopyFile = async () => {
-                  await LocalFileService.doUpdateIndexTagFromICloud(bitmarkId);
-                };
-              }
-              let doSyncFile = async () => {
-                if (assetId) {
-                  let assetInfo = await BitmarkModel.doGetAssetInformation(assetId);
-                  console.log('assetId', assetId, assetInfo);
-                  if (isHealthDataRecord(assetInfo) && keyFilePath.endsWith('.txt')) {
-                    iCloudSyncAdapter.deleteFileFromCloud(key);
-                    return;
-                  }
+      this.iCloudFileChangedTimeout = setTimeout(() => {
+        console.log('mapFiles:', Object.keys(mapFiles).length);
+        for (let key in mapFiles) {
+          let keyList = key.split('_');
+          let promiseRunAfterCopyFile;
+          let overwrite = false;
+          let assetId;
+          if (keyList[0] === bitmarkAccountNumber) {
+            let keyFilePath;
+            if (keyList[1] === 'assets') {
+              assetId = base58.decode(keyList[2]).toString('hex');
+              keyFilePath = key.replace(`${bitmarkAccountNumber}_assets_${keyList[2]}_`, `${bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
+            } else if (keyList[1] === 'thumbnails') {
+              keyFilePath = key.replace(`${bitmarkAccountNumber}_thumbnails_`, `${bitmarkAccountNumber}/thumbnails/`);
+            } else if (keyList[1] === 'indexedData') {
+              keyFilePath = key.replace(`${bitmarkAccountNumber}_indexedData_`, `${bitmarkAccountNumber}/indexedData/`);
+            } else if (keyList[1] === 'indexTag') {
+              keyFilePath = key.replace(`${bitmarkAccountNumber}_indexTag_`, `${bitmarkAccountNumber}/indexTag/`);
+              let bitmarkId = keyList[2].replace('.txt', '');
+              overwrite = true;
+              promiseRunAfterCopyFile = async () => {
+                await LocalFileService.doUpdateIndexTagFromICloud(bitmarkId);
+              };
+            }
+            let doSyncFile = async () => {
+              if (assetId) {
+                let assetInfo = await BitmarkModel.doGetAssetInformation(assetId);
+                console.log('assetId', assetId, assetInfo);
+                if (isHealthDataRecord(assetInfo) && keyFilePath.endsWith('.txt')) {
+                  iCloudSyncAdapter.deleteFileFromCloud(key);
+                  return;
                 }
-                let filePath = mapFiles[key];
-                let downloadedFile = `${FileUtil.SharedGroupDirectory}/${keyFilePath}`;
-                if (overwrite) {
-                  await FileUtil.removeSafe(downloadedFile);
+              }
+              let filePath = mapFiles[key];
+              let downloadedFile = `${FileUtil.SharedGroupDirectory}/${keyFilePath}`;
+              if (overwrite) {
+                await FileUtil.removeSafe(downloadedFile);
+                let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
+                await FileUtil.mkdir(downloadedFolder);
+                await FileUtil.copyFile(filePath, downloadedFile);
+                if (promiseRunAfterCopyFile) {
+                  await promiseRunAfterCopyFile();
+                  promiseRunAfterCopyFile = null;
+                }
+              } else {
+                let existFileICloud = await FileUtil.exists(filePath);
+                let existFileLocal = await FileUtil.exists(downloadedFile);
+                if (existFileICloud && !existFileLocal) {
                   let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
                   await FileUtil.mkdir(downloadedFolder);
                   await FileUtil.copyFile(filePath, downloadedFile);
-                  if (promiseRunAfterCopyFile) {
-                    await promiseRunAfterCopyFile();
-                    promiseRunAfterCopyFile = null;
-                  }
-                } else {
-                  let existFileICloud = await FileUtil.exists(filePath);
-                  let existFileLocal = await FileUtil.exists(downloadedFile);
-                  if (existFileICloud && !existFileLocal) {
-                    let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
-                    await FileUtil.mkdir(downloadedFolder);
-                    await FileUtil.copyFile(filePath, downloadedFile);
-                  }
                 }
-              };
-              runPromiseWithoutError(doSyncFile());
-            }
+              }
+            };
+            runPromiseWithoutError(doSyncFile());
           }
-        },
-        1000 * 15 // 15s
-      );
+        }
+      }, 1000 * 5);// 15s
     });
     iCloudSyncAdapter.syncCloud();
     //configNotification();
@@ -594,9 +594,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       let signatureData = await CommonModel.doCreateSignatureData();
       let result = await AccountModel.doRegisterJWT(bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
       CacheData.jwt = result.jwt_token;
-      console.log('run1');
       Sentry.setUserContext({ userID: bitmarkAccountNumber, });
-      console.log('run2');
       if (!CacheData.userInformation.metadata) {
         CacheData.userInformation.metadata = {
           receive_email_records: true,
@@ -604,10 +602,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
           visualize_health_data: true,
         };
         await AccountModel.doUpdateUserMetadata(CacheData.jwt, CacheData.userInformation.metadata);
-        console.log('run3');
         AccountStore.dispatch(AccountActions.reload());
       } else {
-        console.log('run4');
         CacheData.userInformation.metadata = await AccountModel.doGetUserMetadata(CacheData.jwt);
         AccountStore.dispatch(AccountActions.reload());
       }
