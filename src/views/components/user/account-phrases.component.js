@@ -260,7 +260,6 @@ export class AccountPhraseComponent extends Component {
         if ((index < (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== smallerList[index].word) ||
           (index >= (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== biggerList[index - (this.state.phraseWords.length / 2)].word)) {
           testingResult = false;
-          console.log('testingResult  false :', index, this.state.phraseWords, this.state.smallerList, this.state.biggerList);
           break;
         }
       }
@@ -368,7 +367,7 @@ export class AccountPhraseComponent extends Component {
                 <Text style={styles.titleText}>WARNING</Text>
                 <Image style={styles.warningIcon} source={require('assets/imgs2/warning_icon.png')} />
               </ShadowTopComponent>
-              <ScrollView style={[styles.bodyContent, styles.paddingContent]}>
+              <ScrollView style={[styles.bodyContent, styles.paddingContent]} contentContainerStyle={{ flexGrow: 1, }}>
                 {!this.props.isLogout && <View style={styles.warningArea}>
                   <Text style={styles.warningTitle}>View your vault key phrase.</Text>
                   {/* <Text style={styles.warningTitle}>{i18n.t('AccountPhraseComponent_warningTitle1')}</Text> */}
@@ -397,7 +396,7 @@ export class AccountPhraseComponent extends Component {
 
 
             {(this.state.step === STEPS.init) &&
-              <ScrollView style={styles.bodyContent}>
+              <View style={styles.bodyContent}>
                 <View style={{ flex: 1 }}>
                   {/*TOP AREA*/}
                   <View style={[styles.topArea]}>
@@ -406,74 +405,75 @@ export class AccountPhraseComponent extends Component {
                   </View>
 
                   {/*CONTENT*/}
-                  <View style={styles.contentArea}>
-                    {/*PHRASE WORDS*/}
-                    <View style={styles.phraseWordsArea}>
-                      <View style={[styles.phraseWordsList]}>
-                        <FlatList data={this.state.smallerList}
-                          keyExtractor={(item, index) => index + ''}
-                          scrollEnabled={false}
-                          extraData={this.state}
-                          renderItem={({ item, index }) => {
-                            return (
-                              <View style={styles.recoveryPhraseSet}>
-                                <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                <View style={[styles.phraseWordContainer]}>
-                                  {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                    <Text style={[styles.character]} >{character.toUpperCase()}</Text>
-                                  </View>)}
+                  <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, }}>
+                    <View style={styles.contentArea}>
+                      {/*PHRASE WORDS*/}
+                      <View style={styles.phraseWordsArea}>
+                        <View style={[styles.phraseWordsList]}>
+                          <FlatList data={this.state.smallerList}
+                            keyExtractor={(item, index) => index + ''}
+                            scrollEnabled={false}
+                            extraData={this.state}
+                            renderItem={({ item, index }) => {
+                              return (
+                                <View style={styles.recoveryPhraseSet}>
+                                  <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
+                                  <View style={[styles.phraseWordContainer]}>
+                                    {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                      <Text style={[styles.character]} >{character.toUpperCase()}</Text>
+                                    </View>)}
+                                  </View>
                                 </View>
-                              </View>
-                            )
-                          }}
-                        />
-                        <FlatList data={this.state.biggerList}
-                          keyExtractor={(item, index) => index + ''}
-                          style={{ marginLeft: 20 }}
-                          scrollEnabled={false}
-                          extraData={this.state}
-                          renderItem={({ item, index }) => {
-                            return (
-                              <View style={styles.recoveryPhraseSet}>
-                                <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                                <View style={[styles.phraseWordContainer]}>
-                                  {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                    <Text style={[styles.character]} >{character.toUpperCase()}</Text>
-                                  </View>)}
+                              )
+                            }}
+                          />
+                          <FlatList data={this.state.biggerList}
+                            keyExtractor={(item, index) => index + ''}
+                            style={{ marginLeft: 20 }}
+                            scrollEnabled={false}
+                            extraData={this.state}
+                            renderItem={({ item, index }) => {
+                              return (
+                                <View style={styles.recoveryPhraseSet}>
+                                  <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
+                                  <View style={[styles.phraseWordContainer]}>
+                                    {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                      <Text style={[styles.character]} >{character.toUpperCase()}</Text>
+                                    </View>)}
+                                  </View>
                                 </View>
-                              </View>
-                            )
-                          }}
-                        />
+                              )
+                            }}
+                          />
+                        </View>
+
+                        {/*INFO LINK*/}
+                        {(this.state.step === STEPS.init) &&
+                          <View style={[styles.infoLinkTextContainer]}>
+                            <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
+                            <TouchableOpacity style={[]} onPress={() => this.setState({ step: STEPS.writeDownPhraseWordsInform })}>
+                              <Text style={[styles.infoLinkText, { marginLeft: 5 }]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
+                            </TouchableOpacity>
+                          </View>
+                        }
                       </View>
 
-                      {/*INFO LINK*/}
-                      {(this.state.step === STEPS.init) &&
-                        <View style={[styles.infoLinkTextContainer]}>
-                          <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
-                          <TouchableOpacity style={[]} onPress={() => this.setState({ step: STEPS.writeDownPhraseWordsInform })}>
-                            <Text style={[styles.infoLinkText, { marginLeft: 5 }]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
-                          </TouchableOpacity>
-                        </View>
-                      }
-                    </View>
-
-                    {/*DESC*/}
-                    <View style={styles.introductionTextArea}>
-                      <Text style={[styles.introductionTitle]}>Your vault key phrase</Text>
-                      <Text style={[styles.introductionDescription]}>
-                        A 12-word phrase that only you know.
+                      {/*DESC*/}
+                      <View style={styles.introductionTextArea}>
+                        <Text style={[styles.introductionTitle]}>Your vault key phrase</Text>
+                        <Text style={[styles.introductionDescription]}>
+                          A 12-word phrase that only you know.
                     </Text>
 
-                      {/*GENERATE HEALTH CODE*/}
-                      {(this.state.step === STEPS.init || this.state.step === STEPS.generated) &&
-                        <TouchableOpacity style={[styles.button, { marginTop: 20 }]} onPress={() => this.goToTest.bind(this)(this.state.phraseWords)}>
-                          <Text style={[styles.buttonText]}>TEST YOUR KEY PHRASE</Text>
-                        </TouchableOpacity>
-                      }
+                        {/*GENERATE HEALTH CODE*/}
+                        {(this.state.step === STEPS.init || this.state.step === STEPS.generated) &&
+                          <TouchableOpacity style={[styles.button, { marginTop: 20 }]} onPress={() => this.goToTest.bind(this)(this.state.phraseWords)}>
+                            <Text style={[styles.buttonText]}>TEST YOUR KEY PHRASE</Text>
+                          </TouchableOpacity>
+                        }
+                      </View>
                     </View>
-                  </View>
-
+                  </ScrollView>
                   {/*BOTTOM AREA*/}
                   <View style={[styles.bottomArea]}>
                     <View style={styles.dotArea}>
@@ -487,12 +487,12 @@ export class AccountPhraseComponent extends Component {
                     </TouchableOpacity>
                   </View>
                 </View>
-              </ScrollView>
+              </View>
             }
 
             {/*WRITE DOWN PHRASE WORDS INFORM STEP*/}
             {this.state.step === STEPS.writeDownPhraseWordsInform &&
-              <ScrollView style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
+              <View style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
                 <View style={{ flex: 1 }}>
                   {/*TOP AREA*/}
                   <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#FFFFFF', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
@@ -501,16 +501,18 @@ export class AccountPhraseComponent extends Component {
                   </View>
 
                   {/*CONTENT*/}
-                  <View style={[styles.contentArea, styles.paddingContent, { justifyContent: 'flex-start' }]}>
-                    <View>
-                      <Text style={[styles.writeDownPhraseWordsInformTitle]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
+                  <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, }}>
+                    <View style={[styles.contentArea, styles.paddingContent, { justifyContent: 'flex-start' }]}>
+                      <View>
+                        <Text style={[styles.writeDownPhraseWordsInformTitle]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
+                      </View>
+                      <View>
+                        <Text style={[styles.writeDownPhraseWordsInformText]}>Internet services normally require user accounts that are stored on servers in “the cloud”. Servers can be (and are often) hacked, thus your data and privacy are constantly at risk.</Text>
+                        <Text style={[styles.writeDownPhraseWordsInformText]}>In contrast, your vault is stored on your phone and secured by a 12-word phrase that only you know. Think of this as a magic phrase — it instantly restores all your data if your phone is ever lost, stolen, or damaged.</Text>
+                        <Text style={[styles.writeDownPhraseWordsInformText]}>Keep it safe and protect what’s most important: control of your health.</Text>
+                      </View>
                     </View>
-                    <View>
-                      <Text style={[styles.writeDownPhraseWordsInformText]}>Internet services normally require user accounts that are stored on servers in “the cloud”. Servers can be (and are often) hacked, thus your data and privacy are constantly at risk.</Text>
-                      <Text style={[styles.writeDownPhraseWordsInformText]}>In contrast, your vault is stored on your phone and secured by a 12-word phrase that only you know. Think of this as a magic phrase — it instantly restores all your data if your phone is ever lost, stolen, or damaged.</Text>
-                      <Text style={[styles.writeDownPhraseWordsInformText]}>Keep it safe and protect what’s most important: control of your health.</Text>
-                    </View>
-                  </View>
+                  </ScrollView>
 
                   {/*BOTTOM AREA*/}
                   <View style={[styles.bottomArea, styles.paddingContent, { justifyContent: 'flex-end' }]}>
@@ -519,12 +521,12 @@ export class AccountPhraseComponent extends Component {
                     </TouchableOpacity>
                   </View>
                 </View>
-              </ScrollView>
+              </View>
             }
 
             {/*TEST PHRASE WORDS*/}
             {this.state.step === STEPS.testing &&
-              <ScrollView style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
+              <View style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]} contentContainerStyle={{ flexGrow: 1, }}>
                 <View style={{ flex: 1 }}>
                   {/*TOP AREA*/}
                   {/*BITMARK Header*/}
@@ -550,115 +552,116 @@ export class AccountPhraseComponent extends Component {
                   }
 
                   {/*CONTENT*/}
-                  <View style={[styles.contentArea, styles.paddingContent]}>
-                    {/*PHRASE WORDS*/}
-                    <View style={styles.phraseWordsArea}>
-                      <View style={[styles.phraseWordsList]}>
-                        {/*SELECTED WORDS*/}
-                        {/*Smaller list*/}
-                        <FlatList data={this.state.smallerList}
-                          keyExtractor={(item, index) => index + ''}
-                          scrollEnabled={false}
-                          extraData={this.state}
-                          renderItem={({ item, index }) => {
-                            return (
-                              <TouchableOpacity style={[styles.recoveryPhraseSet,]}
-                                disabled={item.selected}
-                                onPress={() => {
-                                  this.setState({ selectingIndex: index });
-                                  this.inputtedRefs[item.key].focus();
-                                }}
-                              >
-                                <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
-                                  {/*Selected word*/}
-                                  {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                    <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
-                                  </View>)}
-                                  {/*Input word*/}
-                                  {!item.characters &&
-                                    <View style={[styles.characterBound, {
-                                      backgroundColor: 'white',
-                                      borderWidth: 1,
-                                      borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                    }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
-                                      <TextInput
-                                        style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
-                                        ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                        value={item.word.toUpperCase()}
-                                        returnKeyType={'done'}
-                                        autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                        onFocus={() => this.onFocus.bind(this)(item.key)}
-                                        onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                      />
-                                    </View>
-                                  }
-                                </View>
-                              </TouchableOpacity>
-                            )
-                          }}
-                        />
-                        {/*Bigger list*/}
-                        <FlatList data={this.state.biggerList}
-                          keyExtractor={(item, index) => index + ''}
-                          style={{ marginLeft: 9 }}
-                          scrollEnabled={false}
-                          extraData={this.state}
-                          renderItem={({ item, index }) => {
-                            return (
-                              <TouchableOpacity style={[styles.recoveryPhraseSet,]}
-                                disabled={item.selected}
-                                onPress={() => {
-                                  this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) });
-                                  this.inputtedRefs[item.key].focus();
-                                }}
-                              >
-                                <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                                <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
-                                  {/*Selected word*/}
-                                  {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                    <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
-                                  </View>)}
-                                  {/*Input word*/}
-                                  {!item.characters &&
-                                    <View style={[styles.characterBound, {
-                                      backgroundColor: 'white',
-                                      borderWidth: 1,
-                                      borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                    }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
-                                      <TextInput
-                                        style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
-                                        ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                        value={item.word.toUpperCase()}
-                                        returnKeyType={'done'}
-                                        autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                        onFocus={() => this.onFocus.bind(this)(item.key)}
-                                        onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                      />
-                                    </View>
-                                  }
-                                </View>
-                              </TouchableOpacity>
-                            )
-                          }}
-                        />
+                  <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, }}>
+                    <View style={[styles.contentArea, styles.paddingContent]}>
+                      {/*PHRASE WORDS*/}
+                      <View style={styles.phraseWordsArea}>
+                        <View style={[styles.phraseWordsList]}>
+                          {/*SELECTED WORDS*/}
+                          {/*Smaller list*/}
+                          <FlatList data={this.state.smallerList}
+                            keyExtractor={(item, index) => index + ''}
+                            scrollEnabled={false}
+                            extraData={this.state}
+                            renderItem={({ item, index }) => {
+                              return (
+                                <TouchableOpacity style={[styles.recoveryPhraseSet,]}
+                                  disabled={item.selected}
+                                  onPress={() => {
+                                    this.setState({ selectingIndex: index });
+                                    this.inputtedRefs[item.key].focus();
+                                  }}
+                                >
+                                  <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
+                                  <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
+                                    {/*Selected word*/}
+                                    {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                      <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
+                                    </View>)}
+                                    {/*Input word*/}
+                                    {!item.characters &&
+                                      <View style={[styles.characterBound, {
+                                        backgroundColor: 'white',
+                                        borderWidth: 1,
+                                        borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                        color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                        <TextInput
+                                          style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
+                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                          value={item.word.toUpperCase()}
+                                          returnKeyType={'done'}
+                                          autoCorrect={false}
+                                          autoCapitalize="none"
+                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                          onFocus={() => this.onFocus.bind(this)(item.key)}
+                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                                        />
+                                      </View>
+                                    }
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }}
+                          />
+                          {/*Bigger list*/}
+                          <FlatList data={this.state.biggerList}
+                            keyExtractor={(item, index) => index + ''}
+                            style={{ marginLeft: 9 }}
+                            scrollEnabled={false}
+                            extraData={this.state}
+                            renderItem={({ item, index }) => {
+                              return (
+                                <TouchableOpacity style={[styles.recoveryPhraseSet,]}
+                                  disabled={item.selected}
+                                  onPress={() => {
+                                    this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) });
+                                    this.inputtedRefs[item.key].focus();
+                                  }}
+                                >
+                                  <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
+                                  <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
+                                    {/*Selected word*/}
+                                    {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
+                                      <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
+                                    </View>)}
+                                    {/*Input word*/}
+                                    {!item.characters &&
+                                      <View style={[styles.characterBound, {
+                                        backgroundColor: 'white',
+                                        borderWidth: 1,
+                                        borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingTop: 4, paddingBottom: 4, paddingRight: 0, }]}>
+                                        <TextInput
+                                          style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
+                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                          value={item.word.toUpperCase()}
+                                          returnKeyType={'done'}
+                                          autoCorrect={false}
+                                          autoCapitalize="none"
+                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                          onFocus={() => this.onFocus.bind(this)(item.key)}
+                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                                        />
+                                      </View>
+                                    }
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }}
+                          />
+                        </View>
+                      </View>
+
+                      {/*DESC*/}
+                      <View style={styles.introductionTextArea}>
+                        <Text style={[styles.introductionTitle]}>{this.props.isLogout ? 'Lock your vault' : 'Test your key phrase, unlock your vault'}</Text>
+                        <Text style={[styles.introductionDescription]}>
+                          Enter the three remaining words.
+                      </Text>
                       </View>
                     </View>
-
-                    {/*DESC*/}
-                    <View style={styles.introductionTextArea}>
-                      <Text style={[styles.introductionTitle]}>{this.props.isLogout ? 'Lock your vault' : 'Test your key phrase, unlock your vault'}</Text>
-                      <Text style={[styles.introductionDescription]}>
-                        Enter the three remaining words.
-                    </Text>
-                    </View>
-                  </View>
-
+                  </ScrollView>
                   {/*BOTTOM AREA*/}
                   <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
                     <View style={styles.dotArea}>
@@ -673,13 +676,13 @@ export class AccountPhraseComponent extends Component {
                       <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
                         <Text style={[styles.buttonNextText]}>GO BACK</Text>
                       </TouchableOpacity>
-                      {this.props.isLogout && <TouchableOpacity style={[styles.buttonNext]} onPress={this.checkInputWrods.bind(this)}>
+                      {this.props.isLogout && <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.checkInputWrods.bind(this)()}>
                         <Text style={[styles.buttonNextText]}>NEXT</Text>
                       </TouchableOpacity>}
                     </View>
                   </View>
                 </View>
-              </ScrollView>
+              </View>
             }
           </View>
 
@@ -829,7 +832,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     width: '100%',
     flex: 1,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   phraseWordsList: {
     paddingTop: convertWidth(30),

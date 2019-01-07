@@ -63,10 +63,8 @@ const doIssueFile = async (bitmarkAccountNumber, filePath, assetName, metadataLi
   await FileUtil.mkdir(assetFolderPath);
   await FileUtil.mkdir(downloadedFolder);
 
-  //TODO need change to write file level4
   let filename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
   await BitmarkSDK.storeFileSecurely(filePath, `${downloadedFolder}/${filename}`);
-  // await FileUtil.copyFile(filePath, `${downloadedFolder}/${filename}`);
 
   let listFile = await FileUtil.readDir(downloadedFolder);
   let results = [];

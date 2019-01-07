@@ -88,19 +88,18 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   };
 
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
-  console.log('latestMMRBitmark :', latestMMRBitmark);
-  if (latestMMRBitmark && latestMMRBitmark.asset.id !== CacheData.userInformation.currentMMRAssetId) {
+  if (latestMMRBitmark) {
     if (latestMMRBitmark.owner === bitmarkAccountNumber) {
       CacheData.userInformation.currentMMRAssetId = latestMMRBitmark.asset.id;
       let result = await runPromiseIgnoreError(detectLocalAssetFilePath(latestMMRBitmark.asset));
-      console.log('result :', result);
       if (result.filePath && (await FileUtil.exists(result.filePath))) {
         CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
+        latestMMRBitmark.asset.filePath = result.filePath;
       }
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
+      latestMMRBitmark.asset.assetFileSyncedToICloud = false;
       await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(latestMMRBitmark));
     } else {
-      CacheData.userInformation.currentMMRAssetId = null;
       CacheData.userInformation.currentMMrData = null;
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
     }
@@ -513,7 +512,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     await IndexDBService.initializeIndexedDB();
 
     iCloudSyncAdapter.oniCloudFileChanged((mapFiles) => {
-      console.log('oniCloudFileChanged :', this.iCloudFileChangedTimeout);
       if (this.iCloudFileChangedTimeout) {
         clearTimeout(this.iCloudFileChangedTimeout)
       }

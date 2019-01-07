@@ -318,7 +318,8 @@ export class MainComponent extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!this.state.user || this.state.user.bitmarkAccountNumber !== nextState.user.bitmarkAccountNumber) {
+    if ((!this.state.user && nextState.user) ||
+      (this.state.user && nextState.user && this.state.user.bitmarkAccountNumber !== nextState.user.bitmarkAccountNumber)) {
       return true;
     }
     return false;
