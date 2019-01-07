@@ -96,7 +96,6 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
         latestMMRBitmark.asset.filePath = result.filePath;
       }
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
-      latestMMRBitmark.asset.assetFileSyncedToICloud = false;
       await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(latestMMRBitmark));
     } else {
       CacheData.userInformation.currentMMrData = null;
@@ -198,7 +197,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               healthAssetBitmarks.push(bitmark);
             }
           } else if (isMMRRecord(asset)) {
-            if (!latestMMRBitmark || latestMMRBitmark.offset < asset.offset) {
+            if (!latestMMRBitmark || latestMMRBitmark.offset < bitmark.offset) {
               bitmark.asset = asset;
               latestMMRBitmark = bitmark;
             }
@@ -1007,6 +1006,7 @@ const doIssueMMR = async (data) => {
 
   let result = await doIssueFile({ filePath, assetName, metadataList: metadata, quantity: 1 });
   await FileUtil.removeSafe(filePath);
+  await runGetUserBitmarksInBackground();
   return result;
 };
 
