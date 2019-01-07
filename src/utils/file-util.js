@@ -70,7 +70,11 @@ class FileUtil {
     return await RNFS.exists(filePath);
   }
   static async stat(filePath) {
-    return await RNFS.stat(filePath);
+    try {
+      return await RNFS.stat(filePath);
+    } catch (err) {
+      return {};
+    }
   }
   static async copyDir(sourceFolderPath, destinationFolderPath, ignoreDuplication) {
     await FileUtil.mkdir(destinationFolderPath);
