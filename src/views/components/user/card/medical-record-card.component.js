@@ -35,6 +35,9 @@ export class MedicalRecordCardComponent extends React.Component {
           ) : (
             <Image style={styles.cardImage} source={require('assets/imgs/unknown-file-thumbnail.png')} />
           )}
+          {/*Cover thumbnail header bar*/}
+          <Image source={require('assets/imgs/linear-gradient-transparent-background.png')} style={[styles.cardImage, styles.coverThumbnailHeaderBar]}>
+          </Image>
         </View>
 
         {/*TOP BAR*/}

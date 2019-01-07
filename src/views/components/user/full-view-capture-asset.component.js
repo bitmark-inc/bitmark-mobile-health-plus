@@ -42,12 +42,19 @@ export class FullViewCaptureAssetComponent extends Component {
     return (
       <View style={[styles.bodySafeView]}>
         <View style={styles.bodyContent}>
-          <View style={styles.titleRow}>
-            <Text style={styles.titleText} numberOfLines={1} >{this.props.title.toUpperCase()}</Text>
-            <TouchableOpacity onPress={Actions.pop}>
-              <Image style={styles.closeIcon} source={require('assets/imgs/close_icon_white.png')} />
+          {/*TOP BAR*/}
+          <View style={styles.topBar}>
+            {/*Back Icon*/}
+            <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
+              <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
+            </TouchableOpacity>
+            {/*MMR Icon*/}
+            <TouchableOpacity onPress={() => {Actions.mmrInformation()}}>
+              <Image style={styles.profileIcon} source={require('assets/imgs/profile-icon.png')} />
             </TouchableOpacity>
           </View>
+
+          {/*CONTENT*/}
           <View style={styles.content}>
             {this.state.type === 'image' && <ImageZoom
               cropWidth={Dimensions.get('window').width}
@@ -58,17 +65,31 @@ export class FullViewCaptureAssetComponent extends Component {
             </ImageZoom>}
 
             {this.state.type === 'pdf' && this.state.loading && <ActivityIndicator size='large' />}
-            {this.state.type === 'pdf' && <Pdf
-              source={{ uri: `file://${this.props.filePath}` }}
-              scale={0.5}
-              minScale={0.2}
-              onLoadComplete={() => {
-                this.setState({ loading: false });
-              }}
-              onError={(error) => {
-                console.log('load pdf error :', error);
-              }}
-              style={{ flex: 1, width: '100%', borderWidth: 3, borderColor: 'white' }} />}
+            {this.state.type === 'pdf' &&
+            <View style={{ flex: 1, width: '100%' }}>
+              <Pdf
+                source={{ uri: `file://${this.props.filePath}` }}
+                scale={0.5}
+                minScale={0.2}
+                horizontal={true}
+                onLoadComplete={() => {
+                  this.setState({ loading: false });
+                }}
+                onPageChanged={(page, numberOfPages)=>{
+                  console.log(`current page: ${page}`);
+                  this.setState({pagination: `< ${page} / ${numberOfPages} >`})
+                }}
+                onError={(error) => {
+                  console.log('load pdf error :', error);
+                }}
+                style={{ flex: 1, width: '100%' }} />
+
+              {/*Pagination*/}
+              <View style={styles.pagination}>
+                <Text style={[styles.paginationText]}>{this.state.pagination}</Text>
+              </View>
+            </View>
+            }
           </View>
         </View>
       </View>
@@ -79,7 +100,7 @@ export class FullViewCaptureAssetComponent extends Component {
 const styles = StyleSheet.create({
   bodySafeView: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#FFFFFF',
   },
 
   bodyContent: {
@@ -87,32 +108,47 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: convertWidth(375)
   },
-
-  titleRow: {
-    paddingTop: (config.isIPhoneX ? 44 : 0),
-    paddingLeft: convertWidth(20), paddingRight: convertWidth(20),
-    position: 'absolute', top: 0, width: convertWidth(375),
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    height: 44 + (config.isIPhoneX ? 44 : 0),
-    zIndex: 1,
-    backgroundColor: 'black',
-
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 56,
+    width: '100%',
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+    marginBottom: 12,
   },
-  titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 24,
-    color: 'white',
-    flex: 1,
+  closeButton: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   closeIcon: {
-    width: convertWidth(21),
-    height: convertWidth(21),
+    width: convertWidth(16),
+    height: convertWidth(16),
     resizeMode: 'contain',
   },
+  profileIcon: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain'
+  },
   content: {
+    backgroundColor: 'black',
     flex: 1,
     paddingTop: 44 + (config.isIPhoneX ? 44 : 0),
     flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
   },
+  pagination: {
+    height: 44,
+    width: '100%',
+    backgroundColor: '#000000',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  paginationText: {
+    fontFamily: 'AvenirNextW1G-Bold',
+    fontSize: 10,
+    color: '#FFFFFF',
+  }
 });

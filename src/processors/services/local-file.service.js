@@ -83,11 +83,25 @@ const writeTagFile = async (tagFilePath, tags) => {
   await FileUtil.writeFile(tagFilePath, tags.join ? tags.join(' ') : tags, 'utf8');
 };
 
+const readNoteFile = async (noteFilePath) => {
+  let note;
+  if (await FileUtil.exists(noteFilePath)) {
+    note = await FileUtil.readFile(noteFilePath, 'utf8');
+  }
+  return note;
+};
+
+const writeNoteFile = async (noteFilePath, note) => {
+  await FileUtil.writeFile(noteFilePath, note, 'utf8');
+};
+
 const doCheckAndSyncDataWithICloud = async (bitmark) => {
   // upload to iCloud
   if (!bitmark) {
     return;
   }
+
+  // Thumbnail
   if (bitmark.asset && !bitmark.asset.assetFileSyncedToICloud && bitmark.asset.filePath && (await FileUtil.exists(bitmark.asset.filePath))) {
     let assetFilename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
     iCloudSyncAdapter.uploadFileToCloud(bitmark.asset.filePath, `${CacheData.userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${assetFilename}`);
@@ -100,6 +114,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
     bitmark.thumbnailSyncedToICloud = true;
   }
 
+  // Index Data
   if (bitmark.asset && (!bitmark.asset.indexDataFileSyncedToICloud || !bitmark.asset.indexDataFileSyncedFromICloud)) {
     let indexedFileName = `${bitmark.asset.id}.txt`;
     let indexedDataFilePath = `${FileUtil.getLocalIndexedDataFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${indexedFileName}`;
@@ -120,6 +135,7 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
     }
   }
 
+  // Tag
   if (!bitmark.indexTagFileSyncedToICloud || !bitmark.indexTagFileSyncedFromICloud) {
     let tagFileName = `${bitmark.id}.txt`;
     let tagFilePath = `${FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${tagFileName}`;
@@ -137,6 +153,27 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
       await writeTagFile(tagFilePath, tagRecord.tags);
       iCloudSyncAdapter.uploadFileToCloud(tagFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexTag_${tagFileName}`);
       bitmark.indexTagFileSyncedToICloud = true;
+    }
+  }
+
+  // Note
+  if (!bitmark.indexNoteFileSyncedToICloud || !bitmark.indexNoteFileSyncedFromICloud) {
+    let noteFileName = `${bitmark.id}.txt`;
+    let noteFilePath = `${FileUtil.getLocalIndexedNoteFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${noteFileName}`;
+    let existFileIndexedNote = await FileUtil.exists(noteFilePath);
+    let noteRecord = await IndexDBService.getNoteByBitmarkId(bitmark.id);
+
+    if (existFileIndexedNote && !noteRecord && !bitmark.indexNoteFileSyncedFromICloud) {
+      let note = await readNoteFile(noteFilePath);
+      await IndexDBService.updateNote(bitmark.id, note);
+      bitmark.indexNoteFileSyncedFromICloud = true;
+    }
+
+    if (!existFileIndexedNote && noteRecord && !bitmark.indexNoteFileSyncedToICloud) {
+      await FileUtil.mkdir(`${FileUtil.getLocalIndexedNoteFolderPath(CacheData.userInformation.bitmarkAccountNumber)}`);
+      await writeNoteFile(noteFilePath, noteRecord);
+      iCloudSyncAdapter.uploadFileToCloud(noteFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexNote_${noteFileName}`);
+      bitmark.indexNoteFileSyncedToICloud = true;
     }
   }
 };
@@ -167,6 +204,31 @@ const doUpdateIndexTagToICloud = async (bitmarkId, tags) => {
   }
 };
 
+const doUpdateIndexNoteFromICloud = async (bitmarkId) => {
+  //sync index note
+  let noteFileName = `${bitmarkId}.txt`;
+  let noteFilePath = `${FileUtil.getLocalIndexedNoteFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${noteFileName}`;
+  let existFileIndexedNote = await FileUtil.exists(noteFilePath);
+  if (existFileIndexedNote) {
+    let note = await readNoteFile(noteFilePath);
+    await IndexDBService.updateNote(bitmarkId, note);
+  }
+};
+
+const doUpdateIndexNoteToICloud = async (bitmarkId, note) => {
+  //sync index note
+  let noteFileName = `${bitmarkId}.txt`;
+  let noteFilePath = `${FileUtil.getLocalIndexedNoteFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${noteFileName}`;
+  if (!note) {
+    note = await IndexDBService.getNoteByBitmarkId(bitmarkId);
+  }
+  if (note) {
+    await FileUtil.mkdir(`${FileUtil.getLocalIndexedNoteFolderPath(CacheData.userInformation.bitmarkAccountNumber)}`);
+    await writeNoteFile(noteFilePath, note);
+    iCloudSyncAdapter.uploadFileToCloud(noteFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexNote_${noteFileName}`);
+  }
+};
+
 const initializeLocalStorage = async () => {
   if (CacheData.userInformation.bitmarkAccountNumber) {
     await FileUtil.mkdir(FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber));
@@ -174,6 +236,9 @@ const initializeLocalStorage = async () => {
     await FileUtil.mkdir(FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber));
     await FileUtil.mkdir(FileUtil.getLocalDatabasesFolderPath(CacheData.userInformation.bitmarkAccountNumber));
     await FileUtil.mkdir(FileUtil.getLocalCachesFolderPath(CacheData.userInformation.bitmarkAccountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalIndexedDataFolderPath(CacheData.userInformation.bitmarkAccountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalIndexedNoteFolderPath(CacheData.userInformation.bitmarkAccountNumber));
   }
 };
 
@@ -189,12 +254,12 @@ const getTagsCache = async () => {
   return tagsCache;
 };
 
-const writeTagsCache = async (tags, bitmarkAccountNumber) => {
+const writeTagsCache = async (tags) => {
   // Only store top latest 10 tags
   if (tags.length > 10) {
     tags = tags.slice(0, 10);
   }
-  let tagsCacheFilePath = `${FileUtil.getLocalCachesFolderPath(bitmarkAccountNumber)}/tags_cache.txt`;
+  let tagsCacheFilePath = `${FileUtil.getLocalCachesFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/tags_cache.txt`;
   await FileUtil.writeFile(tagsCacheFilePath, tags.join(' '), 'utf8');
 };
 
@@ -205,9 +270,16 @@ let LocalFileService = {
   moveFilesFromLocalStorageToSharedStorage,
 
   doCheckAndSyncDataWithICloud,
+
+  // Index Tag
   doUpdateIndexTagFromICloud,
   doUpdateIndexTagToICloud,
 
+  // Index Note
+  doUpdateIndexNoteFromICloud,
+  doUpdateIndexNoteToICloud,
+
+  // Tag Caches
   getTagsCache,
   writeTagsCache,
 };

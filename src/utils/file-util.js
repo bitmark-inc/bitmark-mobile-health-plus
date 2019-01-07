@@ -138,6 +138,10 @@ class FileUtil {
     return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/indexTag`;
   }
 
+  static getLocalIndexedNoteFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.getSharedLocalStorageFolderPath(bitmarkAccountNumber)}/indexNote`;
+  }
+
 }
 
 export { FileUtil };

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactNative, {
-  StyleSheet, Alert, Linking,
+  StyleSheet, Alert,
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView,
 } from 'react-native';
 let { ActionSheetIOS } = ReactNative;
@@ -18,7 +18,7 @@ import {
   FileUtil,
   convertWidth,
 } from 'src/utils';
-import { config, constants } from 'src/configs';
+import { constants } from 'src/configs';
 
 import { SearchInputComponent } from './search-input.component';
 import { SearchResultsComponent } from './search-results.component';
@@ -32,6 +32,7 @@ import { GetStartedFeedCardComponent } from "./card/get-started-feed-card.compon
 import { HealthDataFeedCardComponent } from "./card/health-data-feed-card.component";
 import { MedicalRecordFeedCardComponent } from "./card/medical-record-feed-card.component";
 import { MMRCardComponent } from './mmr';
+import { AddRecordOptionsComponent } from "./add-record-options.component";
 
 const STICK_CARD_TYPES = {
   GET_STARTED_MMR: 0,
@@ -56,22 +57,35 @@ class PrivateUserComponent extends Component {
     this.updateSearch = this.updateSearch.bind(this);
 
     this.state = {
-      stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR
+      stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR,
+      showAddRecordOptions: false
     };
   }
 
-  addRecord() {
+  showAddRecordOptions() {
+    this.setState({showAddRecordOptions: true});
+  }
+
+  hideAddRecordOptions() {
+    this.setState({showAddRecordOptions: false});
+  }
+
+  takePhoto() {
+    this.hideAddRecordOptions();
+    this.onTakePhoto();
+  }
+
+  importRecord() {
+    this.hideAddRecordOptions();
     ActionSheetIOS.showActionSheetWithOptions({
-      options: [i18n.t('UserComponent_actionSheetOption1'), i18n.t('UserComponent_actionSheetOption2'), i18n.t('UserComponent_actionSheetOption3'), i18n.t('UserComponent_actionSheetOption4')],
-      title: i18n.t('UserComponent_pickerTitle'),
-      cancelButtonIndex: 0,
-    },
+        options: [i18n.t('UserComponent_actionSheetOption1'), i18n.t('UserComponent_actionSheetOption3'), i18n.t('UserComponent_actionSheetOption4')],
+        title: 'Import records',
+        cancelButtonIndex: 0,
+      },
       (buttonIndex) => {
         if (buttonIndex === 1) {
-          this.onTakePhoto();
-        } else if (buttonIndex === 2) {
           this.onChooseFromLibrary();
-        } else if (buttonIndex === 3) {
+        } else if (buttonIndex === 2) {
           this.onChooseFile();
         }
       });
@@ -102,6 +116,8 @@ class PrivateUserComponent extends Component {
     let doIssuance = async () => {
       let listAssetName = [];
       let listInfo = [];
+
+      // Prepare data
       for (let imageInfo of images) {
         let filePath = imageInfo.uri.replace('file://', '');
         let asset = mapFileAssets[filePath];
@@ -117,14 +133,20 @@ class PrivateUserComponent extends Component {
           metadataList = [];
           metadataList.push({ label: 'Source', value: 'Health Records' });
           metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
+
+          if (imageInfo.numberOfFiles) {
+            metadataList.push({ label: 'Number Of Files', value: imageInfo.numberOfFiles.toString()});
+          }
         }
         if (assetName.length > 64) assetName = assetName.substring(0, 64);
         listInfo.push({
-          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false, isMultipleAsset
+          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false, isMultipleAsset, note: imageInfo.note, tags: imageInfo.tags
         });
 
         listAssetName.push(assetName);
       }
+
+      // Issue
       let bitmarks = await AppProcessor.doIssueMultipleFiles(listInfo, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       });
@@ -158,13 +180,14 @@ class PrivateUserComponent extends Component {
     });
   }
 
-  onTakePhoto() {
-    // Actions.orderCombineImages();
-    Actions.captureMultipleImages({ doIssueImage: this.doIssueImage });
+  doIssue(issueParams) {
+    issue(issueParams, async () => {
+      Actions.assetNameInform({ assetNames: [issueParams.assetName] });
+    });
+  }
 
-    // ImagePicker.launchCamera({}, (response) => {
-    //   this.processOnChooseImage(response);
-    // });
+  onTakePhoto() {
+    Actions.captureMultipleImages({ doIssueImage: this.doIssueImage });
   }
 
   onChooseFromLibrary() {
@@ -180,33 +203,9 @@ class PrivateUserComponent extends Component {
         let createdAt = new Date(parseInt(image.creationDate)).toISOString();
         images.push({ uri: image.path, createdAt });
       }
-      if (images.length === 1) {
-        this.doIssueImage(images);
-      } else {
-        Actions.orderCombineImages({ images, doIssueImage: this.doIssueImage });
-      }
+
+      Actions.editIssue({ images, doIssueImage: this.doIssueImage });
     });
-
-    // ImagePicker.launchImageLibrary({}, (response) => {
-    //   this.processOnChooseImage(response);
-    // });
-  }
-
-  async processOnChooseImage(response) {
-    if (response.error) {
-      Alert.alert(i18n.t('UserComponent_alertTitle1'), response.error + '.', [{
-        text: i18n.t('UserComponent_alertButton11'),
-        onPress: () => Linking.openURL('app-settings:')
-      }, {
-        text: i18n.t('UserComponent_alertButton12'),
-        style: 'cancel',
-      }]);
-      return;
-    }
-
-    let info = await this.prepareToIssue(response);
-
-    Actions.captureAsset(info);
   }
 
   onChooseFile() {
@@ -232,9 +231,11 @@ class PrivateUserComponent extends Component {
       metadataList.push({ label: 'Source', value: 'Medical Records' });
       metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
 
-      issue(filePath, assetName, metadataList, 'file', 1, async () => {
-        Actions.assetNameInform({ assetNames: [assetName] });
-      });
+      let issueParams = {
+        filePath, assetName, metadataList, fileType: 'file', quantity: 1
+      };
+
+      Actions.editIssue({ issueParams, doIssue: this.doIssue });
     });
   }
 
@@ -320,54 +321,55 @@ class PrivateUserComponent extends Component {
     let cardListData = this.populateCardListData();
 
     return (
-      <SafeAreaView style={[styles.bodySafeView,]}>
-        <View style={[styles.wrapper]}>
-          {/*SEARCH AREA*/}
-          {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
-          <View style={[styles.searchArea, (this.props.searchTerm ? {flex: 1} : {})]}>
-            <View style={styles.searchInputContainer}>
-              {/*Search Input*/}
-              <SearchInputComponent
-                throttle={300}
-                ref={(ref) => {
-                  this.searchInput = ref
-                }}
-                onSearchTermChange={(searchTerm) => {
-                  this.setState({
-                    isSearching: true
-                  });
+      <View style={{flex: 1}}>
+        <SafeAreaView style={[styles.bodySafeView,]}>
+          <View style={[styles.wrapper]}>
+            {/*SEARCH AREA*/}
+            {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
+            <View style={[styles.searchArea, (this.props.searchTerm ? {flex: 1} : {})]}>
+              <View style={styles.searchInputContainer}>
+                {/*Search Input*/}
+                <SearchInputComponent
+                  throttle={300}
+                  ref={(ref) => {
+                    this.searchInput = ref
+                  }}
+                  onSearchTermChange={(searchTerm) => {
+                    this.setState({
+                      isSearching: true
+                    });
 
-                  this.updateSearch(searchTerm);
-                }}
-                setSearchFocus={this.setSearchFocus.bind(this)}
-                style={styles.searchInput}
-                placeholder={global.i18n.t("UserComponent_search").toUpperCase()}>
-              </SearchInputComponent>
+                    this.updateSearch(searchTerm);
+                  }}
+                  setSearchFocus={this.setSearchFocus.bind(this)}
+                  style={styles.searchInput}
+                  placeholder={global.i18n.t("UserComponent_search").toUpperCase()}>
+                </SearchInputComponent>
 
-              {/*Add record button*/}
-              {(!this.state.searchFocusing && !this.props.searchTerm) &&
-              <TouchableOpacity onPress={this.addRecord.bind(this)}>
-                <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-icon.png')}/>
-              </TouchableOpacity>
+                {/*Add record button*/}
+                {(!this.state.searchFocusing && !this.props.searchTerm) &&
+                <TouchableOpacity onPress={this.showAddRecordOptions.bind(this)}>
+                  <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-icon.png')}/>
+                </TouchableOpacity>
+                }
+              </View>
+
+              {this.state.isSearching && <View style={styles.indicatorContainer}>
+                <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16}/>
+                <Text>{global.i18n.t("UserComponent_searching")}</Text>
+              </View>
               }
-            </View>
-
-            {this.state.isSearching && <View style={styles.indicatorContainer}>
-              <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16}/>
-              <Text>{global.i18n.t("UserComponent_searching")}</Text>
+              {(this.state.searchFocusing || this.props.searchTerm) ?
+                <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm}
+                                        cancel={this.searchInput.cancelSearch.bind(this.searchInput)}/> : null}
             </View>
             }
-            {(this.state.searchFocusing || this.props.searchTerm) ?
-              <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm}
-                                      cancel={this.searchInput.cancelSearch.bind(this.searchInput)}/> : null}
-          </View>
-          }
 
-          {/*DATA PANEL*/}
-          {(!this.state.searchFocusing && !this.props.searchTerm) && <View style={styles.body}>
-            <View style={[styles.bodyContent]}>
-              {/*-----TOP BAR-----*/}
-              {this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_MMR &&
+            {/*DATA PANEL*/}
+            {(!this.state.searchFocusing && !this.props.searchTerm) && <View style={styles.body}>
+              <View style={[styles.bodyContent]}>
+                {/*-----TOP BAR-----*/}
+                {this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_MMR &&
                 <View style={[styles.topBar]}>
                   {/*Back button*/}
                   <TouchableOpacity onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR }) }}>
@@ -379,114 +381,120 @@ class PrivateUserComponent extends Component {
                     <Image style={styles.profileIcon} source={require('assets/imgs/profile-icon.png')} />
                   </TouchableOpacity>
                 </View>
-              }
+                }
 
-              <ScrollView style={{}} contentContainerStyle={{ flexGrow: this.shouldHasScroll ? 0 : 1, paddingLeft: 4, paddingRight: 4, }}>
-                <View style={{ flex: 1, paddingTop: 20, }}>
-                  {/*-----STICK CARD-----*/}
-                  <View style={[styles.stickCardContainer,]}>
-                    {/*GET_STARTED_MMR*/}
-                    {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
+                <ScrollView style={{}} contentContainerStyle={{ flexGrow: this.shouldHasScroll ? 0 : 1, paddingLeft: 4, paddingRight: 4, }}>
+                  <View style={{ flex: 1, paddingTop: 20, }}>
+                    {/*-----STICK CARD-----*/}
+                    <View style={[styles.stickCardContainer,]}>
+                      {/*GET_STARTED_MMR*/}
+                      {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
                       <MMRCardComponent displayFromUserScreen={true} />
-                    }
+                      }
 
-                    {/*GET_STARTED_MEDICAL_RECORD*/}
-                    {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD &&
-                      <TouchableOpacity onPress={() => { Actions.addRecord({ addRecord: this.addRecord.bind(this) }) }}>
+                      {/*GET_STARTED_MEDICAL_RECORD*/}
+                      {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD &&
+                      <TouchableOpacity onPress={() => { Actions.addRecord({ takePhoto: this.takePhoto.bind(this), importRecord: this.importRecord.bind(this) }) }}>
                         <GetStartedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}
-                          cardHeader={'Add first medical record'}
-                          cardText={'Store all your medical records in one secure place.'}
-                          cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
-                          isStickCard={true}
-                          cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
+                                                 cardHeader={'Add first medical record'}
+                                                 cardText={'Store all your medical records in one secure place.'}
+                                                 cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
+                                                 isStickCard={true}
+                                                 cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
                         />
                       </TouchableOpacity>
-                    }
+                      }
 
-                    {/*GET_STARTED_HEALTH_DATA*/}
-                    {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&
+                      {/*GET_STARTED_HEALTH_DATA*/}
+                      {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&
                       <TouchableOpacity onPress={Actions.getStart}>
                         <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                          cardHeader={'Learn about your health'}
-                          cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
-                          cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
-                          isStickCard={true}
-                          cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
+                                                 cardHeader={'Learn about your health'}
+                                                 cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
+                                                 cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
+                                                 isStickCard={true}
+                                                 cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
                         />
                       </TouchableOpacity>
-                    }
+                      }
 
-                    {/*MEDICAL RECORD*/}
-                    {this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD &&
+                      {/*MEDICAL RECORD*/}
+                      {this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD &&
                       <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalRecord.data, bitmarkType: 'bitmark_health_issuance' }) }}>
                         <MedicalRecordCardComponent bitmark={this.state.stickMedicalRecord.data} />
                       </TouchableOpacity>
-                    }
+                      }
 
-                    {/*HEALTH DATA*/}
-                    {this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA &&
+                      {/*HEALTH DATA*/}
+                      {this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA &&
                       <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickHealthData.data, bitmarkType: 'bitmark_health_data' }) }}>
                         <HealthDataCardComponent bitmark={this.state.stickHealthData.data} />
                       </TouchableOpacity>
-                    }
+                      }
+                    </View>
+
+                    <View style={{ flex: 1 }}></View>
+
+                    {/*----FEED CARD LIST CONTAINER----*/}
+                    <View style={{ flexDirection: 'column', marginTop: 20, height: this.accumulatedTop + 20 }}>
+                      {cardListData.map((card, index) => {
+                        // ADD FIRST MEDICAL RECORD
+                        if (card.type === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
+                          return (
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD }) }}>
+                              <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}
+                                                           cardHeader={'Add first medical record'}
+                              />
+                            </TouchableOpacity>
+                          );
+                        }
+
+                        // AUTOMATICALLY ADD HEALTH DATA
+                        if (card.type === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
+                          return (
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA }) }}>
+                              <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
+                                                           cardHeader={'Learn about your health'}
+                              />
+                            </TouchableOpacity>
+                          );
+                        }
+
+                        // MEDICAL_RECORD
+                        if (card.type === STICK_CARD_TYPES.MEDICAL_RECORD) {
+                          return (
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.MEDICAL_RECORD, stickMedicalRecord: card }) }}>
+                              <MedicalRecordFeedCardComponent bitmark={card.data} />
+                            </TouchableOpacity>
+                          );
+                        }
+
+                        // HEALTH_DATA
+                        if (card.type === STICK_CARD_TYPES.HEALTH_DATA) {
+                          return (
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickHealthData: card }) }}>
+                              <HealthDataFeedCardComponent bitmark={card.data} />
+                            </TouchableOpacity>
+                          );
+                        }
+
+                        return null;
+                      })}
+                    </View>
+
                   </View>
-
-                  <View style={{ flex: 1 }}></View>
-
-                  {/*----FEED CARD LIST CONTAINER----*/}
-                  <View style={{ flexDirection: 'column', marginTop: 20, height: this.accumulatedTop + 20 }}>
-                    {cardListData.map((card, index) => {
-                      // ADD FIRST MEDICAL RECORD
-                      if (card.type === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
-                        return (
-                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD }) }}>
-                            <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}
-                              cardHeader={'Add first medical record'}
-                            />
-                          </TouchableOpacity>
-                        );
-                      }
-
-                      // AUTOMATICALLY ADD HEALTH DATA
-                      if (card.type === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
-                        return (
-                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA }) }}>
-                            <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                              cardHeader={'Learn about your health'}
-                            />
-                          </TouchableOpacity>
-                        );
-                      }
-
-                      // MEDICAL_RECORD
-                      if (card.type === STICK_CARD_TYPES.MEDICAL_RECORD) {
-                        return (
-                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.MEDICAL_RECORD, stickMedicalRecord: card }) }}>
-                            <MedicalRecordFeedCardComponent bitmark={card.data} />
-                          </TouchableOpacity>
-                        );
-                      }
-
-                      // HEALTH_DATA
-                      if (card.type === STICK_CARD_TYPES.HEALTH_DATA) {
-                        return (
-                          <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickHealthData: card }) }}>
-                            <HealthDataFeedCardComponent bitmark={card.data} />
-                          </TouchableOpacity>
-                        );
-                      }
-
-                      return null;
-                    })}
-                  </View>
-
-                </View>
-              </ScrollView>
+                </ScrollView>
+              </View>
             </View>
+            }
           </View>
-          }
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+
+        {/*ADD RECORDS DIALOG*/}
+        {this.state.showAddRecordOptions &&
+        <AddRecordOptionsComponent takePhoto={this.takePhoto.bind(this)} importRecord={this.importRecord.bind(this)} close={this.hideAddRecordOptions.bind(this)}/>
+        }
+      </View>
     );
   }
 }

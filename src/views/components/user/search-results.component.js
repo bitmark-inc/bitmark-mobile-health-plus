@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     position: 'absolute',
     top: 5,
-    left: 45
+    left: 25
   },
   itemContent: {
     marginLeft: 10,
@@ -319,10 +319,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 96, 242, 0.2)',
     marginRight: 10,
     marginTop: 13,
-    borderRadius: 5,
+    borderRadius: 4,
   },
   taggingItem: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     fontSize: 14,
     fontWeight: '300',
     color: '#0060F2',
@@ -333,5 +333,4 @@ const styles = StyleSheet.create({
   highlightingTag: {
     color: '#0060F2'
   }
-
 });

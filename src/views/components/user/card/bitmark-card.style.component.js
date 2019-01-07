@@ -53,6 +53,11 @@ const styles = StyleSheet.create({
     height: 195,
     resizeMode: 'stretch'
   },
+  coverThumbnailHeaderBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
   cardHeader: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 24,

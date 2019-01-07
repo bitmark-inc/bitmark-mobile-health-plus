@@ -48,7 +48,7 @@ export class HomeComponent extends Component {
                   <Text style={[styles.introductionTitle]}>Control your health</Text>
                   <Text style={[styles.introductionDescription]}>
                     Take ownership of your health history and control how it is shared with healthcare providers, family, and researchers.
-                </Text>
+                  </Text>
                 </View>
               </View>
 

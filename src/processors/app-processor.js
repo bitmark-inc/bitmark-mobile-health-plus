@@ -138,12 +138,12 @@ const doDeleteAccount = async (processingInfo) => {
   return executeTask('doDeleteAccount', { processingInfo });
 };
 
-const doIssueFile = async (filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo) => {
+const doIssueFile = async (issueParams, processingInfo) => {
   if (!CacheData.networkStatus) {
     await showOfflineMessage();
     return;
   }
-  return executeTask('doIssueFile', { filePath, assetName, metadataList, quantity, isPublicAsset, processingInfo });
+  return executeTask('doIssueFile', { issueParams, processingInfo });
 };
 
 const doIssueMultipleFiles = async (listInfo, processingInfo) => {

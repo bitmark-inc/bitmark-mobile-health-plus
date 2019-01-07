@@ -7,8 +7,10 @@ const initializeIndexedDB = async () => {
   await IndexedDBModel.connectDB(CacheData.userInformation.bitmarkAccountNumber);
   await IndexedDBModel.createIndexedDataTable();
   await IndexedDBModel.createTagsTable();
+  await IndexedDBModel.createNoteTable();
 };
 
+// INDEX DATA
 const insertDetectedDataToIndexedDB = async (bitmarkId, assetName, metadata, detectedTexts) => {
   let accountNumber = CacheData.userInformation.bitmarkAccountNumber;
   let metadataStr = '';
@@ -61,7 +63,8 @@ const searchIndexedBitmarks = async (searchTerm) => {
 
   let indexedRecords = (await IndexedDBModel.queryIndexedData(accountNumber, searchTerm)) || [];
   let tagRecords = (await IndexedDBModel.queryTags(accountNumber, searchTerm)) || [];
-  let records = indexedRecords.concat(tagRecords);
+  let noteRecords = (await IndexedDBModel.queryNote(accountNumber, searchTerm)) || [];
+  let records = indexedRecords.concat(tagRecords).concat(noteRecords);
 
   return { bitmarkIds: uniq(records.map(record => record.bitmarkId)), tagRecords };
 };
@@ -75,6 +78,7 @@ const deleteIndexedDataByBitmarkId = async (bitmarkId) => {
   await IndexedDBModel.deleteIndexedDataByBitmarkId(bitmarkId);
 };
 
+// TAGS
 const getTagsByBitmarkId = async (bitmarkId) => {
   let tags = [];
   let records = (await IndexedDBModel.queryTagsByBitmarkId(bitmarkId)) || [];
@@ -106,17 +110,45 @@ const deleteTagsByBitmarkId = async (bitmarkId) => {
   await IndexedDBModel.deleteTagsByBitmarkId(bitmarkId);
 };
 
+// NOTE
+const getNoteByBitmarkId = async (bitmarkId) => {
+  let records = (await IndexedDBModel.queryNoteByBitmarkId(bitmarkId)) || [];
+  return (records.length && records[0].note) || '';
+};
+
+const updateNote = async (bitmarkId, note) => {
+  let records = (await IndexedDBModel.queryNoteByBitmarkId(bitmarkId)) || [];
+  if (records.length) {
+    await IndexedDBModel.updateNote(bitmarkId, note);
+  } else {
+    let accountNumber = CacheData.userInformation.bitmarkAccountNumber;
+    await IndexedDBModel.insertNote(accountNumber, bitmarkId, note);
+  }
+};
+
+const deleteNoteByBitmarkId = async (bitmarkId) => {
+  await IndexedDBModel.deleteNoteByBitmarkId(bitmarkId);
+};
+
 let IndexDBService = {
   initializeIndexedDB,
+
+  // Index data
   insertDetectedDataToIndexedDB,
   insertHealthDataToIndexedDB,
   deleteIndexedDataByBitmarkId,
   searchIndexedBitmarks,
   getIndexedDataByBitmarkId,
 
+  // Tags
   getTagsByBitmarkId,
   getTagRecordByBitmarkId,
   updateTag,
-  deleteTagsByBitmarkId
+  deleteTagsByBitmarkId,
+
+  // Note
+  getNoteByBitmarkId,
+  updateNote,
+  deleteNoteByBitmarkId
 };
 export { IndexDBService };

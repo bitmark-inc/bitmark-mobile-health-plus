@@ -344,7 +344,7 @@ const generateThumbnail = async (filePath, bitmarkId, isCombineFile = false) => 
   let thumbnailsFolderPath = FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber);
   let outputFilePath = isCombineFile ? `${thumbnailsFolderPath}/${bitmarkId}_${COMBINE_FILE_SUFFIX}.PNG` : `${thumbnailsFolderPath}/${bitmarkId}.PNG`;
 
-  const THUMBNAIL_WIDTH = 300;
+  const THUMBNAIL_WIDTH = 400;
   const THUMBNAIL_HEIGHT = 300;
 
   if (isImageFile(filePath)) {

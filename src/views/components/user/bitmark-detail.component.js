@@ -54,8 +54,9 @@ export class BitmarkDetailComponent extends Component {
   async componentDidMount() {
     let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
     let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmark.id);
+    let note = await IndexDBService.getNoteByBitmarkId(this.props.bitmark.id);
 
-    this.setState({fileSize: humanFileSize(fileStat.size), tags});
+    this.setState({fileSize: humanFileSize(fileStat.size), tags, note});
   }
 
   deleteBitmark() {
@@ -78,14 +79,18 @@ export class BitmarkDetailComponent extends Component {
       });
   }
 
+  doUpdateTagsAndNote(tags, note) {
+    this.setState({tags, note});
+  }
+
   render() {
     let bitmark = this.props.bitmark;
     let bitmarkType = this.props.bitmarkType;
     let tags = this.state.tags;
+    let note = this.state.note;
 
-    console.log('bitmark:', bitmark);
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
         <SafeAreaView style={[styles.bodySafeView]}>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
@@ -96,7 +101,7 @@ export class BitmarkDetailComponent extends Component {
                   <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
                 </TouchableOpacity>
                 {/*MMR Icon*/}
-                <TouchableOpacity onPress={() => {}}>
+                <TouchableOpacity onPress={() => {Actions.mmrInformation()}}>
                   <Image style={styles.profileIcon} source={require('assets/imgs/profile-icon.png')} />
                 </TouchableOpacity>
               </View>
@@ -106,7 +111,7 @@ export class BitmarkDetailComponent extends Component {
                 {/*IMAGE*/}
                 <View style={[cardStyles.cardImageContainer]}>
                   <TouchableOpacity onPress={() => {
-                    if (bitmark.thumbnail) {
+                    if (bitmark.thumbnail && bitmark.thumbnail.path) {
                       Actions.fullViewCaptureAsset({
                         filePath: this.state.filePath,
                         title: this.props.bitmark.asset.name
@@ -117,11 +122,23 @@ export class BitmarkDetailComponent extends Component {
                       <Image style={cardStyles.cardImage} source={require('assets/imgs/health-data-thumbnail.png')} />
                     ) : (
                       (bitmark.thumbnail && bitmark.thumbnail.path) ? (
-                        <Image style={cardStyles.cardImage} source={{ uri: bitmark.thumbnail.path }} />
+                        <View>
+                          {/*Thumbnail*/}
+                          <Image style={cardStyles.cardImage} source={{ uri: bitmark.thumbnail.path }} />
+                        </View>
                       ) : (
                         <Image style={cardStyles.cardImage} source={require('assets/imgs/unknown-file-thumbnail.png')} />
                       )
                     )
+                    }
+
+                    {/*Cover thumbnail linear gradient header bar*/}
+                    <Image source={require('assets/imgs/linear-gradient-transparent-background.png')} style={[cardStyles.cardImage, cardStyles.coverThumbnailHeaderBar]}>
+                    </Image>
+
+                    {/*Zoom in icon*/}
+                    {bitmark.thumbnail && bitmark.thumbnail.path &&
+                      <Image style={styles.zoomInIcon} source={require('assets/imgs/zoom-in-icon.png')} />
                     }
                   </TouchableOpacity>
 
@@ -131,8 +148,8 @@ export class BitmarkDetailComponent extends Component {
                   }
 
                   {/*Multiple files number*/}
-                  {bitmark.thumbnail && bitmark.thumbnail.multiple && bitmark.thumbnail.numberOfFiles &&
-                    <Text style={styles.multipleFilesText}>bitmark.thumbnail.numberOfFiles</Text>
+                  {bitmark.asset.metadata['Number Of Files'] &&
+                    <Text style={styles.multipleFilesText}>{bitmark.asset.metadata['Number Of Files']}</Text>
                   }
 
                 </View>
@@ -144,51 +161,53 @@ export class BitmarkDetailComponent extends Component {
                 </View>
 
                 {/*CONTENT*/}
-                <View style={[cardStyles.cardContent]}>
-                  {/*Name*/}
-                  <Text style={[cardStyles.cardHeader]}>{bitmark.asset.name}</Text>
-                  {/*Status*/}
-                  <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <Text style={[cardStyles.cardText]}>{bitmark.asset.created_at ? (bitmarkType == 'bitmark_health_issuance' ? 'ADDED ON ' : 'RECORDED ON ' + moment(bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()) : 'REGISTERING...'}</Text>
-                    {this.state.fileSize &&
-                    <Text style={[cardStyles.cardText]}>{this.state.fileSize}</Text>
-                    }
+                <View style={[cardStyles.cardContent, {paddingRight: 0}]}>
+                  <View style={[{paddingRight: convertWidth(16)}]}>
+                    {/*Name*/}
+                    <Text style={[cardStyles.cardHeader]}>{bitmark.asset.name}</Text>
+                    {/*Status*/}
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                      <Text style={[cardStyles.cardText]}>{bitmark.asset.created_at ? (bitmarkType == 'bitmark_health_issuance' ? 'ADDED ON ' : 'RECORDED ON ' + moment(bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()) : 'REGISTERING...'}</Text>
+                      {this.state.fileSize &&
+                      <Text style={[cardStyles.cardText]}>{this.state.fileSize}</Text>
+                      }
+                    </View>
                   </View>
 
                   {/*Notes*/}
-                  <View style={[styles.notesContainer]}>
+                  <View style={[styles.notesContainer, {paddingRight: convertWidth(16)}]}>
                     <Text style={[styles.notesText]}>Notes:</Text>
+                    {!!note &&
+                    <Text style={[styles.notesText]}>{note}</Text>
+                    }
                   </View>
 
                   {/*Tags*/}
                   <View style={[styles.notesContainer]}>
                     <Text style={[styles.notesText]}>Tags:</Text>
 
-                    <View style={[styles.tagsContainer]}>
-                      {/*Tag icon*/}
-                      <TouchableOpacity onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
+                    <ScrollView horizontal={true}>
+                      <View style={[styles.tagsContainer]}>
+                        {/*Tag icon*/}
                         <Image style={styles.taggingIcon} source={require('assets/imgs/tag-icon.png')} />
-                      </TouchableOpacity>
 
-                      {(tags && tags.length) ? (
-                        <View style={styles.tagListContainer}>
-                          {(tags || []).map(tag => {
+                        {(tags && tags.length) ? (
+                          (tags || []).map(tag => {
                             return (
                               <View key={tag} style={styles.taggingItemContainer}>
                                 <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
                               </View>
                             );
                           })
-                          }
-                        </View>
-                      ) : null
-                      }
-                    </View>
+                        ) : null
+                        }
+                      </View>
+                    </ScrollView>
                   </View>
 
                   <View style={[styles.actionsContainer]}>
-                    {/*Tag icon*/}
-                    <TouchableOpacity onPress={() => Actions.tagging({ bitmarkId: this.props.bitmark.id })}>
+                    {/*Edit icon*/}
+                    <TouchableOpacity onPress={() => Actions.editBitmark({ bitmark, bitmarkType: this.props.bitmarkType, tags: tags, note, doUpdateTagsAndNote: this.doUpdateTagsAndNote.bind(this) })}>
                       <Image style={styles.taggingIcon} source={require('assets/imgs/edit-icon.png')} />
                     </TouchableOpacity>
 
@@ -239,7 +258,7 @@ export class BitmarkDetailComponent extends Component {
             </View>
           </View>
         </SafeAreaView>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -282,6 +301,13 @@ const styles = StyleSheet.create({
     height: 32,
     resizeMode: 'contain'
   },
+  zoomInIcon: {
+    position: 'absolute',
+    width: 18,
+    height: 18,
+    top: 33,
+    left: 14,
+  },
   multipleFilesIcon: {
     position: 'absolute',
     width: 22,
@@ -315,22 +341,17 @@ const styles = StyleSheet.create({
     height: 16,
     resizeMode: 'contain',
   },
-  tagListContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginLeft: 12,
-  },
   taggingItemContainer: {
     flexDirection: 'row',
     padding: 5,
     paddingTop: 5,
     paddingBottom: 5,
     backgroundColor: 'rgba(0, 0, 0, 0.12)',
-    marginRight: 10,
-    borderRadius: 5,
+    marginLeft: 10,
+    borderRadius: 4,
   },
   taggingItem: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     fontSize: 10,
     fontWeight: '300',
     color: 'rgba(0, 0, 0, 0.87)',

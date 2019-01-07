@@ -17,6 +17,7 @@ export class CaptureAssetComponent extends Component {
     filePath: PropTypes.string,
     timestamp: PropTypes.any,
   };
+
   constructor(props) {
     super(props);
   }
@@ -27,11 +28,10 @@ export class CaptureAssetComponent extends Component {
     let metadataList = [];
     metadataList.push({ label: 'Source', value: 'Health Records' });
     metadataList.push({ label: 'Saved Time', value: new Date(this.props.timestamp).toISOString() });
-    issue(filePath, assetName, metadataList, 'image', 1, async () => {
+    issue({filePath, assetName, metadataList, fileType: 'image', quantity: 1}, async () => {
       Actions.assetNameInform({ assetNames: [assetName] });
     });
   }
-
 
   render() {
     return (

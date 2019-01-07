@@ -18,11 +18,12 @@ import { GetStartComponent } from './get-start.component';
 import { AddRecordComponent } from './add-record.component';
 import { AccountNumberComponent } from './account-number.component';
 import { CaptureMultipleImagesComponent } from './capture-multiple-image.component';
-import { OrderCombineImagesComponent } from './order-combine-images.component';
+import { EditIssueComponent } from './edit-issue.component';
 import { TaggingComponent } from "./tagging.component";
 import { DataProcessor } from 'src/processors';
 import { BitmarkLegalComponent, WhatNewComponent } from 'src/views/commons';
 import { MMRInformationComponent } from './mmr';
+import { EditBitmarkComponent } from "./edit-bitmark.component";
 
 export class UserRouterComponent extends Component {
   componentDidMount() {
@@ -49,7 +50,8 @@ export class UserRouterComponent extends Component {
           <Scene key="addRecord" component={AddRecordComponent} />
           <Scene key="accountNumber" component={AccountNumberComponent} />
           <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} />
-          <Scene key="orderCombineImages" component={OrderCombineImagesComponent} />
+          <Scene key="editIssue" component={EditIssueComponent} />
+          <Scene key="editBitmark" component={EditBitmarkComponent} panHandlers={null}/>
           <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
           <Scene key="tagging" component={TaggingComponent} />
           <Scene key="mmrInformation" component={MMRInformationComponent} panHandlers={null} />

@@ -74,8 +74,8 @@ const doDeleteAccount = async (processingInfo) => {
   return await submitting(DataProcessor.doDeleteAccount(), processingInfo);
 };
 
-const doIssueFile = async ({ filePath, assetName, metadataList, quantity, processingInfo }) => {
-  return await submitting(DataProcessor.doIssueFile(filePath, assetName, metadataList, quantity), processingInfo);
+const doIssueFile = async ({ issueParams, processingInfo }) => {
+  return await submitting(DataProcessor.doIssueFile(issueParams), processingInfo);
 };
 
 const doIssueMultipleFiles = async ({ listInfo, processingInfo }) => {

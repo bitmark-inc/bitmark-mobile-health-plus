@@ -20,7 +20,8 @@ export class CaptureMultipleImagesComponent extends Component {
     capture: 'capture',
     detail: 'detail',
     list: 'list',
-  }
+  };
+
   constructor(props) {
     super(props);
 
@@ -57,11 +58,7 @@ export class CaptureMultipleImagesComponent extends Component {
   }
 
   saveImages() {
-    if (this.state.images.length > 1) {
-      Actions.orderCombineImages({ images: this.state.images, doIssueImage: this.props.doIssueImage });
-    } else {
-      this.props.doIssueImage(this.state.images);
-    }
+    Actions.editIssue({ images: this.state.images, doIssueImage: this.props.doIssueImage });
   }
 
   retakeImage() {
@@ -94,7 +91,7 @@ export class CaptureMultipleImagesComponent extends Component {
               <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText1')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
-              {this.state.images.length > 0 && <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText2')}({this.state.images.length})</Text>}
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save ({this.state.images.length})</Text>}
             </TouchableOpacity>
           </View>
           <RNCamera
@@ -121,7 +118,7 @@ export class CaptureMultipleImagesComponent extends Component {
             <TouchableOpacity style={styles.button} disabled={true}>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
-              {this.state.images.length > 0 && <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText2')}({this.state.images.length})</Text>}
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save ({this.state.images.length})</Text>}
             </TouchableOpacity>
           </View>
           <View style={styles.imageArea}>
@@ -142,7 +139,7 @@ export class CaptureMultipleImagesComponent extends Component {
             <TouchableOpacity style={styles.button} disabled={true}>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} disabled={this.state.images.length === 0} onPress={this.saveImages.bind(this)}>
-              {this.state.images.length > 0 && <Text style={styles.buttonText}>{i18n.t('CaptureMultipleImagesComponent_buttonText2')}({this.state.images.length})</Text>}
+              {this.state.images.length > 0 && <Text style={styles.buttonText}>Save ({this.state.images.length})</Text>}
             </TouchableOpacity>
           </View>
           <Swiper
@@ -189,7 +186,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between',
   },
   camera: {
-    borderWidth: 1, borderColor: 'red',
+    borderWidth: 1,
     flex: 1,
     width: '100%',
   },
@@ -208,7 +205,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   paginationText: {
-    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black', color: 'white',
+    fontSize: 18,
+    fontFamily: 'AvenirNextW1G-Bold', color: 'white',
   },
   footer: {
     padding: 20, paddingTop: 40, paddingBottom: 40,
@@ -220,7 +218,9 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   buttonText: {
-    fontSize: 18, fontWeight: '900', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black', color: 'white',
+    fontSize: 18,
+    fontFamily: 'AvenirNextW1G-Bold',
+    color: '#FFFFFF'
   },
   captureIcon: {
     width: convertWidth(68),

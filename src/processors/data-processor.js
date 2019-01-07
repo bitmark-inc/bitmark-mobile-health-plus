@@ -523,64 +523,74 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         clearTimeout(this.iCloudFileChangedTimeout)
       }
 
-      this.iCloudFileChangedTimeout = setTimeout(() => {
-        console.log('mapFiles:', Object.keys(mapFiles).length);
-        for (let key in mapFiles) {
-          let keyList = key.split('_');
-          let promiseRunAfterCopyFile;
-          let overwrite = false;
-          let assetId;
-          if (keyList[0] === bitmarkAccountNumber) {
-            let keyFilePath;
-            if (keyList[1] === 'assets') {
-              assetId = base58.decode(keyList[2]).toString('hex');
-              keyFilePath = key.replace(`${bitmarkAccountNumber}_assets_${keyList[2]}_`, `${bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
-            } else if (keyList[1] === 'thumbnails') {
-              keyFilePath = key.replace(`${bitmarkAccountNumber}_thumbnails_`, `${bitmarkAccountNumber}/thumbnails/`);
-            } else if (keyList[1] === 'indexedData') {
-              keyFilePath = key.replace(`${bitmarkAccountNumber}_indexedData_`, `${bitmarkAccountNumber}/indexedData/`);
-            } else if (keyList[1] === 'indexTag') {
-              keyFilePath = key.replace(`${bitmarkAccountNumber}_indexTag_`, `${bitmarkAccountNumber}/indexTag/`);
-              let bitmarkId = keyList[2].replace('.txt', '');
-              overwrite = true;
-              promiseRunAfterCopyFile = async () => {
-                await LocalFileService.doUpdateIndexTagFromICloud(bitmarkId);
-              };
-            }
-            let doSyncFile = async () => {
-              if (assetId) {
-                let assetInfo = await BitmarkModel.doGetAssetInformation(assetId);
-                console.log('assetId', assetId, assetInfo);
-                if (isHealthDataRecord(assetInfo) && keyFilePath.endsWith('.txt')) {
-                  iCloudSyncAdapter.deleteFileFromCloud(key);
-                  return;
-                }
+      this.iCloudFileChangedTimeout = setTimeout(
+        () => {
+          console.log('mapFiles:', Object.keys(mapFiles).length);
+          for (let key in mapFiles) {
+            let keyList = key.split('_');
+            let promiseRunAfterCopyFile;
+            let overwrite = false;
+            let assetId;
+            if (keyList[0] === bitmarkAccountNumber) {
+              let keyFilePath;
+              if (keyList[1] === 'assets') {
+                assetId = base58.decode(keyList[2]).toString('hex');
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_assets_${keyList[2]}_`, `${bitmarkAccountNumber}/assets/${assetId}/downloaded/`);
+              } else if (keyList[1] === 'thumbnails') {
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_thumbnails_`, `${bitmarkAccountNumber}/thumbnails/`);
+              } else if (keyList[1] === 'indexedData') {
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_indexedData_`, `${bitmarkAccountNumber}/indexedData/`);
+              } else if (keyList[1] === 'indexTag') {
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_indexTag_`, `${bitmarkAccountNumber}/indexTag/`);
+                let bitmarkId = keyList[2].replace('.txt', '');
+                overwrite = true;
+                promiseRunAfterCopyFile = async () => {
+                  await LocalFileService.doUpdateIndexTagFromICloud(bitmarkId);
+                };
+              } else if (keyList[1] === 'indexNote') {
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_indexNote_`, `${bitmarkAccountNumber}/indexNote/`);
+                let bitmarkId = keyList[2].replace('.txt', '');
+                overwrite = true;
+                promiseRunAfterCopyFile = async () => {
+                  await LocalFileService.doUpdateIndexNoteFromICloud(bitmarkId);
+                };
               }
-              let filePath = mapFiles[key];
-              let downloadedFile = `${FileUtil.SharedGroupDirectory}/${keyFilePath}`;
-              if (overwrite) {
-                await FileUtil.removeSafe(downloadedFile);
-                let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
-                await FileUtil.mkdir(downloadedFolder);
-                await FileUtil.copyFile(filePath, downloadedFile);
-                if (promiseRunAfterCopyFile) {
-                  await promiseRunAfterCopyFile();
-                  promiseRunAfterCopyFile = null;
+              let doSyncFile = async () => {
+                if (assetId) {
+                  let assetInfo = await BitmarkModel.doGetAssetInformation(assetId);
+                  console.log('assetId', assetId, assetInfo);
+                  if (isHealthDataRecord(assetInfo) && keyFilePath.endsWith('.txt')) {
+                    iCloudSyncAdapter.deleteFileFromCloud(key);
+                    return;
+                  }
                 }
-              } else {
-                let existFileICloud = await FileUtil.exists(filePath);
-                let existFileLocal = await FileUtil.exists(downloadedFile);
-                if (existFileICloud && !existFileLocal) {
+                let filePath = mapFiles[key];
+                let downloadedFile = `${FileUtil.SharedGroupDirectory}/${keyFilePath}`;
+                if (overwrite) {
+                  await FileUtil.removeSafe(downloadedFile);
                   let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
                   await FileUtil.mkdir(downloadedFolder);
                   await FileUtil.copyFile(filePath, downloadedFile);
+                  if (promiseRunAfterCopyFile) {
+                    await promiseRunAfterCopyFile();
+                    promiseRunAfterCopyFile = null;
+                  }
+                } else {
+                  let existFileICloud = await FileUtil.exists(filePath);
+                  let existFileLocal = await FileUtil.exists(downloadedFile);
+                  if (existFileICloud && !existFileLocal) {
+                    let downloadedFolder = downloadedFile.substring(0, downloadedFile.lastIndexOf('/'));
+                    await FileUtil.mkdir(downloadedFolder);
+                    await FileUtil.copyFile(filePath, downloadedFile);
+                  }
                 }
-              }
-            };
-            runPromiseWithoutError(doSyncFile());
+              };
+              runPromiseWithoutError(doSyncFile());
+            }
           }
-        }
-      }, 1000 * 5);// 15s
+        },
+        1000 * 5 // 5s
+      );
     });
     iCloudSyncAdapter.syncCloud();
     //configNotification();
@@ -709,8 +719,9 @@ const doMarkDoneBitmarkHealthData = () => {
   updateModal(mapModalDisplayKeyIndex.weekly_health_data);
 };
 
-const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultipleAsset = false) => {
-  let results = await BitmarkService.doIssueFile(CacheData.userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity);
+const doIssueFile = async (issueParams) => {
+  let {filePath, assetName, metadataList, quantity, isPublicAsset = false, isMultipleAsset = false, note, tags} = issueParams;
+  let results = await BitmarkService.doIssueFile(CacheData.userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
@@ -737,16 +748,26 @@ const doIssueFile = async (filePath, assetName, metadataList, quantity, isMultip
     } else {
       await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, '');
     }
+
+    // Note
+    if (note) {
+      await IndexDBService.updateNote(record.id, note);
+    }
+
+    // Tags
+    if (tags) {
+      await IndexDBService.updateTag(record.id, tags);
+    }
   }
 
   await runGetUserBitmarksInBackground();
   return results;
 };
 
-const doIssueMultipleFiles = async (listInfo) => {
+const doIssueMultipleFiles = async (issueParamsList) => {
   let results = [];
-  for (let info of listInfo) {
-    let result = await doIssueFile(info.filePath, info.assetName, info.metadataList, info.quantity, info.isPublicAsset, info.isMultipleAsset);
+  for (let issueParams of issueParamsList) {
+    let result = await doIssueFile(issueParams);
     results.push(result[0]);
   }
   return results;
@@ -800,7 +821,7 @@ const doDeleteAccount = async () => {
 const doAcceptEmailRecords = async (emailRecord) => {
   for (let item of emailRecord.list) {
     if (!item.existingAsset) {
-      await doIssueFile(item.filePath, item.assetName, item.metadata, 1);
+      await doIssueFile({filePath: item.filePath, assetName: item.assetName, metadata: item.metadata, quantity: 1});
     }
   }
   for (let id of emailRecord.ids) {
@@ -985,7 +1006,7 @@ const doIssueMMR = async (data) => {
   let filePath = `${FileUtil.CacheDirectory}/${assetName}.json`;
   await FileUtil.writeFile(filePath, JSON.stringify(data));
 
-  let result = await doIssueFile(filePath, assetName, metadata, 1);
+  let result = await doIssueFile({filePath, assetName, metadata, quantity: 1});
   await FileUtil.removeSafe(filePath);
   return result;
 };

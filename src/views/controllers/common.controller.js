@@ -3,7 +3,9 @@ import { AppProcessor, EventEmitterService, IndexDBService, CommonModel, CacheDa
 import { FileUtil, isAssetDataRecord } from 'src/utils';
 import { UserBitmarksStore, UserBitmarksActions } from '../stores';
 
-const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
+const issue = (issueParams, callBack) => {
+  let {filePath, assetName, metadataList, quantity, fileType, note, tags} = issueParams;
+
   if (!CacheData.networkStatus) {
     AppProcessor.showOfflineMessage();
     return;
@@ -13,14 +15,14 @@ const issue = (filePath, assetName, metadataList, type, quality, callBack) => {
   AppProcessor.doCheckFileToIssue(filePath).then(({ asset }) => {
     if (asset && asset.name && !asset.canIssue) {
       let message = asset.registrant === CacheData.userInformation.bitmarkAccountNumber
-        ? i18n.t('CaptureAssetComponent_alertMessage11', { type })
-        : i18n.t('CaptureAssetComponent_alertMessage12', { type });
+        ? i18n.t('CaptureAssetComponent_alertMessage11', { type: fileType })
+        : i18n.t('CaptureAssetComponent_alertMessage12', { type: fileType });
 
       Alert.alert('', message, [{
         text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
       }]);
     } else {
-      AppProcessor.doIssueFile(filePath, assetName, metadataList, quality, {
+      AppProcessor.doIssueFile({filePath, assetName, metadataList, quantity, note, tags}, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       }).then(async (data) => {
         if (data) {

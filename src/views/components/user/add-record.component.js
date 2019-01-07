@@ -4,49 +4,82 @@ import {
   StyleSheet,
   View, SafeAreaView, TouchableOpacity, Text, Image,
 } from 'react-native';
-import Hyperlink from 'react-native-hyperlink';
-import { Actions } from 'react-native-router-flux';
 import { convertWidth } from 'src/utils';
-import { config, constants } from 'src/configs';
+import { AddRecordOptionsComponent } from "./add-record-options.component";
 
 export class AddRecordComponent extends Component {
   static propTypes = {
-    addRecord: PropTypes.func.isRequired,
+    takePhoto: PropTypes.func,
+    importRecord: PropTypes.func,
   };
   constructor(props) {
     super(props);
+
+    this.state = {
+      showAddRecordOptions: false
+    }
+  }
+
+  showAddRecordOptions() {
+    this.setState({showAddRecordOptions: true});
+  }
+
+  hideAddRecordOptions() {
+    this.setState({showAddRecordOptions: false});
+  }
+
+  takePhoto() {
+    this.hideAddRecordOptions();
+    this.props.takePhoto();
+  }
+
+  importRecord() {
+    this.hideAddRecordOptions();
+    this.props.importRecord();
   }
 
   render() {
     return (
-      <SafeAreaView style={styles.bodySafeView}>
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <View style={styles.titleRow}>
-              <Text style={styles.titleText}>{i18n.t('AddRecordComponent_titleText')}</Text>
-              <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
-                <Image style={styles.closeIcon} source={require('assets/imgs/close_icon_red.png')} />
-              </TouchableOpacity>
-            </View>
+      <View style={{flex: 1}}>
+        <SafeAreaView style={styles.bodySafeView}>
+          <View style={styles.body}>
+            <View style={styles.bodyContent}>
+              {/*TOP AREA*/}
+              <View style={[styles.topArea, styles.paddingContent]}>
+                <Text style={[styles.title]}>ADD FIRST MEDICAL RECORD</Text>
+                <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
+              </View>
 
-            <View style={{ flex: 1, padding: 20 }}>
-              <Hyperlink>
-                <Text style={styles.message}>
-                  {i18n.t('AddRecordComponent_message')}
-                </Text>
-              </Hyperlink>
-              <View style={{ flex: 1, padding: 30 }}>
-                <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('assets/imgs/add-record.png')} />
+              {/*CONTENT*/}
+              <View style={[styles.contentArea, styles.paddingContent]}>
+                {/*IMAGE*/}
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                  <View style={[styles.introductionImageArea]}>
+                    <Image style={styles.addRecordImage} source={require('assets/imgs/add-record.png')} />
+                  </View>
+                </View>
+                {/*DESC*/}
+                <View style={styles.introductionTextArea}>
+                  <Text style={[styles.introductionTitle]}>Secure your first medical record</Text>
+                  <Text style={[styles.introductionDescription]}>Upload and store all your medical records in one secure place.</Text>
+                </View>
+              </View>
+
+              {/*BOTTOM AREA*/}
+              <View style={[styles.bottomArea, styles.paddingContent]}>
+                <TouchableOpacity style={[styles.buttonNext]} onPress={this.showAddRecordOptions.bind(this)}>
+                  <Text style={[styles.buttonText, { color: '#FF003C' }]}>START</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.bottomButtonArea}>
-              <TouchableOpacity style={[styles.bottomButton]} onPress={this.props.addRecord}>
-                <Text style={[styles.bottomButtonText]}>{i18n.t('AddRecordComponent_bottomButtonText').toUpperCase()}</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+
+        {/*ADD RECORDS DIALOG*/}
+        {this.state.showAddRecordOptions &&
+        <AddRecordOptionsComponent takePhoto={this.takePhoto.bind(this)} importRecord={this.importRecord.bind(this)} close={this.hideAddRecordOptions.bind(this)}/>
+        }
+      </View>
     );
   }
 }
@@ -57,73 +90,82 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   body: {
+    flex: 1,
+    backgroundColor: 'white',
     padding: convertWidth(16),
     paddingTop: convertWidth(16),
-    flex: 1,
   },
   bodyContent: {
     flex: 1,
-    flexDirection: 'column',
-    borderWidth: 1, borderColor: '#FF4444',
-    width: '100%'
+    backgroundColor: '#F4F2EE',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
-  titleRow: {
+  paddingContent: {
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16)
+  },
+  topArea: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: convertWidth(20),
-    paddingTop: 0,
-    paddingRight: 0,
-    width: '100%',
+    height: 40,
+    backgroundColor: '#FFFFFF',
   },
-  titleText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '900',
-    fontSize: 24,
-    flex: 1,
+  title: {
+    fontFamily: 'AvenirNextW1G-Light',
+    fontSize: 10,
+    color: 'rgba(0, 0, 0, 0.87)'
   },
-  closeButton: {
-    paddingTop: convertWidth(26),
-    paddingBottom: convertWidth(26),
-    paddingRight: convertWidth(24),
-    paddingLeft: convertWidth(50),
-  },
-  closeIcon: {
-    width: convertWidth(21),
-    height: convertWidth(21),
+  logo: {
+    width: 23,
+    height: 23,
     resizeMode: 'contain',
   },
-
-  message: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '300',
-    fontSize: 16,
-  },
-
-
-  bottomButtonArea: {
-    flexDirection: 'row',
+  contentArea: {
+    flex: 1,
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: convertWidth(20),
-  },
-
-  bottomButton: {
-    borderWidth: 1, borderColor: '#FF4444',
-    backgroundColor: '#FF4444',
-    height: constants.buttonHeight,
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     width: '100%',
-
   },
-  bottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '900',
+  bottomArea: {
+    height: 90,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    paddingBottom: 16,
+  },
+  addRecordImage: {
+    resizeMode: 'contain',
+    width: 208,
+    height: 200,
+  },
+  buttonText: {
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
-    color: 'white'
+  },
+  introductionTextArea: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+  },
+  introductionTitle: {
+    marginTop: 25,
+    fontFamily: 'AvenirNextW1G-Bold',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: 24,
+    textAlign: 'left',
+  },
+  introductionDescription: {
+    marginTop: 15,
+    fontFamily: 'AvenirNextW1G-Regular',
+    fontSize: 14,
+    lineHeight: 20,
+    color: 'rgba(0, 0, 0, 0.6)',
+    textAlign: 'left',
   }
-
-
-
 });

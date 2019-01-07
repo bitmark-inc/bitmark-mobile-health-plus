@@ -18,12 +18,12 @@ export class EmailRecordComponent extends Component {
   static STEPS = {
     authorization: 'authorization',
     view: 'view',
-  }
+  };
+
   constructor(props) {
     super(props);
     this.processEmailRecordsFromAnEmail = this.processEmailRecordsFromAnEmail.bind(this);
 
-    console.log('mapEmailRecords :', this.props.mapEmailRecords);
     let emailAddress = Object.keys(this.props.mapEmailRecords);
     this.state = {
       emailAddress,
