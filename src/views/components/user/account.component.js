@@ -98,7 +98,7 @@ class PrivateAccountComponent extends Component {
             <ShadowTopComponent contentStyle={styles.cardHeader}>
               <Text style={styles.cardTitle}>ASSISTANT</Text>
             </ShadowTopComponent>
-            <Text style={styles.cardDescription}>A personal assistant to help you unlock the value of your health data.</Text>
+            <Text style={[styles.cardDescription, { paddingRight: convertWidth(68) }]}>A personal assistant to help you unlock the value of your health data.</Text>
 
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ sugges_health_studies: !this.props.userInformation.metadata.sugges_health_studies })}>
               <Text style={styles.cardContentRowButtonText}>Suggest health studies</Text>
