@@ -11,7 +11,7 @@ import moment from 'moment';
 import { convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { InputTagComponent } from "./tag/input-tag.component";
-import { OutterShadowComponent } from "../../commons/shadow.component";
+import { OutterShadowComponent } from "src/views/commons";
 
 
 class ItemOrderImageComponent extends Component {

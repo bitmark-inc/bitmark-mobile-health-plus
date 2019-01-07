@@ -377,7 +377,7 @@ class PrivateUserComponent extends Component {
                   </TouchableOpacity>
 
                   {/*MMR Icon*/}
-                  <TouchableOpacity onPress={() => { }}>
+                  <TouchableOpacity onPress={() => { Actions.mmrInformation() }}>
                     <Image style={styles.profileIcon} source={require('assets/imgs/profile-icon.png')} />
                   </TouchableOpacity>
                 </View>
