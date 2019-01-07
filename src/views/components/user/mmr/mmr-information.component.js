@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   emergencyContactRowInfoPhoneNumber: {
-    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 14,
   },
   addEmergencyContactButton: {
     width: '100%',
