@@ -56,6 +56,7 @@ export class AccountPhraseComponent extends Component {
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.onKeyboardWillHide.bind(this));
   }
 
   accessPhraseWords() {
@@ -98,6 +99,8 @@ export class AccountPhraseComponent extends Component {
 
   onKeyboardDidHide() {
     this.setState({ keyboardHeight: 0 });
+  }
+  onKeyboardWillHide() {
     let listAnimations = [];
     listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
       toValue: 0,
@@ -561,7 +564,10 @@ export class AccountPhraseComponent extends Component {
                             return (
                               <TouchableOpacity style={[styles.recoveryPhraseSet,]}
                                 disabled={item.selected}
-                                onPress={() => this.setState({ selectingIndex: index })}
+                                onPress={() => {
+                                  this.setState({ selectingIndex: index });
+                                  this.inputtedRefs[item.key].focus();
+                                }}
                               >
                                 <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
                                 <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
@@ -605,7 +611,10 @@ export class AccountPhraseComponent extends Component {
                             return (
                               <TouchableOpacity style={[styles.recoveryPhraseSet,]}
                                 disabled={item.selected}
-                                onPress={() => this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) })}
+                                onPress={() => {
+                                  this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) });
+                                  this.inputtedRefs[item.key].focus();
+                                }}
                               >
                                 <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
                                 <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>

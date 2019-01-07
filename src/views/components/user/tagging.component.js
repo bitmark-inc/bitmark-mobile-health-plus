@@ -33,13 +33,11 @@ export class TaggingComponent extends Component {
   async componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.onKeyboardWillHide.bind(this));
 
     let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmarkId);
-    console.log('tags:', tags);
     let tagsCache = await LocalFileService.getTagsCache();
-    console.log('tagsCache:', tagsCache);
     let tagsSuggestion = tagsCache.filter((item) => tags.indexOf(item) == -1);
-    console.log('tagsSuggestion:', tagsSuggestion);
 
     this.setState({ tags, tagsCache, tagsSuggestion });
   }
@@ -68,7 +66,8 @@ export class TaggingComponent extends Component {
   onKeyboardDidHide() {
     this.hideInputTag();
     this.setState({ keyboardHeight: 0 });
-
+  }
+  onKeyboardWillHide() {
     let listAnimations = [];
     listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
       toValue: 0,

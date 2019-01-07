@@ -60,6 +60,7 @@ export class LoginComponent extends Component {
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.onKeyboardWillHide.bind(this));
   }
 
   componentWillUnmount() {
@@ -85,6 +86,8 @@ export class LoginComponent extends Component {
 
   onKeyboardDidHide() {
     this.setState({ keyboardHeight: 0 });
+  }
+  onKeyboardWillHide() {
     let listAnimations = [];
     listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
       toValue: 0,
@@ -176,7 +179,7 @@ export class LoginComponent extends Component {
 
   async loginWithPhraseWords(phraseWords) {
     await AppProcessor.doLogin(phraseWords, false);
-    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {justCreatedBitmarkAccount: false, indicator: true});
+    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: false, indicator: true });
   }
 
   doCheckPhraseWords() {
@@ -246,122 +249,122 @@ export class LoginComponent extends Component {
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.body}>
           {/*<KeyboardAvoidingView behavior="padding" enabled style={styles.avoidingView} keyboardVerticalOffset={constants.keyboardExternalHeight} >*/}
-            <View style={[styles.bodyContent, {paddingLeft: 0, paddingRight: 0}]}>
-              <View style={{ flex: 1 }}>
-                {/*TOP AREA*/}
-                {/*BITMARK Header*/}
-                {this.state.testingResult === null &&
+          <View style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
+            <View style={{ flex: 1 }}>
+              {/*TOP AREA*/}
+              {/*BITMARK Header*/}
+              {this.state.testingResult === null &&
                 <View style={[styles.topArea, styles.paddingContent]}>
                   <Text style={[styles.title]}>BITMARK HEALTH</Text>
                   <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
                 </View>
-                }
+              }
 
-                {/*Failed Test*/}
-                {this.state.testingResult === false &&
-                <View style={[styles.topArea, styles.paddingContent, {backgroundColor: '#FF003C', borderTopLeftRadius: 10, borderTopRightRadius: 10}]}>
+              {/*Failed Test*/}
+              {this.state.testingResult === false &&
+                <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#FF003C', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
                   <Text style={[styles.testResultMessage]}>WRONG COMBINATION</Text>
                 </View>
-                }
+              }
 
-                {/*Successful test*/}
-                {this.state.testingResult === true &&
-                <View style={[styles.topArea, styles.paddingContent, {backgroundColor: '#0060F2', borderTopLeftRadius: 10, borderTopRightRadius: 10}]}>
+              {/*Successful test*/}
+              {this.state.testingResult === true &&
+                <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#0060F2', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
                   <Text style={[styles.testResultMessage]}>VAULT UNLOCKED</Text>
                 </View>
-                }
+              }
 
-                {/*CONTENT*/}
-                <View style={[styles.contentArea, styles.paddingContent]}>
-                  {/*PHRASE WORDS*/}
-                  <View style={styles.phraseWordsArea}>
-                    <View style={[styles.phraseWordsList]}>
-                      {/*SELECTED WORDS*/}
-                      {/*Smaller list*/}
-                      <FlatList data={this.state.smallerList}
-                                keyExtractor={(item, index) => index + ''}
-                                scrollEnabled={false}
-                                extraData={this.state}
-                                renderItem={({ item, index }) => {
-                                  return (
-                                    <View style={[styles.recoveryPhraseSet,]}>
-                                      <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                      <View style={[styles.phraseWordContainer]}>
-                                        {/*Input word*/}
-                                        <TextInput
-                                          style={[styles.recoveryPhraseInputWord, {
-                                            borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                            color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                          }]}
-                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                          value={item.word.toUpperCase()}
-                                          returnKeyType={'done'}
-                                          autoCorrect={false}
-                                          autoCapitalize="none"
-                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                          onFocus={() => this.onFocus.bind(this)(item.key)}
-                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                        />
-                                      </View>
-                                    </View>
-                                  )
-                                }}
-                      />
-                      {/*Bigger list*/}
-                      <FlatList data={this.state.biggerList}
-                                keyExtractor={(item, index) => index + ''}
-                                style={{ marginLeft: 9 }}
-                                scrollEnabled={false}
-                                extraData={this.state}
-                                renderItem={({ item, index }) => {
-                                  return (
-                                    <View style={[styles.recoveryPhraseSet,]}>
-                                      <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                                      <View style={[styles.phraseWordContainer]}>
-                                        {/*Input word*/}
-                                        <TextInput
-                                          style={[styles.recoveryPhraseInputWord, {
-                                            borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                            color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                          }]}
-                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                          value={item.word.toUpperCase()}
-                                          returnKeyType={'done'}
-                                          autoCorrect={false}
-                                          autoCapitalize="none"
-                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                          onFocus={() => this.onFocus.bind(this)(item.key)}
-                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                        />
-                                      </View>
-                                    </View>
-                                  )
-                                }}
-                      />
-                    </View>
-                  </View>
-
-                  {/*DESC*/}
-                  <View style={styles.introductionTextArea}>
-                    <Text style={[styles.introductionTitle]}>Unlock existing vault</Text>
-                    <Text style={[styles.introductionDescription]}>
-                      Type all 12 words of your vault key phrase in the correct sequence.
-                    </Text>
+              {/*CONTENT*/}
+              <View style={[styles.contentArea, styles.paddingContent]}>
+                {/*PHRASE WORDS*/}
+                <View style={styles.phraseWordsArea}>
+                  <View style={[styles.phraseWordsList]}>
+                    {/*SELECTED WORDS*/}
+                    {/*Smaller list*/}
+                    <FlatList data={this.state.smallerList}
+                      keyExtractor={(item, index) => index + ''}
+                      scrollEnabled={false}
+                      extraData={this.state}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <View style={[styles.recoveryPhraseSet,]}>
+                            <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
+                            <View style={[styles.phraseWordContainer]}>
+                              {/*Input word*/}
+                              <TextInput
+                                style={[styles.recoveryPhraseInputWord, {
+                                  borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                  color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                }]}
+                                ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                value={item.word.toUpperCase()}
+                                returnKeyType={'done'}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                onFocus={() => this.onFocus.bind(this)(item.key)}
+                                onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                              />
+                            </View>
+                          </View>
+                        )
+                      }}
+                    />
+                    {/*Bigger list*/}
+                    <FlatList data={this.state.biggerList}
+                      keyExtractor={(item, index) => index + ''}
+                      style={{ marginLeft: 9 }}
+                      scrollEnabled={false}
+                      extraData={this.state}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <View style={[styles.recoveryPhraseSet,]}>
+                            <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
+                            <View style={[styles.phraseWordContainer]}>
+                              {/*Input word*/}
+                              <TextInput
+                                style={[styles.recoveryPhraseInputWord, {
+                                  borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                  color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                                }]}
+                                ref={(r) => { this.inputtedRefs[item.key] = r; }}
+                                value={item.word.toUpperCase()}
+                                returnKeyType={'done'}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
+                                onFocus={() => this.onFocus.bind(this)(item.key)}
+                                onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
+                              />
+                            </View>
+                          </View>
+                        )
+                      }}
+                    />
                   </View>
                 </View>
 
-                {/*BOTTOM AREA*/}
-                <View style={[styles.bottomArea, styles.paddingContent, {height: 80}]}>
-                  {/*Buttons*/}
-                  <View style={{flexDirection: 'row'}}>
-                    {/*Go Back*/}
-                    <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
-                      <Text style={[styles.buttonNextText]}>GO BACK</Text>
-                    </TouchableOpacity>
-                  </View>
+                {/*DESC*/}
+                <View style={styles.introductionTextArea}>
+                  <Text style={[styles.introductionTitle]}>Unlock existing vault</Text>
+                  <Text style={[styles.introductionDescription]}>
+                    Type all 12 words of your vault key phrase in the correct sequence.
+                    </Text>
+                </View>
+              </View>
+
+              {/*BOTTOM AREA*/}
+              <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
+                {/*Buttons*/}
+                <View style={{ flexDirection: 'row' }}>
+                  {/*Go Back*/}
+                  <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
+                    <Text style={[styles.buttonNextText]}>GO BACK</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
+          </View>
         </View>
 
         {/*KEYBOARD & SUGGESTIONS*/}
