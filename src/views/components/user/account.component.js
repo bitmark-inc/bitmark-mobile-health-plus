@@ -146,11 +146,8 @@ class PrivateAccountComponent extends Component {
               <Text style={styles.cardContentRowButtonText}>View your vault key phrase</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.cardContentRow, {
-              borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
-            }]}
-              onPress={() => Actions.accountPhrase({ isLogout: true })}
-            >
+            <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={() => Actions.accountPhrase({ isLogout: true })}>
+              {/* <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={this.doLogout.bind(this)}> */}
               <Text style={styles.cardContentRowButtonText}>Lock your vault</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
             </TouchableOpacity>

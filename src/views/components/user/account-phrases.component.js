@@ -463,7 +463,7 @@ export class AccountPhraseComponent extends Component {
                         <Text style={[styles.introductionTitle]}>Your vault key phrase</Text>
                         <Text style={[styles.introductionDescription]}>
                           A 12-word phrase that only you know.
-                    </Text>
+                        </Text>
 
                         {/*GENERATE HEALTH CODE*/}
                         {(this.state.step === STEPS.init || this.state.step === STEPS.generated) &&
@@ -806,12 +806,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF'
   },
   introductionTextArea: {
-    marginTop: 20,
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     width: '100%',
-    height: 110,
   },
   introductionTitle: {
     marginTop: 25,

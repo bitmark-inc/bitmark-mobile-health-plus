@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Keyboard,
-  Image, View, TouchableOpacity, Text, FlatList, TextInput, Animated, SafeAreaView,
+  Image, View, TouchableOpacity, Text, FlatList, TextInput, Animated, SafeAreaView, ScrollView,
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
@@ -250,7 +250,7 @@ export class LoginComponent extends Component {
         <View style={styles.body}>
           {/*<KeyboardAvoidingView behavior="padding" enabled style={styles.avoidingView} keyboardVerticalOffset={constants.keyboardExternalHeight} >*/}
           <View style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
-            <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, }}>
               {/*TOP AREA*/}
               {/*BITMARK Header*/}
               {this.state.testingResult === null &&
@@ -352,16 +352,15 @@ export class LoginComponent extends Component {
                     </Text>
                 </View>
               </View>
-
-              {/*BOTTOM AREA*/}
-              <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
-                {/*Buttons*/}
-                <View style={{ flexDirection: 'row' }}>
-                  {/*Go Back*/}
-                  <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
-                    <Text style={[styles.buttonNextText]}>GO BACK</Text>
-                  </TouchableOpacity>
-                </View>
+            </ScrollView>
+            {/*BOTTOM AREA*/}
+            <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
+              {/*Buttons*/}
+              <View style={{ flexDirection: 'row' }}>
+                {/*Go Back*/}
+                <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
+                  <Text style={[styles.buttonNextText]}>GO BACK</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -495,15 +494,13 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   introductionTextArea: {
-    marginTop: 20,
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     width: '100%',
-    height: 110,
   },
   introductionTitle: {
-    marginTop: 25,
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 23,

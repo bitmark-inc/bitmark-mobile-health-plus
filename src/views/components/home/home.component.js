@@ -41,7 +41,7 @@ export class HomeComponent extends Component {
               <View style={styles.contentArea}>
                 {/*IMAGE*/}
                 <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'flex-end', width: '100%' }]}>
-                  <Image style={[styles.onBoardingImage1, config.isIPhoneX ? {position: 'absolute', right: -18} : {}]} source={require('assets/imgs/onboarding_1.png')} />
+                  <Image style={[styles.onBoardingImage1, config.isIPhoneX ? { position: 'absolute', right: -18 } : {}]} source={require('assets/imgs/onboarding_1.png')} />
                 </View>
                 {/*DESC*/}
                 <View style={styles.introductionTextArea}>
@@ -98,7 +98,7 @@ export class HomeComponent extends Component {
                 <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-2.png')} />
 
                 {/*Login link*/}
-                <TouchableOpacity style={[styles.buttonNext, {marginBottom: 2}]} onPress={Actions.login}>
+                <TouchableOpacity style={[styles.buttonNext, { marginBottom: 2 }]} onPress={Actions.login}>
                   <Text style={[styles.linkButtonText]}>Already have a vault?</Text>
                 </TouchableOpacity>
 
@@ -184,9 +184,10 @@ const styles = StyleSheet.create({
 
   },
   introductionTextArea: {
-    marginTop: 25,
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
+    justifyContent: 'center',
     width: '100%',
   },
   introductionTitle: {
