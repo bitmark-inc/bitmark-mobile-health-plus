@@ -292,6 +292,13 @@ const runOnBackground = async (justOpenApp) => {
   if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
     await runGetUserBitmarksInBackground();
     CacheData.userInformation.metadata = await AccountModel.doGetUserMetadata(CacheData.jwt);
+    if (!CacheData.userInformation.metadata) {
+      CacheData.userInformation.metadata = {
+        receive_email_records: true,
+        sugges_health_studies: true,
+        visualize_health_data: true,
+      };
+    }
     AccountStore.dispatch(AccountActions.reload());
     if (!isDisplayingModal(mapModalDisplayKeyIndex.email_record) && CacheData.userInformation.metadata.receive_email_records) {
       await runGetEmailRecordsInBackground();
