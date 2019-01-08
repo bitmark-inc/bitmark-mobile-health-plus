@@ -7,7 +7,7 @@ import {
 import { Provider, connect } from 'react-redux';
 
 import { convertWidth } from 'src/utils';
-import { ShadowComponent, } from 'src/views/commons';
+import { ShadowComponent, ShadowTopComponent, } from 'src/views/commons';
 import { MMRInformationStore } from 'src/views/stores';
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
@@ -24,11 +24,22 @@ class PrivateMMRCardComponent extends Component {
     return (
       <ShadowComponent style={styles.body}>
         {!this.props.mmrInformation &&
-          <TouchableOpacity style={[styles.bodyContent, { padding: convertWidth(16), }]} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
-            <Text style={styles.cardHeaderTitleText}>Personalize your vault</Text>
-            <Text style={styles.cardContentDescription}>Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency. </Text>
-            <View style={[styles.cardNextButton, { marginTop: 20 }]}>
-              <Image style={styles.cardNextButtonIcon} source={require('assets/imgs2/next_icon_grey.png')} />
+          <TouchableOpacity onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
+            <ShadowTopComponent contentStyle={styles.cardHeader}>
+              <Text style={styles.cardTitleText}>GET STARTED</Text>
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_setup_icon.png')} />
+            </ShadowTopComponent>
+            <View style={[styles.bodyContent, { padding: convertWidth(16), }]} >
+              <Text style={styles.cardHeaderTitleText}>{this.props.displayFromUserScreen ? 'Personalize your vault' : 'Set up your minimum medical record'}</Text>
+              <Text style={styles.cardContentDescription}>
+                {this.props.displayFromUserScreen
+                  ? 'Your Bitmark Health vault gives you control over your health data. Personalize your vault settings to control how your health history is shared with healthcare providers, family, and researchers.'
+                  : 'Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency.'
+                }
+              </Text>
+              <View style={[styles.cardNextButton, { marginTop: 20 }]}>
+                <Image style={styles.cardNextButtonIcon} source={require('assets/imgs2/next_icon_grey.png')} />
+              </View>
             </View>
           </TouchableOpacity>
         }
@@ -77,6 +88,20 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
     backgroundColor: 'white',
+  },
+  cardHeader: {
+    width: '100%', height: 40,
+    flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  cardTitleText: {
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+    flex: 1,
+    paddingLeft: convertWidth(16),
+  },
+  cardHeaderIcon: {
+    width: 26, height: 33, resizeMode: 'contain',
+    marginRight: convertWidth(18),
   },
   cardHeaderTitleText: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 24, color: 'rgba(0, 0, 0, 0.87)',
