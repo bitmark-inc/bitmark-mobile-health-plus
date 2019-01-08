@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   mmrInformationAvatar: {
-    width: 76, height: 76, resizeMode: 'center',
+    width: 76, height: 76, resizeMode: 'cover',
     borderWidth: 1, borderColor: 'white', borderRadius: 38,
     marginRight: convertWidth(15),
   },

@@ -5,12 +5,13 @@ import ReactNative, {
   Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, TextInput, KeyboardAvoidingView, ImageBackground,
 } from 'react-native';
 import moment from 'moment';
-import { convertWidth, FileUtil, } from 'src/utils';
+import { convertWidth, FileUtil, getImageSize, } from 'src/utils';
 import { ShadowComponent, ShadowTopComponent } from 'src/views/commons';
 import { Actions } from 'react-native-router-flux';
 import ImagePicker from 'react-native-image-picker';
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import { merge } from 'lodash';
+import ImageResizer from 'react-native-image-resizer';
 
 import DatePicker from 'react-native-datepicker';
 import PickerSelect from 'react-native-picker-select';
@@ -28,6 +29,7 @@ export class MMRInformationComponent extends Component {
 
   constructor(props) {
     super(props);
+    this.resizAvatar = this.resizAvatar.bind(this);
     this.state = {
       isEditing: this.props.mmrInformation ? (this.props.edit ? true : false) : true,
       mmrInformation: this.props.mmrInformation || {},
@@ -39,6 +41,20 @@ export class MMRInformationComponent extends Component {
     let mmrInformation = this.state.mmrInformation;
     mmrInformation = merge({}, mmrInformation, data);
     this.setState({ mmrInformation });
+  }
+
+  async resizAvatar(filePath) {
+    let imageSize = await getImageSize(filePath);
+    console.log({ imageSize });
+    let newSize;
+    if (imageSize.width < imageSize.height) {
+      newSize = { width: 100, height: 100 * (imageSize.height / imageSize.width) };
+    } else {
+      newSize = { width: 100 * (imageSize.width / imageSize.height), height: 100 };
+    }
+    console.log({ filePath, newSize });
+    let temp = await ImageResizer.createResizedImage(filePath, newSize.width, newSize.height, 'PNG', 100, 0, FileUtil.CacheDirectory);
+    return await FileUtil.readFile(temp.uri, 'base64');
   }
 
   chooseAvatar() {
@@ -58,7 +74,8 @@ export class MMRInformationComponent extends Component {
               if (response.error || response.didCancel) {
                 return;
               }
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + response.data });
+              let filePath = response.uri;
+              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizAvatar(filePath)) });
             });
             break;
           }
@@ -67,7 +84,8 @@ export class MMRInformationComponent extends Component {
               if (response.error || response.didCancel) {
                 return;
               }
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + response.data });
+              let filePath = response.uri;
+              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizAvatar(filePath)) });
             });
             break;
           }
@@ -79,8 +97,7 @@ export class MMRInformationComponent extends Component {
                 return;
               }
               let filePath = response.uri.replace('file://', '');
-              let data = await FileUtil.readFile(filePath, 'base64');
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + data });
+              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizAvatar(filePath)) });
             });
             break;
           }
@@ -524,7 +541,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
   },
   mmrInformationAvatar: {
-    width: 76, height: 76, resizeMode: 'center',
+    width: 76, height: 76, resizeMode: 'cover',
     borderWidth: 1, borderRadius: 38,
     borderColor: 'white',
     marginRight: convertWidth(15),
