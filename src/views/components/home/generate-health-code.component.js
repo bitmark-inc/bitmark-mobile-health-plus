@@ -390,7 +390,7 @@ export class GenerateHealthCodeComponent extends Component {
                                   <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
                                   <View style={styles.phraseWordContainer}>
                                     {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                      <CharacterFlapperComponent charStyle={styles.character} ref={ref => this.flapperRefs[`${index}_${cIndex}`] = ref} />
+                                      <CharacterFlapperComponent char={character.toUpperCase()} charStyle={styles.character} ref={ref => this.flapperRefs[`${index}_${cIndex}`] = ref} />
                                     </View>)}
                                   </View>
                                 </View>
@@ -408,7 +408,7 @@ export class GenerateHealthCodeComponent extends Component {
                                   <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
                                   <View style={styles.phraseWordContainer}>
                                     {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                      <CharacterFlapperComponent charStyle={styles.character} ref={ref => this.flapperRefs[`${index + (this.state.phraseWords.length / 2)}_${cIndex}`] = ref} />
+                                      <CharacterFlapperComponent char={character.toUpperCase()} charStyle={styles.character} ref={ref => this.flapperRefs[`${index + (this.state.phraseWords.length / 2)}_${cIndex}`] = ref} />
                                     </View>)}
                                   </View>
                                 </View>
