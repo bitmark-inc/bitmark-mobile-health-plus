@@ -465,6 +465,7 @@ const styles = StyleSheet.create({
   },
   phraseWordContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-start'
   },
   recoveryPhraseSet: {
