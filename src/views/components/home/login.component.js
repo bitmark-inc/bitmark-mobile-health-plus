@@ -289,11 +289,12 @@ export class LoginComponent extends Component {
                         return (
                           <View style={[styles.recoveryPhraseSet,]}>
                             <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                            <View style={[styles.phraseWordContainer]}>
+                            <View style={[styles.phraseWordContainer, {
+                              borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                            }]}>
                               {/*Input word*/}
                               <TextInput
                                 style={[styles.recoveryPhraseInputWord, {
-                                  borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
                                   color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
                                 }]}
                                 ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -320,11 +321,12 @@ export class LoginComponent extends Component {
                         return (
                           <View style={[styles.recoveryPhraseSet,]}>
                             <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                            <View style={[styles.phraseWordContainer]}>
+                            <View style={[styles.phraseWordContainer, {
+                              borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
+                            }]}>
                               {/*Input word*/}
                               <TextInput
                                 style={[styles.recoveryPhraseInputWord, {
-                                  borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
                                   color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
                                 }]}
                                 ref={(r) => { this.inputtedRefs[item.key] = r; }}
@@ -464,9 +466,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   phraseWordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
+    borderWidth: 1, borderRadius: 3,
+    paddingLeft: 5, paddingRight: 5,
+    backgroundColor: '#FFFFFF',
+    height: 20,
   },
   recoveryPhraseSet: {
     flex: 1,
@@ -485,14 +489,7 @@ const styles = StyleSheet.create({
   },
   recoveryPhraseInputWord: {
     width: '100%',
-    height: 20,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
-    fontSize: 13,
-    paddingLeft: 5,
-    paddingRight: 5,
-    borderRadius: 3,
+    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono', fontSize: 13,
   },
   introductionTextArea: {
     flex: 1,
