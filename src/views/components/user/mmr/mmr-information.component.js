@@ -281,7 +281,7 @@ export class MMRInformationComponent extends Component {
                 </TouchableOpacity>
                 <View style={styles.mmrInformationBasic}>
                   <Text style={styles.mmrInformationLabel}>Name</Text>
-                  <TextInput style={[styles.mmrInformationValueInput, { paddingLeft: convertWidth(16), paddingRight: convertWidth(16), color: '#C1C1C1' }]}
+                  <TextInput style={[styles.mmrInformationValueInput, { paddingLeft: convertWidth(16), paddingRight: convertWidth(16), }]}
                     placeholder='TAP TO INPUT'
                     defaultValue={this.state.mmrInformation.name}
                     onChangeText={(name) => this.updateMMRInformationState.bind(this)({ name })}
@@ -304,6 +304,7 @@ export class MMRInformationComponent extends Component {
                         showIcon={false}
                         mode="date"
                         customStyles={{
+                          btnTextConfirm: { color: '#FF003C' },
                           dateInput: { borderWidth: 0, padding: 0, margin: 0, height: '100%', },
                           dateTouchBody: { padding: 0, margin: 0, height: '100%', alignItems: 'center', justifyContent: 'center', }
                         }}
@@ -317,11 +318,11 @@ export class MMRInformationComponent extends Component {
                       <View style={styles.mmrInformationValueInput}>
                         <PickerSelect
                           style={{
-                            inputIOS: { width: '100%', height: '100%', padding: 8, },
+                            inputIOS: { width: '100%', height: '100%', padding: 8, color: 'rgba(0, 0, 0, 0.87)' },
                             modalViewMiddle: { justifyContent: 'flex-end' },
                             chevronContainer: { display: 'none' }
                           }}
-                          selectedValue={this.state.mmrInformation.sex}
+                          value={this.state.mmrInformation.sex}
                           placeholder={{
                             label: 'SELECT',
                             value: null,

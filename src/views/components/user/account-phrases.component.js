@@ -951,6 +951,14 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     backgroundColor: '#EEEFF1',
   },
+  prevButton: {
+    marginLeft: 10,
+  },
+  prevButtonImage: {
+    width: convertWidth(16),
+    height: convertWidth(16),
+    resizeMode: 'contain'
+  },
   nextButton: {
     marginLeft: 5,
   },
