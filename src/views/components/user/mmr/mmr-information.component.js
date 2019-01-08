@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
     width: 16, height: '100%', resizeMode: 'contain',
   },
   headerTitle: {
-    fontFamily: 'AvenirNextW1G-Bold', fontSize: 24, textAlign: 'center',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 20, textAlign: 'center',
     flex: 1
   },
   headerRight: {
