@@ -62,6 +62,13 @@ class PrivateUserComponent extends Component {
     };
   }
 
+  resetToInitialState() {
+    this.setState({
+      stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR,
+      showAddRecordOptions: false
+    });
+  }
+
   showAddRecordOptions() {
     this.setState({showAddRecordOptions: true});
   }
@@ -420,14 +427,14 @@ class PrivateUserComponent extends Component {
 
                       {/*MEDICAL RECORD*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD &&
-                      <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalRecord.data, bitmarkType: 'bitmark_health_issuance' }) }}>
+                      <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalRecord.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                         <MedicalRecordCardComponent bitmark={this.state.stickMedicalRecord.data} />
                       </TouchableOpacity>
                       }
 
                       {/*HEALTH DATA*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA &&
-                      <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickHealthData.data, bitmarkType: 'bitmark_health_data' }) }}>
+                      <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickHealthData.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                         <HealthDataCardComponent bitmark={this.state.stickHealthData.data} />
                       </TouchableOpacity>
                       }

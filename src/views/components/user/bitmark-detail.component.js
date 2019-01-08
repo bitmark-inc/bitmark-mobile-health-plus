@@ -12,7 +12,7 @@ import { Map } from 'immutable'
 import { Actions } from 'react-native-router-flux';
 import { runPromiseWithoutError, FileUtil, convertWidth } from 'src/utils';
 import { EventEmitterService, AppProcessor, IndexDBService } from 'src/processors';
-import { config, constants } from 'src/configs';
+import { config } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
 import moment from "moment/moment";
 import {styles as cardStyles} from "./card/bitmark-card.style.component";
@@ -22,6 +22,7 @@ export class BitmarkDetailComponent extends Component {
   static propTypes = {
     bitmarkType: PropTypes.string,
     bitmark: PropTypes.any,
+    resetToInitialState: PropTypes.func
   };
   constructor(props) {
     super(props);
@@ -59,9 +60,9 @@ export class BitmarkDetailComponent extends Component {
     this.setState({fileSize: humanFileSize(fileStat.size), tags, note});
   }
 
-  deleteBitmark() {
+  deleteBitmark(bitmarkType) {
     ActionSheetIOS.showActionSheetWithOptions({
-      title: i18n.t('BitmarkDetailComponent_titleDeleteModal'),
+      title: `This ${bitmarkType == 'bitmark_health_data' ? 'health data' : 'medical record'} will be deleted`,
       options: [i18n.t('BitmarkDetailComponent_cancelButtonDeleteModal'), i18n.t('BitmarkDetailComponent_deleteButtonDeleteModal')],
       destructiveButtonIndex: 1,
       cancelButtonIndex: 0,
@@ -70,6 +71,7 @@ export class BitmarkDetailComponent extends Component {
         if (buttonIndex === 1) {
           AppProcessor.doTransferBitmark(this.props.bitmark, config.zeroAddress).then(async () => {
             await searchAgain();
+            this.props.resetToInitialState && this.props.resetToInitialState();
             Actions.pop();
           }).catch(error => {
             console.log('error:', error);
@@ -175,21 +177,24 @@ export class BitmarkDetailComponent extends Component {
                   </View>
 
                   {/*Notes*/}
+                  {bitmarkType == 'bitmark_health_issuance' &&
                   <View style={[styles.notesContainer, {paddingRight: convertWidth(16)}]}>
                     <Text style={[styles.notesText]}>Notes:</Text>
                     {!!note &&
                     <Text style={[styles.notesText]}>{note}</Text>
                     }
                   </View>
+                  }
 
                   {/*Tags*/}
+                  {bitmarkType == 'bitmark_health_issuance' &&
                   <View style={[styles.notesContainer]}>
                     <Text style={[styles.notesText]}>Tags:</Text>
 
                     <ScrollView horizontal={true}>
                       <View style={[styles.tagsContainer]}>
                         {/*Tag icon*/}
-                        <Image style={styles.taggingIcon} source={require('assets/imgs/tag-icon.png')} />
+                        <Image style={styles.taggingIcon} source={require('assets/imgs/tag-icon.png')}/>
 
                         {(tags && tags.length) ? (
                           (tags || []).map(tag => {
@@ -204,55 +209,56 @@ export class BitmarkDetailComponent extends Component {
                       </View>
                     </ScrollView>
                   </View>
+                  }
 
+                  {/*Json View Tree*/}
+                  {bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.healthDataViewer} contentContainerStyle={{ flexGrow: 1, }}>
+                    <ScrollView horizontal={true}>
+                      <JSONTree data={this.state.content}
+                                getItemString={() => <Text></Text>}
+                                labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
+                                valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}
+                                hideRoot={true}
+                                theme={{
+                                  scheme: 'monokai',
+                                  author: 'wimer hazenberg (http://www.monokai.nl)',
+                                  base00: '#000000',
+                                  base01: '#383830',
+                                  base02: '#49483e',
+                                  base03: '#75715e',
+                                  base04: '#a59f85',
+                                  base05: '#f8f8f2',
+                                  base06: '#f5f4f1',
+                                  base07: '#f9f8f5',
+                                  base08: '#f92672',
+                                  base09: '#fd971f',
+                                  base0A: '#f4bf75',
+                                  base0B: '#a6e22e',
+                                  base0C: '#a1efe4',
+                                  base0D: '#FF4444',
+                                  base0E: '#ae81ff',
+                                  base0F: '#cc6633'
+                                }}
+                      />
+                    </ScrollView>
+                  </ScrollView>
+                  }
+
+                  {/*Buttons*/}
                   <View style={[styles.actionsContainer]}>
                     {/*Edit icon*/}
+                    {this.props.bitmarkType == 'bitmark_health_issuance' &&
                     <TouchableOpacity onPress={() => Actions.editBitmark({ bitmark, bitmarkType: this.props.bitmarkType, tags: tags, note, doUpdateTagsAndNote: this.doUpdateTagsAndNote.bind(this) })}>
                       <Image style={styles.taggingIcon} source={require('assets/imgs/edit-icon.png')} />
                     </TouchableOpacity>
+                    }
 
                     {/*Delete Icon*/}
-                    {this.props.bitmark.status !== 'pending' && this.props.bitmarkType === 'bitmark_health_issuance' &&
-                    <TouchableOpacity onPress={this.deleteBitmark.bind(this)}>
-                      <Image style={[styles.closeIcon, {marginLeft: 30}]} source={require('assets/imgs/delete-icon.png')} />
+                    {this.props.bitmark.status !== 'pending' &&
+                    <TouchableOpacity onPress={() => {this.deleteBitmark.bind(this)(bitmarkType)}}>
+                      <Image style={[styles.closeIcon, {marginLeft: this.props.bitmarkType == 'bitmark_health_issuance' ? 30 : 0}]} source={require('assets/imgs/delete-icon.png')} />
                     </TouchableOpacity>}
                   </View>
-
-
-                  {/*<View style={[styles.content, this.props.bitmarkType === 'bitmark_health_issuance' ? { padding: 0, } : {}]}>*/}
-                    {/*<ScrollView style={styles.contentScroll} contentContainerStyle={{ flex: 1, }} scrollEnabled={this.props.bitmarkType !== 'bitmark_health_issuance'}>*/}
-                      {/*{bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.bitmarkContent} contentContainerStyle={{ flexGrow: 1, }}>*/}
-                        {/*<ScrollView horizontal={true}>*/}
-                          {/*<JSONTree data={this.state.content}*/}
-                                    {/*getItemString={() => <Text></Text>}*/}
-                                    {/*labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}*/}
-                                    {/*valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}*/}
-                                    {/*hideRoot={true}*/}
-                                    {/*theme={{*/}
-                                      {/*scheme: 'monokai',*/}
-                                      {/*author: 'wimer hazenberg (http://www.monokai.nl)',*/}
-                                      {/*base00: '#000000',*/}
-                                      {/*base01: '#383830',*/}
-                                      {/*base02: '#49483e',*/}
-                                      {/*base03: '#75715e',*/}
-                                      {/*base04: '#a59f85',*/}
-                                      {/*base05: '#f8f8f2',*/}
-                                      {/*base06: '#f5f4f1',*/}
-                                      {/*base07: '#f9f8f5',*/}
-                                      {/*base08: '#f92672',*/}
-                                      {/*base09: '#fd971f',*/}
-                                      {/*base0A: '#f4bf75',*/}
-                                      {/*base0B: '#a6e22e',*/}
-                                      {/*base0C: '#a1efe4',*/}
-                                      {/*base0D: '#FF4444',*/}
-                                      {/*base0E: '#ae81ff',*/}
-                                      {/*base0F: '#cc6633'*/}
-                                    {/*}}*/}
-                          {/*/>*/}
-                        {/*</ScrollView>*/}
-                      {/*</ScrollView>}*/}
-                    {/*</ScrollView>*/}
-                  {/*</View>*/}
                 </View>
               </View>
             </View>
@@ -360,18 +366,9 @@ const styles = StyleSheet.create({
     marginTop: 35,
     flexDirection: 'row'
   },
-
-  content: {
-    flex: 1,
-    padding: convertWidth(26),
-    paddingTop: convertWidth(0),
-  },
-  contentScroll: {
-    flexDirection: 'column',
-  },
-  bitmarkContent: {
+  healthDataViewer: {
     paddingTop: convertWidth(20),
+    paddingRight: convertWidth(16),
     flex: 1,
   },
-
 });
