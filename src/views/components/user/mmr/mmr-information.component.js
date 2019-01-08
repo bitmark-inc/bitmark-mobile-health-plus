@@ -29,7 +29,7 @@ export class MMRInformationComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.resizAvatar = this.resizAvatar.bind(this);
+    this.resizeAvatar = this.resizeAvatar.bind(this);
     this.state = {
       isEditing: this.props.mmrInformation ? (this.props.edit ? true : false) : true,
       mmrInformation: this.props.mmrInformation || {},
@@ -43,7 +43,7 @@ export class MMRInformationComponent extends Component {
     this.setState({ mmrInformation });
   }
 
-  async resizAvatar(filePath) {
+  async resizeAvatar(filePath) {
     let imageSize = await getImageSize(filePath);
     console.log({ imageSize });
     let newSize;
@@ -75,7 +75,7 @@ export class MMRInformationComponent extends Component {
                 return;
               }
               let filePath = response.uri;
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizAvatar(filePath)) });
+              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
             });
             break;
           }
@@ -85,7 +85,7 @@ export class MMRInformationComponent extends Component {
                 return;
               }
               let filePath = response.uri;
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizAvatar(filePath)) });
+              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
             });
             break;
           }
@@ -97,7 +97,7 @@ export class MMRInformationComponent extends Component {
                 return;
               }
               let filePath = response.uri.replace('file://', '');
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizAvatar(filePath)) });
+              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
             });
             break;
           }
@@ -116,7 +116,7 @@ export class MMRInformationComponent extends Component {
         'Cancel',
         'mother',
         'father',
-        'parrent',
+        'parent',
         'brother',
         'sister',
       ]
@@ -182,7 +182,7 @@ export class MMRInformationComponent extends Component {
               <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_profile_icon.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avarta_default.png')} />
+              <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avatar_default.png')} />
               <View style={styles.mmrInformationBasic}>
                 <Text style={styles.mmrInformationLabel}>Name</Text>
                 <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.name}</Text>
@@ -275,8 +275,8 @@ export class MMRInformationComponent extends Component {
               </ShadowTopComponent>
               <View style={styles.cardContentRow}>
                 <TouchableOpacity onPress={this.chooseAvatar.bind(this)}>
-                  <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avarta_default.png')} />
-                  <ImageBackground style={styles.mmrInformationAvatarCover} source={require('assets/imgs2/mmr_avarta_edit_cover.png')}>
+                  <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avatar_default.png')} />
+                  <ImageBackground style={styles.mmrInformationAvatarCover} source={require('assets/imgs2/mmr_avatar_default.png')}>
                   </ImageBackground>
                   {/* <View style={styles.mmrInformationAvatarCover}><Text style={{ fontFamily: 'Andale Mono', fontSize: 12, color: '#404040' }}>EDIT</Text></View> */}
                 </TouchableOpacity>

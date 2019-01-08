@@ -49,7 +49,7 @@ class PrivateMMRCardComponent extends Component {
             onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation })}>
             <Text style={styles.mmrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Minimum Medical Record'}</Text>
             <View style={styles.mmrInformation}>
-              <Image style={styles.mmrInformationAvatar} source={this.props.mmrInformation.avatar ? { uri: this.props.mmrInformation.avatar } : require('assets/imgs2/mmr_avarta_default.png')} />
+              <Image style={styles.mmrInformationAvatar} source={this.props.mmrInformation.avatar ? { uri: this.props.mmrInformation.avatar } : require('assets/imgs2/mmr_avatar_default.png')} />
               <View style={styles.mmrInformationBasic}>
                 <Text style={styles.mmrInformationLabel}>Name</Text>
                 <Text style={styles.mmrInformationValue}>{this.props.mmrInformation.name}</Text>

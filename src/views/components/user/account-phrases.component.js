@@ -951,6 +951,14 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     backgroundColor: '#EEEFF1',
   },
+  nextButton: {
+    marginLeft: 5,
+  },
+  nextButtonImage: {
+    width: convertWidth(16),
+    height: convertWidth(16),
+    resizeMode: 'contain'
+  },
   selectionList: {
     flex: 1,
     height: 30,

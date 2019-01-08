@@ -293,7 +293,7 @@ const runOnBackground = async (justOpenApp) => {
     if (!CacheData.userInformation.metadata) {
       CacheData.userInformation.metadata = {
         receive_email_records: true,
-        sugges_health_studies: true,
+        suggest_health_studies: true,
         visualize_health_data: true,
       };
     }
@@ -611,7 +611,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       if (!CacheData.userInformation.metadata) {
         CacheData.userInformation.metadata = {
           receive_email_records: true,
-          sugges_health_studies: true,
+          suggest_health_studies: true,
           visualize_health_data: true,
         };
         await AccountModel.doUpdateUserMetadata(CacheData.jwt, CacheData.userInformation.metadata);
@@ -621,7 +621,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         if (!CacheData.userInformation.metadata) {
           CacheData.userInformation.metadata = {
             receive_email_records: true,
-            sugges_health_studies: true,
+            suggest_health_studies: true,
             visualize_health_data: true,
           };
         }
@@ -631,7 +631,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       if (!CacheData.userInformation.metadata) {
         CacheData.userInformation.metadata = {
           receive_email_records: true,
-          sugges_health_studies: true,
+          suggest_health_studies: true,
           visualize_health_data: true,
         };
         AccountStore.dispatch(AccountActions.reload());

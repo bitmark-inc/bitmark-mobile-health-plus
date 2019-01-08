@@ -100,13 +100,13 @@ class PrivateAccountComponent extends Component {
             </ShadowTopComponent>
             <Text style={[styles.cardDescription, { paddingRight: convertWidth(68) }]}>A personal assistant to help you unlock the value of your health data.</Text>
 
-            {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ sugges_health_studies: !this.props.userInformation.metadata.sugges_health_studies })}> */}
+            {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ suggest_health_studies: !this.props.userInformation.metadata.suggest_health_studies })}> */}
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} disabled={true}>
               <Text style={styles.cardContentRowButtonText}>Suggest health studies</Text>
-              {this.props.userInformation.metadata.sugges_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
+              {this.props.userInformation.metadata.suggest_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
                 < Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/check_box_icon_white_black.png')} />
               </View>}
-              {!this.props.userInformation.metadata.sugges_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />}
+              {!this.props.userInformation.metadata.suggest_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />}
             </TouchableOpacity>
             <Text style={[styles.rowDescription, { fontSize: 10, paddingRight: convertWidth(49), }]}>I can confidentially match you with health studies based on information you provide in your Minimum Medical Record.</Text>
 
