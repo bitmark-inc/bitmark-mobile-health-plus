@@ -139,7 +139,7 @@ class PrivateAccountComponent extends Component {
             }]}
               onPress={() => Share.share({ title: '', message: emailAddress })}
             >
-              <Text style={styles.emailAddress}>{emailAddress}</Text>
+              <Text style={[styles.emailAddress, { paddingRight: convertWidth(25), }]}>{emailAddress}</Text>
               <Image style={styles.shareIcon} source={require('assets/imgs2/share_icon.png')} />
             </TouchableOpacity>}
 
