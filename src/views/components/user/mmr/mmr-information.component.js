@@ -276,8 +276,7 @@ export class MMRInformationComponent extends Component {
               <View style={styles.cardContentRow}>
                 <TouchableOpacity onPress={this.chooseAvatar.bind(this)}>
                   <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avatar_default.png')} />
-                  <ImageBackground style={styles.mmrInformationAvatarCover} source={require('assets/imgs2/mmr_avatar_default.png')}>
-                  </ImageBackground>
+                  <ImageBackground style={styles.mmrInformationAvatarCover} source={require('assets/imgs2/mmr_avatar_edit_cover.png')} />
                   {/* <View style={styles.mmrInformationAvatarCover}><Text style={{ fontFamily: 'Andale Mono', fontSize: 12, color: '#404040' }}>EDIT</Text></View> */}
                 </TouchableOpacity>
                 <View style={styles.mmrInformationBasic}>
