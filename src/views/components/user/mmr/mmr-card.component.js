@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
     flex: 1,
     paddingLeft: convertWidth(16),
+    letterSpacing: 1.5,
   },
   cardHeaderIcon: {
     width: 26, height: 33, resizeMode: 'contain',
@@ -105,6 +106,7 @@ const styles = StyleSheet.create({
   },
   cardHeaderTitleText: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 24, color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 0.15,
   },
   cardContentDescription: {
     marginTop: 18,
@@ -134,11 +136,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mmrInformationLabel: {
+    letterSpacing: 0.4,
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#545454',
   },
   mmrInformationValue: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 3,
+    letterSpacing: 0.15,
   },
   mmrInformationSeeMoreButtonText: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 10, color: '#FF003C',

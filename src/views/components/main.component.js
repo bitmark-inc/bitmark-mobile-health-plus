@@ -231,7 +231,7 @@ class MainEventsHandlerComponent extends Component {
           <TouchableOpacity style={{ flex: 1, justifyContent: 'center', }} onPress={this.doRefresh}>
             <Text style={{
               width: convertWidth(300),
-              color: 'white', fontWeight: '900', fontSize: 16,
+              color: 'white', fontFamily: 'AvenirNextW1G-Bold', fontSize: 16,
               backgroundColor: '#FF4444', padding: 10,
               textAlign: 'center',
             }}>{i18n.t('MainComponent_pleaseAuthorizeText​')}</Text>
@@ -269,12 +269,12 @@ let mainStyle = StyleSheet.create({
   },
   emptyDataSourceTitle: {
     width: convertWidth(256),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 16, fontWeight: '800', lineHeight: 20,
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 16, lineHeight: 20,
   },
   emptyDataSourceDescription: {
     width: convertWidth(256),
     marginTop: 20,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy', fontSize: 16, fontWeight: '300', lineHeight: 20,
+    fontFamily: 'AvenirNextW1G-Regular', fontSize: 16, lineHeight: 20,
   },
   emptyDataSourceOKButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
@@ -282,14 +282,14 @@ let mainStyle = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   emptyDataSourceOKButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black', fontSize: 16, fontWeight: '900', lineHeight: 20, color: 'white',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 16, lineHeight: 20, color: 'white',
   },
   emptyDataSourceLaterButton: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     width: convertWidth(260), marginTop: 10,
   },
   emptyDataSourceLaterButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 14, fontWeight: '500', color: '#FF4444',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: '#FF4444',
   },
 });
 

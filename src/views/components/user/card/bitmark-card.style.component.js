@@ -1,5 +1,4 @@
 import { convertWidth } from "src/utils";
-import { config } from "src/configs";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -31,7 +30,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 1.5,
   },
   cardIcon: {
     width: 26,
@@ -62,14 +62,16 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 24,
     lineHeight: 36,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 0.15,
   },
   cardText: {
     marginTop: 10,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     fontSize: 12,
-    color: 'rgba(0, 0, 0, 0.6)'
+    color: 'rgba(0, 0, 0, 0.6)',
+    letterSpacing: 0.25,
   }
 });
 
-export {styles};
+export { styles };

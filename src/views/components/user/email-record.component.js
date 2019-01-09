@@ -9,7 +9,7 @@ import KeepAwake from 'react-native-keep-awake';
 import { Actions } from 'react-native-router-flux';
 import { AppProcessor, DataProcessor, EventEmitterService, CacheData } from 'src/processors';
 import { isImageFile, convertWidth } from 'src/utils';
-import { config, constants } from 'src/configs';
+import { constants } from 'src/configs';
 
 export class EmailRecordComponent extends Component {
   static propTypes = {
@@ -221,41 +221,35 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   title: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '900',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 36,
     color: '#464646',
   },
   message: {
     marginTop: 24,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light',
-    fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Light',
     fontSize: 16,
   },
   emailRecordItem: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Medium',
     fontSize: 16,
     color: '#0060F1',
     marginTop: 20,
   },
 
   acceptedEmailRecordItem: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Medium',
     fontSize: 16,
     marginTop: 20,
   },
   processingText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
-    fontWeight: '800',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
     color: '#0060F1',
     marginTop: 16,
   },
   existingAssetMessage: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Medium',
     fontSize: 16,
     marginTop: 20,
   },
@@ -277,8 +271,7 @@ const styles = StyleSheet.create({
     width: convertWidth(143),
   },
   acceptButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontWeight: '800',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
     color: 'white'
   },
@@ -292,8 +285,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   rejectButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
-    fontWeight: '800',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
     color: '#FF4444'
   },
@@ -307,7 +299,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444'
   },
   viewButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Medium',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontWeight: '800',
     fontSize: 16,
     color: 'white'

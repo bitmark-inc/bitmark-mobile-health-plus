@@ -20,15 +20,15 @@ export class AddRecordOptionsComponent extends React.Component {
       <TouchableOpacity style={[dialogStyles.dialogBody]} onPress={this.props.close}>
         <View style={[dialogStyles.content]}>
           <TouchableOpacity style={[dialogStyles.optionContainer]} onPress={this.props.takePhoto}>
-            <Image style={dialogStyles.optionIcon} source={require('assets/imgs/take-photo-icon.png')}/>
+            <Image style={dialogStyles.optionIcon} source={require('assets/imgs/take-photo-icon.png')} />
             <View style={[dialogStyles.textArea]}>
               <Text style={[dialogStyles.title]}>Take photo of records</Text>
               <Text style={[dialogStyles.desc]}>Keep a copy of your records from hospitals or clinics for your own use.</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[dialogStyles.optionContainer, {paddingTop: 0}]} onPress={this.props.importRecord}>
-            <Image style={dialogStyles.optionIcon} source={require('assets/imgs/import-records-icon.png')}/>
+          <TouchableOpacity style={[dialogStyles.optionContainer, { paddingTop: 0 }]} onPress={this.props.importRecord}>
+            <Image style={dialogStyles.optionIcon} source={require('assets/imgs/import-records-icon.png')} />
             <View style={[dialogStyles.textArea]}>
               <Text style={[dialogStyles.title]}>Import records</Text>
               <Text style={[dialogStyles.desc]}>Import existing files from your phone or cloud storage services.</Text>
@@ -86,6 +86,7 @@ const dialogStyles = StyleSheet.create({
   },
   desc: {
     fontFamily: 'AvenirNextW1G-Regular',
+    letterSpacing: 0.25,
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',

@@ -21,11 +21,11 @@ export class AddRecordComponent extends Component {
   }
 
   showAddRecordOptions() {
-    this.setState({showAddRecordOptions: true});
+    this.setState({ showAddRecordOptions: true });
   }
 
   hideAddRecordOptions() {
-    this.setState({showAddRecordOptions: false});
+    this.setState({ showAddRecordOptions: false });
   }
 
   takePhoto() {
@@ -40,7 +40,7 @@ export class AddRecordComponent extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <SafeAreaView style={styles.bodySafeView}>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
@@ -53,7 +53,7 @@ export class AddRecordComponent extends Component {
               {/*CONTENT*/}
               <View style={[styles.contentArea, styles.paddingContent]}>
                 {/*IMAGE*/}
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                   <View style={[styles.introductionImageArea]}>
                     <Image style={styles.addRecordImage} source={require('assets/imgs/add-record.png')} />
                   </View>
@@ -77,7 +77,7 @@ export class AddRecordComponent extends Component {
 
         {/*ADD RECORDS DIALOG*/}
         {this.state.showAddRecordOptions &&
-        <AddRecordOptionsComponent takePhoto={this.takePhoto.bind(this)} importRecord={this.importRecord.bind(this)} close={this.hideAddRecordOptions.bind(this)}/>
+          <AddRecordOptionsComponent takePhoto={this.takePhoto.bind(this)} importRecord={this.importRecord.bind(this)} close={this.hideAddRecordOptions.bind(this)} />
         }
       </View>
     );
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'AvenirNextW1G-Light',
+    letterSpacing: 1.5,
     fontSize: 10,
     color: 'rgba(0, 0, 0, 0.87)'
   },
@@ -159,10 +160,12 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 24,
     textAlign: 'left',
+    letterSpacing: 0.15,
   },
   introductionDescription: {
     marginTop: 15,
     fontFamily: 'AvenirNextW1G-Regular',
+    letterSpacing: 0.25,
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',

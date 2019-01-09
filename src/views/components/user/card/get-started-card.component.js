@@ -6,7 +6,6 @@ import {
 } from 'react-native'
 
 import { convertWidth } from 'src/utils';
-import { config } from 'src/configs';
 
 export class GetStartedCardComponent extends React.Component {
   static propTypes = {
@@ -38,9 +37,9 @@ export class GetStartedCardComponent extends React.Component {
 
         {/*BOTTOM BAR*/}
         {this.props.isStickCard &&
-        <View style={[styles.cardBottomBar]}>
-          <Image style={styles.cardNextIcon} source={this.props.cardNextIconSource} />
-        </View>
+          <View style={[styles.cardBottomBar]}>
+            <Image style={styles.cardNextIcon} source={this.props.cardNextIconSource} />
+          </View>
         }
       </View>
     );
@@ -75,7 +74,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 1.5,
   },
   cardIcon: {
     width: 26,
@@ -92,13 +92,15 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 24,
     lineHeight: 36,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 0.15,
   },
   cardText: {
     marginTop: 10,
     fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 14,
-    color: 'rgba(0, 0, 0, 0.6)'
+    color: 'rgba(0, 0, 0, 0.6)',
+    letterSpacing: 0.25,
   },
   cardBottomBar: {
     paddingLeft: convertWidth(16),

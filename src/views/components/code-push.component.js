@@ -7,7 +7,6 @@ import {
 import codePush from "react-native-code-push";
 import { MainComponent } from './main.component';
 import { DataProcessor } from 'src/processors';
-import { config } from 'src/configs';
 import { Sentry } from 'react-native-sentry';
 
 export class CodePushComponent extends React.Component {
@@ -117,15 +116,13 @@ const styles = StyleSheet.create({
 
   updatingStatus: {
     fontSize: 16,
-    fontWeight: '900',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontFamily: 'AvenirNextW1G-Bold',
     color: '#A4B5CD'
   },
 
   completedStatus: {
     fontSize: 16,
-    fontWeight: '900',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black',
+    fontFamily: 'AvenirNextW1G-Bold',
     color: '#0060F2'
   },
 

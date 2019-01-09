@@ -8,7 +8,6 @@ import {
 import { Actions } from 'react-native-router-flux';
 import moment from "moment/moment";
 import { isFileRecord, isImageFile, isPdfFile } from 'src/utils';
-import { config } from 'src/configs';
 import Highlighter from 'react-native-highlight-words';
 
 
@@ -39,7 +38,7 @@ export class SearchResultsComponent extends Component {
         {/*RESULTS STATUS*/}
         <View style={styles.resultStatusContainer}>
           {/*Back button*/}
-          <TouchableOpacity onPress={() => {this.props.cancel()}}>
+          <TouchableOpacity onPress={() => { this.props.cancel() }}>
             <Image style={styles.backIcon} source={require('assets/imgs/back-icon-black.png')} />
           </TouchableOpacity>
 
@@ -83,13 +82,13 @@ export class SearchResultsComponent extends Component {
                         {item.status === 'pending' ? (
                           <Text style={styles.bitmarkStatus}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>
                         ) : (
-                          <Highlighter
-                            style={styles.bitmarkStatus}
-                            highlightStyle={[styles.highlightingText]}
-                            searchWords={this.props.searchTerm.split(' ')}
-                            textToHighlight={moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}
-                          />
-                        )
+                            <Highlighter
+                              style={styles.bitmarkStatus}
+                              highlightStyle={[styles.highlightingText]}
+                              searchWords={this.props.searchTerm.split(' ')}
+                              textToHighlight={moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}
+                            />
+                          )
                         }
                       </View>
                     </View>
@@ -142,13 +141,13 @@ export class SearchResultsComponent extends Component {
                         {item.status === 'pending' ? (
                           <Text style={styles.bitmarkStatus}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>
                         ) : (
-                          <Highlighter
-                            style={styles.bitmarkStatus}
-                            highlightStyle={[styles.highlightingText]}
-                            searchWords={this.props.searchTerm.split(' ')}
-                            textToHighlight={moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}
-                          />
-                        )
+                            <Highlighter
+                              style={styles.bitmarkStatus}
+                              highlightStyle={[styles.highlightingText]}
+                              searchWords={this.props.searchTerm.split(' ')}
+                              textToHighlight={moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()}
+                            />
+                          )
                         }
 
                         {/*Tags*/}
@@ -208,7 +207,7 @@ const styles = StyleSheet.create({
   },
   numberOfResultsText: {
     fontSize: 12,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     color: 'rgba(0, 0, 0, 0.6)'
   },
   scrollView: {
@@ -303,7 +302,7 @@ const styles = StyleSheet.create({
   },
   bitmarkStatus: {
     fontSize: 14,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 4
   },

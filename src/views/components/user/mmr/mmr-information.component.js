@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactNative, {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, TextInput, KeyboardAvoidingView, ImageBackground,
+  Image, View, TouchableOpacity, Text, SafeAreaView, ScrollView, TextInput, KeyboardAvoidingView,
 } from 'react-native';
 import moment from 'moment';
 import { convertWidth, FileUtil, getImageSize, } from 'src/utils';
@@ -353,7 +353,7 @@ export class MMRInformationComponent extends Component {
                 })}
                 <TouchableOpacity style={styles.addEmergencyContactButton} onPress={this.addEmergencyContact.bind(this)}>
                   <Text style={styles.addEmergencyContactButtonText}>
-                    + Add emergency contact
+                    + ADD EMERGENCY CONTACT
                     </Text>
                 </TouchableOpacity>
               </View>
@@ -476,6 +476,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: 76 + convertWidth(15),
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+    letterSpacing: 1.5,
   },
   emergencyContactRow: {
     flexDirection: 'row',
@@ -483,6 +484,7 @@ const styles = StyleSheet.create({
   },
   emergencyContactRowRelationship: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10, textAlign: 'right',
+    letterSpacing: 0.4,
     width: 76 + convertWidth(15),
     paddingRight: convertWidth(15),
     marginTop: 2,
@@ -493,10 +495,12 @@ const styles = StyleSheet.create({
   },
   emergencyContactRowInfoName: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 12,
+    letterSpacing: 0.15,
     paddingBottom: 3,
   },
   emergencyContactRowInfoPhoneNumber: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+    letterSpacing: 0.4,
   },
   addEmergencyContactButton: {
     width: '100%',
@@ -504,7 +508,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   addEmergencyContactButtonText: {
-    fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: '#0060F2',
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 12, color: '#FF003C',
+    letterSpacing: 1.5,
   },
   emergencyContactRowDeleteIcon: {
     width: 14, height: 18, resizeMode: 'contain',
@@ -525,6 +530,7 @@ const styles = StyleSheet.create({
   },
   cardTitleText: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+    letterSpacing: 1.5,
   },
   cardHeaderIcon: {
     width: 26, height: 33, resizeMode: 'contain',

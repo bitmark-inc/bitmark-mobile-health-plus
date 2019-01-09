@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux';
 import Hyperlink from 'react-native-hyperlink';
 
 import { convertWidth } from 'src/utils';
-import { config, constants } from 'src/configs';
+import { config, } from 'src/configs';
 
 const ONBOARDING_STATES = {
   ONBOARDING_1: 'ONBOARDING_1',
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
+    letterSpacing: 1.5,
     color: 'rgba(0, 0, 0, 0.87)'
   },
   logo: {
@@ -195,6 +196,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 24,
     textAlign: 'left',
+    letterSpacing: 0.15,
   },
   introductionDescription: {
     marginTop: 15,
@@ -203,6 +205,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
     textAlign: 'left',
+    letterSpacing: 0.25,
   },
   hyperLinkText: {
     fontFamily: 'AvenirNextW1G-LightItalic',
@@ -216,11 +219,13 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
+    letterSpacing: 0.75,
   },
   linkButtonText: {
     fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 16,
     color: '#0060F2',
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+    letterSpacing: 0.25,
   },
 });

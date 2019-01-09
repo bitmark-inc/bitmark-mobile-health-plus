@@ -317,7 +317,7 @@ export class LoginComponent extends Component {
                       style={{ marginLeft: 9 }}
                       scrollEnabled={false}
                       extraData={this.state}
-                      renderItem={({ item, index }) => {
+                      renderItem={({ item, }) => {
                         return (
                           <View style={[styles.recoveryPhraseSet,]}>
                             <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
@@ -448,7 +448,8 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 1.5,
   },
   phraseWordsArea: {
     marginTop: 40,
@@ -489,7 +490,8 @@ const styles = StyleSheet.create({
   },
   recoveryPhraseInputWord: {
     width: '100%',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono', fontSize: 13,
+    fontFamily: 'Andale Mono', fontSize: 13,
+    letterSpacing: 4,
   },
   introductionTextArea: {
     flex: 1,
@@ -503,6 +505,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 23,
     textAlign: 'left',
+    letterSpacing: 0.15,
   },
   introductionDescription: {
     marginTop: 10,
@@ -511,6 +514,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
     textAlign: 'left',
+    letterSpacing: 0.25,
   },
 
   keyboardExternal: {
@@ -539,14 +543,6 @@ const styles = StyleSheet.create({
     height: convertWidth(16),
     resizeMode: 'contain'
   },
-  doneButton: {
-    position: 'absolute',
-    right: 10,
-  },
-  doneButtonText: {
-    fontSize: 16,
-    color: '#0060F2',
-  },
   selectionList: {
     flex: 1,
     height: 30,
@@ -573,7 +569,8 @@ const styles = StyleSheet.create({
   buttonNextText: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
-    color: '#FF003C'
+    color: '#FF003C',
+    letterSpacing: 0.75,
   },
 
 });

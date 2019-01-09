@@ -465,7 +465,7 @@ export class GenerateHealthCodeComponent extends Component {
                   <View style={{ flex: 1 }}>
                     {/*TOP AREA*/}
                     <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#FFFFFF', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
-                      <Text style={[{ color: 'rgba(0, 0, 0, 0.6)' }]}>WRITE DOWN YOUR KEY PHRASE</Text>
+                      <Text style={[{ color: 'rgba(0, 0, 0, 0.6)', letterSpacing: 1.5, fontSize: 10, fontFamily: 'AvenirNextW1G-Light' }]}>WRITE DOWN YOUR KEY PHRASE</Text>
                       <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
                     </View>
 
@@ -733,12 +733,14 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 1.5,
   },
   testResultMessage: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 10,
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    letterSpacing: 1.5,
   },
   introductionTextArea: {
     flex: 1,
@@ -752,6 +754,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 24,
     textAlign: 'left',
+    letterSpacing: 0.15,
   },
   introductionDescription: {
     marginTop: 10,
@@ -760,6 +763,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
     textAlign: 'left',
+    letterSpacing: 0.25,
   },
   phraseWordsArea: {
     marginTop: 40,
@@ -812,9 +816,10 @@ const styles = StyleSheet.create({
   recoveryPhraseInputWord: {
     width: '100%',
     backgroundColor: '#FFFFFF',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     fontSize: 13,
     paddingLeft: 2, paddingRight: 2,
+    letterSpacing: 4,
   },
   infoLinkTextContainer: {
     flexDirection: 'row',
@@ -835,11 +840,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 14,
+    letterSpacing: 0.25,
   },
   writeDownPhraseWordsInformTitle: {
     marginTop: 50,
-    fontFamily: 'AvenirNextW1G-Regular',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 14,
+    letterSpacing: 0.25,
     color: 'rgba(0, 0, 0, 0.6)',
   },
   writeDownPhraseWordsInformText: {
@@ -847,6 +854,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 14,
     color: 'rgba(0, 0, 0, 0.6)',
+    letterSpacing: 0.25,
   },
   button: {
     height: 36,
@@ -862,6 +870,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 14,
     color: 'white',
+    letterSpacing: 0.75,
   },
   buttonNext: {
     fontFamily: 'AvenirNextW1G-Bold',
@@ -872,7 +881,8 @@ const styles = StyleSheet.create({
   buttonNextText: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
-    color: '#FF003C'
+    color: '#FF003C',
+    letterSpacing: 0.75,
   },
   keyboardExternal: {
     position: 'absolute',

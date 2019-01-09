@@ -5,10 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Text,
   Image, StyleSheet
 } from 'react-native';
-import { config } from 'src/configs';
 
 export class SearchInputComponent extends Component {
   static defaultProps = {
@@ -151,7 +149,7 @@ const styles = StyleSheet.create({
   },
 
   textInput: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     fontSize: 14,
     flex: 1
   }

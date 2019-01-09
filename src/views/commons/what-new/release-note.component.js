@@ -8,7 +8,6 @@ import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
 import { runPromiseWithoutError, convertWidth } from 'src/utils';
 import { DataProcessor } from 'src/processors';
-import { config, constants } from 'src/configs';
 
 
 export class ReleaseNoteComponent extends Component {
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     flex: 1,
-    textAlign: 'center', fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Black', fontStyle: 'italic', fontWeight: '600', fontSize: 18,
+    textAlign: 'center', fontFamily: 'AvenirNextW1G-Bold', fontStyle: 'italic', fontSize: 18,
   },
   newContent: {
     flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
@@ -84,7 +83,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   closeButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', color: '#FF4444', textAlign: 'center', textAlignVertical: 'center', fontSize: 16,
+    fontFamily: 'AvenirNextW1G-Light', color: '#FF4444', textAlign: 'center', textAlignVertical: 'center', fontSize: 16,
   },
 
   versionInformation: {
@@ -94,16 +93,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
   versionInformationText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Heavy', fontSize: 17, fontWeight: 'bold',
-
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 17,
+    letterSpacing: 1.5,
   },
   versionInformationReleaseDiff: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 14, fontWeight: '300', color: '#999999',
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: '#999999',
+    letterSpacing: 0.4,
   },
   releaseNoteText: {
     width: '100%',
     paddingLeft: convertWidth(20), paddingRight: convertWidth(20),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir Light', fontSize: 16, fontWeight: '300'
+    fontFamily: 'AvenirNextW1G-Light', fontSize: 16,
+    letterSpacing: 0.25,
   },
 
 });

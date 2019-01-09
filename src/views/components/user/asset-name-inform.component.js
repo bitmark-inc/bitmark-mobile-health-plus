@@ -5,8 +5,8 @@ import {
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
-import { config, constants } from 'src/configs';
 import { convertWidth } from 'src/utils';
+import { constants } from 'src/configs';
 
 export class AssetNameInform extends Component {
   static propTypes = {
@@ -18,7 +18,8 @@ export class AssetNameInform extends Component {
   }
 
   gotoBitmarkList() {
-    Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
+    Actions.reset('user');
+    // Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
   }
 
   render() {
@@ -70,20 +71,20 @@ const styles = StyleSheet.create({
     flex: 1
   },
   headerText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
+    letterSpacing: 0.4,
     fontSize: 36,
-    fontWeight: '900'
   },
   description: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir light',
+    fontFamily: 'AvenirNextW1G-Light',
+    letterSpacing: 0.25,
     fontSize: 16,
-    fontWeight: '300',
     marginTop: 20,
   },
   assetName: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir medium',
+    fontFamily: 'AvenirNextW1G-Medium',
     fontSize: 16,
-    fontWeight: '800',
+    letterSpacing: 0.4,
     marginTop: 20,
   },
   lastBottomButtonArea: {
@@ -97,11 +98,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   lastBottomButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: '900',
     color: 'white',
+    letterSpacing: 0.75,
   },
 
 });

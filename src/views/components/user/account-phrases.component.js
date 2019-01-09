@@ -245,11 +245,11 @@ export class AccountPhraseComponent extends Component {
     }
 
     if (word) {
-      this.checkInputWrods(smallerList, biggerList);
+      this.checkInputWords(smallerList, biggerList);
     }
   }
 
-  checkInputWrods(smallerList, biggerList) {
+  checkInputWords(smallerList, biggerList) {
     smallerList = smallerList || this.state.smallerList;
     biggerList = biggerList || this.state.biggerList;
     let testingResult = null;
@@ -676,7 +676,7 @@ export class AccountPhraseComponent extends Component {
                       <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
                         <Text style={[styles.buttonNextText]}>GO BACK</Text>
                       </TouchableOpacity>
-                      {this.props.isLogout && <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.checkInputWrods.bind(this)()}>
+                      {this.props.isLogout && <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.checkInputWords.bind(this)()}>
                         <Text style={[styles.buttonNextText]}>NEXT</Text>
                       </TouchableOpacity>}
                     </View>
@@ -745,7 +745,8 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: 'AvenirNextW1G-Light',
-    fontSize: 10, color: 'rgba(0, 0, 0, 0.6)'
+    fontSize: 10, color: 'rgba(0, 0, 0, 0.6)',
+    letterSpacing: 1.5,
   },
   warningIcon: {
     width: 24, height: 24, resizeMode: 'contain'
@@ -756,11 +757,13 @@ const styles = StyleSheet.create({
   },
   warningTitle: {
     fontFamily: 'AvenirNextW1G-Bold',
+    letterSpacing: 0.25,
     fontWeight: '600', fontSize: 14,
     width: '100%',
   },
   warningMessage: {
     marginTop: 20,
+    letterSpacing: 0.25,
     fontFamily: 'AvenirNextW1G-Regular',
     fontWeight: '300', fontSize: 14,
     width: '100%',
@@ -798,11 +801,13 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
+    letterSpacing: 1.5,
     color: 'rgba(0, 0, 0, 0.87)'
   },
   testResultMessage: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 10,
+    letterSpacing: 1.5,
     color: '#FFFFFF'
   },
   introductionTextArea: {
@@ -817,6 +822,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 24,
+    letterSpacing: 0.15,
     textAlign: 'left',
   },
   introductionDescription: {
@@ -825,6 +831,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',
+    letterSpacing: 0.25,
     textAlign: 'left',
   },
   phraseWordsArea: {
@@ -878,7 +885,8 @@ const styles = StyleSheet.create({
   recoveryPhraseInputWord: {
     width: '100%',
     backgroundColor: '#FFFFFF',
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
+    letterSpacing: 4,
     fontSize: 13,
     paddingLeft: 2, paddingRight: 2
   },
@@ -900,18 +908,21 @@ const styles = StyleSheet.create({
     color: '#0060F2',
     marginLeft: 5,
     fontFamily: 'AvenirNextW1G-Regular',
+    letterSpacing: 0.25,
     fontSize: 14,
   },
   writeDownPhraseWordsInformTitle: {
     marginTop: 50,
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 14,
+    letterSpacing: 0.25,
     color: 'rgba(0, 0, 0, 0.6)',
   },
   writeDownPhraseWordsInformText: {
     marginTop: 20,
     fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 14,
+    letterSpacing: 0.25,
     color: 'rgba(0, 0, 0, 0.6)',
   },
   button: {
@@ -927,12 +938,14 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 14,
+    letterSpacing: 0.75,
     color: 'white',
   },
   buttonNext: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
     color: '#FF003C',
+    letterSpacing: 0.75,
     marginLeft: 15,
   },
   buttonNextText: {
@@ -1012,5 +1025,6 @@ const styles = StyleSheet.create({
   bottomButtonText: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16, color: '#FF003C',
+    letterSpacing: 0.75,
   }
 });

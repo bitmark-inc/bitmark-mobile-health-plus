@@ -6,7 +6,6 @@ import {
 } from 'react-native'
 
 import { convertWidth } from 'src/utils';
-import { config } from 'src/configs';
 
 export class GetStartedFeedCardComponent extends React.Component {
   static propTypes = {
@@ -65,7 +64,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 1.5,
   },
   cardIcon: {
     width: 26,

@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { CommonModel, AppProcessor, EventEmitterService } from 'src/processors';
 import { convertWidth } from 'src/utils';
-import { config, constants } from 'src/configs';
+import { constants } from 'src/configs';
 
 export class TouchFaceIdComponent extends React.Component {
   static propTypes = {
@@ -59,7 +59,7 @@ export class TouchFaceIdComponent extends React.Component {
     }
     promise.then((user) => {
       if (user) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {justCreatedBitmarkAccount: !phraseWords, indicator: true});
+        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: !phraseWords, indicator: true });
       }
     }).catch(error => {
       console.log('error :', error);

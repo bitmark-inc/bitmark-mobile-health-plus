@@ -6,7 +6,7 @@ import {
 import { Actions } from 'react-native-router-flux';
 import { BitmarkLegalComponent } from 'src/views/commons';
 import { convertWidth } from 'src/utils';
-import { config, constants } from 'src/configs';
+import { config, } from 'src/configs';
 
 export class SupportComponent extends Component {
   constructor(props) {

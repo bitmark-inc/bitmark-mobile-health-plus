@@ -131,7 +131,7 @@ class PrivateAccountComponent extends Component {
             <Text style={[styles.rowDescription, {
               fontSize: 10, paddingRight: convertWidth(49),
               marginBottom: this.props.userInformation.metadata.receive_email_records ? 5 : 15,
-            }]}>If others send health records to the following email address,{'\n'}I can automatically add them to your vault:</Text>
+            }]}>If others send health records to the following email address, I can automatically add them to your vault:</Text>
 
             {this.props.userInformation.metadata.receive_email_records && <TouchableOpacity style={[styles.cardContentRow, {
               borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+    letterSpacing: 1.5,
     marginLeft: convertWidth(15),
   },
   cardDescription: {
@@ -257,6 +258,7 @@ const styles = StyleSheet.create({
   },
   rowDescription: {
     fontSize: 10, fontFamily: 'AvenirNextW1G-light', color: 'rgba(0,0,0,0.6)',
+    letterSpacing: 0.25,
     marginTop: 8,
     paddingLeft: convertWidth(15), paddingRight: convertWidth(15),
   },
@@ -283,11 +285,13 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: 'rgba(0,0,0,0.87)',
+    letterSpacing: 1.5,
     flex: 1,
   },
 
   rowValue: {
-    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10, color: 'rgba(0,0,0,0.87)'
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10, color: 'rgba(0,0,0,0.87)',
+    letterSpacing: 1.5,
   },
 
 });

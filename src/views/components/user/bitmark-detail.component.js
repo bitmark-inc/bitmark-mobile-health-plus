@@ -15,7 +15,7 @@ import { EventEmitterService, AppProcessor, IndexDBService } from 'src/processor
 import { config } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
 import moment from "moment/moment";
-import {styles as cardStyles} from "./card/bitmark-card.style.component";
+import { styles as cardStyles } from "./card/bitmark-card.style.component";
 import { humanFileSize } from "../../../utils";
 
 export class BitmarkDetailComponent extends Component {
@@ -57,7 +57,7 @@ export class BitmarkDetailComponent extends Component {
     let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmark.id);
     let note = await IndexDBService.getNoteByBitmarkId(this.props.bitmark.id);
 
-    this.setState({fileSize: humanFileSize(fileStat.size), tags, note});
+    this.setState({ fileSize: humanFileSize(fileStat.size), tags, note });
   }
 
   deleteBitmark(bitmarkType) {
@@ -82,7 +82,7 @@ export class BitmarkDetailComponent extends Component {
   }
 
   doUpdateTagsAndNote(tags, note) {
-    this.setState({tags, note});
+    this.setState({ tags, note });
   }
 
   render() {
@@ -103,7 +103,7 @@ export class BitmarkDetailComponent extends Component {
                   <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
                 </TouchableOpacity>
                 {/*MMR Icon*/}
-                <TouchableOpacity onPress={() => {Actions.mmrInformation()}}>
+                <TouchableOpacity onPress={() => { Actions.mmrInformation() }}>
                   <Image style={styles.profileIcon} source={require('assets/imgs/profile-icon.png')} />
                 </TouchableOpacity>
               </View>
@@ -123,15 +123,15 @@ export class BitmarkDetailComponent extends Component {
                     {bitmarkType !== 'bitmark_health_issuance' ? (
                       <Image style={cardStyles.cardImage} source={require('assets/imgs/health-data-thumbnail.png')} />
                     ) : (
-                      (bitmark.thumbnail && bitmark.thumbnail.path) ? (
-                        <View>
-                          {/*Thumbnail*/}
-                          <Image style={cardStyles.cardImage} source={{ uri: bitmark.thumbnail.path }} />
-                        </View>
-                      ) : (
-                        <Image style={cardStyles.cardImage} source={require('assets/imgs/unknown-file-thumbnail.png')} />
+                        (bitmark.thumbnail && bitmark.thumbnail.path) ? (
+                          <View>
+                            {/*Thumbnail*/}
+                            <Image style={cardStyles.cardImage} source={{ uri: bitmark.thumbnail.path }} />
+                          </View>
+                        ) : (
+                            <Image style={cardStyles.cardImage} source={require('assets/imgs/unknown-file-thumbnail.png')} />
+                          )
                       )
-                    )
                     }
 
                     {/*Cover thumbnail linear gradient header bar*/}
@@ -163,82 +163,82 @@ export class BitmarkDetailComponent extends Component {
                 </View>
 
                 {/*CONTENT*/}
-                <View style={[cardStyles.cardContent, {paddingRight: 0}]}>
-                  <View style={[{paddingRight: convertWidth(16)}]}>
+                <View style={[cardStyles.cardContent, { paddingRight: 0 }]}>
+                  <View style={[{ paddingRight: convertWidth(16) }]}>
                     {/*Name*/}
                     <Text style={[cardStyles.cardHeader]}>{bitmark.asset.name}</Text>
                     {/*Status*/}
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={[cardStyles.cardText]}>{bitmark.asset.created_at ? ((bitmarkType == 'bitmark_health_issuance' ? 'ADDED ON ' : 'RECORDED ON ') + moment(bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()) : 'REGISTERING...'}</Text>
                       {this.state.fileSize &&
-                      <Text style={[cardStyles.cardText]}>{this.state.fileSize}</Text>
+                        <Text style={[cardStyles.cardText]}>{this.state.fileSize}</Text>
                       }
                     </View>
                   </View>
 
                   {/*Notes*/}
                   {bitmarkType == 'bitmark_health_issuance' &&
-                  <View style={[styles.notesContainer, {paddingRight: convertWidth(16)}]}>
-                    <Text style={[styles.notesText]}>Notes:</Text>
-                    {!!note &&
-                    <Text style={[styles.notesText]}>{note}</Text>
-                    }
-                  </View>
+                    <View style={[styles.notesContainer, { paddingRight: convertWidth(16) }]}>
+                      <Text style={[styles.notesText]}>Notes:</Text>
+                      {!!note &&
+                        <Text style={[styles.notesText]}>{note}</Text>
+                      }
+                    </View>
                   }
 
                   {/*Tags*/}
                   {bitmarkType == 'bitmark_health_issuance' &&
-                  <View style={[styles.notesContainer]}>
-                    <Text style={[styles.notesText]}>Tags:</Text>
+                    <View style={[styles.notesContainer]}>
+                      <Text style={[styles.notesText]}>Tags:</Text>
 
-                    <ScrollView horizontal={true}>
-                      <View style={[styles.tagsContainer]}>
-                        {/*Tag icon*/}
-                        <Image style={styles.taggingIcon} source={require('assets/imgs/tag-icon.png')}/>
+                      <ScrollView horizontal={true}>
+                        <View style={[styles.tagsContainer]}>
+                          {/*Tag icon*/}
+                          <Image style={styles.taggingIcon} source={require('assets/imgs/tag-icon.png')} />
 
-                        {(tags && tags.length) ? (
-                          (tags || []).map(tag => {
-                            return (
-                              <View key={tag} style={styles.taggingItemContainer}>
-                                <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
-                              </View>
-                            );
-                          })
-                        ) : null
-                        }
-                      </View>
-                    </ScrollView>
-                  </View>
+                          {(tags && tags.length) ? (
+                            (tags || []).map(tag => {
+                              return (
+                                <View key={tag} style={styles.taggingItemContainer}>
+                                  <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
+                                </View>
+                              );
+                            })
+                          ) : null
+                          }
+                        </View>
+                      </ScrollView>
+                    </View>
                   }
 
                   {/*Json View Tree*/}
                   {bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.healthDataViewer} contentContainerStyle={{ flexGrow: 1, }}>
                     <ScrollView horizontal={true}>
                       <JSONTree data={this.state.content}
-                                getItemString={() => <Text></Text>}
-                                labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
-                                valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}
-                                hideRoot={true}
-                                theme={{
-                                  scheme: 'monokai',
-                                  author: 'wimer hazenberg (http://www.monokai.nl)',
-                                  base00: '#000000',
-                                  base01: '#383830',
-                                  base02: '#49483e',
-                                  base03: '#75715e',
-                                  base04: '#a59f85',
-                                  base05: '#f8f8f2',
-                                  base06: '#f5f4f1',
-                                  base07: '#f9f8f5',
-                                  base08: '#f92672',
-                                  base09: '#fd971f',
-                                  base0A: '#f4bf75',
-                                  base0B: '#a6e22e',
-                                  base0C: '#a1efe4',
-                                  base0D: '#FF4444',
-                                  base0E: '#ae81ff',
-                                  base0F: '#cc6633'
-                                }}
+                        getItemString={() => <Text></Text>}
+                        labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
+                        valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}
+                        hideRoot={true}
+                        theme={{
+                          scheme: 'monokai',
+                          author: 'wimer hazenberg (http://www.monokai.nl)',
+                          base00: '#000000',
+                          base01: '#383830',
+                          base02: '#49483e',
+                          base03: '#75715e',
+                          base04: '#a59f85',
+                          base05: '#f8f8f2',
+                          base06: '#f5f4f1',
+                          base07: '#f9f8f5',
+                          base08: '#f92672',
+                          base09: '#fd971f',
+                          base0A: '#f4bf75',
+                          base0B: '#a6e22e',
+                          base0C: '#a1efe4',
+                          base0D: '#FF4444',
+                          base0E: '#ae81ff',
+                          base0F: '#cc6633'
+                        }}
                       />
                     </ScrollView>
                   </ScrollView>
@@ -248,16 +248,16 @@ export class BitmarkDetailComponent extends Component {
                   <View style={[styles.actionsContainer]}>
                     {/*Edit icon*/}
                     {this.props.bitmarkType == 'bitmark_health_issuance' &&
-                    <TouchableOpacity onPress={() => Actions.editBitmark({ bitmark, bitmarkType: this.props.bitmarkType, tags: tags, note, doUpdateTagsAndNote: this.doUpdateTagsAndNote.bind(this) })}>
-                      <Image style={styles.taggingIcon} source={require('assets/imgs/edit-icon.png')} />
-                    </TouchableOpacity>
+                      <TouchableOpacity onPress={() => Actions.editBitmark({ bitmark, bitmarkType: this.props.bitmarkType, tags: tags, note, doUpdateTagsAndNote: this.doUpdateTagsAndNote.bind(this) })}>
+                        <Image style={styles.taggingIcon} source={require('assets/imgs/edit-icon.png')} />
+                      </TouchableOpacity>
                     }
 
                     {/*Delete Icon*/}
                     {this.props.bitmark.status !== 'pending' &&
-                    <TouchableOpacity onPress={() => {this.deleteBitmark.bind(this)(bitmarkType)}}>
-                      <Image style={[styles.closeIcon, {marginLeft: this.props.bitmarkType == 'bitmark_health_issuance' ? 30 : 0}]} source={require('assets/imgs/delete-icon.png')} />
-                    </TouchableOpacity>}
+                      <TouchableOpacity onPress={() => { this.deleteBitmark.bind(this)(bitmarkType) }}>
+                        <Image style={[styles.closeIcon, { marginLeft: this.props.bitmarkType == 'bitmark_health_issuance' ? 30 : 0 }]} source={require('assets/imgs/delete-icon.png')} />
+                      </TouchableOpacity>}
                   </View>
                 </View>
               </View>
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     height: 22,
     bottom: 13,
     right: 5,
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Andale Mono',
+    fontFamily: 'Andale Mono',
     fontSize: 12,
   },
   notesContainer: {
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 14,
   },
-  tagsContainer:{
+  tagsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,

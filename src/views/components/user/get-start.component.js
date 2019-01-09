@@ -94,10 +94,9 @@ const styles = StyleSheet.create({
   },
   // getStart
   getStartTitle: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
     color: '#FF4444',
     fontSize: 17,
-    fontWeight: '900',
     marginTop: 57,
   },
 
@@ -123,8 +122,7 @@ const styles = StyleSheet.create({
   getStartDescription: {
     marginTop: 25,
     width: convertWidth(296),
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir light',
-    fontWeight: '300',
+    fontFamily: 'AvenirNextW1G-Light',
     fontSize: 16,
     textAlign: 'center',
   },
@@ -146,10 +144,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4444',
   },
   enableButtonText: {
-    fontFamily: config.localization.startsWith('vi') ? 'Avenir Next W1G' : 'Avenir black',
+    fontFamily: 'AvenirNextW1G-Bold',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: '900',
     color: 'white',
   },
 });

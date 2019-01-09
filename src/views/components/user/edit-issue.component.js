@@ -42,7 +42,7 @@ class ItemOrderImageComponent extends Component {
         borderRadius: convertWidth(12),
         zIndex: 1,
       }}>
-        <Text style={{ fontFamily: 'AvenirNextW1G-Bold', color: 'white', flex: 1, fontSize: 12, lineHeight: 20, marginTop: 1}}>{this.state.index + 1}</Text>
+        <Text style={{ fontFamily: 'AvenirNextW1G-Bold', color: 'white', flex: 1, fontSize: 12, lineHeight: 20, marginTop: 1 }}>{this.state.index + 1}</Text>
       </View>
       <Image style={{ width: convertWidth(100), height: convertWidth(100), resizeMode: 'cover', borderRadius: 4 }} source={{ uri: this.state.uri }} />
     </View>);
@@ -61,7 +61,7 @@ export class EditIssueComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { type: 'combine', scrollEnabled: true, itemOrder: null, tags: []};
+    this.state = { type: 'combine', scrollEnabled: true, itemOrder: null, tags: [] };
     this.itemOrderImageRefs = {};
     this.note = '';
     this.isSingleFile = !this.props.images || this.props.images.length == 1;
@@ -73,7 +73,7 @@ export class EditIssueComponent extends Component {
         // Issue image
         let image = this.props.images[0];
         console.log('image:', image);
-        this.props.doIssueImage([{uri: image.uri, createAt: image.createAt, note: this.note, tags: this.state.tags}], false);
+        this.props.doIssueImage([{ uri: image.uri, createAt: image.createAt, note: this.note, tags: this.state.tags }], false);
       } else {
         // Issue unknown file
         let issueParams = this.props.issueParams;
@@ -93,7 +93,7 @@ export class EditIssueComponent extends Component {
       }
 
       AppProcessor.doCombineImages(newImages).then((filePath) => {
-        this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment(), note: this.note, tags: this.state.tags, numberOfFiles: newImages.length}], true);
+        this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment(), note: this.note, tags: this.state.tags, numberOfFiles: newImages.length }], true);
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       })
@@ -122,7 +122,7 @@ export class EditIssueComponent extends Component {
   addTag(tag) {
     let tags = this.state.tags;
     tags.push(tag);
-    this.setState({tags});
+    this.setState({ tags });
   }
 
   removeTag(tag) {
@@ -130,7 +130,7 @@ export class EditIssueComponent extends Component {
 
     if (tags.indexOf(tag) > -1) {
       tags = tags.filter(item => item != tag);
-      this.setState({tags});
+      this.setState({ tags });
     }
   }
 
@@ -152,48 +152,48 @@ export class EditIssueComponent extends Component {
           </View>
 
           {/*CONTENT*/}
-          <ScrollView style={{flex: 1}}>
+          <ScrollView style={{ flex: 1 }}>
             {/*ATTACHED DOCUMENTS*/}
             {!this.isSingleFile &&
-            <OutterShadowComponent style={{marginTop: 1.5}}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <View style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
-                </View>
+              <OutterShadowComponent style={{ marginTop: 1.5 }}>
+                <View style={[styles.section]}>
+                  {/*Top bar*/}
+                  <View style={[styles.topBar]}>
+                    <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
+                  </View>
 
-                {/*Content*/}
-                <View style={[styles.contentContainer]}>
-                  <Text style={styles.introductionTitle}>Arrange the photos</Text>
-                  <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
+                  {/*Content*/}
+                  <View style={[styles.contentContainer]}>
+                    <Text style={styles.introductionTitle}>Arrange the photos</Text>
+                    <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
 
-                  {/*Images*/}
-                  <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
-                    <SortableGrid
-                      style={{ flex: 1, width: convertWidth(312), }}
-                      itemsPerRow={3}
-                      onDragRelease={this.newOrder.bind(this)}
-                      onDragStart={() => this.setState({ scrollEnabled: false })} >
-                      {
-                        this.props.images.map((imageInfo, index) => {
-                          return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
-                            if (this.state.itemOrder) {
-                              this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
-                            } else {
-                              this.itemOrderImageRefs[index] = ref
-                            }
-                          }} />);
-                        })
-                      }
-                    </SortableGrid>
-                  </ScrollView>
+                    {/*Images*/}
+                    <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
+                      <SortableGrid
+                        style={{ flex: 1, width: convertWidth(312), }}
+                        itemsPerRow={3}
+                        onDragRelease={this.newOrder.bind(this)}
+                        onDragStart={() => this.setState({ scrollEnabled: false })} >
+                        {
+                          this.props.images.map((imageInfo, index) => {
+                            return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
+                              if (this.state.itemOrder) {
+                                this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
+                              } else {
+                                this.itemOrderImageRefs[index] = ref
+                              }
+                            }} />);
+                          })
+                        }
+                      </SortableGrid>
+                    </ScrollView>
+                  </View>
                 </View>
-              </View>
-            </OutterShadowComponent>
+              </OutterShadowComponent>
             }
 
             {/*NOTES*/}
-            <OutterShadowComponent style={{marginTop: this.isSingleFile ? 1.5: 19}}>
+            <OutterShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
               <View style={[styles.section]}>
                 {/*Top bar*/}
                 <View style={[styles.topBar]}>
@@ -201,18 +201,18 @@ export class EditIssueComponent extends Component {
                 </View>
 
                 {/*Content*/}
-                <View style={[styles.contentContainer, {backgroundColor: '#F5F5F5'}]}>
+                <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
                   <TextInput style={[styles.inputNote]}
-                             multiline={true}
-                             placeholder={'Tap to add private notes to your record'}
-                             onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+                    multiline={true}
+                    placeholder={'Tap to add private notes to your record'}
+                    onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
                   />
                 </View>
               </View>
             </OutterShadowComponent>
 
             {/*TAGS*/}
-            <OutterShadowComponent style={{marginTop: 19}}>
+            <OutterShadowComponent style={{ marginTop: 19 }}>
               <View style={[styles.section]}>
                 {/*Top bar*/}
                 <View style={[styles.topBar]}>
@@ -230,7 +230,7 @@ export class EditIssueComponent extends Component {
                   <ScrollView horizontal={true}>
                     <View style={[styles.tagIconContainer]}>
                       {/*Tag icon*/}
-                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')}/>
+                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
                       {/*Add tags*/}
                       <TouchableOpacity onPress={this.showInputTag.bind(this)}>
                         <Text style={styles.addTagText}>+ADD TAGS</Text>
@@ -240,9 +240,9 @@ export class EditIssueComponent extends Component {
                       {(tags && tags.length) ? (
                         (tags || []).map((tag, index) => {
                           return (
-                            <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => {this.removeTag.bind(this)(tag)}}>
+                            <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => { this.removeTag.bind(this)(tag) }}>
                               <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
-                              <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')}/>
+                              <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')} />
                             </TouchableOpacity>
                           );
                         })
@@ -261,7 +261,7 @@ export class EditIssueComponent extends Component {
           </TouchableOpacity>
         </View>
 
-        {this.state.inputtingTag && <InputTagComponent tags={this.state.tags} addTag={this.addTag.bind(this)} hideInputTag={this.hideInputTag.bind(this)}/>}
+        {this.state.inputtingTag && <InputTagComponent tags={this.state.tags} addTag={this.addTag.bind(this)} hideInputTag={this.hideInputTag.bind(this)} />}
       </SafeAreaView>
     );
   }
@@ -315,6 +315,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 10,
     fontFamily: 'AvenirNextW1G-Light',
+    letterSpacing: 1.5,
     color: 'rgba(0, 0, 0, 0.87)'
   },
   contentContainer: {
@@ -329,6 +330,7 @@ const styles = StyleSheet.create({
   introductionDescription: {
     fontSize: 14,
     fontFamily: 'AvenirNextW1G-Regular',
+    letterSpacing: 0.25,
     color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 6,
   },
@@ -361,6 +363,7 @@ const styles = StyleSheet.create({
     color: '#FF003C',
     fontSize: 12,
     fontFamily: 'Andale Mono',
+    letterSpacing: 0.25,
   },
   saveButton: {
     marginTop: 52,
@@ -375,6 +378,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 14,
     fontFamily: 'AvenirNextW1G-Bold',
+    letterSpacing: 0.75,
     color: '#FFFFFF'
   },
   taggingItemContainer: {
@@ -388,6 +392,7 @@ const styles = StyleSheet.create({
   },
   taggingItem: {
     fontFamily: 'Andale Mono',
+    letterSpacing: 0.25,
     fontSize: 10,
     fontWeight: '300',
     color: '#FF003C',
