@@ -103,30 +103,30 @@ class PrivateAccountComponent extends Component {
             {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ suggest_health_studies: !this.props.userInformation.metadata.suggest_health_studies })}> */}
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} disabled={true}>
               <Text style={styles.cardContentRowButtonText}>Suggest health studies</Text>
-              {this.props.userInformation.metadata.suggest_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
+              {/* {this.props.userInformation.metadata.suggest_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
                 < Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/check_box_icon_white_black.png')} />
-              </View>}
-              {!this.props.userInformation.metadata.suggest_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />}
+              </View>} */}
+              {/* {!this.props.userInformation.metadata.suggest_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />} */}
             </TouchableOpacity>
             <Text style={[styles.rowDescription, { fontSize: 10, paddingRight: convertWidth(49), }]}>I can confidentially match you with health studies based on information you provide in your Minimum Medical Record.</Text>
 
             {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ visualize_health_data: !this.props.userInformation.metadata.visualize_health_data })}> */}
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} disabled={true}>
               <Text style={styles.cardContentRowButtonText}>Visualize my health data</Text>
-              {this.props.userInformation.metadata.visualize_health_data && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
+              {/* {this.props.userInformation.metadata.visualize_health_data && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
                 < Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/check_box_icon_white_black.png')} />
-              </View>}
-              {!this.props.userInformation.metadata.visualize_health_data && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />}
+              </View>} */}
+              {/* {!this.props.userInformation.metadata.visualize_health_data && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />} */}
             </TouchableOpacity>
             <Text style={[styles.rowDescription, { fontSize: 10, paddingRight: convertWidth(49), }]}>I can confidentially generate visual reports of health data collected from your iPhone.</Text>
 
             {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ receive_email_records: !this.props.userInformation.metadata.receive_email_records })}> */}
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} disabled={true}>
               <Text style={styles.cardContentRowButtonText}>Add records via email</Text>
-              {this.props.userInformation.metadata.receive_email_records && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
+              {/* {this.props.userInformation.metadata.receive_email_records && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
                 < Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/check_box_icon_white_black.png')} />
-              </View>}
-              {!this.props.userInformation.metadata.receive_email_records && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />}
+              </View>} */}
+              {/* {!this.props.userInformation.metadata.receive_email_records && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />} */}
             </TouchableOpacity>
             <Text style={[styles.rowDescription, {
               fontSize: 10, paddingRight: convertWidth(49),
