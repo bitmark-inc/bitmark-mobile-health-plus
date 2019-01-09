@@ -146,6 +146,7 @@ export class GenerateHealthCodeComponent extends Component {
     let phraseInfo = await AppProcessor.doGeneratePhrase();
     this.phraseWords = phraseInfo.phraseWords;
     this.computePhraseWords(phraseInfo.phraseWords, { step: STEPS.generated });
+    // this.loginWithPhraseWords(); // developer
   }
 
   goToTest(phraseWords) {

@@ -114,7 +114,7 @@ export class MMRInformationComponent extends Component {
       }
       let relationshipArray = [
         'Cancel',
-        'mother', 'father', 'parent', 'brother', 'sister', 'son', 'daughter', 'chid',
+        'mother', 'father', 'parent', 'brother', 'sister', 'son', 'daughter', 'child',
         'friend', 'spouse', 'partner', 'assistant', 'manager',
         'other', 'roommate', 'doctor', 'emergency',
       ]
@@ -274,7 +274,7 @@ export class MMRInformationComponent extends Component {
               <View style={styles.cardContentRow}>
                 <TouchableOpacity onPress={this.chooseAvatar.bind(this)}>
                   <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avatar_default.png')} />
-                  <ImageBackground style={styles.mmrInformationAvatarCover} source={require('assets/imgs2/mmr_avatar_edit_cover.png')} />
+                  <Image style={styles.mmrInformationAvatarCover} source={require('assets/imgs2/mmr_avatar_edit_cover.png')} />
                   {/* <View style={styles.mmrInformationAvatarCover}><Text style={{ fontFamily: 'Andale Mono', fontSize: 12, color: '#404040' }}>EDIT</Text></View> */}
                 </TouchableOpacity>
                 <View style={styles.mmrInformationBasic}>
@@ -540,16 +540,16 @@ const styles = StyleSheet.create({
   },
   mmrInformationAvatar: {
     width: 76, height: 76, resizeMode: 'cover',
-    borderWidth: 1, borderRadius: 38,
+    borderWidth: 0.1, borderRadius: 38,
     borderColor: 'white',
     marginRight: convertWidth(15),
     shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
   },
   mmrInformationAvatarCover: {
     position: 'absolute',
-    top: 7, left: -3,
-    width: 82, height: 70,
-    justifyContent: 'center', alignItems: 'center',
+    top: 46.5, left: -1,
+    width: 78, height: 32, resizeMode: 'contain',
+    zIndex: 1,
   },
   mmrInformationBasic: {
     flex: 1,
