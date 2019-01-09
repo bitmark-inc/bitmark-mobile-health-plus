@@ -114,11 +114,9 @@ export class MMRInformationComponent extends Component {
       }
       let relationshipArray = [
         'Cancel',
-        'mother',
-        'father',
-        'parent',
-        'brother',
-        'sister',
+        'mother', 'father', 'parent', 'brother', 'sister', 'son', 'daughter', 'chid',
+        'friend', 'spouse', 'partner', 'assistant', 'manager',
+        'other', 'roommate', 'doctor', 'emergency',
       ]
       ActionSheetIOS.showActionSheetWithOptions({
         title: 'Relationship',
