@@ -186,7 +186,7 @@ class PrivateAccountComponent extends Component {
 
           <View style={[styles.normalRow, { marginTop: 16 }]}>
             <Text style={styles.rowLabel}>VERSION</Text>
-            <Text style={styles.rowValue}>{DataProcessor.getApplicationVersion()}({DataProcessor.getApplicationBuildNumber()})</Text>
+            <Text style={styles.rowValue}>{DataProcessor.getApplicationVersion() + (config.network === config.NETWORKS.testnet ? (`(${DataProcessor.getApplicationBuildNumber()})`) : '')}</Text>
           </View>
 
           <TouchableOpacity style={styles.normalRow} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
