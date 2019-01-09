@@ -385,15 +385,16 @@ export class AccountPhraseComponent extends Component {
                   <View style={styles.normalDot} />
                   {!this.props.isLogout && <View style={styles.normalDot} />}
                 </View>
-                <TouchableOpacity style={styles.bottomButton} onPress={Actions.pop}>
-                  <Text style={styles.bottomButtonText}>CANCEL</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhraseWords.bind(this)}>
-                  <Text style={styles.bottomButtonText}>NEXT</Text>
-                </TouchableOpacity>
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
+                  <TouchableOpacity style={styles.bottomButton} onPress={Actions.pop}>
+                    <Text style={styles.bottomButtonText}>CANCEL</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.bottomButton} onPress={this.accessPhraseWords.bind(this)}>
+                    <Text style={styles.bottomButtonText}>NEXT</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </ShadowComponent>}
-
 
             {(this.state.step === STEPS.init) &&
               <View style={styles.bodyContent}>
@@ -663,7 +664,7 @@ export class AccountPhraseComponent extends Component {
                     </View>
                   </ScrollView>
                   {/*BOTTOM AREA*/}
-                  <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
+                  <View style={[styles.bottomArea, styles.paddingContent]}>
                     <View style={styles.dotArea}>
                       <View style={styles.normalDot} />
                       {!this.props.isLogout && <View style={styles.normalDot} />}
@@ -671,7 +672,7 @@ export class AccountPhraseComponent extends Component {
                     </View>
 
                     {/*Buttons*/}
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
                       {/*Go Back*/}
                       <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
                         <Text style={[styles.buttonNextText]}>GO BACK</Text>
@@ -783,10 +784,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   bottomArea: {
-    height: config.isIPhoneX ? 70 : 50,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingTop: 18,
     paddingBottom: 18,
   },
   paddingContent: {
@@ -1000,12 +999,13 @@ const styles = StyleSheet.create({
 
   bottomButtonArea: {
     padding: convertWidth(20),
+    paddingTop: 18,
+    paddingBottom: 18,
     backgroundColor: '#F4F2EE',
-    height: 71,
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
   },
   dotArea: {
-    flexDirection: 'row',
+    flex: 1, flexDirection: 'row', alignItems: 'center',
   },
   activeDot: {
     width: 8, height: 8,
