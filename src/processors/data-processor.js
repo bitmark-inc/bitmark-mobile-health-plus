@@ -90,15 +90,19 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
   if (latestMMRBitmark) {
     if (latestMMRBitmark.owner === bitmarkAccountNumber) {
-      let result = await runPromiseIgnoreError(detectLocalAssetFilePath(latestMMRBitmark.asset));
-      if (result.filePath && (await FileUtil.exists(result.filePath))) {
-        CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
-        latestMMRBitmark.asset.filePath = result.filePath;
+      if (CacheData.userInformation.latestMMRAssetId !== latestMMRBitmark.asset.id) {
+        let result = await runPromiseIgnoreError(detectLocalAssetFilePath(latestMMRBitmark.asset));
+        if (result.filePath && (await FileUtil.exists(result.filePath))) {
+          CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
+          CacheData.userInformation.latestMMRAssetId = latestMMRBitmark.asset.id;
+          latestMMRBitmark.asset.filePath = result.filePath;
+          await UserModel.doUpdateUserInfo(CacheData.userInformation);
+          await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(latestMMRBitmark));
+        }
       }
-      await UserModel.doUpdateUserInfo(CacheData.userInformation);
-      await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(latestMMRBitmark));
     } else {
       CacheData.userInformation.currentMMrData = null;
+      CacheData.userInformation.latestMMRAssetId = null;
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
     }
   }
@@ -1004,10 +1008,13 @@ const doIssueMMR = async (data) => {
   let filePath = `${FileUtil.CacheDirectory}/${assetName}.json`;
   await FileUtil.writeFile(filePath, JSON.stringify(data));
 
-  let result = await doIssueFile({ filePath, assetName, metadataList: metadata, quantity: 1 });
+  let results = await doIssueFile({ filePath, assetName, metadataList: metadata, quantity: 1 });
   await FileUtil.removeSafe(filePath);
-  await runGetUserBitmarksInBackground();
-  return result;
+  CacheData.userInformation.currentMMrData = data;
+  CacheData.userInformation.latestMMRAssetId = results[0].assetId;
+  let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
+  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
+  return results;
 };
 
 const doSaveUserSetting = async (metadata) => {
