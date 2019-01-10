@@ -17,6 +17,7 @@ import { DocumentPicker } from 'react-native-document-picker';
 import {
   FileUtil,
   convertWidth,
+  isHealthDataRecord,
 } from 'src/utils';
 import { constants } from 'src/configs';
 
@@ -60,6 +61,19 @@ class PrivateUserComponent extends Component {
       stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR,
       showAddRecordOptions: false
     };
+  }
+
+  goBack() {
+    Actions.popTo('user');
+  }
+
+  goToBitmarkDetail(bitmarkId) {
+    let allBitmarks = this.props.healthAssetBitmarks.concat(this.props.healthDataBitmarks);
+    let bitmark = allBitmarks.find(item => item.id == bitmarkId);
+
+    if (bitmark) {
+      Actions.bitmarkDetail({ bitmark, bitmarkType: isHealthDataRecord(bitmark.asset) ? 'bitmark_health_data' : 'bitmark_health_issuance', goBack: this.goBack.bind(this) });
+    }
   }
 
   resetToInitialState() {
@@ -162,7 +176,7 @@ class PrivateUserComponent extends Component {
         for (let i = 0; i < listInfo.length; i++) {
           FileUtil.removeSafe(listInfo[i].filePath);
         }
-        return listAssetName;
+        return bitmarks;
       }
       return null;
     };
@@ -173,10 +187,10 @@ class PrivateUserComponent extends Component {
           text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
         }]);
       } else {
-        doIssuance().then((listAssetName) => {
-          console.log('listAssetName :', listAssetName);
-          if (listAssetName) {
-            Actions.assetNameInform({ assetNames: listAssetName });
+        doIssuance().then((issuedBitmarks) => {
+          if (issuedBitmarks) {
+            let issuedBitmark = issuedBitmarks[0];
+            this.goToBitmarkDetail(issuedBitmark.id);
           }
         }).catch(error => {
           EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
@@ -188,8 +202,8 @@ class PrivateUserComponent extends Component {
   }
 
   doIssue(issueParams) {
-    issue(issueParams, async () => {
-      Actions.assetNameInform({ assetNames: [issueParams.assetName] });
+    issue(issueParams, async (issuedBitmark) => {
+      this.goToBitmarkDetail(issuedBitmark.id);
     });
   }
 
@@ -325,7 +339,6 @@ class PrivateUserComponent extends Component {
   }
 
   render() {
-    console.log('this.props.healthAssetBitmarks:', this.props.healthAssetBitmarks);
     let cardListData = this.populateCardListData();
 
     return (

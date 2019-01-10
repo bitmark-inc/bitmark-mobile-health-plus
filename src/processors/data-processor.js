@@ -228,9 +228,10 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
       }
 
+      await doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber);
+
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
-      return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber);
     }).catch(error => {
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve());
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];

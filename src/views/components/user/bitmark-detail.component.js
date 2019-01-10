@@ -22,7 +22,8 @@ export class BitmarkDetailComponent extends Component {
   static propTypes = {
     bitmarkType: PropTypes.string,
     bitmark: PropTypes.any,
-    resetToInitialState: PropTypes.func
+    resetToInitialState: PropTypes.func,
+    goBack: PropTypes.func
   };
   constructor(props) {
     super(props);
@@ -99,7 +100,7 @@ export class BitmarkDetailComponent extends Component {
               {/*TOP BAR*/}
               <View style={styles.topBar}>
                 {/*Back Icon*/}
-                <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
+                <TouchableOpacity style={styles.closeButton} onPress={this.props.goBack || Actions.pop}>
                   <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
                 </TouchableOpacity>
                 {/*MMR Icon*/}
