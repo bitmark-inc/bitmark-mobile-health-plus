@@ -45,6 +45,7 @@ export class TaggingComponent extends Component {
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    this.keyboardWillHideListener.remove();
   }
 
   onKeyboardDidShow(keyboardEvent) {
