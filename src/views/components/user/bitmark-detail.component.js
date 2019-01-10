@@ -370,5 +370,6 @@ const styles = StyleSheet.create({
     paddingTop: convertWidth(20),
     paddingRight: convertWidth(16),
     flex: 1,
+    maxHeight: 300,
   },
 });
