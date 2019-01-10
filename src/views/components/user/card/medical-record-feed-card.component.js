@@ -37,7 +37,7 @@ export class MedicalRecordFeedCardComponent extends React.Component {
         {/*CONTENT*/}
         <View style={[styles.cardContent]}>
           <Text style={[styles.cardHeader]}>{bitmark.asset.name}</Text>
-          <Text style={[styles.cardText]}>{bitmark.asset.created_at ? ('ADDED ON ' + moment(bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()) : 'REGISTERING...'}</Text>
+          <Text style={[styles.cardText]}>{bitmark.asset.created_at ? ('ADDED ON ' + moment(bitmark.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : 'REGISTERING...'}</Text>
 
           {this.state.fileSize &&
           <Text style={[styles.cardText]}>{this.state.fileSize}</Text>

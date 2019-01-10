@@ -66,7 +66,7 @@ class PrivateBitmarkListComponent extends Component {
                         <TouchableOpacity style={styles.bitmarkHealthRow} onPress={() => {
                           this.goToDetailScreen.bind(this)(item, this.props.bitmarkType);
                         }}>
-                          <Text style={styles.bitmarkHealthRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('YYYY MMM DD').toUpperCase()) : '')}</Text>
+                          <Text style={styles.bitmarkHealthRowText}>{item.asset.name + (item.asset.created_at ? (' - ' + moment(item.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : '')}</Text>
                           {item.status === 'confirmed' && <Image style={styles.bitmarkHealthRowIcon} source={require('assets/imgs/arrow_left_icon_red.png')} />}
                           {item.status === 'pending' && <Text style={styles.bitmarkHealthPending}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>}
                         </TouchableOpacity>
