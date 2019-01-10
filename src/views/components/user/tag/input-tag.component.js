@@ -34,6 +34,7 @@ export class InputTagComponent extends Component {
   async componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.onKeyboardWillHide.bind(this));
 
     let tags = this.tags || [];
     let tagsCache = await LocalFileService.getTagsCache();
@@ -44,6 +45,20 @@ export class InputTagComponent extends Component {
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    this.keyboardWillHideListener.remove();
+  }
+
+  onKeyboardWillHide() {
+    let listAnimations = [];
+    listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
+      toValue: 0,
+      duration: 100,
+    }));
+    listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
+      toValue: 0,
+      duration: 100,
+    }));
+    Animated.parallel(listAnimations).start();
   }
 
   onKeyboardDidShow(keyboardEvent) {
@@ -65,17 +80,6 @@ export class InputTagComponent extends Component {
   onKeyboardDidHide() {
     this.hideInputTag();
     this.setState({ keyboardHeight: 0 });
-
-    let listAnimations = [];
-    listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
-      toValue: 0,
-      duration: 100,
-    }));
-    listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
-      toValue: 0,
-      duration: 100,
-    }));
-    Animated.parallel(listAnimations).start();
   }
 
   hideInputTag() {

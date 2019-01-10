@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View, TouchableOpacity, Text, Image, ScrollView, TextInput, SafeAreaView,
+  View, TouchableOpacity, Text, Image, ScrollView, TextInput, SafeAreaView, KeyboardAvoidingView,
 } from 'react-native';
 import SortableGrid from 'react-native-sortable-grid';
 
@@ -152,108 +152,110 @@ export class EditIssueComponent extends Component {
           </View>
 
           {/*CONTENT*/}
-          <ScrollView style={{ flex: 1 }}>
-            {/*ATTACHED DOCUMENTS*/}
-            {!this.isSingleFile &&
-              <OutterShadowComponent style={{ marginTop: 1.5 }}>
+          <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }} keyboardVerticalOffset={this.state.inputtingTag ? 72 : 0} >
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+              {/*ATTACHED DOCUMENTS*/}
+              {!this.isSingleFile &&
+                <OutterShadowComponent style={{ marginTop: 1.5 }}>
+                  <View style={[styles.section]}>
+                    {/*Top bar*/}
+                    <View style={[styles.topBar]}>
+                      <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
+                    </View>
+
+                    {/*Content*/}
+                    <View style={[styles.contentContainer]}>
+                      <Text style={styles.introductionTitle}>Arrange the photos</Text>
+                      <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
+
+                      {/*Images*/}
+                      <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
+                        <SortableGrid
+                          style={{ flex: 1, width: convertWidth(312), }}
+                          itemsPerRow={3}
+                          onDragRelease={this.newOrder.bind(this)}
+                          onDragStart={() => this.setState({ scrollEnabled: false })} >
+                          {
+                            this.props.images.map((imageInfo, index) => {
+                              return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
+                                if (this.state.itemOrder) {
+                                  this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
+                                } else {
+                                  this.itemOrderImageRefs[index] = ref
+                                }
+                              }} />);
+                            })
+                          }
+                        </SortableGrid>
+                      </ScrollView>
+                    </View>
+                  </View>
+                </OutterShadowComponent>
+              }
+
+              {/*NOTES*/}
+              <OutterShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
                 <View style={[styles.section]}>
                   {/*Top bar*/}
                   <View style={[styles.topBar]}>
-                    <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
+                    <Text style={[styles.sectionTitle]}>NOTES</Text>
+                  </View>
+
+                  {/*Content*/}
+                  <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
+                    <TextInput style={[styles.inputNote]}
+                      multiline={true}
+                      placeholder={'Tap to add private notes to your record'}
+                      onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+                    />
+                  </View>
+                </View>
+              </OutterShadowComponent>
+
+              {/*TAGS*/}
+              <OutterShadowComponent style={{ marginTop: 19 }}>
+                <View style={[styles.section]}>
+                  {/*Top bar*/}
+                  <View style={[styles.topBar]}>
+                    <Text style={[styles.sectionTitle]}>TAGS</Text>
                   </View>
 
                   {/*Content*/}
                   <View style={[styles.contentContainer]}>
-                    <Text style={styles.introductionTitle}>Arrange the photos</Text>
-                    <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
+                    <Text style={styles.introductionTitle}>Add tags to your record</Text>
+                    <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
+                  </View>
 
-                    {/*Images*/}
-                    <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
-                      <SortableGrid
-                        style={{ flex: 1, width: convertWidth(312), }}
-                        itemsPerRow={3}
-                        onDragRelease={this.newOrder.bind(this)}
-                        onDragStart={() => this.setState({ scrollEnabled: false })} >
-                        {
-                          this.props.images.map((imageInfo, index) => {
-                            return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
-                              if (this.state.itemOrder) {
-                                this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
-                              } else {
-                                this.itemOrderImageRefs[index] = ref
-                              }
-                            }} />);
+                  {/*Tags*/}
+                  <View style={[styles.bottomBar]}>
+                    <ScrollView horizontal={true}>
+                      <View style={[styles.tagIconContainer]}>
+                        {/*Tag icon*/}
+                        <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
+                        {/*Add tags*/}
+                        <TouchableOpacity onPress={this.showInputTag.bind(this)}>
+                          <Text style={styles.addTagText}>+ADD TAGS</Text>
+                        </TouchableOpacity>
+
+                        {/*Tag items*/}
+                        {(tags && tags.length) ? (
+                          (tags || []).map((tag, index) => {
+                            return (
+                              <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => { this.removeTag.bind(this)(tag) }}>
+                                <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
+                                <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')} />
+                              </TouchableOpacity>
+                            );
                           })
+                        ) : null
                         }
-                      </SortableGrid>
+                      </View>
                     </ScrollView>
                   </View>
                 </View>
               </OutterShadowComponent>
-            }
-
-            {/*NOTES*/}
-            <OutterShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <View style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>NOTES</Text>
-                </View>
-
-                {/*Content*/}
-                <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
-                  <TextInput style={[styles.inputNote]}
-                    multiline={true}
-                    placeholder={'Tap to add private notes to your record'}
-                    onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
-                  />
-                </View>
-              </View>
-            </OutterShadowComponent>
-
-            {/*TAGS*/}
-            <OutterShadowComponent style={{ marginTop: 19 }}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <View style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>TAGS</Text>
-                </View>
-
-                {/*Content*/}
-                <View style={[styles.contentContainer]}>
-                  <Text style={styles.introductionTitle}>Add tags to your record</Text>
-                  <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
-                </View>
-
-                {/*Tags*/}
-                <View style={[styles.bottomBar]}>
-                  <ScrollView horizontal={true}>
-                    <View style={[styles.tagIconContainer]}>
-                      {/*Tag icon*/}
-                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
-                      {/*Add tags*/}
-                      <TouchableOpacity onPress={this.showInputTag.bind(this)}>
-                        <Text style={styles.addTagText}>+ADD TAGS</Text>
-                      </TouchableOpacity>
-
-                      {/*Tag items*/}
-                      {(tags && tags.length) ? (
-                        (tags || []).map((tag, index) => {
-                          return (
-                            <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => { this.removeTag.bind(this)(tag) }}>
-                              <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
-                              <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')} />
-                            </TouchableOpacity>
-                          );
-                        })
-                      ) : null
-                      }
-                    </View>
-                  </ScrollView>
-                </View>
-              </View>
-            </OutterShadowComponent>
-          </ScrollView>
+            </ScrollView>
+          </KeyboardAvoidingView>
 
           {/*BUTTON*/}
           <TouchableOpacity style={styles.saveButton} onPress={this.continue.bind(this)}>

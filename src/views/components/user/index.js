@@ -37,23 +37,23 @@ export class UserRouterComponent extends Component {
           <Scene key="user" component={UserComponent} initial={true} panHandlers={null} />
           <Scene key="bitmarkHealthData" component={BitmarkHealthDataComponent} panHandlers={null} />
           <Scene key="emailRecords" component={EmailRecordComponent} panHandlers={null} />
-          <Scene key="account" component={AccountComponent} />
-          <Scene key="accountPhrase" component={AccountPhraseComponent} />
-          <Scene key="support" component={SupportComponent} />
-          <Scene key="legal" component={BitmarkLegalComponent} />
-          <Scene key="captureAsset" component={CaptureAssetComponent} />
-          <Scene key="bitmarkList" component={BitmarkListComponent} />
-          <Scene key="bitmarkDetail" component={BitmarkDetailComponent} />
+          <Scene key="account" component={AccountComponent} panHandlers={null} />
+          <Scene key="accountPhrase" component={AccountPhraseComponent} panHandlers={null} />
+          <Scene key="support" component={SupportComponent} panHandlers={null} />
+          <Scene key="legal" component={BitmarkLegalComponent} panHandlers={null} />
+          <Scene key="captureAsset" component={CaptureAssetComponent} panHandlers={null} />
+          <Scene key="bitmarkList" component={BitmarkListComponent} panHandlers={null} />
+          <Scene key="bitmarkDetail" component={BitmarkDetailComponent} panHandlers={null} />
           <Scene key="fullViewCaptureAsset" component={FullViewCaptureAssetComponent} />
-          <Scene key="assetNameInform" component={AssetNameInform} />
-          <Scene key="getStart" component={GetStartComponent} />
-          <Scene key="addRecord" component={AddRecordComponent} />
-          <Scene key="accountNumber" component={AccountNumberComponent} />
-          <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} />
-          <Scene key="editIssue" component={EditIssueComponent} />
-          <Scene key="editBitmark" component={EditBitmarkComponent} panHandlers={null}/>
+          <Scene key="assetNameInform" component={AssetNameInform} panHandlers={null} />
+          <Scene key="getStart" component={GetStartComponent} panHandlers={null} />
+          <Scene key="addRecord" component={AddRecordComponent} panHandlers={null} />
+          <Scene key="accountNumber" component={AccountNumberComponent} panHandlers={null} />
+          <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} panHandlers={null} />
+          <Scene key="editIssue" component={EditIssueComponent} panHandlers={null} />
+          <Scene key="editBitmark" component={EditBitmarkComponent} panHandlers={null} />
           <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
-          <Scene key="tagging" component={TaggingComponent} />
+          <Scene key="tagging" component={TaggingComponent} panHandlers={null} />
           <Scene key="mmrInformation" component={MMRInformationComponent} panHandlers={null} />
         </Stack>
       </Router>

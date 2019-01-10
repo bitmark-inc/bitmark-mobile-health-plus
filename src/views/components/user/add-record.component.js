@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import { convertWidth } from 'src/utils';
 import { AddRecordOptionsComponent } from "./add-record-options.component";
+import { ShadowTopComponent } from 'src/views/commons';
 
 export class AddRecordComponent extends Component {
   static propTypes = {
@@ -45,10 +46,10 @@ export class AddRecordComponent extends Component {
           <View style={styles.body}>
             <View style={styles.bodyContent}>
               {/*TOP AREA*/}
-              <View style={[styles.topArea, styles.paddingContent]}>
+              <ShadowTopComponent style={{ height: 40 }} contentStyle={[styles.topArea, styles.paddingContent]}>
                 <Text style={[styles.title]}>ADD FIRST MEDICAL RECORD</Text>
                 <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
-              </View>
+              </ShadowTopComponent>
 
               {/*CONTENT*/}
               <View style={[styles.contentArea, styles.paddingContent]}>
