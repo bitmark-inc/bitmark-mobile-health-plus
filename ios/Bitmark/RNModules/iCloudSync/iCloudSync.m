@@ -85,7 +85,13 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
           [downloadStatus isEqualToString:NSMetadataUbiquitousItemDownloadingStatusCurrent]) {
         if (item) {
           NSString *path = [item valueForAttribute:NSMetadataItemPathKey];
-          [result setValue:path forKey:keptFileNames[i]];
+          NSString *pathKey = [NSString stringWithFormat:@"ic_%@", path];
+          NSString *oldValue = [[NSUserDefaults standardUserDefaults] objectForKey:pathKey];
+          NSString *newValue = keptFileNames[i];
+          if (!oldValue || ![oldValue isEqualToString:newValue]) {
+            [result setValue:path forKey:keptFileNames[i]];
+            [[NSUserDefaults standardUserDefaults] setObject:newValue forKey:pathKey];
+          }
         }
       } else {
         NSNumber *percent = [item valueForAttribute:NSMetadataUbiquitousItemPercentDownloadedKey];
