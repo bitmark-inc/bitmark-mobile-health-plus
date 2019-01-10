@@ -6,7 +6,8 @@ const ACTION_TYPES = {
   RESET: 'RESET',
   INIT: 'INIT',
   UPDATE_BITMARK_TYPE: 'UPDATE_BITMARK_TYPE',
-  UPDATE_SEARCH_RESULTS: 'UPDATE_SEARCH_RESULTS'
+  UPDATE_SEARCH_RESULTS: 'UPDATE_SEARCH_RESULTS',
+  UPDATE_MMR: 'UPDATE_MMR'
 };
 
 const UserBitmarksActions = {
@@ -22,9 +23,12 @@ const UserBitmarksActions = {
   updateSearchResults: (searchResults, searchTerm) => {
     return { type: ACTION_TYPES.UPDATE_SEARCH_RESULTS, searchResults, searchTerm };
   },
+  updateMMRInformation: (mmrInformation) => {
+    return { type: ACTION_TYPES.UPDATE_MMR, mmrInformation };
+  }
 };
 
-const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], bitmarkType: '', searchTerm: '', searchResults: {} };
+const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], bitmarkType: '', searchTerm: '', searchResults: {}, mmrInformation: null };
 
 const data = (state = initialState, action) => {
   switch (action.type) {
@@ -46,6 +50,11 @@ const data = (state = initialState, action) => {
       let tempState = merge({}, state);
       tempState.searchResults = action.searchResults;
       tempState.searchTerm = action.searchTerm;
+      return tempState;
+    }
+    case ACTION_TYPES.UPDATE_MMR: {
+      let tempState = merge({}, state);
+      tempState.mmrInformation = action.mmrInformation;
       return tempState;
     }
     default:

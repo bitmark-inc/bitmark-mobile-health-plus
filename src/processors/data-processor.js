@@ -108,6 +108,7 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
   }
   let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
   MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
+  UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].healthDataBitmarks;
@@ -1015,6 +1016,7 @@ const doIssueMMR = async (data) => {
   CacheData.userInformation.latestMMRAssetId = results[0].assetId;
   let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
   MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
+  UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
   return results;
 };
 
