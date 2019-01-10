@@ -220,16 +220,14 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
 
         return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
       };
-      if (healthDataBitmarks.length === 0) {
-        healthDataBitmarks = userBitmarks.healthDataBitmarks || [];
-      } else {
+      if (healthDataBitmarks.length > 0) {
         healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
       }
-      if (healthAssetBitmarks.length === 0) {
-        healthAssetBitmarks = userBitmarks.healthAssetBitmarks || [];
-      } else {
+
+      if (healthAssetBitmarks.length > 0) {
         healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
       }
+
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
       return doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber);
@@ -979,6 +977,7 @@ const doDisplayedWhatNewInformation = async () => {
 const doTransferBitmark = async (bitmark, receiver) => {
   let filename = bitmark.asset.filePath.substring(bitmark.asset.filePath.lastIndexOf('/') + 1, bitmark.asset.filePath.length);
   let result = await BitmarkService.doTransferBitmark(bitmark.id, receiver);
+
   await FileUtil.removeSafe(`${FileUtil.getLocalAssetsFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${bitmark.asset_id}`);
   await iCloudSyncAdapter.deleteFileFromCloud(`${CacheData.userInformation.bitmarkAccountNumber}_assets_${base58.encode(new Buffer(bitmark.asset.id, 'hex'))}_${filename}`);
   if (bitmark.thumbnail && bitmark.thumbnail.path && (await FileUtil.exists(bitmark.thumbnail.path))) {
@@ -996,6 +995,7 @@ const doTransferBitmark = async (bitmark, receiver) => {
 
   await IndexDBService.deleteIndexedDataByBitmarkId(bitmark.id);
   await IndexDBService.deleteTagsByBitmarkId(bitmark.id);
+  await IndexDBService.deleteNoteByBitmarkId(bitmark.id);
   await runGetUserBitmarksInBackground();
   return result;
 };

@@ -325,6 +325,7 @@ class PrivateUserComponent extends Component {
   }
 
   render() {
+    console.log('this.props.healthAssetBitmarks:', this.props.healthAssetBitmarks);
     let cardListData = this.populateCardListData();
 
     return (
