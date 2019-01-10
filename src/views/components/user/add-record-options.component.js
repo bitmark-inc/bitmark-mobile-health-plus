@@ -46,7 +46,7 @@ const dialogStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'column',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     position: 'absolute',
     width: '100%',
     height: '100%',
@@ -60,6 +60,12 @@ const dialogStyles = StyleSheet.create({
     width: '100%',
     marginBottom: config.isIPhoneX ? constants.iPhoneXStatusBarHeight : 16,
     borderRadius: 3,
+
+    borderColor: '#FFFFFF',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
   },
   optionContainer: {
     flexDirection: 'row',
