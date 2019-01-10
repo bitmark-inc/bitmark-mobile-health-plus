@@ -5,7 +5,7 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import Pdf from 'react-native-pdf';
 
 import {
-  StyleSheet, Dimensions,
+  StyleSheet, Dimensions, SafeAreaView,
   Image, View, TouchableOpacity, Text, ActivityIndicator,
 } from 'react-native';
 
@@ -40,7 +40,7 @@ export class FullViewCaptureAssetComponent extends Component {
 
   render() {
     return (
-      <View style={[styles.bodySafeView]}>
+      <SafeAreaView style={[styles.bodySafeView]}>
         <View style={styles.bodyContent}>
           {/*TOP BAR*/}
           <View style={styles.topBar}>
@@ -92,7 +92,7 @@ export class FullViewCaptureAssetComponent extends Component {
             }
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
