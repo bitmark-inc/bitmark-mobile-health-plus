@@ -88,8 +88,7 @@ export class BitmarkLegalComponent extends React.Component {
                 <Text style={styles.doneButtonText}>{this.state.displayedContentName ? i18n.t('BitmarkLegalComponent_doneButtonText1') : i18n.t('BitmarkLegalComponent_doneButtonText2')}</Text>
               </TouchableOpacity>
             </View>
-            <ScrollView >
-
+            <ScrollView>
               {(!this.state.displayedContentName || this.state.displayedContentName === Contents.PrivacyPolicy.name) && <View style={[styles.legalContent]}>
                 {!this.state.displayedContentName && <Text style={[styles.headerTitle, { fontSize: 16, marginLeft: convertWidth(19), marginBottom: 20, }]}>PRIVACY POLICY</Text>}
                 <Text style={styles.contentCreatedText}>Last Updated: 19 JAN, 2018{'\n'}</Text>
@@ -651,7 +650,7 @@ const styles = StyleSheet.create({
   },
 
   lastBottomButtonArea: {
-    padding: convertWidth(20),
+    paddingTop: convertWidth(20),
     flexDirection: 'row',
     justifyContent: 'center',
   },
