@@ -87,6 +87,10 @@ const isHealthDataRecord = (asset) => {
   return asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata['Saved Time'] &&
     (asset.name.startsWith('HD') || asset.name.startsWith('HK'));
 };
+const isDailyHealthDataRecord = (asset) => {
+  return asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata.Type === 'Health' &&
+    asset.metadata.Period === 'Daily';
+};
 const isAssetDataRecord = (asset) => {
   return isCaptureDataRecord(asset) || isFileRecord(asset);
 };
@@ -140,6 +144,7 @@ export {
   isFileRecord,
   isCaptureDataRecord,
   isHealthDataRecord,
+  isDailyHealthDataRecord,
   isAssetDataRecord,
   isMMRRecord,
   isJPGFile,

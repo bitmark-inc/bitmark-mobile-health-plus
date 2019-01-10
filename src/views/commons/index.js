@@ -9,3 +9,6 @@ export * from './loading.component';
 export * from './shadow.component';
 export * from './bitmark-safe-view.component';
 export * from './character-flapper.component';
+export * from './visualization/circle-percent.component';
+export * from './visualization/steps-chart.component';
+export * from './visualization/sleep-chart.component';

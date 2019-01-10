@@ -16,7 +16,9 @@ export class CodePushComponent extends React.Component {
       status: null,
       progress: 0,
     };
+  }
 
+  componentDidMount() {
     codePush.checkForUpdate().then((needUpdate) => {
       DataProcessor.setCodePushUpdated(!needUpdate);
     }).catch(error => {

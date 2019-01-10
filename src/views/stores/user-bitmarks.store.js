@@ -14,8 +14,8 @@ const UserBitmarksActions = {
   reset: () => {
     return { type: ACTION_TYPES.RESET, };
   },
-  initBitmarks: ({ healthDataBitmarks, healthAssetBitmarks, bitmarkType }) => {
-    return { type: ACTION_TYPES.INIT, healthDataBitmarks, healthAssetBitmarks, bitmarkType };
+  initBitmarks: ({ healthDataBitmarks, healthAssetBitmarks, dailyHealthDataBitmarks, waitingForIssuingDailyHealthData, bitmarkType }) => {
+    return { type: ACTION_TYPES.INIT, healthDataBitmarks, healthAssetBitmarks, dailyHealthDataBitmarks, waitingForIssuingDailyHealthData, bitmarkType };
   },
   updateBitmarkType: (bitmarkType) => {
     return { type: ACTION_TYPES.UPDATE_BITMARK_TYPE, bitmarkType };
@@ -28,7 +28,7 @@ const UserBitmarksActions = {
   }
 };
 
-const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], bitmarkType: '', searchTerm: '', searchResults: {}, mmrInformation: null };
+const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], dailyHealthDataBitmarks: [], waitingForIssuingDailyHealthData: [], bitmarkType: '', searchTerm: '', searchResults: {}, mmrInformation: null };
 
 const data = (state = initialState, action) => {
   switch (action.type) {
@@ -38,6 +38,8 @@ const data = (state = initialState, action) => {
       let tempState = merge({}, state);
       tempState.healthDataBitmarks = action.healthDataBitmarks || tempState.healthDataBitmarks;
       tempState.healthAssetBitmarks = action.healthAssetBitmarks || tempState.healthAssetBitmarks;
+      tempState.dailyHealthDataBitmarks = action.dailyHealthDataBitmarks || tempState.dailyHealthDataBitmarks;
+      tempState.waitingForIssuingDailyHealthData = action.waitingForIssuingDailyHealthData || tempState.waitingForIssuingDailyHealthData;
       tempState.bitmarkType = action.bitmarkType || tempState.bitmarkType;
       return tempState;
     }

@@ -8,6 +8,7 @@ import { sha3_256 } from 'js-sha3';
 import randomString from 'random-string';
 import base58 from 'bs58';
 import { Sentry } from 'react-native-sentry';
+import { Linking } from 'react-native';
 
 const {
   PushNotificationIOS,
@@ -28,7 +29,7 @@ import {
 } from './models';
 import {
   FileUtil,
-  isImageFile, isPdfFile, isHealthDataRecord, isAssetDataRecord,
+  isImageFile, isPdfFile, isHealthDataRecord, isAssetDataRecord, isDailyHealthDataRecord,
   compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isMMRRecord,
 } from 'src/utils';
 
@@ -79,15 +80,16 @@ let updateModal = (keyIndex, data) => {
 };
 
 // ================================================================================================================================================
-const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber) => {
+const doCheckNewUserDataBitmarks = async ({healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber}) => {
   bitmarkAccountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
+
   let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
   userDataBitmarks[bitmarkAccountNumber] = {
     healthDataBitmarks: (healthDataBitmarks || []).filter(b => b.owner === bitmarkAccountNumber),
+    dailyHealthDataBitmarks: (dailyHealthDataBitmarks || []).filter(b => b.owner === bitmarkAccountNumber),
     healthAssetBitmarks
   };
 
-  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
   if (latestMMRBitmark) {
     if (latestMMRBitmark.owner === bitmarkAccountNumber) {
       if (CacheData.userInformation.latestMMRAssetId !== latestMMRBitmark.asset.id) {
@@ -107,27 +109,31 @@ const doCheckNewUserDataBitmarks = async (healthDataBitmarks, healthAssetBitmark
     }
   }
   let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
-  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
+  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
   UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
+
+  // Update new daily health data
+  if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber && CacheData.userInformation.activeHealthDataAt) {
+    userDataBitmarks[bitmarkAccountNumber].waitingForIssuingDailyHealthData = HealthKitService.doCheckBitmarkHealthDataTask(dailyHealthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
+  }
+
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].healthDataBitmarks;
-
+    storeState.dailyHealthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].dailyHealthDataBitmarks;
+    storeState.waitingForIssuingDailyHealthData = userDataBitmarks[bitmarkAccountNumber].waitingForIssuingDailyHealthData || [];
     storeState.healthAssetBitmarks = healthAssetBitmarks;
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
 
+  // Check daily health data permission
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber &&
-    !CacheData.userInformation.activeHealthDataAt && healthDataBitmarks && healthDataBitmarks.length > 0) {
+    !CacheData.userInformation.activeHealthDataAt && dailyHealthDataBitmarks && dailyHealthDataBitmarks.length > 0) {
     await runPromiseWithoutError(doRequireHealthKitPermission());
   }
 
-  if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber && CacheData.userInformation.activeHealthDataAt) {
-    let list = HealthKitService.doCheckBitmarkHealthDataTask(healthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
-    if (list && list.length > 0) {
-      updateModal(mapModalDisplayKeyIndex.weekly_health_data, { list });
-    }
-  }
+  // Update user data into local database
+  await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
 };
 
 let queueGetUserDataBitmarks = {};
@@ -168,12 +174,12 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
 
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
       let userBitmarks = (await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber)) || {};
-      let healthDataBitmarks = [], healthAssetBitmarks = [];
+      let healthDataBitmarks = [], dailyHealthDataBitmarks = [], healthAssetBitmarks = [];
       let latestMMRBitmark;
       for (let bitmark of bitmarks) {
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
-          let oldBitmark = (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []).find(b => b.id === bitmark.id);
+          let oldBitmark = (userBitmarks.healthAssetBitmarks || []).concat((userBitmarks.dailyHealthDataBitmarks || [])).concat(userBitmarks.healthDataBitmarks || []).find(b => b.id === bitmark.id);
           let oldAsset = oldBitmark ? oldBitmark.asset : {};
           bitmark = merge({}, oldBitmark || {}, bitmark);
           asset = merge({}, oldAsset, asset);
@@ -188,6 +194,17 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               bitmark.asset = asset;
             }
             healthDataBitmarks.push(bitmark);
+          } else if (isDailyHealthDataRecord(asset)) {
+            if (bitmark.owner === bitmarkAccountNumber) {
+              let result = await runPromiseIgnoreError(detectLocalAssetFilePath(asset));
+              asset.filePath = result ? result.filePath : null;
+              asset.viewFilePath = result ? result.viewFilePath : null;
+              bitmark.asset = asset;
+              await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(bitmark));
+            } else {
+              bitmark.asset = asset;
+            }
+            dailyHealthDataBitmarks.push(bitmark);
           } else if (isAssetDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               if (!asset.filePath || asset.filePath.indexOf(FileUtil.SharedGroupDirectory) < 0) {
@@ -221,6 +238,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
 
         return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
       };
+
       if (healthDataBitmarks.length > 0) {
         healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
       }
@@ -229,9 +247,17 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
       }
 
-      await doCheckNewUserDataBitmarks(healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber);
+      if (dailyHealthDataBitmarks.length > 0) {
+        let dailyHealthCompareFunction = (a, b) => {
+          return moment(b.asset.metadata['Collection Date']).toDate().getTime() - moment(a.asset.metadata['Collection Date']).toDate().getTime();
+        };
 
-      (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, healthAssetBitmarks, latestMMRBitmark }));
+        dailyHealthDataBitmarks = dailyHealthDataBitmarks.sort(dailyHealthCompareFunction);
+      }
+
+      await doCheckNewUserDataBitmarks({healthDataBitmarks, healthAssetBitmarks, dailyHealthDataBitmarks, latestMMRBitmark, bitmarkAccountNumber});
+
+      (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestMMRBitmark }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
     }).catch(error => {
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve());
@@ -312,44 +338,44 @@ const runOnBackground = async (justOpenApp) => {
 };
 // ================================================================================================================================================
 
-// const configNotification = () => {
-//   const onRegistered = async (registeredNotificationInfo) => {
-//     CacheData.notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
-//     if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
-//       CacheData.userInformation = await UserModel.doGetCurrentUser();
-//     }
-//     if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
-//       let appInfo = (await doGetAppInformation()) || {};
-//       if (appInfo.notificationUUID !== CacheData.notificationUUID) {
-//         AccountService.doRegisterNotificationInfo(null, CacheData.notificationUUID, appInfo.intercomUserId).then(() => {
-//           CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
-//           return UserModel.doUpdateUserInfo(CacheData.userInformation);
-//         }).catch(error => {
-//           console.log('DataProcessor doRegisterNotificationInfo error:', error);
-//         });
-//       }
-//     } else {
-//       if (CacheData.notificationUUID && CacheData.userInformation.notificationUUID !== CacheData.notificationUUID) {
-//         AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, CacheData.userInformation.intercomUserId).then(() => {
-//           CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
-//           return UserModel.doUpdateUserInfo(CacheData.userInformation);
-//         }).catch(error => {
-//           console.log('DataProcessor doRegisterNotificationInfo error:', error);
-//         });
-//       }
-//     }
-//   };
-//   const onReceivedNotification = async (notificationData) => {
-//     if (!notificationData.foreground && notificationData.data) {
-//       if (notificationData.data.event === 'intercom_reply') {
-//         setTimeout(() => { Intercom.displayConversationsList(); }, 2000);
-//       } else if (notificationData.data.event === 'open_url' && DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
-//         Linking.openURL(notificationData.data.url);
-//       }
-//     }
-//   };
-//   AccountService.configure(onRegistered, onReceivedNotification);
-// };
+const configNotification = () => {
+  const onRegistered = async (registeredNotificationInfo) => {
+    CacheData.notificationUUID = registeredNotificationInfo ? registeredNotificationInfo.token : null;
+    if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
+      CacheData.userInformation = await UserModel.doGetCurrentUser();
+    }
+    if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
+      let appInfo = (await doGetAppInformation()) || {};
+      if (appInfo.notificationUUID !== CacheData.notificationUUID) {
+        AccountService.doRegisterNotificationInfo(null, CacheData.notificationUUID, appInfo.intercomUserId).then(() => {
+          CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
+          return UserModel.doUpdateUserInfo(CacheData.userInformation);
+        }).catch(error => {
+          console.log('DataProcessor doRegisterNotificationInfo error:', error);
+        });
+      }
+    } else {
+      if (CacheData.notificationUUID && CacheData.userInformation.notificationUUID !== CacheData.notificationUUID) {
+        AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, CacheData.userInformation.intercomUserId).then(() => {
+          CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
+          return UserModel.doUpdateUserInfo(CacheData.userInformation);
+        }).catch(error => {
+          console.log('DataProcessor doRegisterNotificationInfo error:', error);
+        });
+      }
+    }
+  };
+  const onReceivedNotification = async (notificationData) => {
+    if (!notificationData.foreground && notificationData.data) {
+      if (notificationData.data.event === 'intercom_reply') {
+        setTimeout(() => { Intercom.displayConversationsList(); }, 2000);
+      } else if (notificationData.data.event === 'open_url' && DeviceInfo.getBundleId() === 'com.bitmark.healthplus.beta') {
+        Linking.openURL(notificationData.data.url);
+      }
+    }
+  };
+  AccountService.configure(onRegistered, onReceivedNotification);
+};
 
 // ================================================================================================================================================
 let dataInterval = null;
@@ -451,7 +477,7 @@ const doRequireHealthKitPermission = async () => {
   CacheData.userInformation.activeHealthDataAt = moment().toDate().toISOString();
   await UserModel.doUpdateUserInfo(CacheData.userInformation);
 
-  let dateNotification = HealthKitService.getNextSunday11AM();
+  let dateNotification = HealthKitService.getNext12AM();
   PushNotificationIOS.scheduleLocalNotification({
     fireDate: dateNotification.toDate(),
     alertTitle: '',
@@ -480,7 +506,7 @@ const doResetHealthDataTasks = async (list) => {
   CacheData.userInformation.restActiveHealthDataAt = restActiveHealthDataAt;
   await UserModel.doUpdateUserInfo(CacheData.userInformation);
 
-  let dateNotification = HealthKitService.getNextSunday11AM();
+  let dateNotification = HealthKitService.getNext12AM();
   PushNotificationIOS.scheduleLocalNotification({
     fireDate: dateNotification.toDate(),
     alertTitle: '',
@@ -560,8 +586,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
               let doSyncFile = async () => {
                 if (assetId) {
                   let assetInfo = await BitmarkModel.doGetAssetInformation(assetId);
-                  console.log('assetId', assetId, assetInfo);
-                  if (isHealthDataRecord(assetInfo) && keyFilePath.endsWith('.txt')) {
+                  if ((isHealthDataRecord(assetInfo) || isDailyHealthDataRecord(assetInfo)) && keyFilePath.endsWith('.txt')) {
                     iCloudSyncAdapter.deleteFileFromCloud(key);
                     return;
                   }
@@ -595,7 +620,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       );
     });
     iCloudSyncAdapter.syncCloud();
-    //configNotification();
+    configNotification();
     if (!CacheData.userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
       CacheData.userInformation.intercomUserId = intercomUserId;
@@ -663,7 +688,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     AccountService.removeAllDeliveredNotifications();
     PushNotificationIOS.cancelAllLocalNotifications();
     if (CacheData.userInformation.activeHealthDataAt) {
-      let dateNotification = HealthKitService.getNextSunday11AM();
+      let dateNotification = HealthKitService.getNext12AM();
       PushNotificationIOS.scheduleLocalNotification({
         fireDate: dateNotification.toDate(),
         alertTitle: '',
@@ -687,7 +712,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       });
     }
 
-    //configNotification();
+    configNotification();
   }
 
   console.log('CacheData.userInformation :', CacheData.userInformation);
@@ -867,7 +892,7 @@ const detectLocalAssetFilePath = async (asset) => {
     return `${assetFolderPath}/view/${list[0]}`;
   }
   filePath = await detectFilePath();
-  if (isHealthDataRecord(asset)) {
+  if (isHealthDataRecord(asset) || isDailyHealthDataRecord(asset)) {
     if (filePath && filePath.substring(filePath.lastIndexOf('.'), filePath.length) === '.txt') {
       asset.assetFileSyncedToICloud = false;
       let fullFilename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);

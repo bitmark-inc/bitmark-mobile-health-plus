@@ -34,6 +34,8 @@ import { HealthDataFeedCardComponent } from "./card/health-data-feed-card.compon
 import { MedicalRecordFeedCardComponent } from "./card/medical-record-feed-card.component";
 import { MMRCardComponent } from './mmr';
 import { AddRecordOptionsComponent } from "./add-record-options.component";
+import { DailyHealthDataFeedCardComponent } from "./card/daily-health-data-feed-card.component";
+import { DailyHealthDataCardComponent } from "./card/daily-health-data-card.component";
 
 const STICK_CARD_TYPES = {
   GET_STARTED_MMR: 0,
@@ -41,7 +43,9 @@ const STICK_CARD_TYPES = {
   GET_STARTED_HEALTH_DATA: 2,
   MMR: 3,
   MEDICAL_RECORD: 4,
-  HEALTH_DATA: 5
+  HEALTH_DATA: 5,
+  SIGN_DAILY_HEALTH_DATA: 6,
+  DAILY_HEALTH_DATA: 7
 };
 
 
@@ -49,6 +53,8 @@ class PrivateUserComponent extends Component {
   static propTypes = {
     healthDataBitmarks: PropTypes.array,
     healthAssetBitmarks: PropTypes.array,
+    dailyHealthDataBitmarks: PropTypes.array,
+    waitingForIssuingDailyHealthData: PropTypes.array,
     searchTerm: PropTypes.string,
     searchResults: PropTypes.object,
     mmrInformation: PropTypes.object,
@@ -314,8 +320,21 @@ class PrivateUserComponent extends Component {
       accumulatedTop += 105;
     }
 
+    // Get stared daily health data
     if (isCurrentUser && !CacheData.userInformation.activeHealthDataAt && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
       cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA, top: accumulatedTop });
+      accumulatedTop += 105;
+    }
+
+    // Sign for Daily health data
+    if (this.props.waitingForIssuingDailyHealthData.length) {
+      cardListData.push({ type: STICK_CARD_TYPES.SIGN_DAILY_HEALTH_DATA, data: this.props.waitingForIssuingDailyHealthData, top: accumulatedTop });
+      accumulatedTop += 105;
+    }
+
+    // Daily health data
+    if (this.props.dailyHealthDataBitmarks.length && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
+      cardListData.push({ type: STICK_CARD_TYPES.DAILY_HEALTH_DATA, data: this.props.dailyHealthDataBitmarks, top: accumulatedTop });
       accumulatedTop += 105;
     }
 
@@ -433,15 +452,15 @@ class PrivateUserComponent extends Component {
 
                       {/*GET_STARTED_HEALTH_DATA*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&
-                        <TouchableOpacity onPress={Actions.getStart}>
-                          <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                            cardHeader={'Learn about your health'}
-                            cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
-                            cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
-                            isStickCard={true}
-                            cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
-                          />
-                        </TouchableOpacity>
+                      <TouchableOpacity onPress={() => Actions.healthDataGetStart({resetToInitialState: this.resetToInitialState.bind(this)})}>
+                        <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
+                                                 cardHeader={'Learn about your health'}
+                                                 cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
+                                                 cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
+                                                 isStickCard={true}
+                                                 cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
+                        />
+                      </TouchableOpacity>
                       }
 
                       {/*MEDICAL RECORD*/}
@@ -456,6 +475,14 @@ class PrivateUserComponent extends Component {
                         <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickHealthData.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                           <HealthDataCardComponent bitmark={this.state.stickHealthData.data} />
                         </TouchableOpacity>
+                      }
+
+                      {/*DAILY HEALTH DATA*/}
+                      {this.state.stickCardType === STICK_CARD_TYPES.DAILY_HEALTH_DATA &&
+
+                      <TouchableOpacity onPress={() => { Actions.dailyHealthDataFullCard({dailyHealthDataBitmarks: this.state.stickDailyHealthData.data, resetToInitialState: this.resetToInitialState.bind(this)})} }>
+                        <DailyHealthDataCardComponent dailyHealthDataBitmarks={this.state.stickDailyHealthData.data} />
+                      </TouchableOpacity>
                       }
                     </View>
 
@@ -500,6 +527,24 @@ class PrivateUserComponent extends Component {
                           return (
                             <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickHealthData: card }) }}>
                               <HealthDataFeedCardComponent bitmark={card.data} />
+                            </TouchableOpacity>
+                          );
+                        }
+
+                        // SIGN FOR DAILY HEALTH DATA
+                        if (card.type === STICK_CARD_TYPES.SIGN_DAILY_HEALTH_DATA) {
+                          return (
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { Actions.bitmarkHealthData({list: card.data})}}>
+                              <DailyHealthDataFeedCardComponent header={'Sign for your daily data'}/>
+                            </TouchableOpacity>
+                          );
+                        }
+
+                        // DAILY HEALTH DATA
+                        if (card.type === STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
+                          return (
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.DAILY_HEALTH_DATA, stickDailyHealthData: card }) }}>
+                              <DailyHealthDataFeedCardComponent header={'Learn about your health'}/>
                             </TouchableOpacity>
                           );
                         }

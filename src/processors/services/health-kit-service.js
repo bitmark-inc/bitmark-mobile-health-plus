@@ -104,6 +104,11 @@ let allDataTypes = [
   // 'WorkoutType',// TODO don't support in iOS10
 ];
 
+let BitmarkHealthDataTypes = [
+  'SleepAnalysis',
+  'StepCount'
+];
+
 let titleDataTypes = {
   'ActiveEnergyBurned': 'Active Energy',
   'AppleExerciseTime': 'Exercise Minutes',
@@ -197,59 +202,57 @@ let titleDataTypes = {
   'WorkoutType': 'Workout Type Identifier',
 };
 
-const SUNDAY = 7;
-const SATURDAY = 6;
-const TIME_SENT_NOTIFICATION = 11;
+// const SUNDAY = 7;
+// const SATURDAY = 6;
+const TIME_SENT_NOTIFICATION = 12;
 
-const getPreviousDay = (date, dayInWeek) => {
-  let tempMoment = moment(date);
-  if (dayInWeek) {
-    let currentDayInWeek = tempMoment.day();
-    if (currentDayInWeek >= dayInWeek) {
-      tempMoment.date(tempMoment.date() + currentDayInWeek - dayInWeek);
-    } else {
-      tempMoment.date(tempMoment.date() + dayInWeek - currentDayInWeek - 7);
-    }
-  } else {
-    tempMoment.date(tempMoment.date() - 1);
-  }
-  return tempMoment;
-};
-
-const getNextDay = (date, dayInWeek) => {
-  let tempMoment = moment(date);
-  if (dayInWeek) {
-    let currentDayInWeek = tempMoment.day();
-    if (currentDayInWeek <= dayInWeek) {
-      tempMoment.date(tempMoment.date() + dayInWeek - currentDayInWeek);
-    } else {
-      tempMoment.date(tempMoment.date() + 7 + dayInWeek - currentDayInWeek);
-    }
-  } else {
-    tempMoment.date(tempMoment.date() + 1);
-  }
-  return tempMoment;
-};
-
-const getBeginDay = (date) => {
-  let tempMoment = moment(date);
-  tempMoment.hour(0);
-  tempMoment.minute(0);
-  tempMoment.second(0);
-  tempMoment.millisecond(0);
-  return tempMoment;
-};
-
-const getEndDay = (date) => {
-  let tempMoment = moment(date);
-  tempMoment.hour(23);
-  tempMoment.minute(59);
-  tempMoment.second(59);
-  tempMoment.millisecond(0);
-  return tempMoment;
-};
-
-
+// const getPreviousDay = (date, dayInWeek) => {
+//   let tempMoment = moment(date);
+//   if (dayInWeek) {
+//     let currentDayInWeek = tempMoment.day();
+//     if (currentDayInWeek >= dayInWeek) {
+//       tempMoment.date(tempMoment.date() + currentDayInWeek - dayInWeek);
+//     } else {
+//       tempMoment.date(tempMoment.date() + dayInWeek - currentDayInWeek - 7);
+//     }
+//   } else {
+//     tempMoment.date(tempMoment.date() - 1);
+//   }
+//   return tempMoment;
+// };
+//
+// const getNextDay = (date, dayInWeek) => {
+//   let tempMoment = moment(date);
+//   if (dayInWeek) {
+//     let currentDayInWeek = tempMoment.day();
+//     if (currentDayInWeek <= dayInWeek) {
+//       tempMoment.date(tempMoment.date() + dayInWeek - currentDayInWeek);
+//     } else {
+//       tempMoment.date(tempMoment.date() + 7 + dayInWeek - currentDayInWeek);
+//     }
+//   } else {
+//     tempMoment.date(tempMoment.date() + 1);
+//   }
+//   return tempMoment;
+// };
+//
+// const getBeginDay = (date) => {
+//   let tempMoment = moment(date);
+//   tempMoment.hour(0);
+//   tempMoment.minute(0);
+//   tempMoment.second(0);
+//   tempMoment.millisecond(0);
+//   return tempMoment;
+// };
+//
+// const getEndDay = (date) => {
+//   let tempMoment = moment(date);
+//   tempMoment.hour(23);
+//   tempMoment.minute(59);
+//   tempMoment.second(59);
+//   tempMoment.millisecond(0);
+//   return tempMoment;
+// };
 
 const isEmptyHealthData = (healthData) => {
   if (!(!healthData || (healthData instanceof Array && healthData.length === 0) ||
@@ -272,6 +275,24 @@ const tryGetHealthDataOfType = (type, startDate, endDate) => {
   });
 }
 
+const doGetHealthKitDataForDifferentDateRange = async (listTypes, dateRage) => {
+  let determinedTypes = await AppleHealthKitAdapter.getDeterminedHKPermission(listTypes);
+  let mapData = {};
+  for (let type of determinedTypes.permissions.read) {
+    let startDate, endDate;
+    if (type === 'SleepAnalysis') {
+      startDate = dateRage.SleepAnalysis.startDate;
+      endDate = dateRage.SleepAnalysis.endDate
+    } else {
+      startDate = dateRage.StepCount.startDate;
+      endDate = dateRage.StepCount.endDate
+    }
+
+    mapData[type] = await tryGetHealthDataOfType(type, startDate, endDate);
+  }
+  return mapData;
+};
+
 const doGetHealthKitData = async (listTypes, startDate, endDate) => {
   let determinedTypes = await AppleHealthKitAdapter.getDeterminedHKPermission(listTypes);
   let mapData = {};
@@ -281,12 +302,13 @@ const doGetHealthKitData = async (listTypes, startDate, endDate) => {
   return mapData;
 };
 
-const doGetDataSources = async () => {
-  await AppleHealthKitAdapter.initHealthKit(allDataTypes);
+const doGetDataSources = async (areAllDataTypes) => {
+  let dataTypes = areAllDataTypes ? allDataTypes : BitmarkHealthDataTypes;
+  await AppleHealthKitAdapter.initHealthKit(dataTypes);
   let startDate = moment().toDate();
   startDate.setDate(startDate.getDate() - 7);
   let endDate = moment().toDate();
-  let mapData = await doGetHealthKitData(allDataTypes, startDate, endDate);
+  let mapData = await doGetHealthKitData(dataTypes, startDate, endDate);
   let dataSourceStatuses = [];
   for (let type in mapData) {
     if (isEmptyHealthData(mapData[type])) {
@@ -344,16 +366,18 @@ const removeEmptyValueData = (healthData) => {
 const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
   let results = [];
   for (let dateRange of list) {
-    let healthRawData = await doGetHealthKitData(allDataTypes, dateRange.startDate, dateRange.endDate);
+    let healthRawData = await doGetHealthKitDataForDifferentDateRange(allDataTypes, dateRange);
     let randomId = randomString({ length: 8, numeric: true, letters: false, });
     let healthData = {
-      date: dateRange.endDate,
+      date: dateRange.StepCount.endDate,
       data: JSON.stringify(removeEmptyValueData(healthRawData)),
 
       assetName: `HD${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase(),
       assetMetadata: {
+        "Type": 'Health',
         "Source": 'HealthKit',
-        "Saved Time": moment(dateRange.endDate).toISOString()
+        "Period": 'Daily',
+        "Collection Date": moment(dateRange.StepCount.endDate).toISOString()
       },
       randomId,
     };
@@ -385,11 +409,13 @@ const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
   return results;
 };
 
-const doCheckBitmarkHealthDataTask = (healthDataBitmarks, activeAt, resetAt) => {
+const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt) => {
   let lastTimeBitmarkHealthData;
-  (healthDataBitmarks || []).forEach(bitmark => {
-    if (bitmark.asset.metadata['Saved Time']) {
-      let saveTime = moment(bitmark.asset.metadata['Saved Time']);
+
+  // Detect last time for daily health data
+  (dailyHealthDataBitmarks || []).forEach(bitmark => {
+    if (bitmark.asset.metadata['Collection Date']) {
+      let saveTime = moment(bitmark.asset.metadata['Collection Date']);
       if (!lastTimeBitmarkHealthData || (saveTime.toDate().getTime() > lastTimeBitmarkHealthData.toDate().getTime())) {
         lastTimeBitmarkHealthData = saveTime;
       }
@@ -399,50 +425,78 @@ const doCheckBitmarkHealthDataTask = (healthDataBitmarks, activeAt, resetAt) => 
     (!lastTimeBitmarkHealthData && resetAt)) {
     lastTimeBitmarkHealthData = resetAt;
   }
-  let list = [];
+
+  // Calculate periods collect time
+  let periods = [];
   let startDate, endDate;
+
   if (!lastTimeBitmarkHealthData) {
+    // Don't have last time yet
     lastTimeBitmarkHealthData = moment(activeAt);
     if (lastTimeBitmarkHealthData.toDate().getTime() > moment().toDate().getTime()) {
-      return list;
+      return periods;
     }
-    startDate = getPreviousDay(lastTimeBitmarkHealthData, SUNDAY);
-    startDate = getBeginDay(startDate);
-    endDate = moment(lastTimeBitmarkHealthData);
-    endDate.second(endDate.second() - 1);
-
-    list.push({ startDate, endDate, });
-
-    startDate = moment(lastTimeBitmarkHealthData);
-    endDate = getNextDay(startDate, SATURDAY);
-    endDate = getEndDay(endDate);
-  } else {
-    startDate = getNextDay(lastTimeBitmarkHealthData);
-    startDate = getBeginDay(startDate);
-    endDate = getNextDay(startDate, SATURDAY);
-    endDate = getEndDay(endDate);
   }
+
+  // TODO: This for adding test data
+  //lastTimeBitmarkHealthData = moment().date(moment().date() - 3);
+
+  console.log('lastTimeBitmarkHealthData:', lastTimeBitmarkHealthData.toDate());
+  startDate = moment(lastTimeBitmarkHealthData);
+  startDate.hour(0);
+  startDate.minute(0);
+  startDate.second(0);
+  startDate.millisecond(0);
+
+  endDate = moment(lastTimeBitmarkHealthData);
+
   let currentDate = moment();
-  if ((currentDate.day() === SUNDAY && currentDate.hour() >= TIME_SENT_NOTIFICATION) || currentDate.day() !== SUNDAY) {
-    while (endDate.toDate() <= currentDate.toDate()) {
-      list.push({
-        startDate: startDate.toDate(),
-        endDate: endDate.toDate(),
-      });
-      startDate = getNextDay(endDate);
-      startDate = getBeginDay(startDate);
-      endDate = getNextDay(startDate, SATURDAY);
-      endDate = getEndDay(endDate);
-    }
+  let lastMidnight = moment(currentDate.hour(0).minute(0).second(0).millisecond(0));
+  while (endDate.diff(lastMidnight, 'hours') < 0) {
+    periods.push({
+      StepCount: {
+        startDate: moment(startDate).toDate(),
+        endDate: moment(endDate).hour(23).minute(59).second(0).millisecond(0).toDate()
+      },
+      SleepAnalysis: {
+        startDate: moment(startDate).hour(12).minute(0).second(0).millisecond(0).toDate(),
+        endDate: getSleepEndDate(endDate).toDate()
+      }
+    });
+
+    startDate = moment(startDate).date(startDate.date() + 1);
+    endDate = moment(endDate).date(endDate.date() + 1);
   }
-  return list;
-};
-const initHealthKit = async () => {
-  await AppleHealthKitAdapter.initHealthKit(allDataTypes);
+
+  console.log('periods:', periods);
+
+  return periods;
 };
 
-const doCheckEmptyDataSource = async () => {
-  let dataSourceStatuses = await doGetDataSources();
+const getSleepEndDate = (endDate) => {
+  let currentDate = moment();
+  let nextDate = moment(endDate).date(endDate.date() + 1);
+  let nextEndDate;
+
+  if (nextDate.diff(currentDate, 'days') < 0) {
+    nextEndDate = moment(nextDate).hour(12).minute(0).second(0).millisecond(0);
+  } else {
+    if (currentDate.hour() < 12) {
+      nextEndDate = currentDate;
+    } else {
+      nextEndDate = moment(currentDate).hour(12).minute(0).second(0).millisecond(0);
+    }
+  }
+
+  return nextEndDate;
+};
+
+const initHealthKit = async (areAllDataTypes) => {
+  await AppleHealthKitAdapter.initHealthKit(areAllDataTypes ? allDataTypes : BitmarkHealthDataTypes);
+};
+
+const doCheckEmptyDataSource = async (areAllDataTypes) => {
+  let dataSourceStatuses = await doGetDataSources(areAllDataTypes);
   let empty = true;
   for (let ds of dataSourceStatuses) {
     if (ds.status === 'Active') {
@@ -451,22 +505,25 @@ const doCheckEmptyDataSource = async () => {
     }
   }
   return empty;
-}
-const getNextSunday11AM = () => {
-  let timeSendNotification = moment();
-  if (timeSendNotification.day() === SUNDAY && timeSendNotification.hour() < TIME_SENT_NOTIFICATION) {
-    timeSendNotification.hour(TIME_SENT_NOTIFICATION);
-  } else {
-    timeSendNotification = getNextDay(timeSendNotification, SUNDAY);
-    timeSendNotification.hour(TIME_SENT_NOTIFICATION);
-  }
+};
+
+const getNext12AM = () => {
+  let timeSendNotification = moment().add(1, 'day');
+  timeSendNotification.hour(TIME_SENT_NOTIFICATION);
   timeSendNotification.minute(0);
   timeSendNotification.second(0);
   return timeSendNotification;
 };
 
 const doDeterminedHKPermission = async () => {
-  return await AppleHealthKitAdapter.getDeterminedHKPermission(allDataTypes);
+  return await AppleHealthKitAdapter.getDeterminedHKPermission(BitmarkHealthDataTypes);
+};
+
+const doGetOtherAllowedHKPermissionLabels = async () => {
+  let dataSourceStatuses = await doGetDataSources(true);
+  let allowedPermissionLabels = dataSourceStatuses.filter(item => item.status == 'Active' && !BitmarkHealthDataTypes.includes(item.key)).map(item => item.title);
+
+  return allowedPermissionLabels;
 };
 
 const HealthKitService = {
@@ -475,8 +532,9 @@ const HealthKitService = {
   doGetDataSources,
   doCheckEmptyDataSource,
   doCheckBitmarkHealthDataTask,
-  getNextSunday11AM,
+  getNext12AM: getNext12AM,
   doDeterminedHKPermission,
+  doGetOtherAllowedHKPermissionLabels
 };
 
 export { HealthKitService };

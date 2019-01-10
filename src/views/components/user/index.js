@@ -14,7 +14,6 @@ import { BitmarkDetailComponent } from './bitmark-detail.component';
 import { FullViewCaptureAssetComponent } from './full-view-capture-asset.component';
 import { EmailRecordComponent } from './email-record.component';
 import { AssetNameInform } from "./asset-name-inform.component";
-import { GetStartComponent } from './get-start.component';
 import { AddRecordComponent } from './add-record.component';
 import { AccountNumberComponent } from './account-number.component';
 import { CaptureMultipleImagesComponent } from './capture-multiple-image.component';
@@ -24,6 +23,8 @@ import { DataProcessor } from 'src/processors';
 import { BitmarkLegalComponent, WhatNewComponent } from 'src/views/commons';
 import { MMRInformationComponent } from './mmr';
 import { EditBitmarkComponent } from "./edit-bitmark.component";
+import { HealthDataGetStartComponent } from "./health-data-get-start.component";
+import { DailyHealthDataFullCardComponent } from "./card/daily-health-data-full-card.component";
 
 export class UserRouterComponent extends Component {
   componentDidMount() {
@@ -46,7 +47,7 @@ export class UserRouterComponent extends Component {
           <Scene key="bitmarkDetail" component={BitmarkDetailComponent} panHandlers={null} />
           <Scene key="fullViewCaptureAsset" component={FullViewCaptureAssetComponent} />
           <Scene key="assetNameInform" component={AssetNameInform} panHandlers={null} />
-          <Scene key="getStart" component={GetStartComponent} panHandlers={null} />
+          <Scene key="healthDataGetStart" component={HealthDataGetStartComponent} panHandlers={null} />
           <Scene key="addRecord" component={AddRecordComponent} panHandlers={null} />
           <Scene key="accountNumber" component={AccountNumberComponent} panHandlers={null} />
           <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} panHandlers={null} />
@@ -55,6 +56,7 @@ export class UserRouterComponent extends Component {
           <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
           <Scene key="tagging" component={TaggingComponent} panHandlers={null} />
           <Scene key="mmrInformation" component={MMRInformationComponent} panHandlers={null} />
+          <Scene key="dailyHealthDataFullCard" component={DailyHealthDataFullCardComponent} panHandlers={null} />
         </Stack>
       </Router>
     );
