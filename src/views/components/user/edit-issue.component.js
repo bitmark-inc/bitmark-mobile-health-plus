@@ -72,7 +72,6 @@ export class EditIssueComponent extends Component {
       if (this.props.images) {
         // Issue image
         let image = this.props.images[0];
-        console.log('image:', image);
         this.props.doIssueImage([{ uri: image.uri, createAt: image.createAt, note: this.note, tags: this.state.tags }], false);
       } else {
         // Issue unknown file
@@ -93,7 +92,7 @@ export class EditIssueComponent extends Component {
       }
 
       AppProcessor.doCombineImages(newImages).then((filePath) => {
-        this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment(), note: this.note, tags: this.state.tags, numberOfFiles: newImages.length }], true);
+        this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment(), note: this.note.substring(0, 255), tags: this.state.tags, numberOfFiles: newImages.length }], true);
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       })
@@ -205,6 +204,7 @@ export class EditIssueComponent extends Component {
                   <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
                     <TextInput style={[styles.inputNote]}
                       multiline={true}
+                      maxLength={255}
                       placeholder={'Tap to add private notes to your record'}
                       onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
                     />

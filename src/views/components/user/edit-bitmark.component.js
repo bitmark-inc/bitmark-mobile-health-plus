@@ -29,7 +29,7 @@ export class EditBitmarkComponent extends Component {
 
   async save() {
     // Update note if needed
-    let note = this.state.note.trim();
+    let note = this.state.note.trim().substring(0, 255);
 
     if (note != this.props.note) {
       await IndexDBService.updateNote(this.props.bitmark.id, note);
@@ -106,6 +106,7 @@ export class EditBitmarkComponent extends Component {
                   <TextInput style={[styles.inputNote]}
                              multiline={true}
                              value={this.state.note}
+                             maxLength={255}
                              placeholder={'Tap to add private notes to your record'}
                              onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
                   />
