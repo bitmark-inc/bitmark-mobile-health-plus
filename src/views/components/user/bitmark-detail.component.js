@@ -215,7 +215,7 @@ export class BitmarkDetailComponent extends Component {
                   {/*Json View Tree*/}
                   {bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.healthDataViewer} contentContainerStyle={{ flexGrow: 1, }}>
                     <ScrollView horizontal={true}>
-                      <JSONTree data={this.state.content}
+                      <JSONTree style={{ marginBottom: 50, }} data={this.state.content}
                         getItemString={() => <Text></Text>}
                         labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
                         valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}
