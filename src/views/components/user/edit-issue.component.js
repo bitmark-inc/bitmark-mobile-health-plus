@@ -208,7 +208,7 @@ export class EditIssueComponent extends Component {
                 <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
                   <TextInput style={[styles.inputNote]}
                     multiline={true}
-                    maxLength={255}
+                    maxLength={250}
                     placeholder={'Tap to add private notes to your record'}
                     onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
                   />
