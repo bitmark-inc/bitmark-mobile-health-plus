@@ -23,7 +23,7 @@ import { constants } from 'src/configs';
 
 import { SearchInputComponent } from './search-input.component';
 import { SearchResultsComponent } from './search-results.component';
-import { AppProcessor, EventEmitterService, CacheData } from 'src/processors';
+import { AppProcessor, EventEmitterService, CacheData, DataProcessor } from 'src/processors';
 import { UserBitmarksStore, UserBitmarksActions } from 'src/views/stores';
 import { search, issue } from 'src/views/controllers';
 import { GetStartedCardComponent } from "./card/get-started-card.component";
@@ -56,6 +56,7 @@ class PrivateUserComponent extends Component {
   constructor(props) {
     super(props);
     this.doIssueImage = this.doIssueImage.bind(this);
+    this.doIssue = this.doIssue.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
 
     this.state = {
@@ -69,12 +70,14 @@ class PrivateUserComponent extends Component {
   }
 
   goToBitmarkDetail(bitmarkId) {
-    let allBitmarks = this.props.healthAssetBitmarks.concat(this.props.healthDataBitmarks);
-    let bitmark = allBitmarks.find(item => item.id == bitmarkId);
-
-    if (bitmark) {
-      Actions.bitmarkDetail({ bitmark, bitmarkType: isHealthDataRecord(bitmark.asset) ? 'bitmark_health_data' : 'bitmark_health_issuance', goBack: this.goBack.bind(this) });
-    }
+    DataProcessor.doGetUserDataBitmarks().then(userBitmarks => {
+      console.log('userBitmarks :', bitmarkId, userBitmarks);
+      let allBitmarks = userBitmarks ? (userBitmarks.healthAssetBitmarks || []).concat(userBitmarks.healthDataBitmarks || []) : [];
+      let bitmark = allBitmarks.find(item => item.id == bitmarkId);
+      if (bitmark) {
+        Actions.bitmarkDetail({ bitmark, bitmarkType: isHealthDataRecord(bitmark.asset) ? 'bitmark_health_data' : 'bitmark_health_issuance', goBack: this.goBack.bind(this) });
+      }
+    });
   }
 
   resetToInitialState() {
@@ -203,8 +206,9 @@ class PrivateUserComponent extends Component {
   }
 
   doIssue(issueParams) {
-    issue(issueParams, async (issuedBitmark) => {
-      this.goToBitmarkDetail(issuedBitmark.id);
+    issue(issueParams, async (issuedBitmarks) => {
+      console.log({issuedBitmarks});
+      this.goToBitmarkDetail(issuedBitmarks[0].id);
     });
   }
 

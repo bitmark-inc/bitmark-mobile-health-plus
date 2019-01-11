@@ -11,7 +11,6 @@ const doGet100Bitmarks = (accountNumber, lastOffset) => {
     let statusCode;
     let bitmarkUrl = config.api_server_url +
       `/v1/bitmarks?issuer=${accountNumber}&asset=true&pending=true&to=later` + (lastOffset ? `&at=${lastOffset}` : '');
-    console.log('bitmarkUrl :', bitmarkUrl);
     fetch(bitmarkUrl, {
       method: 'GET',
       headers: {
@@ -312,7 +311,6 @@ const doGetBitmarkInformation = (bitmarkId) => {
     let statusCode;
     let bitmarkUrl = config.api_server_url +
       `/v1/bitmarks/${bitmarkId}?asset=true&pending=true&provenance=true`;
-    console.log('bitmarkUrl :', bitmarkUrl);
     fetch(bitmarkUrl, {
       method: 'GET',
       headers: {

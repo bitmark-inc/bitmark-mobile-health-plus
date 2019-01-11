@@ -1064,6 +1064,7 @@ const DataProcessor = {
   doDisplayedWhatNewInformation,
   doTransferBitmark,
   doIssueMMR,
+  doGetUserDataBitmarks,
   doSaveUserSetting,
 };
 

@@ -58,9 +58,8 @@ export class FullViewCaptureAssetComponent extends Component {
           </View>
 
           {/*CONTENT*/}
-          <View style={styles.content}>
+          <View style={[styles.content, this.state.type === 'image' ? { alignItems: 'center', justifyContent: 'center', paddingBottom: config.isIPhoneX ? 44 : 20 } : {}]}>
             {this.state.type === 'image' && <ImageZoom
-              style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: config.isIPhoneX ? 44 : 20, }}
               cropWidth={Dimensions.get('window').width}
               cropHeight={(Dimensions.get('window').height)}
               imageWidth={Dimensions.get('window').width * 0.8}

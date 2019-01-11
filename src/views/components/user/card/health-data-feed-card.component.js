@@ -19,13 +19,12 @@ export class HealthDataFeedCardComponent extends React.Component {
   }
 
   async componentDidMount() {
-     let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
-     this.setState({fileSize: humanFileSize(fileStat.size)});
+    let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
+    this.setState({ fileSize: humanFileSize(fileStat.size) });
   }
 
   render() {
     let bitmark = this.props.bitmark;
-    console.log('bitmark:', bitmark);
 
     return (
       <View style={[styles.cardContainer]}>
@@ -41,7 +40,7 @@ export class HealthDataFeedCardComponent extends React.Component {
           <Text style={[styles.cardText]}>{bitmark.asset.created_at ? ('RECORDED ON ' + moment(bitmark.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : 'REGISTERING...'}</Text>
 
           {this.state.fileSize &&
-          <Text style={[styles.cardText]}>{this.state.fileSize}</Text>
+            <Text style={[styles.cardText]}>{this.state.fileSize}</Text>
           }
         </View>
 
