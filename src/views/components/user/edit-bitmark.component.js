@@ -9,8 +9,7 @@ import { Actions } from 'react-native-router-flux';
 import { convertWidth } from 'src/utils';
 import { InputTagComponent } from "./tag/input-tag.component";
 import { IndexDBService } from "src/processors";
-import { OutterShadowComponent } from "src/views/commons";
-import { config } from 'src/configs';
+import { ShadowComponent, ShadowTopComponent } from "src/views/commons";
 
 export class EditBitmarkComponent extends Component {
   static propTypes = {
@@ -84,7 +83,7 @@ export class EditBitmarkComponent extends Component {
         {/*HEADER*/}
         <View style={[styles.header]}>
           {/*Back icon*/}
-          <TouchableOpacity style={{ paddingLeft: convertWidth(16) }} onPress={Actions.pop}>
+          <TouchableOpacity style={{ paddingLeft: convertWidth(16), paddingRight: 4, }} onPress={Actions.pop}>
             <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('assets/imgs/back-icon-black.png')} />
           </TouchableOpacity>
           {/*Title*/}
@@ -92,15 +91,18 @@ export class EditBitmarkComponent extends Component {
           <Text style={{ paddingLeft: convertWidth(16) + 20 }} />
         </View>
         <KeyboardAvoidingView style={styles.body} behavior="padding" enabled >
-          {/*CONTENT*/}
-          <ScrollView contentContainerStyle={{ flexGrow: 1, }}>
+          <ScrollView style={{ flex: 1 }} contentContainerStyle={{
+            flexGrow: 1,
+            paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 5,
+          }}>
+            {/*CONTENT*/}
             {/*NOTES*/}
-            <OutterShadowComponent style={{ marginTop: 1.5 }}>
+            <ShadowComponent style={{ marginTop: 1.5 }}>
               <View style={[styles.section]}>
                 {/*Top bar*/}
-                <View style={[styles.topBar]}>
+                <ShadowTopComponent style={[styles.topBar]}>
                   <Text style={[styles.sectionTitle]}>NOTES</Text>
-                </View>
+                </ShadowTopComponent>
 
                 {/*Content*/}
                 <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
@@ -113,15 +115,15 @@ export class EditBitmarkComponent extends Component {
                   />
                 </View>
               </View>
-            </OutterShadowComponent>
+            </ShadowComponent>
 
             {/*TAGS*/}
-            <OutterShadowComponent style={{ marginTop: 19 }}>
+            <ShadowComponent style={{ marginTop: 19 }}>
               <View style={[styles.section]}>
                 {/*Top bar*/}
-                <View style={[styles.topBar]}>
+                <ShadowTopComponent style={[styles.topBar]}>
                   <Text style={[styles.sectionTitle]}>TAGS</Text>
-                </View>
+                </ShadowTopComponent>
 
                 {/*Content*/}
                 <View style={[styles.contentContainer]}>
@@ -153,12 +155,12 @@ export class EditBitmarkComponent extends Component {
                   </ScrollView>
                 </View>
               </View>
-            </OutterShadowComponent>
+            </ShadowComponent>
+            {/*BUTTON*/}
+            <TouchableOpacity style={styles.saveButton} onPress={this.save.bind(this)}>
+              <Text style={styles.saveButtonText}>SAVE</Text>
+            </TouchableOpacity>
           </ScrollView>
-          {/*BUTTON*/}
-          <TouchableOpacity style={styles.saveButton} onPress={this.save.bind(this)}>
-            <Text style={styles.saveButtonText}>SAVE</Text>
-          </TouchableOpacity>
         </KeyboardAvoidingView >
 
         {this.state.inputtingTag && <InputTagComponent tags={this.state.tags} addTag={this.addTag.bind(this)} hideInputTag={this.hideInputTag.bind(this)} />}
@@ -169,11 +171,8 @@ export class EditBitmarkComponent extends Component {
 
 const styles = StyleSheet.create({
   body: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    paddingLeft: convertWidth(16),
-    paddingRight: convertWidth(16),
+    flex: 1, flexDirection: 'column', alignItems: 'center',
+    backgroundColor: 'white',
   },
   header: {
     width: '100%',
@@ -193,14 +192,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topBar: {
-    width: '100%',
-    height: 41,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: convertWidth(16),
-    paddingRight: convertWidth(16),
-    borderBottomWidth: 1,
-    borderColor: '#F4F2EE',
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
+    height: 40,
   },
   bottomBar: {
     padding: convertWidth(16),
@@ -208,12 +201,14 @@ const styles = StyleSheet.create({
     marginTop: 16,
     minHeight: 54,
     width: '100%',
-    borderTopWidth: 1,
-    borderColor: '#F5F5F5',
+    borderTopWidth: 0.5,
+    borderColor: '#F4F2EE',
   },
   sectionTitle: {
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
     fontSize: 10,
     fontFamily: 'AvenirNextW1G-Light',
+    letterSpacing: 1.5,
     color: 'rgba(0, 0, 0, 0.87)'
   },
   contentContainer: {
@@ -228,6 +223,7 @@ const styles = StyleSheet.create({
   introductionDescription: {
     fontSize: 14,
     fontFamily: 'AvenirNextW1G-Regular',
+    letterSpacing: 0.25,
     color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 6,
   },
@@ -260,6 +256,7 @@ const styles = StyleSheet.create({
     color: '#FF003C',
     fontSize: 12,
     fontFamily: 'Andale Mono',
+    letterSpacing: 0.25,
   },
   saveButton: {
     marginTop: 52,
@@ -274,6 +271,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 14,
     fontFamily: 'AvenirNextW1G-Bold',
+    letterSpacing: 0.75,
     color: '#FFFFFF'
   },
   taggingItemContainer: {
@@ -287,6 +285,7 @@ const styles = StyleSheet.create({
   },
   taggingItem: {
     fontFamily: 'Andale Mono',
+    letterSpacing: 0.25,
     fontSize: 10,
     fontWeight: '300',
     color: '#FF003C',

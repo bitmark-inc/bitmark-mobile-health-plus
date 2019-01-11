@@ -11,7 +11,7 @@ import moment from 'moment';
 import { convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { InputTagComponent } from "./tag/input-tag.component";
-import { OutterShadowComponent, ShadowTopComponent, ShadowComponent } from "src/views/commons";
+import { ShadowTopComponent, ShadowComponent } from "src/views/commons";
 import { config } from 'src/configs';
 
 
@@ -148,12 +148,12 @@ export class EditIssueComponent extends Component {
           </TouchableOpacity>
           {/*Title*/}
           <Text style={styles.titleText}>Edit</Text>
-          <Text />
+          <Text style={{ paddingLeft: convertWidth(16) + 20 }} />
         </View>
 
         {/*CONTENT*/}
         <KeyboardAvoidingView behavior="padding" enabled style={styles.body} keyboardVerticalOffset={this.state.inputtingTag ? (88 + config.isIPhoneX ? 44 : 0) : 0} >
-          <ScrollView contentContainerStyle={{
+          <ScrollView style={{ flex: 1, width: '100%', }} contentContainerStyle={{
             flexGrow: 1,
             paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 5,
           }}>
@@ -197,7 +197,7 @@ export class EditIssueComponent extends Component {
             }
 
             {/*NOTES*/}
-            <OutterShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
+            <ShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
               <View style={[styles.section]}>
                 {/*Top bar*/}
                 <ShadowTopComponent style={[styles.topBar]}>
@@ -214,10 +214,10 @@ export class EditIssueComponent extends Component {
                   />
                 </View>
               </View>
-            </OutterShadowComponent>
+            </ShadowComponent>
 
             {/*TAGS*/}
-            <OutterShadowComponent style={{ marginTop: 19 }}>
+            <ShadowComponent style={{ marginTop: 19 }}>
               <View style={[styles.section]}>
                 {/*Top bar*/}
                 <ShadowTopComponent style={[styles.topBar]}>
@@ -257,7 +257,7 @@ export class EditIssueComponent extends Component {
                   </ScrollView>
                 </View>
               </View>
-            </OutterShadowComponent>
+            </ShadowComponent>
 
             {/*BUTTON*/}
             <TouchableOpacity style={styles.saveButton} onPress={this.continue.bind(this)}>
@@ -285,9 +285,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleText: {
-    marginLeft: -16,
     fontSize: 24,
-    fontFamily: 'AvenirNextW1G-Bold',
+    fontFamily: 'AvenirNextW1G-Bold', textAlign: 'center',
     color: 'rgba(0, 0, 0, 0.87)',
   },
   section: {

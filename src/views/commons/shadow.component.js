@@ -53,8 +53,6 @@ export class OutterShadowComponent extends Component {
 
 const outterStyles = StyleSheet.create({
   body: {
-    padding: 2,
-    paddingTop: 0,
     borderRadius: 4,
     shadowOffset: { width: 0, height: 2, },
     shadowOpacity: 0.2,
