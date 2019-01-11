@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, FlatList, KeyboardAvoidingView, TextInput, Keyboard, Animated
+  Image, View, TouchableOpacity, Text, FlatList, TextInput, Keyboard, Animated
 } from 'react-native';
 
 import { uniq } from "lodash";
-import { constants } from 'src/configs';
 import { LocalFileService } from 'src/processors';
 
 export class InputTagComponent extends Component {
@@ -118,7 +117,7 @@ export class InputTagComponent extends Component {
   render() {
     return (
       <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity }]}>
-        <KeyboardAvoidingView behavior="padding" enabled style={styles.keyboardAvoidingView}>
+        <View style={styles.keyboardAvoidingView}>
           {/*INPUT TAG*/}
           <View style={styles.inputTagContainer}>
             <TextInput
@@ -160,7 +159,7 @@ export class InputTagComponent extends Component {
             </View>
           ) : null
           }
-        </KeyboardAvoidingView>
+        </View>
       </Animated.View>
     );
   }
@@ -168,8 +167,6 @@ export class InputTagComponent extends Component {
 
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
-    position: 'absolute',
-    bottom: 0,
     backgroundColor: '#F5F5F5',
     width: '100%',
     paddingLeft: 15,
@@ -177,10 +174,9 @@ const styles = StyleSheet.create({
   },
   inputTagContainer: {
     flexDirection: 'row',
-    width: '100%',
+    width: '100%', height: 62,
     paddingTop: 15,
     paddingBottom: 15,
-    flex: 1
   },
   inputTag: {
     flex: 1,
@@ -209,13 +205,11 @@ const styles = StyleSheet.create({
   suggestionItemText: {
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 17,
-    lineHeight: 23,
     color: '#0060F2'
   },
   keyboardExternal: {
     position: 'absolute',
     width: '100%',
-    height: constants.keyboardExternalHeight,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center'

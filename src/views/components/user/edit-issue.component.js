@@ -12,6 +12,7 @@ import { convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { InputTagComponent } from "./tag/input-tag.component";
 import { OutterShadowComponent, ShadowTopComponent, ShadowComponent } from "src/views/commons";
+import { config } from 'src/configs';
 
 
 class ItemOrderImageComponent extends Component {
@@ -137,134 +138,133 @@ export class EditIssueComponent extends Component {
     let tags = this.state.tags;
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.body}>
-          {/*HEADER*/}
-          <View style={[styles.header]}>
-            {/*Back icon*/}
-            <TouchableOpacity style={{ paddingLeft: convertWidth(16), paddingRight: 4, borderWidth: 1, }} onPress={Actions.pop}>
-              <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('assets/imgs/back-icon-black.png')} />
-            </TouchableOpacity>
-            {/*Title*/}
-            <Text style={styles.titleText}>Edit</Text>
-            <Text />
-          </View>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
 
-          {/*CONTENT*/}
-          <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }} keyboardVerticalOffset={this.state.inputtingTag ? 72 : 0} >
-            <ScrollView contentContainerStyle={{
-              flexGrow: 1,
-              paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 5,
-            }}>
-              {/*ATTACHED DOCUMENTS*/}
-              {!this.isSingleFile &&
-                <ShadowComponent style={{ margin: 2 }}>
-                  <View style={[styles.section]}>
-                    {/*Top bar*/}
-                    <ShadowTopComponent style={[styles.topBar]}>
-                      <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
-                    </ShadowTopComponent>
+        {/*HEADER*/}
+        <View style={[styles.header]}>
+          {/*Back icon*/}
+          <TouchableOpacity style={{ paddingLeft: convertWidth(16), paddingRight: 4, }} onPress={Actions.pop}>
+            <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('assets/imgs/back-icon-black.png')} />
+          </TouchableOpacity>
+          {/*Title*/}
+          <Text style={styles.titleText}>Edit</Text>
+          <Text />
+        </View>
 
-                    {/*Content*/}
-                    <View style={[styles.contentContainer]}>
-                      <Text style={styles.introductionTitle}>Arrange the photos</Text>
-                      <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
-
-                      {/*Images*/}
-                      <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
-                        <SortableGrid
-                          style={{ flex: 1, width: convertWidth(312), }}
-                          itemsPerRow={3}
-                          onDragRelease={this.newOrder.bind(this)}
-                          onDragStart={() => this.setState({ scrollEnabled: false })} >
-                          {
-                            this.props.images.map((imageInfo, index) => {
-                              return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
-                                if (this.state.itemOrder) {
-                                  this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
-                                } else {
-                                  this.itemOrderImageRefs[index] = ref
-                                }
-                              }} />);
-                            })
-                          }
-                        </SortableGrid>
-                      </ScrollView>
-                    </View>
-                  </View>
-                </ShadowComponent>
-              }
-
-              {/*NOTES*/}
-              <OutterShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
+        {/*CONTENT*/}
+        <KeyboardAvoidingView behavior="padding" enabled style={styles.body} keyboardVerticalOffset={this.state.inputtingTag ? (88 + config.isIPhoneX ? 44 : 0) : 0} >
+          <ScrollView contentContainerStyle={{
+            flexGrow: 1,
+            paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 5,
+          }}>
+            {/*ATTACHED DOCUMENTS*/}
+            {!this.isSingleFile &&
+              <ShadowComponent style={{ margin: 2 }}>
                 <View style={[styles.section]}>
                   {/*Top bar*/}
                   <ShadowTopComponent style={[styles.topBar]}>
-                    <Text style={[styles.sectionTitle]}>NOTES</Text>
-                  </ShadowTopComponent>
-
-                  {/*Content*/}
-                  <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
-                    <TextInput style={[styles.inputNote]}
-                      multiline={true}
-                      maxLength={255}
-                      placeholder={'Tap to add private notes to your record'}
-                      onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
-                    />
-                  </View>
-                </View>
-              </OutterShadowComponent>
-
-              {/*TAGS*/}
-              <OutterShadowComponent style={{ marginTop: 19 }}>
-                <View style={[styles.section]}>
-                  {/*Top bar*/}
-                  <ShadowTopComponent style={[styles.topBar]}>
-                    <Text style={[styles.sectionTitle]}>TAGS</Text>
+                    <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
                   </ShadowTopComponent>
 
                   {/*Content*/}
                   <View style={[styles.contentContainer]}>
-                    <Text style={styles.introductionTitle}>Add tags to your record</Text>
-                    <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
-                  </View>
+                    <Text style={styles.introductionTitle}>Arrange the photos</Text>
+                    <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
 
-                  {/*Tags*/}
-                  <View style={[styles.bottomBar]}>
-                    <ScrollView horizontal={true}>
-                      <View style={[styles.tagIconContainer]}>
-                        {/*Tag icon*/}
-                        <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
-                        {/*Add tags*/}
-                        <TouchableOpacity onPress={this.showInputTag.bind(this)}>
-                          <Text style={styles.addTagText}>+ADD TAGS</Text>
-                        </TouchableOpacity>
-
-                        {/*Tag items*/}
-                        {(tags && tags.length) ? (
-                          (tags || []).map((tag, index) => {
-                            return (
-                              <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => { this.removeTag.bind(this)(tag) }}>
-                                <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
-                                <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')} />
-                              </TouchableOpacity>
-                            );
+                    {/*Images*/}
+                    <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
+                      <SortableGrid
+                        style={{ flex: 1, width: convertWidth(312), }}
+                        itemsPerRow={3}
+                        onDragRelease={this.newOrder.bind(this)}
+                        onDragStart={() => this.setState({ scrollEnabled: false })} >
+                        {
+                          this.props.images.map((imageInfo, index) => {
+                            return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
+                              if (this.state.itemOrder) {
+                                this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
+                              } else {
+                                this.itemOrderImageRefs[index] = ref
+                              }
+                            }} />);
                           })
-                        ) : null
                         }
-                      </View>
+                      </SortableGrid>
                     </ScrollView>
                   </View>
                 </View>
-              </OutterShadowComponent>
+              </ShadowComponent>
+            }
 
-              {/*BUTTON*/}
-              <TouchableOpacity style={styles.saveButton} onPress={this.continue.bind(this)}>
-                <Text style={styles.saveButtonText}>SAVE</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </KeyboardAvoidingView>
-        </View>
+            {/*NOTES*/}
+            <OutterShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
+              <View style={[styles.section]}>
+                {/*Top bar*/}
+                <ShadowTopComponent style={[styles.topBar]}>
+                  <Text style={[styles.sectionTitle]}>NOTES</Text>
+                </ShadowTopComponent>
+
+                {/*Content*/}
+                <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
+                  <TextInput style={[styles.inputNote]}
+                    multiline={true}
+                    maxLength={255}
+                    placeholder={'Tap to add private notes to your record'}
+                    onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+                  />
+                </View>
+              </View>
+            </OutterShadowComponent>
+
+            {/*TAGS*/}
+            <OutterShadowComponent style={{ marginTop: 19 }}>
+              <View style={[styles.section]}>
+                {/*Top bar*/}
+                <ShadowTopComponent style={[styles.topBar]}>
+                  <Text style={[styles.sectionTitle]}>TAGS</Text>
+                </ShadowTopComponent>
+
+                {/*Content*/}
+                <View style={[styles.contentContainer]}>
+                  <Text style={styles.introductionTitle}>Add tags to your record</Text>
+                  <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
+                </View>
+
+                {/*Tags*/}
+                <View style={[styles.bottomBar]}>
+                  <ScrollView horizontal={true}>
+                    <View style={[styles.tagIconContainer]}>
+                      {/*Tag icon*/}
+                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
+                      {/*Add tags*/}
+                      <TouchableOpacity onPress={this.showInputTag.bind(this)}>
+                        <Text style={styles.addTagText}>+ADD TAGS</Text>
+                      </TouchableOpacity>
+
+                      {/*Tag items*/}
+                      {(tags && tags.length) ? (
+                        (tags || []).map((tag, index) => {
+                          return (
+                            <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => { this.removeTag.bind(this)(tag) }}>
+                              <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
+                              <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')} />
+                            </TouchableOpacity>
+                          );
+                        })
+                      ) : null
+                      }
+                    </View>
+                  </ScrollView>
+                </View>
+              </View>
+            </OutterShadowComponent>
+
+            {/*BUTTON*/}
+            <TouchableOpacity style={styles.saveButton} onPress={this.continue.bind(this)}>
+              <Text style={styles.saveButtonText}>SAVE</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </KeyboardAvoidingView>
 
         {this.state.inputtingTag && <InputTagComponent tags={this.state.tags} addTag={this.addTag.bind(this)} hideInputTag={this.hideInputTag.bind(this)} />}
       </SafeAreaView>
@@ -283,7 +283,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   titleText: {
     marginLeft: -16,
