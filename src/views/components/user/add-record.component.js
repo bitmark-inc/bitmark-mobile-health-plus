@@ -7,6 +7,7 @@ import {
 import { convertWidth } from 'src/utils';
 import { AddRecordOptionsComponent } from "./add-record-options.component";
 import { ShadowTopComponent } from 'src/views/commons';
+import { Actions } from 'react-native-router-flux';
 
 export class AddRecordComponent extends Component {
   static propTypes = {
@@ -68,6 +69,9 @@ export class AddRecordComponent extends Component {
 
               {/*BOTTOM AREA*/}
               <View style={[styles.bottomArea, styles.paddingContent]}>
+                <TouchableOpacity style={[styles.buttonNext, { marginRight: 50 }]} onPress={Actions.pop}>
+                  <Text style={[styles.buttonText, { color: '#FF003C' }]}>CANCEL</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={[styles.buttonNext]} onPress={this.showAddRecordOptions.bind(this)}>
                   <Text style={[styles.buttonText, { color: '#FF003C' }]}>START</Text>
                 </TouchableOpacity>

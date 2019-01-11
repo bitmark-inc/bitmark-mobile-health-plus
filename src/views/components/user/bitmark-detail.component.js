@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactNative, {
   StyleSheet,
   Alert,
-  Image, View, SafeAreaView, TouchableOpacity, Text, ScrollView,
+  Image, View, SafeAreaView, TouchableOpacity, Text, ScrollView, ImageBackground,
 } from 'react-native';
 let { ActionSheetIOS } = ReactNative;
 import JSONTree from 'react-native-json-tree';
@@ -11,7 +11,7 @@ import { Map } from 'immutable'
 
 import { Actions } from 'react-native-router-flux';
 import { runPromiseWithoutError, FileUtil, convertWidth } from 'src/utils';
-import { EventEmitterService, AppProcessor, IndexDBService } from 'src/processors';
+import { EventEmitterService, AppProcessor, IndexDBService, CacheData } from 'src/processors';
 import { config } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
 import moment from "moment/moment";
@@ -93,23 +93,25 @@ export class BitmarkDetailComponent extends Component {
     let note = this.state.note;
 
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
-        <SafeAreaView style={[styles.bodySafeView]}>
-          <View style={styles.body}>
-            <View style={styles.bodyContent}>
-              {/*TOP BAR*/}
-              <View style={styles.topBar}>
-                {/*Back Icon*/}
-                <TouchableOpacity style={styles.closeButton} onPress={this.props.goBack || Actions.pop}>
-                  <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
-                </TouchableOpacity>
-                {/*MMR Icon*/}
-                <TouchableOpacity onPress={() => { Actions.mmrInformation() }}>
-                  <Image style={styles.profileIcon} source={require('assets/imgs/profile-icon.png')} />
-                </TouchableOpacity>
-              </View>
+      <SafeAreaView style={[styles.bodySafeView]}>
+        <View style={styles.body}>
+          <View style={styles.bodyContent}>
+            {/*TOP BAR*/}
+            <View style={styles.topBar}>
+              {/*Back Icon*/}
+              <TouchableOpacity style={styles.closeButton} onPress={this.props.goBack || Actions.pop}>
+                <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
+              </TouchableOpacity>
+              {/*MMR Icon*/}
+              <TouchableOpacity onPress={() => { Actions.mmrInformation() }}>
+                <Image style={styles.profileIcon} source={(CacheData.userInformation.currentMMRData && CacheData.userInformation.currentMMRData.avatar) ? {
+                  uri: CacheData.userInformation.currentMMRData.avatar
+                } : require('assets/imgs/profile-icon.png')} />
+              </TouchableOpacity>
+            </View>
 
-              {/*CONTENT*/}
+            {/*CONTENT*/}
+            <ScrollView contentContainerStyle={{ flexGrow: 1, padding: convertWidth(16) }}>
               <View style={[cardStyles.cardContainer]}>
                 {/*IMAGE*/}
                 <View style={[cardStyles.cardImageContainer]}>
@@ -147,14 +149,12 @@ export class BitmarkDetailComponent extends Component {
 
                   {/*Multiple files icon*/}
                   {bitmark.thumbnail && bitmark.thumbnail.multiple &&
-                    <Image style={styles.multipleFilesIcon} source={require('assets/imgs/multiple-files-icon.png')} />
+                    <ImageBackground style={styles.multipleFilesIcon} source={require('assets/imgs/multiple-files-icon.png')} >
+                      {bitmark.asset.metadata['Number Of Files'] && <View style={styles.multipleFilesArea}>
+                        <Text style={[styles.multipleFilesText, {}]}>{bitmark.asset.metadata['Number Of Files']}</Text>
+                      </View>}
+                    </ImageBackground>
                   }
-
-                  {/*Multiple files number*/}
-                  {bitmark.asset.metadata['Number Of Files'] &&
-                    <Text style={styles.multipleFilesText}>{bitmark.asset.metadata['Number Of Files']}</Text>
-                  }
-
                 </View>
 
                 {/*TOP BAR*/}
@@ -180,7 +180,7 @@ export class BitmarkDetailComponent extends Component {
                   {/*Notes*/}
                   {bitmarkType == 'bitmark_health_issuance' &&
                     <View style={[styles.notesContainer, { paddingRight: convertWidth(16) }]}>
-                      <Text style={[styles.notesText]}>Notes:</Text>
+                      <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold' }]}>Notes:</Text>
                       {!!note &&
                         <Text style={[styles.notesText]}>{note}</Text>
                       }
@@ -190,7 +190,7 @@ export class BitmarkDetailComponent extends Component {
                   {/*Tags*/}
                   {bitmarkType == 'bitmark_health_issuance' &&
                     <View style={[styles.notesContainer]}>
-                      <Text style={[styles.notesText]}>Tags:</Text>
+                      <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold' }]}>Tags:</Text>
 
                       <ScrollView horizontal={true}>
                         <View style={[styles.tagsContainer]}>
@@ -262,10 +262,10 @@ export class BitmarkDetailComponent extends Component {
                   </View>
                 </View>
               </View>
-            </View>
+            </ScrollView>
           </View>
-        </SafeAreaView>
-      </ScrollView>
+        </View>
+      </SafeAreaView>
     );
   }
 }
@@ -276,9 +276,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   body: {
-    padding: convertWidth(16),
-    paddingTop: convertWidth(16),
     flex: 1,
+    paddingBottom: convertWidth(16),
   },
   bodyContent: {
     flex: 1,
@@ -297,6 +296,7 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingRight: 5, paddingLeft: convertWidth(16),
   },
   closeIcon: {
     width: convertWidth(16),
@@ -306,7 +306,8 @@ const styles = StyleSheet.create({
   profileIcon: {
     width: 32,
     height: 32,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
+    marginRight: convertWidth(16),
   },
   zoomInIcon: {
     position: 'absolute',
@@ -317,19 +318,17 @@ const styles = StyleSheet.create({
   },
   multipleFilesIcon: {
     position: 'absolute',
-    width: 22,
-    height: 22,
-    bottom: 15,
-    right: 15,
+    width: 22, height: 22,
+    bottom: 15, right: 15,
+    justifyContent: 'center', alignItems: 'center',
+  },
+  multipleFilesArea: {
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    width: '100%',
+    paddingLeft: 5, paddingBottom: 2,
   },
   multipleFilesText: {
-    position: 'absolute',
-    width: 22,
-    height: 22,
-    bottom: 13,
-    right: 5,
-    fontFamily: 'Andale Mono',
-    fontSize: 12,
+    fontFamily: 'Andale Mono', fontSize: 12, textAlign: 'center', textAlignVertical: 'center',
   },
   notesContainer: {
     marginTop: 25,

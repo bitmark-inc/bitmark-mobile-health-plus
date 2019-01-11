@@ -12,6 +12,7 @@ import {
 import { Actions } from 'react-native-router-flux';
 import { convertWidth } from 'src/utils';
 import { config } from 'src/configs';
+import { CacheData } from 'src/processors';
 
 export class FullViewCaptureAssetComponent extends Component {
   static propTypes = {
@@ -49,46 +50,49 @@ export class FullViewCaptureAssetComponent extends Component {
               <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
             </TouchableOpacity>
             {/*MMR Icon*/}
-            <TouchableOpacity onPress={() => {Actions.mmrInformation()}}>
-              <Image style={styles.profileIcon} source={require('assets/imgs/profile-icon.png')} />
+            <TouchableOpacity onPress={() => { Actions.mmrInformation() }}>
+              <Image style={styles.profileIcon} source={(CacheData.userInformation.currentMMRData && CacheData.userInformation.currentMMRData.avatar) ? {
+                uri: CacheData.userInformation.currentMMRData.avatar
+              } : require('assets/imgs/profile-icon.png')} />
             </TouchableOpacity>
           </View>
 
           {/*CONTENT*/}
           <View style={styles.content}>
             {this.state.type === 'image' && <ImageZoom
+              style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: config.isIPhoneX ? 44 : 20, }}
               cropWidth={Dimensions.get('window').width}
-              cropHeight={Dimensions.get('window').height}
+              cropHeight={(Dimensions.get('window').height)}
               imageWidth={Dimensions.get('window').width * 0.8}
-              imageHeight={Dimensions.get('window').height * 0.8}>
-              <Image style={{ width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.8, resizeMode: 'contain' }} source={{ uri: this.props.filePath }} />
+              imageHeight={(Dimensions.get('window').height) * 0.8}>
+              <Image style={{ width: Dimensions.get('window').width * 0.8, height: (Dimensions.get('window').height) * 0.8, resizeMode: 'contain' }} source={{ uri: this.props.filePath }} />
             </ImageZoom>}
 
             {this.state.type === 'pdf' && this.state.loading && <ActivityIndicator size='large' />}
             {this.state.type === 'pdf' &&
-            <View style={{ flex: 1, width: '100%' }}>
-              <Pdf
-                source={{ uri: `file://${this.props.filePath}` }}
-                scale={0.5}
-                minScale={0.2}
-                horizontal={true}
-                onLoadComplete={() => {
-                  this.setState({ loading: false });
-                }}
-                onPageChanged={(page, numberOfPages)=>{
-                  console.log(`current page: ${page}`);
-                  this.setState({pagination: `< ${page} / ${numberOfPages} >`})
-                }}
-                onError={(error) => {
-                  console.log('load pdf error :', error);
-                }}
-                style={{ flex: 1, width: '100%' }} />
+              <View style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                <Pdf
+                  source={{ uri: `file://${this.props.filePath}` }}
+                  scale={0.5}
+                  minScale={0.2}
+                  horizontal={true}
+                  onLoadComplete={() => {
+                    this.setState({ loading: false });
+                  }}
+                  onPageChanged={(page, numberOfPages) => {
+                    console.log(`current page: ${page}`);
+                    this.setState({ pagination: `< ${page} / ${numberOfPages} >` })
+                  }}
+                  onError={(error) => {
+                    console.log('load pdf error :', error);
+                  }}
+                  style={{ flex: 1, width: '100%' }} />
 
-              {/*Pagination*/}
-              <View style={styles.pagination}>
-                <Text style={[styles.paginationText]}>{this.state.pagination}</Text>
+                {/*Pagination*/}
+                <View style={styles.pagination}>
+                  <Text style={[styles.paginationText]}>{this.state.pagination}</Text>
+                </View>
               </View>
-            </View>
             }
           </View>
         </View>
@@ -109,19 +113,15 @@ const styles = StyleSheet.create({
     width: convertWidth(375)
   },
   topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     height: 56,
     width: '100%',
     paddingLeft: convertWidth(16),
     paddingRight: convertWidth(16),
-    marginBottom: 12,
   },
   closeButton: {
     height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center', justifyContent: 'center',
   },
   closeIcon: {
     width: convertWidth(16),

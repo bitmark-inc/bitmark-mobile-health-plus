@@ -405,7 +405,7 @@ class PrivateUserComponent extends Component {
               <View style={[styles.bodyContent]}>
                 {/*-----TOP BAR-----*/}
 
-                <ScrollView style={{}} contentContainerStyle={{ flexGrow: this.shouldHasScroll ? 0 : 1, paddingLeft: 4, paddingRight: 4, }}>
+                <ScrollView contentContainerStyle={{ flexGrow: this.shouldHasScroll ? 0 : 1, paddingLeft: convertWidth(16), paddingRight: convertWidth(16), }}>
                   <View style={{ flex: 1, paddingTop: 20, }}>
                     {/*-----STICK CARD-----*/}
                     <View style={[styles.stickCardContainer,]}>
@@ -539,8 +539,7 @@ const styles = StyleSheet.create({
   },
 
   body: {
-    padding: convertWidth(12),
-    paddingTop: 0,
+    paddingBottom: 10,
     flex: 1,
   },
   bodyContent: {

@@ -11,7 +11,7 @@ import moment from 'moment';
 import { convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { InputTagComponent } from "./tag/input-tag.component";
-import { OutterShadowComponent } from "src/views/commons";
+import { OutterShadowComponent, ShadowTopComponent, ShadowComponent } from "src/views/commons";
 
 
 class ItemOrderImageComponent extends Component {
@@ -142,7 +142,7 @@ export class EditIssueComponent extends Component {
           {/*HEADER*/}
           <View style={[styles.header]}>
             {/*Back icon*/}
-            <TouchableOpacity style={styles.button} onPress={Actions.pop}>
+            <TouchableOpacity style={{ paddingLeft: convertWidth(16), paddingRight: 4, borderWidth: 1, }} onPress={Actions.pop}>
               <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('assets/imgs/back-icon-black.png')} />
             </TouchableOpacity>
             {/*Title*/}
@@ -152,15 +152,18 @@ export class EditIssueComponent extends Component {
 
           {/*CONTENT*/}
           <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }} keyboardVerticalOffset={this.state.inputtingTag ? 72 : 0} >
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView contentContainerStyle={{
+              flexGrow: 1,
+              paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 5,
+            }}>
               {/*ATTACHED DOCUMENTS*/}
               {!this.isSingleFile &&
-                <OutterShadowComponent style={{ marginTop: 1.5 }}>
+                <ShadowComponent style={{ margin: 2 }}>
                   <View style={[styles.section]}>
                     {/*Top bar*/}
-                    <View style={[styles.topBar]}>
+                    <ShadowTopComponent style={[styles.topBar]}>
                       <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
-                    </View>
+                    </ShadowTopComponent>
 
                     {/*Content*/}
                     <View style={[styles.contentContainer]}>
@@ -189,16 +192,16 @@ export class EditIssueComponent extends Component {
                       </ScrollView>
                     </View>
                   </View>
-                </OutterShadowComponent>
+                </ShadowComponent>
               }
 
               {/*NOTES*/}
               <OutterShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
                 <View style={[styles.section]}>
                   {/*Top bar*/}
-                  <View style={[styles.topBar]}>
+                  <ShadowTopComponent style={[styles.topBar]}>
                     <Text style={[styles.sectionTitle]}>NOTES</Text>
-                  </View>
+                  </ShadowTopComponent>
 
                   {/*Content*/}
                   <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
@@ -216,9 +219,9 @@ export class EditIssueComponent extends Component {
               <OutterShadowComponent style={{ marginTop: 19 }}>
                 <View style={[styles.section]}>
                   {/*Top bar*/}
-                  <View style={[styles.topBar]}>
+                  <ShadowTopComponent style={[styles.topBar]}>
                     <Text style={[styles.sectionTitle]}>TAGS</Text>
-                  </View>
+                  </ShadowTopComponent>
 
                   {/*Content*/}
                   <View style={[styles.contentContainer]}>
@@ -254,13 +257,13 @@ export class EditIssueComponent extends Component {
                   </View>
                 </View>
               </OutterShadowComponent>
+
+              {/*BUTTON*/}
+              <TouchableOpacity style={styles.saveButton} onPress={this.continue.bind(this)}>
+                <Text style={styles.saveButtonText}>SAVE</Text>
+              </TouchableOpacity>
             </ScrollView>
           </KeyboardAvoidingView>
-
-          {/*BUTTON*/}
-          <TouchableOpacity style={styles.saveButton} onPress={this.continue.bind(this)}>
-            <Text style={styles.saveButtonText}>SAVE</Text>
-          </TouchableOpacity>
         </View>
 
         {this.state.inputtingTag && <InputTagComponent tags={this.state.tags} addTag={this.addTag.bind(this)} hideInputTag={this.hideInputTag.bind(this)} />}
@@ -271,11 +274,8 @@ export class EditIssueComponent extends Component {
 
 const styles = StyleSheet.create({
   body: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    paddingLeft: convertWidth(16),
-    paddingRight: convertWidth(16),
+    flex: 1, flexDirection: 'column', alignItems: 'center',
+    backgroundColor: 'white',
   },
   header: {
     width: '100%',
@@ -283,6 +283,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
   },
   titleText: {
     marginLeft: -16,
@@ -296,14 +297,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topBar: {
-    width: '100%',
-    height: 41,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: convertWidth(16),
-    paddingRight: convertWidth(16),
-    borderBottomWidth: 1,
-    borderColor: '#F4F2EE',
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
+    height: 40,
   },
   bottomBar: {
     padding: convertWidth(16),
@@ -311,10 +306,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     minHeight: 54,
     width: '100%',
-    borderTopWidth: 1,
-    borderColor: '#F5F5F5',
+    borderTopWidth: 0.5,
+    borderColor: '#F4F2EE',
   },
   sectionTitle: {
+    paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
     fontSize: 10,
     fontFamily: 'AvenirNextW1G-Light',
     letterSpacing: 1.5,

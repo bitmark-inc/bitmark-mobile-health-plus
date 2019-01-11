@@ -24,7 +24,7 @@ export class EditBitmarkComponent extends Component {
     super(props);
     let tags = [];
     Object.assign(tags, this.props.tags);
-    this.state = {tags, note: this.props.note};
+    this.state = { tags, note: this.props.note };
   }
 
   async save() {
@@ -48,7 +48,7 @@ export class EditBitmarkComponent extends Component {
   }
 
   onInputNoteChangeText(text) {
-    this.setState({note: text});
+    this.setState({ note: text });
   }
 
   showInputTag() {
@@ -62,7 +62,7 @@ export class EditBitmarkComponent extends Component {
   addTag(tag) {
     let tags = this.state.tags;
     tags.push(tag);
-    this.setState({tags});
+    this.setState({ tags });
   }
 
   removeTag(tag) {
@@ -70,7 +70,7 @@ export class EditBitmarkComponent extends Component {
 
     if (tags.indexOf(tag) > -1) {
       tags = tags.filter(item => item != tag);
-      this.setState({tags});
+      this.setState({ tags });
     }
   }
 
@@ -92,9 +92,9 @@ export class EditBitmarkComponent extends Component {
           </View>
 
           {/*CONTENT*/}
-          <ScrollView style={{flex: 1}}>
+          <ScrollView style={{ flex: 1 }}>
             {/*NOTES*/}
-            <OutterShadowComponent style={{marginTop: 1.5}}>
+            <OutterShadowComponent style={{ marginTop: 1.5 }}>
               <View style={[styles.section]}>
                 {/*Top bar*/}
                 <View style={[styles.topBar]}>
@@ -102,20 +102,20 @@ export class EditBitmarkComponent extends Component {
                 </View>
 
                 {/*Content*/}
-                <View style={[styles.contentContainer, {backgroundColor: '#F5F5F5'}]}>
+                <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
                   <TextInput style={[styles.inputNote]}
-                             multiline={true}
-                             value={this.state.note}
-                             maxLength={255}
-                             placeholder={'Tap to add private notes to your record'}
-                             onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+                    multiline={true}
+                    value={this.state.note}
+                    maxLength={255}
+                    placeholder={'Tap to add private notes to your record'}
+                    onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
                   />
                 </View>
               </View>
             </OutterShadowComponent>
 
             {/*TAGS*/}
-            <OutterShadowComponent style={{marginTop: 19}}>
+            <OutterShadowComponent style={{ marginTop: 19 }}>
               <View style={[styles.section]}>
                 {/*Top bar*/}
                 <View style={[styles.topBar]}>
@@ -132,7 +132,7 @@ export class EditBitmarkComponent extends Component {
                 <View style={[styles.bottomBar]}>
                   <ScrollView horizontal={true}>
                     <View style={[styles.tagIconContainer]}>
-                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')}/>
+                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
                       <TouchableOpacity onPress={this.showInputTag.bind(this)}>
                         <Text style={styles.addTagText}>+ADD TAGS</Text>
                       </TouchableOpacity>
@@ -140,9 +140,9 @@ export class EditBitmarkComponent extends Component {
                       {(tags && tags.length) ? (
                         (tags || []).map((tag, index) => {
                           return (
-                            <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => {this.removeTag.bind(this)(tag)}}>
+                            <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => { this.removeTag.bind(this)(tag) }}>
                               <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
-                              <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')}/>
+                              <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')} />
                             </TouchableOpacity>
                           );
                         })
@@ -161,7 +161,7 @@ export class EditBitmarkComponent extends Component {
           </TouchableOpacity>
         </View>
 
-        {this.state.inputtingTag && <InputTagComponent tags={this.state.tags} addTag={this.addTag.bind(this)} hideInputTag={this.hideInputTag.bind(this)}/>}
+        {this.state.inputtingTag && <InputTagComponent tags={this.state.tags} addTag={this.addTag.bind(this)} hideInputTag={this.hideInputTag.bind(this)} />}
       </SafeAreaView>
     );
   }
