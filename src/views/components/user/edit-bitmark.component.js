@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View, TouchableOpacity, Text, Image, ScrollView, TextInput, SafeAreaView,
+  View, TouchableOpacity, Text, Image, ScrollView, TextInput, SafeAreaView, KeyboardAvoidingView,
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
@@ -92,69 +92,70 @@ export class EditBitmarkComponent extends Component {
           </View>
 
           {/*CONTENT*/}
-          <ScrollView style={{ flex: 1 }}>
-            {/*NOTES*/}
-            <OutterShadowComponent style={{ marginTop: 1.5 }}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <View style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>NOTES</Text>
+          <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }} keyboardVerticalOffset={this.state.inputtingTag ? 72 : 0} >
+            <ScrollView style={{ flex: 1 }}>
+              {/*NOTES*/}
+              <OutterShadowComponent style={{ marginTop: 1.5 }}>
+                <View style={[styles.section]}>
+                  {/*Top bar*/}
+                  <View style={[styles.topBar]}>
+                    <Text style={[styles.sectionTitle]}>NOTES</Text>
+                  </View>
+
+                  {/*Content*/}
+                  <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
+                    <TextInput style={[styles.inputNote]}
+                      multiline={true}
+                      value={this.state.note}
+                      maxLength={255}
+                      placeholder={'Tap to add private notes to your record'}
+                      onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+                    />
+                  </View>
                 </View>
+              </OutterShadowComponent>
 
-                {/*Content*/}
-                <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
-                  <TextInput style={[styles.inputNote]}
-                    multiline={true}
-                    value={this.state.note}
-                    maxLength={255}
-                    placeholder={'Tap to add private notes to your record'}
-                    onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
-                  />
+              {/*TAGS*/}
+              <OutterShadowComponent style={{ marginTop: 19 }}>
+                <View style={[styles.section]}>
+                  {/*Top bar*/}
+                  <View style={[styles.topBar]}>
+                    <Text style={[styles.sectionTitle]}>TAGS</Text>
+                  </View>
+
+                  {/*Content*/}
+                  <View style={[styles.contentContainer]}>
+                    <Text style={styles.introductionTitle}>Add tags to your record</Text>
+                    <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
+                  </View>
+
+                  {/*Tags*/}
+                  <View style={[styles.bottomBar]}>
+                    <ScrollView horizontal={true}>
+                      <View style={[styles.tagIconContainer]}>
+                        <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
+                        <TouchableOpacity onPress={this.showInputTag.bind(this)}>
+                          <Text style={styles.addTagText}>+ADD TAGS</Text>
+                        </TouchableOpacity>
+
+                        {(tags && tags.length) ? (
+                          (tags || []).map((tag, index) => {
+                            return (
+                              <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => { this.removeTag.bind(this)(tag) }}>
+                                <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
+                                <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')} />
+                              </TouchableOpacity>
+                            );
+                          })
+                        ) : null
+                        }
+                      </View>
+                    </ScrollView>
+                  </View>
                 </View>
-              </View>
-            </OutterShadowComponent>
-
-            {/*TAGS*/}
-            <OutterShadowComponent style={{ marginTop: 19 }}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <View style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>TAGS</Text>
-                </View>
-
-                {/*Content*/}
-                <View style={[styles.contentContainer]}>
-                  <Text style={styles.introductionTitle}>Add tags to your record</Text>
-                  <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
-                </View>
-
-                {/*Tags*/}
-                <View style={[styles.bottomBar]}>
-                  <ScrollView horizontal={true}>
-                    <View style={[styles.tagIconContainer]}>
-                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
-                      <TouchableOpacity onPress={this.showInputTag.bind(this)}>
-                        <Text style={styles.addTagText}>+ADD TAGS</Text>
-                      </TouchableOpacity>
-
-                      {(tags && tags.length) ? (
-                        (tags || []).map((tag, index) => {
-                          return (
-                            <TouchableOpacity key={index} style={styles.taggingItemContainer} onPress={() => { this.removeTag.bind(this)(tag) }}>
-                              <Text style={styles.taggingItem}>#{tag.toUpperCase()}</Text>
-                              <Image style={[styles.removeTagIcon]} source={require('assets/imgs/remove-icon.png')} />
-                            </TouchableOpacity>
-                          );
-                        })
-                      ) : null
-                      }
-                    </View>
-                  </ScrollView>
-                </View>
-              </View>
-            </OutterShadowComponent>
-          </ScrollView>
-
+              </OutterShadowComponent>
+            </ScrollView>
+          </KeyboardAvoidingView>
           {/*BUTTON*/}
           <TouchableOpacity style={styles.saveButton} onPress={this.save.bind(this)}>
             <Text style={styles.saveButtonText}>SAVE</Text>

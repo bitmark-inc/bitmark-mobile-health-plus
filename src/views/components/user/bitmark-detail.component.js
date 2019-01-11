@@ -111,8 +111,8 @@ export class BitmarkDetailComponent extends Component {
             </View>
 
             {/*CONTENT*/}
-            <ScrollView contentContainerStyle={{ flexGrow: 1, padding: convertWidth(16) }}>
-              <View style={[cardStyles.cardContainer]}>
+            <View style={{ flex: 1, padding: convertWidth(16) }}>
+              <View style={[cardStyles.cardContainer, { flex: 1 }]}>
                 {/*IMAGE*/}
                 <View style={[cardStyles.cardImageContainer]}>
                   <TouchableOpacity onPress={() => {
@@ -164,7 +164,7 @@ export class BitmarkDetailComponent extends Component {
                 </View>
 
                 {/*CONTENT*/}
-                <View style={[cardStyles.cardContent, { paddingRight: 0 }]}>
+                <View style={[cardStyles.cardContent, { paddingRight: 0, flex: 1 }]}>
                   <View style={[{ paddingRight: convertWidth(16) }]}>
                     {/*Name*/}
                     <Text style={[cardStyles.cardHeader]}>{bitmark.asset.name}</Text>
@@ -178,17 +178,15 @@ export class BitmarkDetailComponent extends Component {
                   </View>
 
                   {/*Notes*/}
-                  {bitmarkType == 'bitmark_health_issuance' &&
-                    <View style={[styles.notesContainer, { paddingRight: convertWidth(16) }]}>
-                      <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold' }]}>Notes:</Text>
-                      {!!note &&
-                        <Text style={[styles.notesText]}>{note}</Text>
-                      }
+                  {bitmarkType == 'bitmark_health_issuance' && <View style={{ flex: 1 }}>
+                    <View style={[styles.notesContainer, { flex: 1, paddingRight: convertWidth(16) }]}>
+                      <ScrollView>
+                        <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold' }]}>Notes:</Text>
+                        {!!note &&
+                          <Text style={[styles.notesText]}>{note}</Text>
+                        }
+                      </ScrollView>
                     </View>
-                  }
-
-                  {/*Tags*/}
-                  {bitmarkType == 'bitmark_health_issuance' &&
                     <View style={[styles.notesContainer]}>
                       <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold' }]}>Tags:</Text>
 
@@ -210,12 +208,13 @@ export class BitmarkDetailComponent extends Component {
                         </View>
                       </ScrollView>
                     </View>
+                  </View>
                   }
 
                   {/*Json View Tree*/}
-                  {bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.healthDataViewer} contentContainerStyle={{ flexGrow: 1, }}>
-                    <ScrollView horizontal={true}>
-                      <JSONTree style={{ marginBottom: 50, }} data={this.state.content}
+                  {bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.healthDataViewer} contentContainerStyle={{ backgroundColor: 'white', paddingBottom: 20 }}>
+                    <ScrollView horizontal={true} >
+                      <JSONTree data={this.state.content}
                         getItemString={() => <Text></Text>}
                         labelRenderer={raw => <Text style={{ color: 'black', fontWeight: '500', fontFamily: 'Avenir' }}>{raw}</Text>}
                         valueRenderer={raw => <Text style={{ color: '#FF4444', fontFamily: 'Avenir' }}>{raw}</Text>}
@@ -262,7 +261,7 @@ export class BitmarkDetailComponent extends Component {
                   </View>
                 </View>
               </View>
-            </ScrollView>
+            </View>
           </View>
         </View>
       </SafeAreaView>
