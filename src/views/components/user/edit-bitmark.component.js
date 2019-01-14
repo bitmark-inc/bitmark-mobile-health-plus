@@ -91,7 +91,7 @@ export class EditBitmarkComponent extends Component {
           <Text style={{ paddingLeft: convertWidth(16) + 20 }} />
         </View>
         <KeyboardAvoidingView style={styles.body} behavior="padding" enabled >
-          <ScrollView style={{ flex: 1 }} contentContainerStyle={{
+          <ScrollView style={{ flex: 1, width: '100%' }} contentContainerStyle={{
             flexGrow: 1,
             paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 5,
           }}>
