@@ -74,7 +74,7 @@ export class FullViewCaptureAssetComponent extends Component {
                   source={{ uri: `file://${this.props.filePath}` }}
                   scale={0.5}
                   minScale={0.2}
-                  horizontal={true}
+                  horizontal={false}
                   onLoadComplete={() => {
                     this.setState({ loading: false });
                   }}
