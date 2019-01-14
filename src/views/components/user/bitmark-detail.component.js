@@ -104,8 +104,8 @@ export class BitmarkDetailComponent extends Component {
               </TouchableOpacity>
               {/*MMR Icon*/}
               <TouchableOpacity onPress={() => { Actions.mmrInformation() }}>
-                <Image style={styles.profileIcon} source={(CacheData.userInformation.currentMMRData && CacheData.userInformation.currentMMRData.avatar) ? {
-                  uri: CacheData.userInformation.currentMMRData.avatar
+                <Image style={styles.profileIcon} source={(CacheData.userInformation.currentMMrData && CacheData.userInformation.currentMMrData.avatar) ? {
+                  uri: CacheData.userInformation.currentMMrData.avatar
                 } : require('assets/imgs/profile-icon.png')} />
               </TouchableOpacity>
             </View>
@@ -305,8 +305,9 @@ const styles = StyleSheet.create({
   profileIcon: {
     width: 32,
     height: 32,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     marginRight: convertWidth(16),
+    borderWidth: 0.1, borderRadius: 16, borderColor: 'white',
   },
   zoomInIcon: {
     position: 'absolute',
