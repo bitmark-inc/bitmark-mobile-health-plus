@@ -164,8 +164,8 @@ export class BitmarkDetailComponent extends Component {
                 </View>
 
                 {/*CONTENT*/}
-                <View style={[cardStyles.cardContent, { paddingRight: 0, flex: 1 }]}>
-                  <View style={[{ paddingRight: convertWidth(16) }]}>
+                <View style={[cardStyles.cardContent, { flex: 1 }]}>
+                  <View style={{ width: '100%' }}>
                     {/*Name*/}
                     <Text style={[cardStyles.cardHeader]}>{bitmark.asset.name}</Text>
                     {/*Status*/}
@@ -179,7 +179,7 @@ export class BitmarkDetailComponent extends Component {
 
                   {/*Notes*/}
                   {bitmarkType == 'bitmark_health_issuance' && <View style={{ flex: 1 }}>
-                    <View style={[styles.notesContainer, { flex: 1, paddingRight: convertWidth(16) }]}>
+                    <View style={[styles.notesContainer, { flex: 1, }]}>
                       <ScrollView>
                         <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold' }]}>Notes:</Text>
                         {!!note &&
@@ -211,7 +211,7 @@ export class BitmarkDetailComponent extends Component {
                   }
 
                   {/*Json View Tree*/}
-                  {bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.healthDataViewer} contentContainerStyle={{ backgroundColor: 'white', paddingBottom: 20 }}>
+                  {bitmarkType === 'bitmark_health_data' && <ScrollView style={styles.healthDataViewer} contentContainerStyle={{ paddingBottom: 20 }}>
                     <ScrollView horizontal={true} >
                       <JSONTree data={this.state.content}
                         getItemString={() => <Text></Text>}
@@ -247,15 +247,20 @@ export class BitmarkDetailComponent extends Component {
                   <View style={[styles.actionsContainer]}>
                     {/*Edit icon*/}
                     {this.props.bitmarkType == 'bitmark_health_issuance' &&
-                      <TouchableOpacity onPress={() => Actions.editBitmark({ bitmark, bitmarkType: this.props.bitmarkType, tags: tags, note, doUpdateTagsAndNote: this.doUpdateTagsAndNote.bind(this) })}>
+                      <TouchableOpacity style={{
+                        padding: 5, paddingLeft: 0, paddingRight: 10,
+                      }} onPress={() => Actions.editBitmark({ bitmark, bitmarkType: this.props.bitmarkType, tags: tags, note, doUpdateTagsAndNote: this.doUpdateTagsAndNote.bind(this) })}>
                         <Image style={styles.taggingIcon} source={require('assets/imgs/edit-icon.png')} />
                       </TouchableOpacity>
                     }
 
                     {/*Delete Icon*/}
                     {this.props.bitmark.status !== 'pending' &&
-                      <TouchableOpacity onPress={() => { this.deleteBitmark.bind(this)(bitmarkType) }}>
-                        <Image style={[styles.closeIcon, { marginLeft: this.props.bitmarkType == 'bitmark_health_issuance' ? 30 : 0 }]} source={require('assets/imgs/delete-icon.png')} />
+                      <TouchableOpacity style={{
+                        padding: 5, paddingLeft: 0, paddingRight: 10,
+                        marginLeft: this.props.bitmarkType == 'bitmark_health_issuance' ? 10 : 0
+                      }} onPress={() => { this.deleteBitmark.bind(this)(bitmarkType) }}>
+                        <Image style={[styles.closeIcon, {}]} source={require('assets/imgs/delete-icon.png')} />
                       </TouchableOpacity>}
                   </View>
                 </View>
@@ -366,7 +371,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   healthDataViewer: {
-    paddingRight: convertWidth(16),
+    backgroundColor: 'white',
     marginTop: 20,
     flex: 1,
     maxHeight: 300,
