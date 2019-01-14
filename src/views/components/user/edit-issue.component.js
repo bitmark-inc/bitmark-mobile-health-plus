@@ -234,10 +234,9 @@ export class EditIssueComponent extends Component {
                 <View style={[styles.bottomBar]}>
                   <ScrollView horizontal={true}>
                     <View style={[styles.tagIconContainer]}>
-                      {/*Tag icon*/}
-                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
                       {/*Add tags*/}
-                      <TouchableOpacity onPress={this.showInputTag.bind(this)}>
+                      <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} onPress={this.showInputTag.bind(this)}>
+                        <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
                         <Text style={styles.addTagText}>+ADD TAGS</Text>
                       </TouchableOpacity>
 

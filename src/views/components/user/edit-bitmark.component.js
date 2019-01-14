@@ -133,13 +133,12 @@ export class EditBitmarkComponent extends Component {
 
                 {/*Tags*/}
                 <View style={[styles.bottomBar]}>
-                  <ScrollView horizontal={true}>
-                    <View style={[styles.tagIconContainer]}>
+                  <View style={[styles.tagIconContainer]}>
+                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} onPress={this.showInputTag.bind(this)}>
                       <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
-                      <TouchableOpacity onPress={this.showInputTag.bind(this)}>
-                        <Text style={styles.addTagText}>+ADD TAGS</Text>
-                      </TouchableOpacity>
-
+                      <Text style={styles.addTagText}>+ADD TAGS</Text>
+                    </TouchableOpacity>
+                    <ScrollView horizontal={true}>
                       {(tags && tags.length) ? (
                         (tags || []).map((tag, index) => {
                           return (
@@ -151,8 +150,8 @@ export class EditBitmarkComponent extends Component {
                         })
                       ) : null
                       }
-                    </View>
-                  </ScrollView>
+                    </ScrollView>
+                  </View>
                 </View>
               </View>
             </ShadowComponent>

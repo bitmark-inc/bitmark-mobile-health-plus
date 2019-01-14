@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: 195,
-    resizeMode: 'stretch'
+    resizeMode: 'cover'
   },
   coverThumbnailHeaderBar: {
     position: 'absolute',

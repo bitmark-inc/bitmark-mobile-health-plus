@@ -190,11 +190,10 @@ export class BitmarkDetailComponent extends Component {
                     <View style={[styles.notesContainer]}>
                       <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold' }]}>Tags:</Text>
 
-                      <ScrollView horizontal={true}>
-                        <View style={[styles.tagsContainer]}>
-                          {/*Tag icon*/}
-                          <Image style={styles.taggingIcon} source={require('assets/imgs/tag-icon.png')} />
-
+                      <View style={[styles.tagsContainer]}>
+                        {/*Tag icon*/}
+                        <Image style={styles.taggingIcon} source={require('assets/imgs/tag-icon.png')} />
+                        <ScrollView horizontal={true}>
                           {(tags && tags.length) ? (
                             (tags || []).map(tag => {
                               return (
@@ -205,8 +204,8 @@ export class BitmarkDetailComponent extends Component {
                             })
                           ) : null
                           }
-                        </View>
-                      </ScrollView>
+                        </ScrollView>
+                      </View>
                     </View>
                   </View>
                   }
