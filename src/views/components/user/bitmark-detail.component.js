@@ -366,8 +366,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   healthDataViewer: {
-    paddingTop: convertWidth(20),
     paddingRight: convertWidth(16),
+    marginTop: 20,
     flex: 1,
     maxHeight: 300,
   },
