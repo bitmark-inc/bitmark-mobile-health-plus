@@ -180,8 +180,8 @@ export class BitmarkDetailComponent extends Component {
                   {/*Notes*/}
                   {bitmarkType == 'bitmark_health_issuance' && <View style={{ flex: 1 }}>
                     <View style={[styles.notesContainer, { flex: 1, }]}>
+                      <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold', marginBottom: 10, }]}>Notes:</Text>
                       <ScrollView>
-                        <Text style={[styles.notesText, { fontFamily: 'AvenirNextW1G-Bold' }]}>Notes:</Text>
                         {!!note &&
                           <Text style={[styles.notesText]}>{note}</Text>
                         }
