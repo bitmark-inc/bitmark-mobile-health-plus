@@ -452,15 +452,15 @@ class PrivateUserComponent extends Component {
 
                       {/*GET_STARTED_HEALTH_DATA*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&
-                      <TouchableOpacity onPress={() => Actions.healthDataGetStart({resetToInitialState: this.resetToInitialState.bind(this)})}>
-                        <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                                                 cardHeader={'Learn about your health'}
-                                                 cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
-                                                 cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
-                                                 isStickCard={true}
-                                                 cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
-                        />
-                      </TouchableOpacity>
+                        <TouchableOpacity onPress={() => Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) })}>
+                          <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
+                            cardHeader={'Learn about your health'}
+                            cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
+                            cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
+                            isStickCard={true}
+                            cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
+                          />
+                        </TouchableOpacity>
                       }
 
                       {/*MEDICAL RECORD*/}
@@ -480,9 +480,9 @@ class PrivateUserComponent extends Component {
                       {/*DAILY HEALTH DATA*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.DAILY_HEALTH_DATA &&
 
-                      <TouchableOpacity onPress={() => { Actions.dailyHealthDataFullCard({dailyHealthDataBitmarks: this.state.stickDailyHealthData.data, resetToInitialState: this.resetToInitialState.bind(this)})} }>
-                        <DailyHealthDataCardComponent dailyHealthDataBitmarks={this.state.stickDailyHealthData.data} />
-                      </TouchableOpacity>
+                        <TouchableOpacity onPress={() => { Actions.dailyHealthDataFullCard({ dailyHealthDataBitmarks: this.state.stickDailyHealthData.data, resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                          <DailyHealthDataCardComponent dailyHealthDataBitmarks={this.state.stickDailyHealthData.data} />
+                        </TouchableOpacity>
                       }
                     </View>
 
@@ -534,8 +534,8 @@ class PrivateUserComponent extends Component {
                         // SIGN FOR DAILY HEALTH DATA
                         if (card.type === STICK_CARD_TYPES.SIGN_DAILY_HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { Actions.bitmarkHealthData({list: card.data})}}>
-                              <DailyHealthDataFeedCardComponent header={'Sign for your daily data'}/>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.bitmarkHealthData({ list: card.data }) }}>
+                              <DailyHealthDataFeedCardComponent header={'Sign for your daily data'} />
                             </TouchableOpacity>
                           );
                         }
@@ -543,8 +543,8 @@ class PrivateUserComponent extends Component {
                         // DAILY HEALTH DATA
                         if (card.type === STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={ index } onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.DAILY_HEALTH_DATA, stickDailyHealthData: card }) }}>
-                              <DailyHealthDataFeedCardComponent header={'Learn about your health'}/>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.DAILY_HEALTH_DATA, stickDailyHealthData: card }) }}>
+                              <DailyHealthDataFeedCardComponent header={'Learn about your health'} />
                             </TouchableOpacity>
                           );
                         }
@@ -603,7 +603,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingRight: convertWidth(16),
   },
   topBarButton: {
     height: '100%',
