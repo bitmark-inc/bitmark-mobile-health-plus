@@ -32,11 +32,11 @@ export class HealthDataGetStartComponent extends React.Component {
   requestHealthKitPermission() {
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
     AppProcessor.doRequireHealthKitPermission().then(() => {
-      this.setState({ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_3});
+      this.setState({ ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_3 });
     }).then(() => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
     }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {error});
+      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       console.log('doRequireHealthKitPermission error :', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
     });
@@ -53,126 +53,126 @@ export class HealthDataGetStartComponent extends React.Component {
         <View style={styles.body}>
           {/*ONBOARDING SCREEN 1*/}
           {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_1) &&
-          <View style={{flex: 1}}>
-            {/*TOP BAR*/}
-            <View style={styles.topBar}>
-              {/*Back Icon*/}
-              <TouchableOpacity style={styles.closeButton} onPress={() => {Actions.pop()}}>
-                <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
-              </TouchableOpacity>
-            </View>
-
-            {/*CONTENT*/}
-            <View style={styles.bodyContent}>
-              {/*TOP AREA*/}
-              <View style={[styles.topArea, styles.paddingContent]}>
-                <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
-                <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')}/>
+            <View style={{ flex: 1 }}>
+              {/*TOP BAR*/}
+              <View style={styles.topBar}>
+                {/*Back Icon*/}
+                <TouchableOpacity style={styles.closeButton} onPress={() => { Actions.pop() }}>
+                  <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
+                </TouchableOpacity>
               </View>
 
               {/*CONTENT*/}
-              <View style={[styles.contentArea, styles.paddingContent, {justifyContent: 'flex-start'}]}>
-                {/*DESC*/}
-                <View style={styles.introductionTextArea}>
-                  <Text style={[styles.introductionTitle, {marginTop: 50, fontSize: 14}]}>Why should I care?</Text>
-                  <Text style={[styles.introductionDescription, {marginTop: 25}]}>
-                    Personal health data is becoming a key component of the modern healthcare ecosystem, including medical research, ongoing care,
+              <View style={styles.bodyContent}>
+                {/*TOP AREA*/}
+                <View style={[styles.topArea, styles.paddingContent]}>
+                  <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
+                  <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
+                </View>
+
+                {/*CONTENT*/}
+                <View style={[styles.contentArea, styles.paddingContent, { justifyContent: 'flex-start' }]}>
+                  {/*DESC*/}
+                  <View style={styles.introductionTextArea}>
+                    <Text style={[styles.introductionTitle, { marginTop: 50, fontSize: 14 }]}>Why should I care?</Text>
+                    <Text style={[styles.introductionDescription, { marginTop: 25 }]}>
+                      Personal health data is becoming a key component of the modern healthcare ecosystem, including medical research, ongoing care,
                     prediction and prevention.{'\n'}{'\n'}
-                    Protecting all your health data in one place gives you a comprehensive view of your health, which translates into better healthcare
+                      Protecting all your health data in one place gives you a comprehensive view of your health, which translates into better healthcare
                     and outcomes.{'\n'}{'\n'}
-                    Bitmark Health is the first step towards controlling your health by unlocking the value of your health data.
+                      Bitmark Health is the first step towards controlling your health by unlocking the value of your health data.
                   </Text>
+                  </View>
+                </View>
+
+                {/*BOTTOM AREA*/}
+                <View style={[styles.bottomArea, styles.paddingContent]}>
+                  <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.setState({ ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_2 })}>
+                    <Text style={[styles.buttonText, { color: '#FF003C' }]}>NEXT</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-
-              {/*BOTTOM AREA*/}
-              <View style={[styles.bottomArea, styles.paddingContent]}>
-                <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.setState({ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_2})}>
-                  <Text style={[styles.buttonText, {color: '#FF003C'}]}>NEXT</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </View>
           }
 
           {/*ONBOARDING SCREEN 2*/}
           {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_2) &&
-          <View style={{flex: 1}}>
-            {/*TOP BAR*/}
-            <View style={styles.topBar}>
-              {/*Back Icon*/}
-              <TouchableOpacity style={styles.closeButton} onPress={() => this.setState({ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_1})}>
-                <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.bodyContent}>
-              {/*TOP AREA*/}
-              <View style={[styles.topArea, styles.paddingContent]}>
-                <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
-                <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')}/>
-              </View>
-
-              {/*CONTENT*/}
-              <View style={[styles.contentArea]}>
-                {/*IMAGE*/}
-                <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'center', width: '100%', flex:1 }]}>
-                  <Image style={styles.onBoardingImage2} source={require('assets/imgs/health-data-onboarding-1.png')} />
-                </View>
-
-                {/*DESC*/}
-                <View style={[styles.introductionTextArea, styles.paddingContent]}>
-                  <Text style={[styles.introductionTitle]}>Learn about your health</Text>
-                  <Text style={[styles.introductionDescription, {fontSize: 16}]}>
-                    We’ll start by looking at two common categories of health data: daily steps and daily sleep. Please allow access to these to start learning about your health.
-                  </Text>
-                </View>
-              </View>
-
-              {/*BOTTOM AREA*/}
-              <View style={[styles.bottomArea, styles.paddingContent]}>
-                <TouchableOpacity style={[styles.buttonNext]} onPress={this.requestHealthKitPermission.bind(this)}>
-                  <Text style={[styles.buttonText, {color: '#FF003C'}]}>ALLOW ACCESS</Text>
+            <View style={{ flex: 1 }}>
+              {/*TOP BAR*/}
+              <View style={styles.topBar}>
+                {/*Back Icon*/}
+                <TouchableOpacity style={styles.closeButton} onPress={() => this.setState({ ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_1 })}>
+                  <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
                 </TouchableOpacity>
               </View>
+
+              <View style={styles.bodyContent}>
+                {/*TOP AREA*/}
+                <View style={[styles.topArea, styles.paddingContent]}>
+                  <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
+                  <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
+                </View>
+
+                {/*CONTENT*/}
+                <View style={[styles.contentArea]}>
+                  {/*IMAGE*/}
+                  <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'center', width: '100%', flex: 1 }]}>
+                    <Image style={styles.onBoardingImage2} source={require('assets/imgs/health-data-onboarding-1.png')} />
+                  </View>
+
+                  {/*DESC*/}
+                  <View style={[styles.introductionTextArea, styles.paddingContent]}>
+                    <Text style={[styles.introductionTitle]}>Learn about your health</Text>
+                    <Text style={[styles.introductionDescription, { fontSize: 16 }]}>
+                      We’ll start by looking at two common categories of health data: daily steps and daily sleep. Please allow access to these to start learning about your health.
+                  </Text>
+                  </View>
+                </View>
+
+                {/*BOTTOM AREA*/}
+                <View style={[styles.bottomArea, styles.paddingContent]}>
+                  <TouchableOpacity style={[styles.buttonNext]} onPress={this.requestHealthKitPermission.bind(this)}>
+                    <Text style={[styles.buttonText, { color: '#FF003C' }]}>ALLOW ACCESS</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-          </View>
           }
 
           {/*ONBOARDING SCREEN 3*/}
           {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_3) &&
-          <View style={{flex: 1}}>
-            <View style={styles.bodyContent}>
-              {/*TOP AREA*/}
-              <View style={[styles.topArea, styles.paddingContent]}>
-                <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
-                <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')}/>
-              </View>
-
-              {/*CONTENT*/}
-              <View style={[styles.contentArea]}>
-                {/*IMAGE*/}
-                <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'center', width: '100%', flex:1 }]}>
-                  <Image style={styles.onBoardingImage2} source={require('assets/imgs/health-data-onboarding-1.png')} />
+            <View style={{ flex: 1 }}>
+              <View style={styles.bodyContent}>
+                {/*TOP AREA*/}
+                <View style={[styles.topArea, styles.paddingContent]}>
+                  <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
+                  <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
                 </View>
 
-                {/*DESC*/}
-                <View style={[styles.introductionTextArea, styles.paddingContent]}>
-                  <Text style={[styles.introductionTitle]}>You’re all set!</Text>
-                  <Text style={[styles.introductionDescription, {fontSize: 16}]}>
-                    Your first day of health data will be waiting for you to sign and view tomorrow morning.
+                {/*CONTENT*/}
+                <View style={[styles.contentArea]}>
+                  {/*IMAGE*/}
+                  <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'center', width: '100%', flex: 1 }]}>
+                    <Image style={styles.onBoardingImage2} source={require('assets/imgs/health-data-onboarding-1.png')} />
+                  </View>
+
+                  {/*DESC*/}
+                  <View style={[styles.introductionTextArea, styles.paddingContent]}>
+                    <Text style={[styles.introductionTitle]}>You’re all set!</Text>
+                    <Text style={[styles.introductionDescription, { fontSize: 16 }]}>
+                      Your first day of health data will be waiting for you to sign and view tomorrow morning.
                   </Text>
+                  </View>
                 </View>
-              </View>
 
-              {/*BOTTOM AREA*/}
-              <View style={[styles.bottomArea, styles.paddingContent]}>
-                <TouchableOpacity style={[styles.buttonNext]} onPress={this.goBack.bind(this)}>
-                  <Text style={[styles.buttonText, {color: '#FF003C'}]}>DONE</Text>
-                </TouchableOpacity>
+                {/*BOTTOM AREA*/}
+                <View style={[styles.bottomArea, styles.paddingContent]}>
+                  <TouchableOpacity style={[styles.buttonNext]} onPress={this.goBack.bind(this)}>
+                    <Text style={[styles.buttonText, { color: '#FF003C' }]}>DONE</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
           }
         </View>
       </SafeAreaView>
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: convertWidth(16),
-    paddingTop: convertWidth(16),
+    paddingTop: 0,
   },
 
   bodyContent: {
@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 56,
     width: '100%',
+    marginBottom: 12,
   },
   closeButton: {
     height: '100%',

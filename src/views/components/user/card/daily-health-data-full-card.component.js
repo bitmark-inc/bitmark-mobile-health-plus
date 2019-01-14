@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: "100%",
     padding: convertWidth(16),
-    paddingTop: convertWidth(16),
+    paddingTop: convertWidth(10),
   },
   shadowBox: {
     borderColor: '#F5F5F5',
@@ -259,7 +259,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
   },
   backIcon: {
     width: 14,

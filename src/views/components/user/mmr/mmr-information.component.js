@@ -172,7 +172,7 @@ export class MMRInformationComponent extends Component {
           </TouchableOpacity>
         </View>
         {!this.state.isEditing && <ScrollView contentContainerStyle={styles.body}>
-          <ShadowComponent style={styles.cardBody}>
+          <ShadowComponent style={[styles.cardBody, { marginTop: 0 }]}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
               <View style={styles.cardTitle}>
                 <Text style={styles.cardTitleText}>PROFILE</Text>
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(15),
-    paddingTop: convertWidth(15),
+    paddingTop: convertWidth(12),
     flexGrow: 1,
   },
 

@@ -213,7 +213,7 @@ class PrivateUserComponent extends Component {
 
   doIssue(issueParams) {
     issue(issueParams, async (issuedBitmarks) => {
-      console.log({issuedBitmarks});
+      console.log({ issuedBitmarks });
       this.goToBitmarkDetail(issuedBitmarks[0].id);
     });
   }
@@ -429,7 +429,7 @@ class PrivateUserComponent extends Component {
                 {/*-----TOP BAR-----*/}
 
                 <ScrollView contentContainerStyle={{ flexGrow: this.shouldHasScroll ? 0 : 1, paddingLeft: convertWidth(16), paddingRight: convertWidth(16), }}>
-                  <View style={{ flex: 1, paddingTop: 20, }}>
+                  <View style={{ flex: 1, paddingTop: 8, }}>
                     {/*-----STICK CARD-----*/}
                     <View style={[styles.stickCardContainer,]}>
                       {/*GET_STARTED_MMR*/}
@@ -573,7 +573,6 @@ class PrivateUserComponent extends Component {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    paddingTop: convertWidth(16),
   },
   searchInputContainer: {
     flexDirection: 'row',
@@ -632,11 +631,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   searchArea: {
-    paddingTop: convertWidth(16)
   },
   searchInput: {
     paddingLeft: convertWidth(16),
-    paddingBottom: convertWidth(14),
+    paddingBottom: convertWidth(21),
     flex: 1,
   },
   searchResultsContainer: {

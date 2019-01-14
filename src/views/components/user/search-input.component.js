@@ -115,7 +115,7 @@ export class SearchInputComponent extends Component {
 
 const styles = StyleSheet.create({
   searchView: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   inputContainer: {
     borderRadius: 5,

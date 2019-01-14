@@ -111,7 +111,7 @@ export class BitmarkDetailComponent extends Component {
             </View>
 
             {/*CONTENT*/}
-            <View style={{ flex: 1, padding: convertWidth(16) }}>
+            <View style={{ flex: 1, padding: convertWidth(16), paddingTop: 12, }}>
               <View style={[cardStyles.cardContainer, { flex: 1 }]}>
                 {/*IMAGE*/}
                 <View style={[cardStyles.cardImageContainer]}>

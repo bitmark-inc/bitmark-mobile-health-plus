@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: convertWidth(15),
-    paddingTop: convertWidth(15),
+    paddingTop: convertWidth(10),
     flexGrow: 1,
   },
   header: {
