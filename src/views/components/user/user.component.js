@@ -72,6 +72,7 @@ class PrivateUserComponent extends Component {
   }
 
   goBack() {
+    this.resetToInitialState();
     Actions.popTo('user');
   }
 
