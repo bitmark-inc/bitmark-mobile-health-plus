@@ -408,7 +408,6 @@ export class MainComponent extends Component {
     }
     return (
       <View style={{ flex: 1, }}>
-        <StatusBar hidden={config.isIPhoneX ? false : true} />
         <DisplayComponent />
         <MainEventsHandlerComponent />
       </View>
