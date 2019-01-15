@@ -19,7 +19,7 @@ import {
   convertWidth,
   isHealthDataRecord,
 } from 'src/utils';
-import { constants } from 'src/configs';
+import { constants, config } from 'src/configs';
 
 import { SearchInputComponent } from './search-input.component';
 import { SearchResultsComponent } from './search-results.component';
@@ -632,11 +632,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   searchArea: {
-    paddingTop: 11,
+    paddingTop: config.isIPhoneX ? 4 : 11,
   },
   searchInput: {
     paddingLeft: convertWidth(16),
-    paddingBottom: 11,
+    paddingBottom: config.isIPhoneX ? 17 : 11,
     flex: 1,
   },
   searchResultsContainer: {
