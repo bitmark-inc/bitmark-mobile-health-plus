@@ -141,7 +141,7 @@ export class HealthDataGetStartComponent extends React.Component {
 
           {/*ONBOARDING SCREEN 3*/}
           {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_3) &&
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, paddingTop: 8, }}>
               <View style={styles.bodyContent}>
                 {/*TOP AREA*/}
                 <View style={[styles.topArea, styles.paddingContent]}>
@@ -188,8 +188,10 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: 'white',
-    padding: convertWidth(16),
-    paddingTop: 0,
+    paddingLeft: convertWidth(16),
+    paddingRight: convertWidth(16),
+    paddingTop: 8,
+    paddingBottom: 16,
   },
 
   bodyContent: {
@@ -240,7 +242,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 56,
     width: '100%',
-    marginBottom: 12,
   },
   closeButton: {
     height: '100%',
