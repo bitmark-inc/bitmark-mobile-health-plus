@@ -478,7 +478,7 @@ const getSleepEndDate = (endDate) => {
   let nextDate = moment(endDate).date(endDate.date() + 1);
   let nextEndDate;
 
-  if (nextDate.diff(currentDate, 'days') < 0) {
+  if (!nextDate.isSame(currentDate, 'd')) {
     nextEndDate = moment(nextDate).hour(12).minute(0).second(0).millisecond(0);
   } else {
     if (currentDate.hour() < 12) {
