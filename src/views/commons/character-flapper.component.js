@@ -39,12 +39,12 @@ export class CharacterFlapperComponent extends Component {
   }
 
   async loadFlapper(finalChar) {
-    let radomChars = [];
-    // radomChars.push(charString[Math.floor(Math.random() * 26)]);
-    radomChars.push(finalChar);
+    let randomChars = [];
+    // randomChars.push(charString[Math.floor(Math.random() * 26)]);
+    randomChars.push(finalChar);
     let changeText = async (index) => {
-      if (index < radomChars.length) {
-        await this.loadChar(radomChars[index]);
+      if (index < randomChars.length) {
+        await this.loadChar(randomChars[index]);
         await changeText(index + 1);
       }
     };

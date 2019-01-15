@@ -41,85 +41,79 @@ export class FullViewCaptureAssetComponent extends Component {
 
   render() {
     return (
-      <SafeAreaView style={[styles.bodySafeView]}>
-        <View style={styles.bodyContent}>
-          {/*TOP BAR*/}
-          <View style={styles.topBar}>
-            {/*Back Icon*/}
-            <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
-              <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
-            </TouchableOpacity>
-            {/*EMR Icon*/}
-            <TouchableOpacity onPress={() => { Actions.emrInformation() }}>
-              <Image style={styles.profileIcon} source={(CacheData.userInformation.currentEMRData && CacheData.userInformation.currentEMRData.avatar) ? {
-                uri: CacheData.userInformation.currentEMRData.avatar
-              } : require('assets/imgs/profile-icon.png')} />
-            </TouchableOpacity>
-          </View>
-
-          {/*CONTENT*/}
-          <View style={[styles.content, this.state.type === 'image' ? { alignItems: 'center', justifyContent: 'center', paddingBottom: config.isIPhoneX ? 44 : 20 } : {}]}>
-            {this.state.type === 'image' && <ImageZoom
-              cropWidth={Dimensions.get('window').width}
-              cropHeight={(Dimensions.get('window').height)}
-              imageWidth={Dimensions.get('window').width * 0.8}
-              imageHeight={(Dimensions.get('window').height) * 0.8}>
-              <Image style={{ width: Dimensions.get('window').width * 0.8, height: (Dimensions.get('window').height) * 0.8, resizeMode: 'contain' }} source={{ uri: this.props.filePath }} />
-            </ImageZoom>}
-
-            {this.state.type === 'pdf' && this.state.loading && <ActivityIndicator size='large' />}
-            {this.state.type === 'pdf' &&
-              <View style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                <Pdf
-                  source={{ uri: `file://${this.props.filePath}` }}
-                  scale={0.5}
-                  minScale={0.2}
-                  horizontal={false}
-                  onLoadComplete={() => {
-                    this.setState({ loading: false });
-                  }}
-                  onPageChanged={(page, numberOfPages) => {
-                    console.log(`current page: ${page}`);
-                    this.setState({ pagination: `< ${page} / ${numberOfPages} >` })
-                  }}
-                  onError={(error) => {
-                    console.log('load pdf error :', error);
-                  }}
-                  style={{ flex: 1, width: '100%' }} />
-
-                {/*Pagination*/}
-                <View style={styles.pagination}>
-                  <Text style={[styles.paginationText]}>{this.state.pagination}</Text>
-                </View>
-              </View>
-            }
-          </View>
+      <View style={styles.bodyContent}>
+        {/*TOP BAR*/}
+        <View style={styles.topBar}>
+          {/*Back Icon*/}
+          <TouchableOpacity style={styles.closeButton} onPress={Actions.pop}>
+            <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
+          </TouchableOpacity>
+          {/*EMR Icon*/}
+          <TouchableOpacity style={{ paddingRight: convertWidth(16), }} onPress={() => { Actions.emrInformation() }}>
+            <Image style={styles.profileIcon} source={(CacheData.userInformation.currentEMRData && CacheData.userInformation.currentEMRData.avatar) ? {
+              uri: CacheData.userInformation.currentEMRData.avatar
+            } : require('assets/imgs/profile-icon.png')} />
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
+
+        {/*CONTENT*/}
+        <View style={[styles.content, this.state.type === 'image' ? { alignItems: 'center', justifyContent: 'center', paddingBottom: config.isIPhoneX ? 44 : 20 } : {}]}>
+          {this.state.type === 'image' && <ImageZoom
+            cropWidth={Dimensions.get('window').width}
+            cropHeight={(Dimensions.get('window').height - 56)}
+            imageWidth={Dimensions.get('window').width * 0.8}
+            imageHeight={(Dimensions.get('window').height) * 0.8}>
+            <Image style={{ width: Dimensions.get('window').width * 0.8, height: (Dimensions.get('window').height) * 0.8, resizeMode: 'contain' }} source={{ uri: this.props.filePath }} />
+          </ImageZoom>}
+
+          {this.state.type === 'pdf' && this.state.loading && <ActivityIndicator size='large' />}
+          {this.state.type === 'pdf' &&
+            <View style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+              <Pdf
+                source={{ uri: `file://${this.props.filePath}` }}
+                scale={0.5}
+                minScale={0.2}
+                horizontal={false}
+                onLoadComplete={() => {
+                  this.setState({ loading: false });
+                }}
+                onPageChanged={(page, numberOfPages) => {
+                  console.log(`current page: ${page}`);
+                  this.setState({ pagination: `< ${page} / ${numberOfPages} >` })
+                }}
+                onError={(error) => {
+                  console.log('load pdf error :', error);
+                }}
+                style={{ flex: 1, width: '100%' }} />
+
+              {/*Pagination*/}
+              <View style={styles.pagination}>
+                <Text style={[styles.paginationText]}>{this.state.pagination}</Text>
+              </View>
+            </View>
+          }
+        </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  bodySafeView: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
 
   bodyContent: {
     flex: 1,
     flexDirection: 'column',
-    width: convertWidth(375)
+    width: '100%',
+    paddingTop: config.isIPhoneX ? 44 : 20,
   },
   topBar: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     height: 56,
     width: '100%',
-    paddingLeft: convertWidth(16),
-    paddingRight: convertWidth(16),
   },
   closeButton: {
     height: '100%',
+    paddingLeft: convertWidth(16),
     alignItems: 'center', justifyContent: 'center',
   },
   closeIcon: {
@@ -136,7 +130,7 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: 'black',
     flex: 1,
-    paddingTop: 44 + (config.isIPhoneX ? 44 : 0),
+    paddingTop: 56 + (config.isIPhoneX ? 44 : 0),
     flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
   },
   pagination: {
