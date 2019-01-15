@@ -92,7 +92,7 @@ export class EditIssueComponent extends Component {
       }
 
       AppProcessor.doCombineImages(newImages).then((filePath) => {
-        this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment(), note: this.state.note, tags: this.state.tags, numberOfFiles: newImages.length }], true);
+        this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment(), note: this.state.note.trim(), tags: this.state.tags, numberOfFiles: newImages.length }], true);
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       })
@@ -107,7 +107,7 @@ export class EditIssueComponent extends Component {
   }
 
   onInputNoteChangeText(text) {
-    this.setState({ note: (text || '').trim() });
+    this.setState({ note: text });
   }
 
   showInputTag() {
