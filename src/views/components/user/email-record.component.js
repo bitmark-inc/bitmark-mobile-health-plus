@@ -185,7 +185,6 @@ export class EmailRecordComponent extends Component {
             <View style={styles.buttonArea}>
               <TouchableOpacity style={styles.viewButton} onPress={() => {
                 Actions.reset('user');
-                Actions.bitmarkList({ bitmarkType: 'bitmark_health_issuance' });
                 DataProcessor.finishedDisplayEmailRecords();
               }} >
                 <Text style={styles.viewButtonText}>{i18n.t('EmailRecordComponent_viewButtonText').toUpperCase()}</Text>

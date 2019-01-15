@@ -85,7 +85,7 @@ class PrivateAccountComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.headerLeft} onPress={() => Actions.reset('user')}>
+          <TouchableOpacity style={styles.headerLeft} onPress={() => Actions.pop()}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Vault</Text>
