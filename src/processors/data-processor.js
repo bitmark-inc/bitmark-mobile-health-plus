@@ -42,7 +42,6 @@ let mapModalDisplayData = {};
 const mapModalDisplayKeyIndex = {
   what_new: 2,
   email_record: 3,
-  weekly_health_data: 4,
 };
 
 let isDisplayingModal = (keyIndex) => {
@@ -63,10 +62,6 @@ let checkDisplayModal = () => {
         break;
       } else if (keyIndex === mapModalDisplayKeyIndex.email_record && CacheData.mountedRouter) {
         Actions.emailRecords(mapModalDisplayData[keyIndex]);
-        CacheData.keyIndexModalDisplaying = keyIndex;
-        break;
-      } else if (keyIndex === mapModalDisplayKeyIndex.weekly_health_data && CacheData.mountedRouter) {
-        Actions.bitmarkHealthData(mapModalDisplayData[keyIndex]);
         CacheData.keyIndexModalDisplaying = keyIndex;
         break;
       }
@@ -744,10 +739,6 @@ const doBitmarkHealthData = async (list) => {
   return results;
 };
 
-const doMarkDoneBitmarkHealthData = () => {
-  updateModal(mapModalDisplayKeyIndex.weekly_health_data);
-};
-
 const doIssueFile = async (issueParams) => {
   let { filePath, assetName, metadataList, quantity, isPublicAsset = false, isMultipleAsset = false, note, tags } = issueParams;
   let results = await BitmarkService.doIssueFile(CacheData.userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
@@ -1067,7 +1058,6 @@ const DataProcessor = {
   doResetHealthDataTasks,
   doDeactiveApplication,
   doBitmarkHealthData,
-  doMarkDoneBitmarkHealthData,
   doIssueFile,
   doIssueMultipleFiles,
 

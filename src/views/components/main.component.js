@@ -22,8 +22,7 @@ import { HomeRouterComponent } from './home';
 import { UserRouterComponent, } from './user';
 import { runPromiseWithoutError, convertWidth } from 'src/utils';
 import { EventEmitterService, DataProcessor, BitmarkSDK, UserModel, AppProcessor, CommonModel, CacheData } from 'src/processors';
-import { constants, config } from 'src/configs';
-
+import { constants } from 'src/configs';
 
 class MainEventsHandlerComponent extends Component {
   constructor(props) {
