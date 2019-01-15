@@ -421,9 +421,15 @@ const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt
       }
     }
   });
+  console.log('lastTimeBitmarkHealthData:', lastTimeBitmarkHealthData && lastTimeBitmarkHealthData.toDate());
+
   if ((lastTimeBitmarkHealthData && resetAt && lastTimeBitmarkHealthData.toDate().getTime() < moment(resetAt).toDate().getTime()) ||
     (!lastTimeBitmarkHealthData && resetAt)) {
+    // Need to set to reset time
     lastTimeBitmarkHealthData = resetAt;
+  } else if (lastTimeBitmarkHealthData) {
+    // Should add one day for last issue time for checking new daily health data
+    lastTimeBitmarkHealthData = lastTimeBitmarkHealthData.date(lastTimeBitmarkHealthData.date() + 1).startOf('day');
   }
 
   // Calculate periods collect time
@@ -441,7 +447,7 @@ const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt
   // TODO: This for adding test data
   //lastTimeBitmarkHealthData = moment().date(moment().date() - 3);
 
-  console.log('lastTimeBitmarkHealthData:', lastTimeBitmarkHealthData.toDate());
+  console.log('lastTime for checking new  daily bitmark:', lastTimeBitmarkHealthData.toDate());
   startDate = moment(lastTimeBitmarkHealthData);
   startDate.hour(0);
   startDate.minute(0);
@@ -452,7 +458,8 @@ const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt
 
   let currentDate = moment();
   let lastMidnight = moment(currentDate.hour(0).minute(0).second(0).millisecond(0));
-  while (endDate.diff(lastMidnight, 'hours') < 0) {
+
+  while (endDate.diff(lastMidnight, 'minutes') < 0) {
     periods.push({
       StepCount: {
         startDate: moment(startDate).toDate(),
