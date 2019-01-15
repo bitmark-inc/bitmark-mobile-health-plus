@@ -7,7 +7,7 @@ import {
 
 
 import { Actions } from 'react-native-router-flux';
-import { AppProcessor, EventEmitterService } from 'src/processors';
+import { AppProcessor, EventEmitterService, DataProcessor } from 'src/processors';
 import { convertWidth } from 'src/utils';
 
 export class BitmarkHealthDataComponent extends Component {
@@ -19,13 +19,19 @@ export class BitmarkHealthDataComponent extends Component {
     super(props);
   }
 
+  goBack() {
+    Actions.popTo('user');
+  }
+
   issueDailyHealthData() {
     AppProcessor.doBitmarkHealthData(this.props.list, {
       indicator: true, title: i18n.t('BitmarkHealthDataComponent_alertTitle'), message: ''
     }).then(results => {
       if (results) {
         console.log('daily-health-data-results:', results);
-        Actions.pop();
+        DataProcessor.doGetUserDataBitmarks().then(userBitmarks => {
+          Actions.dailyHealthDataFullCard({ dailyHealthDataBitmarks: userBitmarks.dailyHealthDataBitmarks, goBack: this.goBack.bind(this) });
+        });
       }
     }).catch(error => {
       console.log('doDailyBitmarkHealthData error:', error);

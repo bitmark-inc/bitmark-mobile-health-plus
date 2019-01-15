@@ -20,7 +20,8 @@ let { ActionSheetIOS } = ReactNative;
 export class DailyHealthDataFullCardComponent extends React.Component {
   static propTypes = {
     dailyHealthDataBitmarks: PropTypes.array,
-    resetToInitialState: PropTypes.func
+    resetToInitialState: PropTypes.func,
+    goBack: PropTypes.func
   };
 
   constructor(props) {
@@ -88,7 +89,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
         <View style={[styles.body]}>
           <View style={[styles.topBar]}>
             {/*Back button*/}
-            <TouchableOpacity style={{ paddingLeft: convertWidth(16) }} onPress={() => { Actions.pop() }}>
+            <TouchableOpacity style={{ paddingLeft: convertWidth(16) }} onPress={this.props.goBack || Actions.pop}>
               <Image style={styles.backIcon} source={require('assets/imgs/back-icon-black.png')} />
             </TouchableOpacity>
 
