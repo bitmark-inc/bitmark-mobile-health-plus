@@ -22,11 +22,6 @@ RCT_EXPORT_MODULE();
   return @[@"oniCloudFileChanged"];
 }
 
-- (dispatch_queue_t)methodQueue
-{
-  return dispatch_queue_create("iCloud_queue", DISPATCH_QUEUE_SERIAL);
-}
-
 RCT_EXPORT_METHOD(uploadFileToCloud:(NSString *)filePath:(NSString *)iCloudKey:(RCTResponseSenderBlock)callback)
 {
   // Ignore the case that file
@@ -62,7 +57,7 @@ RCT_EXPORT_METHOD(syncCloud:(RCTResponseSenderBlock)callback)
 }
 
 - (void)iCloudFilesDidChange:(NSMutableArray *)files withNewFileNames:(NSMutableArray *)fileNames {
-  dispatch_async(self.methodQueue, ^{
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     if (!files || !fileNames) {
       RCTLog(@"files or filesName is missing");
       return;
