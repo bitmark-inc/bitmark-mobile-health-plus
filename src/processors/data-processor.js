@@ -30,10 +30,10 @@ import {
 import {
   FileUtil,
   isImageFile, isPdfFile, isHealthDataRecord, isAssetDataRecord, isDailyHealthDataRecord,
-  compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isMMRRecord,
+  compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isEMRRecord,
 } from 'src/utils';
 
-import { UserBitmarksStore, UserBitmarksActions, MMRInformationStore, MMRInformationActions, AccountStore, AccountActions } from 'src/views/stores';
+import { UserBitmarksStore, UserBitmarksActions, EMRInformationStore, EMRInformationActions, AccountStore, AccountActions } from 'src/views/stores';
 import { config } from 'src/configs';
 import { CacheData } from './caches';
 
@@ -80,7 +80,7 @@ let updateModal = (keyIndex, data) => {
 };
 
 // ================================================================================================================================================
-const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber }) => {
+const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestEMRBitmark, bitmarkAccountNumber }) => {
   bitmarkAccountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
 
   let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
@@ -90,27 +90,27 @@ const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataB
     healthAssetBitmarks
   };
 
-  if (latestMMRBitmark) {
-    if (latestMMRBitmark.owner === bitmarkAccountNumber) {
-      if (CacheData.userInformation.latestMMRAssetId !== latestMMRBitmark.asset.id) {
-        let result = await runPromiseIgnoreError(detectLocalAssetFilePath(latestMMRBitmark.asset));
+  if (latestEMRBitmark) {
+    if (latestEMRBitmark.owner === bitmarkAccountNumber) {
+      if (CacheData.userInformation.latestEMRAssetId !== latestEMRBitmark.asset.id) {
+        let result = await runPromiseIgnoreError(detectLocalAssetFilePath(latestEMRBitmark.asset));
         if (result.filePath && (await FileUtil.exists(result.filePath))) {
-          CacheData.userInformation.currentMMrData = JSON.parse(await FileUtil.readFile(result.filePath));
-          CacheData.userInformation.latestMMRAssetId = latestMMRBitmark.asset.id;
-          latestMMRBitmark.asset.filePath = result.filePath;
+          CacheData.userInformation.currentEMRData = JSON.parse(await FileUtil.readFile(result.filePath));
+          CacheData.userInformation.latestEMRAssetId = latestEMRBitmark.asset.id;
+          latestEMRBitmark.asset.filePath = result.filePath;
           await UserModel.doUpdateUserInfo(CacheData.userInformation);
-          await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(latestMMRBitmark));
+          await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(latestEMRBitmark));
         }
       }
     } else {
-      CacheData.userInformation.currentMMrData = null;
-      CacheData.userInformation.latestMMRAssetId = null;
+      CacheData.userInformation.currentEMRData = null;
+      CacheData.userInformation.latestEMRAssetId = null;
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
     }
   }
-  let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
-  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState)); UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
-  UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
+  let storeState = { emrInformation: CacheData.userInformation.currentEMRData };
+  EMRInformationStore.dispatch(EMRInformationActions.initData(storeState)); UserBitmarksStore.dispatch(UserBitmarksActions.updateEMRInformation(CacheData.userInformation.currentEMRData));
+  UserBitmarksStore.dispatch(UserBitmarksActions.updateEMRInformation(CacheData.userInformation.currentEMRData));
 
   // Update new daily health data
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber && CacheData.userInformation.activeHealthDataAt) {
@@ -175,7 +175,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
     doGetAllBitmarks().then(async ({ assets, bitmarks }) => {
       let userBitmarks = (await doGetUserDataBitmarks(CacheData.userInformation.bitmarkAccountNumber)) || {};
       let healthDataBitmarks = [], dailyHealthDataBitmarks = [], healthAssetBitmarks = [];
-      let latestMMRBitmark;
+      let latestEMRBitmark;
       for (let bitmark of bitmarks) {
         let asset = assets.find(as => as.id === bitmark.asset_id);
         if (asset) {
@@ -218,10 +218,10 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(bitmark));
               healthAssetBitmarks.push(bitmark);
             }
-          } else if (isMMRRecord(asset)) {
-            if (!latestMMRBitmark || latestMMRBitmark.offset < bitmark.offset) {
+          } else if (isEMRRecord(asset)) {
+            if (!latestEMRBitmark || latestEMRBitmark.offset < bitmark.offset) {
               bitmark.asset = asset;
-              latestMMRBitmark = bitmark;
+              latestEMRBitmark = bitmark;
             }
           }
         }
@@ -255,9 +255,9 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         dailyHealthDataBitmarks = dailyHealthDataBitmarks.sort(dailyHealthCompareFunction);
       }
 
-      await doCheckNewUserDataBitmarks({ healthDataBitmarks, healthAssetBitmarks, dailyHealthDataBitmarks, latestMMRBitmark, bitmarkAccountNumber });
+      await doCheckNewUserDataBitmarks({ healthDataBitmarks, healthAssetBitmarks, dailyHealthDataBitmarks, latestEMRBitmark, bitmarkAccountNumber });
 
-      (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestMMRBitmark }));
+      (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestEMRBitmark }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
     }).catch(error => {
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve());
@@ -1029,21 +1029,21 @@ const doTransferBitmark = async (bitmark, receiver) => {
   return result;
 };
 
-const doIssueMMR = async (data) => {
-  let assetName = `MMR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
+const doIssueEMR = async (data) => {
+  let assetName = `EMR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
   let metadata = {
-    type: 'HEALTH-MMR'
+    type: 'HEALTH-EMR'
   };
   let filePath = `${FileUtil.CacheDirectory}/${assetName}.json`;
   await FileUtil.writeFile(filePath, JSON.stringify(data));
 
   let results = await doIssueFile({ filePath, assetName, metadataList: metadata, quantity: 1 });
   await FileUtil.removeSafe(filePath);
-  CacheData.userInformation.currentMMrData = data;
-  CacheData.userInformation.latestMMRAssetId = results[0].assetId;
-  let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
-  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));
-  UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
+  CacheData.userInformation.currentEMRData = data;
+  CacheData.userInformation.latestEMRAssetId = results[0].assetId;
+  let storeState = { emrInformation: CacheData.userInformation.currentEMRData };
+  EMRInformationStore.dispatch(EMRInformationActions.initData(storeState));
+  UserBitmarksStore.dispatch(UserBitmarksActions.updateEMRInformation(CacheData.userInformation.currentEMRData));
   return results;
 };
 
@@ -1090,7 +1090,7 @@ const DataProcessor = {
   doMarkDisplayedWhatNewInformation,
   doDisplayedWhatNewInformation,
   doTransferBitmark,
-  doIssueMMR,
+  doIssueEMR,
   doGetUserDataBitmarks,
   doSaveUserSetting,
 };

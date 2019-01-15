@@ -21,7 +21,7 @@ import { EditIssueComponent } from './edit-issue.component';
 import { TaggingComponent } from "./tagging.component";
 import { DataProcessor } from 'src/processors';
 import { BitmarkLegalComponent, WhatNewComponent } from 'src/views/commons';
-import { MMRInformationComponent } from './mmr';
+import { EMRInformationComponent } from './emr';
 import { EditBitmarkComponent } from "./edit-bitmark.component";
 import { HealthDataGetStartComponent } from "./health-data-get-start.component";
 import { DailyHealthDataFullCardComponent } from "./card/daily-health-data-full-card.component";
@@ -55,7 +55,7 @@ export class UserRouterComponent extends Component {
           <Scene key="editBitmark" component={EditBitmarkComponent} panHandlers={null} />
           <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
           <Scene key="tagging" component={TaggingComponent} panHandlers={null} />
-          <Scene key="mmrInformation" component={MMRInformationComponent} panHandlers={null} />
+          <Scene key="emrInformation" component={EMRInformationComponent} panHandlers={null} />
           <Scene key="dailyHealthDataFullCard" component={DailyHealthDataFullCardComponent} panHandlers={null} />
         </Stack>
       </Router>

@@ -93,10 +93,10 @@ export class DailyHealthDataFullCardComponent extends React.Component {
               <Image style={styles.backIcon} source={require('assets/imgs/back-icon-black.png')} />
             </TouchableOpacity>
 
-            {/*MMR Icon*/}
-            <TouchableOpacity style={{ paddingRight: convertWidth(16) }} onPress={() => { Actions.mmrInformation() }}>
-              <Image style={styles.profileIcon} source={(CacheData.userInformation.currentMMrData && CacheData.userInformation.currentMMrData.avatar) ? {
-                uri: CacheData.userInformation.currentMMrData.avatar
+            {/*EMR Icon*/}
+            <TouchableOpacity style={{ paddingRight: convertWidth(16) }} onPress={() => { Actions.emrInformation() }}>
+              <Image style={styles.profileIcon} source={(CacheData.userInformation.currentEMRData && CacheData.userInformation.currentEMRData.avatar) ? {
+                uri: CacheData.userInformation.currentEMRData.avatar
               } : require('assets/imgs/profile-icon.png')} />
             </TouchableOpacity>
           </View>

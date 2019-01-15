@@ -11,7 +11,7 @@ import Mailer from 'react-native-mail';
 import { AppProcessor, EventEmitterService, DataProcessor } from 'src/processors';
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
-import { MMRCardComponent } from './mmr';
+import { EMRCardComponent } from './emr';
 import { ShadowTopComponent, ShadowComponent } from 'src/views/commons';
 import { Actions } from 'react-native-router-flux';
 import Intercom from 'react-native-intercom';
@@ -92,7 +92,7 @@ class PrivateAccountComponent extends Component {
           <View style={styles.headerRight} />
         </View>
         <ScrollView contentContainerStyle={styles.body}>
-          <MMRCardComponent />
+          <EMRCardComponent />
 
           <ShadowComponent style={styles.cardBody}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
@@ -108,7 +108,7 @@ class PrivateAccountComponent extends Component {
               </View>} */}
               {/* {!this.props.userInformation.metadata.suggest_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />} */}
             </TouchableOpacity>
-            <Text style={[styles.rowDescription, { fontSize: 10, paddingRight: convertWidth(49), }]}>I can confidentially match you with health studies based on information you provide in your Minimum Medical Record.</Text>
+            <Text style={[styles.rowDescription, { fontSize: 10, paddingRight: convertWidth(49), }]}>I can confidentially match you with health studies based on information you provide in your Emergency Medical Record.</Text>
 
             {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ visualize_health_data: !this.props.userInformation.metadata.visualize_health_data })}> */}
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} disabled={true}>

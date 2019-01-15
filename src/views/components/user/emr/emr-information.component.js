@@ -20,9 +20,9 @@ import { AppProcessor, EventEmitterService } from 'src/processors';
 const { ActionSheetIOS } = ReactNative;
 import { selectContactPhone } from 'react-native-select-contact';
 
-export class MMRInformationComponent extends Component {
+export class EMRInformationComponent extends Component {
   static propTypes = {
-    mmrInformation: PropTypes.any,
+    emrInformation: PropTypes.any,
     displayFromUserScreen: PropTypes.bool,
     edit: PropTypes.bool
   }
@@ -31,16 +31,16 @@ export class MMRInformationComponent extends Component {
     super(props);
     this.resizeAvatar = this.resizeAvatar.bind(this);
     this.state = {
-      isEditing: this.props.mmrInformation ? (this.props.edit ? true : false) : true,
-      mmrInformation: this.props.mmrInformation || {},
+      isEditing: this.props.emrInformation ? (this.props.edit ? true : false) : true,
+      emrInformation: this.props.emrInformation || {},
     };
   }
 
-  updateMMRInformationState(data) {
-    console.log('updateMMRInformationState :', data);
-    let mmrInformation = this.state.mmrInformation;
-    mmrInformation = merge({}, mmrInformation, data);
-    this.setState({ mmrInformation });
+  updateEMRInformationState(data) {
+    console.log('updateEMRInformationState :', data);
+    let emrInformation = this.state.emrInformation;
+    emrInformation = merge({}, emrInformation, data);
+    this.setState({ emrInformation });
   }
 
   async resizeAvatar(filePath) {
@@ -75,7 +75,7 @@ export class MMRInformationComponent extends Component {
                 return;
               }
               let filePath = response.uri;
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
+              this.updateEMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
             });
             break;
           }
@@ -85,7 +85,7 @@ export class MMRInformationComponent extends Component {
                 return;
               }
               let filePath = response.uri;
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
+              this.updateEMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
             });
             break;
           }
@@ -97,7 +97,7 @@ export class MMRInformationComponent extends Component {
                 return;
               }
               let filePath = response.uri.replace('file://', '');
-              this.updateMMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
+              this.updateEMRInformationState({ avatar: 'data:image/jpeg;base64,' + (await this.resizeAvatar(filePath)) });
             });
             break;
           }
@@ -124,15 +124,15 @@ export class MMRInformationComponent extends Component {
         cancelButtonIndex: 0,
       }, (buttonIndex) => {
         if (buttonIndex > 0) {
-          let mmrInformation = this.state.mmrInformation;
-          mmrInformation.emergencyContacts = mmrInformation.emergencyContacts || [];
-          mmrInformation.emergencyContacts.push({
+          let emrInformation = this.state.emrInformation;
+          emrInformation.emergencyContacts = emrInformation.emergencyContacts || [];
+          emrInformation.emergencyContacts.push({
             relationship: relationshipArray[buttonIndex],
             name: data.contact.name,
             phoneNumber: data.selectedPhone.number,
             type: data.selectedPhone.type,
           });
-          this.setState({ mmrInformation });
+          this.setState({ emrInformation });
         }
       });
     }).catch(error => {
@@ -141,14 +141,14 @@ export class MMRInformationComponent extends Component {
   }
 
   deleteEmergencyContact(index) {
-    let mmrInformation = this.state.mmrInformation;
-    mmrInformation.emergencyContacts = mmrInformation.emergencyContacts || [];
-    mmrInformation.emergencyContacts.splice(index, 1);
-    this.setState({ mmrInformation });
+    let emrInformation = this.state.emrInformation;
+    emrInformation.emergencyContacts = emrInformation.emergencyContacts || [];
+    emrInformation.emergencyContacts.splice(index, 1);
+    this.setState({ emrInformation });
   }
 
-  saveMMRInformation() {
-    AppProcessor.doIssueMMR(this.state.mmrInformation).then(result => {
+  saveEMRInformation() {
+    AppProcessor.doIssueEMR(this.state.emrInformation).then(result => {
       if (result) {
         Actions.pop();
       }
@@ -159,14 +159,14 @@ export class MMRInformationComponent extends Component {
   }
 
   render() {
-    console.log('mmrInformation :', this.state.mmrInformation);
+    console.log('emrInformation :', this.state.emrInformation);
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.headerLeft} onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.pop()}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle} numberOfLines={1}>Minimum Medical Record</Text>
+          <Text style={styles.headerTitle} numberOfLines={1}>Emergency Medical Record</Text>
           <TouchableOpacity style={styles.headerRight} disabled={this.state.isEditing} onPress={() => this.setState({ isEditing: !this.state.isEditing })}>
             {!this.state.isEditing && <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/edition_icon_black.png')} />}
           </TouchableOpacity>
@@ -177,22 +177,22 @@ export class MMRInformationComponent extends Component {
               <View style={styles.cardTitle}>
                 <Text style={styles.cardTitleText}>PROFILE</Text>
               </View>
-              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_profile_icon.png')} />
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_profile_icon.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avatar_default.png')} />
-              <View style={styles.mmrInformationBasic}>
-                <Text style={styles.mmrInformationLabel}>Name</Text>
-                <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.name}</Text>
+              <Image style={styles.emrInformationAvatar} source={this.state.emrInformation.avatar ? { uri: this.state.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default.png')} />
+              <View style={styles.emrInformationBasic}>
+                <Text style={styles.emrInformationLabel}>Name</Text>
+                <Text style={styles.emrInformationValue}>{this.state.emrInformation.name}</Text>
                 <View style={{ flex: 1, flexDirection: 'row', marginTop: 21 }}>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
-                    <Text style={styles.mmrInformationLabel}>Date of birth</Text>
-                    <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.birthday ? moment(this.state.mmrInformation.birthday).format('MMM DD, YYYY') : 'TODO'}</Text>
+                    <Text style={styles.emrInformationLabel}>Date of birth</Text>
+                    <Text style={styles.emrInformationValue}>{this.state.emrInformation.birthday ? moment(this.state.emrInformation.birthday).format('MMM DD, YYYY') : 'TODO'}</Text>
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column', marginLeft: convertWidth(16), }}>
-                    <Text style={styles.mmrInformationLabel}>Sex</Text>
-                    <Text style={styles.mmrInformationValue}>{this.state.mmrInformation.sex ?
-                      (this.state.mmrInformation.sex.substring(0, 1).toUpperCase() + this.state.mmrInformation.sex.substring(1, this.state.mmrInformation.sex.length).toUpperCase().toLowerCase()) : ''}</Text>
+                    <Text style={styles.emrInformationLabel}>Sex</Text>
+                    <Text style={styles.emrInformationValue}>{this.state.emrInformation.sex ?
+                      (this.state.emrInformation.sex.substring(0, 1).toUpperCase() + this.state.emrInformation.sex.substring(1, this.state.emrInformation.sex.length).toUpperCase().toLowerCase()) : ''}</Text>
                   </View>
                 </View>
               </View>
@@ -201,7 +201,7 @@ export class MMRInformationComponent extends Component {
               <Text style={styles.emergencyContactTitle}>
                 EMERGENCY CONTACTS
                 </Text>
-              {(this.state.mmrInformation.emergencyContacts || []).map((item, index) => {
+              {(this.state.emrInformation.emergencyContacts || []).map((item, index) => {
                 return <View key={index} style={styles.emergencyContactRow}>
                   <Text style={styles.emergencyContactRowRelationship}>{item.relationship.substring(0, 1).toUpperCase() + item.relationship.substring(1, item.relationship.length).toLowerCase()}</Text>
                   <View style={styles.emergencyContactRowInfo}>
@@ -218,10 +218,10 @@ export class MMRInformationComponent extends Component {
               <View style={styles.cardTitle}>
                 <Text style={styles.cardTitleText}>{'Active Clinical Diagnoses'.toUpperCase()}</Text>
               </View>
-              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_1.png')} />
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_1.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Text style={styles.cardContentRowValue}>{this.state.mmrInformation.activeClinicalDiagnoses}</Text>
+              <Text style={styles.cardContentRowValue}>{this.state.emrInformation.activeClinicalDiagnoses}</Text>
             </View>
           </ShadowComponent>
 
@@ -230,10 +230,10 @@ export class MMRInformationComponent extends Component {
               <View style={styles.cardTitle}>
                 <Text style={styles.cardTitleText}>{'CURRENT TREATMENTS & DOSAGES'.toUpperCase()}</Text>
               </View>
-              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_2.png')} />
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_2.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Text style={styles.cardContentRowValue}>{this.state.mmrInformation.currentTreatmentsAndDosages}</Text>
+              <Text style={styles.cardContentRowValue}>{this.state.emrInformation.currentTreatmentsAndDosages}</Text>
             </View>
           </ShadowComponent>
 
@@ -242,10 +242,10 @@ export class MMRInformationComponent extends Component {
               <View style={styles.cardTitle}>
                 <Text style={styles.cardTitleText}>{'ALLERGIES & REACTIONS'.toUpperCase()}</Text>
               </View>
-              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_3.png')} />
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_3.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Text style={styles.cardContentRowValue}>{this.state.mmrInformation.allergiesAndReactions}</Text>
+              <Text style={styles.cardContentRowValue}>{this.state.emrInformation.allergiesAndReactions}</Text>
             </View>
           </ShadowComponent>
 
@@ -254,10 +254,10 @@ export class MMRInformationComponent extends Component {
               <View style={styles.cardTitle}>
                 <Text style={styles.cardTitleText}>{'Visible & Invisible Disabilities'.toUpperCase()}</Text>
               </View>
-              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_4.png')} />
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_4.png')} />
             </ShadowTopComponent>
             <View style={styles.cardContentRow}>
-              <Text style={styles.cardContentRowValue}>{this.state.mmrInformation.visibleAndInvisibleDisabilities}</Text>
+              <Text style={styles.cardContentRowValue}>{this.state.emrInformation.visibleAndInvisibleDisabilities}</Text>
             </View>
           </ShadowComponent>
         </ScrollView>}
@@ -269,24 +269,24 @@ export class MMRInformationComponent extends Component {
                 <View style={styles.cardTitle}>
                   <Text style={styles.cardTitleText}>PROFILE</Text>
                 </View>
-                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_profile_icon.png')} />
+                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_profile_icon.png')} />
               </ShadowTopComponent>
               <View style={styles.cardContentRow}>
                 <TouchableOpacity onPress={this.chooseAvatar.bind(this)}>
-                  <Image style={styles.mmrInformationAvatar} source={this.state.mmrInformation.avatar ? { uri: this.state.mmrInformation.avatar } : require('assets/imgs2/mmr_avatar_default.png')} />
-                  <Image style={styles.mmrInformationAvatarCover} source={require('assets/imgs2/mmr_avatar_edit_cover.png')} />
-                  {/* <View style={styles.mmrInformationAvatarCover}><Text style={{ fontFamily: 'Andale Mono', fontSize: 12, color: '#404040' }}>EDIT</Text></View> */}
+                  <Image style={styles.emrInformationAvatar} source={this.state.emrInformation.avatar ? { uri: this.state.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default.png')} />
+                  <Image style={styles.emrInformationAvatarCover} source={require('assets/imgs2/emr_avatar_edit_cover.png')} />
+                  {/* <View style={styles.emrInformationAvatarCover}><Text style={{ fontFamily: 'Andale Mono', fontSize: 12, color: '#404040' }}>EDIT</Text></View> */}
                 </TouchableOpacity>
-                <View style={styles.mmrInformationBasic}>
-                  <Text style={styles.mmrInformationLabel}>Name</Text>
-                  <TextInput style={[styles.mmrInformationValueInput, { paddingLeft: convertWidth(16), paddingRight: convertWidth(16), }]}
+                <View style={styles.emrInformationBasic}>
+                  <Text style={styles.emrInformationLabel}>Name</Text>
+                  <TextInput style={[styles.emrInformationValueInput, { paddingLeft: convertWidth(16), paddingRight: convertWidth(16), }]}
                     placeholder='TAP TO INPUT'
-                    defaultValue={this.state.mmrInformation.name}
-                    onChangeText={(name) => this.updateMMRInformationState.bind(this)({ name })}
+                    defaultValue={this.state.emrInformation.name}
+                    onChangeText={(name) => this.updateEMRInformationState.bind(this)({ name })}
                   />
                   <View style={{ flex: 1, flexDirection: 'row', marginTop: 16 }}>
                     <View style={{ flex: 1, flexDirection: 'column' }}>
-                      <Text style={styles.mmrInformationLabel}>Date of birth</Text>
+                      <Text style={styles.emrInformationLabel}>Date of birth</Text>
                       <DatePicker style={{
                         marginTop: 3,
                         flex: 1, width: '100%', height: 32,
@@ -294,8 +294,8 @@ export class MMRInformationComponent extends Component {
                         borderColor: 'transparent', borderWidth: 0.1, borderRadius: 4,
                         shadowOffset: { width: 0, height: 0, }, shadowOpacity: 0.2, shadowColor: '#000', shadowRadius: 5,
                       }}
-                        date={this.state.mmrInformation.birthday ? moment(this.state.mmrInformation.birthday).toDate() : undefined}
-                        onDateChange={(birthday) => this.updateMMRInformationState.bind(this)({ birthday: moment(birthday, 'DD|MM|YYYY').toDate() })}
+                        date={this.state.emrInformation.birthday ? moment(this.state.emrInformation.birthday).toDate() : undefined}
+                        onDateChange={(birthday) => this.updateEMRInformationState.bind(this)({ birthday: moment(birthday, 'DD|MM|YYYY').toDate() })}
                         maxDate={moment().toDate()}
                         format="DD|MM|YYYY"
                         placeholder="DD|MM|YYYY"
@@ -312,15 +312,15 @@ export class MMRInformationComponent extends Component {
                       </DatePicker>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'column', marginLeft: convertWidth(16), }}>
-                      <Text style={styles.mmrInformationLabel}>Sex</Text>
-                      <View style={styles.mmrInformationValueInput}>
+                      <Text style={styles.emrInformationLabel}>Sex</Text>
+                      <View style={styles.emrInformationValueInput}>
                         <PickerSelect
                           style={{
                             inputIOS: { width: '100%', height: '100%', padding: 8, color: 'rgba(0, 0, 0, 0.87)' },
                             modalViewMiddle: { justifyContent: 'flex-end' },
                             chevronContainer: { display: 'none' }
                           }}
-                          value={this.state.mmrInformation.sex}
+                          value={this.state.emrInformation.sex}
                           placeholder={{
                             label: 'SELECT',
                             value: null,
@@ -328,7 +328,7 @@ export class MMRInformationComponent extends Component {
                           }}
                           items={[{ label: 'MALE', value: 'MALE' }, { label: 'FEMALE', value: 'FEMALE' }]}
                           hideIcon={true}
-                          onValueChange={(sex) => this.updateMMRInformationState.bind(this)({ sex })}>
+                          onValueChange={(sex) => this.updateEMRInformationState.bind(this)({ sex })}>
                         </PickerSelect>
                       </View>
                     </View>
@@ -339,7 +339,7 @@ export class MMRInformationComponent extends Component {
                 <Text style={styles.emergencyContactTitle}>
                   EMERGENCY CONTACTS
                 </Text>
-                {(this.state.mmrInformation.emergencyContacts || []).map((item, index) => {
+                {(this.state.emrInformation.emergencyContacts || []).map((item, index) => {
                   return <View key={index} style={styles.emergencyContactRow}>
                     <Text style={styles.emergencyContactRowRelationship}>{item.relationship.substring(0, 1).toUpperCase() + item.relationship.substring(1, item.relationship.length).toLowerCase()}</Text>
                     <View style={styles.emergencyContactRowInfo}>
@@ -364,13 +364,13 @@ export class MMRInformationComponent extends Component {
                 <View style={styles.cardTitle}>
                   <Text style={styles.cardTitleText}>{'Active Clinical Diagnoses'.toUpperCase()}</Text>
                 </View>
-                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_1.png')} />
+                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_1.png')} />
               </ShadowTopComponent>
               <View style={[styles.cardContentRow, { paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0, }]}>
-                <TextInput style={[styles.mmrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
+                <TextInput style={[styles.emrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
                   placeholder='TAP TO INPUT'
-                  defaultValue={this.state.mmrInformation.activeClinicalDiagnoses}
-                  onChangeText={(activeClinicalDiagnoses) => this.updateMMRInformationState.bind(this)({ activeClinicalDiagnoses })}
+                  defaultValue={this.state.emrInformation.activeClinicalDiagnoses}
+                  onChangeText={(activeClinicalDiagnoses) => this.updateEMRInformationState.bind(this)({ activeClinicalDiagnoses })}
                   multiline={true}
                 />
               </View>
@@ -381,13 +381,13 @@ export class MMRInformationComponent extends Component {
                 <View style={styles.cardTitle}>
                   <Text style={styles.cardTitleText}>{'CURRENT TREATMENTS & DOSAGES'.toUpperCase()}</Text>
                 </View>
-                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_2.png')} />
+                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_2.png')} />
               </ShadowTopComponent>
               <View style={[styles.cardContentRow, { paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0, }]}>
-                <TextInput style={[styles.mmrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
+                <TextInput style={[styles.emrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
                   placeholder='TAP TO INPUT'
-                  defaultValue={this.state.mmrInformation.currentTreatmentsAndDosages}
-                  onChangeText={(currentTreatmentsAndDosages) => this.updateMMRInformationState.bind(this)({ currentTreatmentsAndDosages })}
+                  defaultValue={this.state.emrInformation.currentTreatmentsAndDosages}
+                  onChangeText={(currentTreatmentsAndDosages) => this.updateEMRInformationState.bind(this)({ currentTreatmentsAndDosages })}
                   multiline={true}
                 />
               </View>
@@ -398,13 +398,13 @@ export class MMRInformationComponent extends Component {
                 <View style={styles.cardTitle}>
                   <Text style={styles.cardTitleText}>{'ALLERGIES & REACTIONS'.toUpperCase()}</Text>
                 </View>
-                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_3.png')} />
+                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_3.png')} />
               </ShadowTopComponent>
               <View style={[styles.cardContentRow, { paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0, }]}>
-                <TextInput style={[styles.mmrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
+                <TextInput style={[styles.emrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
                   placeholder='TAP TO INPUT'
-                  defaultValue={this.state.mmrInformation.allergiesAndReactions}
-                  onChangeText={(allergiesAndReactions) => this.updateMMRInformationState.bind(this)({ allergiesAndReactions })}
+                  defaultValue={this.state.emrInformation.allergiesAndReactions}
+                  onChangeText={(allergiesAndReactions) => this.updateEMRInformationState.bind(this)({ allergiesAndReactions })}
                   multiline={true}
                 />
               </View>
@@ -415,18 +415,18 @@ export class MMRInformationComponent extends Component {
                 <View style={styles.cardTitle}>
                   <Text style={styles.cardTitleText}>{'Visible & Invisible Disabilities'.toUpperCase()}</Text>
                 </View>
-                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_information_icon_4.png')} />
+                <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_4.png')} />
               </ShadowTopComponent>
               <View style={[styles.cardContentRow, { paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0, }]}>
-                <TextInput style={[styles.mmrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
+                <TextInput style={[styles.emrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
                   placeholder='TAP TO INPUT'
-                  defaultValue={this.state.mmrInformation.visibleAndInvisibleDisabilities}
-                  onChangeText={(visibleAndInvisibleDisabilities) => this.updateMMRInformationState.bind(this)({ visibleAndInvisibleDisabilities })}
+                  defaultValue={this.state.emrInformation.visibleAndInvisibleDisabilities}
+                  onChangeText={(visibleAndInvisibleDisabilities) => this.updateEMRInformationState.bind(this)({ visibleAndInvisibleDisabilities })}
                   multiline={true}
                 />
               </View>
             </ShadowComponent>
-            <TouchableOpacity style={styles.saveButton} onPress={this.saveMMRInformation.bind(this)}>
+            <TouchableOpacity style={styles.saveButton} onPress={this.saveEMRInformation.bind(this)}>
               <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -544,31 +544,31 @@ const styles = StyleSheet.create({
   cardContentRowValue: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
   },
-  mmrInformationAvatar: {
+  emrInformationAvatar: {
     width: 76, height: 76, resizeMode: 'cover',
     borderWidth: 0.1, borderRadius: 38,
     borderColor: 'white',
     marginRight: convertWidth(15),
     shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
   },
-  mmrInformationAvatarCover: {
+  emrInformationAvatarCover: {
     position: 'absolute',
     top: 46.5, left: -1,
     width: 78, height: 32, resizeMode: 'contain',
     zIndex: 1,
   },
-  mmrInformationBasic: {
+  emrInformationBasic: {
     flex: 1,
   },
-  mmrInformationLabel: {
+  emrInformationLabel: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#545454',
   },
-  mmrInformationValue: {
+  emrInformationValue: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 3,
   },
 
-  mmrInformationValueInput: {
+  emrInformationValueInput: {
     marginTop: 3,
     flex: 1, width: '100%', height: 32,
     backgroundColor: '#F5F5F5',

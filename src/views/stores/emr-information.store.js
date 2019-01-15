@@ -7,16 +7,16 @@ const ACTION_TYPES = {
   INIT: 'INIT',
 };
 
-const MMRInformationActions = {
+const EMRInformationActions = {
   reset: () => {
     return { type: ACTION_TYPES.RESET, };
   },
-  initData: ({ mmrInformation }) => {
-    return { type: ACTION_TYPES.INIT, mmrInformation };
+  initData: ({ emrInformation }) => {
+    return { type: ACTION_TYPES.INIT, emrInformation };
   },
 };
 
-const initialState = { mmrInformation: null };
+const initialState = { emrInformation: null };
 
 const data = (state = initialState, action) => {
   switch (action.type) {
@@ -24,7 +24,7 @@ const data = (state = initialState, action) => {
       return merge({}, initialState);
     case ACTION_TYPES.INIT: {
       let tempState = merge({}, state);
-      tempState.mmrInformation = action.mmrInformation;
+      tempState.emrInformation = action.emrInformation;
       return tempState;
     }
     default:
@@ -33,11 +33,11 @@ const data = (state = initialState, action) => {
 };
 const reducer = combineReducers({ data });
 
-const MMRInformationStore = createStore(
+const EMRInformationStore = createStore(
   reducer, applyMiddleware(thunk)
 );
 
 export {
-  MMRInformationActions,
-  MMRInformationStore
+  EMRInformationActions,
+  EMRInformationStore
 };

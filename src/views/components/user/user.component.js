@@ -32,16 +32,16 @@ import { HealthDataCardComponent } from "./card/health-data-card.component";
 import { GetStartedFeedCardComponent } from "./card/get-started-feed-card.component";
 import { HealthDataFeedCardComponent } from "./card/health-data-feed-card.component";
 import { MedicalRecordFeedCardComponent } from "./card/medical-record-feed-card.component";
-import { MMRCardComponent } from './mmr';
+import { EMRCardComponent } from './emr';
 import { AddRecordOptionsComponent } from "./add-record-options.component";
 import { DailyHealthDataFeedCardComponent } from "./card/daily-health-data-feed-card.component";
 import { DailyHealthDataCardComponent } from "./card/daily-health-data-card.component";
 
 const STICK_CARD_TYPES = {
-  GET_STARTED_MMR: 0,
+  GET_STARTED_EMR: 0,
   GET_STARTED_MEDICAL_RECORD: 1,
   GET_STARTED_HEALTH_DATA: 2,
-  MMR: 3,
+  EMR: 3,
   MEDICAL_RECORD: 4,
   HEALTH_DATA: 5,
   SIGN_DAILY_HEALTH_DATA: 6,
@@ -57,7 +57,7 @@ class PrivateUserComponent extends Component {
     waitingForIssuingDailyHealthData: PropTypes.array,
     searchTerm: PropTypes.string,
     searchResults: PropTypes.object,
-    mmrInformation: PropTypes.object,
+    emrInformation: PropTypes.object,
   };
   constructor(props) {
     super(props);
@@ -66,7 +66,7 @@ class PrivateUserComponent extends Component {
     this.updateSearch = this.updateSearch.bind(this);
 
     this.state = {
-      stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR,
+      stickCardType: STICK_CARD_TYPES.GET_STARTED_EMR,
       showAddRecordOptions: false
     };
   }
@@ -89,7 +89,7 @@ class PrivateUserComponent extends Component {
 
   resetToInitialState() {
     this.setState({
-      stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR,
+      stickCardType: STICK_CARD_TYPES.GET_STARTED_EMR,
       showAddRecordOptions: false
     });
   }
@@ -371,7 +371,7 @@ class PrivateUserComponent extends Component {
         <SafeAreaView style={[styles.bodySafeView,]}>
           <View style={[styles.wrapper]}>
             {/*SEARCH AREA*/}
-            {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
+            {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_EMR &&
               <View style={[styles.searchArea, (this.props.searchTerm ? { flex: 1 } : {})]}>
                 <View style={styles.searchInputContainer}>
                   {/*Search Input*/}
@@ -412,16 +412,16 @@ class PrivateUserComponent extends Component {
             }
 
             {/*DATA PANEL*/}
-            {(!this.state.searchFocusing && !this.props.searchTerm && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_MMR) &&
+            {(!this.state.searchFocusing && !this.props.searchTerm && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_EMR) &&
               <View style={[styles.topBar]}>
                 {/*Back button*/}
-                <TouchableOpacity style={styles.topBarButton} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MMR }) }}>
+                <TouchableOpacity style={styles.topBarButton} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_EMR }) }}>
                   <Image style={styles.backIcon} source={require('assets/imgs/back-icon-black.png')} />
                 </TouchableOpacity>
 
-                {/*MMR Icon*/}
-                <TouchableOpacity style={styles.topBarButton} onPress={() => { Actions.mmrInformation() }}>
-                  <Image style={styles.profileIcon} source={this.props.mmrInformation ? { uri: this.props.mmrInformation.avatar } : require('assets/imgs/profile-icon.png')} />
+                {/*EMR Icon*/}
+                <TouchableOpacity style={styles.topBarButton} onPress={() => { Actions.emrInformation() }}>
+                  <Image style={styles.profileIcon} source={this.props.emrInformation ? { uri: this.props.emrInformation.avatar } : require('assets/imgs/profile-icon.png')} />
                 </TouchableOpacity>
               </View>
             }
@@ -433,9 +433,9 @@ class PrivateUserComponent extends Component {
                   <View style={{ flex: 1, paddingTop: 8, }}>
                     {/*-----STICK CARD-----*/}
                     <View style={[styles.stickCardContainer,]}>
-                      {/*GET_STARTED_MMR*/}
-                      {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MMR &&
-                        <MMRCardComponent displayFromUserScreen={true} />
+                      {/*GET_STARTED_EMR*/}
+                      {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_EMR &&
+                        <EMRCardComponent displayFromUserScreen={true} />
                       }
 
                       {/*GET_STARTED_MEDICAL_RECORD*/}

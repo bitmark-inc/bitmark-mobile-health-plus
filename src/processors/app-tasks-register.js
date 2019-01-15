@@ -130,8 +130,8 @@ const doTransferBitmark = async ({ bitmark, receiver }) => {
   return await processing(DataProcessor.doTransferBitmark(bitmark, receiver));
 };
 
-const doIssueMMR = async ({ data }) => {
-  return await processing(DataProcessor.doIssueMMR(data));
+const doIssueEMR = async ({ data }) => {
+  return await processing(DataProcessor.doIssueEMR(data));
 };
 
 const doSaveUserSetting = async ({ settings }) => {
@@ -158,7 +158,7 @@ let AppTasks = {
   doProcessEmailRecords,
   doCombineImages,
   doTransferBitmark,
-  doIssueMMR,
+  doIssueEMR,
   doSaveUserSetting,
 };
 

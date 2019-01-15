@@ -7,7 +7,7 @@ const ACTION_TYPES = {
   INIT: 'INIT',
   UPDATE_BITMARK_TYPE: 'UPDATE_BITMARK_TYPE',
   UPDATE_SEARCH_RESULTS: 'UPDATE_SEARCH_RESULTS',
-  UPDATE_MMR: 'UPDATE_MMR'
+  UPDATE_EMR: 'UPDATE_EMR'
 };
 
 const UserBitmarksActions = {
@@ -23,12 +23,12 @@ const UserBitmarksActions = {
   updateSearchResults: (searchResults, searchTerm) => {
     return { type: ACTION_TYPES.UPDATE_SEARCH_RESULTS, searchResults, searchTerm };
   },
-  updateMMRInformation: (mmrInformation) => {
-    return { type: ACTION_TYPES.UPDATE_MMR, mmrInformation };
+  updateEMRInformation: (emrInformation) => {
+    return { type: ACTION_TYPES.UPDATE_EMR, emrInformation };
   }
 };
 
-const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], dailyHealthDataBitmarks: [], waitingForIssuingDailyHealthData: [], bitmarkType: '', searchTerm: '', searchResults: {}, mmrInformation: null };
+const initialState = { healthDataBitmarks: [], healthAssetBitmarks: [], dailyHealthDataBitmarks: [], waitingForIssuingDailyHealthData: [], bitmarkType: '', searchTerm: '', searchResults: {}, emrInformation: null };
 
 const data = (state = initialState, action) => {
   switch (action.type) {
@@ -54,9 +54,9 @@ const data = (state = initialState, action) => {
       tempState.searchTerm = action.searchTerm;
       return tempState;
     }
-    case ACTION_TYPES.UPDATE_MMR: {
+    case ACTION_TYPES.UPDATE_EMR: {
       let tempState = merge({}, state);
-      tempState.mmrInformation = action.mmrInformation;
+      tempState.emrInformation = action.emrInformation;
       return tempState;
     }
     default:

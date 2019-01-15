@@ -8,29 +8,29 @@ import { Provider, connect } from 'react-redux';
 
 import { convertWidth } from 'src/utils';
 import { ShadowComponent, ShadowTopComponent, } from 'src/views/commons';
-import { MMRInformationStore } from 'src/views/stores';
+import { EMRInformationStore } from 'src/views/stores';
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
 
 
-class PrivateMMRCardComponent extends Component {
+class PrivateEMRCardComponent extends Component {
   static propTypes = {
-    mmrInformation: PropTypes.any,
+    emrInformation: PropTypes.any,
     displayFromUserScreen: PropTypes.bool,
   };
   render() {
-    let displaySeeMoreButton = (this.props.mmrInformation && this.props.mmrInformation.avatar
-      && this.props.mmrInformation.name && this.props.mmrInformation.birthday && this.props.mmrInformation.sex) && this.props.displayFromUserScreen;
+    let displaySeeMoreButton = (this.props.emrInformation && this.props.emrInformation.avatar
+      && this.props.emrInformation.name && this.props.emrInformation.birthday && this.props.emrInformation.sex) && this.props.displayFromUserScreen;
     return (
       <ShadowComponent style={styles.body}>
-        {!this.props.mmrInformation &&
-          <TouchableOpacity onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
+        {!this.props.emrInformation &&
+          <TouchableOpacity onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.emrInformation({ emrInformation: this.props.emrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
               <Text style={styles.cardTitleText}>GET STARTED</Text>
-              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/mmr_setup_icon.png')} />
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_setup_icon.png')} />
             </ShadowTopComponent>
             <View style={[styles.bodyContent, { padding: convertWidth(16), }]} >
-              <Text style={styles.cardHeaderTitleText}>{this.props.displayFromUserScreen ? 'Personalize your vault' : 'Set up your minimum medical record'}</Text>
+              <Text style={styles.cardHeaderTitleText}>{this.props.displayFromUserScreen ? 'Personalize your vault' : 'Set up your emergency medical record'}</Text>
               <Text style={styles.cardContentDescription}>
                 {this.props.displayFromUserScreen
                   ? 'Your Bitmark Health vault gives you control over your health data. Personalize your vault settings to control how your health history is shared with healthcare providers, family, and researchers.'
@@ -44,31 +44,31 @@ class PrivateMMRCardComponent extends Component {
           </TouchableOpacity>
         }
 
-        {this.props.mmrInformation &&
+        {this.props.emrInformation &&
           <TouchableOpacity style={styles.bodyContent}
-            onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.mmrInformation({ mmrInformation: this.props.mmrInformation })}>
-            <Text style={styles.mmrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Minimum Medical Record'}</Text>
-            <View style={styles.mmrInformation}>
-              <Image style={styles.mmrInformationAvatar} source={this.props.mmrInformation.avatar ? { uri: this.props.mmrInformation.avatar } : require('assets/imgs2/mmr_avatar_default.png')} />
-              <View style={styles.mmrInformationBasic}>
-                <Text style={styles.mmrInformationLabel}>Name</Text>
-                <Text style={styles.mmrInformationValue}>{this.props.mmrInformation.name}</Text>
+            onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.emrInformation({ emrInformation: this.props.emrInformation })}>
+            <Text style={styles.emrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Emergency Medical Record'}</Text>
+            <View style={styles.emrInformation}>
+              <Image style={styles.emrInformationAvatar} source={this.props.emrInformation.avatar ? { uri: this.props.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default.png')} />
+              <View style={styles.emrInformationBasic}>
+                <Text style={styles.emrInformationLabel}>Name</Text>
+                <Text style={styles.emrInformationValue}>{this.props.emrInformation.name}</Text>
                 <View style={{ flex: 1, flexDirection: 'row', marginTop: 21, }}>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
-                    <Text style={styles.mmrInformationLabel}>Date of birth</Text>
-                    <Text style={styles.mmrInformationValue}>{this.props.mmrInformation.birthday ? moment(this.props.mmrInformation.birthday).format('MMM DD, YYYY') : ''}</Text>
+                    <Text style={styles.emrInformationLabel}>Date of birth</Text>
+                    <Text style={styles.emrInformationValue}>{this.props.emrInformation.birthday ? moment(this.props.emrInformation.birthday).format('MMM DD, YYYY') : ''}</Text>
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
-                    <Text style={styles.mmrInformationLabel}>Sex</Text>
-                    <Text style={styles.mmrInformationValue}>{this.props.mmrInformation.sex ?
-                      (this.props.mmrInformation.sex.substring(0, 1).toUpperCase() + this.props.mmrInformation.sex.substring(1, this.props.mmrInformation.sex.length).toUpperCase().toLowerCase()) : ''}</Text>
+                    <Text style={styles.emrInformationLabel}>Sex</Text>
+                    <Text style={styles.emrInformationValue}>{this.props.emrInformation.sex ?
+                      (this.props.emrInformation.sex.substring(0, 1).toUpperCase() + this.props.emrInformation.sex.substring(1, this.props.emrInformation.sex.length).toUpperCase().toLowerCase()) : ''}</Text>
                   </View>
                 </View>
               </View>
             </View>
             <View style={styles.cardNextButton}>
-              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.mmrInformation({ mmrInformation: this.props.mmrInformation, edit: (!this.props.displayFromUserScreen || !displaySeeMoreButton) ? true : false })}>
-                <Text style={styles.mmrInformationSeeMoreButtonText}>{displaySeeMoreButton ? 'SEE MORE' : 'EDIT'}</Text>
+              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.emrInformation({ emrInformation: this.props.emrInformation, edit: (!this.props.displayFromUserScreen || !displaySeeMoreButton) ? true : false })}>
+                <Text style={styles.emrInformationSeeMoreButtonText}>{displaySeeMoreButton ? 'SEE MORE' : 'EDIT'}</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -119,42 +119,42 @@ const styles = StyleSheet.create({
   cardNextButtonIcon: {
     width: 16, height: 16, resizeMode: 'contain',
   },
-  mmrUserTitle: {
+  emrUserTitle: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,
     padding: convertWidth(15), paddingBottom: 0,
   },
-  mmrInformation: {
+  emrInformation: {
     padding: convertWidth(15),
     flexDirection: 'row',
   },
-  mmrInformationAvatar: {
+  emrInformationAvatar: {
     width: 76, height: 76, resizeMode: 'cover',
     borderWidth: 1, borderColor: 'white', borderRadius: 38,
     marginRight: convertWidth(15),
   },
-  mmrInformationBasic: {
+  emrInformationBasic: {
     flex: 1,
   },
-  mmrInformationLabel: {
+  emrInformationLabel: {
     letterSpacing: 0.4,
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10, color: '#545454',
   },
-  mmrInformationValue: {
+  emrInformationValue: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 3,
     letterSpacing: 0.15,
   },
-  mmrInformationSeeMoreButtonText: {
+  emrInformationSeeMoreButtonText: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 10, color: '#FF003C',
   },
 });
 
 
-const StoreMMRCardComponent = connect(
+const StoreEMRCardComponent = connect(
   (state, ) => state.data
-)(PrivateMMRCardComponent);
+)(PrivateEMRCardComponent);
 
-export class MMRCardComponent extends Component {
+export class EMRCardComponent extends Component {
   static propTypes = {
     displayFromUserScreen: PropTypes.bool,
     onPress: PropTypes.func
@@ -162,8 +162,8 @@ export class MMRCardComponent extends Component {
 
   render() {
     return (
-      <Provider store={MMRInformationStore}>
-        <StoreMMRCardComponent displayFromUserScreen={this.props.displayFromUserScreen} onPress={this.props.onPress} />
+      <Provider store={EMRInformationStore}>
+        <StoreEMRCardComponent displayFromUserScreen={this.props.displayFromUserScreen} onPress={this.props.onPress} />
       </Provider>
     );
   }
