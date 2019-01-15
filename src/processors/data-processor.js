@@ -80,7 +80,7 @@ let updateModal = (keyIndex, data) => {
 };
 
 // ================================================================================================================================================
-const doCheckNewUserDataBitmarks = async ({healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber}) => {
+const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestMMRBitmark, bitmarkAccountNumber }) => {
   bitmarkAccountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
 
   let userDataBitmarks = await CommonModel.doGetLocalData(CommonModel.KEYS.USER_DATA_BITMARK) || {};
@@ -109,7 +109,7 @@ const doCheckNewUserDataBitmarks = async ({healthDataBitmarks, dailyHealthDataBi
     }
   }
   let storeState = { mmrInformation: CacheData.userInformation.currentMMrData };
-  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState));UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
+  MMRInformationStore.dispatch(MMRInformationActions.initData(storeState)); UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
   UserBitmarksStore.dispatch(UserBitmarksActions.updateMMRInformation(CacheData.userInformation.currentMMrData));
 
   // Update new daily health data
@@ -255,7 +255,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         dailyHealthDataBitmarks = dailyHealthDataBitmarks.sort(dailyHealthCompareFunction);
       }
 
-      await doCheckNewUserDataBitmarks({healthDataBitmarks, healthAssetBitmarks, dailyHealthDataBitmarks, latestMMRBitmark, bitmarkAccountNumber});
+      await doCheckNewUserDataBitmarks({ healthDataBitmarks, healthAssetBitmarks, dailyHealthDataBitmarks, latestMMRBitmark, bitmarkAccountNumber });
 
       (queueGetUserDataBitmarks[bitmarkAccountNumber] || []).forEach(queueResolve => queueResolve({ healthDataBitmarks, dailyHealthDataBitmarks, healthAssetBitmarks, latestMMRBitmark }));
       queueGetUserDataBitmarks[bitmarkAccountNumber] = [];
@@ -303,6 +303,9 @@ const runGetEmailRecordsInBackground = () => {
 };
 
 const runOnBackground = async (justOpenApp) => {
+  if (!CacheData.networkStatus) {
+    return;
+  }
   if (justOpenApp) {
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
   }
@@ -644,7 +647,6 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
           visualize_health_data: true,
         };
         await AccountModel.doUpdateUserMetadata(CacheData.jwt, CacheData.userInformation.metadata);
-        AccountStore.dispatch(AccountActions.reload());
       } else {
         CacheData.userInformation.metadata = await AccountModel.doGetUserMetadata(CacheData.jwt);
         if (!CacheData.userInformation.metadata) {
@@ -654,8 +656,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
             visualize_health_data: true,
           };
         }
-        AccountStore.dispatch(AccountActions.reload());
       }
+      AccountStore.dispatch(AccountActions.reload());
     } else {
       if (!CacheData.userInformation.metadata) {
         CacheData.userInformation.metadata = {
@@ -663,8 +665,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
           suggest_health_studies: true,
           visualize_health_data: true,
         };
-        AccountStore.dispatch(AccountActions.reload());
       }
+      AccountStore.dispatch(AccountActions.reload());
     }
 
     if (justCreatedBitmarkAccount) {

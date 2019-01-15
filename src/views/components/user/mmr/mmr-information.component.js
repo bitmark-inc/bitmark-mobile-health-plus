@@ -264,7 +264,7 @@ export class MMRInformationComponent extends Component {
 
         {this.state.isEditing && <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }} >
           <ScrollView contentContainerStyle={styles.body}>
-            <ShadowComponent style={styles.cardBody}>
+            <ShadowComponent style={[styles.cardBody, { marginTop: 0 }]}>
               <ShadowTopComponent contentStyle={styles.cardHeader}>
                 <View style={styles.cardTitle}>
                   <Text style={styles.cardTitleText}>PROFILE</Text>

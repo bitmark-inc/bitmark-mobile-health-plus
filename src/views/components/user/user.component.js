@@ -631,10 +631,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   searchArea: {
+    paddingTop: 4,
   },
   searchInput: {
     paddingLeft: convertWidth(16),
-    paddingBottom: convertWidth(21),
+    paddingBottom: 17,
     flex: 1,
   },
   searchResultsContainer: {
