@@ -5,7 +5,7 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import Pdf from 'react-native-pdf';
 
 import {
-  StyleSheet, Dimensions, SafeAreaView,
+  StyleSheet, Dimensions,
   Image, View, TouchableOpacity, Text, ActivityIndicator,
 } from 'react-native';
 
