@@ -282,6 +282,7 @@ const doSaveUserSetting = async (settings) => {
 // ================================================================================================
 
 let AppProcessor = {
+  processing,
   doCreateNewAccount,
   doGeneratePhrase,
   doGetCurrentAccount,
