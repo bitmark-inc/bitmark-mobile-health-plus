@@ -39,7 +39,9 @@ export class DailyHealthDataFullCardComponent extends React.Component {
     this.populateDataForVisualization();
 
     let otherData = await HealthKitService.doGetOtherAllowedHKPermissionLabels();
-    this.setState({ otherData });
+    let isAbleToDisplayAppleHealthPermissionForm = await HealthKitService.isAbleToDisplayAppleHealthPermissionForm();
+
+    this.setState({ otherData, isAbleToDisplayAppleHealthPermissionForm });
   }
 
   async populateDataForVisualization() {
@@ -200,12 +202,16 @@ export class DailyHealthDataFullCardComponent extends React.Component {
                         <Text style={[styles.otherDataText]}>{this.state.otherData.join(', ').toUpperCase()}</Text>
                       </View>
                     }
+
+                    {/*Show AppleKit Permission forms*/}
+                    {this.state.isAbleToDisplayAppleHealthPermissionForm &&
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                       <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
                       <TouchableOpacity onPress={() => HealthKitService.initHealthKit(true)}>
                         <Text style={[styles.linkButtonText]}>Add more data from Apple Health</Text>
                       </TouchableOpacity>
                     </View>
+                    }
                   </View>
 
                   {/*REF*/}

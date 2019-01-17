@@ -304,7 +304,7 @@ const doGetHealthKitData = async (listTypes, startDate, endDate) => {
 
 const doGetDataSources = async (areAllDataTypes) => {
   let dataTypes = areAllDataTypes ? allDataTypes : BitmarkHealthDataTypes;
-  await AppleHealthKitAdapter.initHealthKit(dataTypes);
+  // await AppleHealthKitAdapter.initHealthKit(dataTypes);
   let startDate = moment().toDate();
   startDate.setDate(startDate.getDate() - 7);
   let endDate = moment().toDate();
@@ -447,7 +447,7 @@ const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt
   // TODO: This for adding test data
   //lastTimeBitmarkHealthData = moment().date(moment().date() - 3);
 
-  console.log('lastTime for checking new  daily bitmark:', lastTimeBitmarkHealthData.toDate());
+  console.log('lastTime for checking new daily bitmark:', lastTimeBitmarkHealthData.toDate());
   startDate = moment(lastTimeBitmarkHealthData);
   startDate.hour(0);
   startDate.minute(0);
@@ -499,7 +499,8 @@ const getSleepEndDate = (endDate) => {
 };
 
 const initHealthKit = async (areAllDataTypes) => {
-  await AppleHealthKitAdapter.initHealthKit(areAllDataTypes ? allDataTypes : BitmarkHealthDataTypes);
+  let result = await AppleHealthKitAdapter.initHealthKit(areAllDataTypes ? allDataTypes : BitmarkHealthDataTypes);
+  return result;
 };
 
 const doCheckEmptyDataSource = async (areAllDataTypes) => {
@@ -523,7 +524,7 @@ const getNext12AM = () => {
 };
 
 const doDeterminedHKPermission = async () => {
-  return await AppleHealthKitAdapter.getDeterminedHKPermission(BitmarkHealthDataTypes);
+  return await AppleHealthKitAdapter.getDeterminedHKPermission(allDataTypes);
 };
 
 const doGetOtherAllowedHKPermissionLabels = async () => {
@@ -531,6 +532,17 @@ const doGetOtherAllowedHKPermissionLabels = async () => {
   let allowedPermissionLabels = dataSourceStatuses.filter(item => item.status == 'Active' && !BitmarkHealthDataTypes.includes(item.key)).map(item => item.title);
 
   return allowedPermissionLabels;
+};
+
+const isAbleToDisplayAppleHealthPermissionForm = async () => {
+  let isAble = false;
+  let determinedHKPermissions = await doDeterminedHKPermission();
+
+  if (determinedHKPermissions && determinedHKPermissions.permissions.read) {
+    isAble = determinedHKPermissions.permissions.read.length !== allDataTypes.length;
+  }
+
+  return isAble;
 };
 
 const HealthKitService = {
@@ -541,7 +553,8 @@ const HealthKitService = {
   doCheckBitmarkHealthDataTask,
   getNext12AM: getNext12AM,
   doDeterminedHKPermission,
-  doGetOtherAllowedHKPermissionLabels
+  doGetOtherAllowedHKPermissionLabels,
+  isAbleToDisplayAppleHealthPermissionForm
 };
 
 export { HealthKitService };
