@@ -27,7 +27,7 @@ class DailyHealthDataUtil {
     let sleep = undefined;
     if (dailyData.SleepAnalysis) {
       dailyData.SleepAnalysis.forEach(item => {
-        if (item.value == 'INBED' && item.startDate && item.endDate && moment(item.endDate).diff(moment(item.startDate), 'minutes') > 0 && moment(item.startDate).hour() >= 17 && moment(item.endDate).hour() <= 12) {
+        if (item.value == 'INBED' && item.startDate && item.endDate && moment(item.endDate).diff(moment(item.startDate), 'minutes') > 0) {
           sleep = {
             startDate: item.startDate,
             endDate: item.endDate
