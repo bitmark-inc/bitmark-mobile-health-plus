@@ -676,7 +676,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
     let userBitmarks = await doGetUserDataBitmarks(bitmarkAccountNumber);
 
-    if (!CacheData.userInformation.activeHealthDataAt && userBitmarks && userBitmarks.healthDataBitmarks && userBitmarks.healthDataBitmarks.length > 0) {
+    if (!CacheData.userInformation.activeHealthDataAt && userBitmarks && userBitmarks.dailyHealthDataBitmarks && userBitmarks.dailyHealthDataBitmarks.length > 0) {
       await runPromiseWithoutError(doRequireHealthKitPermission());
     }
 
