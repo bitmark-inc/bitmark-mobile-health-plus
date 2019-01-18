@@ -327,17 +327,17 @@ class PrivateUserComponent extends Component {
       accumulatedTop += 105;
     }
 
-    // Sign for Daily health data
-    if (this.props.waitingForIssuingDailyHealthData.length) {
-      cardListData.push({ type: STICK_CARD_TYPES.SIGN_DAILY_HEALTH_DATA, data: this.props.waitingForIssuingDailyHealthData, top: accumulatedTop });
-      accumulatedTop += 105;
-    }
-
-    // Daily health data
-    if (this.props.dailyHealthDataBitmarks.length && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
-      cardListData.push({ type: STICK_CARD_TYPES.DAILY_HEALTH_DATA, data: this.props.dailyHealthDataBitmarks, top: accumulatedTop });
-      accumulatedTop += 105;
-    }
+    // // Sign for Daily health data
+    // if (this.props.waitingForIssuingDailyHealthData.length) {
+    //   cardListData.push({ type: STICK_CARD_TYPES.SIGN_DAILY_HEALTH_DATA, data: this.props.waitingForIssuingDailyHealthData, top: accumulatedTop });
+    //   accumulatedTop += 105;
+    // }
+    //
+    // // Daily health data
+    // if (this.props.dailyHealthDataBitmarks.length && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
+    //   cardListData.push({ type: STICK_CARD_TYPES.DAILY_HEALTH_DATA, data: this.props.dailyHealthDataBitmarks, top: accumulatedTop });
+    //   accumulatedTop += 105;
+    // }
 
     if (this.props.healthAssetBitmarks.length) {
       this.props.healthAssetBitmarks.forEach(bitmark => {

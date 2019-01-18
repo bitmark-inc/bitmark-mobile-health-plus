@@ -104,7 +104,7 @@ const doCheckFileToIssue = async (filePath) => {
 };
 
 const doRequireHealthKitPermission = async () => {
-  return DataProcessor.doRequireHealthKitPermission();
+  // return DataProcessor.doRequireHealthKitPermission();
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {

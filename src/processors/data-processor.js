@@ -618,7 +618,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       );
     });
     iCloudSyncAdapter.syncCloud();
-    configNotification();
+    // configNotification();
     if (!CacheData.userInformation.intercomUserId) {
       let intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
       CacheData.userInformation.intercomUserId = intercomUserId;
@@ -709,7 +709,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       });
     }
 
-    configNotification();
+    // configNotification();
   }
 
   console.log('CacheData.userInformation :', CacheData.userInformation);
