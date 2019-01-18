@@ -322,10 +322,10 @@ class PrivateUserComponent extends Component {
     }
 
     // Get stared daily health data
-    if (isCurrentUser && !CacheData.userInformation.activeHealthDataAt && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
-      cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA, top: accumulatedTop });
-      accumulatedTop += 105;
-    }
+    // if (isCurrentUser && !CacheData.userInformation.activeHealthDataAt && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
+    //   cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA, top: accumulatedTop });
+    //   accumulatedTop += 105;
+    // }
 
     // // Sign for Daily health data
     // if (this.props.waitingForIssuingDailyHealthData.length) {
