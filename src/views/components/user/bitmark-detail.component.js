@@ -108,7 +108,7 @@ export class BitmarkDetailComponent extends Component {
                 <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
               </TouchableOpacity>
               {/*emr Icon*/}
-              <TouchableOpacity onPress={() => { Actions.emrInformation() }}>
+              <TouchableOpacity onPress={() => { Actions.account() }}>
                 <Image style={styles.profileIcon} source={(CacheData.userInformation.currentEMRData && CacheData.userInformation.currentEMRData.avatar) ? {
                   uri: CacheData.userInformation.currentEMRData.avatar
                 } : require('assets/imgs/profile-icon.png')} />

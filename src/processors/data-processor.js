@@ -672,6 +672,7 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
         updateModal(mapModalDisplayKeyIndex.what_new, true);
       }
     }
+    updateModal(mapModalDisplayKeyIndex.what_new, true);
     await UserModel.doUpdateUserInfo(CacheData.userInformation);
 
     let userBitmarks = await doGetUserDataBitmarks(bitmarkAccountNumber);

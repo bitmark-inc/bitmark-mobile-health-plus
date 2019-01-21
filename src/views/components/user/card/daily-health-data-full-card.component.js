@@ -49,8 +49,8 @@ export class DailyHealthDataFullCardComponent extends React.Component {
   }
 
   async requestOtherHealthPermissions() {
-     await HealthKitService.initHealthKit(true);
-     await AppProcessor.processing(this.getOtherData());
+    await HealthKitService.initHealthKit(true);
+    await AppProcessor.processing(this.getOtherData());
   }
 
   async populateDataForVisualization() {
@@ -105,7 +105,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
             </TouchableOpacity>
 
             {/*EMR Icon*/}
-            <TouchableOpacity style={{ paddingRight: convertWidth(16) }} onPress={() => { Actions.emrInformation() }}>
+            <TouchableOpacity style={{ paddingRight: convertWidth(16) }} onPress={() => { Actions.account() }}>
               <Image style={styles.profileIcon} source={(CacheData.userInformation.currentEMRData && CacheData.userInformation.currentEMRData.avatar) ? {
                 uri: CacheData.userInformation.currentEMRData.avatar
               } : require('assets/imgs/profile-icon.png')} />
@@ -214,12 +214,12 @@ export class DailyHealthDataFullCardComponent extends React.Component {
 
                     {/*Show AppleKit Permission forms*/}
                     {this.state.isAbleToDisplayAppleHealthPermissionForm &&
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                      <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
-                      <TouchableOpacity onPress={() => this.requestOtherHealthPermissions.bind(this)()}>
-                        <Text style={[styles.linkButtonText]}>Add more data from Apple Health</Text>
-                      </TouchableOpacity>
-                    </View>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                        <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
+                        <TouchableOpacity onPress={() => this.requestOtherHealthPermissions.bind(this)()}>
+                          <Text style={[styles.linkButtonText]}>Add more data from Apple Health</Text>
+                        </TouchableOpacity>
+                      </View>
                     }
                   </View>
 

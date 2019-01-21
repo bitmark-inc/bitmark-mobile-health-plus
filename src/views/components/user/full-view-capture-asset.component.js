@@ -49,7 +49,7 @@ export class FullViewCaptureAssetComponent extends Component {
             <Image style={styles.closeIcon} source={require('assets/imgs/back-icon-black.png')} />
           </TouchableOpacity>
           {/*EMR Icon*/}
-          <TouchableOpacity style={{ paddingRight: convertWidth(16), }} onPress={() => { Actions.emrInformation() }}>
+          <TouchableOpacity style={{ paddingRight: convertWidth(16), }} onPress={() => { Actions.account() }}>
             <Image style={styles.profileIcon} source={(CacheData.userInformation.currentEMRData && CacheData.userInformation.currentEMRData.avatar) ? {
               uri: CacheData.userInformation.currentEMRData.avatar
             } : require('assets/imgs/profile-icon.png')} />
