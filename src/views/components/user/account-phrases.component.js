@@ -672,11 +672,12 @@ export class AccountPhraseComponent extends Component {
                     </View>
 
                     {/*Buttons*/}
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: this.props.isLogout ? 'space-between' : 'flex-end', }}>
                       {/*Go Back*/}
                       <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
                         <Text style={[styles.buttonNextText]}>GO BACK</Text>
                       </TouchableOpacity>
+                      {/*Next*/}
                       {this.props.isLogout && <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.checkInputWords.bind(this)()}>
                         <Text style={[styles.buttonNextText]}>NEXT</Text>
                       </TouchableOpacity>}
