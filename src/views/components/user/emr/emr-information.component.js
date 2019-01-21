@@ -168,7 +168,7 @@ export class EMRInformationComponent extends Component {
           </TouchableOpacity>
           <Text style={styles.headerTitle} numberOfLines={1}>Emergency Medical Record</Text>
           <TouchableOpacity style={styles.headerRight} disabled={this.state.isEditing} onPress={() => this.setState({ isEditing: !this.state.isEditing })}>
-            {!this.state.isEditing && <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/edition_icon_black.png')} />}
+            {!this.state.isEditing && <Text style={styles.headerEditText}>EDIT</Text>}
           </TouchableOpacity>
         </View>
         {!this.state.isEditing && <ScrollView contentContainerStyle={styles.body}>
@@ -465,7 +465,14 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     paddingRight: convertWidth(19),
-    width: convertWidth(35),
+    width: convertWidth(50),
+  },
+  headerEditText: {
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10,
+    letterSpacing: 1.5,
+    color: '#FF003C',
+    width: '100%',
+    textAlign: 'right'
   },
   emergencyContactArea: {
     flexDirection: 'column',
