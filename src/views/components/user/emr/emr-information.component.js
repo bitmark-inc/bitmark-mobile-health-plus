@@ -216,7 +216,7 @@ export class EMRInformationComponent extends Component {
           <ShadowComponent style={styles.cardBody}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
               <View style={styles.cardTitle}>
-                <Text style={styles.cardTitleText}>{'Active Clinical Diagnoses'.toUpperCase()}</Text>
+                <Text style={styles.cardTitleText}>{'CURRENT DIAGNOSES & CRITICAL HISTORY'.toUpperCase()}</Text>
               </View>
               <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_1.png')} />
             </ShadowTopComponent>
@@ -362,7 +362,7 @@ export class EMRInformationComponent extends Component {
             <ShadowComponent style={styles.cardBody}>
               <ShadowTopComponent contentStyle={styles.cardHeader}>
                 <View style={styles.cardTitle}>
-                  <Text style={styles.cardTitleText}>{'Active Clinical Diagnoses'.toUpperCase()}</Text>
+                  <Text style={styles.cardTitleText}>{'CURRENT DIAGNOSES & CRITICAL HISTORY'.toUpperCase()}</Text>
                 </View>
                 <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_1.png')} />
               </ShadowTopComponent>
