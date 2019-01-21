@@ -17,16 +17,32 @@ import { Actions } from 'react-native-router-flux';
 import Intercom from 'react-native-intercom';
 import { Provider, connect } from 'react-redux';
 import { AccountStore } from 'src/views/stores';
+import { CacheData } from "src/processors/caches";
+
+const PAGE_STATE = {
+  SETTINGS: '0',
+  PRIVATE_HEALTH_ASSISTANT: '1',
+  SECURITY: '2',
+  ABOUT: '3',
+};
 
 class PrivateAccountComponent extends Component {
   static propTypes = {
     userInformation: PropTypes.object,
-  }
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       accountNumberCopyText: i18n.t('AccountComponent_accountNumberCopyText'),
+      pageState: PAGE_STATE.SETTINGS
     };
+
+    this.changePageState = this.changePageState.bind(this);
+  }
+
+  changePageState(pageState) {
+    this.setState({pageState});
   }
 
   doLogout() {
@@ -85,20 +101,58 @@ class PrivateAccountComponent extends Component {
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.headerLeft} onPress={() => Actions.pop()}>
+          <TouchableOpacity style={styles.headerLeft} onPress={() => { this.state.pageState === PAGE_STATE.SETTINGS ? Actions.pop() : this.changePageState(PAGE_STATE.SETTINGS)}}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
+          {this.state.pageState === PAGE_STATE.SETTINGS &&
           <Text style={styles.headerTitle}>Vault</Text>
+          }
           <View style={styles.headerRight} />
         </View>
-        <ScrollView contentContainerStyle={styles.body}>
-          <EMRCardComponent />
 
+        {/*SETTINGS*/}
+        <ScrollView contentContainerStyle={styles.body}>
+          {this.state.pageState === PAGE_STATE.SETTINGS &&
+          <View>
+            {/*EMR*/}
+            {/*<EMRCardComponent />*/}
+
+            {/*VAULT SETTINGS*/}
+            <ShadowComponent style={styles.cardBody}>
+              <ShadowTopComponent contentStyle={styles.cardHeader}>
+                <Text style={styles.cardTitle}>VAULT SETTINGS</Text>
+              </ShadowTopComponent>
+              {/*Emergency Medical Record*/}
+              <TouchableOpacity style={styles.cardContentRow} onPress={() => Actions.emrInformation({emrInformation: CacheData.userInformation.currentEMRData})}>
+                <Text style={styles.cardContentRowButtonText}>Emergency Medical Record</Text>
+                <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+              {/*Private Health Assistant*/}
+              <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={() => this.changePageState(PAGE_STATE.PRIVATE_HEALTH_ASSISTANT)}>
+                <Text style={styles.cardContentRowButtonText}>Private Health Assistant</Text>
+                <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+              {/*Security*/}
+              <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={() => this.changePageState(PAGE_STATE.SECURITY)}>
+                <Text style={styles.cardContentRowButtonText}>Security</Text>
+                <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+              {/*About*/}
+              <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={() => this.changePageState(PAGE_STATE.ABOUT)}>
+                <Text style={styles.cardContentRowButtonText}>About</Text>
+                <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+            </ShadowComponent>
+          </View>
+          }
+
+          {/*PRIVATE_HEALTH_ASSISTANT*/}
+          {this.state.pageState === PAGE_STATE.PRIVATE_HEALTH_ASSISTANT &&
           <ShadowComponent style={styles.cardBody}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
-              <Text style={styles.cardTitle}>ASSISTANT</Text>
+              <Text style={styles.cardTitle}>PRIVATE HEALTH ASSISTANT</Text>
             </ShadowTopComponent>
-            <Text style={[styles.cardDescription, { paddingRight: convertWidth(68) }]}>A personal assistant to help you unlock the value of your health data.</Text>
+            <Text style={[styles.cardDescription, { paddingRight: convertWidth(68) }]}>A private health assistant to help you unlock the value of your health data.</Text>
 
             {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ suggest_health_studies: !this.props.userInformation.metadata.suggest_health_studies })}> */}
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} disabled={true}>
@@ -108,17 +162,17 @@ class PrivateAccountComponent extends Component {
               </View>} */}
               {/* {!this.props.userInformation.metadata.suggest_health_studies && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />} */}
             </TouchableOpacity>
-            <Text style={[styles.rowDescription, { fontSize: 10, paddingRight: convertWidth(49), }]}>I can confidentially match you with health studies based on information you provide in your Emergency Medical Record.</Text>
+            <Text style={[styles.rowDescription, { fontSize: 14, paddingRight: convertWidth(49), }]}>Confidentially match you with health studies based on information you provide in your Emergency Medical Record.</Text>
 
             {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ visualize_health_data: !this.props.userInformation.metadata.visualize_health_data })}> */}
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} disabled={true}>
-              <Text style={styles.cardContentRowButtonText}>Visualize my health data</Text>
+              <Text style={styles.cardContentRowButtonText}>Visualize your health data</Text>
               {/* {this.props.userInformation.metadata.visualize_health_data && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center', }} >
                 < Image style={[styles.copyIcon, { width: 19, height: 22, }]} source={require('assets/imgs2/check_box_icon_white_black.png')} />
               </View>} */}
               {/* {!this.props.userInformation.metadata.visualize_health_data && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />} */}
             </TouchableOpacity>
-            <Text style={[styles.rowDescription, { fontSize: 10, paddingRight: convertWidth(49), }]}>I can confidentially generate visual reports of health data collected from your iPhone.</Text>
+            <Text style={[styles.rowDescription, { fontSize: 14, paddingRight: convertWidth(49), }]}>Confidentially generate visual reports of health data collected from your iPhone.</Text>
 
             {/* <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} onPress={() => this.changeAccountSetting.bind(this)({ receive_email_records: !this.props.userInformation.metadata.receive_email_records })}> */}
             <TouchableOpacity style={[styles.cardContentRow, { minHeight: 25, marginTop: 13, }]} disabled={true}>
@@ -129,28 +183,31 @@ class PrivateAccountComponent extends Component {
               {/* {!this.props.userInformation.metadata.receive_email_records && <View style={{ borderWidth: 1, borderRadius: 10, width: 20, height: 20 }} />} */}
             </TouchableOpacity>
             <Text style={[styles.rowDescription, {
-              fontSize: 10, paddingRight: convertWidth(49),
+              fontSize: 14, paddingRight: convertWidth(49),
               marginBottom: this.props.userInformation.metadata.receive_email_records ? 5 : 15,
-            }]}>If others send health records to the following email address, I can automatically add them to your vault:</Text>
+            }]}>Automatically add records sent to the following email address to your vault:</Text>
 
-            {this.props.userInformation.metadata.receive_email_records && <TouchableOpacity style={[styles.cardContentRow, {
+            {this.props.userInformation.metadata.receive_email_records &&
+            <TouchableOpacity onPress={() => Share.share({ title: '', message: emailAddress })} style={[styles.cardContentRow, {
               borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
               marginBottom: 10,
-            }]}
-              onPress={() => Share.share({ title: '', message: emailAddress })}
-            >
+            }]}>
               <Text style={[styles.emailAddress, { paddingRight: convertWidth(25), }]}>{emailAddress}</Text>
               <Image style={styles.shareIcon} source={require('assets/imgs2/share_icon.png')} />
-            </TouchableOpacity>}
+            </TouchableOpacity>
+            }
 
           </ShadowComponent>
+          }
 
+          {/*SECURITY*/}
+          {this.state.pageState === PAGE_STATE.SECURITY &&
           <ShadowComponent style={styles.cardBody}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
               <Text style={styles.cardTitle}>SECURITY</Text>
             </ShadowTopComponent>
             <TouchableOpacity style={styles.cardContentRow}
-              onPress={() => Actions.accountPhrase()}
+                              onPress={() => Actions.accountPhrase()}
             >
               <Text style={styles.cardContentRowButtonText}>View your vault key phrase</Text>
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
@@ -161,38 +218,46 @@ class PrivateAccountComponent extends Component {
               <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
             </TouchableOpacity>
           </ShadowComponent>
+          }
 
-          <ShadowComponent style={styles.cardBody}>
-            <ShadowTopComponent contentStyle={styles.cardHeader}>
-              <Text style={styles.cardTitle}>ABOUT</Text>
-            </ShadowTopComponent>
-            <TouchableOpacity style={styles.cardContentRow} onPress={() => Intercom.displayMessageComposer()}>
-              <Text style={styles.cardContentRowButtonText}>Chat with us</Text>
-              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.cardContentRow]} onPress={() => Linking.openURL('https://www.facebook.com/groups/274018259885853/')} >
-              <Text style={styles.cardContentRowButtonText}>Join our Alpha Tester Group</Text>
-              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.cardContentRow, {
-              borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
-            }]}
-              onPress={() => Linking.openURL('https://bitmark.com/legal/terms')}
-            >
-              <Text style={styles.cardContentRowButtonText}>Legal</Text>
-              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-            </TouchableOpacity>
-          </ShadowComponent>
+          {/*ABOUT*/}
+          {this.state.pageState === PAGE_STATE.ABOUT &&
+          <View>
+            <ShadowComponent style={styles.cardBody}>
+              <ShadowTopComponent contentStyle={styles.cardHeader}>
+                <Text style={styles.cardTitle}>ABOUT</Text>
+              </ShadowTopComponent>
+              <TouchableOpacity style={styles.cardContentRow} onPress={() => Intercom.displayMessageComposer()}>
+                <Text style={styles.cardContentRowButtonText}>Chat with us</Text>
+                <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.cardContentRow]} onPress={() => Linking.openURL('https://www.facebook.com/groups/274018259885853/')} >
+                <Text style={styles.cardContentRowButtonText}>Join our Alpha Tester Group</Text>
+                <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.cardContentRow, {
+                borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+              }]}
+                                onPress={() => Linking.openURL('https://bitmark.com/legal/terms')}
+              >
+                <Text style={styles.cardContentRowButtonText}>Legal</Text>
+                <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+            </ShadowComponent>
 
-          <View style={[styles.normalRow, { marginTop: 16 }]}>
-            <Text style={styles.rowLabel}>VERSION</Text>
-            <Text style={styles.rowValue}>{DataProcessor.getApplicationVersion() + (config.network === config.NETWORKS.testnet ? (`(${DataProcessor.getApplicationBuildNumber()})`) : '')}</Text>
+
+
+            <View style={[styles.normalRow, { marginTop: 16 }]}>
+              <Text style={styles.rowLabel}>VERSION</Text>
+              <Text style={styles.rowValue}>{DataProcessor.getApplicationVersion() + (config.network === config.NETWORKS.testnet ? (`(${DataProcessor.getApplicationBuildNumber()})`) : '')}</Text>
+            </View>
+
+            <TouchableOpacity style={styles.normalRow} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
+              <Text style={styles.rowLabel}>WHAT’S NEW</Text>
+              <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+            </TouchableOpacity>
           </View>
-
-          <TouchableOpacity style={styles.normalRow} onPress={() => DataProcessor.doDisplayedWhatNewInformation()}>
-            <Text style={styles.rowLabel}>WHAT’S NEW</Text>
-            <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
-          </TouchableOpacity>
+          }
 
         </ScrollView>
       </SafeAreaView >

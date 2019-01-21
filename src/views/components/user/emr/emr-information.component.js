@@ -166,7 +166,7 @@ export class EMRInformationComponent extends Component {
           <TouchableOpacity style={styles.headerLeft} onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.pop()}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle} numberOfLines={1}>Emergency Medical Record</Text>
+          <Text style={styles.headerTitle} numberOfLines={1}></Text>
           <TouchableOpacity style={styles.headerRight} disabled={this.state.isEditing} onPress={() => this.setState({ isEditing: !this.state.isEditing })}>
             {!this.state.isEditing && <Text style={styles.headerEditText}>EDIT</Text>}
           </TouchableOpacity>
