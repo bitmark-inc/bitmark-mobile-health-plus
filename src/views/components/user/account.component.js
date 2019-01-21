@@ -98,6 +98,9 @@ class PrivateAccountComponent extends Component {
     let emailAddress = config.network === config.NETWORKS.livenet
       ? `${this.props.userInformation.bitmarkAccountNumber}@health.bitmark.com`
       : `${this.props.userInformation.bitmarkAccountNumber}@drop.test.bitmark.com`;
+
+    let emrInformation = CacheData.userInformation.currentEMRData;
+
     return (
       <SafeAreaView style={styles.bodySafeView}>
         <View style={styles.header}>
@@ -116,6 +119,16 @@ class PrivateAccountComponent extends Component {
           <View>
             {/*EMR*/}
             {/*<EMRCardComponent />*/}
+            <View style={[styles.userInfoContainer]}>
+              <Image style={styles.profileIcon} source={(emrInformation && emrInformation.avatar) ? {
+                uri: emrInformation.avatar
+              } : require('assets/imgs/profile-icon.png')} />
+              <View style={[styles.userInfoArea]}>
+                {emrInformation && emrInformation.name &&
+                <Text style={[styles.username]}>{emrInformation.name}</Text>
+                }
+              </View>
+            </View>
 
             {/*VAULT SETTINGS*/}
             <ShadowComponent style={styles.cardBody}>
@@ -237,15 +250,11 @@ class PrivateAccountComponent extends Component {
               </TouchableOpacity>
               <TouchableOpacity style={[styles.cardContentRow, {
                 borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
-              }]}
-                                onPress={() => Linking.openURL('https://bitmark.com/legal/terms')}
-              >
+              }]} onPress={() => Linking.openURL('https://bitmark.com/legal/terms')}>
                 <Text style={styles.cardContentRowButtonText}>Legal</Text>
                 <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
               </TouchableOpacity>
             </ShadowComponent>
-
-
 
             <View style={[styles.normalRow, { marginTop: 16 }]}>
               <Text style={styles.rowLabel}>VERSION</Text>
@@ -295,8 +304,30 @@ const styles = StyleSheet.create({
     paddingRight: convertWidth(19),
     width: convertWidth(35),
   },
-
-
+  userInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    height: 78,
+    marginBottom: 18,
+  },
+  profileIcon: {
+    width: 76, height: 76, resizeMode: 'cover',
+    borderWidth: 0.1, borderRadius: 38,
+    borderColor: 'white',
+    marginRight: convertWidth(15),
+    shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
+  },
+  userInfoArea: {
+    height: '100%',
+    alignItems: 'flex-start',
+    justifyContent: 'center'
+  },
+  username: {
+    fontFamily: 'AvenirNextW1G-Bold',fontSize: 14,
+    letterSpacing: 0.15,
+    color: 'rgba(0, 0, 0, 0.6)'
+  },
   cardBody: {
     flexDirection: 'column',
     marginTop: 16,
