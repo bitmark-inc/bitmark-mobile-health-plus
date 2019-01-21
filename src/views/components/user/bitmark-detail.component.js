@@ -10,13 +10,12 @@ import JSONTree from 'react-native-json-tree';
 import { Map } from 'immutable'
 
 import { Actions } from 'react-native-router-flux';
-import { runPromiseWithoutError, FileUtil, convertWidth } from 'src/utils';
+import { runPromiseWithoutError, FileUtil, convertWidth, humanFileSize } from 'src/utils';
 import { EventEmitterService, AppProcessor, IndexDBService, CacheData } from 'src/processors';
 import { config } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
 import moment from "moment/moment";
 import { styles as cardStyles } from "./card/bitmark-card.style.component";
-import { humanFileSize } from "../../../utils";
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -54,11 +53,17 @@ export class BitmarkDetailComponent extends Component {
   }
 
   async componentDidMount() {
-    let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
+    let fileSize;
+
+    if (this.props.bitmarkType !== 'bitmark_health_issuance') {
+      let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
+      fileSize = humanFileSize(fileStat.size);
+    }
+
     let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmark.id);
     let note = await IndexDBService.getNoteByBitmarkId(this.props.bitmark.id);
 
-    this.setState({ fileSize: humanFileSize(fileStat.size), tags, note });
+    this.setState({ fileSize, tags, note });
   }
 
   deleteBitmark(bitmarkType) {
