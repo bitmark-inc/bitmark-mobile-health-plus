@@ -177,6 +177,7 @@ platform :ios do
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus beta",
       silent: true,
+      suppress_xcode_output: true,
       include_bitcode: false
     )
     sentry_upload_dsym(
@@ -232,6 +233,7 @@ platform :ios do
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus dev",
       silent: true,
+      suppress_xcode_output: true,
       include_bitcode: false
     )
 
