@@ -9,7 +9,6 @@
 import Foundation
 
 public struct Migration {
-    
     public static func migrate(recoverPhrase: [String], language: RecoveryLanguage) throws -> (Account, [String]) {
         let accountToMigrate = try Account(recoverPhrase: recoverPhrase, language: language)
         if accountToMigrate.seed.version != .v1 {
@@ -17,8 +16,34 @@ public struct Migration {
         }
         
         // Query for current owning bitmarks
-        let bitmarksQuery = Bitmark.newBitmarkQueryParams().owned(by: accountToMigrate.address).loadAsset(true)
-        let (owningBitmarks, _) = try Bitmark.list(params: bitmarksQuery)
+        var lastOffset: Int64? = nil
+        var owningBitmarks = [Bitmark]()
+        var shouldContinue = true
+        while shouldContinue {
+            var bitmarksQuery = Bitmark.newBitmarkQueryParams()
+                .owned(by: accountToMigrate.address)
+                .loadAsset(true)
+                .to(direction: .earlier)
+                .includePending(true)
+            
+            if let lastOffset = lastOffset {
+                bitmarksQuery = bitmarksQuery.at(lastOffset)
+            }
+            
+            let (bitmarks, _) = try Bitmark.list(params: bitmarksQuery)
+            
+            if bitmarks.count < 100 {
+                shouldContinue = false
+            }
+            
+            if bitmarks.count == 0 {
+                break
+            }
+            
+            lastOffset = bitmarks.last!.offset
+            
+            owningBitmarks += bitmarks
+        }
         
         // Group bitmarks with their asset_id
         let assetBitmarkCountMap = Dictionary(grouping: owningBitmarks,

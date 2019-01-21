@@ -19,9 +19,9 @@ public enum SeedError: Error {
     case wrongNetwork
 }
 
-public enum SeedVersion {
-    case v1
-    case v2
+public enum SeedVersion: Int {
+    case v1 = 1
+    case v2 = 2
 }
 
 public protocol Seedable {
@@ -33,7 +33,7 @@ public protocol Seedable {
     var network: Network { get }
     var version: SeedVersion { get }
     var core: Data { get }
-    func getAuthKeyData() throws -> Data
+    func getKeysData() throws -> (Data, Data)
     func getRecoveryPhrase(language: RecoveryLanguage) throws -> [String]
 }
 
@@ -142,8 +142,9 @@ public struct SeedV1: Seedable {
         return try RecoverPhrase.V1.createPhrase(fromData: data, language: language)
     }
     
-    public func getAuthKeyData() throws -> Data {
-        return try SeedV1.derive(core: core, indexData: "000000000000000000000000000003e7".hexDecodedData)
+    public func getKeysData() throws -> (Data, Data) {
+        return (try SeedV1.derive(core: core, indexData: "000000000000000000000000000003e7".hexDecodedData),
+        try SeedV1.derive(core: core, indexData: "000000000000000000000000000003e8".hexDecodedData))
     }
 }
 
@@ -232,11 +233,13 @@ public struct SeedV2: Seedable {
         
         // Checksum
         let checksumStart = seed.count - Config.SeedConfigV2.checksumLength
-        let core = seed.subdata(in: 0..<checksumStart)
-        let checksum = core.sha3(length: 256).slice(start: 0, end: Config.SeedConfigV2.checksumLength)
+        let exportedSeed = seed.subdata(in: 0..<checksumStart)
+        let checksum = exportedSeed.sha3(length: 256).slice(start: 0, end: Config.SeedConfigV2.checksumLength)
         if checksum != seed.slice(start: checksumStart, end: seed.count) {
             throw SeedError.checksumFailed
         }
+        
+        let core = exportedSeed.subdata(in: Config.SeedConfigV2.magicNumber.count..<exportedSeed.count)
         
         // Network
         var parsedNetwork: Network
@@ -270,9 +273,9 @@ public struct SeedV2: Seedable {
         return try RecoverPhrase.V2.createPhrase(fromData: core, language: language)
     }
     
-    public func getAuthKeyData() throws -> Data {
-        let (result, _) = try SeedV2.seedToKeys(seed: core, keyCount: 1, keySize: 32)
-        return result.first!
+    public func getKeysData() throws -> (Data, Data) {
+        let (result, _) = try SeedV2.seedToKeys(seed: core, keyCount: 2, keySize: 32)
+        return (result[0], result[1])
     }
 }
 

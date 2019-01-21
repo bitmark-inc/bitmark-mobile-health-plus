@@ -3,7 +3,7 @@ platform :ios, '11.0'
 def pods
     # Pods for BitmarkHealthPlus
     
-    pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git'
+    pod 'BitmarkSDK', :git => 'https://github.com/bitmark-inc/bitmark-sdk-swift.git', :branch => 'master'
     pod 'KeychainAccess'
     pod 'Intercom'
     pod 'TesseractOCRiOS', :git => 'https://github.com/gali8/Tesseract-OCR-iOS.git'

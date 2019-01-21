@@ -9,15 +9,15 @@
 import Foundation
 
 public struct Asset: Codable {
-    let id: String
-    let name: String
-    let metadata: [String: String]
-    let fingerprint: String
-    let registrant: String
-    let status: String
-    let block_number: Int64
-    let offset: Int64
-    let created_at: Date
+    public let id: String
+    public let name: String
+    public let metadata: [String: String]
+    public let fingerprint: String
+    public let registrant: String
+    public let status: String
+    public let block_number: Int64
+    public let offset: Int64
+    public let created_at: Date
 }
 
 public extension Asset {
