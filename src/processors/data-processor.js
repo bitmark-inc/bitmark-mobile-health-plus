@@ -228,7 +228,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         } else if (b.status === 'pending' && a.status !== 'pending') {
           return 1;
         } else if (a.status === 'pending' && b.status === 'pending') {
-          return 0;
+          return a.asset.name.localeCompare(b.asset.name) * -1;
         }
 
         return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
