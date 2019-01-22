@@ -209,6 +209,7 @@ export class EditIssueComponent extends Component {
                     multiline={true}
                     value={this.state.note}
                     placeholder={'Tap to add private notes to your record'}
+                    onFocus={() => this.setState({ inputtingTag: false })}
                     onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
                   />
                 </View>
