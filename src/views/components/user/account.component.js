@@ -236,6 +236,7 @@ class PrivateAccountComponent extends Component {
           {/*ABOUT*/}
           {this.state.pageState === PAGE_STATE.ABOUT &&
           <View>
+            {/*ABOUT*/}
             <ShadowComponent style={styles.cardBody}>
               <ShadowTopComponent contentStyle={styles.cardHeader}>
                 <Text style={styles.cardTitle}>ABOUT</Text>
@@ -253,6 +254,16 @@ class PrivateAccountComponent extends Component {
               }]} onPress={() => Linking.openURL('https://bitmark.com/legal/terms')}>
                 <Text style={styles.cardContentRowButtonText}>Legal</Text>
                 <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
+              </TouchableOpacity>
+            </ShadowComponent>
+
+            {/*LANGUAGE*/}
+            <ShadowComponent style={styles.cardBody}>
+              <ShadowTopComponent contentStyle={styles.cardHeader}>
+                <Text style={styles.cardTitle}>LANGUAGE</Text>
+              </ShadowTopComponent>
+              <TouchableOpacity style={styles.cardContentRow} disabled={true}>
+                <Text style={styles.cardContentRowButtonText}>English</Text>
               </TouchableOpacity>
             </ShadowComponent>
 
@@ -321,7 +332,7 @@ const styles = StyleSheet.create({
   userInfoArea: {
     height: '100%',
     alignItems: 'flex-start',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
   username: {
     fontFamily: 'AvenirNextW1G-Bold',fontSize: 14,
