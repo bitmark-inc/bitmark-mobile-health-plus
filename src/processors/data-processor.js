@@ -104,7 +104,7 @@ const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataB
     }
   }
   let storeState = { emrInformation: CacheData.userInformation.currentEMRData };
-  EMRInformationStore.dispatch(EMRInformationActions.initData(storeState)); UserBitmarksStore.dispatch(UserBitmarksActions.updateEMRInformation(CacheData.userInformation.currentEMRData));
+  EMRInformationStore.dispatch(EMRInformationActions.initData(storeState));
   UserBitmarksStore.dispatch(UserBitmarksActions.updateEMRInformation(CacheData.userInformation.currentEMRData));
 
   // Update new daily health data
@@ -1035,6 +1035,7 @@ const doIssueEMR = async (data) => {
   let storeState = { emrInformation: CacheData.userInformation.currentEMRData };
   EMRInformationStore.dispatch(EMRInformationActions.initData(storeState));
   UserBitmarksStore.dispatch(UserBitmarksActions.updateEMRInformation(CacheData.userInformation.currentEMRData));
+  AccountStore.dispatch(AccountActions.reload());
   return results;
 };
 
