@@ -337,7 +337,8 @@ const styles = StyleSheet.create({
   username: {
     fontFamily: 'AvenirNextW1G-Bold',fontSize: 14,
     letterSpacing: 0.15,
-    color: 'rgba(0, 0, 0, 0.6)'
+    color: 'rgba(0, 0, 0, 0.6)',
+    marginTop: 10,
   },
   cardBody: {
     flexDirection: 'column',
