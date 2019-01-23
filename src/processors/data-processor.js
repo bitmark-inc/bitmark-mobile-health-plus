@@ -475,13 +475,13 @@ const doRequireHealthKitPermission = async () => {
   CacheData.userInformation.activeHealthDataAt = moment().toDate().toISOString();
   await UserModel.doUpdateUserInfo(CacheData.userInformation);
 
-  let dateNotification = HealthKitService.getNext12AM();
-  PushNotificationIOS.scheduleLocalNotification({
-    fireDate: dateNotification.toDate(),
-    alertTitle: '',
-    alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
-    repeatInterval: 'week'
-  });
+  // let dateNotification = HealthKitService.getNext12AM();
+  // PushNotificationIOS.scheduleLocalNotification({
+  //   fireDate: dateNotification.toDate(),
+  //   alertTitle: '',
+  //   alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
+  //   repeatInterval: 'week'
+  // });
 
   let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
   if (emptyHealthKitData) {
@@ -504,13 +504,13 @@ const doResetHealthDataTasks = async (list) => {
   CacheData.userInformation.restActiveHealthDataAt = restActiveHealthDataAt;
   await UserModel.doUpdateUserInfo(CacheData.userInformation);
 
-  let dateNotification = HealthKitService.getNext12AM();
-  PushNotificationIOS.scheduleLocalNotification({
-    fireDate: dateNotification.toDate(),
-    alertTitle: '',
-    alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
-    repeatInterval: 'week'
-  });
+  // let dateNotification = HealthKitService.getNext12AM();
+  // PushNotificationIOS.scheduleLocalNotification({
+  //   fireDate: dateNotification.toDate(),
+  //   alertTitle: '',
+  //   alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
+  //   repeatInterval: 'week'
+  // });
 };
 
 const doDeactiveApplication = async () => {
@@ -685,13 +685,13 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     AccountService.removeAllDeliveredNotifications();
     PushNotificationIOS.cancelAllLocalNotifications();
     if (CacheData.userInformation.activeHealthDataAt) {
-      let dateNotification = HealthKitService.getNext12AM();
-      PushNotificationIOS.scheduleLocalNotification({
-        fireDate: dateNotification.toDate(),
-        alertTitle: '',
-        alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
-        repeatInterval: 'week'
-      });
+      // let dateNotification = HealthKitService.getNext12AM();
+      // PushNotificationIOS.scheduleLocalNotification({
+      //   fireDate: dateNotification.toDate(),
+      //   alertTitle: '',
+      //   alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
+      //   repeatInterval: 'week'
+      // });
     }
   } else if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
     let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
