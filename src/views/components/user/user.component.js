@@ -455,7 +455,7 @@ class PrivateUserComponent extends Component {
                       {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&
                         <TouchableOpacity onPress={() => Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) })}>
                           <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                            cardHeader={'Learn about your health'}
+                            cardHeader={'Track your daily activity'}
                             cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
                             cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
                             isStickCard={true}
@@ -508,7 +508,7 @@ class PrivateUserComponent extends Component {
                           return (
                             <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA }) }}>
                               <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                                cardHeader={'Learn about your health'}
+                                cardHeader={'Track your daily activity'}
                               />
                             </TouchableOpacity>
                           );

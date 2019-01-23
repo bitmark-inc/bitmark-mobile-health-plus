@@ -66,7 +66,7 @@ export class HealthDataGetStartComponent extends React.Component {
               <View style={styles.bodyContent}>
                 {/*TOP AREA*/}
                 <View style={[styles.topArea, styles.paddingContent]}>
-                  <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
+                  <Text style={[styles.title]}>TRACK YOUR DAILY ACTIVITY</Text>
                   <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
                 </View>
 
@@ -74,13 +74,11 @@ export class HealthDataGetStartComponent extends React.Component {
                 <View style={[styles.contentArea, styles.paddingContent, { justifyContent: 'flex-start' }]}>
                   {/*DESC*/}
                   <View style={styles.introductionTextArea}>
-                    <Text style={[styles.introductionTitle, { marginTop: 50, fontSize: 14 }]}>Why should I care?</Text>
+                    <Text style={[styles.introductionTitle, { marginTop: 50, fontSize: 14 }]}>Gain control of your health.</Text>
                     <Text style={[styles.introductionDescription, { marginTop: 25 }]}>
-                      Personal health data is becoming a key component of the modern healthcare ecosystem, including medical research, ongoing care,
-                    prediction and prevention.{'\n'}{'\n'}
-                      Protecting all your health data in one place gives you a comprehensive view of your health, which translates into better healthcare
-                    and outcomes.{'\n'}{'\n'}
-                      Bitmark Health is the first step towards controlling your health by unlocking the value of your health data.
+                      Imagine: You are asked about a medical condition or procedure from the past about yourself or a loved one (child, parent, etc.). What was the diagnosis exactly? If you cannot remember, how long would it take you to get this information? What problems would you face if this were an urgent situation?{'\n'}{'\n'}
+                      Furthermore, if this information is from over 10 years ago or from a different healthcare system, it's possible those records do not exist anymore.{'\n'}{'\n'}
+                      Bitmark Health helps you control your health by providing the tools to collect all your health information from any source and receive daily insights about it while keeping your privacy protected.
                   </Text>
                   </View>
                 </View>
