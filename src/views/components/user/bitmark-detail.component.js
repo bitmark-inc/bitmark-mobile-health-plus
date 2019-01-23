@@ -10,7 +10,7 @@ import JSONTree from 'react-native-json-tree';
 import { Map } from 'immutable'
 
 import { Actions } from 'react-native-router-flux';
-import { runPromiseWithoutError, FileUtil, convertWidth, humanFileSize } from 'src/utils';
+import { runPromiseWithoutError, FileUtil, convertWidth } from 'src/utils';
 import { EventEmitterService, AppProcessor, IndexDBService, CacheData } from 'src/processors';
 import { config } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
@@ -53,17 +53,10 @@ export class BitmarkDetailComponent extends Component {
   }
 
   async componentDidMount() {
-    let fileSize;
-
-    if (this.props.bitmarkType !== 'bitmark_health_issuance') {
-      let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
-      fileSize = humanFileSize(fileStat.size);
-    }
-
     let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmark.id);
     let note = await IndexDBService.getNoteByBitmarkId(this.props.bitmark.id);
 
-    this.setState({ fileSize, tags, note });
+    this.setState({ tags, note });
   }
 
   deleteBitmark(bitmarkType) {
@@ -176,9 +169,6 @@ export class BitmarkDetailComponent extends Component {
                     {/*Status*/}
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={[cardStyles.cardText]}>{bitmark.asset.created_at ? ((bitmarkType == 'bitmark_health_issuance' ? 'ADDED ON ' : 'RECORDED ON ') + moment(bitmark.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : 'REGISTERING...'}</Text>
-                      {this.state.fileSize &&
-                        <Text style={[cardStyles.cardText]}>{this.state.fileSize}</Text>
-                      }
                     </View>
                   </View>
 
