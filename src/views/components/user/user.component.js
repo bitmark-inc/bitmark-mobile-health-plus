@@ -343,7 +343,7 @@ class PrivateUserComponent extends Component {
       this.props.healthAssetBitmarks.forEach(bitmark => {
         if (!(this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD && this.state.stickMedicalRecord.data.id == bitmark.id)) {
           cardListData.push({ type: STICK_CARD_TYPES.MEDICAL_RECORD, data: bitmark, top: accumulatedTop });
-          accumulatedTop += 120;
+          accumulatedTop += 110;
         }
       })
     }
@@ -352,7 +352,7 @@ class PrivateUserComponent extends Component {
       this.props.healthDataBitmarks.forEach(bitmark => {
         if (!(this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA && this.state.stickHealthData.data.id == bitmark.id)) {
           cardListData.push({ type: STICK_CARD_TYPES.HEALTH_DATA, data: bitmark, top: accumulatedTop });
-          accumulatedTop += 120;
+          accumulatedTop += 110;
         }
       })
     }
@@ -438,49 +438,48 @@ class PrivateUserComponent extends Component {
                         <EMRCardComponent displayFromUserScreen={true} />
                       }
 
-                      {/*GET_STARTED_MEDICAL_RECORD*/}
-                      {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD &&
-                        <TouchableOpacity onPress={() => { Actions.addRecord({ takePhoto: this.takePhoto.bind(this), importRecord: this.importRecord.bind(this) }) }}>
-                          <GetStartedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}
-                            cardHeader={'Add first medical record'}
-                            cardText={'Store all your medical records in one secure place.'}
-                            cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
-                            isStickCard={true}
-                            cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
-                          />
-                        </TouchableOpacity>
-                      }
+                      {/*/!*GET_STARTED_MEDICAL_RECORD*!/*/}
+                      {/*{this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD &&*/}
+                        {/*<TouchableOpacity onPress={() => { Actions.addRecord({ takePhoto: this.takePhoto.bind(this), importRecord: this.importRecord.bind(this) }) }}>*/}
+                          {/*<GetStartedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}*/}
+                            {/*cardHeader={'Add first medical record'}*/}
+                            {/*cardText={'Store all your medical records in one secure place.'}*/}
+                            {/*cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}*/}
+                            {/*isStickCard={true}*/}
+                            {/*cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}*/}
+                          {/*/>*/}
+                        {/*</TouchableOpacity>*/}
+                      {/*}*/}
 
                       {/*GET_STARTED_HEALTH_DATA*/}
-                      {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&
-                        <TouchableOpacity onPress={() => Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) })}>
-                          <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                            cardHeader={'Learn about your health'}
-                            cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
-                            cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
-                            isStickCard={true}
-                            cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
-                          />
-                        </TouchableOpacity>
-                      }
+                      {/*{this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&*/}
+                        {/*<TouchableOpacity onPress={() => Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) })}>*/}
+                          {/*<GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}*/}
+                            {/*cardHeader={'Learn about your health'}*/}
+                            {/*cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}*/}
+                            {/*cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}*/}
+                            {/*isStickCard={true}*/}
+                            {/*cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}*/}
+                          {/*/>*/}
+                        {/*</TouchableOpacity>*/}
+                      {/*}*/}
 
-                      {/*MEDICAL RECORD*/}
-                      {this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD &&
-                        <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalRecord.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
-                          <MedicalRecordCardComponent bitmark={this.state.stickMedicalRecord.data} />
-                        </TouchableOpacity>
-                      }
+                      {/*/!*MEDICAL RECORD*!/*/}
+                      {/*{this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD &&*/}
+                        {/*<TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalRecord.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>*/}
+                          {/*<MedicalRecordCardComponent bitmark={this.state.stickMedicalRecord.data} />*/}
+                        {/*</TouchableOpacity>*/}
+                      {/*}*/}
 
                       {/*HEALTH DATA*/}
-                      {this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA &&
-                        <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickHealthData.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
-                          <HealthDataCardComponent bitmark={this.state.stickHealthData.data} />
-                        </TouchableOpacity>
-                      }
+                      {/*{this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA &&*/}
+                        {/*<TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickHealthData.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>*/}
+                          {/*<HealthDataCardComponent bitmark={this.state.stickHealthData.data} />*/}
+                        {/*</TouchableOpacity>*/}
+                      {/*}*/}
 
                       {/*DAILY HEALTH DATA*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.DAILY_HEALTH_DATA &&
-
                         <TouchableOpacity onPress={() => { Actions.dailyHealthDataFullCard({ dailyHealthDataBitmarks: this.state.stickDailyHealthData.data, resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                           <DailyHealthDataCardComponent dailyHealthDataBitmarks={this.state.stickDailyHealthData.data} />
                         </TouchableOpacity>
@@ -495,7 +494,7 @@ class PrivateUserComponent extends Component {
                         // ADD FIRST MEDICAL RECORD
                         if (card.type === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.addRecord({ takePhoto: this.takePhoto.bind(this), importRecord: this.importRecord.bind(this) }) }}>
                               <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}
                                 cardHeader={'Add first medical record'}
                               />
@@ -506,7 +505,7 @@ class PrivateUserComponent extends Component {
                         // AUTOMATICALLY ADD HEALTH DATA
                         if (card.type === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
                                 cardHeader={'Learn about your health'}
                               />
@@ -517,7 +516,7 @@ class PrivateUserComponent extends Component {
                         // MEDICAL_RECORD
                         if (card.type === STICK_CARD_TYPES.MEDICAL_RECORD) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.MEDICAL_RECORD, stickMedicalRecord: card }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <MedicalRecordFeedCardComponent bitmark={card.data} />
                             </TouchableOpacity>
                           );
@@ -526,7 +525,7 @@ class PrivateUserComponent extends Component {
                         // HEALTH_DATA
                         if (card.type === STICK_CARD_TYPES.HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickHealthData: card }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <HealthDataFeedCardComponent bitmark={card.data} />
                             </TouchableOpacity>
                           );
@@ -544,7 +543,7 @@ class PrivateUserComponent extends Component {
                         // DAILY HEALTH DATA
                         if (card.type === STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.DAILY_HEALTH_DATA, stickDailyHealthData: card }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.dailyHealthDataFullCard({ dailyHealthDataBitmarks: card.data, resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <DailyHealthDataFeedCardComponent header={'Learn about your health'} />
                             </TouchableOpacity>
                           );
