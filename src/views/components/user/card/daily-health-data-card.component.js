@@ -7,7 +7,7 @@ import {
 import moment from "moment";
 import { styles as cardStyles } from './bitmark-card.style.component';
 import { styles as dailyHealthCardStyles } from './daily-health-data-card.style.component';
-import { FileUtil, humanFileSize, DailyHealthDataUtil } from "src/utils";
+import { DailyHealthDataUtil } from "src/utils";
 import { CirclePercentComponent } from "src/views/commons";
 
 export class DailyHealthDataCardComponent extends React.Component {
@@ -18,28 +18,23 @@ export class DailyHealthDataCardComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.yesterdayBitmark = DailyHealthDataUtil.getYesterdayDailyHealthBitmark(this.props.dailyHealthDataBitmarks);
+    this.lastBitmark = this.props.dailyHealthDataBitmarks[0];
   }
 
   async componentDidMount() {
-    if (this.yesterdayBitmark) {
-      let fileStat = await FileUtil.stat(this.yesterdayBitmark.asset.filePath);
-      this.setState({fileSize: humanFileSize(fileStat.size)});
-    }
-
     this.populateDataForVisualization();
   }
 
   async populateDataForVisualization() {
     let dailyHealthDataBitmarks = this.props.dailyHealthDataBitmarks;
 
-    let {stepsPercent, sleepPercent} = await DailyHealthDataUtil.populateDataForStepsAndSleepPercents(dailyHealthDataBitmarks);
+    let {stepsPercent, sleepPercent, yesterdayDataSteps, yesterdayDataSleepTimeInMinutes} = await DailyHealthDataUtil.populateDataForStepsAndSleepPercents(dailyHealthDataBitmarks);
 
-    this.setState({stepsPercent, sleepPercent});
+    this.setState({stepsPercent, sleepPercent, yesterdayDataSteps, yesterdayDataSleepTimeInMinutes});
   }
 
   render() {
-    let bitmark = this.yesterdayBitmark;
+    let lastBitmark = this.lastBitmark;
 
     return (
       <View style={[cardStyles.cardContainer]}>
@@ -53,7 +48,7 @@ export class DailyHealthDataCardComponent extends React.Component {
         {/*Steps and Sleep Percent*/}
         <View style={[dailyHealthCardStyles.visualization]}>
           {this.state.stepsPercent != undefined ? (
-            <CirclePercentComponent percent={Math.abs(this.state.stepsPercent)} radius={52} negative={this.state.stepsPercent < 0} imageSource={require('assets/imgs/steps.png')} imageStyle={dailyHealthCardStyles.stepsImageStyle}/>
+            <CirclePercentComponent percent={Math.abs(this.state.stepsPercent)} radius={52} value={this.state.yesterdayDataSteps} bottomText={'GOAL = 10k'} imageSource={require('assets/imgs/steps.png')} imageStyle={dailyHealthCardStyles.stepsImageStyle}/>
           ) : (
             <View>
               <Text style={[dailyHealthCardStyles.missingDayText]}>DAY MISSED</Text>
@@ -63,7 +58,7 @@ export class DailyHealthDataCardComponent extends React.Component {
           }
 
           {this.state.sleepPercent != undefined ? (
-            <CirclePercentComponent style={{marginLeft: 25}} percent={Math.abs(this.state.sleepPercent)} radius={52} negative={this.state.sleepPercent < 0} imageSource={require('assets/imgs/sleep.png')} imageStyle={dailyHealthCardStyles.sleepImageStyle}/>
+            <CirclePercentComponent style={{marginLeft: 25}} percent={Math.abs(this.state.sleepPercent)} radius={52} value={this.state.yesterdayDataSleepTimeInMinutes} bottomText={'GOAL = 8h'} imageSource={require('assets/imgs/sleep.png')} imageStyle={dailyHealthCardStyles.sleepImageStyle}/>
           ) : (
             <View style={{marginLeft: 25}}>
               <Text style={[dailyHealthCardStyles.missingDayText]}>DAY MISSED</Text>
@@ -76,26 +71,13 @@ export class DailyHealthDataCardComponent extends React.Component {
         {/*CONTENT*/}
         <View style={[cardStyles.cardContent]}>
           {/*Header*/}
-          <Text style={[cardStyles.cardHeader]}>Learn about your health</Text>
+          <Text style={[cardStyles.cardHeader]}>Track your daily activity</Text>
           {/*Status*/}
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            {bitmark &&
-            <Text style={[cardStyles.cardText]}>{bitmark.asset.created_at ? ('RECORDED ON ' + moment(bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()) : 'REGISTERING...'}</Text>
-            }
-            {this.state.fileSize &&
-            <Text style={[cardStyles.cardText]}>{this.state.fileSize}</Text>
+            {lastBitmark &&
+            <Text style={[cardStyles.cardText]}>{'RECORDED ON ' + moment(lastBitmark.asset.metadata['Collection Date']).add(1, 'day').format('YYYY MMM DD').toUpperCase()}</Text>
             }
           </View>
-
-          {/*REF*/}
-          {bitmark &&
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 1}}></View>
-            <View style={[dailyHealthCardStyles.assetNameContainer]}>
-              <Text style={[dailyHealthCardStyles.assetName]}>REF: {bitmark.asset.name}</Text>
-            </View>
-          </View>
-          }
         </View>
       </View>
     );

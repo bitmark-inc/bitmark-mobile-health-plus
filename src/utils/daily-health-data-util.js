@@ -1,6 +1,9 @@
 import moment from "moment";
 import { FileUtil } from "./index";
 
+const STEPS_GOAL = 10000; // steps
+const SLEEP_IN_MINUTES_GOAL = 8 * 60; // minutes
+
 class DailyHealthDataUtil {
   static async readDailyHealthData(bitmark) {
     try {
@@ -39,8 +42,12 @@ class DailyHealthDataUtil {
     return sleep;
   }
 
-  static getPercent(number1, number2) {
+  static getRelativePercent(number1, number2) {
     return Math.round((number1 - number2) * 100 / number2);
+  }
+
+  static getPercent(number1, number2) {
+    return Math.round(number1 * 100 / number2);
   }
 
   static getMinutesInHours(mins) {
@@ -64,58 +71,34 @@ class DailyHealthDataUtil {
     return yesterdayBitmark;
   }
 
-  static getBeforeYesterdayDailyHealthBitmark(dailyHealthDataBitmarks) {
-    let beforeYesterdayBitmark;
-
-    if (dailyHealthDataBitmarks.length > 1) {
-      let beforeLatestBitmark = dailyHealthDataBitmarks[1];
-      let beforeLastCollectionDate = moment(beforeLatestBitmark.asset.metadata['Collection Date']);
-
-      let BEFORE_YESTERDAY = moment().subtract(2, 'days').startOf('day');
-
-      if (beforeLastCollectionDate.isSame(BEFORE_YESTERDAY, 'd')) {
-        beforeYesterdayBitmark = beforeLatestBitmark;
-      }
-    }
-
-    return beforeYesterdayBitmark;
-  }
-
   static async populateDataForStepsAndSleepPercents(dailyHealthDataBitmarks) {
     let stepsPercent;
     let sleepPercent;
+    let yesterdayDataSteps;
+    let yesterdayDataSleepTimeInMinutes;
 
     let yesterdayBitmark = this.getYesterdayDailyHealthBitmark(dailyHealthDataBitmarks);
     if (yesterdayBitmark) {
       let yesterdayData = await this.readDailyHealthData(yesterdayBitmark);
 
       if (yesterdayData) {
-        let yesterdayDataSteps = this.getDailyStepsFromData(yesterdayData);
+        yesterdayDataSteps = this.getDailyStepsFromData(yesterdayData);
         let yesterdayDataSleep = this.getDailySleepFromData(yesterdayData);
 
-        // Compare to the day before yesterday
-        let beforeYesterdayBitmark = this.getBeforeYesterdayDailyHealthBitmark(dailyHealthDataBitmarks);
-        if (beforeYesterdayBitmark) {
-          let beforeYesterdayData = await this.readDailyHealthData(beforeYesterdayBitmark);
-          if (beforeYesterdayData) {
-            let beforeYesterdayDataSteps = this.getDailyStepsFromData(beforeYesterdayData);
-            let beforeYesterdayDataSleep = this.getDailySleepFromData(beforeYesterdayData);
+        // Compare to the goal
+        if (yesterdayDataSteps != undefined) {
+          stepsPercent = this.getPercent(yesterdayDataSteps, STEPS_GOAL);
+        }
 
-            if (yesterdayDataSteps != undefined && beforeYesterdayDataSteps != undefined) {
-              stepsPercent = this.getPercent(yesterdayDataSteps, beforeYesterdayDataSteps);
-            }
-
-            if (yesterdayDataSleep != undefined && beforeYesterdayDataSleep != undefined) {
-              let yesterdayDataSleepTime = moment(yesterdayDataSleep.endDate).diff(moment(yesterdayDataSleep.startDate), 'minutes');
-              let beforeYesterdayDataSleepTime = moment(beforeYesterdayDataSleep.endDate).diff(moment(beforeYesterdayDataSleep.startDate), 'minutes');
-              sleepPercent = this.getPercent(yesterdayDataSleepTime, beforeYesterdayDataSleepTime);
-            }
-          }
+        if (yesterdayDataSleep != undefined) {
+          let yesterdayDataSleepTime = moment(yesterdayDataSleep.endDate).diff(moment(yesterdayDataSleep.startDate), 'minutes');
+          sleepPercent = this.getPercent(yesterdayDataSleepTime, SLEEP_IN_MINUTES_GOAL);
+          yesterdayDataSleepTimeInMinutes = this.getMinutesInHours(yesterdayDataSleepTime);
         }
       }
     }
 
-    return {stepsPercent, sleepPercent};
+    return {stepsPercent, sleepPercent, yesterdayDataSteps, yesterdayDataSleepTimeInMinutes};
   }
 
   static async populateDataForCharts(dailyHealthDataBitmarks) {
@@ -219,7 +202,7 @@ class DailyHealthDataUtil {
       // Get last day (yesterday) compare to average
       if (!stepsChartData[6].isMissing) {
         let lastDaySteps = stepsChartData[6].value;
-        yesterdayCompareToAverageSteps = this.getPercent(lastDaySteps, averageSteps);
+        yesterdayCompareToAverageSteps = this.getRelativePercent(lastDaySteps, averageSteps);
       }
     }
 
@@ -239,7 +222,7 @@ class DailyHealthDataUtil {
       // Get last day (yesterday) compare to average
       if (!sleepChartData[6].isMissing) {
         let lastDaySleep = sleepChartData[6].value;
-        yesterdayCompareToAverageSleep = this.getPercent(lastDaySleep, averageSleepTime);
+        yesterdayCompareToAverageSleep = this.getRelativePercent(lastDaySleep, averageSleepTime);
       }
     }
 

@@ -134,6 +134,14 @@ const humanFileSize = (bytes) => {
   return bytes.toFixed(1) + ' ' + units[u];
 };
 
+const numberWithCommas = (number) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const percentToDegree = (percent) => {
+  return Math.round(percent / 100 * 360);
+};
+
 export {
   convertWidth,
   runPromiseIgnoreError,
@@ -151,5 +159,7 @@ export {
   getImageSize,
   asyncAlert,
   humanFileSize,
+  numberWithCommas,
+  percentToDegree,
   delay,
 };

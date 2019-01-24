@@ -31,7 +31,7 @@ export class HealthDataGetStartComponent extends React.Component {
 
   requestHealthKitPermission() {
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, true);
-    AppProcessor.doRequireHealthKitPermission().then(() => {
+    AppProcessor.doRequireHealthKitPermission(true).then(() => {
       this.setState({ ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_3 });
     }).then(() => {
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESSING, false);
@@ -107,7 +107,7 @@ export class HealthDataGetStartComponent extends React.Component {
               <View style={styles.bodyContent}>
                 {/*TOP AREA*/}
                 <View style={[styles.topArea, styles.paddingContent]}>
-                  <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
+                  <Text style={[styles.title]}>TRACK YOUR DAILY ACTIVITY</Text>
                   <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
                 </View>
 
@@ -120,9 +120,9 @@ export class HealthDataGetStartComponent extends React.Component {
 
                   {/*DESC*/}
                   <View style={[styles.introductionTextArea, styles.paddingContent]}>
-                    <Text style={[styles.introductionTitle]}>Learn about your health</Text>
+                    <Text style={[styles.introductionTitle]}>Track your daily activity</Text>
                     <Text style={[styles.introductionDescription, { fontSize: 16 }]}>
-                      We’ll start by looking at two common categories of health data: daily steps and daily sleep. Please allow access to these to start learning about your health.
+                      Let's get started by tracking two simple forms of health data: steps and sleep. Note: none of this data or your identity is being shared online, even with Bitmark.
                   </Text>
                   </View>
                 </View>
@@ -143,7 +143,7 @@ export class HealthDataGetStartComponent extends React.Component {
               <View style={styles.bodyContent}>
                 {/*TOP AREA*/}
                 <View style={[styles.topArea, styles.paddingContent]}>
-                  <Text style={[styles.title]}>LEARN ABOUT YOUR HEALTH</Text>
+                  <Text style={[styles.title]}>TRACK YOUR DAILY ACTIVITY</Text>
                   <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
                 </View>
 
@@ -158,7 +158,7 @@ export class HealthDataGetStartComponent extends React.Component {
                   <View style={[styles.introductionTextArea, styles.paddingContent]}>
                     <Text style={[styles.introductionTitle]}>You’re all set!</Text>
                     <Text style={[styles.introductionDescription, { fontSize: 16 }]}>
-                      Your first day of health data will be waiting for you to sign and view tomorrow morning.
+                      Bitmark Health will automatically import your selected health data daily. Check back tomorrow morning to start receiving insights - we'll remind you when it's ready.
                   </Text>
                   </View>
                 </View>
@@ -254,7 +254,8 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: 'rgba(0, 0, 0, 0.6)',
+    letterSpacing: 1.5
   },
   logo: {
     width: 23,
@@ -270,7 +271,7 @@ const styles = StyleSheet.create({
   },
   introductionDescription: {
     marginTop: 15,
-    fontFamily: 'AvenirNextW1G-Regular',
+    fontFamily: 'AvenirNextW1G-Light',
     fontSize: 14,
     lineHeight: 20,
     color: 'rgba(0, 0, 0, 0.6)',

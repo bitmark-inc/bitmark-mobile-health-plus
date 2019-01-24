@@ -363,6 +363,7 @@ const removeEmptyValueData = (healthData) => {
   }
   return realData;
 };
+
 const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
   let results = [];
   for (let dateRange of list) {

@@ -5,13 +5,15 @@ import {
 } from 'react-native';
 
 import PercentageCircle from 'react-native-percentage-circle';
+import { numberWithCommas, percentToDegree } from "src/utils";
 
 
 export class CirclePercentComponent extends Component {
   static propTypes = {
     percent: PropTypes.number,
+    value: PropTypes.any,
+    bottomText: PropTypes.string,
     radius: PropTypes.number,
-    negative: PropTypes.bool,
     style: PropTypes.any,
     imageSource: PropTypes.any,
     imageStyle: PropTypes.any
@@ -20,26 +22,45 @@ export class CirclePercentComponent extends Component {
   render() {
     let radius = this.props.radius;
     let percent = this.props.percent;
-    let negative = this.props.negative;
-    const TEXT_HEIGHT = 30;
+    let value = this.props.value;
+    const TOP_TEXT_HEIGHT = 30;
+    const BOTTOM_TEXT_HEIGHT = 25;
+    const TEXT_HEIGHT = TOP_TEXT_HEIGHT + BOTTOM_TEXT_HEIGHT;
     const BORDER_WIDTH = 3;
+
+    // Calculate transformation
+    let rotationDegree = 0;
+
+    if (percent > 100) {
+      let overPercent = percent % 100;
+      rotationDegree = percentToDegree(overPercent);
+      // Trick to create the break
+      percent = 99;
+    }
 
     return (
       <View style={[{width: radius * 2, height: radius * 2 + TEXT_HEIGHT}, this.props.style]}>
         {/*Text*/}
-        <View style={[styles.textContainer, {width: '100%', height: TEXT_HEIGHT}]}>
-          <Text style={[styles.text, {color: negative ? "#FF003C" : "#5FD855"}]}>{(negative ? '-' : '+') + `${percent}%`}</Text>
+        <View style={[styles.textContainer, {width: '100%', height: TOP_TEXT_HEIGHT}]}>
+          <Text style={[styles.text, {color: "#0060F2"}]}>{numberWithCommas(value)}</Text>
         </View>
 
         {/*Percentage Circle*/}
-        <PercentageCircle radius={radius} percent={percent > 100 ? 100 : percent } borderWidth={BORDER_WIDTH} color={negative ? "#FF003C" : "#5FD855"} bgcolor={'transparent'} textStyle={[{color: 'transparent'}]}>
-          {this.props.imageSource &&
-          <Image style={this.props.imageStyle} source={this.props.imageSource}></Image>
-          }
-        </PercentageCircle>
+        <View style={[{transform: [{ rotate: `${rotationDegree}deg`}]}]}>
+          <PercentageCircle radius={radius} percent={percent} borderWidth={BORDER_WIDTH} color={"#0060F2"} bgcolor={'transparent'} textStyle={[{color: 'transparent'}]}>
+            {this.props.imageSource &&
+            <Image style={[this.props.imageStyle, {transform: [{ rotate: `-${rotationDegree}deg`}]}]} source={this.props.imageSource}></Image>
+            }
+          </PercentageCircle>
+        </View>
 
         {/*Inner Circle*/}
-        <View style={[styles.innerCircle, {width: (radius - BORDER_WIDTH) * 2, height: (radius - BORDER_WIDTH) * 2, borderRadius: (radius - BORDER_WIDTH) , bottom: BORDER_WIDTH, left: BORDER_WIDTH}]}></View>
+        <View style={[styles.innerCircle, {width: (radius - BORDER_WIDTH) * 2, height: (radius - BORDER_WIDTH) * 2, borderRadius: (radius - BORDER_WIDTH) , bottom: BORDER_WIDTH + BOTTOM_TEXT_HEIGHT, left: BORDER_WIDTH}]}></View>
+
+        {/*Bottom*/}
+        <View style={[styles.bottomArea, {width: '100%', height: BOTTOM_TEXT_HEIGHT}]}>
+          <Text style={[styles.bottomText]}>{this.props.bottomText}</Text>
+        </View>
       </View>
     );
   }
@@ -58,8 +79,22 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: 'Andale Mono',
-    fontSize: 20,
-    lineHeight: 20,
-  }
+    fontFamily: 'AvenirNextW1G-Bold',
+    fontSize: 10,
+    lineHeight: 16,
+    letterSpacing: 1.5,
+  },
+
+  bottomArea: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+
+  bottomText: {
+    fontFamily: 'AvenirNextW1G-Bold',
+    fontSize: 10,
+    lineHeight: 16,
+    letterSpacing: 1.5,
+    color: '#A3A9B3'
+  },
 });

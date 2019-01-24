@@ -103,8 +103,8 @@ const doCheckFileToIssue = async (filePath) => {
   return await processing(DataProcessor.doCheckFileToIssue(filePath));
 };
 
-const doRequireHealthKitPermission = async () => {
-  return DataProcessor.doRequireHealthKitPermission();
+const doRequireHealthKitPermission = async (noNeedCheckEmptyDataSource) => {
+  return DataProcessor.doRequireHealthKitPermission(noNeedCheckEmptyDataSource);
 };
 
 const doStartBackgroundProcess = async (justCreatedBitmarkAccount) => {

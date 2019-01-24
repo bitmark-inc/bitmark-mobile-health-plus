@@ -104,19 +104,13 @@ const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataB
     }
   }
   let storeState = { emrInformation: CacheData.userInformation.currentEMRData };
-  EMRInformationStore.dispatch(EMRInformationActions.initData(storeState)); UserBitmarksStore.dispatch(UserBitmarksActions.updateEMRInformation(CacheData.userInformation.currentEMRData));
+  EMRInformationStore.dispatch(EMRInformationActions.initData(storeState));
   UserBitmarksStore.dispatch(UserBitmarksActions.updateEMRInformation(CacheData.userInformation.currentEMRData));
-
-  // Update new daily health data
-  if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber && CacheData.userInformation.activeHealthDataAt) {
-    userDataBitmarks[bitmarkAccountNumber].waitingForIssuingDailyHealthData = HealthKitService.doCheckBitmarkHealthDataTask(dailyHealthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
-  }
 
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber) {
     let storeState = merge({}, UserBitmarksStore.getState().data);
     storeState.healthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].healthDataBitmarks;
     storeState.dailyHealthDataBitmarks = userDataBitmarks[bitmarkAccountNumber].dailyHealthDataBitmarks;
-    storeState.waitingForIssuingDailyHealthData = userDataBitmarks[bitmarkAccountNumber].waitingForIssuingDailyHealthData || [];
     storeState.healthAssetBitmarks = healthAssetBitmarks;
     UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks(storeState));
   }
@@ -129,6 +123,20 @@ const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataB
 
   // Update user data into local database
   await CommonModel.doSetLocalData(CommonModel.KEYS.USER_DATA_BITMARK, userDataBitmarks);
+
+  // Issue new daily health data
+  if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber && CacheData.userInformation.activeHealthDataAt) {
+    checkAndIssueNewDailyHealthData(dailyHealthDataBitmarks);
+  }
+};
+
+const checkAndIssueNewDailyHealthData = async (dailyHealthDataBitmarks) => {
+  console.log('checkAndIssueNewDailyHealthData...');
+  let waitingForIssuingDailyHealthDataList = HealthKitService.doCheckBitmarkHealthDataTask(dailyHealthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
+  if (waitingForIssuingDailyHealthDataList.length) {
+    let results = await doBitmarkHealthData(waitingForIssuingDailyHealthDataList);
+    console.log('Daily health data issue results:', results);
+  }
 };
 
 let queueGetUserDataBitmarks = {};
@@ -470,7 +478,7 @@ const doLogout = async () => {
   return null;
 };
 
-const doRequireHealthKitPermission = async () => {
+const doRequireHealthKitPermission = async (noNeedCheckEmptyDataSource) => {
   let result = await HealthKitService.initHealthKit();
   CacheData.userInformation.activeHealthDataAt = moment().toDate().toISOString();
   await UserModel.doUpdateUserInfo(CacheData.userInformation);
@@ -479,13 +487,15 @@ const doRequireHealthKitPermission = async () => {
   PushNotificationIOS.scheduleLocalNotification({
     fireDate: dateNotification.toDate(),
     alertTitle: '',
-    alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
-    repeatInterval: 'week'
+    alertBody: "Yesterday's daily activity data is ready to view.",
+    repeatInterval: 'day'
   });
 
-  let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
-  if (emptyHealthKitData) {
-    EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
+  if (!noNeedCheckEmptyDataSource) {
+    let emptyHealthKitData = await HealthKitService.doCheckEmptyDataSource();
+    if (emptyHealthKitData) {
+      EventEmitterService.emit(EventEmitterService.events.CHECK_DATA_SOURCE_HEALTH_KIT_EMPTY);
+    }
   }
   await runGetUserBitmarksInBackground();
   return result;
@@ -508,8 +518,8 @@ const doResetHealthDataTasks = async (list) => {
   PushNotificationIOS.scheduleLocalNotification({
     fireDate: dateNotification.toDate(),
     alertTitle: '',
-    alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
-    repeatInterval: 'week'
+    alertBody: "Yesterday's daily activity data is ready to view.",
+    repeatInterval: 'day'
   });
 };
 
@@ -689,8 +699,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       PushNotificationIOS.scheduleLocalNotification({
         fireDate: dateNotification.toDate(),
         alertTitle: '',
-        alertBody: i18n.t('Notification_weeklyHealthDataNotification'),
-        repeatInterval: 'week'
+        alertBody: "Yesterday's daily activity data is ready to view.",
+        repeatInterval: 'day'
       });
     }
   } else if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
@@ -716,23 +726,35 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   return CacheData.userInformation;
 };
 
+let isIssuingBitmarkHealthData = false;
 const doBitmarkHealthData = async (list) => {
-  let results = await HealthKitService.doBitmarkHealthData(CacheData.userInformation.bitmarkAccountNumber, list);
+  if (isIssuingBitmarkHealthData) return;
+  isIssuingBitmarkHealthData = true;
+
+  let results;
+
+  try {
+    results = await HealthKitService.doBitmarkHealthData(CacheData.userInformation.bitmarkAccountNumber, list);
+    isIssuingBitmarkHealthData = false;
+  } catch {
+    isIssuingBitmarkHealthData = false;
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {title: 'There was an error during registering your daily health data'});
+  }
+
+  for (let item of results) {
+    await IndexDBService.insertHealthDataToIndexedDB(item.id, item.healthData);
+  }
 
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   if (appInfo && (!appInfo.lastTimeIssued ||
-    (appInfo.lastTimeIssued && (moment().toDate().getTime() - appInfo.lastTimeIssued) > 7 * 24 * 60 * 60 * 1000))) {
+      (appInfo.lastTimeIssued && (moment().toDate().getTime() - appInfo.lastTimeIssued) > 7 * 24 * 60 * 60 * 1000))) {
     await CommonModel.doTrackEvent({
       event_name: 'health_plus_weekly_active_user',
       account_number: CacheData.userInformation ? CacheData.userInformation.bitmarkAccountNumber : null,
     });
     appInfo.lastTimeIssued = moment().toDate().getTime();
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
-  }
-
-  for (let item of results) {
-    await IndexDBService.insertHealthDataToIndexedDB(item.id, item.healthData);
   }
 
   await runGetUserBitmarksInBackground();

@@ -6,7 +6,6 @@ import { UserComponent } from './user.component';
 import { AccountComponent } from './account.component';
 import { AccountPhraseComponent } from './account-phrases.component';
 import { SupportComponent } from './support.component';
-import { BitmarkHealthDataComponent } from './bitmark-health-data.component';
 import { CaptureAssetComponent } from './capture-asset.component';
 import { BitmarkListComponent } from './bitmark-list.component';
 
@@ -36,7 +35,6 @@ export class UserRouterComponent extends Component {
       <Router sceneStyle={{ shadowOpacity: 0, flex: 1 }}  >
         <Stack hideNavBar={true} >
           <Scene key="user" component={UserComponent} initial={true} panHandlers={null} />
-          <Scene key="bitmarkHealthData" component={BitmarkHealthDataComponent} panHandlers={null} />
           <Scene key="emailRecords" component={EmailRecordComponent} panHandlers={null} />
           <Scene key="account" component={AccountComponent} panHandlers={null} />
           <Scene key="accountPhrase" component={AccountPhraseComponent} panHandlers={null} />

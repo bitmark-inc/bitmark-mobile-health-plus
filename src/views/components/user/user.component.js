@@ -44,8 +44,7 @@ const STICK_CARD_TYPES = {
   EMR: 3,
   MEDICAL_RECORD: 4,
   HEALTH_DATA: 5,
-  SIGN_DAILY_HEALTH_DATA: 6,
-  DAILY_HEALTH_DATA: 7
+  DAILY_HEALTH_DATA: 6
 };
 
 
@@ -54,7 +53,6 @@ class PrivateUserComponent extends Component {
     healthDataBitmarks: PropTypes.array,
     healthAssetBitmarks: PropTypes.array,
     dailyHealthDataBitmarks: PropTypes.array,
-    waitingForIssuingDailyHealthData: PropTypes.array,
     searchTerm: PropTypes.string,
     searchResults: PropTypes.object,
     emrInformation: PropTypes.object,
@@ -327,12 +325,6 @@ class PrivateUserComponent extends Component {
       accumulatedTop += 105;
     }
 
-    // Sign for Daily health data
-    if (this.props.waitingForIssuingDailyHealthData.length) {
-      cardListData.push({ type: STICK_CARD_TYPES.SIGN_DAILY_HEALTH_DATA, data: this.props.waitingForIssuingDailyHealthData, top: accumulatedTop });
-      accumulatedTop += 105;
-    }
-
     // Daily health data
     if (this.props.dailyHealthDataBitmarks.length && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
       cardListData.push({ type: STICK_CARD_TYPES.DAILY_HEALTH_DATA, data: this.props.dailyHealthDataBitmarks, top: accumulatedTop });
@@ -451,19 +443,6 @@ class PrivateUserComponent extends Component {
                         </TouchableOpacity>
                       }
 
-                      {/*GET_STARTED_HEALTH_DATA*/}
-                      {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&
-                        <TouchableOpacity onPress={() => Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) })}>
-                          <GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                            cardHeader={'Track your daily activity'}
-                            cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}
-                            cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}
-                            isStickCard={true}
-                            cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}
-                          />
-                        </TouchableOpacity>
-                      }
-
                       {/*MEDICAL RECORD*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD &&
                         <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalRecord.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
@@ -506,7 +485,7 @@ class PrivateUserComponent extends Component {
                         // AUTOMATICALLY ADD HEALTH DATA
                         if (card.type === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
                                 cardHeader={'Track your daily activity'}
                               />
@@ -532,20 +511,11 @@ class PrivateUserComponent extends Component {
                           );
                         }
 
-                        // SIGN FOR DAILY HEALTH DATA
-                        if (card.type === STICK_CARD_TYPES.SIGN_DAILY_HEALTH_DATA) {
-                          return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.bitmarkHealthData({ list: card.data }) }}>
-                              <DailyHealthDataFeedCardComponent header={'Sign for your daily data'} />
-                            </TouchableOpacity>
-                          );
-                        }
-
                         // DAILY HEALTH DATA
                         if (card.type === STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
                           return (
                             <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.DAILY_HEALTH_DATA, stickDailyHealthData: card }) }}>
-                              <DailyHealthDataFeedCardComponent header={'Learn about your health'} />
+                              <DailyHealthDataFeedCardComponent header={'Track your daily activity'} lastBitmark={card.data[0]} />
                             </TouchableOpacity>
                           );
                         }
