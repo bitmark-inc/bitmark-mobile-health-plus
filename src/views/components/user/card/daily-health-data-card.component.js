@@ -75,7 +75,7 @@ export class DailyHealthDataCardComponent extends React.Component {
           {/*Status*/}
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             {lastBitmark &&
-            <Text style={[cardStyles.cardText]}>{'RECORDED ON ' + moment(lastBitmark.asset.metadata['Collection Date']).add(1, 'day').format('YYYY MMM DD').toUpperCase()}</Text>
+            <Text style={[cardStyles.cardText]}>{'RECORDED ON ' + moment(lastBitmark.asset.metadata['Collection Date']).add(1, 'day').format('MMM DD, YYYY').toUpperCase()}</Text>
             }
           </View>
         </View>
