@@ -28,12 +28,22 @@ class DailyHealthDataUtil {
 
   static getDailySleepFromData(dailyData) {
     let sleep = undefined;
-    if (dailyData.SleepAnalysis) {
-      dailyData.SleepAnalysis.forEach(item => {
-        if (item.value == 'INBED' && item.startDate && item.endDate && moment(item.endDate).diff(moment(item.startDate), 'minutes') > 0) {
-          sleep = {
-            startDate: item.startDate,
-            endDate: item.endDate
+    if (dailyData.SleepAnalysis && dailyData.SleepAnalysis.length) {
+      // Get the longest sleep
+      dailyData.SleepAnalysis.filter(item => item.value == 'INBED').forEach((item) => {
+        if (item.startDate && item.endDate && moment(item.endDate).diff(moment(item.startDate), 'minutes') > 0) {
+          if (!sleep) {
+            sleep = {
+              startDate: item.startDate,
+              endDate: item.endDate
+            }
+          } else {
+            if (moment(item.endDate).diff(moment(item.startDate), 'minutes') > moment(sleep.endDate).diff(moment(sleep.startDate), 'minutes')) {
+              sleep = {
+                startDate: item.startDate,
+                endDate: item.endDate
+              }
+            }
           }
         }
       })
