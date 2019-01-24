@@ -30,7 +30,7 @@ export class HealthDataFeedCardComponent extends React.Component {
       <View style={[styles.cardContainer]}>
         {/*TOP BAR*/}
         <View style={[styles.cardTopBar]}>
-          <Text style={[styles.cardTitle]}>HEALTH KIT DATA</Text>
+          <Text style={[styles.cardTitle]}>HEALTH DATA</Text>
           <Image style={styles.cardIcon} source={require('assets/imgs/health-data-card-icon.png')} />
         </View>
 
