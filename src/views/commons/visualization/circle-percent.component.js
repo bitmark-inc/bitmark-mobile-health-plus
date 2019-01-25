@@ -29,13 +29,12 @@ export class CirclePercentComponent extends Component {
     const BORDER_WIDTH = 3;
 
     // Calculate transformation
-    let rotationDegree = 0;
-
+    let rotationDegree;
     if (percent > 100) {
       let overPercent = percent % 100;
       rotationDegree = percentToDegree(overPercent);
       // Trick to create the break
-      percent = 99;
+      percent = 100;
     }
 
     return (
@@ -46,13 +45,24 @@ export class CirclePercentComponent extends Component {
         </View>
 
         {/*Percentage Circle*/}
-        <View style={[{transform: [{ rotate: `${rotationDegree}deg`}]}]}>
+        <View>
           <PercentageCircle radius={radius} percent={percent} borderWidth={BORDER_WIDTH} color={"#0060F2"} bgcolor={'transparent'} textStyle={[{color: 'transparent'}]}>
             {this.props.imageSource &&
-            <Image style={[this.props.imageStyle, {transform: [{ rotate: `-${rotationDegree}deg`}]}]} source={this.props.imageSource}></Image>
+            <Image style={[this.props.imageStyle]} source={this.props.imageSource}></Image>
             }
           </PercentageCircle>
         </View>
+
+        {/*The Break*/}
+        {rotationDegree &&
+        <View style={[{transform: [{ rotate: `${rotationDegree}deg`}]}, {position: 'absolute', top: TOP_TEXT_HEIGHT}]}>
+          <PercentageCircle radius={radius + 0.2} percent={1} borderWidth={BORDER_WIDTH} color={"#FFFFFF"} bgcolor={'transparent'} innerColor={'transparent'} textStyle={[{color: 'transparent'}]}>
+            {this.props.imageSource &&
+            <Image style={[this.props.imageStyle, {transform: [{ rotate: `${-rotationDegree}deg`}]}]} source={this.props.imageSource}></Image>
+            }
+          </PercentageCircle>
+        </View>
+        }
 
         {/*Inner Circle*/}
         <View style={[styles.innerCircle, {width: (radius - BORDER_WIDTH) * 2, height: (radius - BORDER_WIDTH) * 2, borderRadius: (radius - BORDER_WIDTH) , bottom: BORDER_WIDTH + BOTTOM_TEXT_HEIGHT, left: BORDER_WIDTH}]}></View>
