@@ -118,7 +118,7 @@ const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataB
   // Check daily health data permission
   if (bitmarkAccountNumber === CacheData.userInformation.bitmarkAccountNumber &&
     !CacheData.userInformation.activeHealthDataAt && dailyHealthDataBitmarks && dailyHealthDataBitmarks.length > 0) {
-    await runPromiseWithoutError(doRequireHealthKitPermission());
+    runPromiseWithoutError(doRequireHealthKitPermission());
   }
 
   // Update user data into local database

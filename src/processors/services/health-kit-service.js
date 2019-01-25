@@ -446,7 +446,7 @@ const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt
   }
 
   // TODO: This for adding test data
-  //lastTimeBitmarkHealthData = moment().date(moment().date() - 3);
+  // lastTimeBitmarkHealthData = moment().date(moment().date() - 3);
 
   console.log('lastTime for checking new daily bitmark:', lastTimeBitmarkHealthData.toDate());
   startDate = moment(lastTimeBitmarkHealthData);
