@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, View, Text,
+  StyleSheet, View, Text, Dimensions,
 } from 'react-native';
 
 export class StepsChartComponent extends Component {
@@ -31,7 +31,7 @@ export class StepsChartComponent extends Component {
       return {
         label: item.label,
         value: item.value,
-        valueFontSize: maxValue > 9999 ? 7 : 10,
+        valueFontSize: maxValue > 9999 ? this.calculateFontSizeByScreenSize() : 10,
         isMissing: item.isMissing,
         isActive: item.isActive,
         height: item.isMissing ? 0 : (item.value / CHART_UNIT) * heightPerUnit
@@ -39,6 +39,21 @@ export class StepsChartComponent extends Component {
     });
 
     return chartData;
+  }
+
+  calculateFontSizeByScreenSize() {
+    let fontSize;
+    let screenWidth = Dimensions.get('window').width;
+
+    if (screenWidth > 375) {
+      fontSize = 10;
+    } else if (screenWidth > 320) {
+      fontSize = 9;
+    } else {
+      fontSize = 7;
+    }
+
+    return fontSize;
   }
 
   render() {
