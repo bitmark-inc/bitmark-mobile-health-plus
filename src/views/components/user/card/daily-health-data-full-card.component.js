@@ -132,6 +132,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
                 {/*VISUALIZATION*/}
                 {/*Steps and Sleep Percent*/}
                 <View style={[dailyHealthCardStyles.visualization]}>
+                  {/*STEPS*/}
                   {this.state.stepsPercent != undefined ? (
                     <CirclePercentComponent percent={Math.abs(this.state.stepsPercent)} radius={52} value={this.state.yesterdayDataSteps} bottomText={'GOAL = 10k'} imageSource={require('assets/imgs/steps.png')} imageStyle={dailyHealthCardStyles.stepsImageStyle} />
                   ) : (
@@ -142,6 +143,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
                     )
                   }
 
+                  {/*SLEEP*/}
                   {this.state.sleepPercent != undefined ? (
                     <CirclePercentComponent style={{ marginLeft: 25 }} percent={Math.abs(this.state.sleepPercent)} radius={52} value={this.state.yesterdayDataSleepTimeInMinutes} bottomText={'GOAL = 8h'} imageSource={require('assets/imgs/sleep.png')} imageStyle={dailyHealthCardStyles.sleepImageStyle} />
                   ) : (

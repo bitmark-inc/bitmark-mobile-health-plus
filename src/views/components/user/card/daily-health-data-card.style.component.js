@@ -64,13 +64,13 @@ const styles = StyleSheet.create({
   missingDayText: {
     fontFamily: 'AvenirNextW1G-Light',
     fontSize: 10,
-    lineHeight: 16,
+    lineHeight: 30,
+    height: 30,
     color: '#FF003C',
     textAlign: 'center',
     letterSpacing: 2,
   },
   missingDayIcon: {
-    marginTop: 7,
     width: 108,
     height: 104,
     resizeMode: 'contain'

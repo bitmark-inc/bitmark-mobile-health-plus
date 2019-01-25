@@ -328,7 +328,7 @@ class PrivateUserComponent extends Component {
     // Daily health data
     if (this.props.dailyHealthDataBitmarks.length && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
       cardListData.push({ type: STICK_CARD_TYPES.DAILY_HEALTH_DATA, data: this.props.dailyHealthDataBitmarks, top: accumulatedTop });
-      accumulatedTop += 105;
+      accumulatedTop += 110;
     }
 
     if (this.props.healthAssetBitmarks.length) {
