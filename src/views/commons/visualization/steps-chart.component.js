@@ -31,6 +31,7 @@ export class StepsChartComponent extends Component {
       return {
         label: item.label,
         value: item.value,
+        valueFontSize: maxValue > 9999 ? 7 : 10,
         isMissing: item.isMissing,
         isActive: item.isActive,
         height: item.isMissing ? 0 : (item.value / CHART_UNIT) * heightPerUnit
@@ -51,7 +52,7 @@ export class StepsChartComponent extends Component {
             return (
               <View key={index} style={[styles.barItemContainer, {marginLeft: index == 0 ? 0 : 4}]}>
                 {!item.isMissing &&
-                <Text style={styles.topBarText}>{item.value}</Text>
+                <Text style={[styles.topBarText, {fontSize: item.valueFontSize}]}>{item.value}</Text>
                 }
 
                 {!item.isMissing &&
