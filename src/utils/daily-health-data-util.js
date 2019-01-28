@@ -69,13 +69,16 @@ class DailyHealthDataUtil {
 
   static getYesterdayDailyHealthBitmark(dailyHealthDataBitmarks) {
     let yesterdayBitmark;
-    let latestBitmark = dailyHealthDataBitmarks[0];
-    let lastCollectionDate = moment(latestBitmark.asset.metadata['Collection Date']);
 
-    let YESTERDAY = moment().subtract(1, 'days').startOf('day');
+    if (dailyHealthDataBitmarks.length) {
+      let latestBitmark = dailyHealthDataBitmarks[0];
+      let lastCollectionDate = moment(latestBitmark.asset.metadata['Collection Date']);
 
-    if (lastCollectionDate.isSame(YESTERDAY, 'd')) {
-      yesterdayBitmark = latestBitmark;
+      let YESTERDAY = moment().subtract(1, 'days').startOf('day');
+
+      if (lastCollectionDate.isSame(YESTERDAY, 'd')) {
+        yesterdayBitmark = latestBitmark;
+      }
     }
 
     return yesterdayBitmark;

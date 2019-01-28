@@ -32,7 +32,9 @@ export class DailyHealthDataFeedCardComponent extends React.Component {
         {/*CONTENT*/}
         <View style={[styles.cardContent]}>
           <Text style={[styles.cardHeader]}>{this.props.header}</Text>
+          {bitmark &&
           <Text style={[styles.cardText]}>{'RECORDED ON ' + moment(bitmark.asset.metadata['Collection Date']).add(1, 'day').format('MMM DD, YYYY').toUpperCase()}</Text>
+          }
         </View>
 
         {/*BOTTOM BAR*/}
