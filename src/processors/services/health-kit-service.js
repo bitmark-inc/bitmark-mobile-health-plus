@@ -427,7 +427,7 @@ const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt
   if ((lastTimeBitmarkHealthData && resetAt && lastTimeBitmarkHealthData.toDate().getTime() < moment(resetAt).toDate().getTime()) ||
     (!lastTimeBitmarkHealthData && resetAt)) {
     // Need to set to reset time
-    lastTimeBitmarkHealthData = resetAt;
+    lastTimeBitmarkHealthData = moment(resetAt);
   } else if (lastTimeBitmarkHealthData) {
     // Should add one day for last issue time for checking new daily health data
     lastTimeBitmarkHealthData = lastTimeBitmarkHealthData.date(lastTimeBitmarkHealthData.date() + 1).startOf('day');
