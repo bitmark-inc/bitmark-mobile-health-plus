@@ -1,5 +1,6 @@
 import { } from 'react-native';
 import { Dimensions, Alert, Image } from 'react-native';
+import moment from "moment";
 let currentSize = Dimensions.get('window');
 let widthDesign = 375;
 
@@ -99,6 +100,18 @@ const isEMRRecord = (asset) => {
   return asset && asset.metadata && asset.metadata.type === 'HEALTH-EMR' && asset.name.startsWith('EMR');
 };
 
+const bitmarkSortFunction = (a, b) => {
+  if (a.status === 'pending' && b.status !== 'pending') {
+    return -1;
+  } else if (b.status === 'pending' && a.status !== 'pending') {
+    return 1;
+  } else if (a.status === 'pending' && b.status === 'pending') {
+    return 0;
+  }
+
+  return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
+};
+
 const getImageSize = async (imageFilePath) => {
   return new Promise((resolve) => {
     Image.getSize(imageFilePath, (width, height) => {
@@ -155,6 +168,7 @@ export {
   isDailyHealthDataRecord,
   isAssetDataRecord,
   isEMRRecord,
+  bitmarkSortFunction,
   isJPGFile,
   getImageSize,
   asyncAlert,

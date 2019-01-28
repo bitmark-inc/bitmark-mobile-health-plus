@@ -18,6 +18,7 @@ import {
   FileUtil,
   convertWidth,
   isHealthDataRecord,
+  bitmarkSortFunction,
 } from 'src/utils';
 import { constants, config } from 'src/configs';
 
@@ -326,24 +327,18 @@ class PrivateUserComponent extends Component {
     }
 
     // Daily health data
-    if (this.props.dailyHealthDataBitmarks.length && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
+    if (CacheData.userInformation.activeHealthDataAt && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
       cardListData.push({ type: STICK_CARD_TYPES.DAILY_HEALTH_DATA, data: this.props.dailyHealthDataBitmarks, top: accumulatedTop });
       accumulatedTop += 110;
     }
 
-    if (this.props.healthAssetBitmarks.length) {
-      this.props.healthAssetBitmarks.forEach(bitmark => {
-        if (!(this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD && this.state.stickMedicalRecord.data.id == bitmark.id)) {
-          cardListData.push({ type: STICK_CARD_TYPES.MEDICAL_RECORD, data: bitmark, top: accumulatedTop });
-          accumulatedTop += 120;
-        }
-      })
-    }
-
-    if (this.props.healthDataBitmarks.length) {
-      this.props.healthDataBitmarks.forEach(bitmark => {
-        if (!(this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA && this.state.stickHealthData.data.id == bitmark.id)) {
-          cardListData.push({ type: STICK_CARD_TYPES.HEALTH_DATA, data: bitmark, top: accumulatedTop });
+    // Medical & Weekly Health Data records
+    let medicalAndWeeklyHealthData = this.props.healthAssetBitmarks.concat(this.props.healthDataBitmarks);
+    medicalAndWeeklyHealthData = medicalAndWeeklyHealthData.sort(bitmarkSortFunction);
+    if (medicalAndWeeklyHealthData.length) {
+      medicalAndWeeklyHealthData.forEach(bitmark => {
+        if (!((this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD  || this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA) && this.state.stickMedicalOrWeeklyHealthDataRecord.data.id == bitmark.id)) {
+          cardListData.push({ type: isHealthDataRecord(bitmark.asset) ? STICK_CARD_TYPES.HEALTH_DATA : STICK_CARD_TYPES.MEDICAL_RECORD, data: bitmark, top: accumulatedTop });
           accumulatedTop += 120;
         }
       })
@@ -445,21 +440,20 @@ class PrivateUserComponent extends Component {
 
                       {/*MEDICAL RECORD*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD &&
-                        <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalRecord.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
-                          <MedicalRecordCardComponent bitmark={this.state.stickMedicalRecord.data} />
+                        <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalOrWeeklyHealthDataRecord.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                          <MedicalRecordCardComponent bitmark={this.state.stickMedicalOrWeeklyHealthDataRecord.data} />
                         </TouchableOpacity>
                       }
 
                       {/*HEALTH DATA*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA &&
-                        <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickHealthData.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
-                          <HealthDataCardComponent bitmark={this.state.stickHealthData.data} />
+                        <TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalOrWeeklyHealthDataRecord.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                          <HealthDataCardComponent bitmark={this.state.stickMedicalOrWeeklyHealthDataRecord.data} />
                         </TouchableOpacity>
                       }
 
                       {/*DAILY HEALTH DATA*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.DAILY_HEALTH_DATA &&
-
                         <TouchableOpacity onPress={() => { Actions.dailyHealthDataFullCard({ dailyHealthDataBitmarks: this.state.stickDailyHealthData.data, resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                           <DailyHealthDataCardComponent dailyHealthDataBitmarks={this.state.stickDailyHealthData.data} />
                         </TouchableOpacity>
@@ -496,7 +490,7 @@ class PrivateUserComponent extends Component {
                         // MEDICAL_RECORD
                         if (card.type === STICK_CARD_TYPES.MEDICAL_RECORD) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.MEDICAL_RECORD, stickMedicalRecord: card }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.MEDICAL_RECORD, stickMedicalOrWeeklyHealthDataRecord: card }) }}>
                               <MedicalRecordFeedCardComponent bitmark={card.data} />
                             </TouchableOpacity>
                           );
@@ -505,7 +499,7 @@ class PrivateUserComponent extends Component {
                         // HEALTH_DATA
                         if (card.type === STICK_CARD_TYPES.HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickHealthData: card }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { this.setState({ stickCardType: STICK_CARD_TYPES.HEALTH_DATA, stickMedicalOrWeeklyHealthDataRecord: card }) }}>
                               <HealthDataFeedCardComponent bitmark={card.data} />
                             </TouchableOpacity>
                           );

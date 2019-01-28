@@ -30,7 +30,7 @@ import {
 import {
   FileUtil,
   isImageFile, isPdfFile, isHealthDataRecord, isAssetDataRecord, isDailyHealthDataRecord,
-  compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isEMRRecord,
+  compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isEMRRecord, bitmarkSortFunction
 } from 'src/utils';
 
 import { UserBitmarksStore, UserBitmarksActions, EMRInformationStore, EMRInformationActions, AccountStore, AccountActions } from 'src/views/stores';
@@ -135,7 +135,7 @@ const checkAndIssueNewDailyHealthData = async (dailyHealthDataBitmarks) => {
   let waitingForIssuingDailyHealthDataList = HealthKitService.doCheckBitmarkHealthDataTask(dailyHealthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
   if (waitingForIssuingDailyHealthDataList.length) {
     let results = await doBitmarkHealthData(waitingForIssuingDailyHealthDataList);
-    console.log('Daily health data issue results:', results);
+    console.log('Daily health data issued results:', results);
   }
 };
 
@@ -230,24 +230,12 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
         }
       }
 
-      let compareFunction = (a, b) => {
-        if (a.status === 'pending' && b.status !== 'pending') {
-          return -1;
-        } else if (b.status === 'pending' && a.status !== 'pending') {
-          return 1;
-        } else if (a.status === 'pending' && b.status === 'pending') {
-          return 0;
-        }
-
-        return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
-      };
-
       if (healthDataBitmarks.length > 0) {
-        healthDataBitmarks = healthDataBitmarks.sort(compareFunction);
+        healthDataBitmarks = healthDataBitmarks.sort(bitmarkSortFunction);
       }
 
       if (healthAssetBitmarks.length > 0) {
-        healthAssetBitmarks = healthAssetBitmarks.sort(compareFunction);
+        healthAssetBitmarks = healthAssetBitmarks.sort(bitmarkSortFunction);
       }
 
       if (dailyHealthDataBitmarks.length > 0) {
