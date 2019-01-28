@@ -102,7 +102,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
     let lastBitmark = this.lastBitmark;
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
         <View style={[styles.body]}>
           <View style={[styles.topBar]}>
             {/*Back button*/}
