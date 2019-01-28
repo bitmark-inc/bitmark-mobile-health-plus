@@ -8,6 +8,11 @@
 
 import Foundation
 
+public enum QueryDirection: String {
+    case earlier = "earlier"
+    case later = "later"
+}
+
 protocol QueryBuildable {
     var queryItems: [URLQueryItem] { get }
     func buildURL(baseURL: URL, path: String) -> URL

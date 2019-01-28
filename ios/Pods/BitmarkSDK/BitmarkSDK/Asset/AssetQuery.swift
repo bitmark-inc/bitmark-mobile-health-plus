@@ -29,5 +29,19 @@ public extension Asset {
             items.append(queryItem)
             return QueryParam(queryItems: items)
         }
+        
+        public func at(_ index: Int64) -> QueryParam {
+            let queryItem = URLQueryItem(name: "at", value: String(index))
+            var items = self.queryItems
+            items.append(queryItem)
+            return QueryParam(queryItems: items)
+        }
+        
+        public func to(direction: QueryDirection) -> QueryParam {
+            let queryItem = URLQueryItem(name: "to", value: direction.rawValue)
+            var items = self.queryItems
+            items.append(queryItem)
+            return QueryParam(queryItems: items)
+        }
     }
 }

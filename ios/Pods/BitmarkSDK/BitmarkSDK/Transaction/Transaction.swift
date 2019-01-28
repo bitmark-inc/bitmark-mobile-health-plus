@@ -9,13 +9,13 @@
 import Foundation
 
 public struct Transaction: Codable {
-    let id: String
-    let bitmark_id: String
-    let asset_id: String
-    let owner: String
-    let status: String
-    let block_number: Int64
-    let offset: Int64
+    public let id: String
+    public let bitmark_id: String
+    public let asset_id: String
+    public let owner: String
+    public let status: String
+    public let block_number: Int64
+    public let offset: Int64
 }
 
 extension Transaction {
