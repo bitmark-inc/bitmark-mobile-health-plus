@@ -43,13 +43,12 @@ public extension Bitmark {
         var requests = [IssueRequest]()
         
         // Get asset info
-        let api = API()
         let bitmarkQuery = try Bitmark.newBitmarkQueryParams()
             .referenced(toAssetID: assetID)
             .includePending(true)
             .limit(size: 1)
         let (bitmarks, _) = try Bitmark.list(params: bitmarkQuery)
-        if bitmarks.count == 0 {
+        if bitmarks == nil || bitmarks?.count == 0 {
             // Create first one with nonce = 0
             requests.append(createIssueRequest(assetID: assetID, nonce: 0))
         }
@@ -166,7 +165,7 @@ extension Bitmark {
         }
     }
     
-    public static func list(params: QueryParam) throws -> ([Bitmark], [Asset]?) {
+    public static func list(params: QueryParam) throws -> ([Bitmark]?, [Asset]?) {
         let api = API()
         return try api.listBitmark(builder: params)
     }

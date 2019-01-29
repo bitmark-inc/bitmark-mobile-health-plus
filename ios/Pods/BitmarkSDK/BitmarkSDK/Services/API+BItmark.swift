@@ -28,7 +28,7 @@ extension API {
     }
     
     struct BitmarksQueryResponse: Codable {
-        let bitmarks: [Bitmark]
+        let bitmarks: [Bitmark]?
         let assets: [Asset]?
     }
     
@@ -44,7 +44,7 @@ extension API {
         return result.bitmark
     }
     
-    internal func listBitmark(builder: Bitmark.QueryParam) throws -> ([Bitmark], [Asset]?) {
+    internal func listBitmark(builder: Bitmark.QueryParam) throws -> ([Bitmark]?, [Asset]?) {
         let requestURL = builder.buildURL(baseURL: endpoint.apiServerURL, path: "/v3/bitmarks")
         let urlRequest = URLRequest(url: requestURL)
         let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)

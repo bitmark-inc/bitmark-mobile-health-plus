@@ -166,9 +166,9 @@ export class EMRInformationComponent extends Component {
           <TouchableOpacity style={styles.headerLeft} onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.pop()}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle} numberOfLines={1}>Emergency Medical Record</Text>
+          <Text style={styles.headerTitle} numberOfLines={1}></Text>
           <TouchableOpacity style={styles.headerRight} disabled={this.state.isEditing} onPress={() => this.setState({ isEditing: !this.state.isEditing })}>
-            {!this.state.isEditing && <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/edition_icon_black.png')} />}
+            {!this.state.isEditing && <Text style={styles.headerEditText}>EDIT</Text>}
           </TouchableOpacity>
         </View>
         {!this.state.isEditing && <ScrollView contentContainerStyle={styles.body}>
@@ -187,7 +187,7 @@ export class EMRInformationComponent extends Component {
                 <View style={{ flex: 1, flexDirection: 'row', marginTop: 21 }}>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.emrInformationLabel}>Date of birth</Text>
-                    <Text style={styles.emrInformationValue}>{this.state.emrInformation.birthday ? moment(this.state.emrInformation.birthday).format('MMM DD, YYYY') : 'TODO'}</Text>
+                    <Text style={styles.emrInformationValue}>{this.state.emrInformation.birthday ? moment(this.state.emrInformation.birthday).format('MMM DD, YYYY') : ''}</Text>
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column', marginLeft: convertWidth(16), }}>
                     <Text style={styles.emrInformationLabel}>Sex</Text>
@@ -216,7 +216,7 @@ export class EMRInformationComponent extends Component {
           <ShadowComponent style={styles.cardBody}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
               <View style={styles.cardTitle}>
-                <Text style={styles.cardTitleText}>{'Active Clinical Diagnoses'.toUpperCase()}</Text>
+                <Text style={styles.cardTitleText}>{'CURRENT DIAGNOSES & CRITICAL HISTORY'.toUpperCase()}</Text>
               </View>
               <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_1.png')} />
             </ShadowTopComponent>
@@ -362,7 +362,7 @@ export class EMRInformationComponent extends Component {
             <ShadowComponent style={styles.cardBody}>
               <ShadowTopComponent contentStyle={styles.cardHeader}>
                 <View style={styles.cardTitle}>
-                  <Text style={styles.cardTitleText}>{'Active Clinical Diagnoses'.toUpperCase()}</Text>
+                  <Text style={styles.cardTitleText}>{'CURRENT DIAGNOSES & CRITICAL HISTORY'.toUpperCase()}</Text>
                 </View>
                 <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_1.png')} />
               </ShadowTopComponent>
@@ -465,7 +465,14 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     paddingRight: convertWidth(19),
-    width: convertWidth(35),
+    width: convertWidth(50),
+  },
+  headerEditText: {
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10,
+    letterSpacing: 1.5,
+    color: '#FF003C',
+    width: '100%',
+    textAlign: 'right'
   },
   emergencyContactArea: {
     flexDirection: 'column',

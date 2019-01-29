@@ -16,7 +16,6 @@ import { config } from 'src/configs';
 import { searchAgain } from 'src/views/controllers';
 import moment from "moment/moment";
 import { styles as cardStyles } from "./card/bitmark-card.style.component";
-import { humanFileSize } from "../../../utils";
 
 export class BitmarkDetailComponent extends Component {
   static propTypes = {
@@ -54,11 +53,10 @@ export class BitmarkDetailComponent extends Component {
   }
 
   async componentDidMount() {
-    let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
     let tags = await IndexDBService.getTagsByBitmarkId(this.props.bitmark.id);
     let note = await IndexDBService.getNoteByBitmarkId(this.props.bitmark.id);
 
-    this.setState({ fileSize: humanFileSize(fileStat.size), tags, note });
+    this.setState({ tags, note });
   }
 
   deleteBitmark(bitmarkType) {
@@ -171,9 +169,6 @@ export class BitmarkDetailComponent extends Component {
                     {/*Status*/}
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={[cardStyles.cardText]}>{bitmark.asset.created_at ? ((bitmarkType == 'bitmark_health_issuance' ? 'ADDED ON ' : 'RECORDED ON ') + moment(bitmark.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : 'REGISTERING...'}</Text>
-                      {this.state.fileSize &&
-                        <Text style={[cardStyles.cardText]}>{this.state.fileSize}</Text>
-                      }
                     </View>
                   </View>
 

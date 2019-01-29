@@ -132,7 +132,7 @@ export class InputTagComponent extends Component {
               onChange={() => { this.setState({ tag: this.state.tag.replace(/\s/g, '') }) }}
               onBlur={() => { this.setState({ tag: '' }) }}
               onChangeText={(text) => { this.onChangeText.bind(this)(text) }}
-              onSubmitEditing={this.hideInputTag.bind(this)}
+              onSubmitEditing={() => this.addTag.bind(this)(this.state.tag)}
               placeholder={global.i18n.t("TaggingComponent_enterATag")}
             />
 

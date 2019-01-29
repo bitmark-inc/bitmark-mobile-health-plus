@@ -6,7 +6,6 @@ import {
 
 import moment from "moment/moment";
 import { styles } from './bitmark-card.style.component';
-import { FileUtil, humanFileSize } from "../../../../utils";
 
 export class HealthDataCardComponent extends React.Component {
   static propTypes = {
@@ -16,11 +15,6 @@ export class HealthDataCardComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-  }
-
-  async componentDidMount() {
-    let fileStat = await FileUtil.stat(this.props.bitmark.asset.filePath);
-    this.setState({fileSize: humanFileSize(fileStat.size)});
   }
 
   render() {
@@ -43,9 +37,6 @@ export class HealthDataCardComponent extends React.Component {
           <Text style={[styles.cardHeader]}>{bitmark.asset.name}</Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={[styles.cardText]}>{bitmark.asset.created_at ? ('RECORDED ON ' + moment(bitmark.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : 'REGISTERING...'}</Text>
-            {this.state.fileSize &&
-            <Text style={[styles.cardText]}>{this.state.fileSize}</Text>
-            }
           </View>
         </View>
       </View>

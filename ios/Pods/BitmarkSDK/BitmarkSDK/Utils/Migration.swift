@@ -32,17 +32,17 @@ public struct Migration {
             
             let (bitmarks, _) = try Bitmark.list(params: bitmarksQuery)
             
-            if bitmarks.count < 100 {
-                shouldContinue = false
-            }
-            
-            if bitmarks.count == 0 {
+            if bitmarks == nil || bitmarks?.count == 0 {
                 break
             }
             
-            lastOffset = bitmarks.last!.offset
+            if bitmarks!.count < 100 {
+                shouldContinue = false
+            }
             
-            owningBitmarks += bitmarks
+            lastOffset = bitmarks!.last!.offset
+            
+            owningBitmarks += bitmarks!
         }
         
         // Group bitmarks with their asset_id

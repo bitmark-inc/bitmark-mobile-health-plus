@@ -176,7 +176,7 @@ platform :ios do
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus beta",
-      silent:true,
+      silent: true,
       include_bitcode: false
     )
     sentry_upload_dsym(
@@ -231,7 +231,7 @@ platform :ios do
       export_options: {iCloudContainerEnvironment: 'Production'},
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus dev",
-      silent:true,
+      silent: true,
       include_bitcode: false
     )
 
