@@ -33,7 +33,6 @@ import { MedicalRecordFeedCardComponent } from "./card/medical-record-feed-card.
 import { EMRCardComponent } from './emr';
 import { AddRecordOptionsComponent } from "./add-record-options.component";
 import { DailyHealthDataFeedCardComponent } from "./card/daily-health-data-feed-card.component";
-import { DailyHealthDataCardComponent } from "./card/daily-health-data-card.component";
 
 const STICK_CARD_TYPES = {
   GET_STARTED_EMR: 0,
@@ -334,10 +333,8 @@ class PrivateUserComponent extends Component {
     medicalAndWeeklyHealthData = medicalAndWeeklyHealthData.sort(bitmarkSortFunction);
     if (medicalAndWeeklyHealthData.length) {
       medicalAndWeeklyHealthData.forEach(bitmark => {
-        if (!((this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD  || this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA) && this.state.stickMedicalOrWeeklyHealthDataRecord.data.id == bitmark.id)) {
-          cardListData.push({ type: isHealthDataRecord(bitmark.asset) ? STICK_CARD_TYPES.HEALTH_DATA : STICK_CARD_TYPES.MEDICAL_RECORD, data: bitmark, top: accumulatedTop });
-          accumulatedTop += 120;
-        }
+        cardListData.push({ type: isHealthDataRecord(bitmark.asset) ? STICK_CARD_TYPES.HEALTH_DATA : STICK_CARD_TYPES.MEDICAL_RECORD, data: bitmark, top: accumulatedTop });
+        accumulatedTop += 110;
       })
     }
 
@@ -420,53 +417,6 @@ class PrivateUserComponent extends Component {
                       {/*GET_STARTED_EMR*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_EMR &&
                         <EMRCardComponent displayFromUserScreen={true} />
-                      }
-
-                      {/*/!*GET_STARTED_MEDICAL_RECORD*!/*/}
-                      {/*{this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD &&*/}
-                        {/*<TouchableOpacity onPress={() => { Actions.addRecord({ takePhoto: this.takePhoto.bind(this), importRecord: this.importRecord.bind(this) }) }}>*/}
-                          {/*<GetStartedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}*/}
-                            {/*cardHeader={'Add first medical record'}*/}
-                            {/*cardText={'Store all your medical records in one secure place.'}*/}
-                            {/*cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}*/}
-                            {/*isStickCard={true}*/}
-                            {/*cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}*/}
-                          {/*/>*/}
-                        {/*</TouchableOpacity>*/}
-                      {/*}*/}
-
-                      {/*GET_STARTED_HEALTH_DATA*/}
-                      {/*{this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA &&*/}
-                        {/*<TouchableOpacity onPress={() => Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) })}>*/}
-                          {/*<GetStartedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}*/}
-                            {/*cardHeader={'Learn about your health'}*/}
-                            {/*cardText={'To register ownership of your health data, allow Bitmark Health to access specific (or all) categories of data.'}*/}
-                            {/*cardTopBarStyle={{ backgroundColor: '#FBC9D5' }}*/}
-                            {/*isStickCard={true}*/}
-                            {/*cardNextIconSource={require('assets/imgs/arrow-right-icon-red.png')}*/}
-                          {/*/>*/}
-                        {/*</TouchableOpacity>*/}
-                      {/*}*/}
-
-                      {/*/!*MEDICAL RECORD*!/*/}
-                      {/*{this.state.stickCardType === STICK_CARD_TYPES.MEDICAL_RECORD &&*/}
-                        {/*<TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickMedicalRecord.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>*/}
-                          {/*<MedicalRecordCardComponent bitmark={this.state.stickMedicalRecord.data} />*/}
-                        {/*</TouchableOpacity>*/}
-                      {/*}*/}
-
-                      {/*HEALTH DATA*/}
-                      {/*{this.state.stickCardType === STICK_CARD_TYPES.HEALTH_DATA &&*/}
-                        {/*<TouchableOpacity onPress={() => { Actions.bitmarkDetail({ bitmark: this.state.stickHealthData.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>*/}
-                          {/*<HealthDataCardComponent bitmark={this.state.stickHealthData.data} />*/}
-                        {/*</TouchableOpacity>*/}
-                      {/*}*/}
-
-                      {/*DAILY HEALTH DATA*/}
-                      {this.state.stickCardType === STICK_CARD_TYPES.DAILY_HEALTH_DATA &&
-                        <TouchableOpacity onPress={() => { Actions.dailyHealthDataFullCard({ dailyHealthDataBitmarks: this.state.stickDailyHealthData.data, resetToInitialState: this.resetToInitialState.bind(this) }) }}>
-                          <DailyHealthDataCardComponent dailyHealthDataBitmarks={this.state.stickDailyHealthData.data} />
-                        </TouchableOpacity>
                       }
                     </View>
 

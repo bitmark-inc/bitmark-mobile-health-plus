@@ -36,7 +36,7 @@ export class BitmarkDetailComponent extends Component {
         runPromiseWithoutError(FileUtil.readFile(this.props.bitmark.asset.viewFilePath)).then(result => {
           if (result && result.error) {
             console.log('error:', result.error);
-            EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
+            // EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error: result.error, onClose: Actions.pop });
             return;
           }
           result.immutable = Map({ key: 'value' });

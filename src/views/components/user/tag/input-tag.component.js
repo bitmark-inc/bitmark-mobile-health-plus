@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   inputTagContainer: {
     flexDirection: 'row',
-    width: '100%', height: 62,
+    width: '100%', height: 65,
     paddingTop: 15,
     paddingBottom: 15,
   },
