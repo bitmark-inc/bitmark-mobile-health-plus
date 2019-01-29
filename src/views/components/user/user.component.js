@@ -407,7 +407,7 @@ class PrivateUserComponent extends Component {
                 </TouchableOpacity>
 
                 {/*EMR Icon*/}
-                <TouchableOpacity style={styles.topBarButton} onPress={() => { Actions.emrInformation() }}>
+                <TouchableOpacity style={styles.topBarButton} onPress={() => { Actions.account() }}>
                   <Image style={styles.profileIcon} source={this.props.emrInformation ? { uri: this.props.emrInformation.avatar } : require('assets/imgs/profile-icon.png')} />
                 </TouchableOpacity>
               </View>
