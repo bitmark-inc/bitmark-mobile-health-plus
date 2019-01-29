@@ -373,7 +373,7 @@ const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
       date: dateRange.StepCount.endDate,
       data: JSON.stringify(removeEmptyValueData(healthRawData)),
 
-      assetName: `HD${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase(),
+      assetName: `HD${moment(dateRange.StepCount.endDate).format('YYYYMMMDDHHmmss')}`.toUpperCase(),
       assetMetadata: {
         "Type": 'Health',
         "Source": 'HealthKit',
