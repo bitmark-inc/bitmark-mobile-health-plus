@@ -589,7 +589,7 @@
     "WhatNewComponent_versionInformationText": "VERSION {{version}}",
     "WhatNewComponent_versionInformationReleaseDiff1": "just now",
     "WhatNewComponent_versionInformationReleaseDiff2": "{{day}}d ago",
-    "WhatNewComponent_releaseNoteText": "New Features:\n\n• Track your daily activity -\nTracking two simple forms of health data: steps and sleep.",
+    "WhatNewComponent_releaseNoteText": "New Features:\n\n• Track your daily activity - Tracking two simple forms of health data: steps and sleep.",
     "TaggingComponent_tags": "Tags",
     "TaggingComponent_existingTags": "Existing tags",
     "TaggingComponent_noTags": "You don’t have any tags now, tap to start adding.",
