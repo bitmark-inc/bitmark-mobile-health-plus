@@ -161,11 +161,11 @@ let configure = (onRegister, onNotification) => {
 
 let doRequestNotificationPermissions = async () => {
   // TODO: Temporarily disable notification
-  return new Promise((resolve, reject) => {
-    // resolve(false);
-    reject();
-  });
-  // return await PushNotification.requestPermissions();
+  // return new Promise((resolve, reject) => {
+  //   // resolve(false);
+  //   reject();
+  // });
+  return await PushNotification.requestPermissions();
 };
 
 let setApplicationIconBadgeNumber = (number) => {
