@@ -439,6 +439,7 @@ const doLogin = async () => {
   let signatureData = await CommonModel.doCreateSignatureData();
   await AccountModel.doTryRegisterAccount(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   await checkAppNeedResetLocalData();
+  CacheData.mountedRouter = false;
   return CacheData.userInformation;
 };
 
@@ -726,7 +727,7 @@ const doBitmarkHealthData = async (list) => {
     isIssuingBitmarkHealthData = false;
   } catch {
     isIssuingBitmarkHealthData = false;
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {title: 'There was an error during registering your daily health data'});
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { title: 'There was an error during registering your daily health data' });
   }
 
   for (let item of results) {
@@ -736,7 +737,7 @@ const doBitmarkHealthData = async (list) => {
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   if (appInfo && (!appInfo.lastTimeIssued ||
-      (appInfo.lastTimeIssued && (moment().toDate().getTime() - appInfo.lastTimeIssued) > 7 * 24 * 60 * 60 * 1000))) {
+    (appInfo.lastTimeIssued && (moment().toDate().getTime() - appInfo.lastTimeIssued) > 7 * 24 * 60 * 60 * 1000))) {
     await CommonModel.doTrackEvent({
       event_name: 'health_plus_weekly_active_user',
       account_number: CacheData.userInformation ? CacheData.userInformation.bitmarkAccountNumber : null,
