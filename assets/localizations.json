@@ -297,14 +297,7 @@
     "TaggingComponent_enterATag": "TaggingComponent_enterATag",
     "AlphaAppUpdate_title": "AlphaAppUpdate_title",
     "AlphaAppUpdate_message": "AlphaAppUpdate_message",
-    "AlphaAppUpdate_button": "AlphaAppUpdate_button",
-    "ReleaseNoteComponent_closeButtonText": "ReleaseNoteComponent_closeButtonText",
-    "ReleaseNoteComponent_headerTitle2": "ReleaseNoteComponent_headerTitle2",
-    "ReleaseNoteComponent_versionInformationText": "ReleaseNoteComponent_versionInformationText",
-    "ReleaseNoteComponent_versionInformationReleaseDiff1": "ReleaseNoteComponent_versionInformationReleaseDiff1",
-    "ReleaseNoteComponent_versionInformationReleaseDiff2": "ReleaseNoteComponent_versionInformationReleaseDiff2",
-    "ReleaseNoteComponent_releaseNoteText": "ReleaseNoteComponent_releaseNoteText",
-    "AppProcessor_offlineMessage": "AppProcessor_offlineMessage"
+    "AlphaAppUpdate_button": "AlphaAppUpdate_button"
   },
   "en": {
     "BitmarkInternetOffComponent_titleText": "NO INTERNET CONNECTION",
@@ -596,7 +589,7 @@
     "WhatNewComponent_versionInformationText": "VERSION {{version}}",
     "WhatNewComponent_versionInformationReleaseDiff1": "just now",
     "WhatNewComponent_versionInformationReleaseDiff2": "{{day}}d ago",
-    "WhatNewComponent_releaseNoteText": "New features:\n• Apply new card-based user interface to enhance the app user experience.\n• Emergency Medical Record (EMR) - provide critical medical information in certain emergency medical situations.\n• Added ability to add notes for your medical records.\n\nImprovements:\n• Added new onboarding flow for helping new users understand and experience the app better.",
+    "WhatNewComponent_releaseNoteText": "New Features:\n\n• Track your daily activity -\nTracking two simple forms of health data: steps and sleep.",
     "TaggingComponent_tags": "Tags",
     "TaggingComponent_existingTags": "Existing tags",
     "TaggingComponent_noTags": "You don’t have any tags now, tap to start adding.",
@@ -604,14 +597,7 @@
     "TaggingComponent_enterATag": "Enter a tag",
     "AlphaAppUpdate_title": "Update Available",
     "AlphaAppUpdate_message": "New version of Bitmark Health is available. Please check it out.",
-    "AlphaAppUpdate_button": "View",
-    "ReleaseNoteComponent_closeButtonText": "Close",
-    "ReleaseNoteComponent_headerTitle2": "RELEASE NOTES",
-    "ReleaseNoteComponent_versionInformationText": "VERSION {{version}}",
-    "ReleaseNoteComponent_versionInformationReleaseDiff1": "just now",
-    "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ago",
-    "ReleaseNoteComponent_releaseNoteText": "New Features:\n\n• Now supports offline access and viewing of account information, health data, and health records.\n\n\nUX Improvements:\n\n• Improved speed of registering health and medical records.\n\n• Increased security by storing users’ health data locally on devices.\n\n• Fixed minor bug causing app to freeze for a few seconds at startup.",
-    "AppProcessor_offlineMessage": "Please connect to the Internet and try again!"
+    "AlphaAppUpdate_button": "View"
   },
   "zh": {
     "BitmarkInternetOffComponent_titleText": "沒有網路連線",
@@ -911,14 +897,7 @@
     "TaggingComponent_enterATag": "請輸入一個標籤",
     "AlphaAppUpdate_title": "更新通知",
     "AlphaAppUpdate_message": "現在有更新的 Bitmark Health 了！請前往下載更新。",
-    "AlphaAppUpdate_button": "查看",
-    "ReleaseNoteComponent_closeButtonText": "關閉",
-    "ReleaseNoteComponent_headerTitle2": "版本歷史紀錄",
-    "ReleaseNoteComponent_versionInformationText": "版本{{version}}",
-    "ReleaseNoteComponent_versionInformationReleaseDiff1": "今天",
-    "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}天前",
-    "ReleaseNoteComponent_releaseNoteText": "新功能：\n\n• 支援離線存取並查看帳戶資訊、健康數據及健康紀錄。\n\n\n用戶體驗改進：\n\n• 提升登記健康數據及醫療紀錄的的速度。\n\n• 透過本機儲存使用者的健康數據來增加安全性。\n\n• 改善了啟動app時畫面停格幾秒鐘的錯誤。",
-    "AppProcessor_offlineMessage": "網路異常，請確保已連線至網路並再嘗試一次。"
+    "AlphaAppUpdate_button": "查看"
   },
   "vi": {
     "BitmarkInternetOffComponent_titleText": "KHÔNG CÓ KẾT NỐI INTERNET",
@@ -1218,13 +1197,6 @@
     "TaggingComponent_enterATag": "Tạo thẻ",
     "AlphaAppUpdate_title": "Có cập nhật mới.",
     "AlphaAppUpdate_message": "Đã có phiên bản mới của Bitmark Health. Vui lòng cập nhật.",
-    "AlphaAppUpdate_button": "Xem",
-    "ReleaseNoteComponent_closeButtonText": "Đóng",
-    "ReleaseNoteComponent_headerTitle2": "GHI CHÚ PHÁT HÀNH",
-    "ReleaseNoteComponent_versionInformationText": "Phiên bản{{version}}",
-    "ReleaseNoteComponent_versionInformationReleaseDiff1": "vừa xong",
-    "ReleaseNoteComponent_versionInformationReleaseDiff2": "{{day}}d ngày trước",
-    "ReleaseNoteComponent_releaseNoteText": "Tính năng mới:\n\n• Cho phép người dùng xem các thông tin về tài khoản, xem chi tiết dữ liệu sức khoẻ và các bản ghi y tế khi không có Internet.\n\n\nCải tiến UX:\n\n• Cải thiện tốc độ đăng ký dữ liệu sức khoẻ và bản ghi y tế.\n\n• Tăng bảo mật bằng cách lưu dữ liệu sức khoẻ người dùng hoàn toàn trên thiết bị.\n\n• Sửa lỗi gây ra việc ứng dụng bị đứng trong quá trình khởi động. ",
-    "AppProcessor_offlineMessage": "Vui lòng kết nối mạng và thử lại!"
+    "AlphaAppUpdate_button": "Xem"
   }
 }
