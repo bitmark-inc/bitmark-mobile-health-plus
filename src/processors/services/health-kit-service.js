@@ -417,7 +417,7 @@ const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt
   (dailyHealthDataBitmarks || []).forEach(bitmark => {
     if (bitmark.asset.metadata['Collection Date']) {
       let saveTime = moment(bitmark.asset.metadata['Collection Date']);
-      if (!lastTimeBitmarkHealthData || (saveTime.toDate().getTime() > lastTimeBitmarkHealthData.toDate().getTime())) {
+      if (!lastTimeBitmarkHealthData || (saveTime.isValid() && saveTime.toDate().getTime() > lastTimeBitmarkHealthData.toDate().getTime())) {
         lastTimeBitmarkHealthData = saveTime;
       }
     }
