@@ -730,8 +730,10 @@ const doBitmarkHealthData = async (list) => {
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { title: 'There was an error during registering your daily health data' });
   }
 
-  for (let item of results) {
-    await IndexDBService.insertHealthDataToIndexedDB(item.id, item.healthData);
+  if (results && results.length > 0) {
+    for (let item of results) {
+      await IndexDBService.insertHealthDataToIndexedDB(item.id, item.healthData);
+    }
   }
 
   let appInfo = await doGetAppInformation();
