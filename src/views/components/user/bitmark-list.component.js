@@ -32,7 +32,7 @@ class PrivateBitmarkListComponent extends Component {
     if (asset.filePath) {
       Share.share({ title: i18n.t('BitmarkListComponent_shareTitle'), url: asset.filePath }).then(() => {
       }).catch(error => {
-        console.log('Share error:', error);
+        console.log('BitmarkListComponent Share error:', error);
       })
     }
   }

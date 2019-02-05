@@ -91,7 +91,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
             this.props.resetToInitialState && this.props.resetToInitialState();
             Actions.pop();
           }).catch(error => {
-            console.log('error:', error);
+            console.log('DailyHealthDataFullCardComponent doTransferBitmark error:', error);
             EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
           })
         }
@@ -162,7 +162,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
                   {/*Status*/}
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     {lastBitmark &&
-                    <Text style={[cardStyles.cardText]}>{'RECORDED ON ' + moment(lastBitmark.asset.metadata['Collection Date']).add(1, 'day').format('MMM DD, YYYY').toUpperCase()}</Text>
+                      <Text style={[cardStyles.cardText]}>{'RECORDED ON ' + moment(lastBitmark.asset.metadata['Collection Date']).add(1, 'day').format('MMM DD, YYYY').toUpperCase()}</Text>
                     }
                   </View>
 

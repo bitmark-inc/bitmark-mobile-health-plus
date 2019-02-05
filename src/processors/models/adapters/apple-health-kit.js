@@ -156,7 +156,7 @@ AppleHealthKitAdapter.getFood = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getFoodSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getFood error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -169,7 +169,7 @@ AppleHealthKitAdapter.getWorkoutType = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getWorkoutTypeOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getWorkoutType error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -182,7 +182,7 @@ AppleHealthKitAdapter.getBloodType = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBloodType(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBloodType error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -195,7 +195,7 @@ AppleHealthKitAdapter.getFitzpatrickSkinType = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getFitzpatrickSkinType(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getFitzpatrickSkinType error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -208,7 +208,7 @@ AppleHealthKitAdapter.getWaistCircumference = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getLatestWaistCircumference(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getLatestWaistCircumference error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -221,7 +221,7 @@ AppleHealthKitAdapter.getVO2Max = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getVO2MaxOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getVO2Max error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -234,7 +234,7 @@ AppleHealthKitAdapter.getBodyMassIndex = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getLatestBmi(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBodyMassIndex error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -246,7 +246,7 @@ AppleHealthKitAdapter.getBodyFatPercentage = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getLatestBodyFatPercentage(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBodyFatPercentage error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -259,7 +259,7 @@ AppleHealthKitAdapter.getHeight = (options) => {
     if (options) {
       AppleHealthKit.getHeightSamples(options, (error, result) => {
         if (error) {
-          console.log('error: ', error);
+          console.log('getHeightSamples error: ', error);
           resolve(null);
         } else {
           resolve(result);
@@ -268,7 +268,7 @@ AppleHealthKitAdapter.getHeight = (options) => {
     } else {
       AppleHealthKit.getLatestHeight(options, (error, result) => {
         if (error) {
-          console.log('error: ', error);
+          console.log('getLatestHeight error: ', error);
           resolve(null);
         } else {
           resolve(result);
@@ -282,7 +282,7 @@ AppleHealthKitAdapter.getWeight = (options) => {
     if (options) {
       AppleHealthKit.getWeightSamples(options, (error, result) => {
         if (error) {
-          console.log('error: ', error);
+          console.log('getWeight error: ', error);
           resolve(null);
         } else {
           resolve(result);
@@ -291,7 +291,7 @@ AppleHealthKitAdapter.getWeight = (options) => {
     } else {
       AppleHealthKit.getLatestWeight(options, (error, result) => {
         if (error) {
-          console.log('error: ', error);
+          console.log('getLatestWeight error: ', error);
           resolve(null);
         } else {
           resolve(result);
@@ -304,7 +304,7 @@ AppleHealthKitAdapter.getLeanBodyMass = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getLatestLeanBodyMass(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getLeanBodyMass error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -316,7 +316,7 @@ AppleHealthKitAdapter.getStepCount = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getDailyStepCountSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getStepCount error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -328,7 +328,7 @@ AppleHealthKitAdapter.getDistanceWalkingRunning = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getDistanceWalkingRunning(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getDistanceWalkingRunning error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -340,7 +340,7 @@ AppleHealthKitAdapter.getDistanceCycling = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getDistanceCycling(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getDistanceCycling error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -352,7 +352,7 @@ AppleHealthKitAdapter.getWheelchairDistance = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getWheelchairDistanceOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getWheelchairDistanceOnDay error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -364,7 +364,7 @@ AppleHealthKitAdapter.getBasalEnergyBurned = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBasalEnergyBurnedOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBasalEnergyBurnedOnDay error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -376,7 +376,7 @@ AppleHealthKitAdapter.getActiveEnergyBurned = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getActiveEnergyBurnedOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getActiveEnergyBurnedOnDay error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -388,7 +388,7 @@ AppleHealthKitAdapter.getFlightsClimbed = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getFlightsClimbed(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getFlightsClimbed error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -400,7 +400,7 @@ AppleHealthKitAdapter.getNikeFuel = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNikeFuelOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNikeFuelOnDay error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -412,7 +412,7 @@ AppleHealthKitAdapter.getAppleExerciseTime = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getAppleExerciseTimeOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getAppleExerciseTimeOnDay error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -424,7 +424,7 @@ AppleHealthKitAdapter.getPushCount = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getPushCountOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getPushCountOnDay error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -436,7 +436,7 @@ AppleHealthKitAdapter.getDistanceSwimming = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getDistanceSwimmingOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getDistanceSwimmingOnDay error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -448,7 +448,7 @@ AppleHealthKitAdapter.getSwimmingStrokeCount = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getSwimmingStrokeCountOnDay(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getSwimmingStrokeCountOnDay error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -460,7 +460,7 @@ AppleHealthKitAdapter.getHeartRate = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getHeartRateSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getHeartRateSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -472,7 +472,7 @@ AppleHealthKitAdapter.getBodyTemperature = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBodyTemperatureSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBodyTemperatureSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -484,7 +484,7 @@ AppleHealthKitAdapter.getBasalBodyTemperature = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBasalBodyTemperatureSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBasalBodyTemperatureSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -496,7 +496,7 @@ AppleHealthKitAdapter.getBloodPressureSystolic = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBloodPressureSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBloodPressureSamples error: ', error);
         resolve(null);
       } else {
         var realResult = [];
@@ -516,7 +516,7 @@ AppleHealthKitAdapter.getBloodPressureDiastolic = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBloodPressureSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBloodPressureSamples error: ', error);
         resolve(null);
       } else {
         var realResult = [];
@@ -536,7 +536,7 @@ AppleHealthKitAdapter.getRespiratoryRate = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getRespiratoryRateSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getRespiratoryRateSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -548,7 +548,7 @@ AppleHealthKitAdapter.getOxygenSaturation = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getOxygenSaturationSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getOxygenSaturationSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -560,7 +560,7 @@ AppleHealthKitAdapter.getPeripheralPerfusionIndex = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getPeripheralPerfusionIndexSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getPeripheralPerfusionIndexSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -572,7 +572,7 @@ AppleHealthKitAdapter.getBloodGlucose = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBloodGlucoseSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBloodGlucoseSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -584,7 +584,7 @@ AppleHealthKitAdapter.getNumberOfTimesFallen = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNumberOfTimesFallenSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNumberOfTimesFallenSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -596,7 +596,7 @@ AppleHealthKitAdapter.getElectrodermalActivity = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getElectrodermalActivitySamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getElectrodermalActivitySamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -608,7 +608,7 @@ AppleHealthKitAdapter.getInhalerUsage = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getInhalerUsageSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getInhalerUsageSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -620,7 +620,7 @@ AppleHealthKitAdapter.getBloodAlcoholContent = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBloodAlcoholContentSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBloodAlcoholContentSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -632,7 +632,7 @@ AppleHealthKitAdapter.getForcedVitalCapacity = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getForcedVitalCapacitySamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getForcedVitalCapacitySamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -644,7 +644,7 @@ AppleHealthKitAdapter.getExpiratoryVolume1 = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getExpiratoryVolume1Samples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getExpiratoryVolume1Samples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -656,7 +656,7 @@ AppleHealthKitAdapter.getExpiratoryFlowRate = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getExpiratoryFlowRateSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getExpiratoryFlowRateSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -669,7 +669,7 @@ AppleHealthKitAdapter.getDietaryFatTotal = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryFatTotal error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -682,7 +682,7 @@ AppleHealthKitAdapter.getDietaryFatPolyunsaturated = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryFatPolyunsaturated error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -695,7 +695,7 @@ AppleHealthKitAdapter.getDietaryFatMonounsaturated = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryFatMonounsaturated error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -708,7 +708,7 @@ AppleHealthKitAdapter.getDietaryFatSaturated = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryFatSaturated error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -721,7 +721,7 @@ AppleHealthKitAdapter.getDietaryCholesterol = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryCholesterol error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -734,7 +734,7 @@ AppleHealthKitAdapter.getDietarySodium = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietarySodium error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -747,7 +747,7 @@ AppleHealthKitAdapter.getDietaryCarbohydrates = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryCarbohydrates error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -760,7 +760,7 @@ AppleHealthKitAdapter.getDietaryFiber = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryFiber error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -773,7 +773,7 @@ AppleHealthKitAdapter.getDietarySugar = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietarySugar error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -786,7 +786,7 @@ AppleHealthKitAdapter.getDietaryEnergy = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryEnergy error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -799,7 +799,7 @@ AppleHealthKitAdapter.getDietaryProtein = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryProtein error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -812,7 +812,7 @@ AppleHealthKitAdapter.getDietaryVitaminA = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryVitaminA error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -825,7 +825,7 @@ AppleHealthKitAdapter.getDietaryVitaminB6 = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryVitaminB6 error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -838,7 +838,7 @@ AppleHealthKitAdapter.getDietaryVitaminB12 = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryVitaminB12 error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -851,7 +851,7 @@ AppleHealthKitAdapter.getDietaryVitaminC = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryVitaminC error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -864,7 +864,7 @@ AppleHealthKitAdapter.getDietaryVitaminD = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryVitaminD error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -877,7 +877,7 @@ AppleHealthKitAdapter.getDietaryVitaminE = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryVitaminE error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -890,7 +890,7 @@ AppleHealthKitAdapter.getDietaryVitaminK = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryVitaminK error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -903,7 +903,7 @@ AppleHealthKitAdapter.getDietaryCalcium = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryCalcium error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -916,7 +916,7 @@ AppleHealthKitAdapter.getDietaryIron = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryIron error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -929,7 +929,7 @@ AppleHealthKitAdapter.getDietaryThiamin = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryThiamin error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -942,7 +942,7 @@ AppleHealthKitAdapter.getDietaryRiboflavin = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryRiboflavin error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -955,7 +955,7 @@ AppleHealthKitAdapter.getDietaryNiacin = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryNiacin error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -968,7 +968,7 @@ AppleHealthKitAdapter.getDietaryFolate = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryFolate error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -981,7 +981,7 @@ AppleHealthKitAdapter.getDietaryBiotin = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryBiotin error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -994,7 +994,7 @@ AppleHealthKitAdapter.getDietaryPantothenicAcid = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryPantothenicAcid error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1007,7 +1007,7 @@ AppleHealthKitAdapter.getDietaryPhosphorus = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryPhosphorus error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1020,7 +1020,7 @@ AppleHealthKitAdapter.getDietaryIodine = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryIodine error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1033,7 +1033,7 @@ AppleHealthKitAdapter.getDietaryMagnesium = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryMagnesium error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1046,7 +1046,7 @@ AppleHealthKitAdapter.getDietaryZinc = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryZinc error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1059,7 +1059,7 @@ AppleHealthKitAdapter.getDietarySelenium = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietarySelenium error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1072,7 +1072,7 @@ AppleHealthKitAdapter.getDietaryCopper = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryCopper error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1085,7 +1085,7 @@ AppleHealthKitAdapter.getDietaryManganese = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryManganese error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1098,7 +1098,7 @@ AppleHealthKitAdapter.getDietaryChromium = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryChromium error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1111,7 +1111,7 @@ AppleHealthKitAdapter.getDietaryMolybdenum = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryMolybdenum error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1124,7 +1124,7 @@ AppleHealthKitAdapter.getDietaryChloride = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryChloride error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1137,7 +1137,7 @@ AppleHealthKitAdapter.getDietaryPotassium = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryPotassium error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1150,7 +1150,7 @@ AppleHealthKitAdapter.getDietaryCaffeine = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryCaffeine error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1163,7 +1163,7 @@ AppleHealthKitAdapter.getDietaryWater = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getNutritionSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getNutritionSamples DietaryWater error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1175,7 +1175,7 @@ AppleHealthKitAdapter.getUVExposure = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getUVExposure(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getUVExposure error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1187,7 +1187,7 @@ AppleHealthKitAdapter.getSleepAnalysis = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getSleepSamples(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getSleepSamples error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1199,7 +1199,7 @@ AppleHealthKitAdapter.getCervicalMucousQuality = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getCervicalMucousQuality(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getCervicalMucousQuality error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1211,7 +1211,7 @@ AppleHealthKitAdapter.getOvulationTestResult = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getOvulationTestResult(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getOvulationTestResult error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1223,7 +1223,7 @@ AppleHealthKitAdapter.getMenstrualFlow = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getMenstrualFlow(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getMenstrualFlow error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1235,7 +1235,7 @@ AppleHealthKitAdapter.getIntermenstrualBleeding = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getIntermenstrualBleeding(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getIntermenstrualBleeding error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1247,7 +1247,7 @@ AppleHealthKitAdapter.getSexualActivity = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getSexualActivity(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getSexualActivity error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1259,7 +1259,7 @@ AppleHealthKitAdapter.getBiologicalSex = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getBiologicalSex(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getBiologicalSex error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1271,7 +1271,7 @@ AppleHealthKitAdapter.getDateOfBirth = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getDateOfBirth(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getDateOfBirth error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1283,7 +1283,7 @@ AppleHealthKitAdapter.getWheelchairUse = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getWheelchairUse(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getWheelchairUse error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1296,7 +1296,7 @@ AppleHealthKitAdapter.getStandHour = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getStandHour(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getStandHour error: ', error);
         resolve(null);
       } else {
         resolve(result);
@@ -1309,7 +1309,7 @@ AppleHealthKitAdapter.getMindfulSession = (options) => {
   return new Promise((resolve) => {
     AppleHealthKit.getMindfullSession(options, (error, result) => {
       if (error) {
-        console.log('error: ', error);
+        console.log('getMindfullSession error: ', error);
         resolve(null);
       } else {
         resolve(result);

@@ -62,7 +62,7 @@ export class TouchFaceIdComponent extends React.Component {
         EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: !phraseWords, indicator: true });
       }
     }).catch(error => {
-      console.log('error :', error);
+      console.log('TouchFaceIdComponent doContinue error :', error);
       this.setState({ errorMessage: 'Can not create or access bitmark account!' })
     });
   }

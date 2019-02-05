@@ -153,7 +153,7 @@ export class EMRInformationComponent extends Component {
         Actions.pop();
       }
     }).catch(error => {
-      console.log('error:', error);
+      console.log('saveEMRInformation error:', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     })
   }

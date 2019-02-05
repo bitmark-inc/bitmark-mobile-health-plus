@@ -8,7 +8,7 @@ import {
   Image, View, SafeAreaView, ScrollView, Text, TouchableOpacity,
 } from 'react-native';
 import Mailer from 'react-native-mail';
-import { AppProcessor, EventEmitterService, DataProcessor, CommonModel } from 'src/processors';
+import { AppProcessor, EventEmitterService, DataProcessor } from 'src/processors';
 import { config, } from 'src/configs';
 import { convertWidth } from 'src/utils';
 import { ShadowTopComponent, ShadowComponent } from 'src/views/commons';

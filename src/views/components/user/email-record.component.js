@@ -77,7 +77,7 @@ export class EmailRecordComponent extends Component {
         }
       }
     }).catch(error => {
-      console.log('error :', error);
+      console.log('EmailRecordComponent doAcceptEmailRecords error :', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
@@ -97,7 +97,7 @@ export class EmailRecordComponent extends Component {
         this.setState({ step: EmailRecordComponent.STEPS.view });
       }
     }).catch(error => {
-      console.log('error :', error);
+      console.log('EmailRecordComponent doReject error :', error);
       EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
     });
   }
