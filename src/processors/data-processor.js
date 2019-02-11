@@ -725,9 +725,10 @@ const doBitmarkHealthData = async (list) => {
   try {
     results = await HealthKitService.doBitmarkHealthData(CacheData.userInformation.bitmarkAccountNumber, list);
     isIssuingBitmarkHealthData = false;
-  } catch {
+  } catch (error) {
     isIssuingBitmarkHealthData = false;
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { title: 'There was an error during registering your daily health data' });
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {title: 'There was an error during registering your daily health data'});
+    Sentry.captureException(error, {logger: 'user'});
   }
 
   if (results && results.length > 0) {
