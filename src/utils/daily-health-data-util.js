@@ -53,6 +53,7 @@ class DailyHealthDataUtil {
   }
 
   static getRelativePercent(number1, number2) {
+    if (number2 == 0) return 0;
     return Math.round((number1 - number2) * 100 / number2);
   }
 
@@ -116,7 +117,7 @@ class DailyHealthDataUtil {
 
   static async populateDataForCharts(dailyHealthDataBitmarks) {
     let currentDate = moment();
-    let sevenDaysAgo = currentDate.date(currentDate.date() - 7).hour(0).minute(0).second(0);
+    let sevenDaysAgo = currentDate.date(currentDate.date() - 6).hour(0).minute(0).second(0);
 
     let last7DaysBitmarks = dailyHealthDataBitmarks.filter(bitmark => {
       let saveTime = moment(bitmark.asset.metadata['Collection Date']);
