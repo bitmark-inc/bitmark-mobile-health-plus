@@ -57,7 +57,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your calendars.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Bitmark Health + would like to access to your camera.</string>
+	<string>$(PRODUCT_NAME) would like to access to your camera for medical documents scanning.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Touch/Face ID or a passcode is required to authorize your transactions.</string>
 	<key>NSHealthShareUsageDescription</key>
@@ -73,7 +73,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your motion sensor data.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Bitmark Health + would like to access to your photo library.</string>
+	<string>$(PRODUCT_NAME) would like to access to your photo library for medical documents.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Bitmark Health + would like to access to your photo library.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
