@@ -80,10 +80,7 @@ class MainEventsHandlerComponent extends Component {
     if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
       // TODO authenticate touch face id
       let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
-      console.log('result:', result);
-      // TODO: Don't apply touch face id
-      // let passTouchFaceId = !result || !result.error;
-      let passTouchFaceId = true;
+      let passTouchFaceId = !result || !result.error;
       this.setState({ passTouchFaceId });
       if (passTouchFaceId) {
         EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, options);
@@ -109,10 +106,7 @@ class MainEventsHandlerComponent extends Component {
     UserModel.doTryGetCurrentUser().then(async (userInformation) => {
       if (userInformation && userInformation.bitmarkAccountNumber) {
         let result = await runPromiseWithoutError(BitmarkSDK.requestSession(i18n.t('FaceTouchId_doOpenApp')));
-        console.log('result:', result);
-        // TODO: Don't apply touch face id
-        // let passTouchFaceId = !result || !result.error;
-        let passTouchFaceId = true;
+        let passTouchFaceId = !result || !result.error;
         this.setState({ passTouchFaceId });
         if (passTouchFaceId) {
           EventEmitterService.emit(EventEmitterService.events.APP_LOAD_DATA, {});
