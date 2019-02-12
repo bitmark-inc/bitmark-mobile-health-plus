@@ -275,6 +275,8 @@ platform :ios do
 
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
+      export_method: "enterprise",
+      clean: "true",
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus beta",
       silent: true,
@@ -310,6 +312,8 @@ platform :ios do
 
     build_app(
       export_options: {iCloudContainerEnvironment: 'Production'},
+      export_method: "enterprise",
+      clean: "true",
       workspace: "ios/BitmarkHealthPlus.xcworkspace", 
       scheme: "BitmarkHealthPlus dev",
       silent: true,
