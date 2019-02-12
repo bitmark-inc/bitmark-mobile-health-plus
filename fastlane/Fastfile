@@ -252,4 +252,85 @@ platform :ios do
       repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus",
       )
   end
+  lane :betajenkins do
+    version_number = latest_hockey_build_number(
+      api_token: ENV['HOCKEYAPP_KEY']
+    )
+    
+    increment_build_number(
+      xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
+      build_number: (version_number.to_i + 1)
+    )
+    
+    set_info_plist_value(
+      path: "ios/Info-beta.plist",
+      key: "BitmarkSDKAPIKey",
+      value: ENV['BITMARKSDK_API_KEY']
+    )
+    
+    cert
+    sigh(
+      force: false
+    )
+
+    build_app(
+      export_options: {iCloudContainerEnvironment: 'Production'},
+      workspace: "ios/BitmarkHealthPlus.xcworkspace", 
+      scheme: "BitmarkHealthPlus beta",
+      silent: true,
+      include_bitcode: false
+    )
+    
+    sentry_upload_dsym(
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      dsym_path: './BitmarkHealthPlus beta.app.dSYM.zip'
+    )
+    sh "sentry-cli upload-dsym"
+    hockey(
+      api_token: ENV['HOCKEYAPP_KEY'],
+      release_type: "2",
+      tags: "internal_testers",
+      )
+  end
+  lane :developjenkins do
+    version_number = latest_hockey_build_number(
+      api_token: ENV['HOCKEYAPP_KEY']
+    )
+    increment_build_number(
+      xcodeproj: "ios/BitmarkHealthPlus.xcodeproj",
+      build_number: (version_number.to_i + 1)
+    )
+    
+    cert
+    sigh(
+      force: false
+    )
+
+    build_app(
+      export_options: {iCloudContainerEnvironment: 'Production'},
+      workspace: "ios/BitmarkHealthPlus.xcworkspace", 
+      scheme: "BitmarkHealthPlus dev",
+      silent: true,
+      include_bitcode: false
+    )
+
+    sentry_upload_dsym(
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
+      org_slug: 'bitmark-inc',
+      project_slug: 'bitmark-health',
+      dsym_path: './BitmarkHealthPlus dev.app.dSYM.zip'
+    )
+
+    sh "sentry-cli upload-dsym"
+
+    hockey(
+      api_token: ENV['HOCKEYAPP_KEY'],
+      notes: "**Branch**: ```" + ENV['BRANCH_NAME'] + "``` --- Author: ```" + ENV['GIT_COMMITTER_EMAIL'] + "``` --- **Commit**: ```" + ENV['GIT_COMMIT'] + "```",
+      notes_type: "1",
+      build_server_url: ENV['TRAVIS_JOB_WEB_URL'],
+      repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus",
+      )
+  end
 end
