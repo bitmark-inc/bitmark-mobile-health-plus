@@ -7,6 +7,6 @@
 */
 
 "NSFaceIDUsageDescription" = "Touch/Face ID or a passcode is required to authorize your transactions";
-"NSCameraUsageDescription" = "Bitmark Health + would like to access to your camera.";
-"NSPhotoLibraryUsageDescription" = "Bitmark Health + would like to access to your photo library.";
-"NSHealthShareUsageDescription" = "Bitmark Health + would like to access to your health data.";
+"NSCameraUsageDescription" = "Bitmark Health would like to access to your camera for medical documents scanning.";
+"NSPhotoLibraryUsageDescription" = "Bitmark Health would like to access to your photo library for medical documents.";
+"NSHealthShareUsageDescription" = "Bitmark Health would like to access to your health data.";
