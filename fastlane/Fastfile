@@ -331,7 +331,6 @@ platform :ios do
 
     hockey(
       api_token: ENV['HOCKEYAPP_KEY'],
-      notes: "**Branch**: ```" + ENV['BRANCH_NAME'] + "``` --- Author: ```" + ENV['GIT_COMMITTER_EMAIL'] + "``` --- **Commit**: ```" + ENV['GIT_COMMIT'] + "```",
       notes_type: "1",
       repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus",
       )
