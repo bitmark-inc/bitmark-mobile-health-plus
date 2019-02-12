@@ -333,7 +333,6 @@ platform :ios do
       api_token: ENV['HOCKEYAPP_KEY'],
       notes: "**Branch**: ```" + ENV['BRANCH_NAME'] + "``` --- Author: ```" + ENV['GIT_COMMITTER_EMAIL'] + "``` --- **Commit**: ```" + ENV['GIT_COMMIT'] + "```",
       notes_type: "1",
-      build_server_url: ENV['TRAVIS_JOB_WEB_URL'],
       repository_url: "https://github.com/bitmark-inc/bitmark-mobile-health-plus",
       )
   end
