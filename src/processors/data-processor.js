@@ -29,7 +29,7 @@ import {
 } from './models';
 import {
   FileUtil,
-  isImageFile, isPdfFile, isHealthDataRecord, isAssetDataRecord, isDailyHealthDataRecord,
+  isImageFile, isPdfFile, isHealthDataRecord, isMedicalRecord, isDailyHealthDataRecord,
   compareVersion, runPromiseWithoutError, runPromiseIgnoreError, isEMRRecord, bitmarkSortFunction
 } from 'src/utils';
 
@@ -208,7 +208,7 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
               bitmark.asset = asset;
             }
             dailyHealthDataBitmarks.push(bitmark);
-          } else if (isAssetDataRecord(asset)) {
+          } else if (isMedicalRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
               if (!asset.filePath || asset.filePath.indexOf(FileUtil.SharedGroupDirectory) < 0) {
                 let result = await runPromiseIgnoreError(detectLocalAssetFilePath(asset));

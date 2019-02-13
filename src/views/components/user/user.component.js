@@ -158,8 +158,9 @@ class PrivateUserComponent extends Component {
         } else {
           assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
           metadataList = [];
-          metadataList.push({ label: 'Source', value: 'Health Records' });
-          metadataList.push({ label: 'Saved Time', value: moment(imageInfo.createdAt).toDate().toISOString() });
+          metadataList.push({ label: 'Type', value: 'Health' });
+          metadataList.push({ label: 'Source', value: 'Medical Records' });
+          metadataList.push({ label: 'Collection Date', value: moment(imageInfo.createdAt).toDate().toISOString() });
 
           if (imageInfo.numberOfFiles) {
             metadataList.push({ label: 'Number Of Files', value: imageInfo.numberOfFiles.toString() });
@@ -256,8 +257,9 @@ class PrivateUserComponent extends Component {
       let assetName = `HR${moment().format('YYYYMMMDDHHmmss')}`.toUpperCase();
 
       let metadataList = [];
+      metadataList.push({ label: 'Type', value: 'Health' });
       metadataList.push({ label: 'Source', value: 'Medical Records' });
-      metadataList.push({ label: 'Saved Time', value: new Date(info.timestamp).toISOString() });
+      metadataList.push({ label: 'Collection Date', value: new Date(info.timestamp).toISOString() });
 
       let issueParams = {
         filePath, assetName, metadataList, fileType: 'file', quantity: 1

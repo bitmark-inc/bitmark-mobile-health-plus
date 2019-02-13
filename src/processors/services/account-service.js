@@ -148,8 +148,9 @@ let doProcessEmailRecords = async (bitmarkAccountNumber, emailIssueRequestsFromA
                 let detectResult = await CommonModel.populateAssetNameFromImage(filePath);
                 detectedTexts = detectResult.detectedTexts;
               }
+              metadataList.push({ label: 'Type', value: 'Health' });
               metadataList.push({ label: 'Source', value: 'Medical Records' });
-              metadataList.push({ label: 'Saved Time', value: new Date(emailIssueRequest.created_at).toISOString() });
+              metadataList.push({ label: 'Collection Date', value: new Date(emailIssueRequest.created_at).toISOString() });
             }
 
             results.list.push({

@@ -7,7 +7,7 @@ import {
 
 import { Actions } from 'react-native-router-flux';
 import moment from "moment/moment";
-import { isFileRecord, isImageFile, isPdfFile } from 'src/utils';
+import { isMedicalRecord, isImageFile, isPdfFile } from 'src/utils';
 import Highlighter from 'react-native-highlight-words';
 
 
@@ -63,7 +63,7 @@ export class SearchResultsComponent extends Component {
               renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity style={[styles.bitmarkItemContainer, (index == results.healthDataBitmarks.length - 1) ? styles.bitmarkLastItemContainer : {}]} onPress={() => {
-                    isFileRecord(item.asset) ? this.shareBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_data');
+                    this.goToDetailScreen.bind(this)(item, 'bitmark_health_data');
                   }}>
                     <View style={[styles.bitmarkItem]}>
                       {/*Thumbnail*/}
@@ -113,7 +113,7 @@ export class SearchResultsComponent extends Component {
               renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity style={[styles.bitmarkItemContainer, (index == results.healthAssetBitmarks.length - 1) ? styles.bitmarkLastItemContainer : {}]} onPress={() => {
-                    (isFileRecord(item.asset) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) ? this.shareBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
+                    (isMedicalRecord(item.asset) && !isImageFile(item.asset.filePath) && !isPdfFile(item.asset.filePath)) ? this.shareBitmark.bind(this)(item.asset) : this.goToDetailScreen.bind(this)(item, 'bitmark_health_issuance');
                   }}>
                     <View style={[styles.bitmarkItem]}>
                       {/*Thumbnail*/}

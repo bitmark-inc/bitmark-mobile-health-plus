@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import { AppProcessor, EventEmitterService, IndexDBService, CommonModel, CacheData } from "src/processors";
-import { FileUtil, isAssetDataRecord } from 'src/utils';
+import { FileUtil, isMedicalRecord } from 'src/utils';
 import { UserBitmarksStore, UserBitmarksActions } from '../stores';
 
 const issue = (issueParams, callBack) => {
@@ -61,7 +61,7 @@ const search = async (searchTerm) => {
         let bitmark = allBitmarksMap[searchResultBitmarkIds[i]];
 
         if (bitmark) {
-          if (isAssetDataRecord(bitmark.asset)) {
+          if (isMedicalRecord(bitmark.asset)) {
             if (!bitmark.thumbnail) {
               bitmark.thumbnail = await CommonModel.checkThumbnailForBitmark(bitmark.id);
             }

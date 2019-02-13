@@ -76,6 +76,13 @@ const isPdfFile = (filePath) => {
   return pdfExtensions.includes(fileExtension.toUpperCase());
 };
 
+const isHealthDataRecord = (asset) => {
+  return asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata['Saved Time'] &&
+    (asset.name.startsWith('HD') || asset.name.startsWith('HK'));
+};
+const isDailyHealthDataRecord = (asset) => {
+  return asset && asset.metadata && asset.metadata.Type === 'Health' && asset.metadata.Source === 'HealthKit' && asset.metadata['Collection Date'] && asset.metadata.Period === 'Daily';
+};
 const isFileRecord = (asset) => {
   return asset && asset.metadata && asset.metadata.Source === 'Medical Records' && asset.metadata['Saved Time'] &&
     (asset.name.startsWith('HR') || asset.name.startsWith('HA'));
@@ -84,18 +91,15 @@ const isCaptureDataRecord = (asset) => {
   return asset && asset.metadata && asset.metadata.Source === 'Health Records' && asset.metadata['Saved Time'] &&
     (asset.name.startsWith('HR') || asset.name.startsWith('HA'));
 };
-const isHealthDataRecord = (asset) => {
-  return asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata['Saved Time'] &&
-    (asset.name.startsWith('HD') || asset.name.startsWith('HK'));
-};
-const isDailyHealthDataRecord = (asset) => {
-  return asset && asset.metadata && asset.metadata.Source === 'HealthKit' && asset.metadata.Type === 'Health' &&
-    asset.metadata.Period === 'Daily';
-};
-const isAssetDataRecord = (asset) => {
+const isOldMedicalRecord = (asset) => {
   return isCaptureDataRecord(asset) || isFileRecord(asset);
 };
-
+const isNewMedicalRecord = (asset) => {
+  return asset && asset.metadata && asset.metadata.Type === 'Health' && asset.metadata.Source === 'Medical Records' && asset.metadata['Collection Date'];
+};
+const isMedicalRecord = (asset) => {
+  return isOldMedicalRecord(asset) || isNewMedicalRecord(asset);
+};
 const isEMRRecord = (asset) => {
   return asset && asset.metadata && asset.metadata.type === 'HEALTH-EMR' && asset.name.startsWith('EMR');
 };
@@ -162,11 +166,9 @@ export {
   compareVersion,
   isImageFile,
   isPdfFile,
-  isFileRecord,
-  isCaptureDataRecord,
   isHealthDataRecord,
   isDailyHealthDataRecord,
-  isAssetDataRecord,
+  isMedicalRecord,
   isEMRRecord,
   bitmarkSortFunction,
   isJPGFile,
