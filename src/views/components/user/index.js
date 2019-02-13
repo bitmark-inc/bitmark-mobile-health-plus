@@ -6,13 +6,10 @@ import { UserComponent } from './user.component';
 import { AccountComponent } from './account.component';
 import { AccountPhraseComponent } from './account-phrases.component';
 import { SupportComponent } from './support.component';
-import { CaptureAssetComponent } from './capture-asset.component';
-import { BitmarkListComponent } from './bitmark-list.component';
 
 import { BitmarkDetailComponent } from './bitmark-detail.component';
 import { FullViewCaptureAssetComponent } from './full-view-capture-asset.component';
 import { EmailRecordComponent } from './email-record.component';
-import { AssetNameInform } from "./asset-name-inform.component";
 import { AddRecordComponent } from './add-record.component';
 import { AccountNumberComponent } from './account-number.component';
 import { CaptureMultipleImagesComponent } from './capture-multiple-image.component';
@@ -40,11 +37,8 @@ export class UserRouterComponent extends Component {
           <Scene key="accountPhrase" component={AccountPhraseComponent} panHandlers={null} />
           <Scene key="support" component={SupportComponent} panHandlers={null} />
           <Scene key="legal" component={BitmarkLegalComponent} panHandlers={null} />
-          <Scene key="captureAsset" component={CaptureAssetComponent} panHandlers={null} />
-          <Scene key="bitmarkList" component={BitmarkListComponent} panHandlers={null} />
           <Scene key="bitmarkDetail" component={BitmarkDetailComponent} panHandlers={null} />
           <Scene key="fullViewCaptureAsset" component={FullViewCaptureAssetComponent} />
-          <Scene key="assetNameInform" component={AssetNameInform} panHandlers={null} />
           <Scene key="healthDataGetStart" component={HealthDataGetStartComponent} panHandlers={null} />
           <Scene key="addRecord" component={AddRecordComponent} panHandlers={null} />
           <Scene key="accountNumber" component={AccountNumberComponent} panHandlers={null} />
