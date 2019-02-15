@@ -366,48 +366,56 @@ const removeEmptyValueData = (healthData) => {
 
 const doBitmarkHealthData = async (bitmarkAccountNumber, list) => {
   let results = [];
+  let errors = [];
+
   for (let dateRange of list) {
-    let healthRawData = await doGetHealthKitDataForDifferentDateRange(allDataTypes, dateRange);
-    let randomId = randomString({ length: 8, numeric: true, letters: false, });
-    let healthData = {
-      date: dateRange.StepCount.endDate,
-      data: JSON.stringify(removeEmptyValueData(healthRawData)),
+    try {
+      let healthRawData = await doGetHealthKitDataForDifferentDateRange(allDataTypes, dateRange);
+      let randomId = randomString({ length: 8, numeric: true, letters: false, });
+      let healthData = {
+        date: dateRange.StepCount.endDate,
+        data: JSON.stringify(removeEmptyValueData(healthRawData)),
 
-      assetName: `HD${moment(dateRange.StepCount.endDate).format('YYYYMMMDDHHmmss')}`.toUpperCase(),
-      assetMetadata: {
-        "Type": 'Health',
-        "Source": 'HealthKit',
-        "Period": 'Daily',
-        "Collection Date": moment(dateRange.StepCount.endDate).toISOString()
-      },
-      randomId,
-    };
-    let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
+        assetName: `HD${moment(dateRange.StepCount.endDate).format('YYYYMMMDDHHmmss')}`.toUpperCase(),
+        assetMetadata: {
+          "Type": 'Health',
+          "Source": 'HealthKit',
+          "Period": 'Daily',
+          "Collection Date": moment(dateRange.StepCount.endDate).toISOString()
+        },
+        randomId,
+      };
+      let filePath = await doCreateFile('HealthKitData', bitmarkAccountNumber, healthData.date, healthData.data, healthData.randomId);
 
-    let issueResult = await BitmarkModel.doIssueFile(filePath, healthData.assetName, healthData.assetMetadata, 1);
+      let issueResult = await BitmarkModel.doIssueFile(filePath, healthData.assetName, healthData.assetMetadata, 1);
 
-    let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
-    let downloadedFolder = `${assetFolderPath}/downloaded`;
-    await FileUtil.mkdir(assetFolderPath);
-    await FileUtil.mkdir(downloadedFolder);
-    let filename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
-    await BitmarkSDK.storeFileSecurely(filePath, `${downloadedFolder}/${filename}`);
-    await FileUtil.removeSafe(filePath);
+      let assetFolderPath = `${FileUtil.getLocalAssetsFolderPath(bitmarkAccountNumber)}/${issueResult.assetId}`;
+      let downloadedFolder = `${assetFolderPath}/downloaded`;
+      await FileUtil.mkdir(assetFolderPath);
+      await FileUtil.mkdir(downloadedFolder);
+      let filename = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
+      await BitmarkSDK.storeFileSecurely(filePath, `${downloadedFolder}/${filename}`);
+      await FileUtil.removeSafe(filePath);
 
-    let listFiles = await FileUtil.readDir(downloadedFolder);
-    let zipFilePath = `${downloadedFolder}/${listFiles[0]}`;
-    await FileUtil.unzip(zipFilePath, `${assetFolderPath}/view`);
+      let listFiles = await FileUtil.readDir(downloadedFolder);
+      let zipFilePath = `${downloadedFolder}/${listFiles[0]}`;
+      await FileUtil.unzip(zipFilePath, `${assetFolderPath}/view`);
 
-    issueResult.bitmarkIds.forEach(id => {
-      results.push({
-        id,
-        assetId: issueResult.asset,
-        healthData,
-        filePath: `${downloadedFolder}/${listFiles[0]}`
+      issueResult.bitmarkIds.forEach(id => {
+        results.push({
+          id,
+          assetId: issueResult.assetId,
+          healthData,
+          filePath: `${downloadedFolder}/${listFiles[0]}`
+        });
       });
-    });
+
+    } catch (err) {
+      console.log('Issue Daily Health Data err:', err);
+      errors.push(err);
+    }
   }
-  return results;
+  return {results, errors};
 };
 
 const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt) => {

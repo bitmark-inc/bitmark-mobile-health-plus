@@ -130,12 +130,21 @@ const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataB
   }
 };
 
+let isIssuingBitmarkHealthData = false;
 const checkAndIssueNewDailyHealthData = async (dailyHealthDataBitmarks) => {
+  if (isIssuingBitmarkHealthData) return;
+
   console.log('checkAndIssueNewDailyHealthData...');
   let waitingForIssuingDailyHealthDataList = HealthKitService.doCheckBitmarkHealthDataTask(dailyHealthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
   if (waitingForIssuingDailyHealthDataList.length) {
-    let results = await doBitmarkHealthData(waitingForIssuingDailyHealthDataList);
-    console.log('Daily health data issued results:', results);
+    isIssuingBitmarkHealthData = true;
+    try {
+      let results = await doBitmarkHealthData(waitingForIssuingDailyHealthDataList);
+      console.log('Daily health data issued results:', results);
+    } finally {
+      isIssuingBitmarkHealthData = false;
+      console.log('Finished issuing Daily health data');
+    }
   }
 };
 
@@ -726,20 +735,13 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   return CacheData.userInformation;
 };
 
-let isIssuingBitmarkHealthData = false;
 const doBitmarkHealthData = async (list) => {
-  if (isIssuingBitmarkHealthData) return;
-  isIssuingBitmarkHealthData = true;
+  console.log('Issuing daily health data...');
+  let {results, errors} = await HealthKitService.doBitmarkHealthData(CacheData.userInformation.bitmarkAccountNumber, list);
 
-  let results;
-
-  try {
-    results = await HealthKitService.doBitmarkHealthData(CacheData.userInformation.bitmarkAccountNumber, list);
-    isIssuingBitmarkHealthData = false;
-  } catch (error) {
-    isIssuingBitmarkHealthData = false;
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { title: 'There was an error during registering your daily health data' });
-    Sentry.captureException(error, { logger: 'user' });
+  if (errors && errors.length) {
+    Sentry.captureException(errors[0], {logger: 'user'});
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {title: 'There was an error during registering your daily health data'});
   }
 
   if (results && results.length > 0) {
@@ -760,7 +762,6 @@ const doBitmarkHealthData = async (list) => {
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
   }
 
-  await runGetUserBitmarksInBackground();
   return results;
 };
 
