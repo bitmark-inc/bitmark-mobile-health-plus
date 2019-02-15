@@ -29,6 +29,16 @@ for_lane :developtravis do
     team_id "A52M7AQ8B2" # Developer Portal Team ID
 end
 
+for_lane :betajenkins do
+    app_identifier "com.bitmark.healthplus.beta"
+    team_id "A52M7AQ8B2" # Developer Portal Team ID
+end
+
+for_lane :developjenkins do
+    app_identifier "com.bitmark.healthplus.inhouse"
+    team_id "A52M7AQ8B2" # Developer Portal Team ID
+end
+
 
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile
