@@ -30,6 +30,23 @@ extension API {
         return transferResponse.txid
     }
     
+    internal func transfer(withCounterTransfer counterTransfer: CountersignedTransferRequest) throws -> String {
+        let json = try JSONSerialization.data(withJSONObject: ["transfer": counterTransfer.toJSON()], options: [])
+        
+        let requestURL = endpoint.apiServerURL.appendingPathComponent("/v3/transfer")
+        
+        var urlRequest = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData)
+        urlRequest.httpBody = json
+        urlRequest.httpMethod = "POST"
+        
+        let (data, _) = try urlSession.synchronousDataTask(with: urlRequest)
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full)
+        let transferResponse = try decoder.decode(TransferResponse.self, from: data)
+        return transferResponse.txid
+    }
+    
     internal func offer(_ offer: OfferParams) throws {
         let json = try JSONSerialization.data(withJSONObject: offer.toJSON(), options: [])
         

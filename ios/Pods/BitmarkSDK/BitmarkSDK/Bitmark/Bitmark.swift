@@ -39,7 +39,7 @@ public extension Bitmark {
         }
         
         
-        let baseNonce = UInt64(Date().timeIntervalSince1970)
+        let baseNonce = UInt64(Date().timeIntervalSince1970) * 1000
         var requests = [IssueRequest]()
         
         // Get asset info
@@ -77,7 +77,23 @@ public extension Bitmark {
     
     public static func issue(_ params: IssuanceParams) throws -> [String] {
         let api = API()
-        let bitmarkIDs = try api.issue(withIssueParams: params)
+        
+        let step = 100
+        var i = 0
+        var shouldContinue = true
+        var bitmarkIDs = [String]()
+        while shouldContinue {
+            var last = i*step + step
+            if last > params.issuances.count {
+                shouldContinue = false
+                last = params.issuances.count
+            }
+            
+            let parts = [IssueRequest](params.issuances[(i*step)..<last])
+            let ids = try api.issue(withIssueParams: IssuanceParams(issuances: parts))
+            bitmarkIDs += ids
+            i += 1
+        }
         
         return bitmarkIDs
     }

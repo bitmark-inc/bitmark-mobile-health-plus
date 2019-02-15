@@ -66,6 +66,13 @@ public struct CountersignedTransferRequest: Codable {
     var counterSignature: String?
     let payment: Payment?
     
+    init(link: String, owner: String, signature: String, payment: Payment? = nil) {
+        self.link = link
+        self.owner = owner
+        self.signature = signature
+        self.payment = payment
+    }
+    
     internal func packRecord(withReceiver receiver: AccountNumber) throws -> Data {
         var txData: Data
         txData = Data.varintFrom(Config.transferCountersignedTag)
