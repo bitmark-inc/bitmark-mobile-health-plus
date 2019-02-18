@@ -55,6 +55,17 @@ struct KeychainUtil {
     }
   }
   
+  static func replaceCore(_ core: Data, version: String) throws {
+    guard let authentication = UserDefaults.standard.object(forKey: authenticationKey) as? Bool else {
+      throw("Current key is not available")
+    }
+
+    UserDefaults.standard.set(version, forKey: versionKey)    
+    let keychain = try getKeychain(reason: NSLocalizedString("info_plist_touch_face_id", comment: ""), authentication: authentication)
+    try? keychain.removeAll()
+    try keychain.set(core, key: bitmarkSeedCoreKey(authentication: authentication))
+  }
+  
   static func saveCore(_ core: Data, version: String, authentication: Bool) throws {
     UserDefaults.standard.set(authentication, forKey: authenticationKey)
     UserDefaults.standard.set(version, forKey: versionKey)
@@ -84,6 +95,22 @@ struct KeychainUtil {
     try getKeychain(reason: "Bitmark app would like to remove your account from keychain.", authentication: authentication)
       .remove(bitmarkSeedCoreKey(authentication: authentication))
     UserDefaults.standard.removeObject(forKey: authenticationKey)
+  }
+  
+  static func saveTemporaryAccount(_ account: Account, key: String) throws {
+    try getKeychain(reason: "", authentication: false).set(try account.toSeed(), key: "tmp_" + key)
+  }
+  
+  static func loadTemporaryAccount(key: String) throws -> Account {
+    guard let seed = try getKeychain(reason: "", authentication: false).get("tmp_" + key) else {
+      throw("Key not found: " + key)
+    }
+    
+    return try Account(fromSeed: seed)
+  }
+  
+  static func removeTemporaryAccount(key: String) throws {
+    try getKeychain(reason: "", authentication: false).remove("tmp_" + key)
   }
   
   static func getAccountVersion() -> SeedVersion {

@@ -67,35 +67,42 @@ public struct Migration {
 //    }
     
     // Query and transfer all of current confirmed properties
-    public static func rekey(from accountFrom: Account, to accountTo: Account) throws {
-        // Query for current owning bitmarks
-        var lastOffset: Int64? = nil
-        var shouldContinue = true
-        
-        while shouldContinue {
-            var bitmarksQuery = Bitmark.newBitmarkQueryParams()
-                .owned(by: accountFrom.address)
-                .loadAsset(true)
-                .to(direction: .earlier)
-                .includePending(false)
+    public static func rekey(from accountFrom: Account, to accountTo: Account, handler: ((Float, Error?) -> Void)) {
+        do {
+            // Query for current owning bitmarks
+            var lastOffset: Int64? = nil
+            var owningBitmarks = [Bitmark]()
+            var shouldContinue = true
             
-            if let lastOffset = lastOffset {
-                bitmarksQuery = bitmarksQuery.at(lastOffset)
+            while shouldContinue {
+                var bitmarksQuery = Bitmark.newBitmarkQueryParams()
+                    .owned(by: accountFrom.address)
+                    .loadAsset(true)
+                    .to(direction: .earlier)
+                    .includePending(false)
+                
+                if let lastOffset = lastOffset {
+                    bitmarksQuery = bitmarksQuery.at(lastOffset)
+                }
+                
+                let (bitmarks, _) = try Bitmark.list(params: bitmarksQuery)
+                
+                if bitmarks == nil || bitmarks?.count == 0 {
+                    break
+                }
+                
+                if bitmarks!.count < 100 {
+                    shouldContinue = false
+                }
+                
+                lastOffset = bitmarks!.last!.offset
+                
+                owningBitmarks += bitmarks!
             }
             
-            let (bitmarks, _) = try Bitmark.list(params: bitmarksQuery)
-            
-            if bitmarks == nil || bitmarks?.count == 0 {
-                break
-            }
-            
-            if bitmarks!.count < 100 {
-                shouldContinue = false
-            }
-            
-            lastOffset = bitmarks!.last!.offset
-            
-            for bitmark in bitmarks! {
+            for i in 0..<owningBitmarks.count {
+                let bitmark = owningBitmarks[i]
+                
                 var transferRequest = TransferRequest()
                 transferRequest.set(fromOwner: accountFrom.accountNumber)
                 try transferRequest.set(to: accountTo.accountNumber)
@@ -110,7 +117,13 @@ public struct Migration {
                 
                 let api = API()
                 _ = try api.transfer(withCounterTransfer: counterTransfer)
+                
+                // Update progress
+                handler(Float((i + 1)) / Float(owningBitmarks.count), nil)
             }
+        }
+        catch let e {
+            handler(0, e)
         }
     }
 }

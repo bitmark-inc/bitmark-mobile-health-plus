@@ -43,4 +43,8 @@ RCT_EXTERN_METHOD(getTransactions:(NSDictionary *)params:(RCTPromiseResolveBlock
 RCT_EXTERN_METHOD(getAsset:(NSString *)assetID:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getAssets:(NSDictionary *)params:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
 
+// Account migration
+RCT_EXTERN_METHOD(migrate:(NSArray<NSString *> *)pharse:(RCTResponseSenderBlock)progressCallback:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(progressCallback:(RCTResponseSenderBlock)progressCallback:(RCTPromiseResolveBlock)resolve:(RCTPromiseRejectBlock)reject)
+
 @end
