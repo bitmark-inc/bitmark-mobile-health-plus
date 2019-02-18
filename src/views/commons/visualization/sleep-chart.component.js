@@ -16,7 +16,7 @@ export class SleepChartComponent extends Component {
   }
 
   populateChartData(dataSource, chartHeight) {
-    chartHeight = chartHeight - 50;
+    chartHeight = chartHeight - 70;
     const CHART_UNIT = 100.0;
 
     let maxValue = 0;
