@@ -131,16 +131,29 @@ const doCheckNewUserDataBitmarks = async ({ healthDataBitmarks, dailyHealthDataB
 };
 
 let isIssuingBitmarkHealthData = false;
+let lastIssuedDailyHealthCollectionDate;
 const checkAndIssueNewDailyHealthData = async (dailyHealthDataBitmarks) => {
   if (isIssuingBitmarkHealthData) return;
 
   console.log('checkAndIssueNewDailyHealthData...');
   let waitingForIssuingDailyHealthDataList = HealthKitService.doCheckBitmarkHealthDataTask(dailyHealthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
+  if (lastIssuedDailyHealthCollectionDate) {
+    waitingForIssuingDailyHealthDataList = waitingForIssuingDailyHealthDataList.filter((item) => {
+      return item.StepCount.endDate.getTime() > lastIssuedDailyHealthCollectionDate.toDate().getTime();
+    });
+  }
+
+  console.log('waitingForIssuingDailyHealthDataList:', waitingForIssuingDailyHealthDataList);
+
   if (waitingForIssuingDailyHealthDataList.length) {
     isIssuingBitmarkHealthData = true;
     try {
       let results = await doBitmarkHealthData(waitingForIssuingDailyHealthDataList);
       console.log('Daily health data issued results:', results);
+      if (results && results.length) {
+        let lastResult = results[results.length - 1];
+        lastIssuedDailyHealthCollectionDate = moment(lastResult.healthData.assetMetadata["Collection Date"]);
+      }
     } finally {
       isIssuingBitmarkHealthData = false;
       console.log('Finished issuing Daily health data');
