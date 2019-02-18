@@ -204,7 +204,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
                       }
                     </View>
                     {this.state.sleepChartData &&
-                      <SleepChartComponent dataSource={this.state.sleepChartData} height={120} />
+                      <SleepChartComponent dataSource={this.state.sleepChartData} height={140} />
                     }
                   </View>
 
