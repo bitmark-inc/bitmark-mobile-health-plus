@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, Image, TouchableOpacity, SafeAreaView,
-  StyleSheet,
+  StyleSheet, ScrollView,
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux';
@@ -50,7 +50,7 @@ export class HealthDataGetStartComponent extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.body}>
+        <ScrollView style={styles.body}>
           {/*ONBOARDING SCREEN 1*/}
           {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_1) &&
             <View style={{ flex: 1 }}>
@@ -172,7 +172,7 @@ export class HealthDataGetStartComponent extends React.Component {
               </View>
             </View>
           }
-        </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }

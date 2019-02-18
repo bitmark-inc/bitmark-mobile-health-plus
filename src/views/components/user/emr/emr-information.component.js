@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     paddingRight: convertWidth(19),
-    width: convertWidth(50),
+    width: convertWidth(53),
   },
   headerEditText: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 10,

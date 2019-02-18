@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, SafeAreaView, Linking
+  Image, View, TouchableOpacity, Text, SafeAreaView, Linking, Dimensions
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Hyperlink from 'react-native-hyperlink';
@@ -174,12 +174,12 @@ const styles = StyleSheet.create({
   onBoardingImage1: {
     resizeMode: 'contain',
     width: config.isIPhoneX ? convertWidth(250) : convertWidth(206),
-    height: config.isIPhoneX ? (385 * convertWidth(250) / 250) : (318 * convertWidth(206) / 206),
+    height: config.isIPhoneX ? (385 * convertWidth(250) / 250) : ((Dimensions.get('window').height === 568 ? 280 : 318) * convertWidth(206) / 206),
   },
   onBoardingImage2: {
     resizeMode: 'contain',
     width: convertWidth(241),
-    height: 323 * convertWidth(241) / 241,
+    height: (Dimensions.get('window').height === 568 ? 200 : 323) * convertWidth(241) / 241,
   },
   introductionImageArea: {
 
