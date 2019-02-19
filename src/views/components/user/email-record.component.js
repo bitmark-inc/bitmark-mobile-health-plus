@@ -175,7 +175,7 @@ export class EmailRecordComponent extends Component {
               <View>
                 {areAllExistingAssets ? (
                   <View style={[styles.bottomArea, styles.paddingContent, {justifyContent: 'flex-end'}]}>
-                    <TouchableOpacity style={styles.buttonNext} onPress={this.gotoUserScreen.bind(this)} >
+                    <TouchableOpacity style={styles.buttonNext} onPress={this.doAccept.bind(this)} >
                       <Text style={[styles.buttonText, { color: '#FF003C' }]}>{i18n.t('BitmarkInternetOffComponent_okButtonText').toUpperCase()}</Text>
                     </TouchableOpacity>
                   </View>
