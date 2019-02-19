@@ -51,7 +51,7 @@ export class HealthDataGetStartComponent extends React.Component {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.body}>
-          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, paddingBottom: 8 }}>
             {/*ONBOARDING SCREEN 1*/}
             {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_1) &&
             <View style={{ flex: 1 }}>

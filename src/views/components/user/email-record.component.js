@@ -8,7 +8,8 @@ import {
 import KeepAwake from 'react-native-keep-awake';
 import { Actions } from 'react-native-router-flux';
 import { AppProcessor, DataProcessor, EventEmitterService, CacheData } from 'src/processors';
-import { isImageFile, convertWidth } from 'src/utils';
+import { isImageFile, convertWidth, FileUtil } from 'src/utils';
+import { AccountModel } from "src/processors/models";
 
 export class EmailRecordComponent extends Component {
   static propTypes = {
@@ -50,6 +51,15 @@ export class EmailRecordComponent extends Component {
       ids: results.ids || [],
       processing: false
     });
+  }
+
+  async removeEmailRecords() {
+    for (let id of this.state.ids) {
+      await FileUtil.removeSafe(`${FileUtil.CacheDirectory}/${CacheData.userInformation.bitmarkAccountNumber}/email_records/${id}`);
+      await AccountModel.doDeleteEmailRecord(CacheData.jwt, id);
+    }
+
+    this.gotoUserScreen();
   }
 
   doAccept() {
@@ -105,8 +115,6 @@ export class EmailRecordComponent extends Component {
   }
 
   render() {
-    console.log('this :', this.state, this.props);
-
     const areAllExistingAssets = this.state.list.every(item => item.existingAsset);
 
     return (
@@ -175,7 +183,7 @@ export class EmailRecordComponent extends Component {
               <View>
                 {areAllExistingAssets ? (
                   <View style={[styles.bottomArea, styles.paddingContent, {justifyContent: 'flex-end'}]}>
-                    <TouchableOpacity style={styles.buttonNext} onPress={this.doAccept.bind(this)} >
+                    <TouchableOpacity style={styles.buttonNext} onPress={this.removeEmailRecords.bind(this)} >
                       <Text style={[styles.buttonText, { color: '#FF003C' }]}>{i18n.t('BitmarkInternetOffComponent_okButtonText').toUpperCase()}</Text>
                     </TouchableOpacity>
                   </View>
