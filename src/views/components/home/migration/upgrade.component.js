@@ -6,48 +6,67 @@ import {
 
 import { convertWidth } from 'src/utils';
 import { ShadowTopComponent } from "src/views/commons";
-import { EventEmitterService } from "src/processors";
+import { EventEmitterService, DataProcessor } from "src/processors";
 import PropTypes from 'prop-types';
+import LottieView from 'lottie-react-native';
+import { IndexDBService, LocalFileService } from "src/processors/services";
+import { AccountModel } from "src/processors/models";
 
 const UPGRADE_STATE = {
   UPGRADING: 0,
   UPGRADE_COMPLETED: 1,
 };
 
+const COMPLETED_PROGRESS_BAR_VALUE = 0.41;
+
 export class UpgradeComponent extends Component {
   static propTypes = {
-    phraseWords: PropTypes.any
+    twelveWords: PropTypes.any
   };
 
   constructor(props) {
     super(props);
-    this.phraseWords = props.phraseWords;
-    console.log('phraseWords:', this.phraseWords);
+    this.twelveWords = props.twelveWords;
+    console.log('twelveWords:', this.twelveWords);
 
     this.state = {
-      upgradeState: UPGRADE_STATE.UPGRADING
+      upgradeState: UPGRADE_STATE.UPGRADING,
+      progress: 0.01
     }
   }
 
   async componentDidMount() {
-    await this.migrateTo12Words(this.phraseWords);
+    await this.migrateTo12Words(this.twelveWords);
   }
 
   async migrateTo12Words() {
-    // TODO: Call migration for 24 words here
+    let twentyFourWordsAccountNumber = (await DataProcessor.getAccountInfoForMigration()).bitmarkAccountNumber;
+    let twelveWordsAccountNumber = await AccountModel.migrateFrom24WordsTo12Words(this.twelveWords, this.updateProgressBar);
+
+    await IndexDBService.upgradeDataFrom24Words(twentyFourWordsAccountNumber, twelveWordsAccountNumber);
+    await LocalFileService.initializeLocalStorage(twelveWordsAccountNumber);
+    await LocalFileService.moveFilesToNewAccount(twentyFourWordsAccountNumber, twelveWordsAccountNumber);
+    await DataProcessor.doLogin();
 
     // If migrate successfully
     this.setState({
-      upgradeState: UPGRADE_STATE.UPGRADE_COMPLETED
+      upgradeState: UPGRADE_STATE.UPGRADE_COMPLETED,
+      progress: COMPLETED_PROGRESS_BAR_VALUE
     })
   }
 
+  updateProgressBar(progressResponse) {
+    let progress = progressResponse[0];
+    let progressVal = ((COMPLETED_PROGRESS_BAR_VALUE - 0.03) * progress) / 100.0;
+    this.setState({progress: progressVal});
+  }
+
   reloadApp() {
-    console.log('reloadApp...');
     EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: false, indicator: true });
   }
 
   render() {
+    console.log('this.state.progress:', this.state.progress);
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.body}>
@@ -63,9 +82,18 @@ export class UpgradeComponent extends Component {
               <View style={[styles.contentArea, styles.paddingContent]}>
                 {/*Upgrade progress container*/}
                 <View style={[styles.progressContainer]}>
-                  <Text style={[styles.introductionDescription]}>Your account is now being upgraded.</Text>
+                  <Text style={[styles.introductionDescription, {marginTop: 56}]}>Your account is now being upgraded.</Text>
                   <View style={[styles.progressBar]}>
-
+                    <LottieView
+                      style={{ width: 400, height: 400 }}
+                      ref={animation => {
+                        this.animation = animation;
+                      }}
+                      progress={this.state.progress}
+                      loop={false}
+                      source={require('assets/animation/progress-bar.json')}
+                      autoPlay={false}
+                    />
                   </View>
                 </View>
 
@@ -92,7 +120,7 @@ export class UpgradeComponent extends Component {
               <View style={[styles.contentArea, styles.paddingContent]}>
                 {/*Desc*/}
                 <View style={styles.introductionTextArea}>
-                  <Text style={[styles.introductionDescription]}>
+                  <Text style={[styles.introductionDescription, {marginTop: 56}]}>
                     {`Your account upgrade has been finished!`}
                   </Text>
                   <View style={[styles.iconContainer]}>
@@ -171,7 +199,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   introductionDescription: {
-    marginTop: 56,
     fontFamily: 'AvenirNextW1G-Regular',
     fontSize: 17,
     lineHeight: 20,
@@ -193,6 +220,12 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+  },
+  progressBar: {
+    marginTop: -120,
+    height: 280,
+    alignItems: 'center',
+    width: '100%'
   },
   iconContainer: {
     marginTop: 80,

@@ -538,29 +538,28 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 
-const checkIf24WordsAccount = async () => {
-  let is24Words = false;
+const getAccountInfoForMigration = async () => {
+  let is24WordsAccount = false;
+  let bitmarkAccountNumber;
   let phraseInfo = await AccountModel.doGeneratePhrase();
 
   if (phraseInfo) {
     console.log('phraseInfo.phraseWords:', phraseInfo.phraseWords);
-    if (phraseInfo.phraseWords.length == 24) {
-      is24Words = true;
-    }
+    is24WordsAccount = phraseInfo.phraseWords.length === 24;
+    bitmarkAccountNumber = phraseInfo.bitmarkAccountNumber;
   }
 
-  return is24Words;
+  return {is24WordsAccount, bitmarkAccountNumber};
 };
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
-  // TODO: Check 24 words account
-  let is24WordsAccount = await checkIf24WordsAccount();
-  console.log('is24WordsAccount:', is24WordsAccount);
+  let accountInfoForMigration = await getAccountInfoForMigration();
 
   // TODO: for testing
-  // is24WordsAccount = true;
-  if (is24WordsAccount) {
-    return {is24WordsAccount: true};
+  // accountInfoForMigration.is24WordsAccount = true;
+
+  if (accountInfoForMigration.is24WordsAccount) {
+    return accountInfoForMigration;
   }
 
   CacheData.userInformation = await UserModel.doTryGetCurrentUser();
@@ -1135,6 +1134,8 @@ const DataProcessor = {
   doIssueEMR,
   doGetUserDataBitmarks,
   doSaveUserSetting,
+
+  getAccountInfoForMigration
 };
 
 export { DataProcessor };

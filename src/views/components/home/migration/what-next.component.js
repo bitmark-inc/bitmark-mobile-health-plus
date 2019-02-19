@@ -11,12 +11,12 @@ import PropTypes from 'prop-types';
 
 export class WhatNextComponent extends Component {
   static propTypes = {
-    phraseWords: PropTypes.any
+    twelveWords: PropTypes.any
   };
 
   constructor(props) {
     super(props);
-    this.phraseWords = props.phraseWords;
+    this.twelveWords = props.twelveWords;
   }
 
   render() {
@@ -44,7 +44,7 @@ export class WhatNextComponent extends Component {
 
             {/*BOTTOM AREA*/}
             <View style={[styles.bottomArea, styles.paddingContent]}>
-              <TouchableOpacity style={[styles.buttonNext]} onPress={() => Actions.upgrade({phraseWords: this.phraseWords})}>
+              <TouchableOpacity style={[styles.buttonNext]} onPress={() => Actions.upgrade({twelveWords: this.twelveWords})}>
                 <Text style={[styles.buttonText, { color: '#FF003C' }]}>BEGIN UPGRADE</Text>
               </TouchableOpacity>
             </View>

@@ -65,6 +65,11 @@ export class IndexedDBModel {
     return this.executeQuery(query, [accountNumber, bitmarkId, assetName, metadata, content]);
   }
 
+  static async updateIndexedDataAccountNumber(oldAccountNumber, newAccountNumber) {
+    let query = `UPDATE ${INDEXED_DATA_TABLE_NAME} SET accountNumber='${newAccountNumber}' WHERE accountNumber='${oldAccountNumber}'`;
+    return this.executeQuery(query);
+  }
+
   static async deleteIndexedDataByBitmarkId(accountNumber, bitmarkId) {
     let query = `DELETE FROM ${INDEXED_DATA_TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
     return this.executeQuery(query);
@@ -96,6 +101,11 @@ export class IndexedDBModel {
     return this.executeQuery(query);
   }
 
+  static async updateTagAccountNumber(oldAccountNumber, newAccountNumber) {
+    let query = `UPDATE ${TAGS_TABLE_NAME} SET accountNumber='${newAccountNumber}' WHERE accountNumber='${oldAccountNumber}'`;
+    return this.executeQuery(query);
+  }
+
   static async deleteTagsByBitmarkId(bitmarkId) {
     let query = `DELETE FROM ${TAGS_TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
     return this.executeQuery(query);
@@ -124,6 +134,11 @@ export class IndexedDBModel {
 
   static async updateNote(bitmarkId, note) {
     let query = `UPDATE ${NOTES_TABLE_NAME} SET note='${note}' WHERE bitmarkId='${bitmarkId}'`;
+    return this.executeQuery(query);
+  }
+
+  static async updateNoteAccountNumber(oldAccountNumber, newAccountNumber) {
+    let query = `UPDATE ${NOTES_TABLE_NAME} SET accountNumber='${newAccountNumber}' WHERE accountNumber='${oldAccountNumber}'`;
     return this.executeQuery(query);
   }
 

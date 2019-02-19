@@ -108,7 +108,7 @@ export class GenerateHealthCodeComponent extends Component {
     let phraseWords = this.state.phraseWords.map(item => item.word);
 
     if (this.migrateFrom24Words) {
-      Actions.whatNext({phraseWords});
+      Actions.whatNext({twelveWords: phraseWords});
     } else {
       await AppProcessor.doLogin(phraseWords, false);
       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: true, indicator: true });

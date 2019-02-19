@@ -130,6 +130,14 @@ const deleteNoteByBitmarkId = async (bitmarkId) => {
   await IndexedDBModel.deleteNoteByBitmarkId(bitmarkId);
 };
 
+const upgradeDataFrom24Words = async (twentyFourWordsAccountNumber, twelveWordsAccountNumber) => {
+  return Promise.all([
+    IndexedDBModel.updateIndexedDataAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber),
+    IndexedDBModel.updateTagAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber),
+    IndexedDBModel.updateNoteAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber)
+  ])
+};
+
 let IndexDBService = {
   initializeIndexedDB,
 
@@ -149,6 +157,9 @@ let IndexDBService = {
   // Note
   getNoteByBitmarkId,
   updateNote,
-  deleteNoteByBitmarkId
+  deleteNoteByBitmarkId,
+
+  // Migration
+  upgradeDataFrom24Words
 };
 export { IndexDBService };

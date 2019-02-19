@@ -58,6 +58,15 @@ const moveOldDataFilesToNewLocalStorageFolder = async () => {
   }
 };
 
+const moveFilesToNewAccount = async (oldBitmarkAccountNumber, newBitmarkAccountNumber) => {
+  let oldSharedStorageFolderPath = FileUtil.getSharedLocalStorageFolderPath(oldBitmarkAccountNumber);
+  let newSharedStorageFolderPath = FileUtil.getSharedLocalStorageFolderPath(newBitmarkAccountNumber);
+
+  if (await FileUtil.exists(oldSharedStorageFolderPath)) {
+    await FileUtil.copyDir(oldSharedStorageFolderPath, newSharedStorageFolderPath, true);
+  }
+};
+
 const readIndexedDataFile = async (indexedDataFilePath) => {
   let indexedData;
   if (await FileUtil.exists(indexedDataFilePath)) {
@@ -229,16 +238,17 @@ const doUpdateIndexNoteToICloud = async (bitmarkId, note) => {
   }
 };
 
-const initializeLocalStorage = async () => {
-  if (CacheData.userInformation.bitmarkAccountNumber) {
-    await FileUtil.mkdir(FileUtil.getSharedLocalStorageFolderPath(CacheData.userInformation.bitmarkAccountNumber));
-    await FileUtil.mkdir(FileUtil.getLocalAssetsFolderPath(CacheData.userInformation.bitmarkAccountNumber));
-    await FileUtil.mkdir(FileUtil.getLocalThumbnailsFolderPath(CacheData.userInformation.bitmarkAccountNumber));
-    await FileUtil.mkdir(FileUtil.getLocalDatabasesFolderPath(CacheData.userInformation.bitmarkAccountNumber));
-    await FileUtil.mkdir(FileUtil.getLocalCachesFolderPath(CacheData.userInformation.bitmarkAccountNumber));
-    await FileUtil.mkdir(FileUtil.getLocalIndexedDataFolderPath(CacheData.userInformation.bitmarkAccountNumber));
-    await FileUtil.mkdir(FileUtil.getLocalIndexedTagFolderPath(CacheData.userInformation.bitmarkAccountNumber));
-    await FileUtil.mkdir(FileUtil.getLocalIndexedNoteFolderPath(CacheData.userInformation.bitmarkAccountNumber));
+const initializeLocalStorage = async (bitmarkAccountNumber) => {
+  let accountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
+  if (accountNumber) {
+    await FileUtil.mkdir(FileUtil.getSharedLocalStorageFolderPath(accountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalAssetsFolderPath(accountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalThumbnailsFolderPath(accountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalDatabasesFolderPath(accountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalCachesFolderPath(accountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalIndexedDataFolderPath(accountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalIndexedTagFolderPath(accountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalIndexedNoteFolderPath(accountNumber));
   }
 };
 
@@ -268,6 +278,7 @@ let LocalFileService = {
   initializeLocalStorage,
   moveOldDataFilesToNewLocalStorageFolder,
   moveFilesFromLocalStorageToSharedStorage,
+  moveFilesToNewAccount,
 
   doCheckAndSyncDataWithICloud,
 

@@ -38,6 +38,10 @@ const doLogout = async (jwt) => {
   return true;
 };
 
+const migrateFrom24WordsTo12Words = async (twelveWords, progressCallback) => {
+  return await BitmarkSDK.migrateFrom24WordsTo12Words(twelveWords, progressCallback);
+};
+
 const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platform, token, client, intercom_user_id) => {
   return new Promise((resolve, reject) => {
     let statusCode;
@@ -393,7 +397,9 @@ let AccountModel = {
   doGetHockeyAppVersion,
   doGetUserMetadata,
   doUpdateUserMetadata,
-}
+
+  migrateFrom24WordsTo12Words
+};
 
 export {
   AccountModel,
