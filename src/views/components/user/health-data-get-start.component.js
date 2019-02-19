@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, Image, TouchableOpacity, SafeAreaView,
-  StyleSheet, ScrollView,
+  StyleSheet, ScrollView, Dimensions,
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux';
@@ -15,6 +15,8 @@ const ONBOARDING_STATES = {
   ONBOARDING_3: 'ONBOARDING_3'
 };
 
+const windowSize = Dimensions.get('window');
+const isSmallPhone = windowSize.width < 375;
 
 export class HealthDataGetStartComponent extends React.Component {
   static propTypes = {
@@ -115,7 +117,7 @@ export class HealthDataGetStartComponent extends React.Component {
                 {/*CONTENT*/}
                 <View style={[styles.contentArea]}>
                   {/*IMAGE*/}
-                  <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'center', width: '100%', flex: 1 }]}>
+                  <View style={[styles.introductionImageArea, { alignItems: isSmallPhone ? 'center' : 'flex-end', justifyContent: 'center', width: '100%', flex: 1, marginTop: 10 }]}>
                     <Image style={styles.onBoardingImage2} source={require('assets/imgs/health-data-onboarding-1.png')} />
                   </View>
 
@@ -151,7 +153,7 @@ export class HealthDataGetStartComponent extends React.Component {
                 {/*CONTENT*/}
                 <View style={[styles.contentArea]}>
                   {/*IMAGE*/}
-                  <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'center', width: '100%', flex: 1 }]}>
+                  <View style={[styles.introductionImageArea, { alignItems: isSmallPhone ? 'center' : 'flex-end', justifyContent: 'center', width: '100%', flex: 1 }]}>
                     <Image style={styles.onBoardingImage2} source={require('assets/imgs/health-data-onboarding-1.png')} />
                   </View>
 
@@ -265,7 +267,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   introductionTitle: {
-    marginTop: 25,
+    marginTop: isSmallPhone ? 5 : 25,
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 24,
@@ -291,6 +293,6 @@ const styles = StyleSheet.create({
   onBoardingImage2: {
     resizeMode: 'contain',
     width: convertWidth(320),
-    height: 300 * convertWidth(320) / 320,
+    height: (isSmallPhone ? 250 : 300) * convertWidth(320) / 320,
   },
 });
