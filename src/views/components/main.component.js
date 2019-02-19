@@ -23,6 +23,7 @@ import { UserRouterComponent, } from './user';
 import { runPromiseWithoutError, convertWidth } from 'src/utils';
 import { EventEmitterService, DataProcessor, BitmarkSDK, UserModel, AppProcessor, CommonModel, CacheData } from 'src/processors';
 import { constants } from 'src/configs';
+import { MigrationRouterComponent } from "./home/migration";
 
 class MainEventsHandlerComponent extends Component {
   constructor(props) {
@@ -369,6 +370,12 @@ export class MainComponent extends Component {
         return DataProcessor.doOpenApp(options && options.justCreatedBitmarkAccount).then(user => {
           user = user || {};
           console.log('doOpenApp user:', user);
+          // Need to migrate if is 24 words account
+          if (user && user.is24WordsAccount) {
+              this.setState({user});
+              return;
+          }
+
           if (!this.state.user || this.state.user.bitmarkAccountNumber !== user.bitmarkAccountNumber) {
             this.setState({ user });
           }
@@ -402,7 +409,8 @@ export class MainComponent extends Component {
   render() {
     let DisplayComponent = LoadingComponent;
     if (this.state.user) {
-      DisplayComponent = this.state.user.bitmarkAccountNumber ? UserRouterComponent : HomeRouterComponent;
+      console.log('this.state.user:', this.state.user);
+      DisplayComponent =  this.state.user.is24WordsAccount ? MigrationRouterComponent : (this.state.user.bitmarkAccountNumber ? UserRouterComponent : HomeRouterComponent);
     }
     return (
       <View style={{ flex: 1, }}>

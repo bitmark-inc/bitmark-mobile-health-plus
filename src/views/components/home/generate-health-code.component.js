@@ -4,11 +4,13 @@ import {
   Image, View, TouchableOpacity, Text, FlatList, TextInput, Keyboard, Animated, SafeAreaView, ScrollView,
 } from 'react-native';
 
+import { Actions } from 'react-native-router-flux';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { convertWidth, dictionaryPhraseWords, delay } from 'src/utils';
 import { config, constants } from 'src/configs';
 import { CharacterFlapperComponent } from 'src/views/commons';
 import { merge } from 'immutable';
+import PropTypes from 'prop-types';
 
 const STEPS = {
   init: 1,
@@ -30,9 +32,16 @@ const fillUpArrayByEmptyString = (array, length) => {
 };
 
 export class GenerateHealthCodeComponent extends Component {
+  static propTypes = {
+    migrateFrom24Words: PropTypes.bool,
+    sliderStartAt: PropTypes.number,
+  };
+
   constructor(props) {
     super(props);
     this.inputtedRefs = {};
+    this.migrateFrom24Words = props.migrateFrom24Words;
+    this.sliderStartAt = props.sliderStartAt || 3;
     this.state = {
       step: STEPS.init,
       smallerList: [],
@@ -97,8 +106,13 @@ export class GenerateHealthCodeComponent extends Component {
 
   async loginWithPhraseWords() {
     let phraseWords = this.state.phraseWords.map(item => item.word);
-    await AppProcessor.doLogin(phraseWords, false);
-    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: true, indicator: true });
+
+    if (this.migrateFrom24Words) {
+      Actions.whatNext({phraseWords});
+    } else {
+      await AppProcessor.doLogin(phraseWords, false);
+      EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: true, indicator: true });
+    }
   }
 
   async computePhraseWords(sourcePhraseWords, extState, firstLoad) {
@@ -447,7 +461,7 @@ export class GenerateHealthCodeComponent extends Component {
 
                     {/*BOTTOM AREA*/}
                     <View style={[styles.bottomArea]}>
-                      <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-3.png')} />
+                      <Image style={styles.sliderIcon} source={this.sliderStartAt == 2 ? require('assets/imgs/slider-icon-step-2.png') : require('assets/imgs/slider-icon-step-3.png')} />
 
                       <TouchableOpacity style={[styles.buttonNext]} disabled={this.state.step === STEPS.init} onPress={() => { if (this.state.step === STEPS.generated) { this.goToTest.bind(this)(this.state.phraseWords) } }}>
                         <Text style={[styles.buttonNextText, { opacity: this.state.step === STEPS.init ? 0.3 : 1 }]}>NEXT</Text>
@@ -632,7 +646,7 @@ export class GenerateHealthCodeComponent extends Component {
 
                     {/*BOTTOM AREA*/}
                     <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
-                      <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-4.png')} />
+                      <Image style={styles.sliderIcon} source={this.sliderStartAt == 2 ? require('assets/imgs/slider-icon-step-3.png') : require('assets/imgs/slider-icon-step-4.png')} />
 
                       {/*Buttons*/}
                       <View style={{ flexDirection: 'row' }}>

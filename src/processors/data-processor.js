@@ -538,7 +538,31 @@ const doDeactiveApplication = async () => {
   stopInterval();
 };
 
+const checkIf24WordsAccount = async () => {
+  let is24Words = false;
+  let phraseInfo = await AccountModel.doGeneratePhrase();
+
+  if (phraseInfo) {
+    console.log('phraseInfo.phraseWords:', phraseInfo.phraseWords);
+    if (phraseInfo.phraseWords.length == 24) {
+      is24Words = true;
+    }
+  }
+
+  return is24Words;
+};
+
 const doOpenApp = async (justCreatedBitmarkAccount) => {
+  // TODO: Check 24 words account
+  let is24WordsAccount = await checkIf24WordsAccount();
+  console.log('is24WordsAccount:', is24WordsAccount);
+
+  // TODO: for testing
+  // is24WordsAccount = true;
+  if (is24WordsAccount) {
+    return {is24WordsAccount: true};
+  }
+
   CacheData.userInformation = await UserModel.doTryGetCurrentUser();
   await LocalFileService.setShareLocalStoragePath();
 
