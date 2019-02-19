@@ -629,15 +629,15 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     iCloudSyncAdapter.syncCloud();
     configNotification();
     if (!CacheData.userInformation.intercomUserId) {
-      let intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
-      CacheData.userInformation.intercomUserId = intercomUserId;
+      CacheData.userInformation.intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
-      Intercom.logout().then(() => {
-        return Intercom.registerIdentifiedUser({ userId: intercomUserId })
-      }).catch(error => {
-        console.log('registerIdentifiedUser error :', error);
-      });
     }
+
+    Intercom.logout().then(() => {
+      return Intercom.registerIdentifiedUser({ userId: CacheData.userInformation.intercomUserId });
+    }).catch(error => {
+      console.log('registerIdentifiedUser error :', error);
+    });
 
     if (CacheData.networkStatus) {
       let signatureData = await CommonModel.doCreateSignatureData();
