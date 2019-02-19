@@ -631,13 +631,16 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     if (!CacheData.userInformation.intercomUserId) {
       CacheData.userInformation.intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
+      Intercom.logout().then(() => {
+        return Intercom.registerIdentifiedUser({ userId: CacheData.userInformation.intercomUserId });
+      }).catch(error => {
+        console.log('registerIdentifiedUser error :', error);
+      });
+    } else {
+      Intercom.registerIdentifiedUser({ userId: CacheData.userInformation.intercomUserId }).catch(error => {
+        console.log('registerIdentifiedUser error :', error);
+      });
     }
-
-    Intercom.logout().then(() => {
-      return Intercom.registerIdentifiedUser({ userId: CacheData.userInformation.intercomUserId });
-    }).catch(error => {
-      console.log('registerIdentifiedUser error :', error);
-    });
 
     if (CacheData.networkStatus) {
       let signatureData = await CommonModel.doCreateSignatureData();
