@@ -436,9 +436,19 @@ const doCreateAccount = async () => {
 
 const doLogin = async () => {
   CacheData.userInformation = await AccountService.doGetCurrentAccount();
+  await checkAppNeedResetLocalData();
   let signatureData = await CommonModel.doCreateSignatureData();
   await AccountModel.doTryRegisterAccount(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
-  await checkAppNeedResetLocalData();
+  if (CacheData.notificationUUID) {
+    let intercomUserId = `HealthPlus_${sha3_256(CacheData.userInformation.bitmarkAccountNumber)}`;
+    CacheData.userInformation.intercomUserId = intercomUserId;
+    AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, intercomUserId).then(() => {
+      CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
+      return UserModel.doUpdateUserInfo(CacheData.userInformation);
+    }).catch(error => {
+      console.log('DataProcessor doRegisterNotificationInfo error:', error);
+    });
+  }
   CacheData.mountedRouter = false;
   return CacheData.userInformation;
 };
@@ -727,8 +737,8 @@ const doBitmarkHealthData = async (list) => {
     isIssuingBitmarkHealthData = false;
   } catch (error) {
     isIssuingBitmarkHealthData = false;
-    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {title: 'There was an error during registering your daily health data'});
-    Sentry.captureException(error, {logger: 'user'});
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { title: 'There was an error during registering your daily health data' });
+    Sentry.captureException(error, { logger: 'user' });
   }
 
   if (results && results.length > 0) {
