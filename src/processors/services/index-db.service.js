@@ -2,6 +2,7 @@ import moment from 'moment';
 import { uniq } from 'lodash';
 import { CacheData } from '../caches';
 import { IndexedDBModel, CommonModel } from '../models';
+import { FileUtil } from "src/utils";
 
 const initializeIndexedDB = async () => {
   await IndexedDBModel.connectDB(CacheData.userInformation.bitmarkAccountNumber);
@@ -131,11 +132,23 @@ const deleteNoteByBitmarkId = async (bitmarkId) => {
 };
 
 const upgradeDataFrom24Words = async (twentyFourWordsAccountNumber, twelveWordsAccountNumber) => {
-  return Promise.all([
-    IndexedDBModel.updateIndexedDataAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber),
-    IndexedDBModel.updateTagAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber),
-    IndexedDBModel.updateNoteAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber)
-  ])
+  // Copy old database new one
+  let oldDBFilePath = IndexedDBModel.getDBFilePath(twentyFourWordsAccountNumber);
+  let newDBFilePath = IndexedDBModel.getDBFilePath(twelveWordsAccountNumber);
+  let newDBFolderPath = IndexedDBModel.getDBFolderPath(twelveWordsAccountNumber);
+  let existing = await FileUtil.exists(oldDBFilePath);
+
+  if (existing) {
+    await FileUtil.mkdir(newDBFolderPath);
+    await FileUtil.copyFile(oldDBFilePath, newDBFilePath);
+    await IndexedDBModel.connectDB(twelveWordsAccountNumber);
+
+    await Promise.all([
+      IndexedDBModel.updateIndexedDataAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber),
+      IndexedDBModel.updateTagAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber),
+      IndexedDBModel.updateNoteAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber)
+    ]);
+  }
 };
 
 let IndexDBService = {

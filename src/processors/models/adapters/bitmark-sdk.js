@@ -83,8 +83,11 @@ const BitmarkSDK = {
   validateAccountNumber: async (accountNumber) => {
     return await SwiftBitmarkSDK.validateAccountNumber(accountNumber);
   },
-  migrateFrom24WordsTo12Words: async (twelveWords, progressCallback) => {
-    return await SwiftBitmarkSDK.migrate(twelveWords, progressCallback);
+  migrateFrom24WordsTo12Words: async (twelveWords) => {
+    return await SwiftBitmarkSDK.migrate(twelveWords);
+  },
+  resumeMigration24WordsTo12Words: async () => {
+    return await SwiftBitmarkSDK.resumeMigration();
   },
 
 };

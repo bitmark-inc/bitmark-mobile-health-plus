@@ -100,26 +100,30 @@ public struct Migration {
                 owningBitmarks += bitmarks!
             }
             
-            for i in 0..<owningBitmarks.count {
-                let bitmark = owningBitmarks[i]
-                
-                var transferRequest = TransferRequest()
-                transferRequest.set(fromOwner: accountFrom.accountNumber)
-                try transferRequest.set(to: accountTo.accountNumber)
-                transferRequest.set(fromTx: bitmark.id)
-                transferRequest.set(requireCountersignature: true)
-                try transferRequest.sign(accountFrom)
-                
-                var counterTransfer = CountersignedTransferRequest(link: bitmark.id,
-                                                                   owner: transferRequest.owner!,
-                                                                   signature: transferRequest.signature!.hexEncodedString)
-                try counterTransfer.sign(accountTo)
-                
-                let api = API()
-                _ = try api.transfer(withCounterTransfer: counterTransfer)
-                
-                // Update progress
-                handler(Float((i + 1)) / Float(owningBitmarks.count), nil)
+            if (owningBitmarks.count == 0) {
+                handler(Float(1), nil)
+            } else {
+                for i in 0..<owningBitmarks.count {
+                    let bitmark = owningBitmarks[i]
+
+                    var transferRequest = TransferRequest()
+                    transferRequest.set(fromOwner: accountFrom.accountNumber)
+                    try transferRequest.set(to: accountTo.accountNumber)
+                    transferRequest.set(fromTx: bitmark.id)
+                    transferRequest.set(requireCountersignature: true)
+                    try transferRequest.sign(accountFrom)
+
+                    var counterTransfer = CountersignedTransferRequest(link: bitmark.id,
+                                                                       owner: transferRequest.owner!,
+                                                                       signature: transferRequest.signature!.hexEncodedString)
+                    try counterTransfer.sign(accountTo)
+
+                    let api = API()
+                    _ = try api.transfer(withCounterTransfer: counterTransfer)
+
+                    // Update progress
+                    handler(Float((i + 1)) / Float(owningBitmarks.count), nil)
+                }
             }
         }
         catch let e {

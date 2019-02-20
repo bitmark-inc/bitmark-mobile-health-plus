@@ -12,7 +12,7 @@ import KeychainAccess
 import iCloudDocumentSync
 
 @objc(BitmarkSDKWrapper)
-class BitmarkSDKWrapper: NSObject {
+class BitmarkSDKWrapper: RCTEventEmitter {
 
   static let accountNotFound = "Account not found in native layer"
   var account: Account?
@@ -618,19 +618,19 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e);
     }
   }
-  
-  @objc(migrate::::)
-  func migrate(_ pharse: [String], _ progressCallback: @escaping RCTResponseSenderBlock, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+
+  @objc(migrate:::)
+  func migrate(_ pharse: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       guard let currentAccount = self.account else {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
-      
+
       let accountMigrateTo = try Account(recoverPhrase: pharse, language: .english)
-      
+
       let tmpKey = "account_to_migrate"
-      
+
       // Temporary save the account to keychain for failure case
       try KeychainUtil.saveTemporaryAccount(accountMigrateTo, key: tmpKey)
       Migration.rekey(from: currentAccount, to: accountMigrateTo) { (progress, err) in
@@ -638,17 +638,17 @@ class BitmarkSDKWrapper: NSObject {
           reject(nil, nil, err)
           return
         }
-        
-        progressCallback([progress])
-        
-        if progress == 100 {
+
+        sendEvent(withName: "onMigrationProgress", body: ["progress": progress])
+
+        if progress == 1 {
           try! KeychainUtil.removeTemporaryAccount(key: tmpKey)
-          
+
           // Replace new account
           try! KeychainUtil.replaceCore(accountMigrateTo.seed.core,
                                         version: BitmarkSDKWrapper.stringFromVersion(accountMigrateTo.seed.version))
           self.account = accountMigrateTo
-          
+
           resolve(accountMigrateTo.accountNumber)
         }
       }
@@ -658,34 +658,34 @@ class BitmarkSDKWrapper: NSObject {
       reject(nil, nil, e);
     }
   }
-  
-  @objc(resumeMigration:::)
-  func resumeMigration(_ progressCallback: @escaping RCTResponseSenderBlock, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+
+  @objc(resumeMigration::)
+  func resumeMigration(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
       guard let currentAccount = self.account else {
         reject(nil, BitmarkSDKWrapper.accountNotFound, nil)
         return
       }
-      
+
       let tmpKey = "account_to_migrate"
       let accountMigrateTo = try KeychainUtil.loadTemporaryAccount(key: tmpKey)
-      
+
       Migration.rekey(from: currentAccount, to: accountMigrateTo) { (progress, err) in
         if let err = err {
           reject(nil, nil, err)
           return
         }
-        
-        progressCallback([progress])
-        
-        if progress == 100 {
+
+        sendEvent(withName: "onMigrationProgress", body: ["progress": progress])
+
+        if progress == 1 {
           try! KeychainUtil.removeTemporaryAccount(key: tmpKey)
-          
+
           // Replace new account
           try! KeychainUtil.replaceCore(accountMigrateTo.seed.core,
                                         version: BitmarkSDKWrapper.stringFromVersion(accountMigrateTo.seed.version))
           self.account = accountMigrateTo
-          
+
           resolve(accountMigrateTo.accountNumber)
         }
       }
@@ -693,6 +693,10 @@ class BitmarkSDKWrapper: NSObject {
     catch let e {
       reject(nil, nil, e);
     }
+  }
+
+  override func supportedEvents() -> [String]! {
+    return ["onMigrationProgress"]
   }
 }
 

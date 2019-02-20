@@ -38,8 +38,12 @@ const doLogout = async (jwt) => {
   return true;
 };
 
-const migrateFrom24WordsTo12Words = async (twelveWords, progressCallback) => {
-  return await BitmarkSDK.migrateFrom24WordsTo12Words(twelveWords, progressCallback);
+const migrateFrom24WordsTo12Words = async (twelveWords) => {
+  return await BitmarkSDK.migrateFrom24WordsTo12Words(twelveWords);
+};
+
+const resumeMigration24WordsTo12Words = async () => {
+  return await BitmarkSDK.resumeMigration24WordsTo12Words();
 };
 
 const doRegisterNotificationInfo = (accountNumber, timestamp, signature, platform, token, client, intercom_user_id) => {
@@ -398,7 +402,8 @@ let AccountModel = {
   doGetUserMetadata,
   doUpdateUserMetadata,
 
-  migrateFrom24WordsTo12Words
+  migrateFrom24WordsTo12Words,
+  resumeMigration24WordsTo12Words
 };
 
 export {

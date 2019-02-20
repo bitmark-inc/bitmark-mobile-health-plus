@@ -541,29 +541,32 @@ const doDeactiveApplication = async () => {
 const getAccountInfoForMigration = async () => {
   let is24WordsAccount = false;
   let bitmarkAccountNumber;
-  let phraseInfo = await AccountModel.doGeneratePhrase();
+  let accountInfo = await AccountModel.doGetCurrentAccount();
 
-  if (phraseInfo) {
-    console.log('phraseInfo.phraseWords:', phraseInfo.phraseWords);
-    is24WordsAccount = phraseInfo.phraseWords.length === 24;
-    bitmarkAccountNumber = phraseInfo.bitmarkAccountNumber;
+  if (accountInfo) {
+    is24WordsAccount = accountInfo.phraseWords.length === 24;
+    bitmarkAccountNumber = accountInfo.bitmarkAccountNumber;
   }
 
   return {is24WordsAccount, bitmarkAccountNumber};
 };
 
 const doOpenApp = async (justCreatedBitmarkAccount) => {
-  let accountInfoForMigration = await getAccountInfoForMigration();
-
-  // TODO: for testing
-  // accountInfoForMigration.is24WordsAccount = true;
-
-  if (accountInfoForMigration.is24WordsAccount) {
-    return accountInfoForMigration;
-  }
+  await LocalFileService.setShareLocalStoragePath();
 
   CacheData.userInformation = await UserModel.doTryGetCurrentUser();
-  await LocalFileService.setShareLocalStoragePath();
+
+  // Check for migration
+  if (CacheData.userInformation && CacheData.userInformation.bitmarkAccountNumber) {
+    let accountInfoForMigration = await getAccountInfoForMigration();
+
+    // TODO: for testing
+    // accountInfoForMigration.is24WordsAccount = true;
+
+    if (accountInfoForMigration.is24WordsAccount) {
+      return accountInfoForMigration;
+    }
+  }
 
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};

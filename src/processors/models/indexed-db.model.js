@@ -10,6 +10,14 @@ const TAGS_TABLE_NAME = 'UserTags';
 const NOTES_TABLE_NAME = 'Notes';
 
 export class IndexedDBModel {
+  static getDBFolderPath(bitmarkAccountNumber) {
+    return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber}/databases/`;
+  }
+
+  static getDBFilePath(bitmarkAccountNumber) {
+    return `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber}/databases/${DB_NAME}`;
+  }
+
   static async connectDB(bitmarkAccountNumber) {
     let databaseFolderPath = `${FileUtil.DocumentDirectory}/${bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber}/databases`;
     let databaseFilePath = `${databaseFolderPath}/${DB_NAME}`;
@@ -42,6 +50,11 @@ export class IndexedDBModel {
         });
       });
     });
+  }
+
+  static closeDatabase() {
+    console.log('this.db:', this.db);
+    this.db && this.db.close();
   }
 
   // INDEXED DATA

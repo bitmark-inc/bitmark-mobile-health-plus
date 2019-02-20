@@ -44,6 +44,7 @@ export class WhatNextComponent extends Component {
 
             {/*BOTTOM AREA*/}
             <View style={[styles.bottomArea, styles.paddingContent]}>
+              <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-4.png')} />
               <TouchableOpacity style={[styles.buttonNext]} onPress={() => Actions.upgrade({twelveWords: this.twelveWords})}>
                 <Text style={[styles.buttonText, { color: '#FF003C' }]}>BEGIN UPGRADE</Text>
               </TouchableOpacity>
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     height: 90,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingBottom: 16,
   },
   title: {
@@ -131,5 +132,11 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
     letterSpacing: 0.75,
+  },
+  sliderIcon: {
+    width: 56,
+    height: 8,
+    resizeMode: 'contain',
+    marginBottom: 4,
   },
 });

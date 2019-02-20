@@ -10,12 +10,12 @@
 		032DC937E39E6518BA0346D059AE5C1D /* apitypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 59EC49028AA5E3FAC81138A6E39DF621 /* apitypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0541A382B411B2C252971B5D56388A2D /* tiff.h in Headers */ = {isa = PBXBuildFile; fileRef = 478FF90BA76D139DC6F48CC01D302FF5 /* tiff.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0579098AE198C0372E80A3F6DF87323E /* heap.h in Headers */ = {isa = PBXBuildFile; fileRef = A687EC2DAFC7A644EEDCD656581427BB /* heap.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		0718C492C11483933100B73295817340 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
 		07F629AF051A2A825B1A8F8780E5F482 /* G8RecognitionOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 055A79DFD8E867834DA63234A66CFC30 /* G8RecognitionOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A6CFBDA338A2AAAC576E1A678EFB99C /* Pods-BitmarkHealthPlus beta-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 02C58E13E4560EBE842AF733D8721B5E /* Pods-BitmarkHealthPlus beta-dummy.m */; };
 		0AB1118500DAC7C1EFF4635885F8AB17 /* stringcode.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D84810EC857CF7F16C737E2FE4EA59C /* stringcode.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0BFED81A104851996993F6D0DC23928D /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A66B78F6E01C7116C1DF122382F6D2 /* Common.swift */; };
 		0C72D3AB8281EE494160082253BAFCED /* UIImage+G8Filters.h in Headers */ = {isa = PBXBuildFile; fileRef = 1005C81F6B6D149D20EF3FD6EA372ED1 /* UIImage+G8Filters.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0DD73D6F1B493223E107F91507DC94F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
 		0E1BEA7BD87577C8E7E7CD91FA26E8EC /* API+Issuing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7496E0BB6EBC3151F56B86C0402A3A50 /* API+Issuing.swift */; };
 		0E7F00AA07201CDC356F288E2275AA2D /* Pods-BitmarkHealthPlus-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BAC7F48065301B08DD1ADA066D380BA /* Pods-BitmarkHealthPlus-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1009EAB81A18F3EC0C5187E55F203A3F /* Pods-BitmarkHealthPlus dev-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D2BD217AA2C12818D9C42196F11CFE8 /* Pods-BitmarkHealthPlus dev-dummy.m */; };
@@ -44,8 +44,6 @@
 		344A589CE00F89E3DEA394E1ED0971F9 /* gplot.h in Headers */ = {isa = PBXBuildFile; fileRef = 70C687403DB8E1F91AB2BEEE8B7C0E31 /* gplot.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		3603E21389EC0C1E3FD26CF342E086C9 /* ctweetnacl.c in Sources */ = {isa = PBXBuildFile; fileRef = 83B9AE2ED1BBF7B07E82A0AD5168B89E /* ctweetnacl.c */; };
 		3C53DF8EEF63F918ADFE6DC421107927 /* osdetect.h in Headers */ = {isa = PBXBuildFile; fileRef = E994CB3D8D6EF04BB5BAB7D79A2514D3 /* osdetect.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		3C5C52B9A7AD7CE796138F04F18A9587 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
-		3C67D7C16B845A22E64DE866DF23E45F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
 		3D8314D14B6651514D85507576B825FE /* allheaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FE02CBE565EF2DD612C697AD8E89E42 /* allheaders.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		41CA6DDA3D3AAF79D30F5B24BBFD8AA3 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = A763E016FEA36D9D5F77648483C7C29C /* API.swift */; };
 		42D18C0BFB445BCC2B50BF81019AA0CC /* BitmarkSDK-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C9A6475DFA87C840BE4554B3702E0052 /* BitmarkSDK-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -59,6 +57,7 @@
 		4EE962BF621EEC74F9A54F268DE39D17 /* API+Transfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3809431093E2E7F1D2D724FB2316F6E /* API+Transfer.swift */; };
 		4FB31E5022834F62E39576FFFE85A620 /* serialis.h in Headers */ = {isa = PBXBuildFile; fileRef = F63EC1FD664C222A4A1B6461E0F6C61A /* serialis.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		521FCC4C569847C9F62ABE2D001A1B91 /* ModelEquatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F03129EE2324BE452C5D798DE6D624 /* ModelEquatable.swift */; };
+		522D9E21FFB585E33332038B873836F6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
 		553EDA26811E269F86D605DFA6059421 /* iCloud.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A3CE6C56B38BDDFAF50752EBC4C2FB9 /* iCloud.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5646828C04BC20927F3F538EEF2F9A3E /* host.h in Headers */ = {isa = PBXBuildFile; fileRef = E51BDA4A9BDCFEDFCB1E2EA8161CCE81 /* host.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		57639E8BEDBC25C3AA328899CA7D6CFF /* Account+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A310166E9390F3217035401FC581592 /* Account+Keychain.swift */; };
@@ -80,11 +79,13 @@
 		6C2D8667BDAE404AE8AFEE701CAE0252 /* G8TesseractParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 6056E6EEC1C3A12994FC2A1EDC61D1C8 /* G8TesseractParameters.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6DA20776E3AA13A146C0216B7D393DB9 /* bmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 757268D549DC991AEC39B637EFD51351 /* bmp.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6F530896C0BD1087607AF45617904627 /* AssetQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D4FB1AA1056261BD162EBA5A5A5C0E /* AssetQuery.swift */; };
+		6F9D7B07684B47630A4D387F47A4C7CB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 486D27DD347DEB6C09EC8A5C9E8621F2 /* UIKit.framework */; };
 		719E03CA263165616350799AA19346D2 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4B6B62A0E3FFA513CAAF2A1AE14BC0 /* Keychain.swift */; };
 		72B731BCF739F9F1F3661ACFEC25FEBD /* jconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D7760444BA310C6866DD7E2CBA5BC83 /* jconfig.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		73D4997157FF4A21D56AAE9564474A24 /* TesseractOCR.h in Headers */ = {isa = PBXBuildFile; fileRef = 67D6EF5148B68811D8C410EAC18E6777 /* TesseractOCR.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78C8522FE6CC27A3A49F91D9859DD3AE /* stack.h in Headers */ = {isa = PBXBuildFile; fileRef = B2C39A1EF385C23D0ECF5B167AE47C4C /* stack.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		798770212201518508E072BA0C350D95 /* OfferParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5200A155E56BD844C448BEB6E39524A /* OfferParams.swift */; };
+		7C4DC26D57FCF356A08075F2A58F9071 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
 		7DCD290343D1476A692FAF734373F513 /* memry.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C0D38F579B906134658101941636FD /* memry.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7E6649810EFE7370A5FE6015BC57EDDE /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983AF2D9755C21D6C3E59CC2AEAD7DB4 /* Base58.swift */; };
 		7F58A72A75651DEDAD1DFB96BB54F4EC /* imageio.h in Headers */ = {isa = PBXBuildFile; fileRef = 67BDD165771FE298062C0434D18C5C33 /* imageio.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -98,7 +99,6 @@
 		8738CC2A3B3ACCF1F698DE95E759A63E /* Ed25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A5F345CEDAF107E3E5DFDDEF27C8A7 /* Ed25519.swift */; };
 		87522554ABBBED87C83FFDF833BBE052 /* errcode.h in Headers */ = {isa = PBXBuildFile; fileRef = F5FA14028E70C94DE9B48AD746F0F332 /* errcode.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		878480151E98080C0B28352AB88A6643 /* list.h in Headers */ = {isa = PBXBuildFile; fileRef = 89EEEEEEC78BF4EF239E443C8869D00A /* list.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		8811CEED0825D90B2076E62170F09705 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2933155A795142C8B59A12B06259258B /* UIKit.framework */; };
 		886F3AF2D7248B80D04899BECCFC8263 /* bilateral.h in Headers */ = {isa = PBXBuildFile; fileRef = 69E6B4C7A50F349DA812C429584269BE /* bilateral.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8893CF347E3661014CB45F7B7D65B385 /* ctweetnacl.h in Headers */ = {isa = PBXBuildFile; fileRef = CF86D16165BEAE516879026B0AB65B35 /* ctweetnacl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A051E9706DCB2F912E161708803ADF9 /* TweetNacl-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 11355A83F24D9C86604948CAE7917382 /* TweetNacl-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -112,26 +112,23 @@
 		962FC3CE9B52A57F22CBF7C6D59B7957 /* helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DB7CD49BD0016AAD49CA6647992D00A /* helpers.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		963E6444D9F5F500D4DC3614775075F4 /* thresholder.h in Headers */ = {isa = PBXBuildFile; fileRef = B14F2C03C46AB84EB9A9904626CC2AA6 /* thresholder.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		973B5BDD48D42A656C9C24234B732808 /* TweetNacl.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC92EEDC9975F628D7AB918F1084B1 /* TweetNacl.swift */; };
-		976D6D053FF14D1E40C1763AAFA9E644 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
 		9869D7AB50CA9DB2DEE2D2BAD2B9DF54 /* Bitmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71E802B5ED9BD118262AD1C9EF7418D /* Bitmark.swift */; };
-		990B0F7F72B3775F3B773D68A563CA11 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
-		99A79C4E914D490A410DF566591270D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2933155A795142C8B59A12B06259258B /* UIKit.framework */; };
 		9DCF07D9D1DA9E15D2FFA75D29D7B23B /* bbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = FD6A6AE5D2FF69391E8961F48A17749B /* bbuffer.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		9F1AB061BF64DCC0E453414F270A705F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
 		A1C2C9509F5AC7404731F529385A099E /* BinaryPacking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA97F57D3D0F09D0ACFF83663513F08 /* BinaryPacking.swift */; };
 		A2BFC978A2A5541FADCF800F668A43B5 /* unichar.h in Headers */ = {isa = PBXBuildFile; fileRef = BC8EA59A7BE995219E63DB342B42DE55 /* unichar.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		A3593A0C5C3B5DB4AD144FC70C85F8FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 486D27DD347DEB6C09EC8A5C9E8621F2 /* UIKit.framework */; };
 		A4B3C7C4B6C275D781918476D099C5E4 /* API+Bitmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D655B6A21D4F850A0C6851F84F8AA /* API+Bitmark.swift */; };
+		A515469B2BDD36C2B128209E87F54BEF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
 		A583F60357E475E87936824073D37F47 /* BitmarkSDK-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AE360D0E653DAC2DD04041726793C6 /* BitmarkSDK-dummy.m */; };
 		A78EF49399F829A660BBBE24403F78A0 /* bmfdata.h in Headers */ = {isa = PBXBuildFile; fileRef = 65A087113BA1B9D2FEDB8011236FB6E8 /* bmfdata.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		ABA27BD6C85801F6AD88640F06655ED0 /* IssuanceParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC792D7D6D6B09D06074BEC34E927CC /* IssuanceParams.swift */; };
 		AD3279ECA9CFC55C7926A7F1753B0D83 /* tesscallback.h in Headers */ = {isa = PBXBuildFile; fileRef = FCA0B0F5CF01C78AF25DDA272C379598 /* tesscallback.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		AEE187F002EB4760839752369307F4DB /* ocrclass.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6D11F7AD651C92ABFB548830B50B73 /* ocrclass.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		AF043ED501EEEC06E4E4DA7DC42966A4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
 		B087D3B2700A81537BCB8C2A82773B6C /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = 147B3483B9C715F6F3F294A79242CA10 /* array.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		B19883A537A877CA7D0668835D1D0594 /* Pods-BitmarkHealthPlusTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F9DDCA5720E8AE8382FF3DD8AA328E0F /* Pods-BitmarkHealthPlusTests-dummy.m */; };
 		B6C83404F214A6FCA23ECFAA0A5A290D /* SHA3.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6941A58D8752F25278D20F428FCA0EF /* SHA3.swift */; };
+		B78DEF0340C75794963FAB59D84760E7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
 		B798E25B8F3BA75FDD4CBD055742C9E3 /* Parameterizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F37933639DE6FC2C1604FC982BB54DD /* Parameterizable.swift */; };
-		B93292821A72904DE5143B61DAC0BE95 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
 		BC03C480BB8207928F62D02825F0202E /* Pods-BitmarkHealthPlus dev-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D895A79477FEEF61FFBAD1330C6E031 /* Pods-BitmarkHealthPlus dev-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BC6AE0BDECE80A8E2D35472CEF3283DC /* BitmarkSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C22BD825190C2BA8C44BB5C0F507D6D /* BitmarkSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BCED8FBFF5E6597CBD0A323DCA988635 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 75C9E422A06D226F9B60B5D3E87FC5D0 /* main.c */; };
@@ -144,6 +141,7 @@
 		C4BBDBC6B87BE315E20D5D5FCFFF0BF3 /* G8Tesseract.h in Headers */ = {isa = PBXBuildFile; fileRef = FDFE41B3DD4250F92F5233C27312A038 /* G8Tesseract.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C6243487550BBFC4A6205C3C935A99F0 /* iCloudDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A108D05EDF034DC806E547186F7663D /* iCloudDocument.m */; };
 		C636409726BCE5CAB5C63B920F16ACA8 /* API+Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE4A2E983F952115D24C78DD1FDB /* API+Asset.swift */; };
+		C73C2176783A54D699EF5247C169A136 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
 		C8DB5B242EA4342805CB961CD23994F9 /* Pods-BitmarkHealthPlusTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = CF82E0980B0761BC734F3B5536397B40 /* Pods-BitmarkHealthPlusTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CAB91ABE8AB45EACCD9A7E0C6312BE9C /* bmf.h in Headers */ = {isa = PBXBuildFile; fileRef = B6A98DC77F613461380FAAA6AFF9CDC3 /* bmf.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CB7F9E87B4CE2EE3ACCB258831ED7159 /* resultiterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DB4F42921FF78B967DB6EB3EA6AC1CE /* resultiterator.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -161,12 +159,14 @@
 		DEFF290A2F4331B94997C6445BE8FF16 /* png.h in Headers */ = {isa = PBXBuildFile; fileRef = 252B650C73AB1EA5106AB4E61F834920 /* png.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		DF37D1DC9BFDC5E8B2A774B3D702739B /* watershed.h in Headers */ = {isa = PBXBuildFile; fileRef = 00D9001079FA83C3E8BB43D0DF718217 /* watershed.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		E1E79E2A7FD3F9C933376D576288EEFD /* pngconf.h in Headers */ = {isa = PBXBuildFile; fileRef = B681C903DB20F56DF4885C5187AAED41 /* pngconf.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		E65ADB4E2DD68CEB36CA6AAD7A370404 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
+		E90AAC22E0AC6EC4C42649C21FEDE303 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
 		E95B97C75EC7106EA98DFF182ABD1F2A /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BFDC99896927617770133BBC4DF67A /* Asset.swift */; };
 		ED7C02B8F71C8B11C3608190F4BC83B5 /* BitmarkQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143FE9C464CD72A66C9F7F1D0D9B91A5 /* BitmarkQuery.swift */; };
 		EF8504B5B15E6F140376C20D141328BE /* G8TesseractParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A7CAC6ACDF519531C4F35BFFE4E36C /* G8TesseractParameters.m */; };
 		F3584CFCB34B8D4E713AA64C8EBCA75F /* renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A0A04DE79C3001948083A965C5247DC /* renderer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		F45F60B810AFB5AD5A5FA31C7960AAC3 /* TweetNacl-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A92405DEE281034EAD6246214BCCA0E /* TweetNacl-dummy.m */; };
-		F570AAE984A72F12CA73691F3DE6A5B5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */; };
+		F4787CFD795016ADF3D95838663AF4D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */; };
 		F6090EF05A7AEFC1A27E5E8D6AEF67DC /* iCloudDocumentSync-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BC867B3C40668D347D18B6F5C97202DB /* iCloudDocumentSync-dummy.m */; };
 		F8EA934CBEE92A977A57A4ED5A1C2298 /* Pods-BitmarkHealthPlus-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B2E3428994486BC58C26A0EB15210CF6 /* Pods-BitmarkHealthPlus-dummy.m */; };
 		F8F6E8A68ABBDF3839EE6748B7BC02BB /* publictypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0EADEE4E707ACFA1137A74DC37843A55 /* publictypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -340,7 +340,6 @@
 		24D8F56E1798D7308FB34E2209DE3BF2 /* sha3.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = sha3.h; path = BitmarkSDK/tiny_sha3/sha3.h; sourceTree = "<group>"; };
 		24F66903DC16D12B535CF883F8F5DEF8 /* RecoverPhrase+Dic.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "RecoverPhrase+Dic.swift"; path = "BitmarkSDK/Utils/RecoverPhrase+Dic.swift"; sourceTree = "<group>"; };
 		252B650C73AB1EA5106AB4E61F834920 /* png.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = png.h; path = TesseractOCR/include/png.h; sourceTree = "<group>"; };
-		2933155A795142C8B59A12B06259258B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		2A108D05EDF034DC806E547186F7663D /* iCloudDocument.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = iCloudDocument.m; path = iCloud/iCloudDocument.m; sourceTree = "<group>"; };
 		2BC50361415671ED3C0EFF1A26EB773B /* TweetNacl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TweetNacl.h; path = Sources/TweetNacl/TweetNacl.h; sourceTree = "<group>"; };
 		2D6B58CEF4D366B56AFDF58EF188E454 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -366,6 +365,7 @@
 		472CE9CCD756FD34AFF4A593D7FFEE5D /* arrayaccess.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = arrayaccess.h; path = TesseractOCR/include/leptonica/arrayaccess.h; sourceTree = "<group>"; };
 		478FF90BA76D139DC6F48CC01D302FF5 /* tiff.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tiff.h; path = TesseractOCR/include/tiff.h; sourceTree = "<group>"; };
 		483A351B15BAA1DA92FFBA5142A2AB02 /* strngs.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = strngs.h; path = TesseractOCR/include/tesseract/strngs.h; sourceTree = "<group>"; };
+		486D27DD347DEB6C09EC8A5C9E8621F2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		4882536685072294EFAA43836DFBD68E /* G8RecognizedBlock.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = G8RecognizedBlock.m; path = TesseractOCR/G8RecognizedBlock.m; sourceTree = "<group>"; };
 		4B7579D6BAFC3B528426C04909A11A0A /* Pods-BitmarkHealthPlus dev.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-BitmarkHealthPlus dev.modulemap"; sourceTree = "<group>"; };
 		4C9A39E0802CF43998E161D827988D6C /* Pods_BitmarkHealthPlus_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_BitmarkHealthPlus_beta.framework; path = "Pods-BitmarkHealthPlus beta.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -402,7 +402,6 @@
 		69E6B4C7A50F349DA812C429584269BE /* bilateral.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = bilateral.h; path = TesseractOCR/include/leptonica/bilateral.h; sourceTree = "<group>"; };
 		6A310166E9390F3217035401FC581592 /* Account+Keychain.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Account+Keychain.swift"; path = "BitmarkSDK/Account+Keychain.swift"; sourceTree = "<group>"; };
 		6C22BD825190C2BA8C44BB5C0F507D6D /* BitmarkSDK.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = BitmarkSDK.h; path = BitmarkSDK/BitmarkSDK.h; sourceTree = "<group>"; };
-		6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		70091413ED29CA00600593FD0B023514 /* tiffio.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tiffio.h; path = TesseractOCR/include/tiffio.h; sourceTree = "<group>"; };
 		70C687403DB8E1F91AB2BEEE8B7C0E31 /* gplot.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = gplot.h; path = TesseractOCR/include/leptonica/gplot.h; sourceTree = "<group>"; };
 		712011294FDF56B95F2DA8C660ECEBF7 /* TesseractOCRiOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TesseractOCRiOS-dummy.m"; sourceTree = "<group>"; };
@@ -500,6 +499,7 @@
 		CF86D16165BEAE516879026B0AB65B35 /* ctweetnacl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ctweetnacl.h; path = Sources/CTweetNacl/include/ctweetnacl.h; sourceTree = "<group>"; };
 		D1433D404DA338FAF4DEF23174A3B19D /* libpng.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libpng.a; path = TesseractOCR/lib/libpng.a; sourceTree = "<group>"; };
 		D42D90EB16FE5F3167031DBE71978059 /* Pods_BitmarkHealthPlusTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_BitmarkHealthPlusTests.framework; path = "Pods-BitmarkHealthPlusTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		D5200A155E56BD844C448BEB6E39524A /* OfferParams.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OfferParams.swift; path = BitmarkSDK/Bitmark/OfferParams.swift; sourceTree = "<group>"; };
 		D53775A24990CADE73F872FDCAF0ED78 /* pix.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = pix.h; path = TesseractOCR/include/leptonica/pix.h; sourceTree = "<group>"; };
 		D5AC20C9E1CE977E1DD25025FDECD38D /* morph.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = morph.h; path = TesseractOCR/include/leptonica/morph.h; sourceTree = "<group>"; };
@@ -547,7 +547,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DD73D6F1B493223E107F91507DC94F3 /* Foundation.framework in Frameworks */,
+				522D9E21FFB585E33332038B873836F6 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,7 +555,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B93292821A72904DE5143B61DAC0BE95 /* Foundation.framework in Frameworks */,
+				C73C2176783A54D699EF5247C169A136 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,8 +563,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F570AAE984A72F12CA73691F3DE6A5B5 /* Foundation.framework in Frameworks */,
-				99A79C4E914D490A410DF566591270D6 /* UIKit.framework in Frameworks */,
+				F4787CFD795016ADF3D95838663AF4D5 /* Foundation.framework in Frameworks */,
+				6F9D7B07684B47630A4D387F47A4C7CB /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,7 +572,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF043ED501EEEC06E4E4DA7DC42966A4 /* Foundation.framework in Frameworks */,
+				E65ADB4E2DD68CEB36CA6AAD7A370404 /* Foundation.framework in Frameworks */,
 				2BF952503FC2284FA91EB22ED72C0EAE /* KeychainAccess.framework in Frameworks */,
 				184FCFCA0F1E2860C645AB3581FAD33F /* TweetNacl.framework in Frameworks */,
 			);
@@ -582,7 +582,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C67D7C16B845A22E64DE866DF23E45F /* Foundation.framework in Frameworks */,
+				7C4DC26D57FCF356A08075F2A58F9071 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,7 +590,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				990B0F7F72B3775F3B773D68A563CA11 /* Foundation.framework in Frameworks */,
+				B78DEF0340C75794963FAB59D84760E7 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,8 +598,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				976D6D053FF14D1E40C1763AAFA9E644 /* Foundation.framework in Frameworks */,
-				8811CEED0825D90B2076E62170F09705 /* UIKit.framework in Frameworks */,
+				0718C492C11483933100B73295817340 /* Foundation.framework in Frameworks */,
+				A3593A0C5C3B5DB4AD144FC70C85F8FF /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,7 +607,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F1AB061BF64DCC0E453414F270A705F /* Foundation.framework in Frameworks */,
+				E90AAC22E0AC6EC4C42649C21FEDE303 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,7 +615,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C5C52B9A7AD7CE796138F04F18A9587 /* Foundation.framework in Frameworks */,
+				A515469B2BDD36C2B128209E87F54BEF /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -637,15 +637,6 @@
 				4FF65FA6E244E4F9645472AFC9BAAF07 /* Intercom.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		1C18F8F69E00D5789D8BCDC6CD4A4D32 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				6E8F5356A3EC458C2D907D8EADCDA57B /* Foundation.framework */,
-				2933155A795142C8B59A12B06259258B /* UIKit.framework */,
-			);
-			name = iOS;
 			sourceTree = "<group>";
 		};
 		2733A4517903F4C98BC552EF13C21B47 /* Pods-BitmarkHealthPlus dev */ = {
@@ -971,6 +962,15 @@
 			path = iCloudDocumentSync;
 			sourceTree = "<group>";
 		};
+		BC154A593B205F109B138C190B45C195 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				D49C03266E44F9F25A4F5165241F212C /* Foundation.framework */,
+				486D27DD347DEB6C09EC8A5C9E8621F2 /* UIKit.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		C00F7ABBC3AD8F9776DCEB99DDE92AF0 /* KeychainAccess */ = {
 			isa = PBXGroup;
 			children = (
@@ -1055,7 +1055,7 @@
 			children = (
 				E33529F99643C77FA8FBC20EA4B8B24D /* KeychainAccess.framework */,
 				BA344FD4A15B96C20E19F911FECE2C05 /* TweetNacl.framework */,
-				1C18F8F69E00D5789D8BCDC6CD4A4D32 /* iOS */,
+				BC154A593B205F109B138C190B45C195 /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1742,9 +1742,9 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		134100AE44314571419D1E9960C8E2E0 /* Debug */ = {
+		56BB42113368AD38F91A5850017533D7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A9247BA09CEA97D8D26D3D149C01BEA /* Pods-BitmarkHealthPlus.debug.xcconfig */;
+			baseConfigurationReference = 10C35C0C69DE5F80D738BE376F5183C4 /* Pods-BitmarkHealthPlus beta.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1757,12 +1757,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus/Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus beta/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus.modulemap";
+				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -1770,6 +1770,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1777,7 +1779,7 @@
 			};
 			name = Debug;
 		};
-		36530DD5932F9CE937F2BF5156969C5C /* Release */ = {
+		5D978F3C970D54C854C5AE51FD7669B0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5D1F157B1EAD51654C0BF3001F481A5E /* Pods-BitmarkHealthPlus dev.release.xcconfig */;
 			buildSettings = {
@@ -1805,6 +1807,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1813,7 +1817,7 @@
 			};
 			name = Release;
 		};
-		381B7AE486DD95EEE54BE60DA1409951 /* Release */ = {
+		616551FD2211200EEAB8ECECA6A991D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C52F4D13B1B9E0F87C08071B3AB67B8E /* TweetNacl.xcconfig */;
 			buildSettings = {
@@ -1837,6 +1841,8 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1844,68 +1850,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
-		};
-		477139DD4376B3C3223A5476438E4846 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5015B9B953EE968CD1D1DEF4EB315584 /* KeychainAccess.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/KeychainAccess/KeychainAccess-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/KeychainAccess/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/KeychainAccess/KeychainAccess.modulemap";
-				PRODUCT_MODULE_NAME = KeychainAccess;
-				PRODUCT_NAME = KeychainAccess;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		4953C39F325D6D5DE53C4008BD1EECE7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C52F4D13B1B9E0F87C08071B3AB67B8E /* TweetNacl.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/TweetNacl/TweetNacl-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/TweetNacl/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/TweetNacl/TweetNacl.modulemap";
-				PRODUCT_MODULE_NAME = TweetNacl;
-				PRODUCT_NAME = TweetNacl;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
 		};
 		629367F73B1AD6C478E0FA354A6FA82A /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1978,339 +1922,7 @@
 			};
 			name = Debug;
 		};
-		6A629D821C72416EA7CEC37ECD44A452 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9FEB8DD4B21B116BCC092DF0F5C08BAF /* Pods-BitmarkHealthPlus dev.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus dev/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		79454EB6E8909BB42AAC235D208594E0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 991AB366111FB0F0B049C00CECB5F28A /* Pods-BitmarkHealthPlus beta.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus beta/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		8DFC9796FA9E6BCF680E1E0B1780DD0D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_RELEASE=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.2;
-				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = Release;
-		};
-		90D40A6A32DCFC44181BDAED5D441EE2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 59E40C531F7F3A7895B6C6B40980E6A3 /* Pods-BitmarkHealthPlus.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		9163480C36BCDCC2BB7800EE80B7A663 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 10C35C0C69DE5F80D738BE376F5183C4 /* Pods-BitmarkHealthPlus beta.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus beta/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		B4AB6358493B9DF381A7DAE45350D223 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 67C66B508A357E1043AD0B9FF4C9C26E /* TesseractOCRiOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/TesseractOCRiOS/TesseractOCRiOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/TesseractOCRiOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/TesseractOCRiOS/TesseractOCRiOS.modulemap";
-				PRODUCT_MODULE_NAME = TesseractOCR;
-				PRODUCT_NAME = TesseractOCR;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		C4C807A09612EFF802DF4976499B6350 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5015B9B953EE968CD1D1DEF4EB315584 /* KeychainAccess.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/KeychainAccess/KeychainAccess-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/KeychainAccess/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/KeychainAccess/KeychainAccess.modulemap";
-				PRODUCT_MODULE_NAME = KeychainAccess;
-				PRODUCT_NAME = KeychainAccess;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		CCCF3A6F4983C4A1B42C76DFD211441E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 21B9F4F74890B7EA1320077AB2BDCD83 /* BitmarkSDK.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/BitmarkSDK/BitmarkSDK-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/BitmarkSDK/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/BitmarkSDK/BitmarkSDK.modulemap";
-				PRODUCT_MODULE_NAME = BitmarkSDK;
-				PRODUCT_NAME = BitmarkSDK;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		CE7EDDBEF276B4C45A36E1167A2814CA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 67C66B508A357E1043AD0B9FF4C9C26E /* TesseractOCRiOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/TesseractOCRiOS/TesseractOCRiOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/TesseractOCRiOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/TesseractOCRiOS/TesseractOCRiOS.modulemap";
-				PRODUCT_MODULE_NAME = TesseractOCR;
-				PRODUCT_NAME = TesseractOCR;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		E19471FE7E209D0818DAFB22D649A6E9 /* Debug */ = {
+		8C3D32AC054F4DBEE82EB2FD6A303D73 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2370,13 +1982,349 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Debug;
 		};
-		E6E761BCD772143E386E21A6A89FE956 /* Debug */ = {
+		907C032B29693646EBC90C8B11841372 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FEB8DD4B21B116BCC092DF0F5C08BAF /* Pods-BitmarkHealthPlus dev.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus dev/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus dev/Pods-BitmarkHealthPlus dev.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		9820ADC396805A77A115CE24E080588E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5015B9B953EE968CD1D1DEF4EB315584 /* KeychainAccess.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/KeychainAccess/KeychainAccess-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/KeychainAccess/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/KeychainAccess/KeychainAccess.modulemap";
+				PRODUCT_MODULE_NAME = KeychainAccess;
+				PRODUCT_NAME = KeychainAccess;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		A1E2EE314E2B4DFA859EAAEB6C9D08AD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 59E40C531F7F3A7895B6C6B40980E6A3 /* Pods-BitmarkHealthPlus.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		A5FA6D28D181551239E5F07C9A34F115 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5015B9B953EE968CD1D1DEF4EB315584 /* KeychainAccess.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/KeychainAccess/KeychainAccess-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/KeychainAccess/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/KeychainAccess/KeychainAccess.modulemap";
+				PRODUCT_MODULE_NAME = KeychainAccess;
+				PRODUCT_NAME = KeychainAccess;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		AE1166843589F30E1C3F215321DD86F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 991AB366111FB0F0B049C00CECB5F28A /* Pods-BitmarkHealthPlus beta.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus beta/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus beta/Pods-BitmarkHealthPlus beta.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		B4AB6358493B9DF381A7DAE45350D223 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 67C66B508A357E1043AD0B9FF4C9C26E /* TesseractOCRiOS.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/TesseractOCRiOS/TesseractOCRiOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/TesseractOCRiOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/TesseractOCRiOS/TesseractOCRiOS.modulemap";
+				PRODUCT_MODULE_NAME = TesseractOCR;
+				PRODUCT_NAME = TesseractOCR;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		B751CA5B597BFC35A6C0287C65F9E2E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		B98EADAEB6E84BD982DDA3BA316603C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8A9247BA09CEA97D8D26D3D149C01BEA /* Pods-BitmarkHealthPlus.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-BitmarkHealthPlus/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-BitmarkHealthPlus/Pods-BitmarkHealthPlus.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		CE7EDDBEF276B4C45A36E1167A2814CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 67C66B508A357E1043AD0B9FF4C9C26E /* TesseractOCRiOS.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/TesseractOCRiOS/TesseractOCRiOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/TesseractOCRiOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/TesseractOCRiOS/TesseractOCRiOS.modulemap";
+				PRODUCT_MODULE_NAME = TesseractOCR;
+				PRODUCT_NAME = TesseractOCR;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E1082DA8527D395F9B252494EA04CACC /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 21B9F4F74890B7EA1320077AB2BDCD83 /* BitmarkSDK.xcconfig */;
 			buildSettings = {
@@ -2401,12 +2349,15 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
 		EB1C73E605F8DAA440F14A14E134A46A /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2471,6 +2422,71 @@
 			};
 			name = Debug;
 		};
+		EE8C02E0CABCBA8549B43F8707916E73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 21B9F4F74890B7EA1320077AB2BDCD83 /* BitmarkSDK.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/BitmarkSDK/BitmarkSDK-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/BitmarkSDK/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/BitmarkSDK/BitmarkSDK.modulemap";
+				PRODUCT_MODULE_NAME = BitmarkSDK;
+				PRODUCT_NAME = BitmarkSDK;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		F9529A66482F57F731A54BA7C00D0D67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C52F4D13B1B9E0F87C08071B3AB67B8E /* TweetNacl.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/TweetNacl/TweetNacl-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/TweetNacl/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/TweetNacl/TweetNacl.modulemap";
+				PRODUCT_MODULE_NAME = TweetNacl;
+				PRODUCT_NAME = TweetNacl;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2486,8 +2502,8 @@
 		29C540D24393569BCE79FC93177673CA /* Build configuration list for PBXNativeTarget "TweetNacl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4953C39F325D6D5DE53C4008BD1EECE7 /* Debug */,
-				381B7AE486DD95EEE54BE60DA1409951 /* Release */,
+				F9529A66482F57F731A54BA7C00D0D67 /* Debug */,
+				616551FD2211200EEAB8ECECA6A991D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2495,8 +2511,8 @@
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E19471FE7E209D0818DAFB22D649A6E9 /* Debug */,
-				8DFC9796FA9E6BCF680E1E0B1780DD0D /* Release */,
+				8C3D32AC054F4DBEE82EB2FD6A303D73 /* Debug */,
+				B751CA5B597BFC35A6C0287C65F9E2E1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2504,8 +2520,8 @@
 		68A2230F0F36673E3A7311CE2908C9C2 /* Build configuration list for PBXNativeTarget "Pods-BitmarkHealthPlus dev" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6A629D821C72416EA7CEC37ECD44A452 /* Debug */,
-				36530DD5932F9CE937F2BF5156969C5C /* Release */,
+				907C032B29693646EBC90C8B11841372 /* Debug */,
+				5D978F3C970D54C854C5AE51FD7669B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2513,8 +2529,8 @@
 		6BB5FBD907A63F80CC465E3A3B2C0DCC /* Build configuration list for PBXNativeTarget "Pods-BitmarkHealthPlus beta" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9163480C36BCDCC2BB7800EE80B7A663 /* Debug */,
-				79454EB6E8909BB42AAC235D208594E0 /* Release */,
+				56BB42113368AD38F91A5850017533D7 /* Debug */,
+				AE1166843589F30E1C3F215321DD86F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2531,8 +2547,8 @@
 		B0244C4CC005AD9281E105F8742BF291 /* Build configuration list for PBXNativeTarget "Pods-BitmarkHealthPlus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				134100AE44314571419D1E9960C8E2E0 /* Debug */,
-				90D40A6A32DCFC44181BDAED5D441EE2 /* Release */,
+				B98EADAEB6E84BD982DDA3BA316603C0 /* Debug */,
+				A1E2EE314E2B4DFA859EAAEB6C9D08AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2549,8 +2565,8 @@
 		D15244D6D810AEF716284B29D4A3DA6D /* Build configuration list for PBXNativeTarget "KeychainAccess" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				477139DD4376B3C3223A5476438E4846 /* Debug */,
-				C4C807A09612EFF802DF4976499B6350 /* Release */,
+				9820ADC396805A77A115CE24E080588E /* Debug */,
+				A5FA6D28D181551239E5F07C9A34F115 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2558,8 +2574,8 @@
 		F75211CC400B7BB489753FCAB09817E5 /* Build configuration list for PBXNativeTarget "BitmarkSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E6E761BCD772143E386E21A6A89FE956 /* Debug */,
-				CCCF3A6F4983C4A1B42C76DFD211441E /* Release */,
+				EE8C02E0CABCBA8549B43F8707916E73 /* Debug */,
+				E1082DA8527D395F9B252494EA04CACC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

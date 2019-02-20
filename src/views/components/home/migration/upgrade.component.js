@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, SafeAreaView
+  View, TouchableOpacity, Text, SafeAreaView,
+  Image,
+  NativeModules,
+  NativeEventEmitter
 } from 'react-native';
 
 import { convertWidth } from 'src/utils';
@@ -11,13 +14,16 @@ import PropTypes from 'prop-types';
 import LottieView from 'lottie-react-native';
 import { IndexDBService, LocalFileService } from "src/processors/services";
 import { AccountModel } from "src/processors/models";
+const BitmarkSDKEvents = new NativeEventEmitter(NativeModules.BitmarkSDKWrapper);
 
 const UPGRADE_STATE = {
   UPGRADING: 0,
   UPGRADE_COMPLETED: 1,
+  UPGRADE_ERROR: 2,
 };
 
 const COMPLETED_PROGRESS_BAR_VALUE = 0.41;
+const INIT_PROGRESS_BAR_VALUE = 0.01;
 
 export class UpgradeComponent extends Component {
   static propTypes = {
@@ -31,33 +37,88 @@ export class UpgradeComponent extends Component {
 
     this.state = {
       upgradeState: UPGRADE_STATE.UPGRADING,
-      progress: 0.01
+      progress: INIT_PROGRESS_BAR_VALUE
     }
   }
 
   async componentDidMount() {
-    await this.migrateTo12Words(this.twelveWords);
+    BitmarkSDKEvents.addListener(
+      "onMigrationProgress",
+      progress => this.updateProgressBar(progress)
+    );
+    await this.migrateTo12Words();
+  }
+
+  componentWillUnmount() {
+    // BitmarkSDKEvents.removeCurrentListener();
   }
 
   async migrateTo12Words() {
-    let twentyFourWordsAccountNumber = (await DataProcessor.getAccountInfoForMigration()).bitmarkAccountNumber;
-    let twelveWordsAccountNumber = await AccountModel.migrateFrom24WordsTo12Words(this.twelveWords, this.updateProgressBar);
+    let success = true;
+    this.twentyFourWordsAccountNumber = (await DataProcessor.getAccountInfoForMigration()).bitmarkAccountNumber;
+    try {
+      let twelveWordsAccountNumber = await AccountModel.migrateFrom24WordsTo12Words(this.twelveWords);
+      await this.migrateLocalData(this.twentyFourWordsAccountNumber, twelveWordsAccountNumber);
+    } catch (err) {
+      success = false;
+      this.setState({
+        upgradeState: UPGRADE_STATE.UPGRADE_ERROR,
+        progress: INIT_PROGRESS_BAR_VALUE
+      })
+    }
 
+    // If migrate successfully
+    if (success) {
+      console.log('Migrate successfully!');
+      this.setState({
+        upgradeState: UPGRADE_STATE.UPGRADE_COMPLETED,
+        progress: COMPLETED_PROGRESS_BAR_VALUE
+      })
+    }
+  }
+
+  async resumeMigrationTo12Words() {
+    console.log('resumeMigrationTo12Words...');
+    this.setState({
+      upgradeState: UPGRADE_STATE.UPGRADING,
+      progress: INIT_PROGRESS_BAR_VALUE
+    });
+
+    let success = true;
+
+    try {
+      let twelveWordsAccountNumber = await AccountModel.resumeMigration24WordsTo12Words();
+      await this.migrateLocalData(this.twentyFourWordsAccountNumber, twelveWordsAccountNumber);
+    } catch (err) {
+      console.log('err:', err);
+      success = false;
+      this.setState({
+        upgradeState: UPGRADE_STATE.UPGRADE_ERROR,
+        progress: INIT_PROGRESS_BAR_VALUE
+      })
+    }
+
+    // If Resume Migration successfully
+    console.log('success:', success);
+    if (success) {
+      console.log('Resume Migration successfully!');
+      this.setState({
+        upgradeState: UPGRADE_STATE.UPGRADE_COMPLETED,
+        progress: COMPLETED_PROGRESS_BAR_VALUE
+      })
+    }
+  }
+
+  async migrateLocalData(twentyFourWordsAccountNumber, twelveWordsAccountNumber) {
     await IndexDBService.upgradeDataFrom24Words(twentyFourWordsAccountNumber, twelveWordsAccountNumber);
     await LocalFileService.initializeLocalStorage(twelveWordsAccountNumber);
     await LocalFileService.moveFilesToNewAccount(twentyFourWordsAccountNumber, twelveWordsAccountNumber);
     await DataProcessor.doLogin();
-
-    // If migrate successfully
-    this.setState({
-      upgradeState: UPGRADE_STATE.UPGRADE_COMPLETED,
-      progress: COMPLETED_PROGRESS_BAR_VALUE
-    })
   }
 
   updateProgressBar(progressResponse) {
-    let progress = progressResponse[0];
-    let progressVal = ((COMPLETED_PROGRESS_BAR_VALUE - 0.03) * progress) / 100.0;
+    let progress = progressResponse.progress;
+    let progressVal = (COMPLETED_PROGRESS_BAR_VALUE - 0.03) * progress;
     this.setState({progress: progressVal});
   }
 
@@ -71,6 +132,7 @@ export class UpgradeComponent extends Component {
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.body}>
           <View style={styles.bodyContent}>
+            {/*UPGRADING*/}
             {this.state.upgradeState == UPGRADE_STATE.UPGRADING &&
             <View style={{flex: 1}}>
               {/*TOP AREA*/}
@@ -109,6 +171,7 @@ export class UpgradeComponent extends Component {
             </View>
             }
 
+            {/*SUCCESS*/}
             {this.state.upgradeState == UPGRADE_STATE.UPGRADE_COMPLETED &&
             <View style={{flex: 1}}>
               {/*TOP AREA*/}
@@ -123,8 +186,18 @@ export class UpgradeComponent extends Component {
                   <Text style={[styles.introductionDescription, {marginTop: 56}]}>
                     {`Your account upgrade has been finished!`}
                   </Text>
-                  <View style={[styles.iconContainer]}>
-                    <Image style={styles.successIcon} source={require('assets/imgs/success-icon.png')} />
+
+                  {/*Success animation*/}
+                  <View style={[styles.animationContainer]}>
+                    <LottieView
+                      style={{ width: 80, height: 80 }}
+                      ref={animation => {
+                        this.successAnimation = animation;
+                      }}
+                      loop={false}
+                      source={require('assets/animation/check-mark-success.json')}
+                      autoPlay={true}
+                    />
                   </View>
                 </View>
               </View>
@@ -133,6 +206,39 @@ export class UpgradeComponent extends Component {
               <View style={[styles.bottomArea, styles.paddingContent]}>
                 <TouchableOpacity style={[styles.buttonNext]} onPress={() => {this.reloadApp.bind(this)()}}>
                   <Text style={[styles.buttonText, { color: '#FF003C' }]}>VIEW YOUR ACCOUNT</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            }
+
+            {/*ERROR*/}
+            {this.state.upgradeState == UPGRADE_STATE.UPGRADE_ERROR &&
+            <View style={{flex: 1}}>
+              {/*TOP AREA*/}
+              <ShadowTopComponent style={{ height: 40 }} contentStyle={[styles.topArea, styles.paddingContent, {backgroundColor: '#FF003C'}]}>
+                <Text style={[styles.title]}>WE’RE SORRY!</Text>
+              </ShadowTopComponent>
+
+              {/*CONTENT*/}
+              <View style={[styles.contentArea, styles.paddingContent]}>
+                {/*Desc*/}
+                <View style={styles.introductionTextArea}>
+                  <Text style={[styles.introductionDescription, {marginTop: 56}]}>
+                    {
+                      `It looks like something went wrong during migration, but no data was lost. Please tap below to try again.\n\nRemember: the process takes about 5 minutes and please do not leave the app while the migration is running. You also need internet access during this time.`
+                    }
+                  </Text>
+                </View>
+
+                <View style={[styles.imageContainer]}>
+                  <Image style={[styles.retryIcon]} source={require('assets/imgs/retry-icon.png')}></Image>
+                </View>
+              </View>
+
+              {/*BOTTOM AREA*/}
+              <View style={[styles.bottomArea, styles.paddingContent]}>
+                <TouchableOpacity style={[styles.buttonNext]} onPress={() => {this.resumeMigrationTo12Words.bind(this)()}}>
+                  <Text style={[styles.buttonText, { color: '#FF003C' }]}>TRY AGAIN</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -227,14 +333,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%'
   },
-  iconContainer: {
-    marginTop: 80,
+  animationContainer: {
+    marginTop: 50,
     width: '100%',
     alignItems: 'center'
   },
-  successIcon: {
-    width: 74,
-    height: 74,
+  imageContainer: {
+    marginTop: 25,
+    alignItems: 'center',
+    width: '100%',
+  },
+  retryIcon: {
+    height: 96,
+    width: 96,
     resizeMode: 'contain'
   }
 });
