@@ -341,7 +341,7 @@ const configNotification = () => {
     if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
       let appInfo = (await doGetAppInformation()) || {};
       if (appInfo.notificationUUID !== CacheData.notificationUUID) {
-        AccountService.doRegisterNotificationInfo(null, CacheData.notificationUUID, appInfo.intercomUserId).then(() => {
+        AccountService.doRegisterNotificationInfo(null, CacheData.notificationUUID, appInfo.intercom_user_id).then(() => {
           CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
           return UserModel.doUpdateUserInfo(CacheData.userInformation);
         }).catch(error => {
@@ -350,7 +350,7 @@ const configNotification = () => {
       }
     } else {
       if (CacheData.notificationUUID && CacheData.userInformation.notificationUUID !== CacheData.notificationUUID) {
-        AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, CacheData.userInformation.intercomUserId).then(() => {
+        AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, CacheData.userInformation.intercom_user_id).then(() => {
           CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
           return UserModel.doUpdateUserInfo(CacheData.userInformation);
         }).catch(error => {
@@ -418,9 +418,8 @@ const doCreateAccount = async () => {
   let signatureData = await CommonModel.doCreateSignatureData();
   await AccountModel.doTryRegisterAccount(userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   if (CacheData.notificationUUID) {
-    let intercomUserId = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
-    userInformation.intercomUserId = intercomUserId;
-    AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, CacheData.notificationUUID, intercomUserId).then(() => {
+    let intercom_user_id = `HealthPlus_${sha3_256(userInformation.bitmarkAccountNumber)}`;
+    AccountService.doRegisterNotificationInfo(userInformation.bitmarkAccountNumber, CacheData.notificationUUID, intercom_user_id).then(() => {
       userInformation.notificationUUID = CacheData.notificationUUID;
       return UserModel.doUpdateUserInfo(userInformation);
     }).catch(error => {
@@ -440,9 +439,8 @@ const doLogin = async () => {
   let signatureData = await CommonModel.doCreateSignatureData();
   await AccountModel.doTryRegisterAccount(CacheData.userInformation.bitmarkAccountNumber, signatureData.timestamp, signatureData.signature);
   if (CacheData.notificationUUID) {
-    let intercomUserId = `HealthPlus_${sha3_256(CacheData.userInformation.bitmarkAccountNumber)}`;
-    CacheData.userInformation.intercomUserId = intercomUserId;
-    AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, intercomUserId).then(() => {
+    let intercom_user_id = `HealthPlus_${sha3_256(CacheData.userInformation.bitmarkAccountNumber)}`;
+    AccountService.doRegisterNotificationInfo(CacheData.userInformation.bitmarkAccountNumber, CacheData.notificationUUID, intercom_user_id).then(() => {
       CacheData.userInformation.notificationUUID = CacheData.notificationUUID;
       return UserModel.doUpdateUserInfo(CacheData.userInformation);
     }).catch(error => {
@@ -628,16 +626,16 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
     });
     iCloudSyncAdapter.syncCloud();
     configNotification();
-    if (!CacheData.userInformation.intercomUserId) {
-      CacheData.userInformation.intercomUserId = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
+    if (!CacheData.userInformation.intercom_user_id) {
+      CacheData.userInformation.intercom_user_id = `HealthPlus_${sha3_256(bitmarkAccountNumber)}`;
       await UserModel.doUpdateUserInfo(CacheData.userInformation);
       Intercom.logout().then(() => {
-        return Intercom.registerIdentifiedUser({ userId: CacheData.userInformation.intercomUserId });
+        return Intercom.registerIdentifiedUser({ userId: CacheData.userInformation.intercom_user_id });
       }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
       });
     } else {
-      Intercom.registerIdentifiedUser({ userId: CacheData.userInformation.intercomUserId }).catch(error => {
+      Intercom.registerIdentifiedUser({ userId: CacheData.userInformation.intercom_user_id }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
       });
     }
@@ -706,17 +704,17 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
       });
     }
   } else if (!CacheData.userInformation || !CacheData.userInformation.bitmarkAccountNumber) {
-    let intercomUserId = appInfo.intercomUserId || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
-    if (!appInfo.intercomUserId) {
-      appInfo.intercomUserId = intercomUserId;
+    let intercom_user_id = appInfo.intercom_user_id || `HealthPlus_${sha3_256(moment().toDate().getTime() + randomString({ length: 8 }))}`;
+    if (!appInfo.intercom_user_id) {
+      appInfo.intercom_user_id = intercom_user_id;
       Intercom.logout().then(() => {
-        return Intercom.registerIdentifiedUser({ userId: intercomUserId })
+        return Intercom.registerIdentifiedUser({ userId: intercom_user_id })
       }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
       });
       CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
     } else {
-      Intercom.registerIdentifiedUser({ userId: intercomUserId }).catch(error => {
+      Intercom.registerIdentifiedUser({ userId: intercom_user_id }).catch(error => {
         console.log('registerIdentifiedUser error :', error);
       });
     }
