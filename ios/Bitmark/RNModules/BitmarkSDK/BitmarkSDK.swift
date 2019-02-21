@@ -33,7 +33,7 @@ class BitmarkSDKWrapper: NSObject {
   @objc(createAccount:::)
   func createAccount(_ authentication: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
     do {
-      let account = try Account()
+      let account = try Account(version: .v1)
       try KeychainUtil.saveCore(account.seed.core, version: BitmarkSDKWrapper.stringFromVersion(account.seed.version), authentication: authentication)
       self.account = account
       resolve(nil);
