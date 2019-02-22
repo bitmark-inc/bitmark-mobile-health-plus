@@ -18,53 +18,91 @@ public struct TransferOffer: Codable {
 }
 
 public struct Bitmark: Codable {
-    let id: String
-    let asset_id: String
-    let head_id: String
-    let issuer: String
-    let owner: String
-    let status: String
-    let offer: TransferOffer?
-    let block_number: Int64
-    let offset: Int64
-    let created_at: Date?
-    let confirmed_at: Date?
+    public let id: String
+    public let asset_id: String
+    public let head_id: String
+    public let issuer: String
+    public let owner: String
+    public let status: String
+    public let offer: TransferOffer?
+    public let block_number: Int64
+    public let offset: Int64
+    public let created_at: Date?
+    public let confirmed_at: Date?
 }
 
 public extension Bitmark {
     // MARK:- Issue
     public static func newIssuanceParams(assetID: String, owner: AccountNumber, quantity: Int) throws -> IssuanceParams {
-        let baseNonce = UInt64(Date().timeIntervalSince1970)
+        if quantity <= 0 {
+            throw("Invalid quantity")
+        }
+        
+        
+        let baseNonce = UInt64(Date().timeIntervalSince1970) * 1000
         var requests = [IssueRequest]()
-        for i in 0..<quantity {
-            var issuanceParams = IssueRequest()
-            issuanceParams.set(assetId: assetID)
-            issuanceParams.set(nonce: baseNonce + UInt64(i % 1000))
-            requests.append(issuanceParams)
+        
+        // Get asset info
+        let bitmarkQuery = try Bitmark.newBitmarkQueryParams()
+            .referenced(toAssetID: assetID)
+            .includePending(true)
+            .limit(size: 1)
+        let (bitmarks, _) = try Bitmark.list(params: bitmarkQuery)
+        if bitmarks == nil || bitmarks?.count == 0 {
+            // Create first one with nonce = 0
+            requests.append(createIssueRequest(assetID: assetID, nonce: 0))
+        }
+        
+        // Create the rest with random nonce
+        for i in requests.count..<quantity {
+            requests.append(createIssueRequest(assetID: assetID, nonce: baseNonce + UInt64(i % 1000)))
         }
         
         let params = IssuanceParams(issuances: requests)
         return params
     }
     
-    public static func newIssuanceParams(assetID: String, owner: AccountNumber, nonces: [UInt64]) throws -> IssuanceParams {
-        var requests = [IssueRequest]()
-        for nonce in nonces {
-            var issuanceParams = IssueRequest()
-            issuanceParams.set(assetId: assetID)
-            issuanceParams.set(nonce: nonce)
-            requests.append(issuanceParams)
-        }
-        
-        let params = IssuanceParams(issuances: requests)
-        return params
-    }
+//    public static func newIssuanceParams(assetID: String, owner: AccountNumber, nonces: [UInt64]) throws -> IssuanceParams {
+//        var requests = [IssueRequest]()
+//        for nonce in nonces {
+//            var issuanceParams = IssueRequest()
+//            issuanceParams.set(assetId: assetID)
+//            issuanceParams.set(nonce: nonce)
+//            requests.append(issuanceParams)
+//        }
+//
+//        let params = IssuanceParams(issuances: requests)
+//        return params
+//    }
     
     public static func issue(_ params: IssuanceParams) throws -> [String] {
         let api = API()
-        let bitmarkIDs = try api.issue(withIssueParams: params)
+        
+        let step = 100
+        var i = 0
+        var shouldContinue = true
+        var bitmarkIDs = [String]()
+        while shouldContinue {
+            var last = i*step + step
+            if last > params.issuances.count {
+                shouldContinue = false
+                last = params.issuances.count
+            }
+            
+            let parts = [IssueRequest](params.issuances[(i*step)..<last])
+            let ids = try api.issue(withIssueParams: IssuanceParams(issuances: parts))
+            bitmarkIDs += ids
+            i += 1
+        }
         
         return bitmarkIDs
+    }
+    
+    private static func createIssueRequest(assetID: String, nonce: UInt64) -> IssueRequest {
+        var issuanceRequest = IssueRequest()
+        issuanceRequest.set(assetId: assetID)
+        issuanceRequest.set(nonce: nonce)
+        return issuanceRequest
     }
 }
 
@@ -143,7 +181,7 @@ extension Bitmark {
         }
     }
     
-    public static func list(params: QueryParam) throws -> ([Bitmark], [Asset]?) {
+    public static func list(params: QueryParam) throws -> ([Bitmark]?, [Asset]?) {
         let api = API()
         return try api.listBitmark(builder: params)
     }

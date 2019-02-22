@@ -117,6 +117,10 @@ internal struct AuthKey: KeypairSignable {
         self.address = AccountNumber.build(fromPubKey: keyPair.publicKey, network: network, keyType: type)
     }
     
+    init(privateKey: Data) throws {
+        try self.init(fromKeyPair: privateKey, network: globalConfig.network, type: .ed25519)
+    }
+    
     init(fromKeyPairString keyPairString: String, network: Network, type: KeyType = KeyType.ed25519) throws {
         let keyPairData = keyPairString.hexDecodedData
         try self.init(fromKeyPair: keyPairData, network: network, type: type)

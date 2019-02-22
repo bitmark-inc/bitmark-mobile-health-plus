@@ -13,6 +13,7 @@ public struct Account {
     
     public let seed: Seedable
     let authKey: AuthKey
+    public let encryptionKey: EncryptionKey
     
     // MARK:- Basic init
     
@@ -28,7 +29,9 @@ public struct Account {
     
     public init(seed: Seedable) throws {
         self.seed = seed
-        authKey = try AuthKey(fromKeyPair: try seed.getAuthKeyData(), network: seed.network)
+        let (accountPrivateKey, encryptionPrivateKey) = try seed.getKeysData()
+        authKey = try AuthKey(fromKeyPair: accountPrivateKey, network: seed.network)
+        encryptionKey = try EncryptionKey(privateKey: encryptionPrivateKey)
     }
     
     public var accountNumber: AccountNumber {
@@ -73,6 +76,11 @@ public struct Account {
 }
 
 extension Account: KeypairSignable {
+    public init(privateKey: Data) throws {
+        let seed = try Seed.fromCore(privateKey, version: .v2)
+        try self.init(seed: seed)
+    }
+    
     public func sign(message: Data) throws -> Data {
         return try self.authKey.sign(message: message)
     }
