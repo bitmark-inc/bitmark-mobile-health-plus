@@ -146,7 +146,6 @@ const upgradeDataFrom24Words = async (twentyFourWordsAccountNumber, twelveWordsA
     await Promise.all([
       IndexedDBModel.updateIndexedDataAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber),
       IndexedDBModel.updateTagAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber),
-      IndexedDBModel.updateNoteAccountNumber(twentyFourWordsAccountNumber, twelveWordsAccountNumber)
     ]);
   }
 };
