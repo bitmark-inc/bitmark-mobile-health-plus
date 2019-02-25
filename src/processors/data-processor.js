@@ -153,6 +153,7 @@ const checkAndIssueNewDailyHealthData = async (dailyHealthDataBitmarks) => {
       if (results && results.length) {
         let lastResult = results[results.length - 1];
         lastIssuedDailyHealthCollectionDate = moment(lastResult.healthData.assetMetadata["Collection Date"]);
+        runGetUserBitmarksInBackground();
       }
     } finally {
       isIssuingBitmarkHealthData = false;
@@ -750,19 +751,24 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
 const doBitmarkHealthData = async (list) => {
   console.log('Issuing daily health data...');
+  console.time('doBitmarkHealthData');
   let {results, errors} = await HealthKitService.doBitmarkHealthData(CacheData.userInformation.bitmarkAccountNumber, list);
+  console.timeEnd('doBitmarkHealthData');
 
   if (errors && errors.length) {
     Sentry.captureException(errors[0], {logger: 'user'});
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {title: 'There was an error during registering your daily health data'});
   }
 
+  console.time('insertHealthDataToIndexedDB');
   if (results && results.length > 0) {
     for (let item of results) {
       await IndexDBService.insertHealthDataToIndexedDB(item.id, item.healthData);
     }
   }
+  console.timeEnd('insertHealthDataToIndexedDB');
 
+  console.time('doGetAppInformation');
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   if (appInfo && (!appInfo.lastTimeIssued ||
@@ -774,6 +780,7 @@ const doBitmarkHealthData = async (list) => {
     appInfo.lastTimeIssued = moment().toDate().getTime();
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
   }
+  console.timeEnd('doGetAppInformation');
 
   return results;
 };
