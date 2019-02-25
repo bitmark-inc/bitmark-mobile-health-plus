@@ -723,6 +723,8 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
   }
 
   console.log('CacheData.userInformation :', CacheData.userInformation);
+  let tempError = new Error('Test send error for live version!');
+  Sentry.captureException(tempError, { logger: 'user' });
   return CacheData.userInformation;
 };
 
