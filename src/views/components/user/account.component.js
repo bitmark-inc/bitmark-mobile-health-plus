@@ -45,13 +45,12 @@ class PrivateAccountComponent extends Component {
   }
 
   doLogout() {
-    AppProcessor.doLogout().then((result) => {
-      if (result) {
-        EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { indicator: true });
-      }
-    }).catch(error => {
-      EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
-    });
+    let error = new Error('Test send error for live version!');
+    EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error })
+    setTimeout(() => {
+      let abc;
+      console.log('crash ===========', abc.abc);
+    }, 10 * 5000);
   }
 
 
@@ -224,8 +223,8 @@ class PrivateAccountComponent extends Component {
                 <Text style={styles.cardContentRowButtonText}>View your vault key phrase</Text>
                 <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={() => Actions.accountPhrase({ isLogout: true })}>
-                {/* <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={this.doLogout.bind(this)}> */}
+              {/* <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={() => Actions.accountPhrase({ isLogout: true })}> */}
+              <TouchableOpacity style={[styles.cardContentRow, { borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={this.doLogout.bind(this)}>
                 <Text style={styles.cardContentRowButtonText}>Lock your vault</Text>
                 <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
               </TouchableOpacity>
