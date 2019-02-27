@@ -137,18 +137,12 @@ const checkAndIssueNewDailyHealthData = async (dailyHealthDataBitmarks) => {
 
   console.log('checkAndIssueNewDailyHealthData...');
   let waitingForIssuingDailyHealthDataList = HealthKitService.doCheckBitmarkHealthDataTask(dailyHealthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
-  console.log('waitingForIssuingDailyHealthDataList-1:', waitingForIssuingDailyHealthDataList);
-  Sentry.captureMessage(`waitingForIssuingDailyHealthDataList-1: ${waitingForIssuingDailyHealthDataList.length}`);
 
   if (lastIssuedDailyHealthCollectionDate) {
     waitingForIssuingDailyHealthDataList = waitingForIssuingDailyHealthDataList.filter((item) => {
       return item.StepCount.endDate.getTime() > lastIssuedDailyHealthCollectionDate.toDate().getTime();
     });
   }
-
-  Sentry.captureMessage(`waitingForIssuingDailyHealthDataList-2: ${waitingForIssuingDailyHealthDataList.length}`);
-
-  console.log('waitingForIssuingDailyHealthDataList:', waitingForIssuingDailyHealthDataList);
 
   if (waitingForIssuingDailyHealthDataList.length) {
     isIssuingBitmarkHealthData = true;

@@ -458,7 +458,6 @@ const doCheckBitmarkHealthDataTask = (dailyHealthDataBitmarks, activeAt, resetAt
   // lastTimeBitmarkHealthData = moment().date(moment().date() - 3);
 
   console.log('lastTime for checking new daily bitmark:', lastTimeBitmarkHealthData.toDate());
-  Sentry.captureMessage(`lastTime for checking new daily bitmark: ${lastTimeBitmarkHealthData.toDate().toString()}`);
 
   startDate = moment(lastTimeBitmarkHealthData);
   startDate.hour(0);
