@@ -137,11 +137,16 @@ const checkAndIssueNewDailyHealthData = async (dailyHealthDataBitmarks) => {
 
   console.log('checkAndIssueNewDailyHealthData...');
   let waitingForIssuingDailyHealthDataList = HealthKitService.doCheckBitmarkHealthDataTask(dailyHealthDataBitmarks, CacheData.userInformation.activeHealthDataAt, CacheData.userInformation.restActiveHealthDataAt);
+  console.log('waitingForIssuingDailyHealthDataList-1:', waitingForIssuingDailyHealthDataList);
+  Sentry.captureMessage(`waitingForIssuingDailyHealthDataList-1: ${waitingForIssuingDailyHealthDataList.length}`);
+
   if (lastIssuedDailyHealthCollectionDate) {
     waitingForIssuingDailyHealthDataList = waitingForIssuingDailyHealthDataList.filter((item) => {
       return item.StepCount.endDate.getTime() > lastIssuedDailyHealthCollectionDate.toDate().getTime();
     });
   }
+
+  Sentry.captureMessage(`waitingForIssuingDailyHealthDataList-2: ${waitingForIssuingDailyHealthDataList.length}`);
 
   console.log('waitingForIssuingDailyHealthDataList:', waitingForIssuingDailyHealthDataList);
 
@@ -751,24 +756,19 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
 
 const doBitmarkHealthData = async (list) => {
   console.log('Issuing daily health data...');
-  console.time('doBitmarkHealthData');
   let {results, errors} = await HealthKitService.doBitmarkHealthData(CacheData.userInformation.bitmarkAccountNumber, list);
-  console.timeEnd('doBitmarkHealthData');
 
   if (errors && errors.length) {
     Sentry.captureException(errors[0], {logger: 'user'});
     EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, {title: 'There was an error during registering your daily health data'});
   }
 
-  console.time('insertHealthDataToIndexedDB');
   if (results && results.length > 0) {
     for (let item of results) {
       await IndexDBService.insertHealthDataToIndexedDB(item.id, item.healthData);
     }
   }
-  console.timeEnd('insertHealthDataToIndexedDB');
 
-  console.time('doGetAppInformation');
   let appInfo = await doGetAppInformation();
   appInfo = appInfo || {};
   if (appInfo && (!appInfo.lastTimeIssued ||
@@ -780,7 +780,6 @@ const doBitmarkHealthData = async (list) => {
     appInfo.lastTimeIssued = moment().toDate().getTime();
     await CommonModel.doSetLocalData(CommonModel.KEYS.APP_INFORMATION, appInfo);
   }
-  console.timeEnd('doGetAppInformation');
 
   return results;
 };
