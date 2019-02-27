@@ -211,7 +211,7 @@ const doCheckNoLongerSupportVersion = async () => {
     if (returnedData && !returnedData.error && returnedData.app_versions && returnedData.app_versions.length > 0) {
       let lastPublicVersion = returnedData.app_versions.find(item => item.restricted_to_tags === false);
       let url = returnedData.app_versions[0].download_url;
-      if (lastPublicVersion && DeviceInfo.getBuildNumber() < lastPublicVersion.version) {
+      if (lastPublicVersion && parseInt(DeviceInfo.getBuildNumber()) < parseInt(lastPublicVersion.version)) {
         return url;
       }
     }

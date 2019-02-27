@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   View, Text, Image, TouchableOpacity, SafeAreaView,
-  StyleSheet,
+  StyleSheet, ScrollView, Dimensions,
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux';
@@ -15,6 +15,8 @@ const ONBOARDING_STATES = {
   ONBOARDING_3: 'ONBOARDING_3'
 };
 
+const windowSize = Dimensions.get('window');
+const isSmallPhone = windowSize.width < 375;
 
 export class HealthDataGetStartComponent extends React.Component {
   static propTypes = {
@@ -51,8 +53,9 @@ export class HealthDataGetStartComponent extends React.Component {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.body}>
-          {/*ONBOARDING SCREEN 1*/}
-          {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_1) &&
+          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, paddingBottom: 8 }}>
+            {/*ONBOARDING SCREEN 1*/}
+            {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_1) &&
             <View style={{ flex: 1 }}>
               {/*TOP BAR*/}
               <View style={styles.topBar}>
@@ -79,7 +82,7 @@ export class HealthDataGetStartComponent extends React.Component {
                       Imagine: You are asked about a medical condition or procedure from the past about yourself or a loved one (child, parent, etc.). What was the diagnosis exactly? If you cannot remember, how long would it take you to get this information? What problems would you face if this were an urgent situation?{'\n'}{'\n'}
                       Furthermore, if this information is from over 10 years ago or from a different healthcare system, it's possible those records do not exist anymore.{'\n'}{'\n'}
                       Bitmark Health helps you control your health by providing the tools to collect all your health information from any source and receive daily insights about it while keeping your privacy protected.
-                  </Text>
+                    </Text>
                   </View>
                 </View>
 
@@ -91,10 +94,10 @@ export class HealthDataGetStartComponent extends React.Component {
                 </View>
               </View>
             </View>
-          }
+            }
 
-          {/*ONBOARDING SCREEN 2*/}
-          {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_2) &&
+            {/*ONBOARDING SCREEN 2*/}
+            {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_2) &&
             <View style={{ flex: 1 }}>
               {/*TOP BAR*/}
               <View style={styles.topBar}>
@@ -114,7 +117,7 @@ export class HealthDataGetStartComponent extends React.Component {
                 {/*CONTENT*/}
                 <View style={[styles.contentArea]}>
                   {/*IMAGE*/}
-                  <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'center', width: '100%', flex: 1 }]}>
+                  <View style={[styles.introductionImageArea, { alignItems: isSmallPhone ? 'center' : 'flex-end', justifyContent: 'center', width: '100%', flex: 1, marginTop: 10 }]}>
                     <Image style={styles.onBoardingImage2} source={require('assets/imgs/health-data-onboarding-1.png')} />
                   </View>
 
@@ -123,7 +126,7 @@ export class HealthDataGetStartComponent extends React.Component {
                     <Text style={[styles.introductionTitle]}>Track your daily activity</Text>
                     <Text style={[styles.introductionDescription, { fontSize: 16 }]}>
                       Let's get started by tracking two simple forms of health data: steps and sleep. Note: none of this data or your identity is being shared online, even with Bitmark.
-                  </Text>
+                    </Text>
                   </View>
                 </View>
 
@@ -135,10 +138,10 @@ export class HealthDataGetStartComponent extends React.Component {
                 </View>
               </View>
             </View>
-          }
+            }
 
-          {/*ONBOARDING SCREEN 3*/}
-          {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_3) &&
+            {/*ONBOARDING SCREEN 3*/}
+            {(this.state.ONBOARDING_STATE == ONBOARDING_STATES.ONBOARDING_3) &&
             <View style={{ flex: 1, paddingTop: 8, }}>
               <View style={styles.bodyContent}>
                 {/*TOP AREA*/}
@@ -150,7 +153,7 @@ export class HealthDataGetStartComponent extends React.Component {
                 {/*CONTENT*/}
                 <View style={[styles.contentArea]}>
                   {/*IMAGE*/}
-                  <View style={[styles.introductionImageArea, { alignItems: 'flex-end', justifyContent: 'center', width: '100%', flex: 1 }]}>
+                  <View style={[styles.introductionImageArea, { alignItems: isSmallPhone ? 'center' : 'flex-end', justifyContent: 'center', width: '100%', flex: 1 }]}>
                     <Image style={styles.onBoardingImage2} source={require('assets/imgs/health-data-onboarding-1.png')} />
                   </View>
 
@@ -159,7 +162,7 @@ export class HealthDataGetStartComponent extends React.Component {
                     <Text style={[styles.introductionTitle]}>You’re all set!</Text>
                     <Text style={[styles.introductionDescription, { fontSize: 16 }]}>
                       Bitmark Health will automatically import your selected health data daily. Check back tomorrow morning to start receiving insights - we'll remind you when it's ready.
-                  </Text>
+                    </Text>
                   </View>
                 </View>
 
@@ -171,7 +174,8 @@ export class HealthDataGetStartComponent extends React.Component {
                 </View>
               </View>
             </View>
-          }
+            }
+          </ScrollView>
         </View>
       </SafeAreaView>
     );
@@ -263,7 +267,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   introductionTitle: {
-    marginTop: 25,
+    marginTop: isSmallPhone ? 5 : 25,
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 24,
@@ -289,6 +293,6 @@ const styles = StyleSheet.create({
   onBoardingImage2: {
     resizeMode: 'contain',
     width: convertWidth(320),
-    height: 300 * convertWidth(320) / 320,
+    height: (isSmallPhone ? 250 : 300) * convertWidth(320) / 320,
   },
 });

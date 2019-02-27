@@ -10,6 +10,7 @@ import { convertWidth, dictionaryPhraseWords, delay } from 'src/utils';
 import { config, constants } from 'src/configs';
 import { CharacterFlapperComponent } from 'src/views/commons';
 import { merge } from 'immutable';
+import { CommonModel } from "src/processors/models";
 import PropTypes from 'prop-types';
 
 const STEPS = {
@@ -111,6 +112,13 @@ export class GenerateHealthCodeComponent extends Component {
       Actions.whatNext({twelveWords: phraseWords});
     } else {
       await AppProcessor.doLogin(phraseWords, false);
+
+      // Add metric
+      CommonModel.doTrackEvent({
+        event_name: 'health_plus_create_new_account',
+        account_number: this.bitmarkAccountNumber,
+      });
+
       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: true, indicator: true });
     }
   }
@@ -159,6 +167,7 @@ export class GenerateHealthCodeComponent extends Component {
     this.canGenerateNew = false;
     let phraseInfo = await AppProcessor.doGeneratePhrase();
     this.phraseWords = phraseInfo.phraseWords;
+    this.bitmarkAccountNumber = phraseInfo.bitmarkAccountNumber;
     this.computePhraseWords(phraseInfo.phraseWords, { step: STEPS.generated });
     // this.loginWithPhraseWords(); // developer
   }
