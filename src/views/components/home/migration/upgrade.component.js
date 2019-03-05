@@ -57,10 +57,12 @@ export class UpgradeComponent extends Component {
   async migrateTo12Words() {
     let success = true;
     this.twentyFourWordsAccountNumber = (await DataProcessor.getAccountInfoForMigration()).bitmarkAccountNumber;
+    console.log('twentyFourWordsAccountNumber:', this.twentyFourWordsAccountNumber);
     try {
       let twelveWordsAccountNumber = await AccountModel.migrateFrom24WordsTo12Words(this.twelveWords);
       await this.migrateLocalData(this.twentyFourWordsAccountNumber, twelveWordsAccountNumber);
     } catch (err) {
+      console.log('err:', err);
       success = false;
       this.setState({
         upgradeState: UPGRADE_STATE.UPGRADE_ERROR,
@@ -82,6 +84,7 @@ export class UpgradeComponent extends Component {
 
   async resumeMigrationTo12Words() {
     console.log('resumeMigrationTo12Words...');
+    console.log('twentyFourWordsAccountNumber:', this.twentyFourWordsAccountNumber);
     this.setState({
       upgradeState: UPGRADE_STATE.UPGRADING,
       progress: INIT_PROGRESS_BAR_VALUE

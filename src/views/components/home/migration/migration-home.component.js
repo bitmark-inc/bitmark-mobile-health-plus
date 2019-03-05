@@ -39,7 +39,7 @@ export class MigrationHomeComponent extends Component {
             {/*BOTTOM AREA*/}
             <View style={[styles.bottomArea, styles.paddingContent]}>
               <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-1.png')} />
-              <TouchableOpacity style={[styles.buttonNext]} onPress={() => Actions.generateHealthCode({migrateFrom24Words: true, sliderStartAt: 2})}>
+              <TouchableOpacity style={[styles.buttonNext]} onPress={() => Actions.login({migrateFrom24Words: true})}>
                 <Text style={[styles.buttonText, { color: '#FF003C' }]}>NEXT</Text>
               </TouchableOpacity>
             </View>

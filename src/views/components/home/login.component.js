@@ -9,6 +9,7 @@ import { Actions } from 'react-native-router-flux';
 import { dictionaryPhraseWords, convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { constants, config } from 'src/configs';
+import PropTypes from 'prop-types';
 
 const statuses = {
   done: 'done',
@@ -21,9 +22,14 @@ const statuses = {
 // let testWords = ["aunt", "domain", "device", "amount", "surprise", "canal", "unaware", "junk", "emotion", "scene", "gesture", "empower"];
 
 export class LoginComponent extends Component {
+  static propTypes = {
+    migrateFrom24Words: PropTypes.bool
+  };
+
   constructor(props) {
     super(props);
 
+    this.migrateFrom24Words = props.migrateFrom24Words;
     let smallerList = [];
     let biggerList = [];
     let numberPhraseWords = 12;
@@ -178,8 +184,13 @@ export class LoginComponent extends Component {
   }
 
   async loginWithPhraseWords(phraseWords) {
-    await AppProcessor.doLogin(phraseWords, false);
-    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: false, indicator: true });
+    if (this.migrateFrom24Words) {
+      console.log('phraseWords:', phraseWords);
+      Actions.whatNext({twelveWords: phraseWords});
+    } else {
+      await AppProcessor.doLogin(phraseWords, false);
+      EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: false, indicator: true });
+    }
   }
 
   doCheckPhraseWords() {
