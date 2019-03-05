@@ -18,6 +18,10 @@ extension API {
     }
     
     internal func issue(withIssueParams issueParams: IssuanceParams) throws -> [String] {
+        if issueParams.issuances.count == 0 {
+            return [String]()
+        }
+        
         let payload = try issueParams.toJSON()
         
         let json = try JSONSerialization.data(withJSONObject: payload, options: [])

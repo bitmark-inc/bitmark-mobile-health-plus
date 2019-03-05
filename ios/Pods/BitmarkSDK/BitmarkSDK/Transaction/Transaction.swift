@@ -16,6 +16,7 @@ public struct Transaction: Codable {
     public let status: String
     public let block_number: Int64
     public let offset: Int64
+    public let countersign: Bool
 }
 
 extension Transaction {
