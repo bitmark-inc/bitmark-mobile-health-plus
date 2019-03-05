@@ -497,7 +497,7 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       }
 
       let (bitmarks, asset) = try Bitmark.list(params: queryParams)
-      var result: [Any] = [try bitmarks.map { try $0.asDictionary() }]
+      var result = [try bitmarks.map { try $0.asDictionary() }]
       if let a = asset {
         result.append(try a.asDictionary())
       }
