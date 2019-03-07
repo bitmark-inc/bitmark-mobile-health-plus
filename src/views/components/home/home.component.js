@@ -81,15 +81,8 @@ export class HomeComponent extends Component {
                   <Text style={[styles.steps]}>STEP 1 OF 3</Text>
                   <Text style={[styles.introductionTitle, {marginTop: 5}]}>Create your health vault</Text>
                   <Text style={[styles.introductionDescription]}>
-                    Your unique health vault locks data away from unauthorized 3rd-party access.
-                </Text>
-
-                  {/*Terms and Privacy Policy */}
-                  <Hyperlink style={[styles.introductionDescription, styles.hyperLinkText]} linkText={url => url === 'https://bitmark.com/legal/terms' ? 'Terms' : 'Privacy Policy'} onPress={(url) => Linking.openURL(url)}>
-                    <Text style={[styles.introductionDescription, styles.hyperLinkText, { marginTop: 0 }]}>
-                      By creating a vault, you agree to our <Text style={[{ textDecorationLine: 'underline' }, styles.hyperLinkText]}>https://bitmark.com/legal/terms</Text> and <Text style={[{ textDecorationLine: 'underline' }, styles.hyperLinkText]}>https://bitmark.com/legal/privacy.</Text>
-                    </Text>
-                  </Hyperlink>
+                    Your health vault will securely aggegrate your health and medical records on this device. None of your data will be stored in the cloud.
+                  </Text>
                 </View>
               </View>
 
@@ -198,10 +191,6 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.6)',
     textAlign: 'left',
     letterSpacing: 0.25,
-  },
-  hyperLinkText: {
-    fontFamily: 'AvenirNextW1G-LightItalic',
-    color: 'rgba(0, 0, 0, 0.6)',
   },
   buttonNext: {
     fontFamily: 'AvenirNextW1G-Bold',

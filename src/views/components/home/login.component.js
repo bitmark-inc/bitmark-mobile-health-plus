@@ -9,15 +9,22 @@ import { Actions } from 'react-native-router-flux';
 import { dictionaryPhraseWords, convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { constants, config } from 'src/configs';
+import PropTypes from 'prop-types';
+import { CommonModel } from "src/processors/models";
 
 // let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
 // let testWords = ["track", "occur", "mercy", "machine", "guitar", "occur", "main", "extra", "topic", "pen", "fatigue", "whale"];
 // let testWords = ["aunt", "domain", "device", "amount", "surprise", "canal", "unaware", "junk", "emotion", "scene", "gesture", "empower"];
 
 export class LoginComponent extends Component {
+  static propTypes = {
+    migrateFrom24Words: PropTypes.bool,
+    phraseWords: PropTypes.any,
+    backAction: PropTypes.func,
+  };
+
   constructor(props) {
     super(props);
-    this.inputtedRefs = {};
     this.state = {
       inputPhraseWordsString: '',
       testingResult: null,
@@ -79,8 +86,12 @@ export class LoginComponent extends Component {
     let phraseWords = inputPhraseWordsString.split(' ').map(word => word.toLowerCase());
 
     try {
-      await AppProcessor.doCheckPhraseWords(phraseWords);
-      testingResult = true;
+      if (this.props.phraseWords) {
+        testingResult = inputPhraseWordsString == this.props.phraseWords.join(' ');
+      } else {
+        await AppProcessor.doCheckPhraseWords(phraseWords);
+        testingResult = true;
+      }
     } catch {
       testingResult = false;
     }
@@ -90,12 +101,44 @@ export class LoginComponent extends Component {
     if (testingResult) {
       this.loginWithPhraseWords(phraseWords);
     }
+
+    this.applyNewTextInputColor();
+  }
+
+  applyNewTextInputColor() {
+    // Trick to apply new color for TextInput Component
+    // Reset text then re-input text
+    let inputPhraseWordsString = this.state.inputPhraseWordsString;
+    this.setState({inputPhraseWordsString: ''});
+    setTimeout(() => {
+      this.setState({inputPhraseWordsString: inputPhraseWordsString});
+    }, 0);
+  }
+
+  back() {
+    if (this.props.backAction) {
+      this.props.backAction();
+    } else {
+      Actions.pop();
+    }
   }
 
   async loginWithPhraseWords(phraseWords) {
-    if (this.migrateFrom24Words) {
+    if (this.props.migrateFrom24Words) {
       Actions.whatNext({twelveWords: phraseWords});
+    } else if (this.props.phraseWords) {
+      // login with new account
+      await AppProcessor.doLogin(phraseWords, false);
+
+      // Add metric
+      CommonModel.doTrackEvent({
+        event_name: 'health_plus_create_new_account',
+        account_number: this.bitmarkAccountNumber,
+      });
+
+      EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: true, indicator: true });
     } else {
+      // Login with existing account
       await AppProcessor.doLogin(phraseWords, false);
       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: false, indicator: true });
     }
@@ -124,9 +167,15 @@ export class LoginComponent extends Component {
     this.setState({inputPhraseWordsString: text, testingResult: null})
   }
 
+  checkIfCursorInputAtTheEnd(inputText) {
+    let startCursor = this.inputPhraseWordsRef._lastNativeSelection.start;
+    let endCursor = this.inputPhraseWordsRef._lastNativeSelection.end;
+    return (startCursor == endCursor) && (endCursor == inputText.length);
+  }
+
   onSubmitWord(word) {
     let inputPhraseWordsString = this.state.inputPhraseWordsString;
-    if ((this.inputPhraseWordsRef._lastNativeSelection.start == this.inputPhraseWordsRef._lastNativeSelection.end) && (this.inputPhraseWordsRef._lastNativeSelection.end == inputPhraseWordsString.length)) {
+    if (!inputPhraseWordsString || this.checkIfCursorInputAtTheEnd(inputPhraseWordsString)) {
       let words = inputPhraseWordsString.split(' ');
       words[words.length - 1] = word;
       inputPhraseWordsString = `${words.join(' ').trim()} `;
@@ -187,7 +236,7 @@ export class LoginComponent extends Component {
                   </Text>
 
                   {/*Generate Code Container*/}
-                  <View style={[styles.generateCodeContainer]}>
+                  <View style={[styles.generateCodeContainer, {marginTop: 100}]}>
                     {/*header*/}
                     <View style={[styles.generateCodeTitle]}>
                       <Text style={[styles.generateCodeTitleText]}>YOUR 12-WORD VAULT KEY PHRASE</Text>
@@ -198,7 +247,7 @@ export class LoginComponent extends Component {
                       {/*Input words*/}
                       <TextInput
                         ref={(r) => { this.inputPhraseWordsRef = r;}}
-                        style={[styles.inputPhraseWords, this.state.testingResult === false ? {color: '#FF003C'} : {}]}
+                        style={[styles.inputPhraseWords, {color: this.state.testingResult === false ? '#FF003C' : '#0060F2'}]}
                         onChangeText={(text) => this.onChangeText(text)}
                         value={this.state.inputPhraseWordsString}
                         multiline={true}
@@ -217,7 +266,7 @@ export class LoginComponent extends Component {
                 {/*BOTTOM AREA*/}
                 <View style={[styles.bottomArea, styles.paddingContent]}>
                   {/*Back*/}
-                  <TouchableOpacity style={[styles.buttonNext, {marginLeft: 0}]} onPress={Actions.pop}>
+                  <TouchableOpacity style={[styles.buttonNext, {marginLeft: 0}]} onPress={this.back.bind(this)}>
                     <Text style={[styles.buttonNextText]}>BACK</Text>
                   </TouchableOpacity>
 
