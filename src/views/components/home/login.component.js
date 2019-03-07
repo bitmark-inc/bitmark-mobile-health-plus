@@ -10,53 +10,24 @@ import { dictionaryPhraseWords, convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { constants, config } from 'src/configs';
 
-const statuses = {
-  done: 'done',
-  inputting: 'inputting'
-};
-
 // let testWords = ["accident", "sausage", "ticket", "dolphin", "original", "nasty", "theme", "life", "polar", "donor", "office", "weird", "neither", "escape", "flag", "spell", "submit", "salute", "sustain", "habit", "soap", "oil", "romance", "drama",];
-
 // let testWords = ["track", "occur", "mercy", "machine", "guitar", "occur", "main", "extra", "topic", "pen", "fatigue", "whale"];
 // let testWords = ["aunt", "domain", "device", "amount", "surprise", "canal", "unaware", "junk", "emotion", "scene", "gesture", "empower"];
 
 export class LoginComponent extends Component {
   constructor(props) {
     super(props);
-
-    let smallerList = [];
-    let biggerList = [];
-    let numberPhraseWords = 12;
-    for (let index = 0; index < numberPhraseWords; index++) {
-      if (index < (numberPhraseWords / 2)) {
-        smallerList.push({
-          key: index,
-          word: '',
-          // word: testWords[index],
-        });
-      } else {
-        biggerList.push({
-          key: index,
-          word: '',
-          // word: testWords[index],
-        });
-      }
-    }
     this.inputtedRefs = {};
     this.state = {
-      smallerList,
-      biggerList,
-      selectedIndex: -1,
-      remainWordNumber: numberPhraseWords,
-      keyboardHeight: 0,
-      preCheckResult: null,
+      inputPhraseWordsString: '',
+      testingResult: null,
       keyboardExternalBottom: new Animated.Value(0),
       keyboardExternalOpacity: new Animated.Value(0),
       keyboardExternalDataSource: dictionaryPhraseWords,
-      testingResult: null,
-      numberPhraseWords,
     };
+    this.flapperRefs = {};
   }
+
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
@@ -66,10 +37,11 @@ export class LoginComponent extends Component {
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    this.keyboardWillHideListener.remove();
   }
 
   onKeyboardDidShow(keyboardEvent) {
-    let keyboardHeight = keyboardEvent.endCoordinates.height;
+    let keyboardHeight = keyboardEvent.endCoordinates.height - (config.isIPhoneX ? 35 : 0);
     this.setState({ keyboardHeight });
 
     let listAnimations = [];
@@ -87,6 +59,7 @@ export class LoginComponent extends Component {
   onKeyboardDidHide() {
     this.setState({ keyboardHeight: 0 });
   }
+
   onKeyboardWillHide() {
     let listAnimations = [];
     listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
@@ -100,298 +73,183 @@ export class LoginComponent extends Component {
     Animated.parallel(listAnimations).start();
   }
 
+  async testPhraseWords() {
+    let testingResult;
+    let inputPhraseWordsString = this.state.inputPhraseWordsString.trim();
+    let phraseWords = inputPhraseWordsString.split(' ').map(word => word.toLowerCase());
 
-  onChangeText(index, text) {
-    text = text ? text.trim() : '';
-    this.doFilter(text);
-    if (index < (this.state.numberPhraseWords / 2)) {
-      let inputtedWords = this.state.smallerList;
-      inputtedWords[index].word = text;
-      this.setState({ smallerList: inputtedWords });
-    } else {
-      let inputtedWords = this.state.biggerList;
-      inputtedWords[index - (this.state.numberPhraseWords / 2)].word = text;
-      this.setState({ biggerList: inputtedWords });
-    }
-    this.checkStatusInputting();
-  }
-  onFocus(index) {
-    let text = index < (this.state.numberPhraseWords / 2) ? this.state.smallerList[index].word : this.state.biggerList[index - (this.state.numberPhraseWords / 2)].word;
-    this.setState({
-      selectedIndex: index,
-      currentInputtedText: text,
-    });
-    this.inputtedRefs[index].focus();
-    this.doFilter(text);
-  }
-  checkStatusInputting() {
-    let countNumberInputtedWord = 0;
-    this.state.smallerList.forEach(item => {
-      countNumberInputtedWord = countNumberInputtedWord + (item.word ? 1 : 0)
-    });
-    this.state.biggerList.forEach(item => {
-      countNumberInputtedWord = countNumberInputtedWord + (item.word ? 1 : 0)
-    });
-    let status = countNumberInputtedWord === this.state.numberPhraseWords ? statuses.done : statuses.inputting;
-    this.setState({
-      preCheckResult: null,
-      remainWordNumber: this.state.numberPhraseWords - countNumberInputtedWord,
-      status,
-    });
-  }
-  selectedIndex(index) {
-    this.onFocus(index);
-    this.checkStatusInputting();
-  }
-  onSubmitWord(word) {
-    let selectedIndex = this.state.selectedIndex;
-
-    if (selectedIndex < 0) {
-      return;
-    }
-    if (word) {
-      word = word ? word.trim() : '';
-      this.inputtedRefs[selectedIndex].focus();
-      if (selectedIndex < (this.state.numberPhraseWords / 2)) {
-        let inputtedWords = this.state.smallerList;
-        inputtedWords[selectedIndex].word = word;
-        this.setState({ smallerList: inputtedWords });
-      } else {
-        let inputtedWords = this.state.biggerList;
-        inputtedWords[selectedIndex - (this.state.numberPhraseWords / 2)].word = word;
-        this.setState({ biggerList: inputtedWords });
-      }
+    try {
+      await AppProcessor.doCheckPhraseWords(phraseWords);
+      testingResult = true;
+    } catch {
+      testingResult = false;
     }
 
-    if (word) {
-      if (this.state.status == statuses.done) {
-        this.doCheckPhraseWords();
-      } else {
-        this.selectedIndex((selectedIndex + 1) % this.state.numberPhraseWords);
-      }
-    }
-  }
+    this.setState({testingResult});
 
-  doFilter(text) {
-    let keyboardExternalDataSource = dictionaryPhraseWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
-    this.setState({ keyboardExternalDataSource, currentInputtedText: text });
+    if (testingResult) {
+      this.loginWithPhraseWords(phraseWords);
+    }
   }
 
   async loginWithPhraseWords(phraseWords) {
-    await AppProcessor.doLogin(phraseWords, false);
-    EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: false, indicator: true });
-  }
-
-  doCheckPhraseWords() {
-    return new Promise((resolve) => {
-      Keyboard.dismiss();
-      if (this.state.remainWordNumber === 0) {
-        let inputtedWords = [];
-        this.state.smallerList.forEach(item => inputtedWords.push(item.word.toLowerCase()));
-        this.state.biggerList.forEach(item => inputtedWords.push(item.word.toLowerCase()));
-        console.log('inputtedWords:', inputtedWords);
-        AppProcessor.doCheckPhraseWords(inputtedWords).then(() => {
-          this.setState({ testingResult: true });
-          this.loginWithPhraseWords(inputtedWords);
-          resolve(inputtedWords);
-        }).catch((error) => {
-          this.setState({ testingResult: false });
-          resolve(false);
-          console.log('doCheckPhraseWords error: ', error);
-        });
-      } else {
-        this.setState({ testingResult: null });
-        resolve(null);
-      }
-    });
-  }
-
-  doReset(numberPhraseWords) {
-    numberPhraseWords = numberPhraseWords || this.state.numberPhraseWords;
-    let smallerList = [];
-    let biggerList = [];
-    for (let index = 0; index < numberPhraseWords; index++) {
-      if (index < (numberPhraseWords / 2)) {
-        smallerList.push({
-          key: index,
-          word: '',
-        });
-      } else {
-        biggerList.push({
-          key: index,
-          word: '',
-        });
-      }
+    if (this.migrateFrom24Words) {
+      Actions.whatNext({twelveWords: phraseWords});
+    } else {
+      await AppProcessor.doLogin(phraseWords, false);
+      EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, { justCreatedBitmarkAccount: false, indicator: true });
     }
-    this.setState({
-      smallerList: smallerList,
-      biggerList: biggerList,
-      selectedIndex: -1,
-      remainWordNumber: numberPhraseWords,
-    });
   }
 
-  // doSignIn() {
-  //   if (this.state.preCheckResult === i18n.t('LoginComponent_submitButtonText2')) {
-  //     this.doReset();
-  //     return;
-  //   }
-  //   this.doCheckPhraseWords().then(async (result) => {
-  //     if (result) {
-  //       await AppProcessor.doLogin(result, false);
-  //       EventEmitterService.emit(EventEmitterService.events.APP_NEED_REFRESH, {justCreatedBitmarkAccount: false, indicator: true});
-  //     }
-  //   });
-  // }
+  onChangeText(text) {
+    text = text.trimLeft();
+
+    text = text.replace('\n', ' ');
+
+    // Replace double space by single space if any
+    if (text.endsWith('  ')) {
+      text = `${text.trimRight()} `;
+    }
+
+    // Populate suggestion words
+    let textForPopulateSuggestion = text;
+    if (textForPopulateSuggestion && this.inputPhraseWordsRef._lastNativeSelection.start == this.inputPhraseWordsRef._lastNativeSelection.end) {
+      textForPopulateSuggestion = text.substring(0, this.inputPhraseWordsRef._lastNativeSelection.end);
+    }
+
+    let words = textForPopulateSuggestion.split(' ');
+    let lastWord = words[words.length - 1];
+    this.doFilter(lastWord);
+
+    this.setState({inputPhraseWordsString: text, testingResult: null})
+  }
+
+  onSubmitWord(word) {
+    let inputPhraseWordsString = this.state.inputPhraseWordsString;
+    if ((this.inputPhraseWordsRef._lastNativeSelection.start == this.inputPhraseWordsRef._lastNativeSelection.end) && (this.inputPhraseWordsRef._lastNativeSelection.end == inputPhraseWordsString.length)) {
+      let words = inputPhraseWordsString.split(' ');
+      words[words.length - 1] = word;
+      inputPhraseWordsString = `${words.join(' ').trim()} `;
+    } else {
+      let textBeforeSuggestion = inputPhraseWordsString.substring(0, this.inputPhraseWordsRef._lastNativeSelection.end);
+      let words = textBeforeSuggestion.split(' ');
+      words[words.length - 1] = word;
+      textBeforeSuggestion = `${words.join(' ').trim()} `;
+
+      let textAfterSuggestion = inputPhraseWordsString.substring(this.inputPhraseWordsRef._lastNativeSelection.end);
+      inputPhraseWordsString = `${textBeforeSuggestion}${textAfterSuggestion.trim()}`;
+    }
+
+    this.setState({inputPhraseWordsString});
+  }
+
+  doFilter(text) {
+    let keyboardExternalDataSource;
+    if (text) {
+      keyboardExternalDataSource = dictionaryPhraseWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
+    } else {
+      keyboardExternalDataSource = dictionaryPhraseWords;
+    }
+
+    this.setState({ keyboardExternalDataSource });
+  }
 
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.body}>
-          {/*<KeyboardAvoidingView behavior="padding" enabled style={styles.avoidingView} keyboardVerticalOffset={constants.keyboardExternalHeight} >*/}
           <View style={[styles.bodyContent, { paddingLeft: 0, paddingRight: 0 }]}>
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, }}>
-              {/*TOP AREA*/}
-              {/*BITMARK Header*/}
-              {this.state.testingResult === null &&
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+              <View style={{ flex: 1 }}>
+                {/*TOP AREA*/}
+                {/*BITMARK Header*/}
+                {this.state.testingResult !== true &&
                 <View style={[styles.topArea, styles.paddingContent]}>
                   <Text style={[styles.title]}>BITMARK HEALTH</Text>
                   <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
                 </View>
-              }
+                }
 
-              {/*Failed Test*/}
-              {this.state.testingResult === false &&
-                <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#FF003C', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
-                  <Text style={[styles.testResultMessage]}>WRONG COMBINATION</Text>
-                </View>
-              }
-
-              {/*Successful test*/}
-              {this.state.testingResult === true &&
+                {/*Successful test*/}
+                {this.state.testingResult === true &&
                 <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#0060F2', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
                   <Text style={[styles.testResultMessage]}>VAULT UNLOCKED</Text>
                 </View>
-              }
+                }
 
-              {/*CONTENT*/}
-              <View style={[styles.contentArea, styles.paddingContent]}>
-                {/*PHRASE WORDS*/}
-                <View style={styles.phraseWordsArea}>
-                  <View style={[styles.phraseWordsList]}>
-                    {/*SELECTED WORDS*/}
-                    {/*Smaller list*/}
-                    <FlatList data={this.state.smallerList}
-                      keyExtractor={(item, index) => index + ''}
-                      scrollEnabled={false}
-                      extraData={this.state}
-                      renderItem={({ item, index }) => {
-                        return (
-                          <View style={[styles.recoveryPhraseSet,]}>
-                            <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                            <View style={[styles.phraseWordContainer, {
-                              borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                            }]}>
-                              {/*Input word*/}
-                              <TextInput
-                                style={[styles.recoveryPhraseInputWord, {
-                                  color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                }]}
-                                ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                value={item.word.toUpperCase()}
-                                returnKeyType={'done'}
-                                autoCorrect={false}
-                                autoCapitalize="none"
-                                onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                onFocus={() => this.onFocus.bind(this)(item.key)}
-                                onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                              />
-                            </View>
-                          </View>
-                        )
-                      }}
-                    />
-                    {/*Bigger list*/}
-                    <FlatList data={this.state.biggerList}
-                      keyExtractor={(item, index) => index + ''}
-                      style={{ marginLeft: 9 }}
-                      scrollEnabled={false}
-                      extraData={this.state}
-                      renderItem={({ item, }) => {
-                        return (
-                          <View style={[styles.recoveryPhraseSet,]}>
-                            <Text style={styles.recoveryPhraseIndex}>{item.key + 1}.</Text>
-                            <View style={[styles.phraseWordContainer, {
-                              borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                            }]}>
-                              {/*Input word*/}
-                              <TextInput
-                                style={[styles.recoveryPhraseInputWord, {
-                                  color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                }]}
-                                ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                value={item.word.toUpperCase()}
-                                returnKeyType={'done'}
-                                autoCorrect={false}
-                                autoCapitalize="none"
-                                onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                onFocus={() => this.onFocus.bind(this)(item.key)}
-                                onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                              />
-                            </View>
-                          </View>
-                        )
-                      }}
-                    />
-                  </View>
+                {/*CONTENT*/}
+                <View style={[styles.contentArea, styles.paddingContent, {justifyContent: 'flex-start'}]}>
+                  {/*Desc*/}
+                  <Text style={[styles.steps]}>STEP 3 OF 3</Text>
+                  <Text style={[styles.introductionTitle]}>Unlock your vault </Text>
+                  <Text style={[styles.introductionDescription]}>
+                    Enter your vault key phrase below to unlock your vault.
+                  </Text>
+
+                  {/*Generate Code Container*/}
+                  <View style={[styles.generateCodeContainer]}>
+                    {/*header*/}
+                    <View style={[styles.generateCodeTitle]}>
+                      <Text style={[styles.generateCodeTitleText]}>YOUR 12-WORD VAULT KEY PHRASE</Text>
+                    </View>
+
+                    {/*content*/}
+                    <View style={[styles.generateCodeContent]}>
+                      {/*Input words*/}
+                      <TextInput
+                        ref={(r) => { this.inputPhraseWordsRef = r;}}
+                        style={[styles.inputPhraseWords, this.state.testingResult === false ? {color: '#FF003C'} : {}]}
+                        onChangeText={(text) => this.onChangeText(text)}
+                        value={this.state.inputPhraseWordsString}
+                        multiline={true}
+                        returnKeyType={'done'}
+                        secureTextEntry={true}
+                      />
+                    </View>
+                  </View>{/*Info Message*/}
+
+                  {this.state.testingResult === false &&
+                  <Text style={[styles.errorMessage]}>There was a problem with your vault key phrase. Please re-enter it above or go back to generate a new key phrase.</Text>
+                  }
                 </View>
 
-                {/*DESC*/}
-                <View style={styles.introductionTextArea}>
-                  <Text style={[styles.introductionTitle]}>Unlock existing vault</Text>
-                  <Text style={[styles.introductionDescription]}>
-                    Type all 12 words of your vault key phrase in the correct sequence.
-                    </Text>
+
+                {/*BOTTOM AREA*/}
+                <View style={[styles.bottomArea, styles.paddingContent]}>
+                  {/*Back*/}
+                  <TouchableOpacity style={[styles.buttonNext, {marginLeft: 0}]} onPress={Actions.pop}>
+                    <Text style={[styles.buttonNextText]}>BACK</Text>
+                  </TouchableOpacity>
+
+                  {/*Unlock*/}
+                  <TouchableOpacity style={[styles.buttonNext]} onPress={this.testPhraseWords.bind(this)} disabled={!this.state.inputPhraseWordsString}>
+                    <Text style={[styles.buttonNextText, { opacity: this.state.inputPhraseWordsString == '' ? 0.3 : 1 }]}>UNLOCK</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </ScrollView>
-            {/*BOTTOM AREA*/}
-            <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
-              {/*Buttons*/}
-              <View style={{ flexDirection: 'row' }}>
-                {/*Go Back*/}
-                <TouchableOpacity style={[styles.buttonNext]} onPress={Actions.pop}>
-                  <Text style={[styles.buttonNextText]}>GO BACK</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
           </View>
         </View>
 
         {/*KEYBOARD & SUGGESTIONS*/}
         {this.state.keyboardHeight > 0 &&
-          <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
-            <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + 1) % this.state.numberPhraseWords)}>
-              <Image style={styles.nextButtonImage} source={require('assets/imgs/arrow_down_enable.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.prevButton} onPress={() => this.selectedIndex.bind(this)((this.state.selectedIndex + (this.state.numberPhraseWords - 1)) % this.state.numberPhraseWords)}>
-              <Image style={styles.prevButtonImage} source={require('assets/imgs/arrow_up_enable.png')} />
-            </TouchableOpacity>
-            {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
-              <FlatList
-                ref={(ref) => this.listViewElement = ref}
-                keyboardShouldPersistTaps="handled"
-                horizontal={true}
-                extraData={this.state}
-                data={this.state.keyboardExternalDataSource}
-                renderItem={({ item }) => {
-                  return (<TouchableOpacity style={styles.selectionItem} onPress={() => this.onSubmitWord(item)}>
-                    <Text style={[styles.selectionItemText, { color: this.state.currentInputtedText === item ? 'blue' : 'gray' }]}>{item}</Text>
-                  </TouchableOpacity>)
-                }}
-              />
-            </View>}
-          </Animated.View>}
+        <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
+          {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
+            <FlatList
+              ref={(ref) => this.listViewElement = ref}
+              keyboardShouldPersistTaps="handled"
+              horizontal={true}
+              extraData={this.state}
+              data={this.state.keyboardExternalDataSource}
+              renderItem={({ item }) => {
+                return (<TouchableOpacity style={styles.selectionItem} onPress={() => this.onSubmitWord(item)}>
+                  <Text style={[styles.selectionItemText, { color: this.state.currentInputtedText === item ? 'blue' : 'gray' }]}>{item}</Text>
+                </TouchableOpacity>)
+              }}
+            />
+          </View>}
+        </Animated.View>
+        }
       </SafeAreaView>
     );
   }
@@ -415,7 +273,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
   },
-
   topArea: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -430,10 +287,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   bottomArea: {
-    height: config.isIPhoneX ? 70 : 50,
+    height: 70,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingBottom: 18,
   },
   paddingContent: {
@@ -451,59 +308,16 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.87)',
     letterSpacing: 1.5,
   },
-  phraseWordsArea: {
-    marginTop: 40,
-    width: '100%',
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
-  phraseWordsList: {
-    paddingTop: convertWidth(30),
-    paddingBottom: convertWidth(30),
-    borderTopWidth: 3,
-    borderBottomWidth: 3,
-    borderColor: '#FF003C',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  phraseWordContainer: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
-    borderWidth: 1, borderRadius: 3,
-    paddingLeft: 5, paddingRight: 5,
-    backgroundColor: '#FFFFFF',
-    height: 20,
-  },
-  recoveryPhraseSet: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginTop: 2,
-    paddingTop: 3,
-    paddingBottom: 3,
-    width: convertWidth(140),
-  },
-  recoveryPhraseIndex: {
-    width: convertWidth(39),
-    fontFamily: 'AvenirNextW1G-Light',
+  testResultMessage: {
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
-  },
-  recoveryPhraseInputWord: {
-    width: '100%',
-    fontFamily: 'Andale Mono', fontSize: 13,
-    letterSpacing: 4,
-  },
-  introductionTextArea: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    width: '100%',
+    color: '#FFFFFF',
+    letterSpacing: 1.5,
   },
   introductionTitle: {
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
-    fontSize: 23,
+    fontSize: 24,
     textAlign: 'left',
     letterSpacing: 0.15,
   },
@@ -515,50 +329,6 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.6)',
     textAlign: 'left',
     letterSpacing: 0.25,
-  },
-
-  keyboardExternal: {
-    position: 'absolute',
-    width: '100%', height: constants.keyboardExternalHeight,
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 8,
-    paddingRight: 8,
-    backgroundColor: '#EEEFF1',
-  },
-  prevButton: {
-    marginLeft: 10,
-  },
-  prevButtonImage: {
-    width: convertWidth(16),
-    height: convertWidth(16),
-    resizeMode: 'contain'
-  },
-  nextButton: {
-    marginLeft: 5,
-  },
-  nextButtonImage: {
-    width: convertWidth(16),
-    height: convertWidth(16),
-    resizeMode: 'contain'
-  },
-  selectionList: {
-    flex: 1,
-    height: 30,
-    marginLeft: 20,
-    marginRight: 20,
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  selectionItem: {
-    marginLeft: 4,
-    padding: 4,
-  },
-  selectionItemText: {
-    color: 'blue',
   },
   buttonNext: {
     fontFamily: 'AvenirNextW1G-Bold',
@@ -572,5 +342,82 @@ const styles = StyleSheet.create({
     color: '#FF003C',
     letterSpacing: 0.75,
   },
-
+  keyboardExternal: {
+    position: 'absolute',
+    width: '100%',
+    height: constants.keyboardExternalHeight,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 8,
+    paddingRight: 8,
+    backgroundColor: '#EEEFF1',
+  },
+  selectionList: {
+    flex: 1,
+    height: 30,
+    marginLeft: 5,
+    marginRight: 20,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectionItem: {
+    marginLeft: 4,
+    padding: 4,
+  },
+  selectionItemText: {
+    color: 'blue',
+  },
+  steps: {
+    marginTop: 20,
+    marginBottom: 10,
+    fontFamily: 'AvenirNextW1G-Light',
+    fontSize: 10,
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 1.5,
+    lineHeight: 16,
+  },
+  generateCodeContainer: {
+    width: '100%',
+    marginTop: 60,
+    borderBottomWidth: 3,
+    borderBottomColor: '#FF003C',
+  },
+  generateCodeTitle: {
+    backgroundColor: '#FF003C',
+    height: 30,
+    paddingLeft: 5,
+    justifyContent: 'center'
+  },
+  generateCodeTitleText: {
+    color: '#FFFFFF',
+    fontFamily: 'AvenirNextW1G-Bold',
+    fontSize: 14,
+    letterSpacing: 0.25,
+  },
+  generateCodeContent: {
+    height: 130,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  errorMessage: {
+    marginTop: 30,
+    color: '#FF003C',
+    fontFamily: 'AvenirNextW1G-Regular',
+    fontSize: 14,
+    lineHeight: 20,
+    letterSpacing: 0.25,
+  },
+  inputPhraseWords: {
+    height: 130,
+    width: '100%',
+    color: '#0060F2',
+    fontFamily: 'Andale Mono',
+    fontSize: 15,
+    lineHeight: 20,
+  },
 });

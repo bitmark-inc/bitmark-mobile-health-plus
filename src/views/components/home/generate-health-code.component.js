@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Image, View, TouchableOpacity, Text, FlatList, TextInput, Keyboard, Animated, SafeAreaView, ScrollView,
+  Image, View, TouchableOpacity, Text, FlatList, TextInput, Keyboard, Animated, SafeAreaView, ScrollView, Alert,
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
@@ -45,12 +45,7 @@ export class GenerateHealthCodeComponent extends Component {
     this.sliderStartAt = props.sliderStartAt || 3;
     this.state = {
       step: STEPS.init,
-      smallerList: [],
-      biggerList: [],
-      phraseWords: [],
-      randomWords: [],
-      selectingIndex: -1,
-      remainIndex: [],
+      inputPhraseWordsString: '',
       testingResult: null,
       keyboardExternalBottom: new Animated.Value(0),
       keyboardExternalOpacity: new Animated.Value(0),
@@ -105,9 +100,24 @@ export class GenerateHealthCodeComponent extends Component {
     Animated.parallel(listAnimations).start();
   }
 
-  async loginWithPhraseWords() {
-    let phraseWords = this.state.phraseWords.map(item => item.word);
+  testPhraseWords() {
+    let inputPhraseWordsString = this.state.inputPhraseWordsString.trim();
+    let testingResult = inputPhraseWordsString == this.phraseWords.join(' ');
+    this.setState({testingResult});
 
+    if (testingResult) {
+      this.loginWithPhraseWords(this.phraseWords);
+    }
+  }
+
+  goToTest() {
+    this.setState({
+      step: STEPS.testing,
+      testingResult: null,
+    });
+  }
+
+  async loginWithPhraseWords(phraseWords) {
     if (this.migrateFrom24Words) {
       Actions.whatNext({twelveWords: phraseWords});
     } else {
@@ -168,219 +178,82 @@ export class GenerateHealthCodeComponent extends Component {
     let phraseInfo = await AppProcessor.doGeneratePhrase();
     this.phraseWords = phraseInfo.phraseWords;
     this.bitmarkAccountNumber = phraseInfo.bitmarkAccountNumber;
-    this.computePhraseWords(phraseInfo.phraseWords, { step: STEPS.generated });
+    // this.computePhraseWords(phraseInfo.phraseWords, { step: STEPS.generated });
     // this.loginWithPhraseWords(); // developer
+
+
+    this.canGenerateNew = true;
+    this.setState({ step: STEPS.generated });
   }
 
-  goToTest(phraseWords) {
-    let numberWorldFilled = phraseWords.length - 3;
-    let countPreFill = 0;
-    let smallerList = [];
-    let biggerList = [];
-    for (let index in phraseWords) {
-      let word = phraseWords[index].word;
-      let characters = word.split('');
-      fillUpArrayByEmptyString(characters, NUMBER_CHARACTERS_OF_PHRASE_WORD);
+  onChangeText(text) {
+    text = text.trimLeft();
 
-      if (index < (phraseWords.length / 2)) {
-        smallerList.push({ word, characters });
-      } else {
-        biggerList.push({ word, characters });
-      }
+    text = text.replace('\n', ' ');
+
+    // Replace double space by single space if any
+    if (text.endsWith('  ')) {
+      text = `${text.trimRight()} `;
     }
-    while (countPreFill < numberWorldFilled) {
-      let randomIndex = Math.floor(Math.random() * phraseWords.length);
-      if (!phraseWords[randomIndex].selected) {
-        phraseWords[randomIndex].selected = true;
-        if (randomIndex < (phraseWords.length / 2)) {
-          smallerList[randomIndex].selected = true;
-        } else {
-          biggerList[randomIndex - (phraseWords.length / 2)].selected = true;
-        }
-        countPreFill++;
-      }
+
+    // Populate suggestion words
+    let textForPopulateSuggestion = text;
+    if (textForPopulateSuggestion && this.inputPhraseWordsRef._lastNativeSelection.start == this.inputPhraseWordsRef._lastNativeSelection.end) {
+      textForPopulateSuggestion = text.substring(0, this.inputPhraseWordsRef._lastNativeSelection.end);
     }
-    let randomWords = [];
-    let remainIndex = [];
-    for (let index = 0; index < phraseWords.length; index++) {
-      if (!phraseWords[index].selected) {
-        let word = phraseWords[index].word;
-        let characters = word.split('');
-        fillUpArrayByEmptyString(characters, NUMBER_CHARACTERS_OF_PHRASE_WORD);
 
-        randomWords.push({ word, characters });
-        remainIndex.push(index);
-      }
-    }
-    randomWords = randomWords.sort((a, b) => a.word < b.word ? -1 : (a.word > b.word ? 1 : 0));
+    let words = textForPopulateSuggestion.split(' ');
+    let lastWord = words[words.length - 1];
+    this.doFilter(lastWord);
 
-    randomWords.forEach(item => item.selected = null);
-    smallerList.forEach((item, index) => {
-      item.word = item.selected ? item.word : '';
-      item.characters = item.selected ? item.characters : undefined;
-      item.key = index;
-    });
-    biggerList.forEach((item, index) => {
-      item.word = item.selected ? item.word : '';
-      item.characters = item.selected ? item.characters : undefined;
-      item.key = (phraseWords.length / 2) + index;
-    });
-
-    console.log('randomWords:', randomWords);
-    console.log('smallerList:', smallerList);
-    console.log('biggerList:', biggerList);
-    console.log('remainIndex:', remainIndex);
-    this.setState({
-      step: STEPS.testing,
-      testingResult: null,
-      randomWords,
-      phraseWords,
-      smallerList,
-      biggerList,
-      remainIndex,
-      selectingIndex: remainIndex[0],
-    });
+    this.setState({inputPhraseWordsString: text, testingResult: null})
   }
 
-  onChangeText(index, text) {
-    text = text ? text.trim().toLowerCase() : '';
-    this.doFilter(text);
-    if (index < (this.phraseWords.length / 2)) {
-      let inputtedWords = this.state.smallerList;
-      inputtedWords[index].word = text;
-      this.setState({ smallerList: inputtedWords });
-    } else {
-      let inputtedWords = this.state.biggerList;
-      inputtedWords[index - (this.phraseWords.length / 2)].word = text;
-      this.setState({ biggerList: inputtedWords });
-    }
-    // this.checkStatusInputting();
-  }
-
-  onFocus(index) {
-    let text = index < (this.state.phraseWords.length / 2) ? this.state.smallerList[index].word : this.state.biggerList[index - (this.state.phraseWords.length / 2)].word;
-    this.setState({
-      selectingIndex: index
-    });
-    this.inputtedRefs[index].focus();
-    this.doFilter(text);
-  }
-  selectedIndex(index) {
-    this.onFocus(index);
-    // this.checkStatusInputting();
-  }
   onSubmitWord(word) {
-    console.log('word:', word);
-    let selectingIndex = this.state.selectingIndex;
-    let smallerList = this.state.smallerList;
-    let biggerList = this.state.biggerList;
+    let inputPhraseWordsString = this.state.inputPhraseWordsString;
+    if ((this.inputPhraseWordsRef._lastNativeSelection.start == this.inputPhraseWordsRef._lastNativeSelection.end) && (this.inputPhraseWordsRef._lastNativeSelection.end == inputPhraseWordsString.length)) {
+      let words = inputPhraseWordsString.split(' ');
+      words[words.length - 1] = word;
+      inputPhraseWordsString = `${words.join(' ').trim()} `;
+    } else {
+      let textBeforeSuggestion = inputPhraseWordsString.substring(0, this.inputPhraseWordsRef._lastNativeSelection.end);
+      let words = textBeforeSuggestion.split(' ');
+      words[words.length - 1] = word;
+      textBeforeSuggestion = `${words.join(' ').trim()} `;
 
-    if (word) {
-      word = word ? word.trim().toLowerCase() : '';
-      this.inputtedRefs[selectingIndex].focus();
-      if (selectingIndex < (this.state.phraseWords.length / 2)) {
-        let inputtedWords = this.state.smallerList;
-        inputtedWords[selectingIndex].word = word;
-        this.setState({ smallerList: inputtedWords });
-      } else {
-        let inputtedWords = this.state.biggerList;
-        inputtedWords[selectingIndex - (this.state.phraseWords.length / 2)].word = word;
-        this.setState({ biggerList: inputtedWords });
-      }
+      let textAfterSuggestion = inputPhraseWordsString.substring(this.inputPhraseWordsRef._lastNativeSelection.end);
+      inputPhraseWordsString = `${textBeforeSuggestion}${textAfterSuggestion.trim()}`;
     }
 
-    if (word) {
-      let testingResult = null;
-      if (this.checkIfFinishedInputting()) {
-        testingResult = true;
-
-        for (let index = 0; index < this.state.phraseWords.length; index++) {
-          if ((index < (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== smallerList[index].word) ||
-            (index >= (this.state.phraseWords.length / 2) && this.state.phraseWords[index].word !== biggerList[index - (this.state.phraseWords.length / 2)].word)) {
-            testingResult = false;
-            console.log('testingResult  false :', index);
-            break;
-          }
-        }
-
-        if (testingResult) {
-          Keyboard.dismiss();
-          this.loginWithPhraseWords();
-        }
-
-        this.setState({ testingResult });
-      } else {
-        // Focus on next word
-        this.selectedIndex(this.getNextInputIndex());
-      }
-    }
-  }
-
-  getNextInputIndex() {
-    let selectingIndex = this.state.selectingIndex;
-    let remainIndex = this.state.remainIndex;
-
-    let tempIndex = remainIndex.findIndex(id => id === selectingIndex);
-    let nextIndex = remainIndex[0];
-
-    if (tempIndex !== (remainIndex.length - 1)) {
-      nextIndex = remainIndex[tempIndex + 1];
-    }
-
-    return nextIndex;
-  }
-
-  getPreviousInputIndex() {
-    let selectingIndex = this.state.selectingIndex;
-    let remainIndex = this.state.remainIndex;
-
-    let tempIndex = remainIndex.findIndex(id => id === selectingIndex);
-    let previousIndex = 0;
-
-    if (tempIndex > 0) {
-      previousIndex = remainIndex[tempIndex - 1];
-    }
-
-    return previousIndex;
-  }
-
-  checkIfFinishedInputting() {
-    let finishedInputting = true;
-
-    let remainingIndexes = this.state.remainIndex;
-    let smallerList = this.state.smallerList;
-    let biggerList = this.state.biggerList;
-
-    for (let i = 0; i < remainingIndexes.length; i++) {
-      let index = remainingIndexes[i];
-
-      if (index < (this.state.phraseWords.length / 2)) {
-        if (!smallerList[index].word) {
-          finishedInputting = false;
-          break;
-        }
-      } else {
-        if (!biggerList[index - (this.state.phraseWords.length / 2)].word) {
-          finishedInputting = false;
-          break;
-        }
-      }
-    }
-
-    return finishedInputting;
+    this.setState({inputPhraseWordsString});
   }
 
   doFilter(text) {
-    let keyboardExternalDataSource = dictionaryPhraseWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
+    let keyboardExternalDataSource;
+    if (text) {
+      keyboardExternalDataSource = dictionaryPhraseWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
+    } else {
+      keyboardExternalDataSource = dictionaryPhraseWords;
+    }
+
     this.setState({ keyboardExternalDataSource });
   }
 
   resetTest() {
-    this.computePhraseWords(INIT_PHRASE_WORDS, {
-      step: STEPS.init,
-      testingResult: null
-    });
-    this.inputtedRefs = {};
+    Alert.alert('Are you sure?', 'If you go back, you will lose this key phrase and will need to generate a new one. ', [
+      {
+        text: 'Cancel', style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          this.setState({
+            step: STEPS.init,
+            testingResult: null,
+            inputPhraseWordsString: ''
+          })
+        }
+      }]);
   }
 
   render() {
@@ -400,79 +273,47 @@ export class GenerateHealthCodeComponent extends Component {
                     </View>
 
                     {/*CONTENT*/}
-                    <View style={styles.contentArea}>
-                      {/*PHRASE WORDS*/}
-                      <View style={styles.phraseWordsArea}>
-                        <View style={[styles.phraseWordsList]}>
-                          <FlatList data={this.state.smallerList}
-                            keyExtractor={(item, index) => index + ''}
-                            scrollEnabled={false}
-                            extraData={this.state}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <View style={styles.recoveryPhraseSet}>
-                                  <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                  <View style={styles.phraseWordContainer}>
-                                    {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                      <CharacterFlapperComponent char={character.toUpperCase()} charStyle={styles.character} ref={ref => this.flapperRefs[`${index}_${cIndex}`] = ref} />
-                                    </View>)}
-                                  </View>
-                                </View>
-                              )
-                            }}
-                          />
-                          <FlatList data={this.state.biggerList}
-                            keyExtractor={(item, index) => index + ''}
-                            style={{ marginLeft: 20 }}
-                            scrollEnabled={false}
-                            extraData={this.state}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <View style={styles.recoveryPhraseSet}>
-                                  <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                                  <View style={styles.phraseWordContainer}>
-                                    {item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                      <CharacterFlapperComponent char={character.toUpperCase()} charStyle={styles.character} ref={ref => this.flapperRefs[`${index + (this.state.phraseWords.length / 2)}_${cIndex}`] = ref} />
-                                    </View>)}
-                                  </View>
-                                </View>
-                              )
-                            }}
-                          />
+                    <View style={[styles.contentArea, {justifyContent: 'flex-start'}]}>
+                      {/*Desc*/}
+                      <Text style={[styles.steps]}>STEP 2 OF 3</Text>
+                      <Text style={[styles.introductionTitle]}>Generate vault key phrase</Text>
+                      <Text style={[styles.introductionDescription]}>
+                        Your vault is stored on your phone and secured by a 12-word key phrase that only you will know. Think of this as a magic phrase — it instantly restores all your data if your phone is ever lost, stolen, or damaged.
+                      </Text>
+
+                      {/*Generate Code Container*/}
+                      <View style={[styles.generateCodeContainer]}>
+                        {/*header*/}
+                        <View style={[styles.generateCodeTitle]}>
+                          <Text style={[styles.generateCodeTitleText]}>YOUR 12-WORD VAULT KEY PHRASE</Text>
                         </View>
 
-                        {/*INFO LINK*/}
-                        {(this.state.step === STEPS.generated) &&
-                          <View style={[styles.infoLinkTextContainer]}>
-                            <Image style={styles.infoIcon} source={require('assets/imgs/info-icon.png')} />
-                            <TouchableOpacity style={[]} onPress={() => this.setState({ step: STEPS.writeDownPhraseWordsInform })}>
-                              <Text style={[styles.infoLinkText, { marginLeft: 5 }]}>Write down your key phrase on a piece of paper and keep it safe.</Text>
-                            </TouchableOpacity>
-                          </View>
-                        }
-                      </View>
+                        {/*content*/}
+                        <View style={[styles.generateCodeContent]}>
+                          {/*Phrase Words*/}
+                          {(this.state.step === STEPS.generated) &&
+                          <Text style={[styles.phraseWords]}>{this.phraseWords.join(' ').toLowerCase()}</Text>
+                          }
 
-                      {/*DESC*/}
-                      <View style={styles.introductionTextArea}>
-                        <Text style={[styles.introductionTitle]}>Set your vault key phrase</Text>
-                        <Text style={[styles.introductionDescription]}>
-                          A 12-word phrase that only you know.
-                    </Text>
-
-                        {/*GENERATE HEALTH CODE*/}
-                        {(this.state.step === STEPS.init || this.state.step === STEPS.generated) &&
-                          <TouchableOpacity style={[styles.button, { marginTop: 20 }]} onPress={this.generatePhraseWords.bind(this)}>
-                            <Text style={[styles.buttonText]}>GENERATE KEY PHRASE</Text>
+                          {/*GENERATE HEALTH CODE*/}
+                          {(this.state.step === STEPS.init) &&
+                          <TouchableOpacity style={[styles.button]} onPress={this.generatePhraseWords.bind(this)}>
+                            <Text style={[styles.buttonText]}>GENERATE NOW</Text>
                           </TouchableOpacity>
-                        }
+                          }
+                        </View>
                       </View>
+
+                      {/*Info Message*/}
+                      {this.state.step === STEPS.generated &&
+                      <Text style={[styles.infoMessage]}>Write it down and keep it safe. You will need it to unlock your vault in the next
+                        step.</Text>
+                      }
                     </View>
 
                     {/*BOTTOM AREA*/}
-                    <View style={[styles.bottomArea]}>
-                      <Image style={styles.sliderIcon} source={this.sliderStartAt == 2 ? require('assets/imgs/slider-icon-step-2.png') : require('assets/imgs/slider-icon-step-3.png')} />
-
-                      <TouchableOpacity style={[styles.buttonNext]} disabled={this.state.step === STEPS.init} onPress={() => { if (this.state.step === STEPS.generated) { this.goToTest.bind(this)(this.state.phraseWords) } }}>
+                    <View style={[styles.bottomArea, {justifyContent: 'flex-end'}]}>
+                      <TouchableOpacity style={[styles.buttonNext]} disabled={this.state.step === STEPS.init} onPress={() => { if (this.state.step === STEPS.generated) { this.goToTest.bind(this)(this.phraseWords) } }}>
                         <Text style={[styles.buttonNextText, { opacity: this.state.step === STEPS.init ? 0.3 : 1 }]}>NEXT</Text>
                       </TouchableOpacity>
                     </View>
@@ -522,17 +363,10 @@ export class GenerateHealthCodeComponent extends Component {
                   <View style={{ flex: 1 }}>
                     {/*TOP AREA*/}
                     {/*BITMARK Header*/}
-                    {this.state.testingResult === null &&
+                    {this.state.testingResult !== true &&
                       <View style={[styles.topArea, styles.paddingContent]}>
                         <Text style={[styles.title]}>BITMARK HEALTH</Text>
                         <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
-                      </View>
-                    }
-
-                    {/*Failed Test*/}
-                    {this.state.testingResult === false &&
-                      <View style={[styles.topArea, styles.paddingContent, { backgroundColor: '#FF003C', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
-                        <Text style={[styles.testResultMessage]}>WRONG COMBINATION</Text>
                       </View>
                     }
 
@@ -544,126 +378,53 @@ export class GenerateHealthCodeComponent extends Component {
                     }
 
                     {/*CONTENT*/}
-                    <View style={[styles.contentArea, styles.paddingContent]}>
-                      {/*PHRASE WORDS*/}
-                      <View style={styles.phraseWordsArea}>
-                        <View style={[styles.phraseWordsList]}>
-                          {/*SELECTED WORDS*/}
-                          {/*Smaller list*/}
-                          <FlatList data={this.state.smallerList}
-                            keyExtractor={(item, index) => index + ''}
-                            scrollEnabled={false}
-                            extraData={this.state}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity style={[styles.recoveryPhraseSet,]}
-                                  disabled={item.selected}
-                                  onPress={() => {
-                                    this.setState({ selectingIndex: index });
-                                    this.inputtedRefs[item.key].focus();
-                                  }}
-                                >
-                                  <Text style={styles.recoveryPhraseIndex}>{index + 1}.</Text>
-                                  <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
-                                    {/*Selected word*/}
-                                    {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                      <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
-                                    </View>)}
-                                    {/*Input word*/}
-                                    {!item.characters &&
-                                      <View style={[styles.characterBound, {
-                                        backgroundColor: 'white',
-                                        borderWidth: 1,
-                                        borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                        color: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingRight: 1, paddingLeft: 1 }]}>
-                                        <TextInput
-                                          style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
-                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                          value={item.word.toUpperCase()}
-                                          returnKeyType={'done'}
-                                          autoCorrect={false}
-                                          autoCapitalize="none"
-                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                          onFocus={() => this.onFocus.bind(this)(item.key)}
-                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                        />
-                                      </View>
-                                    }
-                                  </View>
-                                </TouchableOpacity>
-                              )
-                            }}
-                          />
-                          {/*Bigger list*/}
-                          <FlatList data={this.state.biggerList}
-                            keyExtractor={(item, index) => index + ''}
-                            style={{ marginLeft: 9 }}
-                            scrollEnabled={false}
-                            extraData={this.state}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity style={[styles.recoveryPhraseSet,]}
-                                  disabled={item.selected}
-                                  onPress={() => {
-                                    this.setState({ selectingIndex: index + (this.state.phraseWords.length / 2) });
-                                    this.inputtedRefs[item.key].focus();
-                                  }}
-                                >
-                                  <Text style={styles.recoveryPhraseIndex}>{index + (this.state.phraseWords.length / 2) + 1}.</Text>
-                                  <View style={[styles.phraseWordContainer, item.characters ? {} : { paddingTop: 0, paddingBottom: 0, paddingRight: 0, backgroundColor: 'transparent' }]}>
-                                    {/*Selected word*/}
-                                    {item.characters && item.characters.map((character, cIndex) => <View style={styles.characterBound} key={'character_' + cIndex}>
-                                      <Text style={[styles.character, { color: item.selected ? '#828282' : '#FF4444' }]} >{character.toUpperCase()}</Text>
-                                    </View>)}
-                                    {/*Input word*/}
-                                    {!item.characters &&
-                                      <View style={[styles.characterBound, {
-                                        backgroundColor: 'white',
-                                        borderWidth: 1,
-                                        borderColor: this.state.testingResult === false ? '#FF4444' : '#0060F2',
-                                      }, item.characters ? {} : { marginLeft: 0, height: 20, paddingRight: 1, paddingLeft: 1 }]}>
-                                        <TextInput
-                                          style={[styles.recoveryPhraseInputWord, { color: this.state.testingResult === false ? '#FF4444' : '#0060F2', }]}
-                                          ref={(r) => { this.inputtedRefs[item.key] = r; }}
-                                          value={item.word.toUpperCase()}
-                                          returnKeyType={'done'}
-                                          autoCorrect={false}
-                                          autoCapitalize="none"
-                                          onChangeText={(text) => this.onChangeText.bind(this)(item.key, text)}
-                                          onFocus={() => this.onFocus.bind(this)(item.key)}
-                                          onSubmitEditing={() => this.onSubmitWord.bind(this)(item.word)}
-                                        />
-                                      </View>
-                                    }
-                                  </View>
-                                </TouchableOpacity>
-                              )
-                            }}
+                    <View style={[styles.contentArea, styles.paddingContent, {justifyContent: 'flex-start'}]}>
+                      {/*Desc*/}
+                      <Text style={[styles.steps]}>STEP 3 OF 3</Text>
+                      <Text style={[styles.introductionTitle]}>Unlock your vault </Text>
+                      <Text style={[styles.introductionDescription]}>
+                        Enter your vault key phrase below to unlock your vault.
+                      </Text>
+
+                      {/*Generate Code Container*/}
+                      <View style={[styles.generateCodeContainer]}>
+                        {/*header*/}
+                        <View style={[styles.generateCodeTitle]}>
+                          <Text style={[styles.generateCodeTitleText]}>YOUR 12-WORD VAULT KEY PHRASE</Text>
+                        </View>
+
+                        {/*content*/}
+                        <View style={[styles.generateCodeContent]}>
+                          {/*Input words*/}
+                          <TextInput
+                            ref={(r) => { this.inputPhraseWordsRef = r;}}
+                            style={[styles.inputPhraseWords, this.state.testingResult === false ? {color: '#FF003C'} : {}]}
+                            onChangeText={(text) => this.onChangeText(text)}
+                            value={this.state.inputPhraseWordsString}
+                            multiline={true}
+                            returnKeyType={'done'}
+                            secureTextEntry={true}
                           />
                         </View>
-                      </View>
+                      </View>{/*Info Message*/}
 
-                      {/*DESC*/}
-                      <View style={styles.introductionTextArea}>
-                        <Text style={[styles.introductionTitle]}>Complete your vault key phrase to unlock your vault</Text>
-                        <Text style={[styles.introductionDescription]}>
-                          Enter the three missing words.
-                    </Text>
-                      </View>
+                      {this.state.testingResult === false &&
+                      <Text style={[styles.errorMessage]}>There was a problem with your vault key phrase. Please re-enter it above or go back to generate a new key phrase.</Text>
+                      }
                     </View>
 
-                    {/*BOTTOM AREA*/}
-                    <View style={[styles.bottomArea, styles.paddingContent, { height: 80 }]}>
-                      <Image style={styles.sliderIcon} source={this.sliderStartAt == 2 ? require('assets/imgs/slider-icon-step-3.png') : require('assets/imgs/slider-icon-step-4.png')} />
 
-                      {/*Buttons*/}
-                      <View style={{ flexDirection: 'row' }}>
-                        {/*Go Back*/}
-                        <TouchableOpacity style={[styles.buttonNext]} onPress={this.resetTest.bind(this)}>
-                          <Text style={[styles.buttonNextText]}>GO BACK</Text>
-                        </TouchableOpacity>
-                      </View>
+                    {/*BOTTOM AREA*/}
+                    <View style={[styles.bottomArea, styles.paddingContent]}>
+                      {/*Back*/}
+                      <TouchableOpacity style={[styles.buttonNext, {marginLeft: 0}]} onPress={this.resetTest.bind(this)}>
+                        <Text style={[styles.buttonNextText]}>BACK</Text>
+                      </TouchableOpacity>
+
+                      {/*Unlock*/}
+                      <TouchableOpacity style={[styles.buttonNext]} onPress={this.testPhraseWords.bind(this)} disabled={!this.state.inputPhraseWordsString}>
+                        <Text style={[styles.buttonNextText, { opacity: this.state.inputPhraseWordsString == '' ? 0.3 : 1 }]}>UNLOCK</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </ScrollView>
@@ -674,12 +435,6 @@ export class GenerateHealthCodeComponent extends Component {
           {/*KEYBOARD & SUGGESTIONS*/}
           {this.state.keyboardHeight > 0 &&
             <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
-              <TouchableOpacity style={styles.nextButton} onPress={() => this.selectedIndex.bind(this)(this.getNextInputIndex.bind(this)())}>
-                <Image style={styles.nextButtonImage} source={require('assets/imgs/arrow_down_enable.png')} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.prevButton} onPress={() => this.selectedIndex.bind(this)(this.getPreviousInputIndex.bind(this)())}>
-                <Image style={styles.prevButtonImage} source={require('assets/imgs/arrow_up_enable.png')} />
-              </TouchableOpacity>
               {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
                 <FlatList
                   ref={(ref) => this.listViewElement = ref}
@@ -694,7 +449,8 @@ export class GenerateHealthCodeComponent extends Component {
                   }}
                 />
               </View>}
-            </Animated.View>}
+            </Animated.View>
+          }
         </View>
       </SafeAreaView>
     );
@@ -711,7 +467,6 @@ const styles = StyleSheet.create({
     padding: convertWidth(16),
     paddingTop: convertWidth(16),
   },
-
   bodyContent: {
     flex: 1,
     backgroundColor: '#F4F2EE',
@@ -723,7 +478,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
   },
-
   topArea: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -738,7 +492,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   bottomArea: {
-    height: config.isIPhoneX ? 70 : 50,
+    height: 70,
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
@@ -765,13 +519,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     letterSpacing: 1.5,
   },
-  introductionTextArea: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    width: '100%',
-  },
   introductionTitle: {
     fontFamily: 'AvenirNextW1G-Bold',
     color: 'rgba(0, 0, 0, 0.87)',
@@ -788,82 +535,10 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     letterSpacing: 0.25,
   },
-  phraseWordsArea: {
-    marginTop: 40,
-    width: '100%',
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
-  phraseWordsList: {
-    paddingTop: convertWidth(30),
-    paddingBottom: convertWidth(30),
-    borderTopWidth: 3,
-    borderBottomWidth: 3,
-    borderColor: '#FF003C',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  phraseWordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    backgroundColor: '#FFFFFF',
-    paddingTop: 2, paddingBottom: 2,
-    paddingRight: 2,
-  },
-  characterBound: {
-    flex: 1, alignItems: 'center', justifyContent: 'center',
-    height: 16,
-    borderRadius: 3, borderWidth: 0.1, borderColor: '#F1F1F1',
-    backgroundColor: '#F1F1F1',
-    marginLeft: 2,
-  },
-  character: {
-    textAlign: 'center', fontFamily: 'Andale Mono', fontSize: 13,
-    color: 'rgba(0, 0, 0, 0.6)',
-  },
-  recoveryPhraseSet: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginTop: 2,
-    paddingTop: 3,
-    paddingBottom: 3,
-    width: convertWidth(140),
-  },
-  recoveryPhraseIndex: {
-    width: convertWidth(39),
-    fontFamily: 'AvenirNextW1G-Light',
-    fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
-  },
-  recoveryPhraseInputWord: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
-    fontFamily: 'Andale Mono',
-    fontSize: 13,
-    paddingLeft: 2, paddingRight: 2,
-    letterSpacing: 4,
-  },
-  infoLinkTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 15,
-    width: '100%',
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
   infoIcon: {
     width: 20,
     height: 20,
     resizeMode: 'contain'
-  },
-  infoLinkText: {
-    textDecorationLine: 'underline',
-    color: '#0060F2',
-    marginLeft: 5,
-    fontFamily: 'AvenirNextW1G-Regular',
-    fontSize: 14,
-    letterSpacing: 0.25,
   },
   writeDownPhraseWordsInformTitle: {
     marginTop: 50,
@@ -918,26 +593,10 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     backgroundColor: '#EEEFF1',
   },
-  prevButton: {
-    marginLeft: 10,
-  },
-  prevButtonImage: {
-    width: convertWidth(16),
-    height: convertWidth(16),
-    resizeMode: 'contain'
-  },
-  nextButton: {
-    marginLeft: 5,
-  },
-  nextButtonImage: {
-    width: convertWidth(16),
-    height: convertWidth(16),
-    resizeMode: 'contain'
-  },
   selectionList: {
     flex: 1,
     height: 30,
-    marginLeft: 20,
+    marginLeft: 5,
     marginRight: 20,
     flexDirection: 'row',
     alignContent: 'center',
@@ -950,5 +609,69 @@ const styles = StyleSheet.create({
   },
   selectionItemText: {
     color: 'blue',
+  },
+  steps: {
+    marginTop: 20,
+    marginBottom: 10,
+    fontFamily: 'AvenirNextW1G-Light',
+    fontSize: 10,
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 1.5,
+    lineHeight: 16,
+  },
+  generateCodeContainer: {
+    width: '100%',
+    marginTop: 60,
+    borderBottomWidth: 3,
+    borderBottomColor: '#FF003C',
+  },
+  generateCodeTitle: {
+    backgroundColor: '#FF003C',
+    height: 30,
+    paddingLeft: 5,
+    justifyContent: 'center'
+  },
+  generateCodeTitleText: {
+    color: '#FFFFFF',
+    fontFamily: 'AvenirNextW1G-Bold',
+    fontSize: 14,
+    letterSpacing: 0.25,
+  },
+  generateCodeContent: {
+    height: 130,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  phraseWords: {
+    color: '#000000',
+    fontFamily: 'Andale Mono',
+    fontSize: 15,
+    lineHeight: 20,
+  },
+  infoMessage: {
+    marginTop: 30,
+    color: '#000000',
+    fontFamily: 'AvenirNextW1G-Demi',
+    fontSize: 14,
+    lineHeight: 20,
+    letterSpacing: 0.25,
+  },
+  errorMessage: {
+    marginTop: 30,
+    color: '#FF003C',
+    fontFamily: 'AvenirNextW1G-Regular',
+    fontSize: 14,
+    lineHeight: 20,
+    letterSpacing: 0.25,
+  },
+  inputPhraseWords: {
+    height: 130,
+    width: '100%',
+    color: '#0060F2',
+    fontFamily: 'Andale Mono',
+    fontSize: 15,
+    lineHeight: 20,
   },
 });
