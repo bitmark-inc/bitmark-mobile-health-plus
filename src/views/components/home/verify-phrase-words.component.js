@@ -16,15 +16,18 @@ import { CommonModel } from "src/processors/models";
 // let testWords = ["track", "occur", "mercy", "machine", "guitar", "occur", "main", "extra", "topic", "pen", "fatigue", "whale"];
 // let testWords = ["aunt", "domain", "device", "amount", "surprise", "canal", "unaware", "junk", "emotion", "scene", "gesture", "empower"];
 
-export class LoginComponent extends Component {
+export class VerifyPhraseWordsComponent extends Component {
   static propTypes = {
-    migrateFrom24Words: PropTypes.bool,
     phraseWords: PropTypes.any,
     backAction: PropTypes.func,
+    successAction: PropTypes.any,
+    actionType: PropTypes.any,
   };
 
   constructor(props) {
     super(props);
+
+    // console.log('this.props.phraseWords.join(\' \'):', this.props.phraseWords.join(' '));
     this.state = {
       inputPhraseWordsString: '',
       testingResult: null,
@@ -32,7 +35,6 @@ export class LoginComponent extends Component {
       keyboardExternalOpacity: new Animated.Value(0),
       keyboardExternalDataSource: dictionaryPhraseWords,
     };
-    this.flapperRefs = {};
   }
 
   componentDidMount() {
@@ -86,7 +88,10 @@ export class LoginComponent extends Component {
     let phraseWords = inputPhraseWordsString.split(' ').map(word => word.toLowerCase());
 
     try {
-      if (this.props.phraseWords) {
+      if (this.props.actionType == 'logout') {
+        let userInfo = await AppProcessor.doGetCurrentAccount();
+        testingResult = inputPhraseWordsString == userInfo.phraseWords.join(' ');
+      } else if (this.props.phraseWords) {
         testingResult = inputPhraseWordsString == this.props.phraseWords.join(' ');
       } else {
         await AppProcessor.doCheckPhraseWords(phraseWords);
@@ -99,7 +104,11 @@ export class LoginComponent extends Component {
     this.setState({testingResult});
 
     if (testingResult) {
-      this.loginWithPhraseWords(phraseWords);
+      if (this.props.successAction) {
+        this.props.successAction(phraseWords);
+      } else {
+        this.loginWithPhraseWords(phraseWords);
+      }
     }
 
     this.applyNewTextInputColor();
@@ -124,9 +133,7 @@ export class LoginComponent extends Component {
   }
 
   async loginWithPhraseWords(phraseWords) {
-    if (this.props.migrateFrom24Words) {
-      Actions.whatNext({twelveWords: phraseWords});
-    } else if (this.props.phraseWords) {
+    if (this.props.actionType == 'createNewAccount') {
       // login with new account
       await AppProcessor.doLogin(phraseWords, false);
 
@@ -203,7 +210,31 @@ export class LoginComponent extends Component {
     this.setState({ keyboardExternalDataSource });
   }
 
+  getDescComponent() {
+    switch (this.props.actionType) {
+      case 'testPhraseWords':
+        return TestPhraseWordsDescComponent;
+      case 'logout':
+        return LogoutDescComponent;
+      default:
+        return LoginDescComponent;
+    }
+  }
+
+  getTestingErrorMessage() {
+    switch (this.props.actionType) {
+      case 'testPhraseWords':
+      case 'logout':
+        return 'There was a problem with your vault key phrase. Please re-enter it above.';
+      default:
+        return 'There was a problem with your vault key phrase. Please re-enter it above or go back to generate a new key phrase.';
+    }
+  }
+
   render() {
+    let DescComponent = this.getDescComponent();
+    let testingErrorMessage = this.getTestingErrorMessage();
+
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.body}>
@@ -229,17 +260,13 @@ export class LoginComponent extends Component {
                 {/*CONTENT*/}
                 <View style={[styles.contentArea, styles.paddingContent, {justifyContent: 'flex-start'}]}>
                   {/*Desc*/}
-                  <Text style={[styles.steps]}>STEP 3 OF 3</Text>
-                  <Text style={[styles.introductionTitle]}>Unlock your vault </Text>
-                  <Text style={[styles.introductionDescription]}>
-                    Enter your vault key phrase below to unlock your vault.
-                  </Text>
+                  <DescComponent/>
 
                   {/*Generate Code Container*/}
-                  <View style={[styles.generateCodeContainer, {marginTop: 100}]}>
+                  <View style={[styles.generateCodeContainer]}>
                     {/*header*/}
                     <View style={[styles.generateCodeTitle]}>
-                      <Text style={[styles.generateCodeTitleText]}>YOUR 12-WORD VAULT KEY PHRASE</Text>
+                      <Text style={[styles.generateCodeTitleText]}>ENTER 12-WORD VAULT KEY PHRASE</Text>
                     </View>
 
                     {/*content*/}
@@ -258,7 +285,7 @@ export class LoginComponent extends Component {
                   </View>{/*Info Message*/}
 
                   {this.state.testingResult === false &&
-                  <Text style={[styles.errorMessage]}>There was a problem with your vault key phrase. Please re-enter it above or go back to generate a new key phrase.</Text>
+                  <Text style={[styles.errorMessage]}>{testingErrorMessage}</Text>
                   }
                 </View>
 
@@ -470,3 +497,44 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
+
+class LoginDescComponent extends Component {
+  render() {
+    return (
+      <View>
+        <Text style={[styles.steps]}>STEP 3 OF 3</Text>
+        <Text style={[styles.introductionTitle]}>Unlock your vault </Text>
+        <Text style={[styles.introductionDescription]}>
+          Enter your vault key phrase below to unlock your vault.
+        </Text>
+      </View>
+    )
+  }
+}
+
+class TestPhraseWordsDescComponent extends Component {
+  render() {
+    return (
+      <View>
+        <Text style={[styles.introductionTitle, {marginTop: 30}]}>Test your key phrase</Text>
+        <Text style={[styles.introductionDescription]}>
+          Enter your vault key phrase below to test your vault key phrase.
+        </Text>
+      </View>
+    )
+  }
+}
+
+class LogoutDescComponent extends Component {
+  render() {
+    return (
+      <View>
+        <Text style={[styles.introductionTitle, {marginTop: 30}]}>Lock your vault</Text>
+        <Text style={[styles.introductionDescription]}>
+          Enter your vault key phrase below to lock your vault on this device. You will need to enter your vault key phrase again to unlock your vault.
+        </Text>
+      </View>
+    )
+  }
+}
+

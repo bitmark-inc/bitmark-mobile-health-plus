@@ -306,6 +306,10 @@ class PrivateUserComponent extends Component {
     this.setState({ searchFocusing });
   }
 
+  cancelSearch() {
+    this.searchInput.cancelSearch();
+  }
+
   populateCardListData() {
     let cardListData = [];
     let accumulatedTop = 0;
@@ -353,8 +357,23 @@ class PrivateUserComponent extends Component {
       <View style={{ flex: 1 }}>
         <SafeAreaView style={[styles.bodySafeView,]}>
           <View style={[styles.wrapper]}>
+            {/*HEADER BAR*/}
+            {!this.state.searchFocusing &&
+            <View style={[styles.topBar]}>
+              {/*Back button*/}
+              <TouchableOpacity style={styles.topBarButton} onPress={() => { Actions.account() }}>
+                <Image style={styles.settingIcon} source={require('assets/imgs/setting-icon-blue.png')} />
+              </TouchableOpacity>
+
+              {/*Search Icon*/}
+              <TouchableOpacity style={styles.topBarButton} onPress={() => { this.setState({searchFocusing: true}) }}>
+                <Image style={styles.searchIcon} source={require('assets/imgs/search-icon-blue.png')} />
+              </TouchableOpacity>
+            </View>
+            }
+
             {/*SEARCH AREA*/}
-            {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_EMR &&
+            {this.state.searchFocusing == true &&
               <View style={[styles.searchArea, (this.props.searchTerm ? { flex: 1 } : {})]}>
                 <View style={styles.searchInputContainer}>
                   {/*Search Input*/}
@@ -374,23 +393,19 @@ class PrivateUserComponent extends Component {
                     style={styles.searchInput}
                     placeholder={global.i18n.t("UserComponent_search").toUpperCase()}>
                   </SearchInputComponent>
-
-                  {/*Add record button*/}
-                  {(!this.state.searchFocusing && !this.props.searchTerm) &&
-                    <TouchableOpacity onPress={this.showAddRecordOptions.bind(this)}>
-                      <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-icon.png')} />
-                    </TouchableOpacity>
-                  }
                 </View>
 
+                {/*Searching status*/}
                 {this.state.isSearching && <View style={styles.indicatorContainer}>
                   <MaterialIndicator style={styles.indicator} color={'#C4C4C4'} size={16} />
                   <Text>{global.i18n.t("UserComponent_searching")}</Text>
                 </View>
                 }
+
                 {(this.state.searchFocusing || this.props.searchTerm) ?
                   <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm}
-                    cancel={this.searchInput.cancelSearch.bind(this.searchInput)} /> : null}
+                    cancel={this.cancelSearch.bind(this)} /> : null
+                }
               </View>
             }
 
@@ -418,7 +433,7 @@ class PrivateUserComponent extends Component {
                     <View style={[styles.stickCardContainer,]}>
                       {/*GET_STARTED_EMR*/}
                       {this.state.stickCardType === STICK_CARD_TYPES.GET_STARTED_EMR &&
-                        <EMRCardComponent displayFromUserScreen={true} />
+                        <EMRCardComponent />
                       }
                     </View>
 
@@ -432,7 +447,7 @@ class PrivateUserComponent extends Component {
                           return (
                             <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.addRecord({ takePhoto: this.takePhoto.bind(this), importRecord: this.importRecord.bind(this) }) }}>
                               <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}
-                                cardHeader={'Add first medical record'}
+                                cardHeader={'Add first medical record'} color={'#DFF0FE'}
                               />
                             </TouchableOpacity>
                           );
@@ -443,7 +458,7 @@ class PrivateUserComponent extends Component {
                           return (
                             <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
-                                cardHeader={'Track your daily activity'}
+                                cardHeader={'Track your daily activity'} color={'#EDF0F4'}
                               />
                             </TouchableOpacity>
                           );
@@ -488,6 +503,13 @@ class PrivateUserComponent extends Component {
           </View>
         </SafeAreaView>
 
+        {/*Add record FAB button*/}
+        {(!this.state.searchFocusing && !this.props.searchTerm) &&
+        <TouchableOpacity onPress={this.showAddRecordOptions.bind(this)}>
+          <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-fab-icon.png')} />
+        </TouchableOpacity>
+        }
+
         {/*ADD RECORDS DIALOG*/}
         {this.state.showAddRecordOptions &&
           <AddRecordOptionsComponent takePhoto={this.takePhoto.bind(this)} importRecord={this.importRecord.bind(this)} close={this.hideAddRecordOptions.bind(this)} />
@@ -506,11 +528,12 @@ const styles = StyleSheet.create({
     paddingRight: convertWidth(16),
   },
   addRecordIcon: {
-    width: 28,
-    height: 28,
+    width: 60,
+    height: 60,
     resizeMode: 'contain',
-    marginTop: 5,
-    marginLeft: 16,
+    position: 'absolute',
+    bottom: config.isIPhoneX ? 64 : 20,
+    right: 6,
   },
 
   body: {
@@ -539,6 +562,16 @@ const styles = StyleSheet.create({
   backIcon: {
     width: 16,
     height: 16,
+    resizeMode: 'contain'
+  },
+  settingIcon: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain'
+  },
+  searchIcon: {
+    width: 28,
+    height: 28,
     resizeMode: 'contain'
   },
   profileIcon: {

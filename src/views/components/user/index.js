@@ -21,6 +21,7 @@ import { EMRInformationComponent } from './emr';
 import { EditBitmarkComponent } from "./edit-bitmark.component";
 import { HealthDataGetStartComponent } from "./health-data-get-start.component";
 import { DailyHealthDataFullCardComponent } from "./card/daily-health-data-full-card.component";
+import { VerifyPhraseWordsComponent } from "../home/verify-phrase-words.component";
 
 export class UserRouterComponent extends Component {
   componentDidMount() {
@@ -49,6 +50,7 @@ export class UserRouterComponent extends Component {
           <Scene key="tagging" component={TaggingComponent} panHandlers={null} />
           <Scene key="emrInformation" component={EMRInformationComponent} panHandlers={null} />
           <Scene key="dailyHealthDataFullCard" component={DailyHealthDataFullCardComponent} panHandlers={null} />
+          <Scene key="verifyPhraseWords" component={VerifyPhraseWordsComponent} panHandlers={null} />
         </Stack>
       </Router>
     );

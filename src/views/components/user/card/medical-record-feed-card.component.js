@@ -21,7 +21,7 @@ export class MedicalRecordFeedCardComponent extends React.Component {
     let bitmark = this.props.bitmark;
 
     return (
-      <View style={[styles.cardContainer]}>
+      <View style={[styles.cardContainer, {backgroundColor: '#DFF0FE'}]}>
         {/*TOP BAR*/}
         <View style={[styles.cardTopBar]}>
           <Text style={[styles.cardTitle]}>MEDICAL RECORD</Text>

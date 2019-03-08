@@ -11,6 +11,7 @@ export class GetStartedFeedCardComponent extends React.Component {
   static propTypes = {
     cardIconSource: PropTypes.any,
     cardHeader: PropTypes.string,
+    color: PropTypes.string,
   };
 
   constructor(props) {
@@ -18,7 +19,7 @@ export class GetStartedFeedCardComponent extends React.Component {
   }
   render() {
     return (
-      <View style={[styles.cardContainer]}>
+      <View style={[styles.cardContainer, this.props.color ? {backgroundColor: this.props.color} : {}]}>
         {/*TOP BAR*/}
         <View style={[styles.cardTopBar]}>
           <Text style={[styles.cardTitle]}>GET STARTED</Text>

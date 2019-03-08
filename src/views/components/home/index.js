@@ -1,5 +1,5 @@
 import { HomeComponent } from './home.component';
-import { LoginComponent } from './login.component';
+import { VerifyPhraseWordsComponent } from './verify-phrase-words.component';
 
 import React, { Component } from 'react';
 import { Router, Scene, Stack, } from 'react-native-router-flux';
@@ -19,7 +19,7 @@ export class HomeRouterComponent extends Component {
       }} >
         <Stack hideNavBar={true} >
           <Scene key="home" component={HomeComponent} initial={true} />
-          <Scene key="login" component={LoginComponent} />
+          <Scene key="verifyPhraseWords" component={VerifyPhraseWordsComponent} />
           <Scene key="touchFaceId" component={TouchFaceIdComponent} />
           <Scene key="legal" component={BitmarkLegalComponent} />
           <Scene key="generateHealthCode" component={GenerateHealthCodeComponent} />
@@ -32,4 +32,4 @@ export class HomeRouterComponent extends Component {
 
 
 export * from "./home.component";
-export * from "./login.component";
+export * from "./verify-phrase-words.component";
