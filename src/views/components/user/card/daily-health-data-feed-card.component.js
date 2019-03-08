@@ -22,7 +22,7 @@ export class DailyHealthDataFeedCardComponent extends React.Component {
     let bitmark = this.props.lastBitmark;
 
     return (
-      <View style={[styles.cardContainer]}>
+      <View style={[styles.cardContainer, {backgroundColor: '#EDF0F4'}]}>
         {/*TOP BAR*/}
         <View style={[styles.cardTopBar]}>
           <Text style={[styles.cardTitle]}>HEALTH DATA</Text>

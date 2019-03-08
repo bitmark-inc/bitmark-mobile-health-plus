@@ -25,21 +25,18 @@ class PrivateEMRCardComponent extends Component {
       <ShadowComponent style={styles.body}>
         {!this.props.emrInformation &&
           <TouchableOpacity onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.emrInformation({ emrInformation: this.props.emrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
-            <ShadowTopComponent contentStyle={styles.cardHeader}>
+            <View style={styles.cardHeader}>
               <Text style={styles.cardTitleText}>GET STARTED</Text>
-              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_setup_icon.png')} />
-            </ShadowTopComponent>
-            <View style={[styles.bodyContent, { padding: convertWidth(16), }]} >
-              <Text style={styles.cardHeaderTitleText}>{this.props.displayFromUserScreen ? 'Personalize your vault' : 'Set up your emergency medical record'}</Text>
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs/emr-setup-icon.png')} />
+            </View>
+            <View style={[styles.bodyContent, { padding: convertWidth(16), }, {paddingBottom: 28}]} >
+              <Text style={styles.cardHeaderTitleText}>{this.props.displayFromUserScreen ? 'Personalize your vault' : 'Set up Emergency Medical Record'}</Text>
               <Text style={styles.cardContentDescription}>
                 {this.props.displayFromUserScreen
                   ? 'Your Bitmark Health vault gives you control over your health data. Personalize your vault settings to control how your health history is shared with healthcare providers, family, and researchers.'
-                  : 'Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency.'
+                  : 'Your Emergency Medical Record stores all your most important medical history so that medical professionals can help you in case of an emergency.'
                 }
               </Text>
-              <View style={[styles.cardNextButton, { marginTop: 20 }]}>
-                <Image style={styles.cardNextButtonIcon} source={require('assets/imgs2/next_icon_grey.png')} />
-              </View>
             </View>
           </TouchableOpacity>
         }
@@ -49,7 +46,7 @@ class PrivateEMRCardComponent extends Component {
             onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.emrInformation({ emrInformation: this.props.emrInformation })}>
             <Text style={styles.emrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Emergency Medical Record'}</Text>
             <View style={styles.emrInformation}>
-              <Image style={styles.emrInformationAvatar} source={this.props.emrInformation.avatar ? { uri: this.props.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default.png')} />
+              <Image style={styles.emrInformationAvatar} source={this.props.emrInformation.avatar ? { uri: this.props.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default_2.png')} />
               <View style={styles.emrInformationBasic}>
                 <Text style={styles.emrInformationLabel}>Name</Text>
                 <Text style={styles.emrInformationValue}>{this.props.emrInformation.name}</Text>
@@ -81,18 +78,18 @@ class PrivateEMRCardComponent extends Component {
 const styles = StyleSheet.create({
   body: {
     width: '100%',
-    borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
-    backgroundColor: '#F4F2EE',
+    borderWidth: 0.1, borderRadius: 4, borderColor: '#FFE1DE',
+    backgroundColor: '#FFE1DE',
   },
   bodyContent: {
     flex: 1,
-    borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
-    backgroundColor: 'white',
+    borderWidth: 0.1, borderRadius: 4, borderColor: '#FFE1DE',
+    backgroundColor: '#FFE1DE',
   },
   cardHeader: {
     width: '100%', height: 40,
     flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFE1DE',
   },
   cardTitleText: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
@@ -101,6 +98,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
   },
   cardHeaderIcon: {
+    marginTop: -5,
     width: 26, height: 33, resizeMode: 'contain',
     marginRight: convertWidth(18),
   },
@@ -115,9 +113,6 @@ const styles = StyleSheet.create({
   cardNextButton: {
     width: '100%',
     flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center',
-  },
-  cardNextButtonIcon: {
-    width: 16, height: 16, resizeMode: 'contain',
   },
   emrUserTitle: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,

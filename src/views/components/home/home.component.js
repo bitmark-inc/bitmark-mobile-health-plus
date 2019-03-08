@@ -89,7 +89,7 @@ export class HomeComponent extends Component {
               {/*BOTTOM AREA*/}
               <View style={[styles.bottomArea]}>
                 {/*Login link*/}
-                <TouchableOpacity style={[styles.buttonNext, { marginBottom: 2 }]} onPress={Actions.login}>
+                <TouchableOpacity style={[styles.buttonNext, { marginBottom: 2 }]} onPress={() => Actions.verifyPhraseWords({actionType: 'login'})}>
                   <Text style={[styles.linkButtonText]}>Already have a vault?</Text>
                 </TouchableOpacity>
 

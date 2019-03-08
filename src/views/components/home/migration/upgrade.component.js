@@ -34,7 +34,6 @@ export class UpgradeComponent extends Component {
   constructor(props) {
     super(props);
     this.twelveWords = props.twelveWords;
-    console.log('twelveWords:', this.twelveWords);
 
     this.state = {
       upgradeState: UPGRADE_STATE.UPGRADING,

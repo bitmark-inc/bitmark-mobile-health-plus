@@ -121,10 +121,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   title: {
-    fontFamily: 'AvenirNextW1G-Light',
-    letterSpacing: 1.5,
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: '#000000',
+    letterSpacing: 1.5
   },
   logo: {
     width: 23,

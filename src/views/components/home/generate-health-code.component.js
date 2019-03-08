@@ -34,7 +34,22 @@ export class GenerateHealthCodeComponent extends Component {
   }
 
   goToTest() {
-    Actions.login({migrateFrom24Words: this.migrateFrom24Words, phraseWords: this.phraseWords, backAction: this.regeneratePhraseWords.bind(this)});
+    if (this.migrateFrom24Words) {
+      Actions.verifyPhraseWords({
+        phraseWords: this.phraseWords,
+        backAction: this.regeneratePhraseWords.bind(this),
+        successAction: () => {
+          this.gotoWhatNextPage.bind(this)(this.phraseWords)
+        },
+        actionType: 'migrateFrom24Words'
+      });
+    } else {
+      Actions.verifyPhraseWords({phraseWords: this.phraseWords, backAction: this.regeneratePhraseWords.bind(this), actionType: 'createNewAccount'});
+    }
+  }
+
+  gotoWhatNextPage(phraseWords) {
+    Actions.whatNext({twelveWords: phraseWords});
   }
 
   async generatePhraseWords() {
