@@ -618,6 +618,25 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       reject(nil, nil, e);
     }
   }
+  
+  @objc(replaceAccount:::)
+  func replaceAccount(_ pharse: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    do {
+      let tmpKey = "account_to_migrate"
+      try KeychainUtil.removeTemporaryAccount(key: tmpKey)
+      // Replace new account
+      let accountMigrateTo = try Account(recoverPhrase: pharse, language: .english)
+      try KeychainUtil.replaceCore(accountMigrateTo.seed.core,
+                                    version: BitmarkSDKWrapper.stringFromVersion(accountMigrateTo.seed.version))
+      self.account = accountMigrateTo
+      
+      resolve(accountMigrateTo.accountNumber)
+      
+    }
+    catch let e {
+      reject(nil, nil, e);
+    }
+  }
 
   @objc(migrate:::)
   func migrate(_ pharse: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
