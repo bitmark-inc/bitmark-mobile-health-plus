@@ -679,10 +679,10 @@ class BitmarkSDKWrapper: RCTEventEmitter {
         sendEvent(withName: "onMigrationProgress", body: ["progress": progress])
 
         if progress == 1 {
-          try! KeychainUtil.removeTemporaryAccount(key: tmpKey)
+          try? KeychainUtil.removeTemporaryAccount(key: tmpKey)
 
           // Replace new account
-          try! KeychainUtil.replaceCore(accountMigrateTo.seed.core,
+          try? KeychainUtil.replaceCore(accountMigrateTo.seed.core,
                                         version: BitmarkSDKWrapper.stringFromVersion(accountMigrateTo.seed.version))
           self.account = accountMigrateTo
 
