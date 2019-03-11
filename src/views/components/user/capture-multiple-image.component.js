@@ -58,7 +58,11 @@ export class CaptureMultipleImagesComponent extends Component {
   }
 
   saveImages() {
-    Actions.editIssue({ images: this.state.images, doIssueImage: this.props.doIssueImage });
+    if (this.state.images.length > 1) {
+      Actions.arrangePhotos({ images: this.state.images, doIssueImage: this.props.doIssueImage });
+    } else {
+      Actions.editIssue({ images: this.state.images, doIssueImage: this.props.doIssueImage });
+    }
   }
 
   retakeImage() {

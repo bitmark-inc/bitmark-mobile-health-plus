@@ -105,15 +105,15 @@ const isEMRRecord = (asset) => {
 };
 
 const bitmarkSortFunction = (a, b) => {
-  if (a.status === 'pending' && b.status !== 'pending') {
-    return -1;
-  } else if (b.status === 'pending' && a.status !== 'pending') {
+  if (a.addedOn && !b.addedOn) {
     return 1;
-  } else if (a.status === 'pending' && b.status === 'pending') {
+  } else if (b.addedOn && !a.addedOn) {
+    return -1;
+  } else if (!a.addedOn && !b.addedOn) {
     return 0;
   }
 
-  return moment(b.created_at).toDate().getTime() - moment(a.created_at).toDate().getTime();
+  return moment(b.addedOn).toDate().getTime() - moment(a.addedOn).toDate().getTime();
 };
 
 const getImageSize = async (imageFilePath) => {

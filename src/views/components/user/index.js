@@ -22,6 +22,7 @@ import { EditBitmarkComponent } from "./edit-bitmark.component";
 import { HealthDataGetStartComponent } from "./health-data-get-start.component";
 import { DailyHealthDataFullCardComponent } from "./card/daily-health-data-full-card.component";
 import { VerifyPhraseWordsComponent } from "../home/verify-phrase-words.component";
+import { ArrangePhotosComponent } from "./arrange-photos.component";
 
 export class UserRouterComponent extends Component {
   componentDidMount() {
@@ -45,6 +46,7 @@ export class UserRouterComponent extends Component {
           <Scene key="accountNumber" component={AccountNumberComponent} panHandlers={null} />
           <Scene key="captureMultipleImages" component={CaptureMultipleImagesComponent} panHandlers={null} />
           <Scene key="editIssue" component={EditIssueComponent} panHandlers={null} />
+          <Scene key="arrangePhotos" component={ArrangePhotosComponent} panHandlers={null} />
           <Scene key="editBitmark" component={EditBitmarkComponent} panHandlers={null} />
           <Scene key="whatNew" component={WhatNewComponent} panHandlers={null} />
           <Scene key="tagging" component={TaggingComponent} panHandlers={null} />
