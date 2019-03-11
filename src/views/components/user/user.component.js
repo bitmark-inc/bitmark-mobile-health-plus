@@ -517,7 +517,7 @@ class PrivateUserComponent extends Component {
 
         {/*Add record FAB button*/}
         {(!this.state.searchFocusing && !this.props.searchTerm) &&
-        <TouchableOpacity onPress={this.showAddRecordOptions.bind(this)}>
+        <TouchableOpacity style={[styles.addRecordButton]} onPress={this.showAddRecordOptions.bind(this)}>
           <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-fab-icon.png')} />
         </TouchableOpacity>
         }
@@ -539,13 +539,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingRight: convertWidth(16),
   },
-  addRecordIcon: {
-    width: 60,
-    height: 60,
-    resizeMode: 'contain',
+  addRecordButton: {
+    width: 80,
+    height: 80,
     position: 'absolute',
     bottom: config.isIPhoneX ? 64 : 20,
     right: 6,
+  },
+  addRecordIcon: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
   },
 
   body: {

@@ -144,11 +144,11 @@ export class BitmarkDetailComponent extends Component {
                   </TouchableOpacity>
 
                   {/*Multiple files icon*/}
-                  {bitmark.thumbnail && bitmark.thumbnail.multiple &&
+                  {bitmark.thumbnail &&
                     <ImageBackground style={styles.multipleFilesIcon} source={require('assets/imgs/multiple-files-icon.png')} >
-                      {bitmark.asset.metadata['Number Of Files'] && <View style={styles.multipleFilesArea}>
-                        <Text style={[styles.multipleFilesText, {}]}>{bitmark.asset.metadata['Number Of Files']}</Text>
-                      </View>}
+                      <View style={styles.multipleFilesArea}>
+                        <Text style={[styles.multipleFilesText]}>{bitmark.thumbnail.multiple ? bitmark.asset.metadata['Number Of Files'] : '1'}</Text>
+                      </View>
                     </ImageBackground>
                   }
                 </View>
