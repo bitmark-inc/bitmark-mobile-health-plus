@@ -22,7 +22,7 @@ export class HealthDataFeedCardComponent extends React.Component {
     let addedOn = bitmark.asset.created_at || bitmark.addedOn || moment().toDate().toISOString();
 
     return (
-      <View style={[styles.cardContainer]}>
+      <View style={[styles.cardContainer, {backgroundColor: '#EDF0F4'}]}>
         {/*TOP BAR*/}
         <View style={[styles.cardTopBar]}>
           <Text style={[styles.cardTitle]}>HEALTH DATA</Text>

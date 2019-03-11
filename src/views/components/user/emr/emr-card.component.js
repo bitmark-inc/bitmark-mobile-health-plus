@@ -7,7 +7,7 @@ import {
 import { Provider, connect } from 'react-redux';
 
 import { convertWidth } from 'src/utils';
-import { ShadowComponent, ShadowTopComponent, } from 'src/views/commons';
+import { ShadowComponent } from 'src/views/commons';
 import { EMRInformationStore } from 'src/views/stores';
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
@@ -19,8 +19,6 @@ class PrivateEMRCardComponent extends Component {
     displayFromUserScreen: PropTypes.bool,
   };
   render() {
-    let displaySeeMoreButton = (this.props.emrInformation && this.props.emrInformation.avatar
-      && this.props.emrInformation.name && this.props.emrInformation.birthday && this.props.emrInformation.sex) && this.props.displayFromUserScreen;
     return (
       <ShadowComponent style={styles.body}>
         {!this.props.emrInformation &&
@@ -42,9 +40,12 @@ class PrivateEMRCardComponent extends Component {
         }
 
         {this.props.emrInformation &&
-          <TouchableOpacity style={styles.bodyContent}
+          <TouchableOpacity style={[styles.bodyContent, {paddingBottom: 16}]}
             onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.emrInformation({ emrInformation: this.props.emrInformation })}>
-            <Text style={styles.emrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Emergency Medical Record'}</Text>
+            <View style={styles.cardHeader}>
+              <Text style={styles.emrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Emergency Medical Record'}</Text>
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs/emr-setup-icon.png')} />
+            </View>
             <View style={styles.emrInformation}>
               <Image style={styles.emrInformationAvatar} source={this.props.emrInformation.avatar ? { uri: this.props.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default_2.png')} />
               <View style={styles.emrInformationBasic}>
@@ -62,11 +63,6 @@ class PrivateEMRCardComponent extends Component {
                   </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.cardNextButton}>
-              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.emrInformation({ emrInformation: this.props.emrInformation, edit: (!this.props.displayFromUserScreen || !displaySeeMoreButton) ? true : false })}>
-                <Text style={styles.emrInformationSeeMoreButtonText}>{displaySeeMoreButton ? 'SEE MORE' : 'EDIT'}</Text>
-              </TouchableOpacity>
             </View>
           </TouchableOpacity>
         }
@@ -98,7 +94,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
   },
   cardHeaderIcon: {
-    marginTop: -5,
+    marginTop: -8,
     width: 26, height: 33, resizeMode: 'contain',
     marginRight: convertWidth(18),
   },
@@ -109,10 +105,6 @@ const styles = StyleSheet.create({
   cardContentDescription: {
     marginTop: 18,
     fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
-  },
-  cardNextButton: {
-    width: '100%',
-    flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center',
   },
   emrUserTitle: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,
@@ -138,9 +130,6 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 3,
     letterSpacing: 0.15,
-  },
-  emrInformationSeeMoreButtonText: {
-    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10, color: '#FF003C',
   },
 });
 
