@@ -9,7 +9,7 @@ import { Actions } from 'react-native-router-flux';
 import { convertWidth } from 'src/utils';
 import { InputTagComponent } from "./tag/input-tag.component";
 import { IndexDBService } from "src/processors";
-import { ShadowComponent, ShadowTopComponent } from "src/views/commons";
+import { ShadowComponent } from "src/views/commons";
 
 export class EditBitmarkComponent extends Component {
   static propTypes = {
@@ -17,34 +17,73 @@ export class EditBitmarkComponent extends Component {
     bitmarkType: PropTypes.string,
     tags: PropTypes.array,
     note: PropTypes.string,
-    doUpdateTagsAndNote: PropTypes.func
+    localName: PropTypes.string,
+    doUpdateInfo: PropTypes.func
   };
 
   constructor(props) {
     super(props);
     let tags = [];
     Object.assign(tags, this.props.tags);
-    this.state = { tags, note: this.props.note };
+    this.state = { tags, note: this.props.note, name: this.props.localName };
   }
 
-  async save() {
-    // Update note if needed
-    let note = this.state.note.trim();
+  componentDidMount() {
+    this.enableAutoSave();
+  }
 
-    if (note != this.props.note) {
-      await IndexDBService.updateNote(this.props.bitmark.id, note);
-      //await LocalFileService.doUpdateIndexNoteToICloud(this.props.bitmark.id, note);
+  componentWillUnmount() {
+    this.removeAutoSave();
+  }
+
+  enableAutoSave() {
+    this.autoSaveInterval = setInterval(() => this.save(true), 2000);
+  }
+
+  removeAutoSave() {
+    if (this.autoSaveInterval) {
+      clearInterval(this.autoSaveInterval);
+    }
+  }
+
+  async save(noNeedToGoback) {
+    if (!this.isSaving) {
+      this.isSaving = true;
+      // Update name if needed
+      let name = this.state.name.trim();
+
+      if (name != this.props.localName) {
+        await IndexDBService.updateName(this.props.bitmark.id, name);
+        //await LocalFileService.doUpdateIndexNameToICloud(this.props.bitmark.id, name);
+      }
+
+      // Update note if needed
+      let note = this.state.note.trim();
+
+      if (note != this.props.note) {
+        await IndexDBService.updateNote(this.props.bitmark.id, note);
+        //await LocalFileService.doUpdateIndexNoteToICloud(this.props.bitmark.id, note);
+      }
+
+      // Update tags if needed
+      let tags = this.state.tags;
+      if (JSON.stringify(tags) != JSON.stringify(this.props.tags)) {
+        await IndexDBService.updateTag(this.props.bitmark.id, tags);
+        //await LocalFileService.doUpdateIndexTagToICloud(this.props.bitmark.id, tags);
+      }
+
+      this.props.doUpdateInfo(tags, note, name);
     }
 
-    // Update tags if needed
-    let tags = this.state.tags;
-    if (JSON.stringify(tags) != JSON.stringify(this.props.tags)) {
-      await IndexDBService.updateTag(this.props.bitmark.id, tags);
-      //await LocalFileService.doUpdateIndexTagToICloud(this.props.bitmark.id, tags);
+    if (!noNeedToGoback) {
+      Actions.pop();
     }
 
-    this.props.doUpdateTagsAndNote(tags, note);
-    Actions.pop();
+    this.isSaving = false;
+  }
+
+  onInputNameChangeText(text) {
+    this.setState({ name: text });
   }
 
   onInputNoteChangeText(text) {
@@ -87,58 +126,64 @@ export class EditBitmarkComponent extends Component {
             <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('assets/imgs/back-icon-black.png')} />
           </TouchableOpacity>
           {/*Title*/}
-          <Text style={styles.titleText}>Edit</Text>
-          <Text style={{ paddingLeft: convertWidth(16) + 20 }} />
+          <Text style={styles.titleText}>Edit record details</Text>
+          {/*Done*/}
+          <TouchableOpacity style={{ paddingRight: convertWidth(16) }} onPress={() => this.save.bind(this)()}>
+            <Text style={styles.headerRightText}>DONE</Text>
+          </TouchableOpacity>
         </View>
+
         <KeyboardAvoidingView style={styles.body} behavior="padding" enabled >
           <ScrollView style={{ flex: 1, width: '100%' }} contentContainerStyle={{
-            flexGrow: 1,
             paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 5,
           }}>
-            {/*CONTENT*/}
-            {/*NOTES*/}
-            <ShadowComponent style={{ marginTop: 1.5 }}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <ShadowTopComponent style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>NOTES</Text>
-                </ShadowTopComponent>
-
-                {/*Content*/}
-                <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
-                  <TextInput style={[styles.inputNote]}
-                    multiline={true}
-                    value={this.state.note}
-                    placeholder={'Tap to add private notes to your record'}
-                    onFocus={() => this.setState({ inputtingTag: false })}
-                    onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+            <View style={[styles.bodyContent]}>
+              {/*NAME*/}
+              <Text style={[styles.sectionTitle, {marginTop: 20}]}>Name:</Text>
+              {/*Content*/}
+              <View style={[styles.contentContainer, {paddingTop: 10}]}>
+                <ShadowComponent>
+                  <TextInput style={[styles.inputName]}
+                             value={this.state.name}
+                             placeholder={'Add a private name to your record.'}
+                             onChangeText={(text) => this.onInputNameChangeText.bind(this)(text)}
                   />
-                </View>
+                </ShadowComponent>
               </View>
-            </ShadowComponent>
 
-            {/*TAGS*/}
-            <ShadowComponent style={{ marginTop: 19 }}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <ShadowTopComponent style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>TAGS</Text>
-                </ShadowTopComponent>
+              {/*NOTES*/}
+              <Text style={[styles.sectionTitle]}>Notes:</Text>
+              {/*Content*/}
+              <View style={[styles.contentContainer, {paddingTop: 10}]}>
+                <ShadowComponent>
+                  <TextInput style={[styles.inputNote]}
+                             multiline={true}
+                             value={this.state.note}
+                             placeholder={'Add private notes to your record.'}
+                             onFocus={() => this.setState({ inputtingTag: false })}
+                             onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+                  />
+                </ShadowComponent>
+              </View>
 
-                {/*Content*/}
-                <View style={[styles.contentContainer]}>
-                  <Text style={styles.introductionTitle}>Add tags to your record</Text>
-                  <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
-                </View>
+              {/*TAGS*/}
+              <Text style={[styles.sectionTitle]}>Tags:</Text>
+              <View style={[styles.contentContainer, {paddingTop: 0, paddingBottom: 0}]}>
+                {/*Tag desc*/}
+                <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you <Text style={{color: 'rgba(0, 0, 0, 0.6)'}}>search over</Text> them and find them faster in the future. </Text>
+              </View>
+              {/*Tags*/}
+              <View style={[styles.bottomBar]}>
+                <ShadowComponent>
+                  <ScrollView horizontal={true} contentContainerStyle={{width: '100%', backgroundColor: '#FFFFFF', padding: 10, borderRadius: 5}}>
+                    <View style={[styles.tagIconContainer]}>
+                      {/*Add tags*/}
+                      <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} onPress={this.showInputTag.bind(this)}>
+                        <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
+                        <Text style={styles.addTagText}>+ADD TAGS</Text>
+                      </TouchableOpacity>
 
-                {/*Tags*/}
-                <View style={[styles.bottomBar]}>
-                  <View style={[styles.tagIconContainer]}>
-                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} onPress={this.showInputTag.bind(this)}>
-                      <Image style={[styles.tagIcon]} source={require('assets/imgs/tag-icon-black.png')} />
-                      <Text style={styles.addTagText}>+ADD TAGS</Text>
-                    </TouchableOpacity>
-                    <ScrollView horizontal={true}>
+                      {/*Tag items*/}
                       {(tags && tags.length) ? (
                         (tags || []).map((tag, index) => {
                           return (
@@ -150,15 +195,11 @@ export class EditBitmarkComponent extends Component {
                         })
                       ) : null
                       }
-                    </ScrollView>
-                  </View>
-                </View>
+                    </View>
+                  </ScrollView>
+                </ShadowComponent>
               </View>
-            </ShadowComponent>
-            {/*BUTTON*/}
-            <TouchableOpacity style={styles.saveButton} onPress={this.save.bind(this)}>
-              <Text style={styles.saveButtonText}>SAVE</Text>
-            </TouchableOpacity>
+            </View>
           </ScrollView>
         </KeyboardAvoidingView >
 
@@ -173,6 +214,12 @@ const styles = StyleSheet.create({
     flex: 1, flexDirection: 'column', alignItems: 'center',
     backgroundColor: 'white',
   },
+  bodyContent: {flex: 1,
+    backgroundColor: '#F4F2EE',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    paddingBottom: 8
+  },
   header: {
     width: '100%',
     height: 56,
@@ -180,24 +227,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  headerRightText: {
+    fontSize: 18,
+    fontFamily: 'AvenirNextW1G-Bold',
+    textAlign: 'right',
+    color: '#FF003C',
+  },
   titleText: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'AvenirNextW1G-Bold', textAlign: 'center',
     color: 'rgba(0, 0, 0, 0.87)',
   },
-  section: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    width: '100%',
-  },
-  topBar: {
-    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
-    height: 40,
-  },
   bottomBar: {
     padding: convertWidth(16),
-    paddingRight: 0,
-    marginTop: 16,
     minHeight: 54,
     width: '100%',
     borderTopWidth: 0.5,
@@ -205,19 +247,14 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
-    fontSize: 10,
-    fontFamily: 'AvenirNextW1G-Light',
+    fontSize: 14,
+    fontFamily: 'AvenirNextW1G-Bold',
     letterSpacing: 1.5,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: '#000000'
   },
   contentContainer: {
     width: '100%',
     padding: convertWidth(16),
-  },
-  introductionTitle: {
-    fontSize: 18,
-    fontFamily: 'AvenirNextW1G-Bold',
-    color: 'rgba(0, 0, 0, 0.87)'
   },
   introductionDescription: {
     fontSize: 14,
@@ -226,12 +263,23 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 6,
   },
+  inputName: {
+    padding: 9,
+    height: 37,
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: 14,
+    fontFamily: 'AvenirNextW1G-Regular',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
+  },
   inputNote: {
+    padding: 9,
     height: 103,
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 14,
     fontFamily: 'AvenirNextW1G-Regular',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
   },
   tagIconContainer: {
     flexDirection: 'row',
@@ -256,22 +304,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Andale Mono',
     letterSpacing: 0.25,
-  },
-  saveButton: {
-    marginTop: 52,
-    backgroundColor: '#0060F2',
-    height: 36,
-    width: '100%',
-    borderRadius: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  saveButtonText: {
-    fontSize: 14,
-    fontFamily: 'AvenirNextW1G-Bold',
-    letterSpacing: 0.75,
-    color: '#FFFFFF'
   },
   taggingItemContainer: {
     flexDirection: 'row',

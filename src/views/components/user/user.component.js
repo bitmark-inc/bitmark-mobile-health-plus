@@ -71,6 +71,13 @@ class PrivateUserComponent extends Component {
     Actions.popTo('user');
   }
 
+  finishIssuing() {
+    this.resetToInitialState();
+    DataProcessor.doGetUserDataBitmarks().then(() => {
+      Actions.popTo('user');
+    });
+  }
+
   goToBitmarkDetail(bitmarkId) {
     DataProcessor.doGetUserDataBitmarks().then(userBitmarks => {
       console.log('userBitmarks :', bitmarkId, userBitmarks);
@@ -168,7 +175,7 @@ class PrivateUserComponent extends Component {
         }
         if (assetName.length > 64) assetName = assetName.substring(0, 64);
         listInfo.push({
-          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false, isMultipleAsset, note: imageInfo.note, tags: imageInfo.tags
+          filePath, assetName, metadataList, quantity: 1, isPublicAsset: false, isMultipleAsset, name: imageInfo.name, note: imageInfo.note, tags: imageInfo.tags
         });
 
         listAssetName.push(assetName);
@@ -196,8 +203,8 @@ class PrivateUserComponent extends Component {
       } else {
         doIssuance().then((issuedBitmarks) => {
           if (issuedBitmarks) {
-            let issuedBitmark = issuedBitmarks[0];
-            this.goToBitmarkDetail(issuedBitmark.id);
+            console.log({ issuedBitmarks });
+            this.finishIssuing();
           }
         }).catch(error => {
           EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
@@ -211,7 +218,7 @@ class PrivateUserComponent extends Component {
   doIssue(issueParams) {
     issue(issueParams, async (issuedBitmarks) => {
       console.log({ issuedBitmarks });
-      this.goToBitmarkDetail(issuedBitmarks[0].id);
+      this.finishIssuing();
     });
   }
 
@@ -233,7 +240,11 @@ class PrivateUserComponent extends Component {
         images.push({ uri: image.path, createdAt });
       }
 
-      Actions.editIssue({ images, doIssueImage: this.doIssueImage });
+      if (images.length > 1) {
+        Actions.arrangePhotos({ images, doIssueImage: this.doIssueImage });
+      } else {
+        Actions.editIssue({ images, doIssueImage: this.doIssueImage });
+      }
     });
   }
 
@@ -317,31 +328,32 @@ class PrivateUserComponent extends Component {
     let accountNumberDisplay = CacheData.userInformation.bitmarkAccountNumber;
     let isCurrentUser = accountNumberDisplay === CacheData.userInformation.bitmarkAccountNumber;
 
-    if (this.props.healthAssetBitmarks.length === 0 && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
-      cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD, top: accumulatedTop });
-      accumulatedTop += 105;
-    }
-
-    // Get stared daily health data
-    if (isCurrentUser && !CacheData.userInformation.activeHealthDataAt && !this.props.dailyHealthDataBitmarks.length && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
-      cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA, top: accumulatedTop });
-      accumulatedTop += 105;
-    }
-
-    // Daily health data
-    if (CacheData.userInformation.activeHealthDataAt && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
-      cardListData.push({ type: STICK_CARD_TYPES.DAILY_HEALTH_DATA, data: this.props.dailyHealthDataBitmarks, top: accumulatedTop });
-      accumulatedTop += 110;
-    }
-
     // Medical & Weekly Health Data records
     let medicalAndWeeklyHealthData = this.props.healthAssetBitmarks.concat(this.props.healthDataBitmarks);
     medicalAndWeeklyHealthData = medicalAndWeeklyHealthData.sort(bitmarkSortFunction);
     if (medicalAndWeeklyHealthData.length) {
       medicalAndWeeklyHealthData.forEach(bitmark => {
-        cardListData.push({ type: isHealthDataRecord(bitmark.asset) ? STICK_CARD_TYPES.HEALTH_DATA : STICK_CARD_TYPES.MEDICAL_RECORD, data: bitmark, top: accumulatedTop });
+        cardListData.push({ type: isHealthDataRecord(bitmark.asset) ? STICK_CARD_TYPES.HEALTH_DATA : STICK_CARD_TYPES.MEDICAL_RECORD, data: bitmark, key: bitmark.id, top: accumulatedTop });
         accumulatedTop += 110;
       })
+    }
+
+    // Get stared medical record
+    if (this.props.healthAssetBitmarks.length === 0 && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
+      cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD, top: accumulatedTop, key: 'GET_STARTED_MEDICAL_RECORD' });
+      accumulatedTop += 105;
+    }
+
+    // Get stared daily health data
+    if (isCurrentUser && !CacheData.userInformation.activeHealthDataAt && !this.props.dailyHealthDataBitmarks.length && this.state.stickCardType !== STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
+      cardListData.push({ type: STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA, top: accumulatedTop, key: 'GET_STARTED_HEALTH_DATA' });
+      accumulatedTop += 105;
+    }
+
+    // Daily health data
+    if (CacheData.userInformation.activeHealthDataAt && this.state.stickCardType !== STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
+      cardListData.push({ type: STICK_CARD_TYPES.DAILY_HEALTH_DATA, data: this.props.dailyHealthDataBitmarks, key: 'DAILY_HEALTH_DATA', top: accumulatedTop });
+      accumulatedTop += 110;
     }
 
     this.accumulatedTop = accumulatedTop;
@@ -358,7 +370,7 @@ class PrivateUserComponent extends Component {
         <SafeAreaView style={[styles.bodySafeView,]}>
           <View style={[styles.wrapper]}>
             {/*HEADER BAR*/}
-            {!this.state.searchFocusing &&
+            {(!this.state.searchFocusing && !this.props.searchTerm) &&
             <View style={[styles.topBar]}>
               {/*Back button*/}
               <TouchableOpacity style={styles.topBarButton} onPress={() => { Actions.account() }}>
@@ -373,7 +385,7 @@ class PrivateUserComponent extends Component {
             }
 
             {/*SEARCH AREA*/}
-            {this.state.searchFocusing == true &&
+            {(this.state.searchFocusing == true || !!this.props.searchTerm) &&
               <View style={[styles.searchArea, (this.props.searchTerm ? { flex: 1 } : {})]}>
                 <View style={styles.searchInputContainer}>
                   {/*Search Input*/}
@@ -402,7 +414,7 @@ class PrivateUserComponent extends Component {
                 </View>
                 }
 
-                {(this.state.searchFocusing || this.props.searchTerm) ?
+                {(this.state.searchFocusing || !!this.props.searchTerm) ?
                   <SearchResultsComponent style={styles.searchResultsContainer} results={this.props.searchResults} searchTerm={this.props.searchTerm}
                     cancel={this.cancelSearch.bind(this)} /> : null
                 }
@@ -441,11 +453,11 @@ class PrivateUserComponent extends Component {
 
                     {/*----FEED CARD LIST CONTAINER----*/}
                     <View style={{ flexDirection: 'column', marginTop: 20, height: this.accumulatedTop + 20 }}>
-                      {cardListData.map((card, index) => {
+                      {cardListData.map((card) => {
                         // ADD FIRST MEDICAL RECORD
                         if (card.type === STICK_CARD_TYPES.GET_STARTED_MEDICAL_RECORD) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.addRecord({ takePhoto: this.takePhoto.bind(this), importRecord: this.importRecord.bind(this) }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={card.key} onPress={() => { Actions.addRecord({ takePhoto: this.takePhoto.bind(this), importRecord: this.importRecord.bind(this) }) }}>
                               <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/medical-record-card-icon.png')}
                                 cardHeader={'Add first medical record'} color={'#DFF0FE'}
                               />
@@ -456,7 +468,7 @@ class PrivateUserComponent extends Component {
                         // AUTOMATICALLY ADD HEALTH DATA
                         if (card.type === STICK_CARD_TYPES.GET_STARTED_HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={card.key} onPress={() => { Actions.healthDataGetStart({ resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <GetStartedFeedCardComponent cardIconSource={require('assets/imgs/health-data-card-icon.png')}
                                 cardHeader={'Track your daily activity'} color={'#EDF0F4'}
                               />
@@ -467,7 +479,7 @@ class PrivateUserComponent extends Component {
                         // MEDICAL_RECORD
                         if (card.type === STICK_CARD_TYPES.MEDICAL_RECORD) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={card.key} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <MedicalRecordFeedCardComponent bitmark={card.data} />
                             </TouchableOpacity>
                           );
@@ -476,7 +488,7 @@ class PrivateUserComponent extends Component {
                         // HEALTH_DATA
                         if (card.type === STICK_CARD_TYPES.HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={card.key} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <HealthDataFeedCardComponent bitmark={card.data} />
                             </TouchableOpacity>
                           );
@@ -485,7 +497,7 @@ class PrivateUserComponent extends Component {
                         // DAILY HEALTH DATA
                         if (card.type === STICK_CARD_TYPES.DAILY_HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={index} onPress={() => { Actions.dailyHealthDataFullCard({ dailyHealthDataBitmarks: card.data, resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={card.key} onPress={() => { Actions.dailyHealthDataFullCard({ dailyHealthDataBitmarks: card.data, resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <DailyHealthDataFeedCardComponent header={'Track your daily activity'} lastBitmark={card.data[0]} />
                             </TouchableOpacity>
                           );

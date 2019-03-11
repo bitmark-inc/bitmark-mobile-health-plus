@@ -8,6 +8,7 @@ const DB_LOCATION = 'Documents'; //Documents subdirectory - visible to iTunes an
 const INDEXED_DATA_TABLE_NAME = 'IndexedData';
 const TAGS_TABLE_NAME = 'UserTags';
 const NOTES_TABLE_NAME = 'Notes';
+const NAMES_TABLE_NAME = 'Names';
 
 export class IndexedDBModel {
   static getDBFolderPath(bitmarkAccountNumber) {
@@ -157,6 +158,37 @@ export class IndexedDBModel {
 
   static async deleteNoteByBitmarkId(bitmarkId) {
     let query = `DELETE FROM ${NOTES_TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
+    return this.executeQuery(query);
+  }
+
+  // NAME
+  static async createNameTable() {
+    let query = `CREATE VIRTUAL TABLE IF NOT EXISTS ${NAMES_TABLE_NAME} USING fts4(accountNumber, bitmarkId, name, tokenize=porter)`;
+    return this.executeQuery(query);
+  }
+
+  static async queryName(accountNumber, term) {
+    let query = `SELECT * FROM ${NAMES_TABLE_NAME} WHERE accountNumber='${accountNumber}' AND name MATCH '${term}'`;
+    return this.executeQuery(query);
+  }
+
+  static async queryNameByBitmarkId(bitmarkId) {
+    let query = `SELECT * FROM ${NAMES_TABLE_NAME} WHERE bitmarkId='${bitmarkId}'`;
+    return this.executeQuery(query);
+  }
+
+  static async insertName(accountNumber, bitmarkId, name) {
+    let query = `INSERT INTO ${NAMES_TABLE_NAME} VALUES (?,?,?)`;
+    return this.executeQuery(query, [accountNumber, bitmarkId, name]);
+  }
+
+  static async updateName(bitmarkId, name) {
+    let query = `UPDATE ${NAMES_TABLE_NAME} SET name='${name}' WHERE bitmarkId='${bitmarkId}'`;
+    return this.executeQuery(query);
+  }
+
+  static async deleteNameByBitmarkId(bitmarkId) {
+    let query = `DELETE FROM ${NAMES_TABLE_NAME} WHERE bitmarkId = '${bitmarkId}'`;
     return this.executeQuery(query);
   }
 }

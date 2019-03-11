@@ -131,12 +131,22 @@ export class SearchResultsComponent extends Component {
                       {/*Content*/}
                       <View style={styles.itemContent}>
                         {/*Name*/}
-                        <Highlighter
-                          style={styles.assetName}
-                          highlightStyle={[styles.highlightingText]}
-                          searchWords={this.props.searchTerm.split(' ')}
-                          textToHighlight={item.asset.name}
-                        />
+                        {item.name ? (
+                          <Highlighter
+                            style={styles.assetName}
+                            highlightStyle={[styles.highlightingText]}
+                            searchWords={this.props.searchTerm.split(' ')}
+                            textToHighlight={item.name}
+                          />
+                        ) : (
+                          <Highlighter
+                            style={styles.assetName}
+                            highlightStyle={[styles.highlightingText]}
+                            searchWords={this.props.searchTerm.split(' ')}
+                            textToHighlight={item.asset.name}
+                          />
+                        )
+                        }
                         {/*Status*/}
                         {item.status === 'pending' ? (
                           <Text style={styles.bitmarkStatus}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>

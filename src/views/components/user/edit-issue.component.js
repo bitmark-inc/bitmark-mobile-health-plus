@@ -2,53 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View, TouchableOpacity, Text, Image, ScrollView, TextInput, SafeAreaView, KeyboardAvoidingView,
+  View, TouchableOpacity, Text, Image, ScrollView, TextInput, SafeAreaView, KeyboardAvoidingView, ImageBackground
 } from 'react-native';
-import SortableGrid from 'react-native-sortable-grid';
 
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
 import { convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
 import { InputTagComponent } from "./tag/input-tag.component";
-import { ShadowTopComponent, ShadowComponent } from "src/views/commons";
+import { ShadowComponent } from "src/views/commons";
 import { config } from 'src/configs';
+import { styles as cardStyles } from "./card/bitmark-card.style.component";
 
-
-class ItemOrderImageComponent extends Component {
-  static propTypes = {
-    uri: PropTypes.string,
-    index: PropTypes.number,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      index: this.props.index,
-      uri: this.props.uri,
-    };
-  }
-
-  changeData({ uri, index }) {
-    uri = uri || this.state.uri;
-    this.setState({ uri, index });
-  }
-
-  render() {
-    return (<View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}  >
-      <View style={{
-        position: 'absolute', bottom: 10, right: 10, height: convertWidth(24), width: convertWidth(24),
-        backgroundColor: 'rgba(255, 0, 60, 0.3)',
-        alignItems: 'center', justifyContent: 'center',
-        borderRadius: convertWidth(12),
-        zIndex: 1,
-      }}>
-        <Text style={{ fontFamily: 'AvenirNextW1G-Bold', color: 'white', flex: 1, fontSize: 12, lineHeight: 20, marginTop: 1 }}>{this.state.index + 1}</Text>
-      </View>
-      <Image style={{ width: convertWidth(100), height: convertWidth(100), resizeMode: 'cover', borderRadius: 4 }} source={{ uri: this.state.uri }} />
-    </View>);
-  }
-}
 
 export class EditIssueComponent extends Component {
   static propTypes = {
@@ -62,7 +27,7 @@ export class EditIssueComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { note: '', type: 'combine', scrollEnabled: true, itemOrder: null, tags: [] };
+    this.state = { name: '', note: '', type: 'combine', scrollEnabled: true, itemOrder: null, tags: [] };
     this.itemOrderImageRefs = {};
     this.isSingleFile = !this.props.images || this.props.images.length == 1;
   }
@@ -72,10 +37,11 @@ export class EditIssueComponent extends Component {
       if (this.props.images) {
         // Issue image
         let image = this.props.images[0];
-        this.props.doIssueImage([{ uri: image.uri, createAt: image.createAt, note: this.state.note, tags: this.state.tags }], false);
+        this.props.doIssueImage([{ uri: image.uri, createAt: image.createAt, name: this.state.name, note: this.state.note, tags: this.state.tags }], false);
       } else {
         // Issue unknown file
         let issueParams = this.props.issueParams;
+        issueParams.name = this.state.name;
         issueParams.note = this.state.note;
         issueParams.tags = this.state.tags;
 
@@ -92,18 +58,15 @@ export class EditIssueComponent extends Component {
       }
 
       AppProcessor.doCombineImages(newImages).then((filePath) => {
-        this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment(), note: this.state.note.trim(), tags: this.state.tags, numberOfFiles: newImages.length }], true);
+        this.props.doIssueImage([{ uri: `file://${filePath}`, createAt: moment(), name: this.state.name.trim(), note: this.state.note.trim(), tags: this.state.tags, numberOfFiles: newImages.length }], true);
       }).catch(error => {
         EventEmitterService.emit(EventEmitterService.events.APP_PROCESS_ERROR, { error });
       })
     }
   }
 
-  newOrder({ itemOrder }) {
-    this.setState({ scrollEnabled: true, itemOrder: itemOrder });
-    for (let index in this.itemOrderImageRefs) {
-      this.itemOrderImageRefs[itemOrder[index].key].changeData({ index: itemOrder[index].order })
-    }
+  onInputNameChangeText(text) {
+    this.setState({ name: text });
   }
 
   onInputNoteChangeText(text) {
@@ -138,7 +101,6 @@ export class EditIssueComponent extends Component {
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-
         {/*HEADER*/}
         <View style={[styles.header]}>
           {/*Back icon*/}
@@ -146,93 +108,72 @@ export class EditIssueComponent extends Component {
             <Image style={{ width: 20, height: 20, resizeMode: 'contain' }} source={require('assets/imgs/back-icon-black.png')} />
           </TouchableOpacity>
           {/*Title*/}
-          <Text style={styles.titleText}>Edit</Text>
-          <Text style={{ paddingLeft: convertWidth(16) + 20 }} />
+          <Text style={styles.titleText}>Edit record details</Text>
+          {/*Done*/}
+          <TouchableOpacity style={{ paddingRight: convertWidth(16) }} onPress={this.continue.bind(this)}>
+            <Text style={styles.headerRightText}>DONE</Text>
+          </TouchableOpacity>
         </View>
 
         {/*CONTENT*/}
         <KeyboardAvoidingView behavior="padding" enabled style={styles.body} keyboardVerticalOffset={this.state.inputtingTag ? (88 + config.isIPhoneX ? 44 : 0) : 0} >
           <ScrollView style={{ flex: 1, width: '100%', }} contentContainerStyle={{
-            flexGrow: 1,
             paddingLeft: convertWidth(16), paddingRight: convertWidth(16), paddingTop: 5,
           }}>
-            {/*ATTACHED DOCUMENTS*/}
-            {!this.isSingleFile &&
-              <ShadowComponent style={{ margin: 2 }}>
-                <View style={[styles.section]}>
-                  {/*Top bar*/}
-                  <ShadowTopComponent style={[styles.topBar]}>
-                    <Text style={[styles.sectionTitle]}>ATTACHED DOCUMENTS</Text>
-                  </ShadowTopComponent>
-
-                  {/*Content*/}
-                  <View style={[styles.contentContainer]}>
-                    <Text style={styles.introductionTitle}>Arrange the photos</Text>
-                    <Text style={styles.introductionDescription}>Drag and drop to rearrange photos.</Text>
-
-                    {/*Images*/}
-                    <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
-                      <SortableGrid
-                        style={{ flex: 1, width: convertWidth(312), }}
-                        itemsPerRow={3}
-                        onDragRelease={this.newOrder.bind(this)}
-                        onDragStart={() => this.setState({ scrollEnabled: false })} >
-                        {
-                          this.props.images.map((imageInfo, index) => {
-                            return (<ItemOrderImageComponent uri={imageInfo.uri} index={index} key={index} ref={(ref) => {
-                              if (this.state.itemOrder) {
-                                this.itemOrderImageRefs[this.state.itemOrder[index].key] = ref;
-                              } else {
-                                this.itemOrderImageRefs[index] = ref
-                              }
-                            }} />);
-                          })
-                        }
-                      </SortableGrid>
-                    </ScrollView>
+            <View style={[styles.bodyContent]}>
+              {/*THUMBNAIL*/}
+              {this.props.images &&
+              <View>
+                <Image style={cardStyles.cardImage} source={{ uri: this.props.images[0].uri }} />
+                {/*Multiple files icon*/}
+                {this.props.images &&
+                <ImageBackground style={styles.multipleFilesIcon} source={require('assets/imgs/multiple-files-icon.png')} >
+                  <View style={styles.multipleFilesArea}>
+                    <Text style={[styles.multipleFilesText, {}]}>{this.props.images.length}</Text>
                   </View>
-                </View>
-              </ShadowComponent>
-            }
-
-            {/*NOTES*/}
-            <ShadowComponent style={{ marginTop: this.isSingleFile ? 1.5 : 19 }}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <ShadowTopComponent style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>NOTES</Text>
-                </ShadowTopComponent>
-
-                {/*Content*/}
-                <View style={[styles.contentContainer, { backgroundColor: '#F5F5F5' }]}>
-                  <TextInput style={[styles.inputNote]}
-                    multiline={true}
-                    value={this.state.note}
-                    placeholder={'Tap to add private notes to your record'}
-                    onFocus={() => this.setState({ inputtingTag: false })}
-                    onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
-                  />
-                </View>
+                </ImageBackground>
+                }
               </View>
-            </ShadowComponent>
+              }
 
-            {/*TAGS*/}
-            <ShadowComponent style={{ marginTop: 19 }}>
-              <View style={[styles.section]}>
-                {/*Top bar*/}
-                <ShadowTopComponent style={[styles.topBar]}>
-                  <Text style={[styles.sectionTitle]}>TAGS</Text>
-                </ShadowTopComponent>
+              {/*NAME*/}
+              <Text style={[styles.sectionTitle, {marginTop: 20}]}>Name:</Text>
+              {/*Content*/}
+              <View style={[styles.contentContainer, {paddingTop: 10}]}>
+                <ShadowComponent>
+                  <TextInput style={[styles.inputName]}
+                             value={this.state.name}
+                             placeholder={'Add a private name to your record.'}
+                             onChangeText={(text) => this.onInputNameChangeText.bind(this)(text)}
+                  />
+                </ShadowComponent>
+              </View>
 
-                {/*Content*/}
-                <View style={[styles.contentContainer]}>
-                  <Text style={styles.introductionTitle}>Add tags to your record</Text>
-                  <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you search over them and find them faster in the future.</Text>
-                </View>
+              {/*NOTES*/}
+              <Text style={[styles.sectionTitle]}>Notes:</Text>
+              {/*Content*/}
+              <View style={[styles.contentContainer, {paddingTop: 10}]}>
+                <ShadowComponent>
+                  <TextInput style={[styles.inputNote]}
+                             multiline={true}
+                             value={this.state.note}
+                             placeholder={'Add private notes to your record.'}
+                             onFocus={() => this.setState({ inputtingTag: false })}
+                             onChangeText={(text) => this.onInputNoteChangeText.bind(this)(text)}
+                  />
+                </ShadowComponent>
+              </View>
 
-                {/*Tags*/}
-                <View style={[styles.bottomBar]}>
-                  <ScrollView horizontal={true}>
+              {/*TAGS*/}
+              <Text style={[styles.sectionTitle]}>Tags:</Text>
+              <View style={[styles.contentContainer, {paddingTop: 0, paddingBottom: 0}]}>
+                {/*Tag desc*/}
+                <Text style={styles.introductionDescription}>Record tagging — you can now add tags to your health records to help you <Text style={{color: 'rgba(0, 0, 0, 0.6)'}}>search over</Text> them and find them faster in the future. </Text>
+              </View>
+              {/*Tags*/}
+              <View style={[styles.bottomBar]}>
+                <ShadowComponent>
+                  <ScrollView horizontal={true} contentContainerStyle={{width: '100%', backgroundColor: '#FFFFFF', padding: 10, borderRadius: 5}}>
                     <View style={[styles.tagIconContainer]}>
                       {/*Add tags*/}
                       <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} onPress={this.showInputTag.bind(this)}>
@@ -254,14 +195,9 @@ export class EditIssueComponent extends Component {
                       }
                     </View>
                   </ScrollView>
-                </View>
+                </ShadowComponent>
               </View>
-            </ShadowComponent>
-
-            {/*BUTTON*/}
-            <TouchableOpacity style={styles.saveButton} onPress={this.continue.bind(this)}>
-              <Text style={styles.saveButtonText}>SAVE</Text>
-            </TouchableOpacity>
+            </View>
           </ScrollView>
         </KeyboardAvoidingView>
 
@@ -276,6 +212,13 @@ const styles = StyleSheet.create({
     flex: 1, flexDirection: 'column', alignItems: 'center',
     backgroundColor: 'white',
   },
+  bodyContent: {
+    flex: 1,
+    backgroundColor: '#F4F2EE',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    paddingBottom: 8
+  },
   header: {
     width: '100%',
     height: 56,
@@ -283,24 +226,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  headerRightText: {
+    fontSize: 18,
+    fontFamily: 'AvenirNextW1G-Bold',
+    textAlign: 'right',
+    color: '#FF003C',
+  },
   titleText: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'AvenirNextW1G-Bold', textAlign: 'center',
     color: 'rgba(0, 0, 0, 0.87)',
   },
-  section: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    width: '100%',
-  },
-  topBar: {
-    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
-    height: 40,
-  },
   bottomBar: {
     padding: convertWidth(16),
-    paddingRight: 0,
-    marginTop: 16,
     minHeight: 54,
     width: '100%',
     borderTopWidth: 0.5,
@@ -308,33 +246,40 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     paddingLeft: convertWidth(16), paddingRight: convertWidth(16),
-    fontSize: 10,
-    fontFamily: 'AvenirNextW1G-Light',
+    fontSize: 14,
+    fontFamily: 'AvenirNextW1G-Bold',
     letterSpacing: 1.5,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: '#000000'
   },
   contentContainer: {
     width: '100%',
     padding: convertWidth(16),
   },
-  introductionTitle: {
-    fontSize: 18,
-    fontFamily: 'AvenirNextW1G-Bold',
-    color: 'rgba(0, 0, 0, 0.87)'
-  },
   introductionDescription: {
     fontSize: 14,
-    fontFamily: 'AvenirNextW1G-Regular',
-    letterSpacing: 0.25,
-    color: 'rgba(0, 0, 0, 0.6)',
+    fontFamily: 'AvenirNextW1G-Medium',
+    letterSpacing: 0.15,
+    color: '#999999',
+    lineHeight: 24,
     marginTop: 6,
   },
+  inputName: {
+    padding: 9,
+    height: 37,
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: 14,
+    fontFamily: 'AvenirNextW1G-Regular',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
+  },
   inputNote: {
+    padding: 9,
     height: 103,
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: 14,
     fontFamily: 'AvenirNextW1G-Regular',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
   },
   tagIconContainer: {
     flexDirection: 'row',
@@ -360,22 +305,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Andale Mono',
     letterSpacing: 0.25,
   },
-  saveButton: {
-    marginTop: 52,
-    backgroundColor: '#0060F2',
-    height: 36,
-    width: '100%',
-    borderRadius: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  saveButtonText: {
-    fontSize: 14,
-    fontFamily: 'AvenirNextW1G-Bold',
-    letterSpacing: 0.75,
-    color: '#FFFFFF'
-  },
   taggingItemContainer: {
     flexDirection: 'row',
     padding: 5,
@@ -391,5 +320,19 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '300',
     color: '#FF003C',
+  },
+  multipleFilesIcon: {
+    position: 'absolute',
+    width: 22, height: 22,
+    bottom: 15, right: 15,
+    justifyContent: 'center', alignItems: 'center',
+  },
+  multipleFilesArea: {
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    width: '100%',
+    paddingLeft: 5, paddingBottom: 2,
+  },
+  multipleFilesText: {
+    fontFamily: 'Andale Mono', fontSize: 12, textAlign: 'center', textAlignVertical: 'center',
   },
 });

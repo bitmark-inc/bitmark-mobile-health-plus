@@ -4,8 +4,9 @@ import {
   View, Text, Image,
 } from 'react-native'
 
-import moment from "moment/moment";
+import moment from "moment";
 import { styles } from './bitmark-feed-card.style.component';
+import { IndexDBService } from "src/processors";
 
 export class MedicalRecordFeedCardComponent extends React.Component {
   static propTypes = {
@@ -17,8 +18,14 @@ export class MedicalRecordFeedCardComponent extends React.Component {
     this.state = {};
   }
 
+  async componentDidMount() {
+    let name = await IndexDBService.getNameByBitmarkId(this.props.bitmark.id);
+    this.setState({ name });
+  }
+
   render() {
     let bitmark = this.props.bitmark;
+    let addedOn = bitmark.asset.created_at || bitmark.addedOn || moment().toDate().toISOString();
 
     return (
       <View style={[styles.cardContainer, {backgroundColor: '#DFF0FE'}]}>
@@ -30,8 +37,8 @@ export class MedicalRecordFeedCardComponent extends React.Component {
 
         {/*CONTENT*/}
         <View style={[styles.cardContent]}>
-          <Text style={[styles.cardHeader]}>{bitmark.asset.name}</Text>
-          <Text style={[styles.cardText]}>{bitmark.asset.created_at ? ('ADDED ON ' + moment(bitmark.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : 'REGISTERING...'}</Text>
+          <Text numberOfLines={1} ellipsizeMode='tail' style={[styles.cardHeader]}>{this.state.name || bitmark.asset.name}</Text>
+          <Text style={[styles.cardText]}>{'ADDED ON ' + moment(addedOn).format('MMM DD, YYYY').toUpperCase()}</Text>
         </View>
 
         {/*BOTTOM BAR*/}

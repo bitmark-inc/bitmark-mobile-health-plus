@@ -19,6 +19,7 @@ export class HealthDataFeedCardComponent extends React.Component {
 
   render() {
     let bitmark = this.props.bitmark;
+    let addedOn = bitmark.asset.created_at || bitmark.addedOn || moment().toDate().toISOString();
 
     return (
       <View style={[styles.cardContainer]}>
@@ -31,7 +32,7 @@ export class HealthDataFeedCardComponent extends React.Component {
         {/*CONTENT*/}
         <View style={[styles.cardContent]}>
           <Text style={[styles.cardHeader]}>{bitmark.asset.name}</Text>
-          <Text style={[styles.cardText]}>{bitmark.asset.created_at ? ('RECORDED ON ' + moment(bitmark.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : 'REGISTERING...'}</Text>
+          <Text style={[styles.cardText]}>{'RECORDED ON ' + moment(addedOn).format('MMM DD, YYYY').toUpperCase()}</Text>
         </View>
 
         {/*BOTTOM BAR*/}
