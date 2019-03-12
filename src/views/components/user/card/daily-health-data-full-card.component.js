@@ -126,7 +126,6 @@ export class DailyHealthDataFullCardComponent extends React.Component {
                 {/*CARD TOP BAR*/}
                 <View style={[cardStyles.cardTopBar, { backgroundColor: '#FFFFFF' }]}>
                   <Text style={[cardStyles.cardTitle]}>HEALTH DATA</Text>
-                  <Image style={cardStyles.cardIcon} source={require('assets/imgs/health-data-card-icon.png')} />
                 </View>
 
                 {/*VISUALIZATION*/}

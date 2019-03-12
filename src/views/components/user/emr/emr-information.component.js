@@ -209,7 +209,7 @@ export class EMRInformationComponent extends Component {
             </View>
             <View style={styles.emergencyContactArea}>
               <Text style={styles.emergencyContactTitle}>
-                EMERGENCY CONTACTS
+                Emergency contacts
                 </Text>
               {(this.state.emrInformation.emergencyContacts || []).map((item, index) => {
                 return <View key={index} style={styles.emergencyContactRow}>
@@ -598,15 +598,5 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Regular', color: 'rgba(0, 0, 0, 0.87)',
     borderColor: 'transparent', borderWidth: 0.1, borderRadius: 4,
     shadowOffset: { width: 0, height: 0, }, shadowOpacity: 0.2, shadowColor: '#000', shadowRadius: 5,
-  },
-  saveButton: {
-    borderWidth: 1, borderColor: '#0060F2', borderRadius: 4,
-    backgroundColor: '#0060F2',
-    height: 36,
-    marginTop: 36,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  saveButtonText: {
-    fontFamily: 'Avenir Black', fontSize: 14, fontWeight: '900', color: 'white',
   }
 });
