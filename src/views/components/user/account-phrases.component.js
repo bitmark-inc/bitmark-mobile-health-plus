@@ -22,7 +22,7 @@ export class AccountPhraseComponent extends Component {
   }
 
   goToTest() {
-    Actions.verifyPhraseWords({phraseWords: this.phraseWords, backAction: Actions.pop, successAction: this.goToAccountPage.bind(this), actionType: 'testPhraseWords'});
+    Actions.verifyPhraseWords({phraseWords: this.state.phraseWords, backAction: Actions.pop, successAction: this.goToAccountPage.bind(this), actionType: 'testPhraseWords'});
   }
 
   goToAccountPage() {
