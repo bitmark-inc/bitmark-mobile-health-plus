@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Keyboard,
-  Image, View, TouchableOpacity, Text, FlatList, TextInput, Animated, SafeAreaView, ScrollView,
+  Image, View, TouchableOpacity, Text, TextInput, SafeAreaView, ScrollView,
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
-import { dictionaryPhraseWords, convertWidth } from 'src/utils';
+import { convertWidth } from 'src/utils';
 import { AppProcessor, EventEmitterService } from 'src/processors';
-import { constants, config } from 'src/configs';
 import PropTypes from 'prop-types';
 import { CommonModel } from "src/processors/models";
 
@@ -31,70 +30,22 @@ export class VerifyPhraseWordsComponent extends Component {
     this.state = {
       inputPhraseWordsString: '',
       testingResult: null,
-      keyboardExternalBottom: new Animated.Value(0),
-      keyboardExternalOpacity: new Animated.Value(0),
-      keyboardExternalDataSource: dictionaryPhraseWords,
     };
-  }
-
-  componentDidMount() {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardDidShow.bind(this));
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardDidHide.bind(this));
-    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.onKeyboardWillHide.bind(this));
-  }
-
-  componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-    this.keyboardWillHideListener.remove();
-  }
-
-  onKeyboardDidShow(keyboardEvent) {
-    let keyboardHeight = keyboardEvent.endCoordinates.height - (config.isIPhoneX ? 35 : 0);
-    this.setState({ keyboardHeight });
-
-    let listAnimations = [];
-    listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
-      toValue: keyboardHeight,
-      duration: 200,
-    }));
-    listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
-      toValue: 1,
-      duration: 200,
-    }));
-    Animated.parallel(listAnimations).start();
-  }
-
-  onKeyboardDidHide() {
-    this.setState({ keyboardHeight: 0 });
-  }
-
-  onKeyboardWillHide() {
-    let listAnimations = [];
-    listAnimations.push(Animated.spring(this.state.keyboardExternalBottom, {
-      toValue: 0,
-      duration: 200,
-    }));
-    listAnimations.push(Animated.spring(this.state.keyboardExternalOpacity, {
-      toValue: 0,
-      duration: 200,
-    }));
-    Animated.parallel(listAnimations).start();
   }
 
   async testPhraseWords() {
     let testingResult;
     let inputPhraseWordsString = this.state.inputPhraseWordsString.trim();
-    let phraseWords = inputPhraseWordsString.split(' ').map(word => word.toLowerCase());
+    let inputPhraseWords = inputPhraseWordsString.split(' ').filter((word => word.trim() != '')).map(word => word.toLowerCase());
 
     try {
       if (this.props.actionType == 'logout') {
         let userInfo = await AppProcessor.doGetCurrentAccount();
-        testingResult = inputPhraseWordsString == userInfo.phraseWords.join(' ');
+        testingResult = inputPhraseWords.join(' ') == userInfo.phraseWords.join(' ');
       } else if (this.props.phraseWords) {
-        testingResult = inputPhraseWordsString == this.props.phraseWords.join(' ');
+        testingResult = inputPhraseWords.join(' ') == this.props.phraseWords.join(' ');
       } else {
-        await AppProcessor.doCheckPhraseWords(phraseWords);
+        await AppProcessor.doCheckPhraseWords(inputPhraseWords);
         testingResult = true;
       }
     } catch {
@@ -105,9 +56,9 @@ export class VerifyPhraseWordsComponent extends Component {
 
     if (testingResult) {
       if (this.props.successAction) {
-        this.props.successAction(phraseWords);
+        this.props.successAction(inputPhraseWords);
       } else {
-        this.loginWithPhraseWords(phraseWords);
+        this.loginWithPhraseWords(inputPhraseWords);
       }
     }
 
@@ -154,60 +105,18 @@ export class VerifyPhraseWordsComponent extends Component {
   onChangeText(text) {
     text = text.trimLeft();
 
-    text = text.replace('\n', ' ');
+    text = text.replace('\n', '');
 
     // Replace double space by single space if any
     if (text.endsWith('  ')) {
       text = `${text.trimRight()} `;
     }
 
-    // Populate suggestion words
-    let textForPopulateSuggestion = text;
-    if (textForPopulateSuggestion && this.inputPhraseWordsRef._lastNativeSelection.start == this.inputPhraseWordsRef._lastNativeSelection.end) {
-      textForPopulateSuggestion = text.substring(0, this.inputPhraseWordsRef._lastNativeSelection.end);
-    }
-
-    let words = textForPopulateSuggestion.split(' ');
-    let lastWord = words[words.length - 1];
-    this.doFilter(lastWord);
-
     this.setState({inputPhraseWordsString: text, testingResult: null})
   }
 
-  checkIfCursorInputAtTheEnd(inputText) {
-    let startCursor = this.inputPhraseWordsRef._lastNativeSelection.start;
-    let endCursor = this.inputPhraseWordsRef._lastNativeSelection.end;
-    return (startCursor == endCursor) && (endCursor == inputText.length);
-  }
-
-  onSubmitWord(word) {
-    let inputPhraseWordsString = this.state.inputPhraseWordsString;
-    if (!inputPhraseWordsString || this.checkIfCursorInputAtTheEnd(inputPhraseWordsString)) {
-      let words = inputPhraseWordsString.split(' ');
-      words[words.length - 1] = word;
-      inputPhraseWordsString = `${words.join(' ').trim()} `;
-    } else {
-      let textBeforeSuggestion = inputPhraseWordsString.substring(0, this.inputPhraseWordsRef._lastNativeSelection.end);
-      let words = textBeforeSuggestion.split(' ');
-      words[words.length - 1] = word;
-      textBeforeSuggestion = `${words.join(' ').trim()} `;
-
-      let textAfterSuggestion = inputPhraseWordsString.substring(this.inputPhraseWordsRef._lastNativeSelection.end);
-      inputPhraseWordsString = `${textBeforeSuggestion}${textAfterSuggestion.trim()}`;
-    }
-
-    this.setState({inputPhraseWordsString});
-  }
-
-  doFilter(text) {
-    let keyboardExternalDataSource;
-    if (text) {
-      keyboardExternalDataSource = dictionaryPhraseWords.filter(word => word.toLowerCase().indexOf(text.toLowerCase()) === 0);
-    } else {
-      keyboardExternalDataSource = dictionaryPhraseWords;
-    }
-
-    this.setState({ keyboardExternalDataSource });
+  onSubmitEditing() {
+    Keyboard.dismiss();
   }
 
   getDescComponent() {
@@ -276,6 +185,7 @@ export class VerifyPhraseWordsComponent extends Component {
                         ref={(r) => { this.inputPhraseWordsRef = r;}}
                         style={[styles.inputPhraseWords, {color: this.state.testingResult === false ? '#FF003C' : '#0060F2'}]}
                         onChangeText={(text) => this.onChangeText(text)}
+                        onSubmitEditing={() => this.onSubmitEditing()}
                         value={this.state.inputPhraseWordsString}
                         multiline={true}
                         returnKeyType={'done'}
@@ -306,26 +216,6 @@ export class VerifyPhraseWordsComponent extends Component {
             </ScrollView>
           </View>
         </View>
-
-        {/*KEYBOARD & SUGGESTIONS*/}
-        {this.state.keyboardHeight > 0 &&
-        <Animated.View style={[styles.keyboardExternal, { bottom: this.state.keyboardExternalBottom, opacity: this.state.keyboardExternalOpacity, }]}>
-          {this.state.keyboardExternalDataSource && <View style={[styles.selectionList]}>
-            <FlatList
-              ref={(ref) => this.listViewElement = ref}
-              keyboardShouldPersistTaps="handled"
-              horizontal={true}
-              extraData={this.state}
-              data={this.state.keyboardExternalDataSource}
-              renderItem={({ item }) => {
-                return (<TouchableOpacity style={styles.selectionItem} onPress={() => this.onSubmitWord(item)}>
-                  <Text style={[styles.selectionItemText, { color: this.state.currentInputtedText === item ? 'blue' : 'gray' }]}>{item}</Text>
-                </TouchableOpacity>)
-              }}
-            />
-          </View>}
-        </Animated.View>
-        }
       </SafeAreaView>
     );
   }
@@ -417,34 +307,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#FF003C',
     letterSpacing: 0.75,
-  },
-  keyboardExternal: {
-    position: 'absolute',
-    width: '100%',
-    height: constants.keyboardExternalHeight,
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 8,
-    paddingRight: 8,
-    backgroundColor: '#EEEFF1',
-  },
-  selectionList: {
-    flex: 1,
-    height: 30,
-    marginLeft: 5,
-    marginRight: 20,
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  selectionItem: {
-    marginLeft: 4,
-    padding: 4,
-  },
-  selectionItemText: {
-    color: 'blue',
   },
   steps: {
     marginTop: 20,
