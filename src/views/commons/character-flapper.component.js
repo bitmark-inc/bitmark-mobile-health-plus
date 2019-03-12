@@ -33,7 +33,7 @@ export class CharacterFlapperComponent extends Component {
     return new Promise((resolve) => {
       Animated.spring(this.state.rotate, {
         toValue: this.state.rotate.__getValue() === 360 ? 0 : 360,
-        duration: 10,
+        speed: 2
       }).start(resolve);
     })
   }

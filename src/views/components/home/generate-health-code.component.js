@@ -6,7 +6,7 @@ import {
 
 import { Actions } from 'react-native-router-flux';
 import { AppProcessor } from 'src/processors';
-import { convertWidth } from 'src/utils';
+import { convertWidth, delay } from 'src/utils';
 import { CharacterFlapperComponent } from 'src/views/commons';
 import PropTypes from 'prop-types';
 
@@ -52,6 +52,20 @@ export class GenerateHealthCodeComponent extends Component {
     Actions.whatNext({twelveWords: phraseWords});
   }
 
+  async doFlapper(phraseWords) {
+    let characters = phraseWords;
+
+    return new Promise((resolve) => {
+      let list = [];
+      for (let cIndex = 0; cIndex < characters.length; cIndex++) {
+        if (this.flapperRefs[`${'Key'}_${cIndex}`]) {
+          list.push(this.flapperRefs[`${'Key'}_${cIndex}`].loadFlapper(characters[cIndex]));
+        }
+      }
+      Promise.all(list).then(resolve);
+    });
+  }
+
   async generatePhraseWords() {
     if (!this.canGenerateNew) {
       return;
@@ -61,12 +75,15 @@ export class GenerateHealthCodeComponent extends Component {
     this.phraseWords = phraseInfo.phraseWords;
     this.bitmarkAccountNumber = phraseInfo.bitmarkAccountNumber;
 
-    this.canGenerateNew = true;
     this.setState({ step: STEPS.generated });
+
+    await this.doFlapper(this.phraseWords);
+    await delay(100);
+    this.canGenerateNew = true;
   }
 
   regeneratePhraseWords() {
-    Alert.alert('Are you sure?', 'If you go back, you will lose this key phrase and will need to generate a new one. ', [
+    Alert.alert('Are you sure?', 'If you go back, you will lose this key phrase and will need to generate a new one.', [
       {
         text: 'Cancel', style: 'cancel',
       },
@@ -117,7 +134,13 @@ export class GenerateHealthCodeComponent extends Component {
                       <View style={[styles.generateCodeContent]}>
                         {/*Phrase Words*/}
                         {(this.state.step === STEPS.generated) &&
-                        <Text style={[styles.phraseWords]}>{this.phraseWords.join(' ').toLowerCase()}</Text>
+                        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                          {this.phraseWords.map((character, cIndex) => <View style={{flexDirection: 'row', flexWrap: 'wrap'}} key={'character_' + cIndex}>
+                            <CharacterFlapperComponent char={character} charStyle={styles.phraseWords} ref={ref => this.flapperRefs[`${'Key'}_${cIndex}`] = ref} />
+                            <Text>{' '}</Text>
+                          </View>)
+                          }
+                        </View>
                         }
 
                         {/*GENERATE HEALTH CODE*/}
