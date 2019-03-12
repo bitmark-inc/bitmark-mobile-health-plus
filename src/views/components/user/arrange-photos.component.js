@@ -121,7 +121,7 @@ export class ArrangePhotosComponent extends Component {
                   {/*Images*/}
                   <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 25, }} scrollEnabled={this.state.scrollEnabled}>
                     <SortableGrid
-                      style={{ flex: 1, width: convertWidth(312), }}
+                      style={{ flex: 1, width: convertWidth(305), }}
                       itemsPerRow={3}
                       onDragRelease={this.newOrder.bind(this)}
                       onDragStart={() => this.setState({ scrollEnabled: false })} >

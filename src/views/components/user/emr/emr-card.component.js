@@ -54,7 +54,7 @@ class PrivateEMRCardComponent extends Component {
                 <View style={{ flex: 1, flexDirection: 'row', marginTop: 21, }}>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.emrInformationLabel}>Date of birth</Text>
-                    <Text style={styles.emrInformationValue}>{this.props.emrInformation.birthday ? moment(this.props.emrInformation.birthday).format('MMM DD, YYYY') : ''}</Text>
+                    <Text style={styles.emrInformationValue}>{this.props.emrInformation.birthday ? moment(this.props.emrInformation.birthday).format('YYYY MMM DD') : ''}</Text>
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.emrInformationLabel}>Sex</Text>
