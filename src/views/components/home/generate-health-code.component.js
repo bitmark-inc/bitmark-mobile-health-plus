@@ -71,7 +71,7 @@ export class GenerateHealthCodeComponent extends Component {
         text: 'Cancel', style: 'cancel',
       },
       {
-        text: 'OK',
+        text: 'Yes',
         onPress: () => {
           Actions.pop();
           this.setState({

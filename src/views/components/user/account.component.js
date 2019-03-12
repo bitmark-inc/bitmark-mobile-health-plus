@@ -90,7 +90,7 @@ class PrivateAccountComponent extends Component {
           <TouchableOpacity style={styles.headerLeft} onPress={() => {Actions.pop() }}>
             <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Vault Settings</Text>
+          <Text style={styles.headerTitle}>Vault settings</Text>
           <View style={styles.headerRight} />
         </View>
 
@@ -136,7 +136,7 @@ class PrivateAccountComponent extends Component {
 
               <TouchableOpacity style={[{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4, }]} onPress={() => this.goToLogoutPage()}>
                 <View style={styles.cardContentRow}>
-                  <Text style={styles.cardContentRowButtonText}>Lock your vault</Text>
+                  <Text style={styles.cardContentRowButtonText}>Lock your vault on this device</Text>
                   <Image style={styles.copyIcon} source={require('assets/imgs2/arrow_left_icon_black.png')} />
                 </View>
 

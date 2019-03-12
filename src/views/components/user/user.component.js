@@ -540,8 +540,8 @@ const styles = StyleSheet.create({
     paddingRight: convertWidth(16),
   },
   addRecordButton: {
-    width: 80,
-    height: 80,
+    width: 74,
+    height: 74,
     position: 'absolute',
     bottom: config.isIPhoneX ? 64 : 20,
     right: 6,
