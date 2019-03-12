@@ -197,7 +197,7 @@ export class EMRInformationComponent extends Component {
                 <View style={{ flex: 1, flexDirection: 'row', marginTop: 21 }}>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.emrInformationLabel}>Date of birth</Text>
-                    <Text style={styles.emrInformationValue}>{this.state.emrInformation.birthday ? moment(this.state.emrInformation.birthday).format('MMM DD, YYYY') : ''}</Text>
+                    <Text style={styles.emrInformationValue}>{this.state.emrInformation.birthday ? moment(this.state.emrInformation.birthday).format('YYYY MMM DD') : ''}</Text>
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column', marginLeft: convertWidth(16), }}>
                     <Text style={styles.emrInformationLabel}>Sex</Text>

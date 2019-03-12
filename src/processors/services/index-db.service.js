@@ -19,12 +19,12 @@ const insertDetectedDataToIndexedDB = async (bitmarkId, assetName, metadata, det
 
   if (metadata instanceof Array) {
     metadataStr = metadata.map((metadata) => {
-      return (metadata.label == 'Saved Time' || metadata.label == 'Collection Date') ? `${metadata.label} ${moment(metadata.value).format('MMM DD, YYYY')}` : `${metadata.label} ${metadata.value}`;
+      return (metadata.label == 'Saved Time' || metadata.label == 'Collection Date') ? `${metadata.label} ${moment(metadata.value).format('YYYY MMM DD')}` : `${metadata.label} ${metadata.value}`;
     }).join(' ');
   } else if (metadata instanceof Object) {
     let metadataList = [];
     for (let key in metadata) {
-      let searchableData = (key == 'Saved Time' || key == 'Collection Date') ? `${key} ${moment(metadata[key]).format('MMM DD, YYYY')}` : `${key} ${metadata[key]}`;
+      let searchableData = (key == 'Saved Time' || key == 'Collection Date') ? `${key} ${moment(metadata[key]).format('YYYY MMM DD')}` : `${key} ${metadata[key]}`;
       metadataList.push(searchableData);
     }
 
@@ -37,7 +37,7 @@ const insertHealthDataToIndexedDB = async (bitmarkId, healthData) => {
   let accountNumber = CacheData.userInformation.bitmarkAccountNumber;
   let metadataList = [];
   for (let key in healthData.assetMetadata) {
-    let searchableData = (key == 'Saved Time' || key == 'Collection Date') ? `${key} ${moment(healthData.assetMetadata[key]).format('MMM DD, YYYY')}` : `${key} ${healthData.assetMetadata[key]}`;
+    let searchableData = (key == 'Saved Time' || key == 'Collection Date') ? `${key} ${moment(healthData.assetMetadata[key]).format('YYYY MMM DD')}` : `${key} ${healthData.assetMetadata[key]}`;
     metadataList.push(searchableData);
   }
 

@@ -38,7 +38,7 @@ export class MedicalRecordFeedCardComponent extends React.Component {
         {/*CONTENT*/}
         <View style={[styles.cardContent]}>
           <Text numberOfLines={1} ellipsizeMode='tail' style={[styles.cardHeader]}>{this.state.name || bitmark.asset.name}</Text>
-          <Text style={[styles.cardText]}>{'ADDED ON ' + moment(addedOn).format('MMM DD, YYYY').toUpperCase()}</Text>
+          <Text style={[styles.cardText]}>{'ADDED ON ' + moment(addedOn).format('YYYY MMM DD').toUpperCase()}</Text>
         </View>
 
         {/*BOTTOM BAR*/}

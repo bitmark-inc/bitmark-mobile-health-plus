@@ -155,7 +155,7 @@ export class CaptureMultipleImagesComponent extends Component {
             scrollEnabled={true}
             renderPagination={(index, total) => {
               return (<View style={styles.pagination}>
-                <Text style={styles.paginationText}>{index + 1}/{total}</Text>
+                <Text style={styles.paginationText}>{index + 1} of {total}</Text>
               </View>)
             }}
             onIndexChanged={(selectedIndex) => this.setState({ selectedIndex })

@@ -165,7 +165,7 @@ export class BitmarkDetailComponent extends Component {
                     <Text style={[cardStyles.cardHeader]}>{name || bitmark.asset.name}</Text>
                     {/*Status*/}
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <Text style={[cardStyles.cardText]}>{(bitmarkType == 'bitmark_health_issuance' ? 'ADDED ON ' : 'RECORDED ON ') + moment(addedOn).format('MMM DD, YYYY').toUpperCase()}</Text>
+                      <Text style={[cardStyles.cardText]}>{(bitmarkType == 'bitmark_health_issuance' ? 'ADDED ON ' : 'RECORDED ON ') + moment(addedOn).format('YYYY MMM DD').toUpperCase()}</Text>
                     </View>
                   </View>
 

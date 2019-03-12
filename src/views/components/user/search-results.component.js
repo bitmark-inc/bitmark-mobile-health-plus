@@ -83,7 +83,7 @@ export class SearchResultsComponent extends Component {
                           style={styles.bitmarkStatus}
                           highlightStyle={[styles.highlightingText]}
                           searchWords={this.props.searchTerm.split(' ')}
-                          textToHighlight={moment(item.addedOn || item.asset.created_at).format('MMM DD, YYYY').toUpperCase()}
+                          textToHighlight={moment(item.addedOn || item.asset.created_at).format('YYYY MMM DD').toUpperCase()}
                         />
                       </View>
                     </View>
@@ -147,7 +147,7 @@ export class SearchResultsComponent extends Component {
                           style={styles.bitmarkStatus}
                           highlightStyle={[styles.highlightingText]}
                           searchWords={this.props.searchTerm.split(' ')}
-                          textToHighlight={moment(item.addedOn || item.asset.created_at).format('MMM DD, YYYY').toUpperCase()}
+                          textToHighlight={moment(item.addedOn || item.asset.created_at).format('YYYY MMM DD').toUpperCase()}
                         />
 
                         {/*Tags*/}
