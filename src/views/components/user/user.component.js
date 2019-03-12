@@ -34,6 +34,8 @@ import { EMRCardComponent } from './emr';
 import { AddRecordOptionsComponent } from "./add-record-options.component";
 import { DailyHealthDataFeedCardComponent } from "./card/daily-health-data-feed-card.component";
 
+import randomString from 'random-string';
+
 const STICK_CARD_TYPES = {
   GET_STARTED_EMR: 0,
   GET_STARTED_MEDICAL_RECORD: 1,
@@ -364,6 +366,7 @@ class PrivateUserComponent extends Component {
 
   render() {
     let cardListData = this.populateCardListData();
+    let randomKey = randomString({length: 8});
 
     return (
       <View style={{ flex: 1 }}>
@@ -479,7 +482,7 @@ class PrivateUserComponent extends Component {
                         // MEDICAL_RECORD
                         if (card.type === STICK_CARD_TYPES.MEDICAL_RECORD) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={card.key} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={`${card.key}_${randomKey}`} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_issuance', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <MedicalRecordFeedCardComponent bitmark={card.data} />
                             </TouchableOpacity>
                           );
@@ -488,7 +491,7 @@ class PrivateUserComponent extends Component {
                         // HEALTH_DATA
                         if (card.type === STICK_CARD_TYPES.HEALTH_DATA) {
                           return (
-                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={card.key} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
+                            <TouchableOpacity style={[styles.cardItem, { top: card.top }]} key={`${card.key}_${randomKey}`} onPress={() => { Actions.bitmarkDetail({ bitmark: card.data, bitmarkType: 'bitmark_health_data', resetToInitialState: this.resetToInitialState.bind(this) }) }}>
                               <HealthDataFeedCardComponent bitmark={card.data} />
                             </TouchableOpacity>
                           );

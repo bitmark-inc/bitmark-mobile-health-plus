@@ -10,6 +10,7 @@ import { convertWidth } from 'src/utils';
 import { InputTagComponent } from "./tag/input-tag.component";
 import { IndexDBService } from "src/processors";
 import { ShadowComponent } from "src/views/commons";
+import { UserBitmarksActions, UserBitmarksStore } from "src/views/stores";
 
 export class EditBitmarkComponent extends Component {
   static propTypes = {
@@ -37,7 +38,7 @@ export class EditBitmarkComponent extends Component {
   }
 
   enableAutoSave() {
-    this.autoSaveInterval = setInterval(() => this.save(true), 2000);
+    this.autoSaveInterval = setInterval(() => this.save(true), 3000);
   }
 
   removeAutoSave() {
@@ -80,6 +81,8 @@ export class EditBitmarkComponent extends Component {
     }
 
     this.isSaving = false;
+
+    UserBitmarksStore.dispatch(UserBitmarksActions.initBitmarks({}));
   }
 
   onInputNameChangeText(text) {
