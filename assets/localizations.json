@@ -589,7 +589,7 @@
     "WhatNewComponent_versionInformationText": "VERSION {{version}}",
     "WhatNewComponent_versionInformationReleaseDiff1": "just now",
     "WhatNewComponent_versionInformationReleaseDiff2": "{{day}}d ago",
-    "WhatNewComponent_releaseNoteText": "New feature:\n  • Support migrating from 24-word accounts to 12-word accounts.\n\nImprovements:\n  • Update name & metadata format for the records\n  • Fixed the bugs that might cause error during Healthkit data registration.",
+    "WhatNewComponent_releaseNoteText": "Enhancements:\n  • Redesigned onboarding flow to make the [Generate vault key phrase] more intuitive\n  • Improved the usability for the Vault settings\n  • New colors for the card-based user interface\n  • Now you are able to rename the health record\n\nWe value your feedback, if you have ideas or suggestions on how to make our app even better, please email us at support@bitmark.com.",
     "TaggingComponent_tags": "Tags",
     "TaggingComponent_existingTags": "Existing tags",
     "TaggingComponent_noTags": "You don’t have any tags now, tap to start adding.",
