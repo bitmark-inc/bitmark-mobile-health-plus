@@ -250,7 +250,7 @@ export class BitmarkDetailComponent extends Component {
                     }
 
                     {/*Delete Icon*/}
-                    {this.props.bitmark.status !== 'pending' &&
+                    {(this.props.bitmark.status !== 'pending' && this.props.bitmark.status !== 'queuing') &&
                       <TouchableOpacity style={{
                         padding: 5, paddingLeft: 0, paddingRight: 10,
                         marginLeft: this.props.bitmarkType == 'bitmark_health_issuance' ? 10 : 0
