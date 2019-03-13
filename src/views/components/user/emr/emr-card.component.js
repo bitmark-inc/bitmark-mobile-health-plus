@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
   emrUserTitle: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,
     padding: convertWidth(15), paddingBottom: 0,
+    lineHeight: 20,
   },
   emrInformation: {
     padding: convertWidth(15),
