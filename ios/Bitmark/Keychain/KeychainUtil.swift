@@ -56,9 +56,7 @@ struct KeychainUtil {
   }
   
   static func replaceCore(_ core: Data, version: String) throws {
-    guard let authentication = UserDefaults.standard.object(forKey: authenticationKey) as? Bool else {
-      throw("Current key is not available")
-    }
+    let authentication = UserDefaults.standard.bool(forKey: authenticationKey)
 
     UserDefaults.standard.set(version, forKey: versionKey)    
     let keychain = try getKeychain(reason: NSLocalizedString("info_plist_touch_face_id", comment: ""), authentication: authentication)
