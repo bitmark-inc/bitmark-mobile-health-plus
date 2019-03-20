@@ -63,7 +63,7 @@ export class AddRecordComponent extends Component {
                 {/*DESC*/}
                 <View style={styles.introductionTextArea}>
                   <Text style={[styles.introductionTitle]}>Secure your first medical record</Text>
-                  <Text style={[styles.introductionDescription]}>Upload and store all your medical records in one secure place.</Text>
+                  <Text style={[styles.introductionDescription]}>Upload and store all your medical records, such as reports, prescriptions, images, vaccinations, and bills.</Text>
                 </View>
               </View>
 
@@ -121,10 +121,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   title: {
-    fontFamily: 'AvenirNextW1G-Light',
-    letterSpacing: 1.5,
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.87)'
+    color: '#000000',
+    letterSpacing: 1.5
   },
   logo: {
     width: 23,
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
   },
   addRecordImage: {
     resizeMode: 'contain',
-    width: 208,
-    height: 200,
+    width: 247,
+    height: 294,
   },
   buttonText: {
     fontFamily: 'AvenirNextW1G-Bold',

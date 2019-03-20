@@ -104,6 +104,18 @@ const writeNoteFile = async (noteFilePath, note) => {
   await FileUtil.writeFile(noteFilePath, note, 'utf8');
 };
 
+const readNameFile = async (nameFilePath) => {
+  let name;
+  if (await FileUtil.exists(nameFilePath)) {
+    name = await FileUtil.readFile(nameFilePath, 'utf8');
+  }
+  return name;
+};
+
+const writeNameFile = async (nameFilePath, name) => {
+  await FileUtil.writeFile(nameFilePath, name, 'utf8');
+};
+
 const doCheckAndSyncDataWithICloud = async (bitmark) => {
   // upload to iCloud
   if (!bitmark) {
@@ -185,6 +197,27 @@ const doCheckAndSyncDataWithICloud = async (bitmark) => {
       bitmark.indexNoteFileSyncedToICloud = true;
     }
   }
+
+  // Name
+  if (!bitmark.indexNameFileSyncedToICloud || !bitmark.indexNameFileSyncedFromICloud) {
+    let nameFileName = `${bitmark.id}.txt`;
+    let nameFilePath = `${FileUtil.getLocalIndexedNameFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${nameFileName}`;
+    let existFileIndexedName = await FileUtil.exists(nameFilePath);
+    let nameRecord = await IndexDBService.getNameByBitmarkId(bitmark.id);
+
+    if (existFileIndexedName && !nameRecord && !bitmark.indexNameFileSyncedFromICloud) {
+      let name = await readNameFile(nameFilePath);
+      await IndexDBService.updateName(bitmark.id, name);
+      bitmark.indexNameFileSyncedFromICloud = true;
+    }
+
+    if (!existFileIndexedName && nameRecord && !bitmark.indexNameFileSyncedToICloud) {
+      await FileUtil.mkdir(`${FileUtil.getLocalIndexedNameFolderPath(CacheData.userInformation.bitmarkAccountNumber)}`);
+      await writeNameFile(nameFilePath, nameRecord);
+      iCloudSyncAdapter.uploadFileToCloud(nameFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexName_${nameFileName}`);
+      bitmark.indexNameFileSyncedToICloud = true;
+    }
+  }
 };
 
 const doUpdateIndexTagFromICloud = async (bitmarkId) => {
@@ -238,6 +271,31 @@ const doUpdateIndexNoteToICloud = async (bitmarkId, note) => {
   }
 };
 
+const doUpdateIndexNameFromICloud = async (bitmarkId) => {
+  //sync index name
+  let nameFileName = `${bitmarkId}.txt`;
+  let nameFilePath = `${FileUtil.getLocalIndexedNameFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${nameFileName}`;
+  let existFileIndexedName = await FileUtil.exists(nameFilePath);
+  if (existFileIndexedName) {
+    let name = await readNameFile(nameFilePath);
+    await IndexDBService.updateName(bitmarkId, name);
+  }
+};
+
+const doUpdateIndexNameToICloud = async (bitmarkId, name) => {
+  //sync index name
+  let nameFileName = `${bitmarkId}.txt`;
+  let nameFilePath = `${FileUtil.getLocalIndexedNameFolderPath(CacheData.userInformation.bitmarkAccountNumber)}/${nameFileName}`;
+  if (!name) {
+    name = await IndexDBService.getNameByBitmarkId(bitmarkId);
+  }
+  if (name) {
+    await FileUtil.mkdir(`${FileUtil.getLocalIndexedNameFolderPath(CacheData.userInformation.bitmarkAccountNumber)}`);
+    await writeNameFile(nameFilePath, name);
+    iCloudSyncAdapter.uploadFileToCloud(nameFilePath, `${CacheData.userInformation.bitmarkAccountNumber}_indexName_${nameFileName}`);
+  }
+};
+
 const initializeLocalStorage = async (bitmarkAccountNumber) => {
   let accountNumber = bitmarkAccountNumber || CacheData.userInformation.bitmarkAccountNumber;
   if (accountNumber) {
@@ -249,6 +307,7 @@ const initializeLocalStorage = async (bitmarkAccountNumber) => {
     await FileUtil.mkdir(FileUtil.getLocalIndexedDataFolderPath(accountNumber));
     await FileUtil.mkdir(FileUtil.getLocalIndexedTagFolderPath(accountNumber));
     await FileUtil.mkdir(FileUtil.getLocalIndexedNoteFolderPath(accountNumber));
+    await FileUtil.mkdir(FileUtil.getLocalIndexedNameFolderPath(accountNumber));
   }
 };
 
@@ -289,6 +348,10 @@ let LocalFileService = {
   // Index Note
   doUpdateIndexNoteFromICloud,
   doUpdateIndexNoteToICloud,
+
+  // Index Name
+  doUpdateIndexNameFromICloud,
+  doUpdateIndexNameToICloud,
 
   // Tag Caches
   getTagsCache,

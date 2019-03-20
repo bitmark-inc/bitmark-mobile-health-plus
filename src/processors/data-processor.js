@@ -219,6 +219,9 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
             } else {
               bitmark.asset = asset;
             }
+
+            bitmark.addedOn = asset.created_at || moment().toDate().toISOString();
+
             healthDataBitmarks.push(bitmark);
           } else if (isDailyHealthDataRecord(asset)) {
             if (bitmark.owner === bitmarkAccountNumber) {
@@ -241,12 +244,14 @@ const runGetUserBitmarksInBackground = (bitmarkAccountNumber) => {
                 bitmark.thumbnail = await runPromiseIgnoreError(CommonModel.checkThumbnailForBitmark(bitmark.id));
               }
               bitmark.asset = asset;
+              bitmark.addedOn = asset.created_at || moment().toDate().toISOString();
               await runPromiseWithoutError(LocalFileService.doCheckAndSyncDataWithICloud(bitmark));
               healthAssetBitmarks.push(bitmark);
             }
           } else if (isEMRRecord(asset)) {
             if (!latestEMRBitmark || latestEMRBitmark.offset < bitmark.offset) {
               bitmark.asset = asset;
+              bitmark.addedOn = asset.created_at || moment().toDate().toISOString();
               latestEMRBitmark = bitmark;
             }
           }
@@ -636,6 +641,13 @@ const doOpenApp = async (justCreatedBitmarkAccount) => {
                 promiseRunAfterCopyFile = async () => {
                   await LocalFileService.doUpdateIndexNoteFromICloud(bitmarkId);
                 };
+              } else if (keyList[1] === 'indexName') {
+                keyFilePath = key.replace(`${bitmarkAccountNumber}_indexName_`, `${bitmarkAccountNumber}/indexName/`);
+                let bitmarkId = keyList[2].replace('.txt', '');
+                overwrite = true;
+                promiseRunAfterCopyFile = async () => {
+                  await LocalFileService.doUpdateIndexNameFromICloud(bitmarkId);
+                };
               }
               let doSyncFile = async () => {
                 if (assetId) {
@@ -806,7 +818,7 @@ const doBitmarkHealthData = async (list) => {
 };
 
 const doIssueFile = async (issueParams) => {
-  let { filePath, assetName, metadataList, quantity, isPublicAsset = false, isMultipleAsset = false, note, tags } = issueParams;
+  let { filePath, assetName, metadataList, quantity, isPublicAsset = false, isMultipleAsset = false, name, note, tags } = issueParams;
   let results = await BitmarkService.doIssueFile(CacheData.userInformation.bitmarkAccountNumber, filePath, assetName, metadataList, quantity, isPublicAsset);
 
   let appInfo = await doGetAppInformation();
@@ -833,6 +845,11 @@ const doIssueFile = async (issueParams) => {
       await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, detectResult.detectedTexts);
     } else {
       await IndexDBService.insertDetectedDataToIndexedDB(record.id, assetName, metadataList, '');
+    }
+
+    // Name
+    if (name) {
+      await IndexDBService.updateName(record.id, name);
     }
 
     // Note
@@ -1082,6 +1099,7 @@ const doTransferBitmark = async (bitmark, receiver) => {
   await IndexDBService.deleteIndexedDataByBitmarkId(bitmark.id);
   await IndexDBService.deleteTagsByBitmarkId(bitmark.id);
   await IndexDBService.deleteNoteByBitmarkId(bitmark.id);
+  await IndexDBService.deleteNameByBitmarkId(bitmark.id);
   await runGetUserBitmarksInBackground();
   return result;
 };

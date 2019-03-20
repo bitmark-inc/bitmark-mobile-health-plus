@@ -52,7 +52,7 @@
     "react-native-qrcode": "^0.2.7",
     "react-native-router-flux": "^4.0.6",
     "react-native-select-contact": "^1.1.1",
-    "react-native-sentry": "^0.40.2",
+    "react-native-sentry": "^0.42.0",
     "react-native-shadow": "^1.2.2",
     "react-native-sortable-grid": "^2.0.0",
     "react-native-sqlite-storage": "^3.3.7",

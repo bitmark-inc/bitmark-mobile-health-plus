@@ -13,7 +13,7 @@ import { EventEmitterService, DataProcessor } from "src/processors";
 import PropTypes from 'prop-types';
 import LottieView from 'lottie-react-native';
 import { IndexDBService, LocalFileService } from "src/processors/services";
-import { AccountModel } from "src/processors/models";
+import { AccountModel, UserModel } from "src/processors/models";
 import { Sentry } from "react-native-sentry/lib/Sentry";
 const BitmarkSDKEvents = new NativeEventEmitter(NativeModules.BitmarkSDKWrapper);
 
@@ -34,7 +34,6 @@ export class UpgradeComponent extends Component {
   constructor(props) {
     super(props);
     this.twelveWords = props.twelveWords;
-    console.log('twelveWords:', this.twelveWords);
 
     this.state = {
       upgradeState: UPGRADE_STATE.UPGRADING,
@@ -116,6 +115,7 @@ export class UpgradeComponent extends Component {
     await IndexDBService.upgradeDataFrom24Words(twentyFourWordsAccountNumber, twelveWordsAccountNumber);
     await LocalFileService.initializeLocalStorage(twelveWordsAccountNumber);
     await LocalFileService.moveFilesToNewAccount(twentyFourWordsAccountNumber, twelveWordsAccountNumber);
+    await UserModel.doRemoveUserInfo();
     await DataProcessor.doLogin();
   }
 

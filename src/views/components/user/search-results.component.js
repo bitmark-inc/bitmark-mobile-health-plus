@@ -79,17 +79,12 @@ export class SearchResultsComponent extends Component {
                           textToHighlight={item.asset.name}
                         />
                         {/*Status*/}
-                        {item.status === 'pending' ? (
-                          <Text style={styles.bitmarkStatus}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>
-                        ) : (
-                            <Highlighter
-                              style={styles.bitmarkStatus}
-                              highlightStyle={[styles.highlightingText]}
-                              searchWords={this.props.searchTerm.split(' ')}
-                              textToHighlight={moment(item.asset.created_at).format('MMM DD, YYYY').toUpperCase()}
-                            />
-                          )
-                        }
+                        <Highlighter
+                          style={styles.bitmarkStatus}
+                          highlightStyle={[styles.highlightingText]}
+                          searchWords={this.props.searchTerm.split(' ')}
+                          textToHighlight={moment(item.asset.created_at || item.addedOn || moment().toDate().toISOString()).format('YYYY MMM DD').toUpperCase()}
+                        />
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -131,24 +126,29 @@ export class SearchResultsComponent extends Component {
                       {/*Content*/}
                       <View style={styles.itemContent}>
                         {/*Name*/}
+                        {item.name ? (
+                          <Highlighter
+                            style={styles.assetName}
+                            highlightStyle={[styles.highlightingText]}
+                            searchWords={this.props.searchTerm.split(' ')}
+                            textToHighlight={item.name}
+                          />
+                        ) : (
+                          <Highlighter
+                            style={styles.assetName}
+                            highlightStyle={[styles.highlightingText]}
+                            searchWords={this.props.searchTerm.split(' ')}
+                            textToHighlight={item.asset.name}
+                          />
+                        )
+                        }
+                        {/*Status*/}
                         <Highlighter
-                          style={styles.assetName}
+                          style={styles.bitmarkStatus}
                           highlightStyle={[styles.highlightingText]}
                           searchWords={this.props.searchTerm.split(' ')}
-                          textToHighlight={item.asset.name}
+                          textToHighlight={moment(item.asset.created_at || item.addedOn || moment().toDate().toISOString()).format('YYYY MMM DD').toUpperCase()}
                         />
-                        {/*Status*/}
-                        {item.status === 'pending' ? (
-                          <Text style={styles.bitmarkStatus}>{i18n.t('BitmarkListComponent_bitmarkPending')}</Text>
-                        ) : (
-                            <Highlighter
-                              style={styles.bitmarkStatus}
-                              highlightStyle={[styles.highlightingText]}
-                              searchWords={this.props.searchTerm.split(' ')}
-                              textToHighlight={moment(item.asset.created_at).format('MMM DD, YYYY').toUpperCase()}
-                            />
-                          )
-                        }
 
                         {/*Tags*/}
                         {(item.tags && item.tags.length) ? (
