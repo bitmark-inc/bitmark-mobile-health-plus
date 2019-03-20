@@ -44,7 +44,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
         resolve(nil);
       }
       else {
-        reject(nil, nil, e);
+        if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
       }
     }
   }
@@ -58,7 +62,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
                BitmarkSDKWrapper.stringFromVersion(account.seed.version)])
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -77,7 +85,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
         resolve(nil);
       }
       else {
-        reject(nil, nil, e);
+        if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
       }
     }
   }
@@ -90,7 +102,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(account.accountNumber)
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -106,7 +122,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
                BitmarkSDKWrapper.stringFromVersion(account.seed.version)])
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -123,7 +143,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(nil)
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -134,7 +158,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(nil);
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -173,7 +201,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve([bitmarkIds, assetId])
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -185,7 +217,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(nil);
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -259,7 +295,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve([assetid, fingerprint])
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -316,7 +356,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(signatures)
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -361,7 +405,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(txId)
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -388,7 +436,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(nil);
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -422,7 +474,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(nil);
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -506,7 +562,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
 
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -572,7 +632,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(result)
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -615,7 +679,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       resolve(try assets.map { try $0.asDictionary() } )
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -655,7 +723,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
 
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
@@ -691,7 +763,11 @@ class BitmarkSDKWrapper: RCTEventEmitter {
       }
     }
     catch let e {
-      reject(nil, nil, e);
+      if let err = e as? String {
+        reject(nil, err, e)
+      } else {
+        reject(nil, e.localizedDescription, e)
+      }
     }
   }
 
