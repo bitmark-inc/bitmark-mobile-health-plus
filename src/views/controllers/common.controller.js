@@ -4,7 +4,7 @@ import { FileUtil, isMedicalRecord } from 'src/utils';
 import { UserBitmarksStore, UserBitmarksActions } from '../stores';
 
 const issue = (issueParams, callBack) => {
-  let {filePath, assetName, metadataList, quantity, fileType, note, tags} = issueParams;
+  let {filePath, assetName, metadataList, quantity, fileType, name, note, tags} = issueParams;
 
   if (!CacheData.networkStatus) {
     AppProcessor.showOfflineMessage();
@@ -22,7 +22,7 @@ const issue = (issueParams, callBack) => {
         text: i18n.t('CaptureAssetComponent_alertButton1'), style: 'cancel'
       }]);
     } else {
-      AppProcessor.doIssueFile({filePath, assetName, metadataList, quantity, note, tags}, {
+      AppProcessor.doIssueFile({filePath, assetName, metadataList, quantity, name, note, tags}, {
         indicator: true, title: i18n.t('CaptureAssetComponent_title'), message: ''
       }).then(async (data) => {
         if (data) {
@@ -62,8 +62,14 @@ const search = async (searchTerm) => {
 
         if (bitmark) {
           if (isMedicalRecord(bitmark.asset)) {
+            // Thumbnail
             if (!bitmark.thumbnail) {
               bitmark.thumbnail = await CommonModel.checkThumbnailForBitmark(bitmark.id);
+            }
+
+            // Name
+            if (!bitmark.name) {
+              bitmark.name = await IndexDBService.getNameByBitmarkId(bitmark.id);
             }
 
             if (tagRecordsMap[bitmark.id]) {

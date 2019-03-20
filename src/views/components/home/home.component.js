@@ -53,8 +53,7 @@ export class HomeComponent extends Component {
               </View>
 
               {/*BOTTOM AREA*/}
-              <View style={[styles.bottomArea]}>
-                <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-1.png')} />
+              <View style={[styles.bottomArea, {justifyContent: 'flex-end'}]}>
                 <TouchableOpacity style={[styles.buttonNext]} onPress={() => this.setState({ ONBOARDING_STATE: ONBOARDING_STATES.ONBOARDING_2 })}>
                   <Text style={[styles.buttonText, { color: '#FF003C' }]}>NEXT</Text>
                 </TouchableOpacity>
@@ -72,38 +71,30 @@ export class HomeComponent extends Component {
               </View>
 
               {/*CONTENT*/}
-              <View style={styles.contentArea}>
+              <View style={[styles.contentArea]}>
                 {/*IMAGE*/}
                 <View style={styles.introductionImageArea}>
                   <Image style={styles.onBoardingImage2} source={require('assets/imgs/onboarding_2.png')} />
                 </View>
                 {/*DESC*/}
-                <View style={styles.introductionTextArea}>
-                  <Text style={[styles.introductionTitle]}>Create your health vault</Text>
+                <View style={[styles.introductionTextArea]}>
+                  <Text style={[styles.steps]}>STEP 1 OF 3</Text>
+                  <Text style={[styles.introductionTitle, {marginTop: 5}]}>Create your health vault</Text>
                   <Text style={[styles.introductionDescription]}>
-                    Your unique health vault locks data away from unauthorized 3rd-party access.
-                </Text>
-
-                  {/*Terms and Privacy Policy */}
-                  <Hyperlink style={[styles.introductionDescription, styles.hyperLinkText]} linkText={url => url === 'https://bitmark.com/legal/terms' ? 'Terms' : 'Privacy Policy'} onPress={(url) => Linking.openURL(url)}>
-                    <Text style={[styles.introductionDescription, styles.hyperLinkText, { marginTop: 0 }]}>
-                      By creating a vault, you agree to our <Text style={[{ textDecorationLine: 'underline' }, styles.hyperLinkText]}>https://bitmark.com/legal/terms</Text> and <Text style={[{ textDecorationLine: 'underline' }, styles.hyperLinkText]}>https://bitmark.com/legal/privacy.</Text>
-                    </Text>
-                  </Hyperlink>
+                    Your health vault will securely aggegrate your health and medical records on this device. None of your data will be stored in the cloud.
+                  </Text>
                 </View>
               </View>
 
               {/*BOTTOM AREA*/}
               <View style={[styles.bottomArea]}>
-                <Image style={styles.sliderIcon} source={require('assets/imgs/slider-icon-step-2.png')} />
-
                 {/*Login link*/}
-                <TouchableOpacity style={[styles.buttonNext, { marginBottom: 2 }]} onPress={Actions.login}>
+                <TouchableOpacity style={[styles.buttonNext, { marginBottom: 2 }]} onPress={() => Actions.verifyPhraseWords({actionType: 'login'})}>
                   <Text style={[styles.linkButtonText]}>Already have a vault?</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={[styles.buttonNext]} onPress={() => Actions.generateHealthCode()}>
-                  <Text style={[styles.buttonText, { color: '#FF003C' }]}>NEXT</Text>
+                  <Text style={[styles.buttonText, { color: '#FF003C' }]}>CREATE</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -165,12 +156,6 @@ const styles = StyleSheet.create({
     height: 23,
     resizeMode: 'contain',
   },
-  sliderIcon: {
-    width: 56,
-    height: 8,
-    resizeMode: 'contain',
-    marginBottom: 4,
-  },
   onBoardingImage1: {
     resizeMode: 'contain',
     width: config.isIPhoneX ? convertWidth(250) : convertWidth(206),
@@ -207,10 +192,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     letterSpacing: 0.25,
   },
-  hyperLinkText: {
-    fontFamily: 'AvenirNextW1G-LightItalic',
-    color: 'rgba(0, 0, 0, 0.6)',
-  },
   buttonNext: {
     fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 16,
@@ -228,4 +209,11 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     letterSpacing: 0.25,
   },
+  steps: {
+    fontFamily: 'AvenirNextW1G-Light',
+    fontSize: 10,
+    color: 'rgba(0, 0, 0, 0.87)',
+    letterSpacing: 1.5,
+    lineHeight: 16,
+  }
 });

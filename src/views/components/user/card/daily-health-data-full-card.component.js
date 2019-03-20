@@ -126,7 +126,6 @@ export class DailyHealthDataFullCardComponent extends React.Component {
                 {/*CARD TOP BAR*/}
                 <View style={[cardStyles.cardTopBar, { backgroundColor: '#FFFFFF' }]}>
                   <Text style={[cardStyles.cardTitle]}>HEALTH DATA</Text>
-                  <Image style={cardStyles.cardIcon} source={require('assets/imgs/health-data-card-icon.png')} />
                 </View>
 
                 {/*VISUALIZATION*/}
@@ -162,7 +161,7 @@ export class DailyHealthDataFullCardComponent extends React.Component {
                   {/*Status*/}
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     {lastBitmark &&
-                      <Text style={[cardStyles.cardText]}>{'RECORDED ON ' + moment(lastBitmark.asset.metadata['Collection Date']).add(1, 'minute').format('MMM DD, YYYY').toUpperCase()}</Text>
+                      <Text style={[cardStyles.cardText]}>{'RECORDED ON ' + moment(lastBitmark.asset.metadata['Collection Date']).add(1, 'minute').format('YYYY MMM DD').toUpperCase()}</Text>
                     }
                   </View>
 

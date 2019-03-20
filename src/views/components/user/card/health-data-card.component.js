@@ -36,7 +36,7 @@ export class HealthDataCardComponent extends React.Component {
         <View style={[styles.cardContent]}>
           <Text style={[styles.cardHeader]}>{bitmark.asset.name}</Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={[styles.cardText]}>{bitmark.asset.created_at ? ('RECORDED ON ' + moment(bitmark.asset.created_at).format('MMM DD, YYYY').toUpperCase()) : 'REGISTERING...'}</Text>
+            <Text style={[styles.cardText]}>{bitmark.asset.created_at ? ('RECORDED ON ' + moment(bitmark.asset.created_at).format('YYYY MMM DD').toUpperCase()) : 'REGISTERING...'}</Text>
           </View>
         </View>
       </View>

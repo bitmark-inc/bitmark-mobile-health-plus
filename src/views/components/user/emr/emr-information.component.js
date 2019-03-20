@@ -159,18 +159,28 @@ export class EMRInformationComponent extends Component {
   }
 
   render() {
-    console.log('emrInformation :', this.state.emrInformation);
     return (
       <SafeAreaView style={styles.bodySafeView}>
+        {/*HEADER BAR*/}
         <View style={styles.header}>
           <TouchableOpacity style={styles.headerLeft} onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.pop()}>
-            <Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />
+            {/*<Image style={styles.headerLeftBackIcon} source={require('assets/imgs2/back_icon_black.png')} />*/}
+            <Text style={[styles.headerLeftText]}>Close</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle} numberOfLines={1}></Text>
-          <TouchableOpacity style={styles.headerRight} disabled={this.state.isEditing} onPress={() => this.setState({ isEditing: !this.state.isEditing })}>
-            {!this.state.isEditing && <Text style={styles.headerEditText}>EDIT</Text>}
-          </TouchableOpacity>
+          <Text style={styles.headerTitle} numberOfLines={1}>EMR</Text>
+
+          {this.state.isEditing == true ? (
+            <TouchableOpacity style={styles.headerRight} onPress={this.saveEMRInformation.bind(this)}>
+              <Text style={styles.headerEditText}>SAVE</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.headerRight} disabled={this.state.isEditing} onPress={() => this.setState({ isEditing: !this.state.isEditing })}>
+              {!this.state.isEditing && <Text style={styles.headerEditText}>EDIT</Text>}
+            </TouchableOpacity>
+          )}
+
         </View>
+
         {!this.state.isEditing && <ScrollView contentContainerStyle={styles.body}>
           <ShadowComponent style={[styles.cardBody, { marginTop: 0 }]}>
             <ShadowTopComponent contentStyle={styles.cardHeader}>
@@ -187,7 +197,7 @@ export class EMRInformationComponent extends Component {
                 <View style={{ flex: 1, flexDirection: 'row', marginTop: 21 }}>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.emrInformationLabel}>Date of birth</Text>
-                    <Text style={styles.emrInformationValue}>{this.state.emrInformation.birthday ? moment(this.state.emrInformation.birthday).format('MMM DD, YYYY') : ''}</Text>
+                    <Text style={styles.emrInformationValue}>{this.state.emrInformation.birthday ? moment(this.state.emrInformation.birthday).format('YYYY MMM DD') : ''}</Text>
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column', marginLeft: convertWidth(16), }}>
                     <Text style={styles.emrInformationLabel}>Sex</Text>
@@ -199,7 +209,7 @@ export class EMRInformationComponent extends Component {
             </View>
             <View style={styles.emergencyContactArea}>
               <Text style={styles.emergencyContactTitle}>
-                EMERGENCY CONTACTS
+                Emergency contacts
                 </Text>
               {(this.state.emrInformation.emergencyContacts || []).map((item, index) => {
                 return <View key={index} style={styles.emergencyContactRow}>
@@ -265,6 +275,7 @@ export class EMRInformationComponent extends Component {
         {this.state.isEditing && <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }} >
           <ScrollView contentContainerStyle={styles.body}>
             <ShadowComponent style={[styles.cardBody, { marginTop: 0 }]}>
+              {/*PROFILE*/}
               <ShadowTopComponent contentStyle={styles.cardHeader}>
                 <View style={styles.cardTitle}>
                   <Text style={styles.cardTitleText}>PROFILE</Text>
@@ -274,16 +285,18 @@ export class EMRInformationComponent extends Component {
               <View style={styles.cardContentRow}>
                 <TouchableOpacity onPress={this.chooseAvatar.bind(this)}>
                   <Image style={styles.emrInformationAvatar} source={this.state.emrInformation.avatar ? { uri: this.state.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default.png')} />
-                  <Image style={styles.emrInformationAvatarCover} source={require('assets/imgs2/emr_avatar_edit_cover.png')} />
-                  {/* <View style={styles.emrInformationAvatarCover}><Text style={{ fontFamily: 'Andale Mono', fontSize: 12, color: '#404040' }}>EDIT</Text></View> */}
+                  <Text style={[styles.emrInformationAvatarEditText]}>EDIT</Text>
                 </TouchableOpacity>
                 <View style={styles.emrInformationBasic}>
+                  {/*Name*/}
                   <Text style={styles.emrInformationLabel}>Name</Text>
-                  <TextInput style={[styles.emrInformationValueInput, { paddingLeft: convertWidth(16), paddingRight: convertWidth(16), }]}
-                    placeholder='TAP TO INPUT'
+                  <TextInput style={[styles.emrInformationValueInput, { paddingLeft: convertWidth(5), paddingRight: convertWidth(16), }]}
+                    placeholder='Tap to input'
                     defaultValue={this.state.emrInformation.name}
                     onChangeText={(name) => this.updateEMRInformationState.bind(this)({ name })}
                   />
+
+                  {/*Date of birth*/}
                   <View style={{ flex: 1, flexDirection: 'row', marginTop: 16 }}>
                     <View style={{ flex: 1, flexDirection: 'column' }}>
                       <Text style={styles.emrInformationLabel}>Date of birth</Text>
@@ -311,6 +324,8 @@ export class EMRInformationComponent extends Component {
                       >
                       </DatePicker>
                     </View>
+
+                    {/*Sex*/}
                     <View style={{ flex: 1, flexDirection: 'column', marginLeft: convertWidth(16), }}>
                       <Text style={styles.emrInformationLabel}>Sex</Text>
                       <View style={styles.emrInformationValueInput}>
@@ -322,7 +337,7 @@ export class EMRInformationComponent extends Component {
                           }}
                           value={this.state.emrInformation.sex}
                           placeholder={{
-                            label: 'SELECT',
+                            label: 'Select',
                             value: null,
                             color: '#9EA0A4',
                           }}
@@ -337,7 +352,7 @@ export class EMRInformationComponent extends Component {
               </View>
               <View style={styles.emergencyContactArea}>
                 <Text style={styles.emergencyContactTitle}>
-                  EMERGENCY CONTACTS
+                  Emergency contacts
                 </Text>
                 {(this.state.emrInformation.emergencyContacts || []).map((item, index) => {
                   return <View key={index} style={styles.emergencyContactRow}>
@@ -368,7 +383,7 @@ export class EMRInformationComponent extends Component {
               </ShadowTopComponent>
               <View style={[styles.cardContentRow, { paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0, }]}>
                 <TextInput style={[styles.emrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
-                  placeholder='TAP TO INPUT'
+                  placeholder='Tap to input'
                   defaultValue={this.state.emrInformation.activeClinicalDiagnoses}
                   onChangeText={(activeClinicalDiagnoses) => this.updateEMRInformationState.bind(this)({ activeClinicalDiagnoses })}
                   multiline={true}
@@ -385,7 +400,7 @@ export class EMRInformationComponent extends Component {
               </ShadowTopComponent>
               <View style={[styles.cardContentRow, { paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0, }]}>
                 <TextInput style={[styles.emrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
-                  placeholder='TAP TO INPUT'
+                  placeholder='Tap to input'
                   defaultValue={this.state.emrInformation.currentTreatmentsAndDosages}
                   onChangeText={(currentTreatmentsAndDosages) => this.updateEMRInformationState.bind(this)({ currentTreatmentsAndDosages })}
                   multiline={true}
@@ -402,7 +417,7 @@ export class EMRInformationComponent extends Component {
               </ShadowTopComponent>
               <View style={[styles.cardContentRow, { paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0, }]}>
                 <TextInput style={[styles.emrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
-                  placeholder='TAP TO INPUT'
+                  placeholder='Tap to input'
                   defaultValue={this.state.emrInformation.allergiesAndReactions}
                   onChangeText={(allergiesAndReactions) => this.updateEMRInformationState.bind(this)({ allergiesAndReactions })}
                   multiline={true}
@@ -413,22 +428,19 @@ export class EMRInformationComponent extends Component {
             <ShadowComponent style={styles.cardBody}>
               <ShadowTopComponent contentStyle={styles.cardHeader}>
                 <View style={styles.cardTitle}>
-                  <Text style={styles.cardTitleText}>{'Visible & Invisible Disabilities'.toUpperCase()}</Text>
+                  <Text style={styles.cardTitleText}>{'VISIBLE & INVISIBLE DISABILITIES'.toUpperCase()}</Text>
                 </View>
                 <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_information_icon_4.png')} />
               </ShadowTopComponent>
               <View style={[styles.cardContentRow, { paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0, }]}>
                 <TextInput style={[styles.emrInformationValueInput, { height: 103, padding: convertWidth(16) }]}
-                  placeholder='TAP TO INPUT'
+                  placeholder='Tap to input'
                   defaultValue={this.state.emrInformation.visibleAndInvisibleDisabilities}
                   onChangeText={(visibleAndInvisibleDisabilities) => this.updateEMRInformationState.bind(this)({ visibleAndInvisibleDisabilities })}
                   multiline={true}
                 />
               </View>
             </ShadowComponent>
-            <TouchableOpacity style={styles.saveButton} onPress={this.saveEMRInformation.bind(this)}>
-              <Text style={styles.saveButtonText}>Save</Text>
-            </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>}
       </SafeAreaView>
@@ -453,22 +465,24 @@ const styles = StyleSheet.create({
   },
   headerLeft: {
     paddingLeft: convertWidth(19),
-    width: convertWidth(35),
+    width: convertWidth(80),
+  },
+  headerLeftText: {
+    fontFamily: 'AvenirNextW1G-Medium', fontSize: 20,
+    color: '#FF003C',
+    width: '100%'
   },
 
-  headerLeftBackIcon: {
-    width: 16, height: '100%', resizeMode: 'contain',
-  },
   headerTitle: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 20, textAlign: 'center',
     flex: 1
   },
   headerRight: {
     paddingRight: convertWidth(19),
-    width: convertWidth(53),
+    width: convertWidth(80),
   },
   headerEditText: {
-    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10,
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,
     letterSpacing: 1.5,
     color: '#FF003C',
     width: '100%',
@@ -536,7 +550,7 @@ const styles = StyleSheet.create({
     paddingLeft: convertWidth(15), flexDirection: 'row', alignItems: 'center',
   },
   cardTitleText: {
-    fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
+    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10,
     letterSpacing: 1.5,
   },
   cardHeaderIcon: {
@@ -558,11 +572,13 @@ const styles = StyleSheet.create({
     marginRight: convertWidth(15),
     shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.2, shadowColor: '#000000', shadowRadius: 5,
   },
-  emrInformationAvatarCover: {
-    position: 'absolute',
-    top: 46.5, left: -1,
-    width: 78, height: 32, resizeMode: 'contain',
-    zIndex: 1,
+  emrInformationAvatarEditText: {
+    marginTop: 5,
+    fontFamily: 'AvenirNextW1G-Bold',
+    fontSize: 10,
+    color: '#FF003C',
+    textAlign: 'center',
+    width: 78,
   },
   emrInformationBasic: {
     flex: 1,
@@ -582,15 +598,5 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Regular', color: 'rgba(0, 0, 0, 0.87)',
     borderColor: 'transparent', borderWidth: 0.1, borderRadius: 4,
     shadowOffset: { width: 0, height: 0, }, shadowOpacity: 0.2, shadowColor: '#000', shadowRadius: 5,
-  },
-  saveButton: {
-    borderWidth: 1, borderColor: '#0060F2', borderRadius: 4,
-    backgroundColor: '#0060F2',
-    height: 36,
-    marginTop: 36,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  saveButtonText: {
-    fontFamily: 'Avenir Black', fontSize: 14, fontWeight: '900', color: 'white',
   }
 });

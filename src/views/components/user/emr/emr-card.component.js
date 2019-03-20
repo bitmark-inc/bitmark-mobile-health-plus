@@ -7,7 +7,7 @@ import {
 import { Provider, connect } from 'react-redux';
 
 import { convertWidth } from 'src/utils';
-import { ShadowComponent, ShadowTopComponent, } from 'src/views/commons';
+import { ShadowComponent } from 'src/views/commons';
 import { EMRInformationStore } from 'src/views/stores';
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
@@ -19,44 +19,42 @@ class PrivateEMRCardComponent extends Component {
     displayFromUserScreen: PropTypes.bool,
   };
   render() {
-    let displaySeeMoreButton = (this.props.emrInformation && this.props.emrInformation.avatar
-      && this.props.emrInformation.name && this.props.emrInformation.birthday && this.props.emrInformation.sex) && this.props.displayFromUserScreen;
     return (
       <ShadowComponent style={styles.body}>
         {!this.props.emrInformation &&
           <TouchableOpacity onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.emrInformation({ emrInformation: this.props.emrInformation, displayFromUserScreen: this.props.displayFromUserScreen })}>
-            <ShadowTopComponent contentStyle={styles.cardHeader}>
+            <View style={styles.cardHeader}>
               <Text style={styles.cardTitleText}>GET STARTED</Text>
-              <Image style={styles.cardHeaderIcon} source={require('assets/imgs2/emr_setup_icon.png')} />
-            </ShadowTopComponent>
-            <View style={[styles.bodyContent, { padding: convertWidth(16), }]} >
-              <Text style={styles.cardHeaderTitleText}>{this.props.displayFromUserScreen ? 'Personalize your vault' : 'Set up your emergency medical record'}</Text>
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs/emr-setup-icon.png')} />
+            </View>
+            <View style={[styles.bodyContent, { padding: convertWidth(16), }, {paddingBottom: 28}]} >
+              <Text style={styles.cardHeaderTitleText}>{this.props.displayFromUserScreen ? 'Personalize your vault' : 'Set up Emergency Medical Record'}</Text>
               <Text style={styles.cardContentDescription}>
                 {this.props.displayFromUserScreen
                   ? 'Your Bitmark Health vault gives you control over your health data. Personalize your vault settings to control how your health history is shared with healthcare providers, family, and researchers.'
-                  : 'Medical profile helps first responders access your critical medical information from the Bitmark health app. They can see information like allergies and medical conditions as well as who to contact in case of an emergency.'
+                  : 'Your Emergency Medical Record stores all your most important medical history so that medical professionals can help you in case of an emergency.'
                 }
               </Text>
-              <View style={[styles.cardNextButton, { marginTop: 20 }]}>
-                <Image style={styles.cardNextButtonIcon} source={require('assets/imgs2/next_icon_grey.png')} />
-              </View>
             </View>
           </TouchableOpacity>
         }
 
         {this.props.emrInformation &&
-          <TouchableOpacity style={styles.bodyContent}
+          <TouchableOpacity style={[styles.bodyContent, {paddingBottom: 16}]}
             onPress={() => this.props.displayFromUserScreen ? Actions.account() : Actions.emrInformation({ emrInformation: this.props.emrInformation })}>
-            <Text style={styles.emrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Emergency Medical Record'}</Text>
+            <View style={styles.cardHeader}>
+              <Text style={styles.emrUserTitle}>{this.props.displayFromUserScreen ? 'Vault' : 'Emergency Medical Record'}</Text>
+              <Image style={styles.cardHeaderIcon} source={require('assets/imgs/emr-setup-icon.png')} />
+            </View>
             <View style={styles.emrInformation}>
-              <Image style={styles.emrInformationAvatar} source={this.props.emrInformation.avatar ? { uri: this.props.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default.png')} />
+              <Image style={styles.emrInformationAvatar} source={this.props.emrInformation.avatar ? { uri: this.props.emrInformation.avatar } : require('assets/imgs2/emr_avatar_default_2.png')} />
               <View style={styles.emrInformationBasic}>
                 <Text style={styles.emrInformationLabel}>Name</Text>
                 <Text style={styles.emrInformationValue}>{this.props.emrInformation.name}</Text>
                 <View style={{ flex: 1, flexDirection: 'row', marginTop: 21, }}>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.emrInformationLabel}>Date of birth</Text>
-                    <Text style={styles.emrInformationValue}>{this.props.emrInformation.birthday ? moment(this.props.emrInformation.birthday).format('MMM DD, YYYY') : ''}</Text>
+                    <Text style={styles.emrInformationValue}>{this.props.emrInformation.birthday ? moment(this.props.emrInformation.birthday).format('YYYY MMM DD') : ''}</Text>
                   </View>
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.emrInformationLabel}>Sex</Text>
@@ -65,11 +63,6 @@ class PrivateEMRCardComponent extends Component {
                   </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.cardNextButton}>
-              <TouchableOpacity style={{ padding: convertWidth(16) }} onPress={() => Actions.emrInformation({ emrInformation: this.props.emrInformation, edit: (!this.props.displayFromUserScreen || !displaySeeMoreButton) ? true : false })}>
-                <Text style={styles.emrInformationSeeMoreButtonText}>{displaySeeMoreButton ? 'SEE MORE' : 'EDIT'}</Text>
-              </TouchableOpacity>
             </View>
           </TouchableOpacity>
         }
@@ -81,18 +74,18 @@ class PrivateEMRCardComponent extends Component {
 const styles = StyleSheet.create({
   body: {
     width: '100%',
-    borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
-    backgroundColor: '#F4F2EE',
+    borderWidth: 0.1, borderRadius: 4, borderColor: '#FFE1DE',
+    backgroundColor: '#FFE1DE',
   },
   bodyContent: {
     flex: 1,
-    borderWidth: 0.1, borderRadius: 4, borderColor: '#F4F2EE',
-    backgroundColor: 'white',
+    borderWidth: 0.1, borderRadius: 4, borderColor: '#FFE1DE',
+    backgroundColor: '#FFE1DE',
   },
   cardHeader: {
     width: '100%', height: 40,
     flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFE1DE',
   },
   cardTitleText: {
     fontFamily: 'AvenirNextW1G-Light', fontSize: 10,
@@ -101,6 +94,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
   },
   cardHeaderIcon: {
+    marginTop: -8,
     width: 26, height: 33, resizeMode: 'contain',
     marginRight: convertWidth(18),
   },
@@ -112,16 +106,10 @@ const styles = StyleSheet.create({
     marginTop: 18,
     fontFamily: 'AvenirNextW1G-Light', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
   },
-  cardNextButton: {
-    width: '100%',
-    flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center',
-  },
-  cardNextButtonIcon: {
-    width: 16, height: 16, resizeMode: 'contain',
-  },
   emrUserTitle: {
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 18,
     padding: convertWidth(15), paddingBottom: 0,
+    lineHeight: 20,
   },
   emrInformation: {
     padding: convertWidth(15),
@@ -143,9 +131,6 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextW1G-Bold', fontSize: 14, color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 3,
     letterSpacing: 0.15,
-  },
-  emrInformationSeeMoreButtonText: {
-    fontFamily: 'AvenirNextW1G-Bold', fontSize: 10, color: '#FF003C',
   },
 });
 

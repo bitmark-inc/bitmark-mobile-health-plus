@@ -256,9 +256,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   title: {
-    fontFamily: 'AvenirNextW1G-Light',
+    fontFamily: 'AvenirNextW1G-Bold',
     fontSize: 10,
-    color: 'rgba(0, 0, 0, 0.6)',
+    color: '#000000',
     letterSpacing: 1.5
   },
   logo: {
