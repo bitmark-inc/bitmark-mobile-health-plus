@@ -23,6 +23,7 @@ import { HealthDataGetStartComponent } from "./health-data-get-start.component";
 import { DailyHealthDataFullCardComponent } from "./card/daily-health-data-full-card.component";
 import { VerifyPhraseWordsComponent } from "../home/verify-phrase-words.component";
 import { ArrangePhotosComponent } from "./arrange-photos.component";
+import { ShutdownAnnouncementComponent } from "./shutdown-announcement.component";
 
 export class UserRouterComponent extends Component {
   componentDidMount() {
@@ -33,7 +34,8 @@ export class UserRouterComponent extends Component {
     return (
       <Router sceneStyle={{ shadowOpacity: 0, flex: 1 }}  >
         <Stack hideNavBar={true} >
-          <Scene key="user" component={UserComponent} initial={true} panHandlers={null} />
+          <Scene key="shutdownAnnouncement" component={ShutdownAnnouncementComponent} initial={true} panHandlers={null} />
+          <Scene key="user" component={UserComponent} panHandlers={null} />
           <Scene key="emailRecords" component={EmailRecordComponent} panHandlers={null} />
           <Scene key="account" component={AccountComponent} panHandlers={null} />
           <Scene key="accountPhrase" component={AccountPhraseComponent} panHandlers={null} />

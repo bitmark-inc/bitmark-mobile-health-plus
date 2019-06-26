@@ -29,6 +29,7 @@ let config = {
   mobile_server_url: 'https://bm.devel.bitmark.com',
   preview_asset_url: 'https://preview.test.bitmarkaccountassets.com',
   bitmark_web_site: 'https://bitmark.com',
+  webapp_web_site: 'https://webapp.test.bitmark.com',
   needResetLocalData: 1551067776993,
 };
 
@@ -42,6 +43,7 @@ if (config.network === NETWORKS.testnet) {
   config.mobile_server_url = 'https://bm.bitmark.com';
   config.preview_asset_url = "https://preview.bitmarkaccountassets.com";
   config.bitmark_web_site = 'https://bitmark.com';
+  config.webapp_web_site = 'https://a.bitmark.com';
   config.zeroAddress = 'a3ezwdYVEVrHwszQrYzDTCAZwUD3yKtNsCq9YhEu97bPaGAKy1';
 }
 export { config, };
