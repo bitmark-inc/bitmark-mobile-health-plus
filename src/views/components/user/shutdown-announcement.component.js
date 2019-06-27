@@ -25,7 +25,7 @@ export class ShutdownAnnouncementComponent extends Component {
           <View style={styles.bodyContent}>
             {/*TOP AREA*/}
             <ShadowTopComponent style={{ height: 40 }} contentStyle={[styles.topArea, styles.paddingContent]}>
-              <Text style={[styles.title]}>SHUTTING DOWN BITMARK HEALTH</Text>
+              <Text style={[styles.title]}>ANNOUNCEMENT</Text>
               <Image style={styles.logo} source={require('assets/imgs/bitmark-health-icon.png')} />
             </ShadowTopComponent>
 
