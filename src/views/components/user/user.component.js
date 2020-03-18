@@ -518,12 +518,12 @@ class PrivateUserComponent extends Component {
           </View>
         </SafeAreaView>
 
-        {/*Add record FAB button*/}
-        {(!this.state.searchFocusing && !this.props.searchTerm) &&
-        <TouchableOpacity style={[styles.addRecordButton]} onPress={this.showAddRecordOptions.bind(this)}>
-          <Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-fab-icon.png')} />
-        </TouchableOpacity>
-        }
+        {/*/!*Add record FAB button*!/*/}
+        {/*{(!this.state.searchFocusing && !this.props.searchTerm) &&*/}
+        {/*<TouchableOpacity style={[styles.addRecordButton]} onPress={this.showAddRecordOptions.bind(this)}>*/}
+          {/*<Image style={styles.addRecordIcon} source={require('assets/imgs/add-record-fab-icon.png')} />*/}
+        {/*</TouchableOpacity>*/}
+        {/*}*/}
 
         {/*ADD RECORDS DIALOG*/}
         {this.state.showAddRecordOptions &&
